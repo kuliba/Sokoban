@@ -9,20 +9,23 @@ import ForaTools
 import Foundation
 import PayHub
 
-public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure> {
+public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure> {
     
     public let makeQRFailure: MakeQRFailure
     public let makePayments: MakePayments
     public let makeMixedPicker: MakeMixedPicker
+    public let makeMultiplePicker: MakeMultiplePicker
     
     public init(
         makeQRFailure: @escaping MakeQRFailure,
         makePayments: @escaping MakePayments,
-        makeMixedPicker: @escaping MakeMixedPicker
+        makeMixedPicker: @escaping MakeMixedPicker,
+        makeMultiplePicker: @escaping MakeMultiplePicker
     ) {
         self.makeQRFailure = makeQRFailure
         self.makePayments = makePayments
         self.makeMixedPicker = makeMixedPicker
+        self.makeMultiplePicker = makeMultiplePicker
     }
 }
 
@@ -40,12 +43,7 @@ public extension QRBinderGetNavigationComposerMicroServices {
     }
     
     typealias MakeQRFailure = (QRCodeDetails<QRCode>) -> QRFailure
-}
-
-public enum QRCodeDetails<QRCode> {
     
-    case qrCode(QRCode)
-    case missingINN(QRCode)
+    typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMultiplePicker = (MakeMultiplePickerPayload) -> MultiplePicker
 }
-
-extension QRCodeDetails: Equatable where QRCode: Equatable {}

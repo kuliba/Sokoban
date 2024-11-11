@@ -230,6 +230,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
 
+    // MARK: - SavingsAccountFlag
+    
+    func test_load_shouldDeliverActiveSavingsAccountFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .savingsAccountFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            savingsAccountFlag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveSavingsAccountFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            savingsAccountFlag: .init(.inactive)
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -254,7 +278,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
+        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil,
+        savingsAccountFlag: SavingsAccountFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
@@ -264,7 +289,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive),
-            collateralLoanLandingFlag: collateralLoanLandingFlag.map { .init($0.rawValue) } ?? .init(.inactive)
+            collateralLoanLandingFlag: collateralLoanLandingFlag.map { .init($0.rawValue) } ?? .init(.inactive),
+            savingsAccountFlag: savingsAccountFlag.map { .init($0.rawValue) } ?? .init(.inactive)
         )
     }
 }

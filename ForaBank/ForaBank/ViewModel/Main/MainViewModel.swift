@@ -1108,7 +1108,7 @@ extension MainViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:

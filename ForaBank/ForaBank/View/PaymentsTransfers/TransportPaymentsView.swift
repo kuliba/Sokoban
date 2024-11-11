@@ -7,18 +7,31 @@
 
 import SwiftUI
 
+struct TransportPaymentsViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+}
+
+extension TransportPaymentsViewFactory {
+    
+    static let preview: Self = .init(makePaymentsView: {_ in fatalError()})
+}
+
 struct TransportPaymentsView<MosParkingView: View>: View {
     
     @ObservedObject private var viewModel: TransportPaymentsViewModel
     
     private let mosParkingView: () -> MosParkingView
+    private let viewFactory: TransportPaymentsViewFactory
     
     init(
         viewModel: TransportPaymentsViewModel,
-        mosParkingView: @escaping () -> MosParkingView
+        mosParkingView: @escaping () -> MosParkingView,
+        viewFactory: TransportPaymentsViewFactory
     ) {
         self.viewModel = viewModel
         self.mosParkingView = mosParkingView
+        self.viewFactory = viewFactory
     }
     
     var body: some View {
@@ -50,7 +63,7 @@ struct TransportPaymentsView<MosParkingView: View>: View {
                 mosParkingView()
                 
             case let .payment(viewModel):
-                PaymentsView(viewModel: viewModel)
+                viewFactory.makePaymentsView(viewModel)
                     .navigationBarHidden(true)
             }
         }
@@ -229,11 +242,11 @@ struct TransportPaymentsView_Previews: PreviewProvider {
         viewModel: TransportPaymentsViewModel
     ) -> some View {
         
-        TransportPaymentsView(viewModel: viewModel) {
-            
-            Text("MosParkingView")
-            
-        }
+        TransportPaymentsView(
+            viewModel: viewModel,
+            mosParkingView: { Text("MosParkingView")},
+            viewFactory: .preview
+        )
     }
 }
 
