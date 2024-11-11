@@ -857,7 +857,8 @@ extension ProductProfileViewModel {
         filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
         filterState: .preview,
-        rootView: ""
+        rootView: "",
+        collateralLoanLandingFlag: .init(.active)
     )
     
     static let sadSample = ProductProfileViewModel(
@@ -879,7 +880,8 @@ extension ProductProfileViewModel {
         filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
         filterState: .preview,
-        rootView: ""
+        rootView: "",
+        collateralLoanLandingFlag: .init(.active)
     )
 }
 

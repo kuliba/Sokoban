@@ -259,6 +259,11 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
+            
+        case .collateralLoanLanding:
+            // TODO: There are will added integration in next commit
+            Color.clear
+                .edgesIgnoringSafeArea(.bottom)
         }
     }
     
@@ -588,7 +593,8 @@ extension ProductProfileViewModel  {
         updateInfoStatusFlag: .init(.active),
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-        makeServicePaymentBinder: ServicePaymentBinder.preview
+        makeServicePaymentBinder: ServicePaymentBinder.preview,
+        collateralLoanLandingFlag: .init(.active)
     )
 }
 
@@ -603,7 +609,8 @@ extension MainViewModel {
         landingServices: .empty(), 
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}, 
+        collateralLoanLandingFlag: .init(.active),
+        onRegister: {},
         bannersBinder: .preview
     )
 }

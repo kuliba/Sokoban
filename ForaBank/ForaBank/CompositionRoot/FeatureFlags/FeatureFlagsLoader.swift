@@ -31,8 +31,8 @@ extension FeatureFlagsLoader {
             historyFilterFlag: loadHistoryFilterFlag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             utilitiesPaymentsFlag: loadUtilitiesPaymentsFlag(),
-            collateralLoanLandingFlag: loadCollateralLoanLandingFlag(),
-            savingsAccountFlag: loadSavingsAccountFlag()
+            savingsAccountFlag: loadSavingsAccountFlag(),
+            collateralLoanLandingFlag: loadCollateralLoanLandingFlag()
         )
     }
 }

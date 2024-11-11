@@ -18,6 +18,7 @@ class OpenNewProductsViewModel: ObservableObject {
     
     private let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
     private let model: Model
+    private let collateralLoanLandingFlag: CollateralLoanLandingFlag
     private var bindings = Set<AnyCancellable>()
     
     var displayButtons: [String] {
@@ -27,16 +28,25 @@ class OpenNewProductsViewModel: ObservableObject {
         return items
     }
     
-    init(items: [NewProductButton.ViewModel], model: Model = .emptyMock) {
+    init(
+        items: [NewProductButton.ViewModel],
+        model: Model = .emptyMock,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
+    ) {
         
         self.items = items
         self.model = model
+        self.collateralLoanLandingFlag = collateralLoanLandingFlag
     }
     
-    init(_ model: Model) {
+    init(
+        _ model: Model,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
+    ) {
         
         self.items = []
         self.model = model
+        self.collateralLoanLandingFlag = collateralLoanLandingFlag
         self.items = createItems()
         
         bind()
@@ -71,9 +81,12 @@ class OpenNewProductsViewModel: ObservableObject {
                 
                 switch type {
                 case .loan:
-                    viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
-                        subTitle: subTitle, url: model.productsOpenLoanURL))
-                    
+                    if collateralLoanLandingFlag.isActive {
+                        fallthrough
+                    } else {
+                        viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
+                                                                    subTitle: subTitle, url: model.productsOpenLoanURL))
+                    }
                 default:
                     viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
                         subTitle: subTitle, action: { [weak self] in

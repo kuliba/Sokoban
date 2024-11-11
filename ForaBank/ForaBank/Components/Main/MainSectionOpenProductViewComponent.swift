@@ -28,9 +28,9 @@ extension MainSectionOpenProductView {
             super.init(isCollapsed: isCollapsed)
         }
         
-        init(_ model: Model) {
+        init(_ model: Model, collateralLoanLandingFlag: CollateralLoanLandingFlag) {
             
-            self.newProducts = .init(model)
+            self.newProducts = .init(model, collateralLoanLandingFlag: collateralLoanLandingFlag)
             self.model = model
             super.init(isCollapsed: false)
             
@@ -98,8 +98,19 @@ struct MainBlockOpenProductsView_Previews: PreviewProvider {
 extension MainSectionOpenProductView.ViewModel {
 
     static let previewSample = MainSectionOpenProductView.ViewModel(
-        newProducts: .init(items: [.sample, .sample, .sample,.sample]),
+        newProducts: .init(
+            items: [
+                .sample,
+                .sample,
+                .sample,
+                .sample
+            ],
+            collateralLoanLandingFlag: .init(rawValue: .active)
+        ),
         isCollapsed: false)
 
-    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock)
+    static let sample = MainSectionOpenProductView.ViewModel(
+        .emptyMock,
+        collateralLoanLandingFlag: .init(rawValue: .active)
+    )
 }

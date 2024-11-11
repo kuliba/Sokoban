@@ -55,6 +55,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+    private let collateralLoanLandingFlag: CollateralLoanLandingFlag
     
     let bannersBinder: BannersBinder
     
@@ -71,19 +72,20 @@ class MainViewModel: ObservableObject, Resetable {
         landingServices: LandingServices,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        colleteralLoanLandingFlag: CollateralLoanLandingFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping () -> Void,
         bannersBinder: BannersBinder,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
+        self.collateralLoanLandingFlag = collateralLoanLandingFlag
         self.navButtonsRight = []
         self.sections = Self.getSections(
             model,
             bannersBinder,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            collateralLoanLandingFlag: colleteralLoanLandingFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
             stickerViewModel: nil
         )
         
@@ -122,7 +124,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionPromoView.ViewModel(model),
         //    BannerPickerSectionBinderWrapper.init(binder: binder),
             MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model, collateralLoanLandingFlag: collateralLoanLandingFlag),
             MainSectionAtmView.ViewModel.initial
         ]
         if updateInfoStatusFlag.isActive {
@@ -546,6 +548,15 @@ private extension MainViewModel {
                                 
                                 openCard()
                                 
+                            case .loan:
+                                
+                                if collateralLoanLandingFlag.isActive {
+                                    
+                                    openCollateralLoanLanding()
+                                } else {
+                                    fallthrough
+                                }
+                                
                             default:
                                 //MARK: Action for Sticker Product
                                 
@@ -625,7 +636,7 @@ private extension MainViewModel {
                                     return .updateFailureInfo
                                 }
                                 return nil
-                            })
+                            }), collateralLoanLandingFlag: collateralLoanLandingFlag
                         )
                         myProductsViewModel.rootActions = rootActions
                         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
@@ -962,6 +973,13 @@ private extension MainViewModel {
         }
     }
         
+    private func openCollateralLoanLanding() {
+        
+        guard collateralLoanLandingFlag.isActive else { return }
+
+        route.destination = .collateralLoanLanding
+    }
+    
     private typealias DepositeID = Int
     private func returnFirstExpiredDepositID(
         previousData: (expired: Date?, DepositeID?),
@@ -1679,6 +1697,7 @@ extension MainViewModel {
         case paymentSticker
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
+        case collateralLoanLanding
         
         var id: Case {
             
@@ -1727,6 +1746,8 @@ extension MainViewModel {
                 return .paymentProviderPicker
             case .providerServicePicker:
                 return .providerServicePicker
+            case .collateralLoanLanding:
+                return .collateralLoanLanding
             }
         }
         
@@ -1754,6 +1775,7 @@ extension MainViewModel {
             case sberQRPayment
             case paymentProviderPicker
             case providerServicePicker
+            case collateralLoanLanding
         }
     }
     

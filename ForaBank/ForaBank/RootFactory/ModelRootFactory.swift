@@ -49,7 +49,8 @@ extension ModelRootFactory: RootFactory {
             marketplaceFlag: .init(.active),
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
             updateInfoStatusFlag: .init(.active),
-            savingsAccountFlag: featureFlags.savingsAccountFlag
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
         )
         
         let binder = MarketShowcaseToRootViewModelBinder(

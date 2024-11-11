@@ -79,13 +79,14 @@ class MyProductsViewModel: ObservableObject {
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         openOrderSticker: @escaping () -> Void,
-        makeMyProductsViewFactory: MyProductsViewFactory
+        makeMyProductsViewFactory: MyProductsViewFactory,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
             totalMoney: .init(model: model),
             productSections: [],
-            openProductVM: .init(model),
+            openProductVM: .init(model, collateralLoanLandingFlag: collateralLoanLandingFlag),
             editModeState: .inactive,
             model: model,
             cardAction: cardAction,

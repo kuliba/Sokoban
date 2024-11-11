@@ -50,7 +50,8 @@ extension RootViewModelFactory {
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        savingsAccountFlag: SavingsAccountFlag
+        savingsAccountFlag: SavingsAccountFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) -> RootViewModel {
         
         func performOrWaitForActive(
@@ -351,7 +352,8 @@ extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder
+            makeServicePaymentBinder: makeServicePaymentBinder,
+            collateralLoanLandingFlag: collateralLoanLandingFlag
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
@@ -486,6 +488,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             updateInfoStatusFlag: updateInfoStatusFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
@@ -527,7 +530,8 @@ extension ProductProfileViewModel {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -550,7 +554,8 @@ extension ProductProfileViewModel {
                 updateInfoStatusFlag: updateInfoStatusFlag,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-                makeServicePaymentBinder: makeServicePaymentBinder
+                makeServicePaymentBinder: makeServicePaymentBinder,
+                collateralLoanLandingFlag: collateralLoanLandingFlag
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -640,7 +645,8 @@ extension ProductProfileViewModel {
                 },
                 filterState: filterState,
                 rootView: rootView,
-                dismissAction: dismissAction
+                dismissAction: dismissAction,
+                collateralLoanLandingFlag: collateralLoanLandingFlag
             )
         }
     }
@@ -688,6 +694,7 @@ private extension RootViewModelFactory {
         qrViewModelFactory: QRViewModelFactory,
         landingServices: LandingServices,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
@@ -725,6 +732,7 @@ private extension RootViewModelFactory {
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: onRegister,
             bannersBinder: bannersBinder
         )
