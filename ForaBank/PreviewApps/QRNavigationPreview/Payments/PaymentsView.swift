@@ -56,6 +56,9 @@ private extension Payments.Source {
             
         case let .url(url):
             Text("Payments View for url: **\(url.relativeString)**")
+            
+        case let .source(source):
+            Text("Payments View for source: **\(source)**")
         }
     }
 }

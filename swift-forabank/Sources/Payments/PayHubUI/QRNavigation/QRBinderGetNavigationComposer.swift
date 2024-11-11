@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker> {
+public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
 
@@ -41,7 +41,8 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+
     typealias FlowDomain = Domain.FlowDomain
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
@@ -78,14 +79,22 @@ private extension QRBinderGetNavigationComposer {
             completion(.payments(bind(payments, to: notify)))
             
         case let .failure(qrCode):
-            let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
+            let qrFailure = microServices.makeQRFailure(qrCode)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .mapped(mapped):
             getNavigation(mapped, notify, completion)
             
-        default:
+        case let .sberQR(url):
             fatalError()
+            
+        case .url:
+            let qrFailure = microServices.makeQRFailure(nil)
+            completion(.qrFailure(bind(qrFailure, to: notify)))
+            
+        case .unknown:
+            let qrFailure = microServices.makeQRFailure(nil)
+            completion(.qrFailure(bind(qrFailure, to: notify)))
         }
     }
     
@@ -98,7 +107,7 @@ private extension QRBinderGetNavigationComposer {
     ) {
         switch mapped {
         case let .missingINN(qrCode):
-            let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
+            let qrFailure = microServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .mixed(mixed):
@@ -117,8 +126,13 @@ private extension QRBinderGetNavigationComposer {
             let servicePicker = microServices.makeServicePicker(payload)
             completion(.servicePicker(bind(servicePicker, to: notify)))
             
-        default:
-            fatalError()
+        case let .single(payload):
+            let operatorModel = microServices.makeOperatorModel(payload)
+            completion(.operatorModel(operatorModel))
+            
+        case let .source(source):
+            let payments = microServices.makePayments(.source(source))
+            completion(.payments(bind(payments, to: notify)))
         }
     }
 }

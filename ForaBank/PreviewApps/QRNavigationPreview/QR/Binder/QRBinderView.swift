@@ -29,6 +29,9 @@ struct QRBinderView: View {
                         case let .multiplePicker(multiplePicker):
                             MultiplePickerView(model: multiplePicker)
                             
+                        case let .operatorModel(operatorModel):
+                            OperatorModelView(model: operatorModel)
+                            
                         case let .payments(payments):
                             PaymentsView(model: payments)
                             
@@ -81,6 +84,9 @@ extension QRDomain.FlowDomain.State {
             case let .multiplePicker(node):
                 return .multiplePicker(node.model)
                 
+            case let .operatorModel(operatorModel):
+                return .operatorModel(operatorModel)
+                
             case let .payments(node):
                 return .payments(node.model)
                 
@@ -97,6 +103,7 @@ extension QRDomain.FlowDomain.State {
         
         case mixedPicker(MixedPicker)
         case multiplePicker(MultiplePicker)
+        case operatorModel(OperatorModel)
         case payments(Payments)
         case qrFailure(QRFailureDomain.Binder)
         case servicePicker(ServicePicker)
@@ -114,6 +121,9 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
         case let .multiplePicker(multiplePicker):
             return .multiplePicker(.init(multiplePicker))
             
+        case let .operatorModel(operatorModel):
+            return .operatorModel(.init(operatorModel))
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
@@ -129,6 +139,7 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
         
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
+        case operatorModel(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)

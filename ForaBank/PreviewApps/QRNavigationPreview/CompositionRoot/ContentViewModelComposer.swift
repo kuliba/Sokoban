@@ -153,7 +153,7 @@ private extension ContentViewModelComposer {
         )
     }
     
-    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source, ServicePicker>
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailureDomain.Binder, QRMapping, ServicePicker, Source>
     
     private func makeNavigationComposer() -> NavigationComposer {
         
@@ -161,6 +161,7 @@ private extension ContentViewModelComposer {
             microServices: .init(
                 makeMixedPicker: { _ in .init() },
                 makeMultiplePicker: { _ in .init() },
+                makeOperatorModel: { _ in .init() },
                 makePayments: makePayments,
                 makeQRFailure: qrFailureBinderComposer.compose,
                 makeServicePicker: { _ in .init() }
@@ -188,7 +189,7 @@ private extension ContentViewModelComposer {
                     mixedPicker: { $0.scanQRPublisher },
                     multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
-                    qrFailure: { _ in Empty().eraseToAnyPublisher() },
+                    qrFailure: { $0.scanQRPublisher },
                     servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
@@ -205,7 +206,20 @@ private extension ContentViewModelComposer {
             
         case let .details(qrCode):
             return .init(source: .details(qrCode))
+            
+        case let .source(source):
+            return .init(source: .source(source))
         }
+    }
+}
+
+extension QRFailureDomain.Binder {
+    
+    var scanQRPublisher: AnyPublisher<Void, Never> {
+        
+        flow.$state
+            .compactMap(\.navigation?.scanQR)
+            .eraseToAnyPublisher()
     }
 }
 

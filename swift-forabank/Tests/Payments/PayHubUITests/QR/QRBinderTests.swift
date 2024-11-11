@@ -13,39 +13,10 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias _NavigationComposer = _QRBinderGetNavigationComposer<_QRResult, _QRNavigation>
-    
-    struct _QRResult: Equatable {
-        
-        let value: String
-    }
-    
-    func make_QRResult(
-        _ value: String = anyMessage()
-    ) -> _QRResult {
-        
-        return .init(value: value)
-    }
-    
-    struct _QRNavigation: Equatable {
-        
-        let value: String
-    }
-    
-    func make_QRNavigation(
-        _ value: String = anyMessage()
-    ) -> _QRNavigation {
-        
-        return .init(value: value)
-    }
-    
-    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
-    typealias MappedNavigationComposerMicroServices = MappedNavigationComposer.MicroServices
-    
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
@@ -59,10 +30,13 @@ class QRBinderTests: XCTestCase {
     typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMultiplePicker = CallSpy<MakeMultiplePickerPayload, MultiplePicker>
     
+    typealias SinglePayload = PayHub.SinglePayload<Operator, QRCode, QRMapping>
+    typealias MakeOperatorModel = CallSpy<SinglePayload, OperatorModel>
+    
     typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
-    typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
+    typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
     
     typealias MakeServicePicker = CallSpy<ProviderPayload, ServicePicker>
     
@@ -251,6 +225,7 @@ class QRBinderTests: XCTestCase {
         case outside(Outside)
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
+        case operatorModel(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
@@ -282,6 +257,9 @@ class QRBinderTests: XCTestCase {
                 
             case let .multiplePicker(node):
                 return .multiplePicker(.init(node.model))
+                
+            case let .operatorModel(operatorModel):
+                return .operatorModel(.init(operatorModel))
                 
             case let .payments(node):
                 return .payments(.init(node.model))
@@ -318,6 +296,26 @@ class QRBinderTests: XCTestCase {
     }
     
     func makeQR() -> QR {
+        
+        return .init()
+    }
+    
+    func makeSinglePayload(
+        `operator`: QRBinderTests.Operator? = nil,
+        qrCode: QRBinderTests.QRCode? = nil,
+        qrMapping: QRBinderTests.QRMapping? = nil
+    ) -> SinglePayload {
+        
+        return .init(
+            operator: `operator` ?? makeOperator(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
+    }
+    
+    final class OperatorModel {}
+    
+    func makeOperatorModel() -> OperatorModel {
         
         return .init()
     }
@@ -432,7 +430,7 @@ class QRBinderTests: XCTestCase {
         
         private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
         
-        var isClosed: AnyPublisher<Bool, Never> {
+        var isLoading: AnyPublisher<Bool, Never> {
             
             isLoadingSubject.eraseToAnyPublisher()
         }

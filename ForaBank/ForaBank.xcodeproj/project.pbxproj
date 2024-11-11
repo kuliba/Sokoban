@@ -1275,6 +1275,8 @@
 		2A8B7E0C2CDE545500D4D202 /* MultiplePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E0B2CDE545500D4D202 /* MultiplePickerView.swift */; };
 		2A8B7E122CDF25BC00D4D202 /* ServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E0E2CDF256B00D4D202 /* ServicePicker.swift */; };
 		2A8B7E132CDF25BC00D4D202 /* ServicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E102CDF257A00D4D202 /* ServicePickerView.swift */; };
+		2A8B7E172CDF8DA200D4D202 /* OperatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E152CDF8D6C00D4D202 /* OperatorModel.swift */; };
+		2A8B7E192CDF8E8300D4D202 /* OperatorModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E182CDF8E8300D4D202 /* OperatorModelView.swift */; };
 		2A8CC23F2B299CC200191B8E /* RootViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */; };
 		2A8CC2432B29B4C100191B8E /* RootViewFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2422B29B4C100191B8E /* RootViewFactoryComposer.swift */; };
 		2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2442B29D44D00191B8E /* ImageCache.swift */; };
@@ -4880,6 +4882,8 @@
 		2A8B7E0B2CDE545500D4D202 /* MultiplePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePickerView.swift; sourceTree = "<group>"; };
 		2A8B7E0E2CDF256B00D4D202 /* ServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePicker.swift; sourceTree = "<group>"; };
 		2A8B7E102CDF257A00D4D202 /* ServicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerView.swift; sourceTree = "<group>"; };
+		2A8B7E152CDF8D6C00D4D202 /* OperatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorModel.swift; sourceTree = "<group>"; };
+		2A8B7E182CDF8E8300D4D202 /* OperatorModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorModelView.swift; sourceTree = "<group>"; };
 		2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ServiceCategories.xctestplan; sourceTree = "<group>"; };
 		2A8C30FC2C6B2CA1009EB5F7 /* ServiceCategoriesBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ServiceCategoriesBackend.xctestplan; sourceTree = "<group>"; };
 		2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactory.swift; sourceTree = "<group>"; };
@@ -9432,6 +9436,7 @@
 				2ABBD6BC2CDD1BC80078E977 /* MixedPicker */,
 				2A8B7E082CDE528700D4D202 /* MultiplePicker */,
 				2A65AAE02CD1287B001AB123 /* Payments */,
+				2A8B7E142CDF8D6200D4D202 /* OperatorModel */,
 				2A632C692CD118DF00AF3B6B /* QR */,
 				2AA3C3772CDB79C000B4C220 /* QRFailure */,
 				2A8B7E0D2CDF255400D4D202 /* ServicePicker */,
@@ -11642,6 +11647,15 @@
 				2A8B7E102CDF257A00D4D202 /* ServicePickerView.swift */,
 			);
 			path = ServicePicker;
+			sourceTree = "<group>";
+		};
+		2A8B7E142CDF8D6200D4D202 /* OperatorModel */ = {
+			isa = PBXGroup;
+			children = (
+				2A8B7E152CDF8D6C00D4D202 /* OperatorModel.swift */,
+				2A8B7E182CDF8E8300D4D202 /* OperatorModelView.swift */,
+			);
+			path = OperatorModel;
 			sourceTree = "<group>";
 		};
 		2A8DF0E12CC8CF5400FB76D4 /* Transfers */ = {
@@ -20554,6 +20568,8 @@
 				2A8B7E132CDF25BC00D4D202 /* ServicePickerView.swift in Sources */,
 				2ABBD6BF2CDD1BEC0078E977 /* MixedPicker.swift in Sources */,
 				2A30B0982CCE2BA4006697E1 /* QRNavigationPreviewApp.swift in Sources */,
+				2A8B7E172CDF8DA200D4D202 /* OperatorModel.swift in Sources */,
+				2A8B7E192CDF8E8300D4D202 /* OperatorModelView.swift in Sources */,
 				2AA3C37F2CDB7D6700B4C220 /* QRBinderView.swift in Sources */,
 				2ABBD6C52CDD35650078E977 /* MixedPickerView.swift in Sources */,
 				2A65AAED2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift in Sources */,
