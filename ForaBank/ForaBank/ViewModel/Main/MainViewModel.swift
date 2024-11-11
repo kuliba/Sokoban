@@ -1100,17 +1100,17 @@ extension MainViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:
             handleUnknownQR()
             
-        case let .mixed(mixed, qrCode, qrMapping):
-            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+        case let .mixed(mixed):
+            makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
             
-        case let .multiple(multipleOperators, qrCode, qrMapping):
-            searchOperators(multipleOperators, with: qrCode)
+        case let .multiple(multiple):
+            searchOperators(multiple.operators, with: multiple.qrCode)
             
         case let .none(qrCode):
             payByInstructions(with: qrCode)

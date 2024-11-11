@@ -13,7 +13,7 @@ struct PaymentsView: View {
     
     var body: some View {
         
-        Text("Payments View for **\(model.url.relativeString)**")
+        model.source.text
             .foregroundColor(.secondary)
             .padding(.top)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -23,8 +23,46 @@ struct PaymentsView: View {
                 
                 ToolbarItem(placement: .topBarLeading) {
                     
-                    Button("Close", action: model.close)
+                    Button(action: model.close) {
+                        
+                        Image(systemName: "chevron.left")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    
+                    Button(action: model.scanQR) {
+                        
+                        Image(systemName: "qrcode.viewfinder")
+                    }
                 }
             }
+    }
+}
+
+private extension Payments.Source {
+    
+    var text: Text {
+        
+        switch self {
+        case .nothing:
+            Text("Payments View with no source.")
+            
+        case let .qrCode(qrCode):
+            Text("Payments View for QR Code **\(qrCode.value)**")
+            
+        case let .url(url):
+            Text("Payments View for url: **\(url.relativeString)**")
+        }
+    }
+}
+
+#Preview {
+    
+    NavigationView {
+        
+        PaymentsView(model: .init(
+            qrCode: .init(value: .init(UUID().uuidString.prefix(6)))
+        ))
     }
 }

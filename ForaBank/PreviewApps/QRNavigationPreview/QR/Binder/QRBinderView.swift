@@ -23,11 +23,17 @@ struct QRBinderView: View {
                     content: {
                         
                         switch $0 {
+                        case let .mixedPicker(mixedPicker):
+                            MixedPickerView(model: mixedPicker)
+                            
+                        case let .multiplePicker(multiplePicker):
+                            MultiplePickerView(model: multiplePicker)
+                            
                         case let .payments(payments):
                             PaymentsView(model: payments)
                             
                         case let .qrFailure(qrFailure):
-                            QRFailureView(qrFailure: qrFailure)
+                            QRFailureBinderView(binder: qrFailure)
                         }
                     }
                 )
@@ -61,21 +67,32 @@ extension QRDomain.FlowDomain.State {
     var destination: Destination? {
         
         switch navigation {
-        case .none:
+        case .none, .outside:
             return nil
             
-        case let .payments(node):
-            return .payments(node.model)
-            
-        case let .qrFailure(qrFailure):
-            return .qrFailure(qrFailure)
+        case let .qrNavigation(qrNavigation):
+            switch qrNavigation {
+            case let .mixedPicker(node):
+                return .mixedPicker(node.model)
+                
+            case let .multiplePicker(node):
+                return .multiplePicker(node.model)
+                
+            case let .payments(node):
+                return .payments(node.model)
+                
+            case let .qrFailure(node):
+                return .qrFailure(node.model)
+            }
         }
     }
     
     enum Destination {
         
+        case mixedPicker(MixedPicker)
+        case multiplePicker(MultiplePicker)
         case payments(Payments)
-        case qrFailure(QRFailure)
+        case qrFailure(QRFailureDomain.Binder)
     }
 }
 
@@ -84,6 +101,12 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .mixedPicker(mixedPicker):
+            return .mixedPicker(.init(mixedPicker))
+            
+        case let .multiplePicker(multiplePicker):
+            return .multiplePicker(.init(multiplePicker))
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
@@ -94,6 +117,8 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case mixedPicker(ObjectIdentifier)
+        case multiplePicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
     }

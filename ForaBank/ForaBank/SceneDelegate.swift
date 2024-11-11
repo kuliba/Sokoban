@@ -7,8 +7,9 @@
 
 import Combine
 import CombineSchedulers
-import UIKit
 import MarketShowcase
+import PayHubUI
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -18,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private lazy var rootViewModel = {
+    private lazy var binder: RootViewDomain.Binder = {
         
         let rootViewModel = factory.makeRootViewModel(
             featureFlags,
@@ -27,9 +28,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         bind(rootViewModel: rootViewModel)
         
-        return rootViewModel
+        let getNavigation = factory.makeGetRootNavigation(featureFlags)
+        let composer = RootViewBinderComposer(getNavigation: getNavigation)
+        
+        return composer.compose(with: rootViewModel)
     }()
-
+    
     private lazy var rootViewFactory = factory.makeRootViewFactory(featureFlags)
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -38,7 +42,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         let rootViewController = RootViewHostingViewController(
-            with: rootViewModel,
+            with: binder,
             rootViewFactory: rootViewFactory
         )
         window?.rootViewController = rootViewController
@@ -50,7 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                          selector:#selector(dismissAll),
                          name: .dismissAllViewAndSwitchToMainTab,
                          object: nil)
-    
+        
         legacyNavigationBarBackground()
         setAlertAppearance()
         
@@ -61,10 +65,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    //FIXME: remove after refactor paymnets
+    // FIXME: remove after refactor payments
     @objc func dismissAll() {
-        self.rootViewModel.action.send(RootViewModelAction.DismissAll())
-        self.rootViewModel.action.send(RootViewModelAction.SwitchTab(tabType: .main))
+        
+        self.binder.content.action.send(RootViewModelAction.DismissAll())
+        self.binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
 }
 
