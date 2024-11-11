@@ -58,7 +58,7 @@ public extension RootViewDomain {
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    enum Select {
+    enum Select: Equatable {
         
         case scanQR
     }
