@@ -21,6 +21,11 @@ extension SegmentedBarView {
         
         private let model: Model
         
+        var sortedValues: [(key: ProductStatementMerchantGroup, Double)] {
+            
+            values.sorted(by: { $0.value > $1.value })
+        }
+        
         init(
             values: [ProductStatementMerchantGroup: Double],
             titleLabel: String,
@@ -131,53 +136,64 @@ extension SegmentedBarView {
 
 //MARK: - View
 
+private extension SegmentedBarView {
+
+    @ViewBuilder
+    func bar(width: CGFloat) -> some View {
+        
+        if viewModel.totalValue != 0 {
+                
+            bar(coef: width / viewModel.totalValue)
+        
+        } else {
+            
+            RoundedRectangle(cornerRadius: 8)
+                .frame(width: width)
+                .foregroundColor(.mainColorsGrayLightest)
+        }
+    }
+    
+    @ViewBuilder
+    func bar(coef: CGFloat) -> some View {
+        
+        HStack(alignment: .center, spacing: 0) {
+    
+            ForEach(viewModel.sortedValues, id: \.key) { key, value in
+                
+                key.color
+                    .frame(width: value * coef)
+                    .animation(.easeInOut, value: value)
+            }
+        }
+        .cornerRadius(8)
+    }
+}
+
 struct SegmentedBarView: View {
     
     let viewModel: SegmentedBarView.ViewModel
     
     var body: some View {
         
-        GeometryReader { geometry in
+        VStack {
             
-            VStack {
+            HStack {
                 
-                HStack {
-                
-                    Text(viewModel.titleLabel)
-                        .accessibilityIdentifier("spendingTitleMonth")
-                    Spacer()
-                    Text(viewModel.totalValueFormatted)
-                        .accessibilityIdentifier("spendingAmount")
-                }
-                .foregroundColor(.textSecondary)
-                .font(.textH4M16240())
-                .padding(.bottom, 6)
-            
-                if viewModel.totalValue != 0 {
-                    
-                    ZStack {
-                
-                        HStack(alignment: .center, spacing: 0) {
-                    
-                            ForEach(viewModel
-                                .values.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
-                        
-                                    Rectangle()
-                                        .frame(width: geometry.size.width
-                                            * CGFloat(value / viewModel.totalValue),height: 8)
-                                        .foregroundColor(key.color)
-                                        .animation(.easeInOut)
-                            }
-                        }
-                    }.cornerRadius(8)
-                
-                } else {
-                    
-                    RoundedRectangle(cornerRadius: 8)
-                        .frame(width: geometry.size.width, height: 8)
-                        .foregroundColor(.mainColorsGrayLightest)
-                }
+                Text(viewModel.titleLabel)
+                    .accessibilityIdentifier("spendingTitleMonth")
+                Spacer()
+                Text(viewModel.totalValueFormatted)
+                    .accessibilityIdentifier("spendingAmount")
             }
+            .foregroundColor(.textSecondary)
+            .font(.textH4M16240())
+            .padding(.bottom, 6)
+            
+            GeometryReader { geometry in
+                
+                bar(width: geometry.size.width)
+            }
+            .frame(height: 8)
         }
     }
 }
