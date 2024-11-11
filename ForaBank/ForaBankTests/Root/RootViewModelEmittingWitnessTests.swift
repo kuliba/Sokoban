@@ -14,31 +14,53 @@ extension RootViewModel {
     
     var selectEmitting: AnyPublisher<Select, Never> {
         
-        let mainViewSections = tabsViewModel.mainViewModel.sections
-        let mainViewSectionPublishers = mainViewSections
-            .map(\.action)
-            .map { $0.compactMap { $0 as? RootEvent }
-                .eraseToAnyPublisher() }
+        return Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
+    }
+}
+
+private extension RootViewModel {
+    
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        let fast = mainViewSections
-            .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
-        let mainViewQRPublishers = fast.map(\.rootEventPublisher)
+        mainViewRootEventPublishers + paymentsTransfersRootEventPublishers
+    }
+    
+    private var mainViewRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        var publishers = mainViewSectionPublishers + mainViewQRPublishers
+        tabsViewModel.mainViewModel.rootEventPublishers
+    }
+    
+    private var paymentsTransfersRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         switch tabsViewModel.paymentsModel {
         case let .legacy(legacy):
-            let legacyQRPublishers = legacy.sections
-                .filter { $0.type == .payments }
-                .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
-                .map(\.rootEventPublisher)
-            publishers.append(contentsOf: legacyQRPublishers)
+            return legacy.rootEventPublishers
             
         default:
-            break
+            return []
         }
+    }
+}
+
+private extension MainViewModel {
+
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        return Publishers.MergeMany(publishers).eraseToAnyPublisher()
+        explicitRootEventPublishers + fastRootEventPublishers
+    }
+
+    private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+     
+        sections
+            .map(\.action)
+            .map { $0.compactMap { $0 as? RootEvent }.eraseToAnyPublisher() }
+    }
+
+    private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        sections
+            .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
+            .map(\.rootEventPublisher)
     }
 }
 
@@ -62,6 +84,17 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
         case .byQr: return .scanQR
         default:    return nil
         }
+    }
+}
+
+private extension PaymentsTransfersViewModel {
+    
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        sections
+            .filter { $0.type == .payments }
+            .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
+            .map(\.rootEventPublisher)
     }
 }
 
@@ -130,7 +163,7 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [.scanQR])
     }
     
-    func test_init_shouldEmitScanQROnPaymentsTransfersLegacyPaymentsSectionQRButtonAction() throws {
+    func test_init_shouldEmitScanQROnLegacyPaymentsTransfersPaymentsSectionQRButtonAction() throws {
         
         let (sut, spy) = makeSUT()
         
