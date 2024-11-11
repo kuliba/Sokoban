@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import UIPrimitives
+import CalendarUI
 
 //MARK: - ViewModel
 
@@ -30,21 +31,34 @@ extension ProductProfileHistoryView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(productId: ProductData.ID, state: Content, model: Model = .emptyMock,
-                      segmentBarVM: SegmentedBarView.ViewModel? = .spending) {
+        private let filter: () -> FilterState?
+        
+        init(
+            productId: ProductData.ID,
+            state: Content,
+            model: Model = .emptyMock,
+            segmentBarVM: SegmentedBarView.ViewModel? = .spending,
+            filter: @escaping () -> FilterState?
+        ) {
             
             self.productId = productId
             self.content = state
             self.model = model
             self.segmentBarViewModel = segmentBarVM
+            self.filter = filter
         }
         
-        init(_ model: Model, productId: ProductData.ID) {
+        init(
+            _ model: Model,
+            productId: ProductData.ID,
+            filter: @escaping () -> FilterState?
+        ) {
             
             self.productId = productId
             self.content = .loading
             self.model = model
- 
+            self.filter = filter
+            
             bind()
             action.send(ProductProfileHistoryViewModelAction.DownloadLatest())
         }
@@ -57,11 +71,113 @@ extension ProductProfileHistoryView {
                     
                     switch action {
                     case _ as ProductProfileHistoryViewModelAction.DownloadLatest:
-                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .latest))
+                        model.action.send(ModelAction.Statement.List.Request(
+                            productId: productId,
+                            direction: .latest,
+                            operationType: nil,
+                            category: nil
+                        ))
                         
                     case _ as ProductProfileHistoryViewModelAction.DidTapped.More:
-                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest))
+                        model.action.send(ModelAction.Statement.List.Request(
+                            productId: productId,
+                            direction: .eldest,
+                            operationType: nil,
+                            category: nil
+                        ))
                         
+                    case let payload as ProductProfileHistoryViewModelAction.Filter:
+                        guard let storage = model.statements.value[id] else {
+                            return
+                        }
+                     
+                        Task.detached(priority: .high) { [self] in
+                            
+                            var storageData: [ProductStatementData]
+                            let filter = filter()
+                            storageData = storage.statements
+                            
+                            if filter?.filter.selectedTransaction != nil {
+                                
+                                switch filter?.filter.selectedTransaction {
+                                case .debit:
+                                    storageData = storage.statements.filter({
+                                        $0.isDebitType
+                                    })
+                                case .credit:
+                                    storageData = storage.statements.filter({
+                                        $0.isCreditType
+                                    })
+                                case .none:
+                                    break
+                                }
+                            }
+                            
+                            if payload.filterState?.filter.selectedPeriod != nil, payload.filterState?.filter.selectDates != nil {
+                                
+                                switch payload.filterState?.filter.selectedPeriod {
+                                case .week:
+                                    storageData = storageData.filter({
+                                        $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                    })
+                                    
+                                case .month:
+                                    storageData = storageData.filter({
+                                        $0.dateValue.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                    })
+                                case .dates:
+                                    storageData = storageData.filter({
+                                        $0.dateValue.isBetweenStartDate(payload.period.lowerDate ?? Date(), endDateInclusive: payload.period.upperDate ?? Date())
+                                    })
+                                case .none:
+                                    break
+                                }
+                            }
+                            
+                            if let services = filter?.filter.selectedServices, services.count >= 1 {
+                                
+                                storageData = storageData.filter({ item in
+                                    return item.groupName.contained(in: filter?.filter.selectedServices.sorted() ?? [])
+                                })
+                                
+                            }
+                            
+                            if let lowerDate = payload.period.lowerDate,
+                               let upperDate = payload.period.upperDate {
+                                
+                                storageData = storageData.filter({
+                                    $0.dateValue.localDate().isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
+                                })
+                            }
+                            
+                            Task { @MainActor in
+                                
+                                updateContent(with: .idle, storage: storage)
+                                
+                            }
+                            
+                            let update = await reduce(
+                                content: content,
+                                statements: storageData,
+                                images: model.images.value,
+                                model: model
+                            ) { [weak self] statementId in
+                                {
+                                    self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId))
+                                }
+                            }
+                            
+                            Task { @MainActor [storageData] in
+                                
+                                updateContent(with: update.groups)
+                                
+                                updateSegmentedBar(
+                                    productId: id,
+                                    statements: storageData, 
+                                    selectRange: filter?.filter.selectDates ?? filter?.calendar.selectedRange
+                                )
+                            }
+                        }
                     default:
                         break
                     }
@@ -76,24 +192,100 @@ extension ProductProfileHistoryView {
                         return
                     }
                     
-                    // isMapped = false  это согласованный костыль
-                    updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
-                    
                     Task.detached(priority: .high) { [self] in
                         
-                        let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
-                            { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
+                        var storageStatements: [ProductStatementData] = storage.statements
+                        if let filter = filter(),
+                           (filter.calendar.selectedRange != nil || filter.filter.selectDates != nil) {
+                            
+                            if let lowerDate = filter.calendar.range?.lowerDate,
+                               let upperDate = filter.calendar.range?.upperDate {
+                                
+                                storageStatements = storage.statements.filter({
+                                    
+                                    print($0.dateValue.localDate())
+                                    return $0.dateValue.localDate().isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
+                                })
+                            }
+                            if filter.filter.selectedTransaction != nil {
+                                
+                                switch filter.filter.selectedTransaction {
+                                case .debit:
+                                    storageStatements = storageStatements.filter({
+                                        $0.isDebitType
+                                    })
+                                case .credit:
+                                    storageStatements = storageStatements.filter({
+                                        $0.isCreditType
+                                    })
+                                case .none:
+                                    break
+                                }
+                            }
+
+                            if filter.filter.selectDates != nil,
+                                let selectPeriod = filter.filter.selectedPeriod {
+                                
+                                switch selectPeriod {
+                                case .week:
+                                    storageStatements = storageStatements.filter({
+                                        $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                    })
+                                    
+                                case .month:
+                                    storageStatements = storageStatements.filter({
+                                        $0.dateValue.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                    })
+                                case .dates:
+                                    storageStatements = storageStatements.filter({
+                                        
+                                        $0.dateValue.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
+                                    })
+                                }
+                            }
+                            
+                            if filter.filter.selectedServices.count >= 1 {
+                                
+                                storageStatements = storageStatements.filter({ item in
+                                    return item.groupName.contained(in: filter.filter.selectedServices.sorted())
+                                })
+                            }
+                        }
+                        
+                        // isMapped = false  это согласованный костыль
+                        updateSegmentedBar(
+                            productId: id,
+                            statements: storageStatements,
+                            selectRange: filter()?.filter.selectDates ?? filter()?.calendar.selectedRange,
+                            isMapped: false
+                        )
+                        
+                        let update = await reduce(
+                            content: content,
+                            statements: storageStatements,
+                            images: model.images.value,
+                            model: model
+                        ) { [weak self] statementId in
+                            {
+                                self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId))
+                            }
                         }
                         
                         await MainActor.run {
-    
+                            
                             updateContent(with: update.groups)
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
-                                updateContent(with: state, storage: storage)
-                            }
+                                if filter()?.filter.selectDates?.lowerBound != nil || filter()?.calendar.range?.upperDate != nil {
+                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerBound ?? Date(), end: filter()?.filter.selectDates?.upperBound ?? Date())), storage: storage)
 
+                                } else {
+                                    updateContent(with: state, storage: storage)
+
+                                }
+                            }
+                            
                             if update.downloadImagesIds.isEmpty == false {
                                 
                                 model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: update.downloadImagesIds))
@@ -139,8 +331,12 @@ extension ProductProfileHistoryView {
                 }.store(in: &bindings)
         }
         
-        func updateSegmentedBar(productId: ProductData.ID,
-                                statements: [ProductStatementData], isMapped: Bool = true ) {
+        func updateSegmentedBar(
+            productId: ProductData.ID,
+            statements: [ProductStatementData],
+            selectRange: ClosedRange<Date>?,
+            isMapped: Bool = true
+        ) {
             
             guard let product = model.product(productId: productId) else { return }
                 
@@ -164,70 +360,99 @@ extension ProductProfileHistoryView {
             case .loan: return
             }
             
-            let statementFilteredPeriod = statementFilteredOperation
-                .filter { Calendar.current.dateComponents([.year, .month], from: $0.dateValue)
-                    == Calendar.current.dateComponents([.year, .month], from: Date()) }
+            var statementFilteredPeriod = statementFilteredOperation
+            
+            if let selectRange {
+                
+                statementFilteredPeriod = statementFilteredPeriod
+                    .filter {
+                        $0.dateValue.isBetweenStartDate(selectRange.lowerBound, endDateInclusive: selectRange.upperBound)
+                    }
+                
+            } else {
+                statementFilteredPeriod = statementFilteredPeriod
+                    .filter { Calendar.current.isInMonth($0.dateValue)}
+            }
             
             if isMapped {
                 
                 let dict = statementFilteredPeriod
-                            .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
-                                if let documentAmount = $1.documentAmount {
-                                    
-                                    $0[.init($1.groupName), default: 0] += documentAmount
-                                }
-                            }
-                
-                segmentBarViewModel = .init(mappedValues: dict,
-                                        productType: product.productType,
-                                        currencyCode: product.currency,
-                                        model: model)
-            } else {
-                
-                let dict = statementFilteredPeriod
-                            .reduce(into: [ String: Double]()) {
-                                if let documentAmount = $1.documentAmount {
-                                    
-                                    $0[$1.groupName, default: 0] += documentAmount
-                                }
-                            }
-                
-                segmentBarViewModel = .init(stringValues: dict,
-                                        productType: product.productType,
-                                        currencyCode: product.currency,
-                                        model: model)
-                
-            }
-        }
-        
-        func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {
-            
-            if groups.isEmpty == false {
-
-                if case .list(let historyListViewModel) = content {
-
-                    withAnimation {
-                        
-                        historyListViewModel.groups = groups
+                    .reduce(into: [ProductStatementMerchantGroup: Double]()) {
+                        if let documentAmount = $1.documentAmount {
+                            
+                            $0[.init($1.groupName), default: 0] += documentAmount
+                        }
                     }
+                
+                Task { @MainActor in
                     
-                } else {
-
-                    let listViewModel = HistoryListViewModel(expences: nil, latestUpdate: nil, groups: groups, eldestUpdate: nil)
-                   
-                    withAnimation {
-                        
-                        content = .list(listViewModel)
-                    }
+                    segmentBarViewModel = .init(
+                        mappedValues: dict,
+                        productType: product.productType,
+                        currencyCode: product.currency,
+                        selectRange: selectRange,
+                        model: model
+                    )
                 }
                 
             } else {
                 
-                content = .empty(.init())
+                let dict = statementFilteredPeriod
+                    .reduce(into: [ String: Double]()) {
+                        if let documentAmount = $1.documentAmount {
+                            
+                            $0[$1.groupName, default: 0] += documentAmount
+                        }
+                    }
+                
+                Task { @MainActor in
+                    
+                    segmentBarViewModel = .init(
+                        stringValues: dict,
+                        productType: product.productType,
+                        currencyCode: product.currency,
+                        selectRange: selectRange,
+                        model: model
+                    )
+                }
+                
             }
         }
         
-        func updateContent(with state: ProductStatementsUpdateState, storage: ProductStatementsStorage) {
+        func updateContent(
+            with groups: [HistoryListViewModel.DayGroupViewModel]
+        ) {
+            guard !groups.isEmpty else {
+                return content = .empty(.init())
+            }
+            
+            if case let .list(historyListViewModel) = content {
+                
+                withAnimation {
+                    
+                    historyListViewModel.groups = groups
+                }
+                
+            } else {
+                
+                let listViewModel = HistoryListViewModel(
+                    expences: nil,
+                    latestUpdate: nil,
+                    groups: groups,
+                    eldestUpdate: nil
+                )
+                
+                withAnimation {
+                    
+                    content = .list(listViewModel)
+                }
+            }
+        }
+        
+        func updateContent(
+            with state: ProductStatementsUpdateState,
+            storage: ProductStatementsStorage
+        ) {
             
             withAnimation {
                 
@@ -236,17 +461,23 @@ extension ProductProfileHistoryView {
                     switch content {
                     case let .list(listViewModel):
                         listViewModel.latestUpdate = nil
+                        let isFilterApplied = (filter()?.filter.isFilterApplied == true)
                         
-                        if storage.isHistoryComplete == false {
+                        if storage.hasMoreHistoryToShow,    
+                           !isFilterApplied {
                             
-                            listViewModel.eldestUpdate = .more(.init(title: "Смотреть еще", style: .gray, action: {[weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())}))
+                            listViewModel.eldestUpdate = .more(.init(
+                                title: "Смотреть еще",
+                                style: .red,
+                                action: { [weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())} )
+                            )
+                            
                         } else {
                             
                             listViewModel.eldestUpdate = nil
                         }
-
                     default:
-                        content = .empty(.init())
+                        break
                     }
                     
                 case let .downloading(downloadingType):
@@ -260,6 +491,10 @@ extension ProductProfileHistoryView {
                         case .eldest:
                             listViewModel.latestUpdate = nil
                             listViewModel.eldestUpdate = .updating
+                            
+                        case let .custom(start: startDate, end: endDate):
+                            listViewModel.latestUpdate = nil
+                            listViewModel.eldestUpdate = nil
                         }
        
                     default:
@@ -284,6 +519,18 @@ extension ProductProfileHistoryView {
                 }
             }
         }
+    }
+}
+
+extension Calendar {
+ 
+    func isInMonth(
+        _ date: Date,
+        of currentDate: Date = .init()
+    ) -> Bool {
+        
+        dateComponents([.year, .month], from: date)
+            == dateComponents([.year, .month], from: currentDate)
     }
 }
 
@@ -327,7 +574,11 @@ extension ProductProfileHistoryView.ViewModel {
             let date = group.value[0].statement.date
             let dateString = groupDateFormatted(date: date)
             
-            groupsResult.append(HistoryListViewModel.DayGroupViewModel(id: group.key, title: dateString, operations: group.value))
+            groupsResult.append(HistoryListViewModel.DayGroupViewModel(
+                id: group.key,
+                title: dateString,
+                operations: group.value
+            ))
         }
         
         return (groupsResult, operationsUpdateResult.downloadImagesIds)
@@ -391,9 +642,31 @@ enum ProductProfileHistoryViewModelAction {
     }
     
     struct DownloadLatest: Action {}
+    
+    struct Filter: Action {
+        
+        let filterState: FilterState?
+        let period: (lowerDate: Date?, upperDate: Date?)
+    }
 }
 
 //MARK: - Types
+
+extension ProductProfileHistoryView.ViewModel.Content {
+    
+    var amounts: [Double]? {
+        guard case let .list(list) = self else { return nil }
+        return list.expences?.amounts
+    }
+}
+
+extension ProductProfileViewModel {
+
+    var amounts: [Double]? {
+     
+        history?.content.amounts
+    }
+}
 
 extension ProductProfileHistoryView.ViewModel {
     
@@ -429,7 +702,12 @@ extension ProductProfileHistoryView.ViewModel {
         @Published var groups: [DayGroupViewModel]
         @Published var eldestUpdate: EldestUpdateState?
         
-        init(expences: MonthExpencesViewModel?, latestUpdate: LatestUpdateState?, groups: [DayGroupViewModel], eldestUpdate: EldestUpdateState?) {
+        init(
+            expences: MonthExpencesViewModel?,
+            latestUpdate: LatestUpdateState?,
+            groups: [DayGroupViewModel],
+            eldestUpdate: EldestUpdateState?
+        ) {
             
             self.expences = expences
             self.latestUpdate = latestUpdate
@@ -477,7 +755,7 @@ extension ProductProfileHistoryView.ViewModel {
             
             class Operation: Identifiable, ObservableObject {
                 
-                var id: ProductStatementData.ID { statement.id }
+                var id: Int { statement.id }
                 let statement: StatementBasicData
                 let title: String
                 @Published var image: Image?
@@ -521,11 +799,15 @@ extension ProductProfileHistoryView.ViewModel {
                 
                 struct StatementBasicData {
      
-                    let id: ProductStatementData.ID
+                    let id: Int
                     let date: Date
                     let imageId: String
                     
-                    internal init(id: ProductStatementData.ID, date: Date, imageId: String) {
+                    internal init(
+                        id: Int,
+                        date: Date,
+                        imageId: String
+                    ) {
                         
                         self.id = id
                         self.date = date
@@ -534,7 +816,12 @@ extension ProductProfileHistoryView.ViewModel {
                     
                     init(statement: ProductStatementData) {
                         
-                        self.id = statement.id
+                        var hasher = Hasher()
+                        hasher.combine(statement.id)
+                        hasher.combine(statement.dateValue)
+                        hasher.combine(statement.operationType)
+                        
+                        self.id = hasher.finalize()
                         self.date = statement.dateValue
                         self.imageId = statement.md5hash
                     }
@@ -579,13 +866,17 @@ private extension ProductStatementData {
 struct ProductProfileHistoryView: View {
     
     @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel
+    let makeHistoryButton: (Bool) -> HistoryButtonView?
     
     var body: some View {
         
-        VStack {
+        LazyVStack {
             
-            HeaderView(viewModel: viewModel.header)
-                .padding(.bottom, 15)
+            HeaderView(
+                viewModel: viewModel.header,
+                makeHistoryButton: makeHistoryButton(viewModel.segmentBarViewModel != nil)
+            )
+            .padding(.bottom, 15)
             
             switch viewModel.content {
             case .empty(let emptyListViewModel):
@@ -593,21 +884,20 @@ struct ProductProfileHistoryView: View {
                     .padding(.top, 20)
                 
             case let .list(listViewModel):
-                VStack(spacing: 64) {
+                
+                if let segmentedVM = viewModel.segmentBarViewModel {
                     
-                    if let segmentedVM = viewModel.segmentBarViewModel {
-                        
-                        SegmentedBarView(viewModel: segmentedVM)
-                            .padding(.vertical, 5)
-                    }
-                    ListView(viewModel: listViewModel)
+                    SegmentedBarView(viewModel: segmentedVM)
+                        .padding(.vertical, 5)
+                        .padding(.bottom, 64)
                 }
+                
+                ListView(viewModel: listViewModel)
                 
             case .loading:
                 LoadingView()
             }
-            
-        }.padding(.horizontal, 20)
+        }
     }
 }
 
@@ -618,15 +908,18 @@ extension ProductProfileHistoryView {
     struct HeaderView: View {
         
         let viewModel: ProductProfileHistoryView.ViewModel.HeaderViewModel
-        
+        let makeHistoryButton: HistoryButtonView?
+
         var body: some View {
             
             HStack(alignment: .center) {
                 
                 Text(viewModel.title)
                     .font(Font.system(size: 22, weight: .bold))
-                
+                                
                 Spacer()
+                
+                makeHistoryButton
                 
                 // temporally off
                 /*
@@ -686,7 +979,7 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            LazyVStack {
+            Group {
                 
                 //TODO: expences view
                 
@@ -704,7 +997,9 @@ extension ProductProfileHistoryView {
                 ForEach(viewModel.groups) { groupViewModel in
                     
                     ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
-                        .padding(.bottom, 32)
+                        .background(Color.mainColorsGrayLightest)
+                        .cornerRadius(12)
+                        .padding(.bottom, 14)
                 }
                 
                 if let eldestUpdate = viewModel.eldestUpdate {
@@ -733,7 +1028,6 @@ extension ProductProfileHistoryView {
                 Text(viewModel.title)
                     .font(.textBodyMSb14200())
                     .foregroundColor(.textSecondary)
-                    .padding(.bottom, 16)
                     .accessibilityIdentifier("historyGroupDate")
           
                 ForEach(viewModel.operations) { operationViewModel in
@@ -741,6 +1035,10 @@ extension ProductProfileHistoryView {
                     ProductProfileHistoryView.OperationView(viewModel: operationViewModel)
                 }
             }
+            .padding(.top, 13)
+            .padding(.leading, 12)
+            .padding(.trailing, 16)
+            .padding(.bottom, 13)
         }
     }
     
@@ -813,7 +1111,7 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            VStack( spacing: 20){
+            VStack(spacing: 20){
                 
                 ForEach(0..<3) { _ in
                     
@@ -858,14 +1156,14 @@ extension ProductProfileHistoryView {
                         RoundedRectangle(cornerRadius: 4)
                             .foregroundColor(color)
                             .frame(width: 72, height: 20)
-                        
-                        Spacer()
                     }
                 }
                 .padding(.vertical, 8)
                 .frame(height: 56)
             }
             .shimmering()
+            .frame(height: 112)
+            .clipped()
         }
     }
     
@@ -914,15 +1212,22 @@ struct HistoryViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
+            ProductProfileHistoryView(
+                viewModel: .sample,
+                makeHistoryButton: { _ in .init(event: { event in }, isFiltered: { true }, isDateFiltered: { true }, clearOptions: {})}
+            )
+            .previewLayout(.fixed(width: 375, height: 500))
             
-            ProductProfileHistoryView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 500))
+            ProductProfileHistoryView(
+                viewModel: .sampleSecond,
+                makeHistoryButton: { _ in .init(event: { event in }, isFiltered: { true }, isDateFiltered: { true }, clearOptions: {})}
+            )
+            .previewLayout(.fixed(width: 375, height: 400))
             
-            ProductProfileHistoryView(viewModel: .sampleSecond)
-                .previewLayout(.fixed(width: 375, height: 400))
-            
-            ProductProfileHistoryView.EmptyListView(viewModel: .init())
-                .previewLayout(.fixed(width: 375, height: 300))
+            ProductProfileHistoryView.EmptyListView(
+                viewModel: .init()
+            )
+            .previewLayout(.fixed(width: 375, height: 300))
             
             ProductProfileHistoryView.LoadingView()
                 .padding(.horizontal, 20)
@@ -935,7 +1240,6 @@ struct HistoryViewComponent_Previews: PreviewProvider {
             ProductProfileHistoryView.LoadingItemView()
                 .padding(.horizontal, 20)
                 .previewLayout(.fixed(width: 375, height: 120))
-            
         }
     }
 }
@@ -944,9 +1248,9 @@ struct HistoryViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel {
     
-    static let debitOperation = Operation(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar"), subtitle: "Услуги банка", amount: .init(value: "-65 Р", color: .black), amountStatusImage: Image("MigAvatar"))
+    static let debitOperation = Operation(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar"), subtitle: "Услуги банка", amount: .init(value: "-65 Р", color: .black), amountStatusImage: Image("MigAvatar"))
     
-    static let creditOperation = Operation(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage"), subtitle: "Услуги банка", amount: .init(value: "-100 Р", color: .black), amountStatusImage: Image("MigAvatar"))
+    static let creditOperation = Operation(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage"), subtitle: "Услуги банка", amount: .init(value: "-100 Р", color: .black), amountStatusImage: Image("MigAvatar"))
 }
 
 extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateState.FailViewModel {
@@ -956,9 +1260,9 @@ extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateS
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)))
+    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 2, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil })
     
-    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ))
+    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ), filter: { nil })
     
-    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)))
+    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: 2, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: 3, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: 4, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil })
 }
