@@ -22,9 +22,21 @@ extension RootViewModel {
         
         let fast = mainViewSections
             .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
-        let qrPublishers = fast.map(\.rootEventPublisher)
+        let mainViewQRPublishers = fast.map(\.rootEventPublisher)
         
-        let publishers = mainViewSectionPublishers + qrPublishers
+        var publishers = mainViewSectionPublishers + mainViewQRPublishers
+        
+        switch tabsViewModel.paymentsModel {
+        case let .legacy(legacy):
+            let legacyQRPublishers = legacy.sections
+                .filter { $0.type == .payments }
+                .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
+                .map(\.rootEventPublisher)
+            publishers.append(contentsOf: legacyQRPublishers)
+            
+        default:
+            break
+        }
         
         return Publishers.MergeMany(publishers).eraseToAnyPublisher()
     }
@@ -49,6 +61,28 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
         switch self {
         case .byQr: return .scanQR
         default:    return nil
+        }
+    }
+}
+
+private extension PTSectionPaymentsView.ViewModel {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        action
+            .compactMap { $0 as? PTSectionPaymentsViewAction.ButtonTapped.Payment }
+            .compactMap(\.rootEvent)
+            .eraseToAnyPublisher()
+    }
+}
+
+private extension PTSectionPaymentsViewAction.ButtonTapped.Payment {
+    
+    var rootEvent: RootEvent? {
+        
+        switch type {
+        case .qrPayment: return .scanQR
+        default:         return nil
         }
     }
 }
@@ -92,6 +126,15 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
         let (sut, spy) = makeSUT()
         
         try sut.tapMainViewFastSectionQRButton()
+        
+        XCTAssertNoDiff(spy.values, [.scanQR])
+    }
+    
+    func test_init_shouldEmitScanQROnPaymentsTransfersLegacyPaymentsSectionQRButtonAction() throws {
+        
+        let (sut, spy) = makeSUT()
+        
+        try sut.tapLegacyPaymentsSectionQRButton()
         
         XCTAssertNoDiff(spy.values, [.scanQR])
     }
@@ -180,6 +223,25 @@ private extension RootViewModel {
         
         try mainViewModel.tapFastSectionQRButton()
     }
+    
+    func legacyPaymentsTransfers() throws -> PaymentsTransfersViewModel {
+        
+        switch tabsViewModel.paymentsModel {
+        case let .legacy(paymentsTransfers):
+            return paymentsTransfers
+            
+        default:
+            throw NSError(domain: "Expected Legacy PaymentsTransfers", code: -1)
+        }
+    }
+    
+    func tapLegacyPaymentsSectionQRButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try legacyPaymentsTransfers().tapPaymentsSectionQRButton(file: file, line: line)
+    }
 }
 
 private extension MainSectionViewModel {
@@ -220,5 +282,39 @@ private extension MainViewModel {
     ) throws {
         
         try fastSectionQRButton(file: file, line: line).action()
+    }
+}
+
+private extension PaymentsTransfersViewModel {
+    
+    typealias PaymentsSection = PTSectionPaymentsView.ViewModel
+    
+    func paymentsSection(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> PaymentsSection {
+        
+        let sections = sections.compactMap { $0 as? PaymentsSection }
+            
+        return try XCTUnwrap(sections.first, "Expected to have Payments Section", file: file, line: line)
+    }
+    
+    func paymentsSectionQRButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> PaymentsSection.PaymentButtonVM {
+        
+        let buttons = try paymentsSection(file: file, line: line).paymentButtons
+            .filter { $0.type == .qrPayment }
+        
+        return try XCTUnwrap(buttons.first, "Expected to have QR Button in Payments Section", file: file, line: line)
+    }
+    
+    func tapPaymentsSectionQRButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try paymentsSectionQRButton(file: file, line: line).action()
     }
 }
