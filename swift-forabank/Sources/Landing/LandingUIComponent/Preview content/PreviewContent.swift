@@ -869,7 +869,8 @@ extension CarouselActions {
         openUrl: {_ in },
         goToMain: {},
         orderCard: {}, 
-        landing: {_ in }
+        landing: {_ in }, 
+        payment: {_ in }
     )
 }
 

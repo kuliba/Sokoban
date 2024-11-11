@@ -753,9 +753,12 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-            
-        default:
-            break
+          
+        case let payload:
+#warning("need change after analyst creates a new action type")
+            if payload.type == .payment {
+                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
+            }
         }
     }
     
@@ -1097,17 +1100,17 @@ extension MainViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:
             handleUnknownQR()
             
-        case let .mixed(mixed, qrCode, qrMapping):
-            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+        case let .mixed(mixed):
+            makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
             
-        case let .multiple(multipleOperators, qrCode, qrMapping):
-            searchOperators(multipleOperators, with: qrCode)
+        case let .multiple(multiple):
+            searchOperators(multiple.operators, with: multiple.qrCode)
             
         case let .none(qrCode):
             payByInstructions(with: qrCode)
@@ -1803,7 +1806,8 @@ extension MainViewModel {
                         config: .default,
                         landingActions: landingActions(for:),
                         outsideAction: {_ in }, 
-                        orderCard: {})
+                        orderCard: {}, 
+                        payment: {_ in })
                     
                     route.destination = .landing(viewModel, false)
                 }

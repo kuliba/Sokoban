@@ -10,6 +10,7 @@ import AnywayPaymentDomain
 import SberQR
 import SwiftUI
 import MarketShowcase
+import LoadableResourceComponent
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -17,11 +18,14 @@ typealias MakeHistoryButtonView = (@escaping (ProductProfileFlowEvent.ButtonEven
 typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 typealias MakeIconView = IconDomain.MakeIconView
 typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
+typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel, UserAccountConfig) -> UserAccountView
 
-typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping () -> Void) -> MarketShowcaseWrapperView?
+typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
+typealias MakeOrderCard = () -> Void
+typealias MakePaymentByType = (String) -> Void
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
@@ -39,6 +43,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
+    let components: ViewComponents
 }
 
 extension RootViewFactory {
@@ -66,7 +71,8 @@ extension RootViewFactory {
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView, 
+            components: components
         )
     }
 }

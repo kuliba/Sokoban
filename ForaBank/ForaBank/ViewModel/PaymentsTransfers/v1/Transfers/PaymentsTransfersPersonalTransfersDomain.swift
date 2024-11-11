@@ -9,14 +9,38 @@ import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
     
+    typealias Binder = PlainPickerBinder<Select, NavigationResult>
+    typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
+    
+    typealias FlowDomain = PayHubUI.FlowDomain<Select, NavigationResult>
+    
+    typealias FlowState = FlowDomain.State
+    typealias FlowEvent = FlowDomain.Event
+    typealias FlowEffect = FlowDomain.Effect
+
+    typealias NotifyEvent = FlowDomain.NotifyEvent
+    
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
     
-    enum Element {
+    enum Select {
         
+        case alert(String)
         case buttonType(ButtonType)
+        case contactAbroad(Payments.Operation.Source)
         case contacts(Payments.Operation.Source)
+        case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
+        case qr(QR)
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
+        
+        enum QR: Equatable {
+            
+            case result(QRModelResult)
+            case scan
+        }
     }
+    
+    typealias NavigationResult = Result<Navigation, NavigationFailure>
     
     enum Navigation {
         
@@ -24,14 +48,14 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
+        case scanQR(Node<QRModel>)
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
-    typealias Binder = PlainPickerBinder<Element, Navigation>
-    typealias BinderComposer = PlainPickerBinderComposer<Element, Navigation>
-    
-    typealias FlowDomain = PayHubUI.FlowDomain<Element, Navigation>
-    
-    typealias FlowState = FlowDomain.State
-    typealias FlowEvent = FlowDomain.Event
-    typealias FlowEffect = FlowDomain.Effect
+    enum NavigationFailure: Error, Equatable {
+        
+        case alert(String)
+        case makeLatestFailure
+        case makeMeToMeFailure
+    }
 }

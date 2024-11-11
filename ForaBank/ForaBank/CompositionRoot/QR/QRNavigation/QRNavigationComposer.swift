@@ -23,7 +23,7 @@ final class QRNavigationComposer {
 
 extension QRNavigationComposer {
     
-    func compose(
+    func getNavigation(
         payload: Payload,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
@@ -45,13 +45,14 @@ extension QRNavigationComposer {
         case sberPay(URL, SberQRConfirmPaymentState)
     }
     
-    enum NotifyEvent: Equatable {
+    enum NotifyEvent {
         
         case contactAbroad(Payments.Operation.Source)
         case detailPayment(QRCode?)
         case dismiss
         case isLoading(Bool)
         case outside(Outside)
+        case qrNavigation(QRNavigation)
         case sberPay(SberQRConfirmPaymentState)
         case scanQR
         
@@ -112,7 +113,7 @@ private extension QRNavigationComposer {
     }
     
     func handle(
-        mapped: QRModelResult.Mapped,
+        mapped: QRMappedResult,
         with notify: @escaping Notify,
         and completion: @escaping QRNavigationCompletion
     ) {
@@ -120,11 +121,11 @@ private extension QRNavigationComposer {
         case .missingINN:
             makeQRFailure(with: notify) { completion(.failure($0)) }
             
-        case let .mixed(mixed, qrCode, qrMapping):
+        case let .mixed(mixed):
             let payload = MicroServices.MakeProviderPickerPayload(
-                mixed: mixed,
-                qrCode: qrCode,
-                qrMapping: qrMapping
+                mixed: mixed.operators,
+                qrCode: mixed.qrCode,
+                qrMapping: mixed.qrMapping
             )
             microServices.makeProviderPicker(payload) { [weak self] in
                 
@@ -136,11 +137,11 @@ private extension QRNavigationComposer {
                 )))
             }
             
-        case let .multiple(multiple, qrCode, qrMapping):
+        case let .multiple(multiple):
             let payload = MicroServices.MakeOperatorSearchPayload(
-                multiple: multiple,
-                qrCode: qrCode,
-                qrMapping: qrMapping,
+                multiple: multiple.operators,
+                qrCode: multiple.qrCode,
+                qrMapping: multiple.qrMapping,
                 chat: { notify(.outside(.chat)) },
                 detailPayment: { notify(.detailPayment(nil)) },
                 dismiss: { notify(.dismiss) }

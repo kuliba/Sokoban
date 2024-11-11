@@ -23,6 +23,7 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
+        .collateralLoanLandingSaveConsentsBackend,
         .collateralLoanLandingShowCaseBackend,
         .collateralLoanLandingShowCaseUI,
         .collateralLoanLandingDraftBackend,
@@ -51,6 +52,7 @@ let package = Package(
         .cardStatementAPI,
         .svCardLimitAPI,
         .getBannerCatalogListAPI,
+        .getBannersMyProductListService,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -65,6 +67,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
+        .getProductListByTypeV7Service,
         .getClientInformDataServices,
         // UI
         .buttonWithSheet,
@@ -132,6 +135,8 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
+        .collateralLoanLandingSaveConsentsBackend,
+        .collateralLoanLandingSaveConsentsBackendTests,
         .collateralLoanLandingShowCaseBackend,
         .collateralLoanLandingShowCaseBackendTests,
         .collateralLoanLandingShowCaseUI,
@@ -191,6 +196,8 @@ let package = Package(
         .svCardLimitAPITests,
         .getBannerCatalogListAPI,
         .getBannerCatalogListAPITests,
+        .getBannersMyProductListService,
+        .getBannersMyProductListServiceTests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -219,6 +226,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
+        .getProductListByTypeV7Service,
+        .getProductListByTypeV7ServiceTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
         // UI
@@ -404,6 +413,13 @@ private extension Product {
         name: .collateralLoanLandingShowCaseBackend,
         targets: [
             .collateralLoanLandingShowCaseBackend
+        ]
+    )
+    
+    static let collateralLoanLandingSaveConsentsBackend = library(
+        name: .collateralLoanLandingSaveConsentsBackend,
+        targets: [
+            .collateralLoanLandingSaveConsentsBackend
         ]
     )
     
@@ -809,6 +825,13 @@ private extension Product {
         ]
     )
     
+    static let getBannersMyProductListService = library(
+        name: .getBannersMyProductListService,
+        targets: [
+            .getBannersMyProductListService
+        ]
+    )
+    
     static let cryptoSwaddler = library(
         name: .cryptoSwaddler,
         targets: [
@@ -908,6 +931,13 @@ private extension Product {
         ]
     )
     
+    static let getProductListByTypeV7Service = library(
+        name: .getProductListByTypeV7Service,
+        targets: [
+            .getProductListByTypeV7Service
+        ]
+    )
+
     static let getClientInformDataServices = library(
         name: .getClientInformDataServices,
         targets: [
@@ -1166,14 +1196,14 @@ private extension Target {
         name: .landingUIComponent,
         dependencies: [
             .combineSchedulers,
-            .tagged,
-            .shimmer,
-            .uiPrimitives,
-            .rxViewModel,
             .foraTools,
-            .textFieldComponent,
+            .rxViewModel,
             .sharedConfigs,
-            .svCardLimitAPI
+            .shimmer,
+            .svCardLimitAPI,
+            .tagged,
+            .textFieldComponent,
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -1188,7 +1218,25 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
     )
+
+    static let collateralLoanLandingSaveConsentsBackend = target(
+        name: .collateralLoanLandingSaveConsentsBackend,
+        dependencies: [
+            .remoteServices,
+            .sharedConfigs
+        ],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.SaveConsents)/Backend"
+    )
     
+    static let collateralLoanLandingSaveConsentsBackendTests = testTarget(
+        name: .collateralLoanLandingSaveConsentsBackendTests,
+        dependencies: [
+            .collateralLoanLandingSaveConsentsBackend,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.SaveConsents)/Backend"
+    )
+
     static let collateralLoanLandingShowCaseBackend = target(
         name: .collateralLoanLandingShowCaseBackend,
         dependencies: [
@@ -1779,7 +1827,27 @@ private extension Target {
         path: "Tests/Services/\(String.getBannerCatalogListAPITests)"
         //TODO: add resources
     )
-    
+
+    static let getBannersMyProductListService = target(
+        name: .getBannersMyProductListService,
+        dependencies: [
+            .remoteServices,
+            .foraTools
+        ],
+        path: "Sources/Services/\(String.getBannersMyProductListService)"
+    )
+    static let getBannersMyProductListServiceTests = testTarget(
+        name: .getBannersMyProductListServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getBannersMyProductListService,
+            .remoteServices
+        ],
+        path: "Tests/Services/\(String.getBannersMyProductListServiceTests)"
+    )
+
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -2044,6 +2112,34 @@ private extension Target {
             .copy("Responses/GetProductListByType_Loan_Response.json")
         ]
     )
+    
+    static let getProductListByTypeV7Service = target(
+        name: .getProductListByTypeV7Service,
+        dependencies: [
+            .foraTools,
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeV7Service)"
+    )
+    
+    static let getProductListByTypeV7ServiceTests = testTarget(
+        name: .getProductListByTypeV7ServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeV7Service
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeV7ServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
+
 
     static let getClientInformDataServices = target(
         name: .getClientInformDataServices,
@@ -2931,6 +3027,10 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
     
+    static let collateralLoanLandingSaveConsentsBackend = byName(
+        name: .collateralLoanLandingSaveConsentsBackend
+    )
+
     static let collateralLoanLandingShowCaseBackend = byName(
         name: .collateralLoanLandingShowCaseBackend
     )
@@ -3219,6 +3319,10 @@ private extension Target.Dependency {
         name: .getBannerCatalogListAPI
     )
     
+    static let getBannersMyProductListService = byName(
+        name: .getBannersMyProductListService
+    )
+    
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -3271,6 +3375,10 @@ private extension Target.Dependency {
         name: .getProductListByTypeV6Service
     )
     
+    static let getProductListByTypeV7Service = byName(
+        name: .getProductListByTypeV7Service
+    )
+
     static let getClientInformDataServices = byName(
         name: .getClientInformDataServices
     )
@@ -3334,6 +3442,10 @@ private extension String {
     
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
+
+    static let SaveConsents = "SaveConsents"
+    static let collateralLoanLandingSaveConsentsBackend = "CollateralLoanLandingSaveConsentsBackend"
+    static let collateralLoanLandingSaveConsentsBackendTests = "CollateralLoanLandingSaveConsentsBackendTests"
 
     static let collateralLoanLandingShowCaseBackend = "CollateralLoanLandingShowCaseBackend"
     static let collateralLoanLandingShowCaseName = "ShowCase"
@@ -3544,6 +3656,9 @@ private extension String {
     static let getBannerCatalogListAPI = "GetBannerCatalogListAPI"
     static let getBannerCatalogListAPITests = "GetBannerCatalogListAPITests"
     
+    static let getBannersMyProductListService = "GetBannersMyProductListService"
+    static let getBannersMyProductListServiceTests = "GetBannersMyProductListServiceTests"
+    
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
     
@@ -3586,6 +3701,9 @@ private extension String {
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
     
+    static let getProductListByTypeV7Service = "GetProductListByTypeV7Service"
+    static let getProductListByTypeV7ServiceTests = "GetProductListByTypeV7ServiceTests"
+
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     

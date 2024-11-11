@@ -8,29 +8,38 @@
 import RxViewModel
 import SwiftUI
 
+struct PaymentsTransfersPersonalTransfersFlowViewFactory {
+    
+    let makeContactsView: MakeContactsView
+    let makePaymentsMeToMeView: MakePaymentsMeToMeView
+    let makePaymentsView: MakePaymentsView
+}
+
+
 struct PaymentsTransfersPersonalTransfersFlowView<ContentView>: View
 where ContentView: View {
     
     let state: Domain.FlowState
     let event: (Domain.FlowEvent) -> Void
     let contentView: () -> ContentView
+    let viewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory
     
     var body: some View {
         
         contentView()
             .bottomSheet(
                 sheet: state.bottomSheet,
-                dismiss: {},
+                dismiss: { event(.dismiss) },
                 content: makeBottomSheetView
             )
             .navigationDestination(
                 destination: state.destination,
-                dismiss: {},
+                dismiss: { event(.dismiss) },
                 content: makeDestinationView
             )
             .sheet(
                 modal: state.sheet,
-                dismiss: {},
+                dismiss: { event(.dismiss) },
                 content: makeSheetView
             )
     }
@@ -50,7 +59,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch bottomSheet {
         case let .meToMe(meToMe):
-            PaymentsMeToMeView(viewModel: meToMe.model)
+            viewFactory.makePaymentsMeToMeView(meToMe.model)
             //                .fullScreenCover(
             //                    cover: state.fullCover,
             //                    content: { fullCover in
@@ -72,7 +81,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch destination {
         case let .payments(node):
-            PaymentsView(viewModel: node.model.paymentsViewModel)
+            viewFactory.makePaymentsView(node.model.paymentsViewModel)
         }
     }
     
@@ -83,7 +92,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch sheet {
         case let .contacts(node):
-            ContactsView(viewModel: node.model)
+            viewFactory.makeContactsView(node.model)
         }
     }
 }
@@ -93,41 +102,57 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
     var bottomSheet: PaymentsTransfersPersonalTransfersDomain.BottomSheet? {
         
         switch navigation {
-            
-        case let .meToMe(meToMe):
-            return .meToMe(meToMe)
-            
-        default:
+        case .failure, .none:
             return nil
+            
+        case let .success(navigation):
+            switch navigation {
+            case let .meToMe(meToMe):
+                return .meToMe(meToMe)
+                
+            case .contacts, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+                return nil
+            }
         }
     }
     
     var destination: PaymentsTransfersPersonalTransfersDomain.Destination? {
         
         switch navigation {
-            //    case let .anotherCard(anotherCard):
-            //        return .anotherCard(anotherCard)
-            
-        case let .payments(payments):
-            return .payments(payments)
-            
-        default:
+        case .failure, .none:
             return nil
+            
+        case let .success(navigation):
+            switch navigation {
+                //    case let .anotherCard(anotherCard):
+                //        return .anotherCard(anotherCard)
+                
+            case let .payments(payments):
+                return .payments(payments)
+                
+            case .contacts, .meToMe, .paymentsViewModel, .scanQR, .successMeToMe:
+                return nil
+            }
         }
     }
     
     var sheet: PaymentsTransfersPersonalTransfersDomain.Sheet? {
         
         switch navigation {
-        case let .contacts(contacts):
-            return .contacts(contacts)
-            
-        default:
+        case .failure, .none:
             return nil
+            
+        case let .success(navigation):
+            switch navigation {
+            case let .contacts(contacts):
+                return .contacts(contacts)
+                
+            case .meToMe, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+                return nil
+            }
         }
     }
 }
-
 extension PaymentsTransfersPersonalTransfersDomain {
     
     enum BottomSheet: BottomSheetCustomizable {
