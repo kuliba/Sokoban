@@ -57,6 +57,7 @@ public extension QRFailureBinderComposer {
         )
         
         let composer = Domain.FlowComposer(
+            delay: delay,
             getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
