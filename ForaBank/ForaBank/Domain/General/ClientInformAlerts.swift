@@ -34,7 +34,8 @@ struct ClientInformAlerts {
                 isRequired: true, 
                 type: type,
                 title: title,
-                text: text,
+                text: text.textWithLink(),
+                url: text.extractedURL,
                 link: link,
                 version: version,
                 authBlocking: authBlocking
@@ -55,7 +56,8 @@ struct ClientInformAlerts {
                 isRequired: false, 
                 type: .notRequired,
                 title: title,
-                text: text,
+                text: text.textWithLink(),
+                url: text.extractedURL,
                 link: nil,
                 version: nil, 
                 authBlocking: authBlocking
@@ -70,6 +72,7 @@ struct ClientInformAlerts {
         let type: ClientInformActionType
         let title: String
         let text: String
+        let url: URL?
         let link: String?
         let version: String?
         let authBlocking: Bool

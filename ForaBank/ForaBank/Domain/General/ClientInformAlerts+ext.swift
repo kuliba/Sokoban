@@ -62,19 +62,20 @@ extension ClientInformAlerts.Alert {
     func swiftUIAlert(action: @escaping (ClientInformActionType) -> Void) -> SwiftUI.Alert {
         
         let actionType: ClientInformActionType = type
+        let linkableText = url != nil ? "\(text) \(url!)" : text
         
         switch actionType {
         case .required:
             return Alert(
                 title: Text(title),
-                message: Text(text),
+                message: Text(linkableText),
                 dismissButton: .default(Text("Обновить"), action: { action(.required) })
             )
             
         case .optional:
             return Alert(
                 title: Text(title),
-                message: Text(text),
+                message: Text(linkableText),
                 primaryButton: .cancel(Text("Позже")),
                 secondaryButton: .default(Text("Обновить"), action: { action(.optional) })
             )
@@ -82,7 +83,7 @@ extension ClientInformAlerts.Alert {
         case .notRequired:
             return Alert(
                 title: Text(title),
-                message: Text(text),
+                message: Text(linkableText),
                 dismissButton: .default(Text("Ok"), action: { action(.notRequired) })
             )
         }
