@@ -83,7 +83,7 @@ public struct ClientInformListView: View {
     
     private func contentStack() -> some View {
         
-        VStack(spacing: config.sizes.spacing) {
+        VStack(alignment: .center, spacing: config.sizes.spacing) {
                         
             switch info {
             case .single(let singleInfo):
@@ -131,7 +131,8 @@ public struct ClientInformListView: View {
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
-            .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight : 0)
+            .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight +
+                     config.sizes.bigSpacing : 0)
         }
     }
     

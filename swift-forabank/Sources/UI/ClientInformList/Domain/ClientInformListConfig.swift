@@ -20,16 +20,13 @@ public struct ClientInformListConfig {
 
     public struct Colors {
         
-        let grayGrabber: Color
         let grayBackground: Color
         let bgIconRedLight: Color
         
         public init(
-            grayGrabber: Color,
             grayBackground: Color,
             bgIconRedLight: Color
         ) {
-            self.grayGrabber = grayGrabber
             self.grayBackground = grayBackground
             self.bgIconRedLight = bgIconRedLight
         }
@@ -42,10 +39,8 @@ public struct ClientInformListConfig {
         let rowIconSize: CGFloat
         let navBarHeight: CGFloat
         let navBarMaxWidth: CGFloat
-        let grabberWidth: CGFloat
-        let grabberHeight: CGFloat
-        let grabberCornerRadius: CGFloat
         let spacing: CGFloat
+        let bigSpacing: CGFloat
 
         public init(
             iconSize: CGFloat,
@@ -53,10 +48,8 @@ public struct ClientInformListConfig {
             rowIconSize: CGFloat,
             navBarHeight: CGFloat,
             navBarMaxWidth: CGFloat,
-            grabberWidth: CGFloat,
-            grabberHeight: CGFloat,
-            grabberCornerRadius: CGFloat,
-            spacing: CGFloat
+            spacing: CGFloat,
+            bigSpacing: CGFloat
         ) {
             
             self.iconSize = iconSize
@@ -64,27 +57,22 @@ public struct ClientInformListConfig {
             self.rowIconSize = rowIconSize
             self.navBarHeight = navBarHeight
             self.navBarMaxWidth = navBarMaxWidth
-            self.grabberWidth = grabberWidth
-            self.grabberHeight = grabberHeight
-            self.grabberCornerRadius = grabberCornerRadius
             self.spacing = spacing
+            self.bigSpacing = bigSpacing
         }
     }
     
     public struct Paddings {
                 
-        let topGrabber: CGFloat
         let topImage: CGFloat
         let horizontal: CGFloat
         let vertical: CGFloat
         
         public init(
-            topGrabber: CGFloat,
             topImage: CGFloat,
             horizontal: CGFloat,
             vertical: CGFloat
         ) {
-            self.topGrabber = topGrabber
             self.topImage = topImage
             self.horizontal = horizontal
             self.vertical = vertical

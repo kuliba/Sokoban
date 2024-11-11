@@ -11,7 +11,6 @@ extension ClientInformListConfig.Colors {
     
     static let preview: Self = .init(
 
-        grayGrabber: Color(red: 0.83, green: 0.83, blue: 0.83),
         grayBackground: Color(red: 0.97, green: 0.97, blue: 0.97),
         bgIconRedLight: Color(red: 1.00, green: 0.62, blue: 0.62)
     )
@@ -31,6 +30,8 @@ extension ClientInformListConfig.Strings {
 @available(iOS 15, *)
 extension ClientInformListDataState {
     
+//    static let preview: Self = ClientInformListDataState.single(.init(label: .init(image: .clock, title: "Urgent Info"), text: "please drop your phone! Alarm!"))
+
     static let preview: Self = ClientInformListDataState.multiple(.init(
         title: Label(image: .infoCircle, title: "Информация"),
         items: [
@@ -59,13 +60,10 @@ extension ClientInformListConfig {
             rowIconSize: 40,
             navBarHeight: 59,
             navBarMaxWidth: 48,
-            grabberWidth: 48,
-            grabberHeight: 5,
-            grabberCornerRadius: 3,
-            spacing: 24
+            spacing: 24, 
+            bigSpacing: 32
         ),
         paddings: .init(
-            topGrabber: 8,
             topImage: 20,
             horizontal: 20,
             vertical: 12

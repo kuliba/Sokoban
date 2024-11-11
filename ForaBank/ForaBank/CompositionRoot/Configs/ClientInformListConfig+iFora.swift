@@ -11,7 +11,6 @@ extension ClientInformListConfig {
     
     static let iFora: Self = .init(
         colors: .init(
-            grayGrabber: .mainColorsGrayMedium,
             grayBackground: .mainColorsGrayLightest,
             bgIconRedLight: .bgIconRedLight
         ),
@@ -32,13 +31,10 @@ extension ClientInformListConfig {
             rowIconSize: 40,
             navBarHeight: 59,
             navBarMaxWidth: 48,
-            grabberWidth: 48,
-            grabberHeight: 5,
-            grabberCornerRadius: 3,
-            spacing: 24
+            spacing: 24, 
+            bigSpacing: 32
         ),
         paddings: .init(
-            topGrabber: 8,
             topImage: 20,
             horizontal: 20,
             vertical: 12
