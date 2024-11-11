@@ -14,7 +14,7 @@ class OpenNewProductsViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published
-    var items: [ButtonNewProduct.ViewModel]
+    var items: [NewProductButton.ViewModel]
     
     private let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
     private let model: Model
@@ -27,7 +27,7 @@ class OpenNewProductsViewModel: ObservableObject {
         return items
     }
     
-    init(items: [ButtonNewProduct.ViewModel], model: Model = .emptyMock) {
+    init(items: [NewProductButton.ViewModel], model: Model = .emptyMock) {
         
         self.items = items
         self.model = model
@@ -56,9 +56,9 @@ class OpenNewProductsViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    private func createItems() -> [ButtonNewProduct.ViewModel] {
+    private func createItems() -> [NewProductButton.ViewModel] {
         
-        var viewModel: [ButtonNewProduct.ViewModel] = []
+        var viewModel: [NewProductButton.ViewModel] = []
         
         for typeStr in displayButtons {
             
@@ -71,11 +71,11 @@ class OpenNewProductsViewModel: ObservableObject {
                 
                 switch type {
                 case .loan:
-                    viewModel.append(ButtonNewProduct.ViewModel(id: id, icon: icon, title: title,
+                    viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
                         subTitle: subTitle, url: model.productsOpenLoanURL))
                     
                 default:
-                    viewModel.append(ButtonNewProduct.ViewModel(id: id, icon: icon, title: title,
+                    viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
                         subTitle: subTitle, action: { [weak self] in
                             self?.action.send(OpenNewProductsViewModelAction
                                                 .Tapped.NewProduct(productType: type))
@@ -86,13 +86,13 @@ class OpenNewProductsViewModel: ObservableObject {
                    
                     switch typeStr {
                     case "INSURANCE":
-                        viewModel.append(ButtonNewProduct.ViewModel(id: typeStr, icon: .ic24InsuranceColor, title: "Страховку", subTitle: "Надежно", url: model.productsOpenInsuranceURL))
+                        viewModel.append(NewProductButton.ViewModel(id: typeStr, icon: .ic24InsuranceColor, title: "Страховку", subTitle: "Надежно", url: model.productsOpenInsuranceURL))
                         
                     case "MORTGAGE":
-                        viewModel.append(ButtonNewProduct.ViewModel(id: typeStr, icon: .ic24Mortgage, title: "Ипотеку", subTitle: "Удобно", url: model.productsOpenMortgageURL))
+                        viewModel.append(NewProductButton.ViewModel(id: typeStr, icon: .ic24Mortgage, title: "Ипотеку", subTitle: "Удобно", url: model.productsOpenMortgageURL))
                     
                     case "STICKER":
-                        viewModel.append(ButtonNewProduct.ViewModel(
+                        viewModel.append(NewProductButton.ViewModel(
                             id: typeStr,
                             icon: .ic24Sticker,
                             title: "Стикер",

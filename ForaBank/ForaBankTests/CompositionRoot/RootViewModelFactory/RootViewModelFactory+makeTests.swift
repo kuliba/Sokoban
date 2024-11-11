@@ -151,7 +151,8 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.inactive),
             paymentsTransfersFlag: .init(.active),
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active), 
+            savingsAccountFlag: .init(.active)
         )
         
         return (sut, httpClient, sessionAgent, backgroundScheduler, bindings)

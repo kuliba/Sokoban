@@ -41,21 +41,28 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         let makeQRFailure = MakeQRFailure()
         let makePayments = MakePayments()
         let makeMixedPicker = MakeMixedPicker()
+        let makeMultiplePicker = MakeMultiplePicker()
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
                 makeQRFailure: makeQRFailure.call,
                 makePayments: makePayments.call,
-                makeMixedPicker: makeMixedPicker.call
+                makeMixedPicker: makeMixedPicker.call,
+                makeMultiplePicker: makeMultiplePicker.call
             ),
             witnesses: .init(
-                addCompany: .init(mixedPicker: { _ in fatalError() }),
+                addCompany: .init(
+                    mixedPicker: { $0.addCompanyPublisher },
+                    multiplePicker: { $0.addCompanyPublisher }
+                ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },
+                    multiplePicker: { $0.isClosed },
                     payments: { $0.isClosed },
                     qrFailure: { $0.isClosed }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.scanQRPublisher },
+                    multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
                     qrFailure: { $0.scanQRPublisher }
                 )
