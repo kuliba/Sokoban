@@ -12,11 +12,13 @@ import PayHub
 public extension FlowComposer {
     
     convenience init(
+        delay: Delay = .milliseconds(100),
         getNavigation: @escaping MicroServices.GetNavigation,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.init(
+            delay: delay,
             microServices: .init(getNavigation: getNavigation),
             scheduler: scheduler,
             interactiveScheduler: interactiveScheduler
