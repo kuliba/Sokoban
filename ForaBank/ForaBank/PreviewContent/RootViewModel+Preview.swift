@@ -9,5 +9,10 @@ import Foundation
 
 extension RootViewModel.RootActions {
     
-    static let emptyMock = RootViewModel.RootActions(dismissCover: {}, spinner: .init(show: {}, hide: {}), switchTab: { _ in }, dismissAll: {})
+    static let emptyMock = RootViewModel.RootActions(
+        dismissCover: {},
+        spinner: .init(show: {}, hide: {}), 
+        switchTab: { _ in },
+        dismissAll: {},
+        openUtilityPayment: {_ in })
 }

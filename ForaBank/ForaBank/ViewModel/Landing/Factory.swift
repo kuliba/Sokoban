@@ -109,14 +109,16 @@ extension Model {
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void,
         outsideAction: @escaping (String) -> Void,
-        orderCard: @escaping () -> Void
+        orderCard: @escaping () -> Void,
+        payment: @escaping (String) -> Void
     ) -> LandingWrapperViewModel {
         
         let actions = CarouselActions(
             openUrl: { landingActions(.card(.openUrl($0))) },
             goToMain: { landingActions(.card(.goToMain)) },
             orderCard: { orderCard() },
-            landing: { if let target = $0 { outsideAction(target) } }
+            landing: { if let target = $0 { outsideAction(target) } }, 
+            payment: payment
         )
         
         return LandingWrapperViewModel(

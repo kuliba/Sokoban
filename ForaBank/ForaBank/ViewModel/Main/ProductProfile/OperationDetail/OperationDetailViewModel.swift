@@ -22,7 +22,10 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     @Published var isLoading: Bool
     @Published var sheet: Sheet?
     @Published var fullScreenSheet: FullScreenSheet?
-
+    let repeatButtonAvailable: Bool
+    
+    var operationId: Int? = nil
+    
     var templateAction: () -> Void = {}
     
     let model: Model
@@ -48,6 +51,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.templateButton = nil
         self.isLoading = false
         self.updateFastAll = updateFastAll
+        self.repeatButtonAvailable = productStatement.repeatButtonAvailable
         self.model = model
 
         bind()
@@ -127,6 +131,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         }
                 
                         self.update(with: statement, product: product, operationDetail: details)
+                        self.operationId = details.paymentOperationDetailId
                         
                         guard statement.paymentDetailType != .insideOther,
                               details.shouldHaveTemplateButton,
@@ -549,3 +554,26 @@ extension OperationDetailViewModel {
     }
 }
 
+private extension ProductStatementData {
+
+    var repeatButtonAvailable: Bool {
+        
+        let availableTypes: [ProductStatementData.Kind] = [
+            .taxes,
+            .betweenTheir,
+            .insideBank,
+            .housingAndCommunalService,
+            .externalEntity,
+            .externalIndivudual,
+            .sfp,
+            .contactAddressless,
+            .outsideCash,
+            .direct,
+            .transport,
+            .mobile,
+            .internet
+        ]
+        
+        return availableTypes.contains(where:  { $0 == self.paymentDetailType })
+    }
+}

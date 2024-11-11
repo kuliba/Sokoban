@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Comparing
-extension Date {
+public extension Date {
     
     func isLater(
         _ component: Calendar.Component,
@@ -49,6 +49,7 @@ extension Date {
         to date: Date,
         in component: Calendar.Component
     ) -> Int {
+        //TODO: MCalendar remove, create component
         MCalendar.get().dateComponents([component], from: self, to: date).value(for: component) ?? 0
     }
 }
@@ -76,7 +77,7 @@ public extension Date {
     func end(
         of component: Calendar.Component
     ) -> Date {
-        MCalendar.get().dateInterval(of: component, for: self)?.end.addingTimeInterval(-1) ?? .distantPast
+        MCalendar.get().dateInterval(of: component, for: self)?.end ?? .distantPast
     }
 }
 
@@ -91,4 +92,76 @@ extension Date {
 // MARK: - Helpers
 extension Date {
     static var now: Date { .init() }
+}
+
+extension DateFormatter {
+    
+    static var shortDate: DateFormatter {
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        dateFormatter.dateStyle = DateFormatter.Style.long
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+
+        return dateFormatter
+    }
+}
+
+public extension Date {
+    
+    static var startOfWeek: Date? {
+        let gregorian = Calendar(identifier: .gregorian)
+        guard let sunday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else { return nil }
+        return gregorian.date(byAdding: .day, value: 1, to: sunday)
+    }
+    
+    static var endOfWeek: Date? {
+        let gregorian = Calendar(identifier: .gregorian)
+        guard let sunday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else { return nil }
+        return gregorian.date(byAdding: .day, value: 7, to: sunday)
+    }
+    
+    static var startOfMonth: Date {
+
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month], from: Date())
+
+        return  calendar.date(from: components)!
+    }
+    
+    static func date(_ date: Date, addCalendarComponents calendarComponents: Calendar.Component, amount: Int) -> Date? {
+        var components: DateComponents = DateComponents.init()
+        let gregorian: Calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        
+        switch calendarComponents {
+        case .second:
+            components.second = amount
+            break
+        case .minute:
+            components.minute = amount
+            break
+        case .hour:
+            components.hour = amount
+            break
+        case .day:
+            components.day = amount
+            break
+        case .weekOfMonth:
+            components.weekOfMonth = amount
+            break
+        case .month:
+            components.month = amount
+            break
+        case .year:
+            components.year = amount
+            break
+        default:
+            break
+        }
+        return gregorian.date(byAdding: components, to: date)
+    }
 }

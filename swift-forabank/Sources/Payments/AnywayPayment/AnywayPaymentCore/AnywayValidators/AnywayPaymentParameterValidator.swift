@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import ForaTools
 import Foundation
 
 public final class AnywayPaymentParameterValidator {
@@ -54,6 +55,16 @@ public extension AnywayPaymentParameterValidator {
     typealias Parameter = AnywayElement.Parameter
 }
 
+private extension Optional where Wrapped == String {
+    
+    var isNilOrEmpty: Bool {
+        
+        guard let string = self else { return true }
+        
+        return string.isEmpty
+    }
+}
+
 private extension AnywayPaymentParameterValidator {
     
     func validateRequired(
@@ -61,7 +72,7 @@ private extension AnywayPaymentParameterValidator {
         with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
-        if validation.isRequired, value == nil {
+        if validation.isRequired, value.isNilOrEmpty {
             return .emptyRequired
         } else {
             return nil

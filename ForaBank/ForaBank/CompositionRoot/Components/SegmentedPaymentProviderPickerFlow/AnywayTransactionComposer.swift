@@ -283,10 +283,11 @@ extension AnywayPaymentContext {
             footer: .continue,
             isFinalStep: false
         )
+        let payment = initialPayment.update(with: update, and: outline)
         
         self.init(
             initial: initialPayment,
-            payment: initialPayment.update(with: update, and: outline),
+            payment: payment,
             staged: .init(),
             outline: outline,
             shouldRestart: false

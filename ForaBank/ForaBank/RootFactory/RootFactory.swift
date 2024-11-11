@@ -14,6 +14,10 @@ protocol RootFactory {
         bindings: inout Set<AnyCancellable>
     ) -> RootViewModel
     
+    func makeGetRootNavigation(
+        _: FeatureFlags
+    ) -> RootViewDomain.GetNavigation
+    
     func makeRootViewFactory(
         _: FeatureFlags
     ) -> RootViewFactory
