@@ -20,7 +20,7 @@ public final class BinderComposer<Content, Select, Navigation> {
         delay: Delay = .milliseconds(100),
         getNavigation: @escaping GetNavigation,
         makeContent: @escaping MakeContent,
-        schedulers: Schedulers,
+        schedulers: Schedulers = .init(),
         witnesses: Witnesses
     ) {
         self.delay = delay
