@@ -42,7 +42,7 @@ extension SegmentedPaymentProviderPickerView {
 
 extension SegmentedOperatorProvider: Identifiable {
     
-    var id: String {
+    public var id: String {
         
         switch self {
         case let .operator(`operator`):

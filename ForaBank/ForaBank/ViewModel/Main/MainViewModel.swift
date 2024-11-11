@@ -15,12 +15,13 @@ import SberQR
 import SwiftUI
 import LandingUIComponent
 import PaymentSticker
+import CalendarUI
 
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -327,8 +328,9 @@ private extension MainViewModel {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.resetDestination() })
-                    else { return }
+                            .defaultFilterComponents(product: product),
+                            { [weak self] in self?.resetDestination() }
+                          ) else { return }
                     
                     productProfileViewModel.rootActions = rootActions
                     productProfileViewModel.contactsAction = { [weak self] in self?.showContacts() }
@@ -718,6 +720,7 @@ private extension MainViewModel {
         
         templates.$state
             .map(\.external)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
@@ -750,9 +753,12 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-            
-        default:
-            break
+          
+        case let payload:
+#warning("need change after analyst creates a new action type")
+            if payload.type == .payment {
+                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
+            }
         }
     }
     
@@ -786,7 +792,7 @@ private extension MainViewModel {
 
         switch external.outside {
         case .none:
-            rootActions?.spinner.hide()
+            break
 
         case let .productID(productID):
             rootActions?.spinner.hide()
@@ -834,7 +840,7 @@ private extension MainViewModel {
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
                             return nil
                         }
-                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
+                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId, amount: latestPayment.amount, productId: nil)
                         
                     default:
                         return payloadSource
@@ -1095,17 +1101,17 @@ extension MainViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:
             handleUnknownQR()
             
-        case let .mixed(mixed, qrCode, qrMapping):
-            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+        case let .mixed(mixed):
+            makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
             
-        case let .multiple(multipleOperators, qrCode, qrMapping):
-            searchOperators(multipleOperators, with: qrCode)
+        case let .multiple(multiple):
+            searchOperators(multiple.operators, with: multiple.qrCode)
             
         case let .none(qrCode):
             payByInstructions(with: qrCode)
@@ -1801,7 +1807,8 @@ extension MainViewModel {
                         config: .default,
                         landingActions: landingActions(for:),
                         outsideAction: {_ in }, 
-                        orderCard: {})
+                        orderCard: {}, 
+                        payment: {_ in })
                     
                     route.destination = .landing(viewModel, false)
                 }
@@ -1846,6 +1853,8 @@ extension MainViewModel {
         switch landingEvent {
         case let .card(event): return landingAction(for: event)()
         case let .sticker(event): return landingAction(for: event)()
+        case .goToBack:
+            return handleCloseLinkAction()
         default: return {}()
         }
     }

@@ -11,6 +11,7 @@ import PickerWithPreviewComponent
 import SberQR
 import SwiftUI
 import OperatorsListComponents
+import CalendarUI
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -748,7 +749,12 @@ private extension PaymentsTransfersViewModel {
             
             switch outside {
             case .chat: self?.rootActions?.switchTab(.chat)
-            case .main: self?.rootActions?.switchTab(.main)
+            case .main:
+                if #available(iOS 16, *) {
+                    self?.rootActions?.switchTab(.main)
+                } else {
+                    self?.dismissAllViewAndSwitchToMainTab()
+                }
             }
             
             self?.rootActions?.spinner.hide()
@@ -816,10 +822,7 @@ private extension PaymentsTransfersViewModel {
                     event(.dismiss(.destination))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
-                    
-                    withAnimation {
-                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
-                    }
+                    dismissAllViewAndSwitchToMainTab()
                     
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
@@ -949,8 +952,8 @@ private extension PaymentsTransfersViewModel {
               let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
                 product,
                 "\(type(of: self))",
-                { [weak self] in self?.event(.dismiss(.destination)) })
-        else { return }
+                .defaultFilterComponents(product: product),
+                { [weak self] in self?.event(.dismiss(.destination)) }) else { return }
         
         productProfileViewModel.rootActions = rootActions
         bind(productProfileViewModel)
@@ -1278,6 +1281,7 @@ private extension PaymentsTransfersViewModel {
         
         templates.$state
             .map(\.external)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
@@ -1289,7 +1293,7 @@ private extension PaymentsTransfersViewModel {
 
         switch external.outside {
         case .none:
-            rootActions?.spinner.hide()
+            break
 
         case let .productID(productID):
             rootActions?.spinner.hide()
@@ -1446,6 +1450,12 @@ private extension PaymentsTransfersViewModel {
         self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
         self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
         self.rootActions?.switchTab(.main)
+    }
+    
+    private func dismissAllViewAndSwitchToMainTab() {
+        withAnimation {
+            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+        }
     }
     
     private func repeatSuccess() {
@@ -1672,17 +1682,17 @@ extension PaymentsTransfersViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:
             handleUnknownQR()
 
-        case let .mixed(mixed, qrCode, qrMapping):
-            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+        case let .mixed(mixed):
+            makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
 
-        case let .multiple(multipleOperators, qrCode, qrMapping):
-            searchOperators(multipleOperators, with: qrCode)
+        case let .multiple(multiple):
+            searchOperators(multiple.operators, with: multiple.qrCode)
             
         case let .none(qrCode):
             payByInstructions(with: qrCode)
@@ -2053,6 +2063,32 @@ private extension NavigationBarButtonViewModel {
         return .init(
             icon: .ic24BarcodeScanner2,
             action: action
+        )
+    }
+}
+extension FilterState {
+    
+    //TODO: Create fabric for FilterState
+    static func defaultFilterComponents(
+        product: ProductData
+    ) -> FilterState {
+        .init(
+            productId: product.id,
+            calendar: .init(
+                date: Date(),
+                range: .init(),
+                monthsData: .generate(startDate: product.openDate),
+                periods: FilterHistoryState.Period.allCases
+            ),
+            filter: .init(
+                title: "Фильтры",
+                selectDates: nil, 
+                selectedPeriod: .dates,
+                periods: FilterHistoryState.Period.allCases,
+                transactionType: [],
+                services: []
+            ),
+            status: .normal
         )
     }
 }

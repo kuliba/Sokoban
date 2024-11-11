@@ -120,7 +120,7 @@ struct MainView<NavigationOperationView: View>: View {
             viewFactory.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
             
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-            MainSectionProductsView(viewModel: productsSectionViewModel)
+            viewFactory.components.makeMainSectionProductsView(productsSectionViewModel)
                 .padding(.bottom, 19)
             
         case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
@@ -141,8 +141,8 @@ struct MainView<NavigationOperationView: View>: View {
             MainSectionCurrencyView(viewModel: currencyViewModel)
                 .padding(.bottom, 32)
             
-        case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
-            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+        case let currencyMetalViewModel as MainSectionCurrencyMetallView.ViewModel:
+            viewFactory.components.makeMainSectionCurrencyMetalView(currencyMetalViewModel)
                 .padding(.bottom, 32)
             
         case let openProductViewModel as MainSectionOpenProductView.ViewModel:
@@ -187,17 +187,10 @@ struct MainView<NavigationOperationView: View>: View {
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(node):
-            TemplatesListFlowView(
-                model: node.model,
-                makeAnywayFlowView: makeAnywayFlowView,
-                makeIconView: {
-                    
-                    viewFactory.makeIconView($0.map { .svg($0) })
-                }
-            )
+            viewFactory.components.makeTemplatesListFlowView(node)
             
         case let .currencyWallet(viewModel):
-            CurrencyWalletView(viewModel: viewModel)
+            viewFactory.components.makeCurrencyWalletView(viewModel)
             
         case let .myProducts(myProductsViewModel):
             MyProductsView(
@@ -219,15 +212,15 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .failedView(failedViewModel):
-            QRFailedView(viewModel: failedViewModel)
+            viewFactory.components.makeQRFailedView(failedViewModel)
             
         case let .searchOperators(viewModel):
-            QRSearchOperatorView(viewModel: viewModel)
+            viewFactory.components.makeQRSearchOperatorView(viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
         case let .payments(node):
-            PaymentsView(viewModel: node.model)
+            viewFactory.components.makePaymentsView(node.model)
             
         case let .operatorView(internetDetailViewModel):
             InternetTVDetailsView(viewModel: internetDetailViewModel)
@@ -235,7 +228,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .paymentsServices(viewModel):
-            PaymentsServicesOperatorsView(viewModel: viewModel)
+            viewFactory.components.makePaymentsServicesOperatorsView(viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -290,7 +283,7 @@ struct MainView<NavigationOperationView: View>: View {
             PlacesView(viewModel: placesViewModel)
             
         case let .byPhone(node):
-            ContactsView(viewModel: node.model)
+            viewFactory.components.makeContactsView(node.model)
         }
     }
     
@@ -315,10 +308,10 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            QRView(viewModel: node.model.qrModel)
+            viewFactory.components.makeQRView(node.model.qrModel)
             
         case let .success(viewModel):
-            PaymentsSuccessView(viewModel: viewModel)
+            viewFactory.components.makePaymentsSuccessView(viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
     }
@@ -397,18 +390,14 @@ private extension MainView {
         _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        ComposedSegmentedPaymentProviderPickerFlowView(
-            flowModel: flowModel,
-            iconView: viewFactory.makeIconView,
-            makeAnywayFlowView: makeAnywayFlowView
-        )
-        .navigationBarWithBack(
-            title: PaymentsTransfersSectionType.payments.name,
-            dismiss: viewModel.dismissPaymentProviderPicker,
-            rightItem: .barcodeScanner(
-                action: viewModel.dismissPaymentProviderPicker
+        viewFactory.components.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
+            .navigationBarWithBack(
+                title: PaymentsTransfersSectionType.payments.name,
+                dismiss: viewModel.dismissPaymentProviderPicker,
+                rightItem: .barcodeScanner(
+                    action: viewModel.dismissPaymentProviderPicker
+                )
             )
-        )
     }
     
     @ViewBuilder
@@ -418,58 +407,14 @@ private extension MainView {
         
         let provider = flowModel.state.content.state.payload.provider
         
-        AnywayServicePickerFlowView(
-            flowModel: flowModel,
-            factory: .init(
-                makeAnywayFlowView: makeAnywayFlowView,
-                makeIconView: viewFactory.makeIconView
+        viewFactory.components.makeAnywayServicePickerFlowView(flowModel)
+            .navigationBarWithAsyncIcon(
+                title: provider.origin.title,
+                subtitle: provider.origin.inn,
+                dismiss: viewModel.dismissProviderServicePicker,
+                icon: viewFactory.iconView(provider.origin.icon),
+                style: .normal
             )
-        )
-        .navigationBarWithAsyncIcon(
-            title: provider.origin.title,
-            subtitle: provider.origin.inn,
-            dismiss: viewModel.dismissProviderServicePicker,
-            icon: viewFactory.iconView(provider.origin.icon),
-            style: .normal
-        )
-    }
-}
-
-// MARK: - payment flow
-
-private extension MainView {
-    
-    @ViewBuilder
-    func makeAnywayFlowView(
-        flowModel: AnywayFlowModel
-    ) -> some View {
-        
-        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
-            
-            flowModel.state.content.event(.payment($0))
-        }
-        
-        AnywayFlowView(
-            flowModel: flowModel,
-            factory: .init(
-                makeElementView: anywayPaymentFactory.makeElementView,
-                makeFooterView: anywayPaymentFactory.makeFooterView
-            ),
-            makePaymentCompleteView: {
-                
-                viewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        merchantIcon: $0.merchantIcon,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { flowModel.event(.goTo(.main)) }
-                )
-            }
-        )
     }
 }
 
@@ -587,11 +532,11 @@ struct MainView_Previews: PreviewProvider {
         MainView(
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
-            viewFactory: .preview,
+            viewFactory: .preview, 
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:),
+                makeHistoryButton: { .init(event: $0, isFiltered: $1, isDateFiltered: $2, clearOptions: $3) },
                 makeRepeatButtonView: { _ in .init(action: {}) }
             ),
             getUImage: { _ in nil }
@@ -617,7 +562,8 @@ extension MainViewFactory {
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:config:)
+            makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: .preview) },
+            components: .preview
         )
     }
 }
