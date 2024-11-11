@@ -12,38 +12,51 @@ import PayHubUI
 
 final class ContentViewModelComposer {
     
-    private let mainScheduler: AnySchedulerOf<DispatchQueue>
-    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
+    private let qrFailureBinderComposer: QRFailureBinderComposer
+    
+    private let schedulers: Schedulers
     
     init(
-        mainScheduler: AnySchedulerOf<DispatchQueue> = .main,
-        interactiveScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive)
+        schedulers: Schedulers = .init()
     ) {
-        self.mainScheduler = mainScheduler
-        self.interactiveScheduler = interactiveScheduler
+        self.schedulers = schedulers
+        
+        self.qrFailureBinderComposer = .init(
+            delay: .milliseconds(100),
+            microServices: .init(
+                makeCategoryPicker: CategoryPicker.init(qrCode:),
+                makeDetailPayment: Payments.init(qrCode:),
+                makeQRFailure: QRFailure.init(with:)
+            ),
+            contentFlowWitnesses: .init(
+                contentEmitting: { $0.selectPublisher },
+                contentReceiving: { $0.receive },
+                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+                flowReceiving: { flow in { flow.event(.select($0)) }}
+            ),
+            isClosedWitnesses: .init(
+                categoryPicker: { $0.isClosedPublisher },
+                detailPayment: { $0.isClosedPublisher }
+            ),
+            scanQRWitnesses: .init(
+                categoryPicker: { $0.scanQRPublisher },
+                detailPayment: { $0.scanQRPublisher }
+            ),
+            schedulers: schedulers
+        )
     }
+    
+    typealias QRFailureBinderComposer = PayHubUI.QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, Payments>
 }
 
 extension ContentViewModelComposer {
     
     func compose() -> ContentViewDomain.Flow {
         
-        let qrComposer = makeQRBinderComposer()
-        
         let composer = ContentViewDomain.Composer(
-            getNavigation: { select, notify, completion in
-                
-                switch select {
-                case .scanQR:
-                    let qr = qrComposer.compose()
-                    let close = qr.content.isClosedPublisher
-                        .sink { if $0 { notify(.dismiss) }}
-                    
-                    completion(.qr(.init(model: qr, cancellable: close)))
-                }
-            },
-            scheduler: mainScheduler,
-            interactiveScheduler: interactiveScheduler
+            getNavigation: getNavigation,
+            scheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
         
         return composer.compose()
@@ -52,41 +65,62 @@ extension ContentViewModelComposer {
 
 private extension ContentViewModelComposer {
     
-    func makeWitnesses() -> QRDomain.Witnesses {
+    func getNavigation(
+        select: ContentViewSelect,
+        using notify: @escaping (ContentViewDomain.NotifyEvent) -> Void,
+        completion: @escaping (ContentViewNavigation) -> Void
+    ) {
+        let qrComposer = makeQRBinderComposer()
         
-        return .init(
-            contentEmitting: { $0.publisher },
-            contentReceiving: { content in { content.receive() }},
-            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
-        )
+        switch select {
+        case .scanQR:
+            let qr = qrComposer.compose()
+            
+            completion(.qr(.init(
+                model: qr,
+                cancellables: bind(qr: qr, using: notify)
+            )))
+        }
     }
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source>
-    
-    func makeNavigationComposer() -> NavigationComposer {
+    func bind(
+        qr: QRDomain.Binder,
+        using notify: @escaping (ContentViewDomain.NotifyEvent) -> Void
+    ) -> Set<AnyCancellable> {
         
-        return .init(
-            microServices: .init(
-                makePayments: {
+        let addCompany = qr.flow.$state
+            .compactMap(\.navigation)
+            .compactMap {
+                
+                switch $0 {
+                case let .outside(outside):
+                    return outside
                     
-                    switch $0 {
-                    case let .c2bSubscribe(url):
-                        Payments(url: url)
-                    }
+                default:
+                    return nil
                 }
-            ),
-            witnesses: .init(
-                isClosed: { $0.isClosedPublisher }
-            )
-        )
+            }
+            .sink {
+                
+                switch $0 {
+                case .chat:
+                    print("Need to switch to chat tab")
+                    notify(.dismiss)
+                }
+            }
+        
+        let close = qr.content.isClosedPublisher
+            .sink { if $0 { notify(.dismiss) }}
+        
+        return [addCompany, close]
     }
     
-    typealias QRBinderComposer = PayHubUI.QRBinderComposer<QRNavigation, QRModel, QRResult>
+    typealias Domain = QRNavigationDomain
+    typealias QRBinderComposer = PayHubUI.QRBinderComposer<Domain.Navigation, QRModel, Domain.Select>
     
     func makeQRBinderComposer() -> QRBinderComposer {
         
-        let factory = ContentFlowBindingFactory(scheduler: mainScheduler)
+        let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
         let witnesses = makeWitnesses()
         let composer = makeNavigationComposer()
         
@@ -96,8 +130,70 @@ private extension ContentViewModelComposer {
                 getNavigation: composer.getNavigation,
                 makeQR: QRModel.init
             ),
-            mainScheduler: mainScheduler,
-            interactiveScheduler: interactiveScheduler
+            mainScheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
+    }
+    
+    private func makeWitnesses() -> QRDomain.Witnesses {
+        
+        return .init(
+            contentEmitting: { $0.publisher },
+            contentReceiving: { content in { content.receive() }},
+            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+            flowReceiving: { flow in { flow.event(.select($0)) }}
+        )
+    }
+    
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
+    
+    private func makeNavigationComposer() -> NavigationComposer {
+        
+        return .init(
+            microServices: .init(
+                makeQRFailure: qrFailureBinderComposer.compose,
+                makePayments: makePayments,
+                makeMixedPicker: { _ in .init() },
+                makeMultiplePicker: { _ in .init() }
+            ),
+            witnesses: .init(
+                addCompany: .init(
+                    mixedPicker: { $0.addCompanyPublisher },
+                    multiplePicker: { $0.addCompanyPublisher }
+                ),
+                isClosed: .init(
+                    mixedPicker: { $0.isClosedPublisher },
+                    multiplePicker: { $0.isClosedPublisher },
+                    payments: { $0.isClosedPublisher },
+                    qrFailure: { _ in Empty().eraseToAnyPublisher() }
+                ),
+                scanQR: .init(
+                    mixedPicker: { $0.scanQRPublisher },
+                    multiplePicker: { $0.scanQRPublisher },
+                    payments: { $0.scanQRPublisher },
+                    qrFailure: { _ in Empty().eraseToAnyPublisher() }
+                )
+            )
+        )
+    }
+    
+    private func makePayments(
+        payload: NavigationComposer.MicroServices.MakePaymentsPayload
+    ) -> Payments {
+        
+        switch payload {
+        case let .c2bSubscribe(url), let .c2b(url):
+            return Payments(url: url)
+        }
+    }
+}
+
+extension QRFailureDomain.Navigation {
+    
+    var scanQR: Void? {
+        
+        guard case .scanQR = self else { return nil }
+        
+        return ()
     }
 }

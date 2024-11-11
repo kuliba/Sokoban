@@ -8,14 +8,17 @@
 import PayHub
 import PayHubUI
 
-typealias QRDomain = PayHubUI.QRDomain<QRNavigation, QRModel, QRResult>
+typealias QRNavigationDomain = PayHubUI.QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
 
-typealias QRNavigation = PayHubUI.QRNavigation<Payments>
-
-typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
+typealias QRDomain = PayHubUI.QRDomain<QRNavigationDomain.Navigation, QRModel, QRNavigationDomain.Select>
 
 struct Operator: Equatable {}
 struct Provider: Equatable {}
-struct QRCode: Equatable {}
+
+struct QRCode: Equatable {
+    
+    let value: String
+}
+
 struct QRMapping: Equatable {}
 struct Source: Equatable {}

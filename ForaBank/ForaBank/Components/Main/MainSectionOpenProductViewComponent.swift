@@ -73,7 +73,7 @@ struct MainSectionOpenProductView: View {
 
                     ForEach($viewModel.newProducts.items) { $itemViewModel in
 
-                        ButtonNewProduct(viewModel: itemViewModel)
+                        NewProductButton(viewModel: itemViewModel)
                             .frame(width: 112, height: 124)
                     }
                 }

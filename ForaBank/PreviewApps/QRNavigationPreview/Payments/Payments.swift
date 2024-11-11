@@ -11,12 +11,23 @@ import Foundation
 final class Payments {
     
     private let isClosedSubject = CurrentValueSubject<Bool, Never>(false)
+    private let scanQRSubject = PassthroughSubject<Void, Never>()
     
-    let url: URL
+    let source: Source
+    
+    init(source: Source) {
+        
+        self.source = source
+    }
     
     init(url: URL) {
         
-        self.url = url
+        self.source = .url(url)
+    }
+    
+    init(qrCode: QRCode?) {
+        
+        self.source = qrCode.map { .qrCode($0) } ?? .nothing
     }
     
     var isClosedPublisher: AnyPublisher<Bool, Never> {
@@ -24,8 +35,25 @@ final class Payments {
         isClosedSubject.eraseToAnyPublisher()
     }
     
+    var scanQRPublisher: AnyPublisher<Void, Never> {
+        
+        scanQRSubject.eraseToAnyPublisher()
+    }
+    
     func close() {
         
         isClosedSubject.send(true)
+    }
+    
+    func scanQR() {
+        
+        scanQRSubject.send(())
+    }
+    
+    enum Source {
+        
+        case nothing
+        case qrCode(QRCode)
+        case url(URL)
     }
 }

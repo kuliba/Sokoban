@@ -13,17 +13,64 @@ struct QRContentView: View {
     
     var body: some View {
         
-        VStack {
+        List {
             
-            Text("Select scan result")
-                .foregroundColor(.secondary)
-                .padding(.vertical)
-            
-            Button("c2b Subscribe") {
+            Section("Select scan result") {
                 
-                model.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
+                Group {
+                    
+                    Button("c2b Subscribe") {
+                        
+                        model.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
+                    }
+                    
+                    Button("c2b") {
+                        
+                        model.emit(.c2bURL(.init(string: "c2bURL")!))
+                    }
+                    
+                    Button("failure") {
+                        
+                        model.emit(.failure(.init(value: "QRCOde")))
+                    }
+                    .foregroundColor(.red)
+                    
+                    Button("missing INN") {
+                        
+                        model.emit(.mapped(.missingINN(.init(value: "QRCOde"))))
+                    }
+                    .foregroundColor(.red)
+                    
+                    Button("Mixed Operators") {
+                        
+                        model.emit(.mapped(.mixed(.init(
+                            operators: .init(
+                                .operator(.init()),
+                                .provider(.init())
+                            ),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
+                    
+                    Button("Multiple Operators") {
+                        
+                        model.emit(.mapped(.multiple(.init(
+                            operators: .init(.init(), .init()),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
+                }
+                .foregroundColor(.blue)
             }
         }
+        .listStyle(.inset)
         .navigationTitle("QR Scanner")
     }
+}
+
+#Preview {
+    
+    QRContentView(model: .init())
 }

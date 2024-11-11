@@ -21,7 +21,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderComposer<Navigation, QR, QRResult>
+    private typealias SUT = QRBinderComposer<Navigation, QR, Select>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -38,12 +38,35 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )
+        let makeQRFailure = MakeQRFailure()
         let makePayments = MakePayments()
+        let makeMixedPicker = MakeMixedPicker()
+        let makeMultiplePicker = MakeMultiplePicker()
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
-                makePayments: makePayments.call
-            ), 
-            witnesses: .init(isClosed: { $0.isClosed })
+                makeQRFailure: makeQRFailure.call,
+                makePayments: makePayments.call,
+                makeMixedPicker: makeMixedPicker.call,
+                makeMultiplePicker: makeMultiplePicker.call
+            ),
+            witnesses: .init(
+                addCompany: .init(
+                    mixedPicker: { $0.addCompanyPublisher },
+                    multiplePicker: { $0.addCompanyPublisher }
+                ),
+                isClosed: .init(
+                    mixedPicker: { $0.isClosed },
+                    multiplePicker: { $0.isClosed },
+                    payments: { $0.isClosed },
+                    qrFailure: { $0.isClosed }
+                ),
+                scanQR: .init(
+                    mixedPicker: { $0.scanQRPublisher },
+                    multiplePicker: { $0.scanQRPublisher },
+                    payments: { $0.scanQRPublisher },
+                    qrFailure: { $0.scanQRPublisher }
+                )
+            )
         )
         let sut = QRBinderComposer(
             microServices: .init(
