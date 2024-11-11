@@ -71,6 +71,7 @@ class MainViewModel: ObservableObject, Resetable {
         landingServices: LandingServices,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        colleteralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping () -> Void,
         bannersBinder: BannersBinder,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
@@ -78,7 +79,13 @@ class MainViewModel: ObservableObject, Resetable {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = Self.getSections(model, bannersBinder, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
+        self.sections = Self.getSections(
+            model,
+            bannersBinder,
+            updateInfoStatusFlag: updateInfoStatusFlag,
+            collateralLoanLandingFlag: colleteralLoanLandingFlag,
+            stickerViewModel: nil
+        )
         
         self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -102,6 +109,7 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         _ binder: BannersBinder,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
         
