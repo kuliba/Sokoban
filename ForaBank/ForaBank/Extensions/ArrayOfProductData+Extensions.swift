@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 19.04.2024.
 //
 
+import ForaTools
 import Foundation
 
 extension ProductData {
@@ -181,7 +182,5 @@ extension Array where Element == ProductData {
 
 extension Optional where Wrapped == String {
 
-    var hasValue: Bool {
-        !isNilOrEmpty
-    }
+    var hasValue: Bool { !isNilOrEmpty }
 }

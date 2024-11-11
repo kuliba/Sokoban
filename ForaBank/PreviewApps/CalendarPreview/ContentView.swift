@@ -83,17 +83,23 @@ private extension CalendarViewWrapper {
     }
     
     func createCalendarView() -> some View {
-        CalendarView(
-            nil,
-            selectedRange,
-            configureCalendar
-        )
-    }
-    
-    func createBottomView() -> some View {
-        Button("Continue", action: closeAction)
-            .padding(.top, 12)
-            .padding(.horizontal, margins)
+        CalendarView(nil, nil, [], nil, CalendarConfig(
+            weekdaysView: {
+                WeekdaysView.init()
+            },
+            monthLabel: { date in
+                MonthLabel(month: date)
+            },
+            dayView: { date, isCurrentMonth, selectedDate, selectedRange, selectDate in
+                DayView(
+                    date: date,
+                    isCurrentMonth: isCurrentMonth,
+                    selectedDate: selectedDate,
+                    selectedRange: selectedRange,
+                    selectDate: selectDate
+                )
+            }
+        ))
     }
     
     func createSimpleButtonView(
@@ -120,8 +126,7 @@ private extension CalendarViewWrapper {
     func configureCalendar(_ config: CalendarConfig) -> CalendarConfig {
        
         config
-            .dayView(DV.RangeSelector.init)
-            .scrollTo(date: .now)
+//            .scrollTo(date: .now)
     }
 }
 
@@ -131,6 +136,7 @@ fileprivate struct SelectedRangeView: View {
     @Binding var selectedRange: MDateRange?
 
     var body: some View {
+        
         HStack(spacing: 12) {
             createDateText(startDateText)
             createArrowIcon()
@@ -180,39 +186,3 @@ private extension SelectedRangeView {
 
 // MARK: - Modifiers
 fileprivate let margins: CGFloat = 24
-
-enum DV {}
-
-extension DV {
-    
-    struct RangeSelector: DayView {
-        
-        let date: Date
-        let isCurrentMonth: Bool
-        let selectedDate: Binding<Date?>?
-        var selectedRange: Binding<MDateRange?>? {
-            didSet {
-                print("print")
-            }
-        }
-    }
-}
-
-extension DV.RangeSelector {
-    
-    func createDayLabel() -> AnyView {
-        
-        Text(getStringFromDay(format: "d"))
-            .font(.system(size: 15))
-            .foregroundStyle(isSelected() ? .white : .black)
-            .opacity(isFuture() ? 0.2 : 1)
-            .erased()
-    }
-}
-
-// MARK: - On Selection Logic
-extension DV.RangeSelector {
-    func onSelection() { if !isFuture() {
-        selectedRange?.wrappedValue?.addToRange(date)
-    }}
-}

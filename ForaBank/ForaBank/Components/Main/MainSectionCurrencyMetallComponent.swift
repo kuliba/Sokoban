@@ -165,11 +165,22 @@ extension MainSectionCurrencyMetallView {
     }
 }
 
+struct MainSectionCurrencyMetalViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension MainSectionCurrencyMetalViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 //MARK: - View
 
 struct MainSectionCurrencyMetallView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: MainSectionCurrencyMetalViewFactory
 
     var body: some View {
         
@@ -179,7 +190,7 @@ struct MainSectionCurrencyMetallView: View {
                 
                 if let selectorViewModel = viewModel.selector {
                     
-                    OptionSelectorView(viewModel: selectorViewModel)
+                    viewFactory.makeOptionSelectorView(selectorViewModel)
                         .frame(height: 24)
                         .padding(.leading, 20)
                 }
@@ -450,7 +461,7 @@ struct CurrencyMetallView_Previews: PreviewProvider {
         
         Group {
             
-            MainSectionCurrencyMetallView(viewModel: .sample)
+            MainSectionCurrencyMetallView(viewModel: .sample, viewFactory: .preview)
                 .previewLayout(.fixed(width: 375, height: 300))
 
             MainSectionCurrencyMetallView.PlaceholderItemView()

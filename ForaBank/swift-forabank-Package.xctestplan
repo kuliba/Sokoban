@@ -560,9 +560,30 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "CollateralLoanLandingDraftBackendTests",
         "name" : "CollateralLoanLandingDraftBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV7ServiceTests",
+        "name" : "GetProductListByTypeV7ServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingSaveConsentsBackendTests",
+        "name" : "CollateralLoanLandingSaveConsentsBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetBannersMyProductListServiceTests",
+        "name" : "GetBannersMyProductListServiceTests"
       }
     }
   ],

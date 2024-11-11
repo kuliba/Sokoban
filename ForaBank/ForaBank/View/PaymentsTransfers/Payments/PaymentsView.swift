@@ -7,9 +7,25 @@
 
 import SwiftUI
 
+struct PaymentsViewFactory {
+    
+    let makePaymentsOperationView: MakePaymentsOperationView
+    let makePaymentsServiceView: MakePaymentsServiceView
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+}
+
+extension PaymentsViewFactory {
+    
+    static let preview: Self = .init(
+        makePaymentsOperationView: {_ in fatalError()},
+        makePaymentsServiceView: {_ in fatalError()},
+        makePaymentsSuccessView: {_ in fatalError()})
+}
+
 struct PaymentsView: View {
     
     @ObservedObject var viewModel: PaymentsViewModel
+    let viewFactory: PaymentsViewFactory
     
     var body: some View {
         
@@ -22,16 +38,17 @@ struct PaymentsView: View {
                     .zIndex(0)
                 
             case let .service(serviceViewModel):
-                PaymentsServiceView(viewModel: serviceViewModel)
+                viewFactory.makePaymentsServiceView(serviceViewModel)
                     .zIndex(0)
                     .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
                         Image("Payments Icon Close") }))
-                
+             
             case let .operation(node):
-                PaymentsOperationView(viewModel: node.model)
+                viewFactory.makePaymentsOperationView(node.model)
                     .zIndex(0)
+
             case let .linkNotActive(viewModel):
-                PaymentsSuccessView(viewModel: viewModel)
+                viewFactory.makePaymentsSuccessView(viewModel)
             }
             
             if let spinnerViewModel = viewModel.spinner {
@@ -44,7 +61,7 @@ struct PaymentsView: View {
                 .zIndex(2)
                 .fullScreenCover(item: $viewModel.successViewModel, content: { successViewModel in
                     
-                    PaymentsSuccessView(viewModel: successViewModel)
+                    viewFactory.makePaymentsSuccessView(successViewModel)
                 })
             
             Color.clear
@@ -64,7 +81,7 @@ struct PaymentsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsView(viewModel: .sample)
+        PaymentsView(viewModel: .sample, viewFactory: .preview)
     }
 }
 

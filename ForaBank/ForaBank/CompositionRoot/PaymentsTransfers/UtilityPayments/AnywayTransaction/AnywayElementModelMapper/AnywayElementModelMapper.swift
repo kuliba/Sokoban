@@ -89,7 +89,7 @@ private extension AnywayElementModelMapper {
         case .nonEditable:
             return .parameter(.init(
                 origin: parameter.uiComponent,
-                type: .nonEditable
+                type: .nonEditable(makeInputViewModel(with: parameter, event: event))
             ))
             
         case .numberInput:
