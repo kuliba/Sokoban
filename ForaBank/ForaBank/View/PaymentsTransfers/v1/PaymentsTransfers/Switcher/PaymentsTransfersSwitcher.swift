@@ -8,3 +8,10 @@
 import PayHubUI
 
 typealias PaymentsTransfersSwitcher = ProfileSwitcherModel<PaymentsTransfersCorporate, PaymentsTransfersPersonal>
+
+import Combine
+
+protocol PaymentsTransfersSwitcherProtocol {
+    
+    var hasDestination: AnyPublisher<Bool, Never> { get }
+}
