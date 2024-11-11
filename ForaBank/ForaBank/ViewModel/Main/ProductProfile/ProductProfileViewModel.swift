@@ -503,9 +503,9 @@ private extension ProductProfileViewModel {
             .compactMap { $0 as? ProductProfileViewModelAction.Spinner.Show }
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
-                withAnimation {
+//                withAnimation {
                     self.spinner = .init()
-                }
+//                }
             }.store(in: &bindings)
         
         // Hide Spinner
@@ -513,9 +513,9 @@ private extension ProductProfileViewModel {
             .compactMap { $0 as? ProductProfileViewModelAction.Spinner.Hide }
             .receive(on: DispatchQueue.main)
             .sink { [unowned self]  _ in
-                withAnimation {
+//                withAnimation {
                     self.spinner = nil
-                }
+//                }
             }.store(in: &bindings)
         
         $isLinkActive
@@ -660,9 +660,9 @@ private extension ProductProfileViewModel {
                     
                 case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
                     
-                    withAnimation {
+//                    withAnimation {
                         NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
-                    }
+//                    }
                     
                 case _ as ProductProfileViewModelAction.Close.Alert:
                     alert = nil
@@ -732,11 +732,11 @@ private extension ProductProfileViewModel {
                             return
                         }
                         
-                        withAnimation {
+//                        withAnimation {
                             
                             navigationBar.updateName(with: name)
                             accentColor = Self.accentColor(with: product)
-                        }
+//                        }
                         
                     case .failed(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
@@ -896,7 +896,7 @@ private extension ProductProfileViewModel {
                     return
                 }
                 
-                withAnimation {
+//                withAnimation {
                     buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
                     
                     if let card = productData.asCard {
@@ -904,7 +904,7 @@ private extension ProductProfileViewModel {
                         let newButtons = productProfileViewModelFactory.makeCardGuardianPanel(card).controlPanelButtons
                         controlPanelViewModel?.event(.updateState(newButtons))
                     }
-                }
+//                }
                 
             }.store(in: &bindings)
         
@@ -919,7 +919,7 @@ private extension ProductProfileViewModel {
                 if let productLoan = model.products.value[.loan]?.first(where: { $0.id == product.activeProductId }) as? ProductLoanData,
                    let loanData = loans.first(where: { $0.loandId == product.activeProductId}) {
                     
-                    withAnimation {
+//                    withAnimation {
                         
                         if let detail = detail {
                             
@@ -930,13 +930,13 @@ private extension ProductProfileViewModel {
                             detail = .init(productLoan: productLoan, loanData: loanData, model: model)
                             bind(detail: detail)
                         }
-                    }
+//                    }
                     
                 } else {
                     
-                    withAnimation {
+//                    withAnimation {
                         detail = nil
-                    }
+//                    }
                 }
                 
             }.store(in: &bindings)
@@ -955,39 +955,39 @@ private extension ProductProfileViewModel {
                     self.model.action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
                 }
                 // status bar update
-                withAnimation {
+//                withAnimation {
                     
                     navigationBar.update(with: product)
                     accentColor = Self.accentColor(with: product)
-                }
+//                }
                 
                 // buttons update
-                withAnimation {
+//                withAnimation {
                     buttons.update(with: product, depositInfo: model.depositsInfo.value[product.id])
-                }
+//                }
                 
                 // detail update
-                withAnimation {
+//                withAnimation {
                     detail = makeDetailViewModel(with: product)
-                }
+//                }
                 
                 bind(detail: detail)
                 
                 // history update
                 if let historyViewModel = historyPool[activeProductId] {
                     
-                    withAnimation {
+//                    withAnimation {
                         history = historyViewModel
-                    }
+//                    }
                     self.event(.history(.clearOptions))
                     
                 } else {
                     
                     let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: activeProductId, model: model)
                     
-                    withAnimation {
+//                    withAnimation {
                         history = historyViewModel
-                    }
+//                    }
                     
                     self.event(.history(.clearOptions))
                     
@@ -999,19 +999,19 @@ private extension ProductProfileViewModel {
                     
                     guard let alertTitle = alertTitle(for: product.productType) else { return }
                     
-                    withAnimation {
+//                    withAnimation {
                         
                         navigationBar.rightItems = [ NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic16Edit2, action: { [weak self] in
                             
                             self?.action.send(ProductProfileViewModelAction.Product.UpdateCustomName(productId: product.id, productType: product.productType, alertTitle: alertTitle))
                         })]
-                    }
+//                    }
                 } else {
                     
-                    withAnimation {
+//                    withAnimation {
                         
                         navigationBar.rightItems = []
-                    }
+//                    }
                 }
                 
             }.store(in: &bindings)
@@ -1363,9 +1363,9 @@ private extension ProductProfileViewModel {
                 
                 guard let product else { return }
                 
-                withAnimation {
+//                withAnimation {
                     product.spinner = .init()
-                }
+//                }
             }.store(in: &bindings)
         
         product.action
@@ -1375,9 +1375,9 @@ private extension ProductProfileViewModel {
                 
                 guard let product else { return }
                 
-                withAnimation {
+//                withAnimation {
                     product.spinner = nil
-                }
+//                }
             }.store(in: &bindings)
         
         product.action
