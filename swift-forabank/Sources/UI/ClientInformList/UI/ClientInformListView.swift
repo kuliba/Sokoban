@@ -103,21 +103,13 @@ public struct ClientInformListView: View {
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
             
-            if let url = singleInfo.url {
-                
-                let linkableText = "\(singleInfo.text) \(url)"
-                
-                Text(.init(linkableText))
-                    .font(config.textConfig.textFont)
-                    .foregroundColor(config.titleConfig.textColor)
-                    .padding(.horizontal, config.paddings.horizontal)
-            } else {
-                
-                Text(singleInfo.text)
-                    .font(config.textConfig.textFont)
-                    .foregroundColor(config.titleConfig.textColor)
-                    .padding(.horizontal, config.paddings.horizontal)
-            }
+            let linkableText = singleInfo.url != nil ? 
+            "\(singleInfo.text) \(singleInfo.url!)" : singleInfo.text
+            
+            Text(linkableText)
+                .font(config.textConfig.textFont)
+                .foregroundColor(config.titleConfig.textColor)
+                .padding(.horizontal, config.paddings.horizontal)
         }
         .frame(maxWidth: .infinity)
     }
