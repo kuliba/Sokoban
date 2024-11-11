@@ -105,12 +105,10 @@ final class FlowComposerTests: XCTestCase {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(
-            microServices: .init(
-                getNavigation:  {
-                    
-                    getNavigation.process(($0, $1), completion: $2)
-                }
-            ),
+            getNavigation:  {
+                
+                getNavigation.process(($0, $1), completion: $2)
+            },
             scheduler: .immediate,
             interactiveScheduler: .immediate
         )

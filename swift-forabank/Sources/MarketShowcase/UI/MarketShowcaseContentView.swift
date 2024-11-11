@@ -32,10 +32,13 @@ where RefreshView: View,
     
     public var body: some View {
         
-        content()
-            .refresh(action: {
-                event(.load)
-            })
+        RefreshableScrollView(
+            action: { event(.load) },
+            showsIndicators: false,
+            refreshCompletionDelay: 2.0
+        ) {
+            content()
+        }
     }
     
     @ViewBuilder

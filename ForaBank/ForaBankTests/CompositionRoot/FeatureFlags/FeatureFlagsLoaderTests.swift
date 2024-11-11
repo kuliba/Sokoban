@@ -206,6 +206,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    // MARK: - SavingsAccountFlag
+    
+    func test_load_shouldDeliverActiveSavingsAccountFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .savingsAccountFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            savingsAccountFlag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveSavingsAccountFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            savingsAccountFlag: .init(.inactive)
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -229,7 +253,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
         marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
-        utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
+        utilitiesPaymentsFlag: StubbedFeatureFlag? = nil,
+        savingsAccountFlag: SavingsAccountFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
@@ -238,7 +263,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             marketplaceFlag: marketplaceFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag.map { .init($0.rawValue) } ?? .init(.inactive),
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive),
+            savingsAccountFlag: savingsAccountFlag.map { .init($0.rawValue) } ?? .init(.inactive)
         )
     }
 }

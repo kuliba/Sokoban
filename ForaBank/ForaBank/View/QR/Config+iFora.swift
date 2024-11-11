@@ -104,6 +104,93 @@ extension ProductSelectComponent.ProductSelectConfig {
     )
 }
 
+import CalendarUI
+
+public extension CalendarConfig {
+    
+    static let iFora: Self = .init(
+        title: "Выберите даты или период",
+        titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
+        option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
+        month: .init(textFont: .textH3M18240(), textColor: .mainColorsGray),
+        optionSelectBackground: .mainColorsBlackMedium,
+        weekdaysView: {
+            WeekdaysView()
+        },
+        monthLabel: { date in
+            MonthLabel(month: date)
+        },
+        dayConfig: .init(
+            selectedColor: .mainColorsBlackMedium,
+            todayBackground: .mainColorsGrayLightest,
+            todayForeground: .mainColorsRed
+        ),
+        closeImage: .ic24Close,
+        scrollDate: Date().scrollToday
+    )
+}
+
+public extension FilterConfig {
+
+    static let iFora: Self = .init(
+        title: .init(
+            title: "Фильтры",
+            titleConfig: .init(
+                textFont: .textH3M18240(),
+                textColor: .textSecondary
+            )
+        ),
+        periodTitle: .init(
+            title: "Период",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        transactionTitle: .init(
+            title: "Движение средств",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        categoryTitle: .init(
+            title: "Категории",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        optionConfig: .init(
+            font: .textBodyMR14200(),
+            selectBackgroundColor: .mainColorsBlackMedium,
+            notSelectedBackgroundColor: .mainColorsGrayLightest,
+            selectForegroundColor: .textWhite,
+            notSelectForegroundColor: .textSecondary
+        ),
+        buttonsContainerConfig: .init(
+            clearButtonTitle: "Очистить",
+            applyButtonTitle: "Применить",
+            disableButtonBackground: .mainColorsGrayLightest
+        ),
+        optionButtonCloseImage: .ic24Close,
+        failureConfig: .init(
+            title: "Мы не смогли загрузить данные.\nПопробуйте позже.",
+            titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
+            icon: .ic32Search,
+            iconForeground: .mainColorsGray,
+            backgroundIcon: .mainColorsGrayLightest
+        ),
+        emptyConfig: .init(
+            title: "Нет подходящих операций. Попробуйте изменить параметры фильтра",
+            titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
+            icon: .ic32Search,
+            iconForeground: .mainColorsGray,
+            backgroundIcon: .mainColorsGrayLightest
+        )
+    )
+}
+
 import SwiftUI
 
 // MARK: - Previews
@@ -135,5 +222,23 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
             map: PublishingInfo.preview,
             config: .iFora
         )
+    }
+}
+
+extension Date {
+    
+    var scrollToday: Date {
+        var today = Date()
+        var gregorian = Calendar(identifier: .gregorian)
+        gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
+
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+
+        today = gregorian.date(from: components)!
+        
+        return today
     }
 }
