@@ -116,11 +116,9 @@ final class RootViewBinderComposerTests: XCTestCase {
             },
             schedulers: .immediate,
             witnesses: .init(
-                contentFlow: .init(
-                    contentEmitting: { $0.selectPublisher },
-                    contentReceiving: { $0.receive },
-                    flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                    flowReceiving: { flow in { flow.event(.select($0)) }}
+                content: .init(
+                    emitting: { $0.selectPublisher },
+                    receiving: { $0.receive }
                 ),
                 dismiss: .init(
                     dismissAll: { _ in dismissAllSubject.eraseToAnyPublisher() },

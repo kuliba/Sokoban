@@ -64,7 +64,16 @@ private extension RootViewBinderComposer {
     ) -> Set<AnyCancellable> {
         
         let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
-        let bind = factory.bind(with: witnesses.contentFlow)
+        let bind = factory.bind(with: .init(
+            contentEmitting: witnesses.content.emitting,
+            contentReceiving: witnesses.content.receiving,
+            flowEmitting: { (flow: RootDomain.Flow) in
+                
+                flow.$state
+                    .map(\RootDomain.FlowDomain.State.navigation).eraseToAnyPublisher()
+            },
+            flowReceiving: { flow in { flow.event(.select($0)) }}
+        ))
         
         var bindings = bindings.union(bind(content, flow))
         bindings.insert(bindDismiss(content: content))

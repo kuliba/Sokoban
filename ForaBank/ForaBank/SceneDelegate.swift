@@ -107,6 +107,32 @@ private extension SceneDelegate {
     }
 }
 
+private extension RootViewDomain<RootViewModel>.Witnesses {
+    
+    static let `default`: Self = .init(
+        content: .init(
+            emitting: { _ in Empty().eraseToAnyPublisher() },
+            receiving: { _ in {}}
+        ),
+        dismiss: .init(
+            dismissAll: {
+                
+                $0.action
+                    .compactMap { $0 as? RootViewModelAction.DismissAll }
+                    .eraseToAnyPublisher()
+            },
+            reset: { content in
+                
+                return {
+                    
+                    content.resetLink()
+                    content.reset()
+                }
+            }
+        )
+    )
+}
+
 // MARK: - appearance
 
 extension SceneDelegate {

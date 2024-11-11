@@ -19,7 +19,7 @@ enum RootViewDomain<RootViewModel> {
     
     struct Witnesses {
      
-        let contentFlow: ContentFlowWitnesses<Content, Flow, Select, Navigation>
+        let content: ContentWitnesses<Content, Select, Navigation>
         let dismiss: DismissWitnesses<Content>
         
         struct DismissWitnesses<T> {
@@ -49,32 +49,4 @@ enum RootViewDomain<RootViewModel> {
         
         case scanQR
     }
-}
-
-extension RootViewDomain<RootViewModel>.Witnesses {
-    
-    static let `default`: Self = .init(
-        contentFlow: .init(
-            contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-            contentReceiving: { _ in {}},
-            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
-        ),
-        dismiss: .init(
-            dismissAll: {
-                
-                $0.action
-                    .compactMap { $0 as? RootViewModelAction.DismissAll }
-                    .eraseToAnyPublisher()
-            },
-            reset: { content in
-                
-                return {
-                    
-                    content.resetLink()
-                    content.reset()
-                }
-            }
-        )
-    )
 }
