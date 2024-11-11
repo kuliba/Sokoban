@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View 
+struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+}
+
+struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View
 where AnywayFlowView: View {
     
     let flowModel: FlowModel
     let iconView: (IconDomain.Icon?) -> IconDomain.IconView
-    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
+    let viewFactory: ComposedSegmentedPaymentProviderPickerFlowViewFactory
     
     var body: some View {
         
@@ -52,25 +58,19 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
         
         switch destination {
         case let .payByInstructions(node):
-            PaymentsView(viewModel: node.model)
+            viewFactory.makePaymentsView(node.model)
             
         case let .payments(node):
-            PaymentsView(viewModel: node.model)
+            viewFactory.makePaymentsView(node.model)
             
         case let .servicePicker(node):
-            AnywayServicePickerFlowView(
-                flowModel: node.model,
-                factory: .init(
-                    makeAnywayFlowView: makeAnywayFlowView,
-                    makeIconView: iconView
+            viewFactory.makeAnywayServicePickerFlowView(node.model)
+                .navigationBarWithAsyncIcon(
+                    title: node.title,
+                    subtitle: node.subtitle,
+                    dismiss: { node.model.event(.dismiss) },
+                    icon: iconView(node.icon)
                 )
-            )
-            .navigationBarWithAsyncIcon(
-                title: node.title,
-                subtitle: node.subtitle,
-                dismiss: { node.model.event(.dismiss) },
-                icon: iconView(node.icon)
-            )
         }
     }
 }
