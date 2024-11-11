@@ -251,7 +251,7 @@ extension ProductProfileCardView {
                     let totalUpdating = data.0
                     let fastUpdating = data.1
                     
-                    withAnimation {
+//                    withAnimation {
                         
                         if totalUpdating.contains(productType) {
                             
@@ -273,7 +273,7 @@ extension ProductProfileCardView {
                                     product.isUpdating = false
                                 }
                             }
-                        }
+//                        }
                     }
                     
                     
@@ -309,10 +309,10 @@ extension ProductProfileCardView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] active in
                     
-                    withAnimation {
+//                    withAnimation {
                         
                         selector.selected = active
-                    }
+//                    }
                     
                     products.forEach { product in
                         
@@ -362,10 +362,10 @@ extension ProductProfileCardView {
                     
                     switch action {
                     case let payload as ProductProfileCardView.ViewModel.SelectorViewModelAction.ThumbnailSelected:
-                        withAnimation {
+//                        withAnimation {
                             
                             activeProductId = payload.thunmbnailId
-                        }
+//                        }
                         
                     case _ as ProductProfileCardView.ViewModel.SelectorViewModelAction.MoreButtonTapped:
                         self.action.send(ProductProfileCardViewModelAction.MoreButtonTapped())

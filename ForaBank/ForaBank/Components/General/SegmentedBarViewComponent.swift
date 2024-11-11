@@ -21,11 +21,18 @@ extension SegmentedBarView {
         
         private let model: Model
         
-        init(values: [ProductStatementMerchantGroup: Double],
-             titleLabel: String,
-             currencyCode: String,
-             prefixTotalValue: String = "",
-             model: Model = .emptyMock) {
+        var sortedValues: [(key: ProductStatementMerchantGroup, Double)] {
+            
+            values.sorted(by: { $0.value > $1.value })
+        }
+        
+        init(
+            values: [ProductStatementMerchantGroup: Double],
+            titleLabel: String,
+            currencyCode: String,
+            prefixTotalValue: String = "",
+            model: Model = .emptyMock
+        ) {
             
             self.values = values
             self.model = model
@@ -40,23 +47,34 @@ extension SegmentedBarView {
                                             style: totalValue != 0 ? .normal : .clipped) ?? String(totalValue))
         }
         
-        convenience init(mappedValues: [ProductStatementMerchantGroup: Double],
-                         productType: ProductType,
-                         currencyCode: String,
-                         model: Model) {
+        convenience init(
+            mappedValues: [ProductStatementMerchantGroup: Double],
+            productType: ProductType,
+            currencyCode: String,
+            selectRange: ClosedRange<Date>?,
+            model: Model
+        ) {
             
-            self.init(values: mappedValues,
-                      titleLabel: Self.getTitleLabel(productType: productType),
-                      currencyCode: currencyCode,
-                      prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
-                      model: model)
+            self.init(
+                values: mappedValues,
+                titleLabel: Self.getTitleLabel(
+                    productType: productType,
+                    selectRange: selectRange
+                ),
+                currencyCode: currencyCode,
+                prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
+                model: model
+            )
         }
         
         // это согласованный костыль
-        convenience init(stringValues: [String: Double],
-                         productType: ProductType,
-                         currencyCode: String,
-                         model: Model) {
+        convenience init(
+            stringValues: [String: Double],
+            productType: ProductType,
+            currencyCode: String,
+            selectRange: ClosedRange<Date>?,
+            model: Model
+        ) {
             
             var mockValues = [ProductStatementMerchantGroup: Double]()
             let merchantGroup = ProductStatementMerchantGroup.allCases
@@ -64,32 +82,48 @@ extension SegmentedBarView {
             var sumEndGroup = 0.0
             
             stringValues.sorted(by: {$0.value > $1.value})
-                        .forEach { key, value in
-                
-                            if i < merchantGroup.count - 1 {
-                                mockValues[merchantGroup[i]] = value
-                            } else {
-                                sumEndGroup += value
-                                mockValues[merchantGroup[merchantGroup.count - 1]] = sumEndGroup
-                            }
-                            
-                            i += 1
-            }
+                .forEach { key, value in
+                    
+                    if i < merchantGroup.count - 1 {
+                        mockValues[merchantGroup[i]] = value
+                    } else {
+                        sumEndGroup += value
+                        mockValues[merchantGroup[merchantGroup.count - 1]] = sumEndGroup
+                    }
+                    
+                    i += 1
+                }
             
-            self.init(values: mockValues,
-                      titleLabel: Self.getTitleLabel(productType: productType),
-                      currencyCode: currencyCode,
-                      prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
-                      model: model)
-                
+            self.init(
+                values: mockValues,
+                titleLabel: Self.getTitleLabel(
+                    productType: productType,
+                    selectRange: selectRange
+                ),
+                currencyCode: currencyCode,
+                prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
+                model: model
+            )
         }
         
-        private static func getTitleLabel(productType: ProductType) -> String {
+        private static func getTitleLabel(
+            productType: ProductType,
+            selectRange: ClosedRange<Date>?
+        ) -> String {
             
-            let dateFormatter = DateFormatter.monthFormatter
-            let currentMonth = dateFormatter.string(from: Date())
-            
-            return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
+            if let selectRange {
+                
+                let dateFormatted = ("\(DateFormatter.shortDateGTM0.string(from: selectRange.lowerBound)) - \(DateFormatter.shortDateGTM0.string(from: selectRange.upperBound))")
+                
+                return productType == .deposit ? "Мой доход за \(dateFormatted)" : "Tраты за \(dateFormatted)"
+                
+            } else {
+                
+                let dateFormatter = DateFormatter.monthFormatter
+                let currentMonth = dateFormatter.string(from: Date())
+                
+                return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
+            }
         }
         
         private static func getPrefixTotalValue(productType: ProductType) -> String {
@@ -102,53 +136,64 @@ extension SegmentedBarView {
 
 //MARK: - View
 
+private extension SegmentedBarView {
+
+    @ViewBuilder
+    func bar(width: CGFloat) -> some View {
+        
+        if viewModel.totalValue != 0 {
+                
+            bar(coef: width / viewModel.totalValue)
+        
+        } else {
+            
+            RoundedRectangle(cornerRadius: 8)
+                .frame(width: width)
+                .foregroundColor(.mainColorsGrayLightest)
+        }
+    }
+    
+    @ViewBuilder
+    func bar(coef: CGFloat) -> some View {
+        
+        HStack(alignment: .center, spacing: 0) {
+    
+            ForEach(viewModel.sortedValues, id: \.key) { key, value in
+                
+                key.color
+                    .frame(width: value * coef)
+                    .animation(.easeInOut, value: value)
+            }
+        }
+        .cornerRadius(8)
+    }
+}
+
 struct SegmentedBarView: View {
     
     let viewModel: SegmentedBarView.ViewModel
     
     var body: some View {
         
-        GeometryReader { geometry in
+        VStack {
             
-            VStack {
+            HStack {
                 
-                HStack {
-                
-                    Text(viewModel.titleLabel)
-                        .accessibilityIdentifier("spendingTitleMonth")
-                    Spacer()
-                    Text(viewModel.totalValueFormatted)
-                        .accessibilityIdentifier("spendingAmount")
-                }
-                .foregroundColor(.textSecondary)
-                .font(.textH4M16240())
-                .padding(.bottom, 6)
-            
-                if viewModel.totalValue != 0 {
-                    
-                    ZStack {
-                
-                        HStack(alignment: .center, spacing: 0) {
-                    
-                            ForEach(viewModel
-                                .values.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
-                        
-                                    Rectangle()
-                                        .frame(width: geometry.size.width
-                                            * CGFloat(value / viewModel.totalValue),height: 8)
-                                        .foregroundColor(key.color)
-                                        .animation(.easeInOut)
-                            }
-                        }
-                    }.cornerRadius(8)
-                
-                } else {
-                    
-                    RoundedRectangle(cornerRadius: 8)
-                        .frame(width: geometry.size.width, height: 8)
-                        .foregroundColor(.mainColorsGrayLightest)
-                }
+                Text(viewModel.titleLabel)
+                    .accessibilityIdentifier("spendingTitleMonth")
+                Spacer()
+                Text(viewModel.totalValueFormatted)
+                    .accessibilityIdentifier("spendingAmount")
             }
+            .foregroundColor(.textSecondary)
+            .font(.textH4M16240())
+            .padding(.bottom, 6)
+            
+            GeometryReader { geometry in
+                
+                bar(width: geometry.size.width)
+            }
+            .frame(height: 8)
         }
     }
 }

@@ -17,7 +17,7 @@ public extension AnywayPaymentUpdate.Parameter {
             case ._backendReserved:
                 return nil
                 
-            case .number, .string:
+            case .integer, .number, .numeric, .string, .string2, .string2Rus, .stringEn:
                 return field.content.map { .nonEditable(.string($0)) }
                 
             case let .pairs(pair, pairs):
@@ -32,7 +32,7 @@ public extension AnywayPaymentUpdate.Parameter {
             case ._backendReserved:
                 return nil
                 
-            case .number:
+            case .integer, .number, .numeric:
                 switch uiAttributes.type {
                 case .input:
                     return .numberInput(id: field.id, value: field.content)
@@ -53,7 +53,7 @@ public extension AnywayPaymentUpdate.Parameter {
                     return .select(pair, pairs)
                 }
                 
-            case .string:
+            case .string, .string2, .string2Rus, .stringEn:
                 switch uiAttributes.type {
                 case .input:
                     return .textInput(id: field.id, value: field.content)
@@ -68,7 +68,7 @@ public extension AnywayPaymentUpdate.Parameter {
             case ._backendReserved:
                 return .hidden("OUTPUT")
                 
-            case .number, .string:
+            case .integer, .number, .numeric, .string, .string2, .string2Rus, .stringEn:
                 return field.content.map { .hidden($0) }
                 
             case let .pairs(pair, pairs):
