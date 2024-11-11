@@ -29,7 +29,8 @@ final class RootViewFactoryComposerTests: XCTestCase {
             model: model ?? .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             historyFeatureFlag: .init(true), 
-            marketFeatureFlag: .init(rawValue: .inactive)
+            marketFeatureFlag: .init(rawValue: .inactive), 
+            savingsAccountFlag: .init(rawValue: .inactive)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

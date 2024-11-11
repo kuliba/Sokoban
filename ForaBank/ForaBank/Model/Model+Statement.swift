@@ -22,6 +22,8 @@ extension ModelAction {
                 
                 let productId: ProductData.ID
                 let direction: Period.Direction
+                let operationType: Services.CardStatementForPeriodPayload.OperationType?
+                let category: [String]?
             }
         }
     }
@@ -33,7 +35,7 @@ extension Model {
     
     static let statementsSerial = "version 3"
     var statementsRequestDays: Int { 30 }
-    var statementslatestDaysOffset: Int { 7 }
+    var statementsLatestDaysOffset: Int { 10 }
     
     func statement(statementId: ProductStatementData.ID) -> ProductStatementData? {
         
@@ -93,12 +95,24 @@ extension Model {
   
                 repeat {
                     
-                    guard let requestProperties = Self.statementsRequestParameters(storage: storage, product: product, direction: currentDirection, days: statementsRequestDays, currentDate: currentDate, latestDaysOffset: statementslatestDaysOffset) else {
-                        
+                    guard let requestProperties = Self.statementsRequestParameters(
+                        storage: storage,
+                        product: product,
+                        direction: currentDirection,
+                        days: statementsRequestDays,
+                        currentDate: currentDate,
+                        latestDaysOffset: statementsLatestDaysOffset
+                    ) else {
                         break
                     }
 
-                    let resultStatements = try await statementsFetch(token: token, product: product, period: requestProperties.period)
+                    let resultStatements = try await statementsFetch(
+                        token: token,
+                        product: product,
+                        period: requestProperties.period,
+                        operationType: payload.operationType,
+                        operationGroup: payload.category
+                    )
                     statementsCheckDuplicates(product: product, statements: resultStatements)
      
                     switch currentDirection {
@@ -117,11 +131,22 @@ extension Model {
                             // stop requesting eldest periods
                             continueRequests = false
                         }
+                    case let .custom(start: startDate, end: endDate):
+                        continueRequests = false
                     }
 
-                    let update = ProductStatementsStorage.Update(period: requestProperties.period, statements: resultStatements, direction: requestProperties.direction, limitDate: requestProperties.limitDate)
+                    let update = ProductStatementsStorage.Update(
+                        period: requestProperties.period,
+                        statements: resultStatements,
+                        direction: requestProperties.direction,
+                        limitDate: requestProperties.limitDate
+                    )
 
-                    storage = Self.reduce(storage: storage, update: update, product: product)
+                    storage = Self.reduce(
+                        storage: storage,
+                        update: update,
+                        product: product
+                    )
 
                 } while continueRequests
                 
@@ -146,7 +171,13 @@ extension Model {
         }
     }
     
-    func statementsFetch(token: String, product: ProductData, period: Period) async throws -> [ProductStatementData] {
+    func statementsFetch(
+        token: String,
+        product: ProductData,
+        period: Period,
+        operationType: Services.CardStatementForPeriodPayload.OperationType?,
+        operationGroup: [String]?
+    ) async throws -> [ProductStatementData] {
         
         switch product.productType {
         case .card:
@@ -154,7 +185,10 @@ extension Model {
             return try await Services.makeCardStatementForPeriod(
                 httpClient: self.authenticatedHTTPClient(), 
                 productId: product.id,
-                period: period)
+                period: period,
+                operationType: operationType?.id.uppercased(),
+                operationGroup: operationGroup
+            )
             
         case .account:
             let command = ServerCommands.AccountController.GetAccountStatementForPeriod(token: token, productId: product.id, period: period)
@@ -186,7 +220,7 @@ extension Model {
                             return
                         }
                         
-                        continuation.resume(returning: data)
+                        continuation.resume(returning: data.operationList)
 
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
@@ -213,7 +247,7 @@ extension Model {
                             return
                         }
                         
-                        continuation.resume(returning: data)
+                        continuation.resume(returning: data.operationList)
 
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
@@ -239,7 +273,14 @@ extension Model {
         return state.isDownloadActive
     }
     
-    static func statementsRequestParameters(storage: ProductStatementsStorage?, product: ProductData, direction: Period.Direction, days: Int, currentDate: Date, latestDaysOffset: Int) -> ProductStatementsStorage.Request? {
+    static func statementsRequestParameters(
+        storage: ProductStatementsStorage?,
+        product: ProductData,
+        direction: Period.Direction,
+        days: Int,
+        currentDate: Date,
+        latestDaysOffset: Int
+    ) -> ProductStatementsStorage.Request? {
         
         switch direction {
         case .latest:
@@ -251,7 +292,13 @@ extension Model {
                 
                 if period.end < currentDate {
                     
-                    return .init(period: period, direction: direction, limitDate: currentDate)
+                    return .init(
+                        period: period,
+                        direction: direction,
+                        limitDate: currentDate,
+                        operationType: nil,
+                        operationGroup: nil
+                    )
                     
                 } else {
                     
@@ -260,21 +307,50 @@ extension Model {
                     
                     let adjustedPeriod = Period(start: startDate, end: endDate)
                     
-                    return .init(period: adjustedPeriod, direction: direction, limitDate: currentDate)
+                    return .init(
+                        period: adjustedPeriod,
+                        direction: direction,
+                        limitDate: currentDate,
+                        operationType: nil,
+                        operationGroup: nil
+                    )
                 }
                 
             } else {
                 
                 let period = Period(daysBack: days, from: currentDate)
-                return .init(period: period, direction: direction, limitDate: currentDate)
+                return .init(
+                    period: period,
+                    direction: direction,
+                    limitDate: currentDate,
+                    operationType: nil,
+                    operationGroup: nil
+                )
             }
             
         case .eldest:
+            let limitDate = ProductStatementsStorage.historyLimitDate(for: product)
+            
             guard let storage = storage,
-                  let limitDate = ProductStatementsStorage.historyLimitDate(for: product),
                   let period = storage.eldestPeriod(days: days, limitDate: limitDate) else { return nil }
             
-            return .init(period: period, direction: direction, limitDate: limitDate)
+            return .init(
+                period: period,
+                direction: direction,
+                limitDate: limitDate,
+                operationType: nil,
+                operationGroup: nil
+            )
+        
+        case let .custom(start: startDate, end: endDate):
+            let adjustedPeriod = Period(start: startDate, end: endDate)
+            return .init(
+                period: adjustedPeriod,
+                direction: direction,
+                limitDate: currentDate,
+                operationType: nil,
+                operationGroup: nil
+            )
         }
     }
 }
@@ -283,7 +359,11 @@ extension Model {
 
 extension Model {
     
-    static func reduce(storage: ProductStatementsStorage?, update: ProductStatementsStorage.Update, product: ProductData ) -> ProductStatementsStorage {
+    static func reduce(
+        storage: ProductStatementsStorage?,
+        update: ProductStatementsStorage.Update,
+        product: ProductData
+    ) -> ProductStatementsStorage {
         
         let historyLimitDate = ProductStatementsStorage.historyLimitDate(for: product)
         if let storage = storage {

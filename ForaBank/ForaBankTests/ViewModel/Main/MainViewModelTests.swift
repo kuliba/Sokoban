@@ -122,7 +122,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -598,7 +598,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -632,7 +632,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: .preview(),
@@ -670,7 +670,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: .preview(),
@@ -726,7 +726,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -1009,7 +1009,7 @@ private extension MainSectionCurrencyMetallView.ViewModel {
 
 private extension TemplatesListViewModel {
     
-    func closeAndWait(timeout: TimeInterval = 0.05) {
+    func closeAndWait(timeout: TimeInterval = 0.1) {
         
         action.send(TemplatesListViewModelAction.CloseAction())
         

@@ -10,10 +10,11 @@ import AnywayPaymentDomain
 import SberQR
 import SwiftUI
 import MarketShowcase
+import LoadableResourceComponent
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
-typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+typealias MakeHistoryButtonView = (@escaping (ProductProfileFlowEvent.ButtonEvent) -> Void, @escaping () -> Bool, @escaping () -> Bool,  @escaping () -> Void) -> HistoryButtonView?
 typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 typealias MakeIconView = IconDomain.MakeIconView
 typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
@@ -42,7 +43,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeAnywayFlowView: MakeAnywayFlowView
+    let components: ViewComponents
 }
 
 extension RootViewFactory {
@@ -71,7 +72,7 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            makeAnywayFlowView: makeAnywayFlowView
+            components: components
         )
     }
 }
@@ -87,7 +88,7 @@ extension RootViewFactory {
 struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
-    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+    let makeHistoryButton: (@escaping (ProductProfileFlowEvent.ButtonEvent) -> Void, @escaping () -> Bool, @escaping () -> Bool, @escaping () -> Void) -> HistoryButtonView?
     let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
 }
 
@@ -119,29 +120,84 @@ struct RepeatButtonView: View {
 
 struct HistoryButtonView: View {
     
-    let event: (HistoryEvent) -> Void
+    let event: (ProductProfileFlowEvent.ButtonEvent) -> Void
+    let isFiltered: () -> Bool
+    let isDateFiltered: () -> Bool
+    let clearOptions: () -> Void
     
     var body: some View {
         
         HStack {
             
-            Button(action: {
-                event(.button(.calendar))
-            }) {
+            Button { event(.calendar) } label: {
                 
-                Text("Calendar")
-                    .font(.system(size: 16))
-                    .foregroundColor(.black)
-                
+                ZStack {
+                    
+                    Color.buttonSecondary
+                        .frame(width: 32, height: 32, alignment: .center)
+                        .cornerRadius(90)
+                    
+                    Image.ic16Calendar
+                    
+                    if isDateFiltered() {
+                        
+                        ZStack{
+                            
+                            Circle()
+                                .foregroundColor(.iconWhite)
+                                .frame(width: 15, height: 15)
+                            
+                            
+                            Circle()
+                                .foregroundColor(.mainColorsRed)
+                                .frame(width: 7, height: 7, alignment: .center)
+                        }
+                        .offset(x: 16, y: -12)
+                    }
+                }
             }
             
-            Button(action: {
-                event(.button(.filter))
-            }) {
+            Button { event(.filter) } label: {
                 
-                Text("Filter")
-                    .font(.system(size: 16))
-                    .foregroundColor(.black)
+                ZStack {
+                    
+                    Color.buttonSecondary
+                        .frame(width: 32, height: 32, alignment: .center)
+                        .cornerRadius(90)
+                    
+                    Image.ic16Filter
+                    
+                    if isFiltered() {
+                        
+                        ZStack{
+                            
+                            Circle()
+                                .foregroundColor(.iconWhite)
+                                .frame(width: 15, height: 15)
+                            
+                            
+                            Circle()
+                                .foregroundColor(.mainColorsRed)
+                                .frame(width: 7, height: 7, alignment: .center)
+                        }
+                        .offset(x: 16, y: -12)
+                    }
+                }
+            }
+            
+            if isFiltered() || isDateFiltered() {
+                
+                Button(action: clearOptions) {
+                    
+                    ZStack {
+                        
+                        Color.buttonSecondary
+                            .frame(width: 32, height: 32, alignment: .center)
+                            .cornerRadius(90)
+                        
+                        Image.ic24Close
+                    }
+                }
                 
             }
         }

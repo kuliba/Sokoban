@@ -448,7 +448,7 @@ struct PaymentSelectDropDownView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsGroupView(viewModel: PaymentSelectDropDownView.ViewModel.selectedGroup)
+            PaymentsGroupView(viewModel: PaymentSelectDropDownView.ViewModel.selectedGroup, viewFactory: .preview)
         }
     }
 }

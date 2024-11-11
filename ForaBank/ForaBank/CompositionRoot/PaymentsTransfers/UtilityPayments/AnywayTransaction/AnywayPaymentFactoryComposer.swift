@@ -101,11 +101,16 @@ private extension AnywayPaymentFactoryComposer {
             viewModel: viewModel,
             factory: .init(
                 makeIconView: { self.makeIconView(icon) },
-                makeItemLabel: {
+                makeItemLabel: { item in
                     
-                    SimpleLabel(
-                        text: $0.value,
-                        makeIconView: { Image.ic24RadioDefolt }
+                    let isSelected = item == viewModel.state.selected
+                    let image = isSelected ? Image.ic24RadioChecked : .ic24RadioDefolt
+                    let iconColor: Color = isSelected ? .buttonPrimary : .buttonSecondaryHover
+                    
+                    return SimpleLabel(
+                        text: item.value,
+                        makeIconView: { image },
+                        iconColor: iconColor
                     )
                 },
                 makeSelectedItemLabel: SelectedOptionView.init,

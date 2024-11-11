@@ -6,10 +6,18 @@
 //
 
 import SwiftUI
+import CalendarUI
 
 final class ProductNavigationStateEffectHandler {
     
-    init(){}
+    typealias HistoryDispatch = (HistoryEvent) -> Void
+    typealias HandleHistoryEffect = (HistoryEffect, @escaping HistoryDispatch) -> Void
+    
+    private let handleHistoryEffect: HandleHistoryEffect
+    
+    init(handleHistoryEffect: @escaping HandleHistoryEffect) {
+        self.handleHistoryEffect = handleHistoryEffect
+    }
 }
 
 extension ProductNavigationStateEffectHandler {
@@ -30,6 +38,8 @@ extension ProductNavigationStateEffectHandler {
                 
                 dispatch(.showBottomSheet(bottomSheet))
             }
+        case let .history(historyEffect):
+            handleHistoryEffect(historyEffect) { dispatch(.history($0)) }
         }
     }
 }
@@ -45,4 +55,5 @@ enum ProductNavigationEvent {
     
     case showAlert(Alert.ViewModel)
     case showBottomSheet(ProductProfileViewModel.BottomSheet)
+    case history(HistoryEvent)
 }
