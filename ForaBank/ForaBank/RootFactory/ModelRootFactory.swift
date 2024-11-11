@@ -65,7 +65,7 @@ extension ModelRootFactory: RootFactory {
     
     func makeGetRootNavigation(
         _ featureFlags: FeatureFlags
-    ) -> RootViewDomain<RootViewModel>.GetNavigation {
+    ) -> RootViewDomain.GetNavigation {
         
         return { select, notify, completion in
         

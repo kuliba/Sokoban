@@ -18,9 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private typealias RootDomain = RootViewDomain<RootViewModel>
-    
-    private lazy var binder: RootDomain.Binder = {
+    private lazy var binder: RootViewDomain.Binder = {
         
         var bindings = Set<AnyCancellable>()
         let rootViewModel = factory.makeRootViewModel(
@@ -29,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
         
         let getNavigation = factory.makeGetRootNavigation(featureFlags)
-        let composer = RootDomain.BinderComposer(
+        let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
             dismiss: { [weak self] in
                 
@@ -107,7 +105,7 @@ private extension SceneDelegate {
     }
 }
 
-private extension RootViewDomain<RootViewModel>.Witnesses {
+private extension RootViewDomain.Witnesses {
     
     static let `default`: Self = .init(
         content: .init(

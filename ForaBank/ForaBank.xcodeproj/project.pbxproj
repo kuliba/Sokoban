@@ -356,7 +356,6 @@
 		2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A07B2092C6524B40021B594 /* SelectorComponents */; };
 		2A0801B42B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B32B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift */; };
 		2A0801B62B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */; };
-		2A08888A2CE08606009005EB /* RootViewBinderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0888892CE08606009005EB /* RootViewBinderComposerTests.swift */; };
 		2A08888C2CE087B6009005EB /* Schedulers+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08888B2CE087B6009005EB /* Schedulers+ext.swift */; };
 		2A08888E2CE09B0A009005EB /* SceneDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */; };
 		2A094DE22BFEFB0900481B99 /* Selector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A094DDE2BFEF68100481B99 /* Selector.swift */; };
@@ -3955,7 +3954,6 @@
 		2A0788062C35E93A0022AEF6 /* CallSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSpy.swift; sourceTree = "<group>"; };
 		2A0801B32B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTransferNumberViewModelTests.swift; sourceTree = "<group>"; };
 		2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessViewModelWithTransferNumberTests.swift; sourceTree = "<group>"; };
-		2A0888892CE08606009005EB /* RootViewBinderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewBinderComposerTests.swift; sourceTree = "<group>"; };
 		2A08888B2CE087B6009005EB /* Schedulers+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Schedulers+ext.swift"; sourceTree = "<group>"; };
 		2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegateTests.swift; sourceTree = "<group>"; };
 		2A094DDE2BFEF68100481B99 /* Selector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selector.swift; sourceTree = "<group>"; };
@@ -8455,15 +8453,6 @@
 			path = PaymentsSucccess;
 			sourceTree = "<group>";
 		};
-		2A0888882CE085E9009005EB /* Root */ = {
-			isa = PBXGroup;
-			children = (
-				2A0888892CE08606009005EB /* RootViewBinderComposerTests.swift */,
-				2A08888B2CE087B6009005EB /* Schedulers+ext.swift */,
-			);
-			path = Root;
-			sourceTree = "<group>";
-		};
 		2A094DDC2BFEF5FC00481B99 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -11173,12 +11162,6 @@
 			isa = PBXGroup;
 			children = (
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
-				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
-				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
-				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
-				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
-				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeServiceCategoryListLoaders.swift */,
-				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
@@ -11277,7 +11260,6 @@
 		2A7688D42AF3A72000045293 /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
-				2A0888882CE085E9009005EB /* Root */,
 				833245DE2CAC56DC001AFF9D /* MarketShowcase */,
 				839331A22C90312700D15379 /* LoadBannersList */,
 				2A0439C42BB405F40063B7AB /* AnywayPayment */,
@@ -12774,6 +12756,7 @@
 		2AD437682B00BD090027286A /* TestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				2A08888B2CE087B6009005EB /* Schedulers+ext.swift */,
 				2AA619562C16D04C00043997 /* anyMessage.swift */,
 				2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */,
 				2AD437692B00BD200027286A /* Spy.swift */,
@@ -13222,8 +13205,6 @@
 			isa = PBXGroup;
 			children = (
 				C123110A2C4E0954002871A8 /* Calendar */,
-				83F775D22CA4744E00A05F69 /* MarketShowcase */,
-				838C09222C8B59C400E894AC /* LoadBannersList */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A2836E52CC79FD100694241 /* HTTPClientFactory */,
@@ -23553,7 +23534,6 @@
 				2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */,
 				2A33459E2CB2802500EBF33E /* QRNavigationComposer+extTests.swift in Sources */,
 				2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */,
-				2A08888A2CE08606009005EB /* RootViewBinderComposerTests.swift in Sources */,
 				2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */,
 				2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */,
 				2AEDAD5229A6157300017F73 /* OperatorDataTestHelpersTests.swift in Sources */,

@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import ForaBank
+import PayHubUI
 import XCTest
 
 final class RootViewBinderComposerTests: XCTestCase {
@@ -89,8 +89,8 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = RootViewBinderComposer<RootViewModel>
-    private typealias DismissAllSubject = PassthroughSubject<RootViewModelAction.DismissAll, Never>
+    private typealias SUT = RootViewBinderComposer<RootViewModel, DismissAll>
+    private typealias DismissAllSubject = PassthroughSubject<DismissAll, Never>
     
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
@@ -167,4 +167,6 @@ final class RootViewBinderComposerTests: XCTestCase {
         
         return .init()
     }
+    
+    private struct DismissAll: Equatable {}
 }
