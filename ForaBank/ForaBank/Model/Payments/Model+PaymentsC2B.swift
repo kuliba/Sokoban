@@ -277,52 +277,50 @@ extension Model {
             throw Payments.Error.missingValueForParameter(productParamId)
         }
         
-        switch product {
-        case let card as ProductCardData:
-            if let title = parameters.first(where: { $0.parameter.id == "success_title" }),
-               title.value == "Такая привязка счета уже существует!" {
-                
-                let result = try await Services.makeModifyC2B(
-                    httpClient: self.authenticatedHTTPClient(),
-                    logger: LoggerAgent.shared,
-                    payload: .init(
-                        productId: product.id,
-                        productType: .card,
-                        subscriptionToken: qrcIdParamValue
-                    )
-                )
-                
-                return .init(with: C2BSubscriptionData(
-                    operationStatus: C2BSubscriptionData.Status(rawValue: result.operationStatus.rawValue) ?? .unknown,
-                    title: "Привязка счета сохранена",
-                    brandIcon: result.brandIcon,
-                    brandName: result.brandName,
-                    legalName: result.legalName,
-                    redirectUrl: result.redirectUrl
-                ))
-                
-            } else {
+        if let title = parameters.first(where: { $0.parameter.id == "success_title" }),
+           title.value == "Такая привязка счета уже существует!" {
             
+            let result = try await Services.makeModifyC2B(
+                httpClient: self.authenticatedHTTPClient(),
+                logger: LoggerAgent.shared,
+                payload: .init(
+                    productId: product.id,
+                    productType: product.productType,
+                    subscriptionToken: qrcIdParamValue
+                )
+            )
+            
+            return .init(with: C2BSubscriptionData(
+                operationStatus: C2BSubscriptionData.Status(rawValue: result.operationStatus.rawValue) ?? .unknown,
+                title: "Привязка счета сохранена",
+                brandIcon: result.brandIcon,
+                brandName: result.brandName,
+                legalName: result.legalName,
+                redirectUrl: result.redirectUrl
+            ))
+            
+        } else {
+            switch product {
+            case let card as ProductCardData:
                 let command = ServerCommands.SubscriptionController.ConfirmC2BSubCard(
                     token: token,
                     payload: .init(qrcId: qrcIdParamValue, productId: String(card.id))
                 )
                 let result = try await serverAgent.executeCommand(command: command)
                 return .init(with: result)
-
+                
+            case let account as ProductAccountData:
+                let command = ServerCommands.SubscriptionController.ConfirmC2BSubAcc(
+                    token: token,
+                    payload: .init(qrcId: qrcIdParamValue, productId: String(account.id))
+                )
+                let result = try await serverAgent.executeCommand(command: command)
+                
+                return .init(with: result)
+                
+            default:
+                throw Payments.Error.unexpectedProductType(product.productType)
             }
-
-        case let account as ProductAccountData:
-            let command = ServerCommands.SubscriptionController.ConfirmC2BSubAcc(
-                token: token,
-                payload: .init(qrcId: qrcIdParamValue, productId: String(account.id))
-            )
-            let result = try await serverAgent.executeCommand(command: command)
-            
-            return .init(with: result)
-            
-        default:
-            throw Payments.Error.unexpectedProductType(product.productType)
         }
     }
     
