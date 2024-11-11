@@ -29,11 +29,17 @@ struct QRBinderView: View {
                         case let .multiplePicker(multiplePicker):
                             MultiplePickerView(model: multiplePicker)
                             
+                        case let .operatorModel(operatorModel):
+                            OperatorModelView(model: operatorModel)
+                            
                         case let .payments(payments):
                             PaymentsView(model: payments)
                             
                         case let .qrFailure(qrFailure):
                             QRFailureBinderView(binder: qrFailure)
+                            
+                        case let .servicePicker(servicePicker):
+                            ServicePickerView(model: servicePicker)
                         }
                     }
                 )
@@ -78,11 +84,17 @@ extension QRDomain.FlowDomain.State {
             case let .multiplePicker(node):
                 return .multiplePicker(node.model)
                 
+            case let .operatorModel(operatorModel):
+                return .operatorModel(operatorModel)
+                
             case let .payments(node):
                 return .payments(node.model)
                 
             case let .qrFailure(node):
                 return .qrFailure(node.model)
+                
+            case let .servicePicker(node):
+                return .servicePicker(node.model)
             }
         }
     }
@@ -91,8 +103,10 @@ extension QRDomain.FlowDomain.State {
         
         case mixedPicker(MixedPicker)
         case multiplePicker(MultiplePicker)
+        case operatorModel(OperatorModel)
         case payments(Payments)
         case qrFailure(QRFailureDomain.Binder)
+        case servicePicker(ServicePicker)
     }
 }
 
@@ -107,11 +121,17 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
         case let .multiplePicker(multiplePicker):
             return .multiplePicker(.init(multiplePicker))
             
+        case let .operatorModel(operatorModel):
+            return .operatorModel(.init(operatorModel))
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
         case let .qrFailure(qrFailure):
             return .qrFailure(.init(qrFailure))
+            
+        case let .servicePicker(servicePicker):
+            return .servicePicker(.init(servicePicker))
         }
     }
     
@@ -119,7 +139,9 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
         
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
+        case operatorModel(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
     }
 }
