@@ -8,17 +8,21 @@
 import Foundation
 import CalendarUI
 import Combine
+import CombineSchedulers
 
 final class FilterEffectHandlerMicroServicesComposer {
     
     private let model: Model
+    private let backgroundScheduler: AnySchedulerOf<DispatchQueue>
     private var cancellable: AnyCancellable?
     typealias MicroServices = FilterModelEffectHandlerMicroServices
     
     init(
-        model: Model
+        model: Model,
+        backgroundScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .background)
     ) {
         self.model = model
+        self.backgroundScheduler = backgroundScheduler
     }
     
     func compose() -> MicroServices {
@@ -36,9 +40,8 @@ private extension FilterEffectHandlerMicroServicesComposer {
         productId: ProductData.ID,
         completion: @escaping MicroServices.ResetPeriodCompletion
     ) {
-        DispatchQueue
-            .global(qos: .userInitiated)
-            .asyncAfter(deadline: .now() + .milliseconds(100)) {
+        backgroundScheduler
+            .delay(for: .milliseconds(100)) {
                 
                 guard let statement = self.model.statements.value[productId]
                 else {
@@ -51,7 +54,6 @@ private extension FilterEffectHandlerMicroServicesComposer {
                 }
                 let services = Array(Set(filteredStatements.compactMap { $0.groupName }))
 
-                
                 completion(period.range, services)
             }
     }
@@ -83,12 +85,13 @@ private extension FilterEffectHandlerMicroServicesComposer {
                 case .idle:
                     return self.model.statements
                         .throttle(for: .milliseconds(300), 
-                                  scheduler: DispatchQueue.main,
+                                  scheduler: self.backgroundScheduler,
                                   latest: true)
                         .compactMap { $0[payload.productId] }
                         .eraseToAnyPublisher()
                 }
             }
+            .subscribe(on: backgroundScheduler)
             .sink { (state: ProductStatementsStorage?) in
                 
                 self.handleStatementResult(payload, state, completion)
