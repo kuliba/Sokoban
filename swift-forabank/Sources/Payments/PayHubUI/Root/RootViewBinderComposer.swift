@@ -86,9 +86,9 @@ private extension RootViewBinderComposer {
         
         return witnesses.dismiss.dismissAll(content)
             .receive(on: schedulers.main)
-            .sink { [unowned self] _ in
+            .sink { [dismiss] _ in
                 
-                self.dismiss()
+                dismiss()
                 reset()
             }
     }
