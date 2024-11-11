@@ -27,7 +27,7 @@ extension ProductProfileCardView {
         @Published var products: [ProductViewModel]
         @Published var activeProductId: ProductData.ID
         
-        let productType: ProductType
+        var productType: ProductType
         
         private let model: Model
         private let cardAction: CardAction?

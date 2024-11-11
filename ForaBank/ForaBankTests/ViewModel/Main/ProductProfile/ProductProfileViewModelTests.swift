@@ -1005,6 +1005,23 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.historyState)
     }
     
+    func testProductTypeUpdatesWhenActiveProductIdChanges() throws {
+        
+        let model = makeModelWithProducts()
+        let product = try XCTUnwrap(model.products.value[.card]?.first)
+        let sut = try XCTUnwrap(makeSUT(model: model, product: product))
+        
+        let productSpy = ValueSpy(sut.$product)
+        
+        XCTAssertEqual(sut.product.productType, .card)
+        XCTAssertEqual(productSpy.values.last?.productType, .card)
+
+        sut.product.productType = .loan
+        _ = XCTWaiter.wait(for: [], timeout: 0.1)
+
+        XCTAssertEqual(productSpy.values.last?.productType, .loan)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
