@@ -39,14 +39,13 @@ private extension String {
     var extractedURL: URL? {
         let pattern = #"((?:http|https)://[\w.-]+(?:\.[\w.-]+)+(?:/[\w./?%&=~-]*)?)"#
         
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
-            return nil
-        }
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { return nil }
         
         let range = NSRange(self.startIndex..<self.endIndex, in: self)
         
         if let match = regex.firstMatch(in: self, options: [], range: range),
            let matchRange = Range(match.range, in: self) {
+           
             return URL(string: String(self[matchRange]))
         }
         

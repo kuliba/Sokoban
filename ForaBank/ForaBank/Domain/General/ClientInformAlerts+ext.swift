@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 enum ClientInformActionType: String {
+    
     case required
     case optional
     case notRequired = "not_required"
@@ -57,32 +58,33 @@ extension ClientInformAlerts {
 }
 
 extension ClientInformAlerts.Alert {
-    
-    func swiftUIAlert(action: @escaping (ClientInformActionType) -> Void) -> SwiftUI.Alert {
-            let actionType: ClientInformActionType = type
 
-            switch actionType {
-            case .required:
-                return Alert(
-                    title: Text(title),
-                    message: Text(text),
-                    dismissButton: .default(Text("Обновить"), action: { action(.required) })
-                )
+    func swiftUIAlert(action: @escaping (ClientInformActionType) -> Void) -> SwiftUI.Alert {
+        
+        let actionType: ClientInformActionType = type
+        
+        switch actionType {
+        case .required:
+            return Alert(
+                title: Text(title),
+                message: Text(text),
+                dismissButton: .default(Text("Обновить"), action: { action(.required) })
+            )
             
-            case .optional:
-                return Alert(
-                    title: Text(title),
-                    message: Text(text),
-                    primaryButton: .cancel(Text("Позже")),
-                    secondaryButton: .default(Text("Обновить"), action: { action(.optional) })
-                )
+        case .optional:
+            return Alert(
+                title: Text(title),
+                message: Text(text),
+                primaryButton: .cancel(Text("Позже")),
+                secondaryButton: .default(Text("Обновить"), action: { action(.optional) })
+            )
             
-            case .notRequired:
-                return Alert(
-                    title: Text(title),
-                    message: Text(text),
-                    dismissButton: .default(Text("Ok"), action: { action(.notRequired) })
-                )
-            }
+        case .notRequired:
+            return Alert(
+                title: Text(title),
+                message: Text(text),
+                dismissButton: .default(Text("Ok"), action: { action(.notRequired) })
+            )
         }
+    }
 }
