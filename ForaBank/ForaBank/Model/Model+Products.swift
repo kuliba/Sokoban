@@ -607,15 +607,7 @@ extension Model {
                 }
                 
                 // update additional products data
-                    
-                    switch productType {
-                        
-                    case .loan:
-                        self.action.send(ModelAction.Loans.Update.All())
-                        
-                    default:
-                        break
-                    }
+                self.additionalUpdateIfNeed(productType: productType)
             }
             else {
                 // updating status

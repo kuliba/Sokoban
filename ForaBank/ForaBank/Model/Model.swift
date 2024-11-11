@@ -614,7 +614,7 @@ class Model {
                 case let payload as ModelAction.Products.Update.Fast.Single.Request:
                     handleProductsUpdateFastSingleRequest(payload)
                     
-                case let payload as ModelAction.Products.Update.Total.All:
+                case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
                     
                 case let payload as ModelAction.Products.UpdateVisibility:

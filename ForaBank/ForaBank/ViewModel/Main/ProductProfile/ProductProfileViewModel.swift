@@ -85,8 +85,6 @@ class ProductProfileViewModel: ObservableObject {
     }
         
     private let depositResponseSubject = CurrentValueSubject<Bool, Never>(false)
-    private let buttonTappedSubject = PassthroughSubject<Void, Never>()
-    
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
@@ -280,7 +278,6 @@ class ProductProfileViewModel: ObservableObject {
         bind(history: historyViewModel)
         bind(detail: detail)
         bind(buttons: buttons)
-        bindDepositResponse()
         
         bind()
     }
@@ -435,23 +432,6 @@ extension ProductProfileViewModel {
 
 private extension ProductProfileViewModel {
     
-    private func bindDepositResponse() {
-        
-        buttonTappedSubject
-            .flatMap { [unowned self] _ in
-                self.depositResponseSubject
-                    .filter { $0 }
-                    .first()
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] _ in
-                
-                self.hideSpinner()
-                self.handleDepositTransfer()
-            }
-            .store(in: &bindings)
-    }
-    
     func bind() {
                 
         action
@@ -507,6 +487,19 @@ private extension ProductProfileViewModel {
                 paymentsTransfersViewModel.rootActions = rootActions
                 link = .paymentsTransfers(.init(model: paymentsTransfersViewModel, cancellables: []))
                 
+            }.store(in: &bindings)
+        
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.DepositTransferButtonDidTapped }
+            .flatMap { [unowned self] _ in
+                self.depositResponseSubject
+                    .filter { $0 }
+                    .first()
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                self.handleDepositTransfer()
             }.store(in: &bindings)
         
         // Confirm OTP
@@ -823,6 +816,8 @@ private extension ProductProfileViewModel {
                     }
                     
                 case let payload as ModelAction.Deposits.Info.Single.Response:
+                    
+                    hideSpinner()
                     
                     switch payload {
                     case .success(data: _):
@@ -1253,7 +1248,7 @@ private extension ProductProfileViewModel {
                             if !self.depositResponseSubject.value {
                                 self.showSpinner()
                             }
-                            self.buttonTappedSubject.send(())
+                            self.action.send(ProductProfileViewModelAction.DepositTransferButtonDidTapped())
                             
                         default:
                             break
@@ -2681,6 +2676,7 @@ enum ProductProfileViewModelAction {
     }
     
     struct TransferButtonDidTapped: Action {}
+    struct DepositTransferButtonDidTapped: Action {}
     
     enum Spinner {
         
