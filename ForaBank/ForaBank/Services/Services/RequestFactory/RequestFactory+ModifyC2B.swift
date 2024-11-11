@@ -26,7 +26,7 @@ extension RequestFactory {
     }
 }
 
-struct ModifyC2BSubscription {
+public struct ModifyC2BSubscription {
     
     let productId: Int
     let productType: ProductType
@@ -36,6 +36,16 @@ struct ModifyC2BSubscription {
         
         case card
         case account
+    }
+    
+    init(
+        productId: Int,
+        productType: ProductType,
+        subscriptionToken: String
+    ) {
+        self.productId = productId
+        self.productType = productType
+        self.subscriptionToken = subscriptionToken
     }
 }
 
