@@ -19,15 +19,20 @@ extension PayHubUI.Schedulers {
         background: .immediate
     )
     
-    static func test() -> (Self, TestSchedulers) {
+    static func test(
+        main: AnySchedulerOf<DispatchQueue>? = nil,
+        interactive: AnySchedulerOf<DispatchQueue>? = nil,
+        userInitiated: AnySchedulerOf<DispatchQueue>? = nil,
+        background: AnySchedulerOf<DispatchQueue>? = nil
+    ) -> (Self, TestSchedulers) {
         
         let testSchedulers = TestSchedulers()
         
         let schedulers = Self(
-            main: testSchedulers.main.eraseToAnyScheduler(),
-            interactive: testSchedulers.interactive.eraseToAnyScheduler(),
-            userInitiated: testSchedulers.userInitiated.eraseToAnyScheduler(),
-            background: testSchedulers.background.eraseToAnyScheduler()
+            main: main ?? testSchedulers.main.eraseToAnyScheduler(),
+            interactive: interactive ?? testSchedulers.interactive.eraseToAnyScheduler(),
+            userInitiated: userInitiated ?? testSchedulers.userInitiated.eraseToAnyScheduler(),
+            background: background ?? testSchedulers.background.eraseToAnyScheduler()
         )
         
         return (schedulers, testSchedulers)

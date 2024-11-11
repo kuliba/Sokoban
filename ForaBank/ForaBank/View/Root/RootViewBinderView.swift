@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RootViewBinderView: View {
     
-    let binder: RootDomain.Binder
+    let binder: RootViewDomain.Binder
     let rootViewFactory: RootViewFactory
     
     var body: some View {
@@ -23,13 +23,11 @@ struct RootViewBinderView: View {
             )
         }
     }
-    
-    typealias RootDomain = RootViewDomain<RootViewModel>
 }
 
 struct RootWrapperView: View {
     
-    @ObservedObject var flow: RootDomain.Flow
+    @ObservedObject var flow: RootViewDomain.Flow
     
     let rootView: () -> RootView
     
@@ -58,8 +56,6 @@ struct RootWrapperView: View {
             }
         }
     }
-    
-    typealias RootDomain = RootViewDomain<RootViewModel>
 }
 
 extension RootViewDomain.Navigation {
