@@ -13,16 +13,18 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
-    typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
+    typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias FirstMicroServices = NavigationComposer.FirstMicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
     typealias QRResult = Select.QRResult
     
     typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
+    
+    typealias MakeConfirmSberQR = Spy<URL, ConfirmSberQR?>
     
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
@@ -33,7 +35,7 @@ class QRBinderTests: XCTestCase {
     typealias SinglePayload = PayHub.SinglePayload<Operator, QRCode, QRMapping>
     typealias MakeOperatorModel = CallSpy<SinglePayload, OperatorModel>
     
-    typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
+    typealias MakePaymentsPayload = FirstMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
@@ -222,6 +224,8 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
+        case confirmSberQR(ObjectIdentifier)
+        case failure(Failure)
         case outside(Outside)
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
@@ -229,6 +233,11 @@ class QRBinderTests: XCTestCase {
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
+        
+        enum Failure: Equatable {
+            
+            case sberQR(URL)
+        }
         
         enum Outside: Equatable {
             
@@ -252,6 +261,12 @@ class QRBinderTests: XCTestCase {
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
+            case let .confirmSberQR(node):
+                return .confirmSberQR(.init(node.model))
+                
+            case let .failure(.sberQR(url)):
+                return .failure(.sberQR(url))
+                
             case let .mixedPicker(node):
                 return .mixedPicker(.init(node.model))
                 
@@ -363,7 +378,7 @@ class QRBinderTests: XCTestCase {
             
             eventSubject.send(event)
         }
-                
+        
         private let eventSubject = PassthroughSubject<Event, Never>()
         
         enum Event {
@@ -393,6 +408,13 @@ class QRBinderTests: XCTestCase {
                 return ()
             }
         }
+    }
+    
+    final class ConfirmSberQR {}
+    
+    func makeConfirmSberQR() -> ConfirmSberQR {
+        
+        return .init()
     }
     
     final class ServicePicker {
