@@ -6,24 +6,63 @@
 //
 
 import Combine
+import ForaTools
 import PayHub
 import PayHubUI
 import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias _NavigationComposer = _QRBinderGetNavigationComposer<_QRResult, _QRNavigation>
+    
+    struct _QRResult: Equatable {
+        
+        let value: String
+    }
+    
+    func make_QRResult(
+        _ value: String = anyMessage()
+    ) -> _QRResult {
+        
+        return .init(value: value)
+    }
+    
+    struct _QRNavigation: Equatable {
+        
+        let value: String
+    }
+    
+    func make_QRNavigation(
+        _ value: String = anyMessage()
+    ) -> _QRNavigation {
+        
+        return .init(value: value)
+    }
+    
+    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias MappedNavigationComposerMicroServices = MappedNavigationComposer.MicroServices
+    
+    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Navigation = QRNavigation<Payments, QRFailure>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     
-    typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    typealias Witnesses = QRDomain<Navigation, QR, QRResult>.Witnesses
-
-    typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
+    typealias Navigation = Domain.Navigation
+    typealias Select = Domain.Select
+    typealias QRResult = Select.QRResult
+    
+    typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
+    
+    typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
+    
+    typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMultiplePicker = CallSpy<MakeMultiplePickerPayload, MultiplePicker>
     
     typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
+    
+    typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
     
     struct Operator: Equatable {
         
@@ -73,6 +112,44 @@ class QRBinderTests: XCTestCase {
         return .init(value: value)
     }
     
+    func makeMixed(
+        first: OperatorProvider<Operator, Provider>? = nil,
+        second: OperatorProvider<Operator, Provider>? = nil,
+        tail: OperatorProvider<Operator, Provider>...
+    ) -> MultiElementArray<OperatorProvider<Operator, Provider>> {
+        
+        return .init(first ?? .operator(makeOperator()), second ?? .provider(makeProvider()), tail)
+    }
+    
+    func makeMakeMixedPickerPayload() -> MakeMixedPickerPayload {
+        
+        let (mixed, qrCode, qrMapping) = (makeMixed(), makeQRCode(), makeQRMapping())
+        
+        return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
+    }
+    
+    func makeMultiple(
+        first: Operator? = nil,
+        second: Operator? = nil,
+        tail: Operator...
+    ) -> MultiElementArray<Operator> {
+        
+        return .init(first ?? makeOperator(), second ?? makeOperator(), tail)
+    }
+    
+    func makeMakeMultiplePickerPayload(
+        operators: MultipleQRResult<Operator, Provider, QRCode, QRMapping>.MultipleOperators? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> MakeMultiplePickerPayload {
+        
+        return .init(
+            operators: operators ?? makeMultiple(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
+    }
+    
     struct Source: Equatable {
         
         let value: String
@@ -85,8 +162,56 @@ class QRBinderTests: XCTestCase {
         return .init(value: value)
     }
     
+    func equatable(
+        _ select: Select
+    ) -> EquatableSelect {
+        
+        switch select {
+        case .outside(.chat):
+            return .chat
+            
+        case let .qrResult(qrResult):
+            return .qrResult(qrResult)
+        }
+    }
+    
+    enum EquatableSelect: Equatable {
+        
+        case chat
+        case qrResult(QRResult)
+    }
+    
+    func equatable(
+        _ event: NavigationComposer.FlowDomain.NotifyEvent
+    ) -> EquatableNotifyEvent {
+        
+        switch event {
+        case .dismiss:
+            return .dismiss
+            
+        case let .select(select):
+            switch select {
+            case .outside(.chat):
+                return .chat
+                
+            case let .qrResult(qrResult):
+                return .qrResult(qrResult)
+            }
+        }
+    }
+    
+    enum EquatableNotifyEvent: Equatable {
+        
+        case chat
+        case dismiss
+        case qrResult(QRResult)
+    }
+    
     enum EquatableNavigation: Equatable {
         
+        case chat
+        case mixedPicker(ObjectIdentifier)
+        case multiplePicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
     }
@@ -96,26 +221,38 @@ class QRBinderTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case let .payments(node):
-            return .payments(.init(node.model))
+        case .outside(.chat):
+            return .chat
             
-        case let .qrFailure(node):
-            return .qrFailure(.init(node.model))
+        case let .qrNavigation(qrNavigation):
+            switch qrNavigation {
+            case let .mixedPicker(node):
+                return .mixedPicker(.init(node.model))
+                
+            case let .multiplePicker(node):
+                return .multiplePicker(.init(node.model))
+                
+            case let .payments(node):
+                return .payments(.init(node.model))
+                
+            case let .qrFailure(node):
+                return .qrFailure(.init(node.model))
+            }
         }
     }
     
     final class QR {
         
-        private let subject = PassthroughSubject<QRResult, Never>()
+        private let subject = PassthroughSubject<Select, Never>()
         
         private(set) var callCount = 0
         
-        var publisher: AnyPublisher<QRResult, Never> {
+        var publisher: AnyPublisher<Select, Never> {
             
             subject.eraseToAnyPublisher()
         }
         
-        func emit(_ value: QRResult) {
+        func emit(_ value: Select) {
             
             self.subject.send(value)
         }
@@ -131,7 +268,37 @@ class QRBinderTests: XCTestCase {
         return .init()
     }
     
-    final class Payments {
+    typealias Payments = Mock
+    
+    func makePayments() -> Payments {
+        
+        return .init()
+    }
+    
+    typealias QRFailure = Mock
+    
+    func makeQRFailure() -> QRFailure {
+        
+        return .init()
+    }
+    
+    typealias MixedPicker = Mock
+    
+    func makeMixedPicker() -> MixedPicker {
+        
+        return .init()
+    }
+    
+    typealias MultiplePicker = Mock
+    
+    func makeMultiplePicker() -> MultiplePicker {
+        
+        return .init()
+    }
+    
+    final class Mock {
+        
+        // MARK: - close
         
         private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
         
@@ -145,25 +312,7 @@ class QRBinderTests: XCTestCase {
             isCloseSubject.value = true
         }
         
-        private let scanQRSubject = PassthroughSubject<Void, Never>()
-        
-        var scanQRPublisher: AnyPublisher<Void, Never> {
-            
-            scanQRSubject.eraseToAnyPublisher()
-        }
-        
-        func scanQR() {
-            
-            scanQRSubject.send(())
-        }
-    }
-    
-    func makePayments() -> Payments {
-        
-        return .init()
-    }
-    
-    final class QRFailure {
+        // MARK: - scanQR
         
         private let scanQRSubject = PassthroughSubject<Void, Never>()
         
@@ -176,10 +325,19 @@ class QRBinderTests: XCTestCase {
             
             scanQRSubject.send(())
         }
-    }
-    
-    func makeQRFailure() -> QRFailure {
         
-        return .init()
+        // MARK: - addCompany
+        
+        private let addCompanySubject = PassthroughSubject<Void, Never>()
+        
+        var addCompanyPublisher: AnyPublisher<Void, Never> {
+            
+            addCompanySubject.eraseToAnyPublisher()
+        }
+        
+        func addCompany() {
+            
+            addCompanySubject.send(())
+        }
     }
 }

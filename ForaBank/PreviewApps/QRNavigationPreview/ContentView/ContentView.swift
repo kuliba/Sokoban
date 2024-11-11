@@ -16,20 +16,17 @@ struct ContentView: View {
     
     var body: some View {
         
-        NavigationView {
-            
-            Button {
-                model.event(.select(.scanQR))
-            } label: {
-                Label("Scan QR", systemImage: "qrcode.viewfinder")
-                    .imageScale(.large)
-            }
-            .fullScreenCover(
-                cover: model.fullScreen,
-                dismiss: { model.event(.dismiss) },
-                content: fullScreenCoverContent
-            )
+        Button {
+            model.event(.select(.scanQR))
+        } label: {
+            Label("Scan QR", systemImage: "qrcode.viewfinder")
+                .imageScale(.large)
         }
+        .fullScreenCover(
+            cover: model.fullScreen,
+            dismiss: { model.event(.dismiss) },
+            content: fullScreenCoverContent
+        )
     }
 }
 
@@ -45,6 +42,7 @@ private extension ContentView {
                 
                 QRBinderView(binder: binder)
             }
+            .navigationViewStyle(.stack)
         }
     }
 }

@@ -8,7 +8,7 @@
 import PayHub
 
 /// A namespace.
-public enum QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment> {}
+public enum QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment> {}
 
 public extension QRFailureDomain {
     
@@ -30,14 +30,14 @@ public extension QRFailureDomain {
     
     enum Select {
         
-        case payWithDetails(QRCode)
+        case payWithDetails(QRCode?)
         case search(QRCode)
         case scanQR
     }
     
     enum Navigation {
         
-        case categories(Node<Categories>)
+        case categoryPicker(Node<CategoryPicker>)
         case detailPayment(Node<DetailPayment>)
         case scanQR
     }
