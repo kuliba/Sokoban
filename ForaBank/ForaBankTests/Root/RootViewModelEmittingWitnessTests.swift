@@ -14,12 +14,42 @@ extension RootViewModel {
     
     var selectEmitting: AnyPublisher<Select, Never> {
         
-        let mainViewSection = tabsViewModel.mainViewModel.sections
-        let mainViewSectionPublishers = mainViewSection.map(\.action)
+        let mainViewSections = tabsViewModel.mainViewModel.sections
+        let mainViewSectionPublishers = mainViewSections
+            .map(\.action)
+            .map { $0.compactMap { $0 as? RootEvent }
+                .eraseToAnyPublisher() }
         
-        return Publishers.MergeMany(mainViewSectionPublishers)
-            .compactMap { $0 as? RootEvent }
+        let fast = mainViewSections
+            .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
+        let qrPublishers = fast.map(\.rootEventPublisher)
+        
+        let publishers = mainViewSectionPublishers + qrPublishers
+        
+        return Publishers.MergeMany(publishers).eraseToAnyPublisher()
+    }
+}
+
+private extension MainSectionFastOperationView.ViewModel {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        action
+            .compactMap { $0 as? MainSectionViewModelAction.FastPayment.ButtonTapped }
+            .map(\.operationType)
+            .compactMap(\.rootEvent)
             .eraseToAnyPublisher()
+    }
+}
+
+private extension MainSectionFastOperationView.ViewModel.FastOperations {
+    
+    var rootEvent: RootEvent? {
+        
+        switch self {
+        case .byQr: return .scanQR
+        default:    return nil
+        }
     }
 }
 
@@ -55,6 +85,15 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
         
         XCTAssertEqual(sections.count, 6)
         XCTAssertNoDiff(spy.values, .init(repeating: .scanQR, count: 6), "Expected \(6) `scanQR` RootEvents, but got \(spy.values.count) instead.")
+    }
+    
+    func test_init_shouldEmitScanQROnMainViewFastOperationSectionQRButtonAction() throws {
+        
+        let (sut, spy) = makeSUT()
+        
+        try sut.tapMainViewFastSectionQRButton()
+        
+        XCTAssertNoDiff(spy.values, [.scanQR])
     }
     
     // MARK: - Helpers
@@ -125,6 +164,24 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
 
 // MARK: - DSL
 
+private extension RootViewModel {
+    
+    var mainViewModel: MainViewModel {
+        
+        return tabsViewModel.mainViewModel
+    }
+    
+    var mainViewSections: [MainSectionViewModel] {
+        
+        return mainViewModel.sections
+    }
+    
+    func tapMainViewFastSectionQRButton() throws {
+        
+        try mainViewModel.tapFastSectionQRButton()
+    }
+}
+
 private extension MainSectionViewModel {
     
     func emit(_ event: RootEvent) {
@@ -133,10 +190,35 @@ private extension MainSectionViewModel {
     }
 }
 
-private extension RootViewModel {
+private extension MainViewModel {
     
-    var mainViewSections: [MainSectionViewModel] {
+    typealias FastSection = MainSectionFastOperationView.ViewModel
+    
+    func fastSection(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> FastSection {
         
-        return tabsViewModel.mainViewModel.sections
+        let sections = sections.compactMap { $0 as? FastSection }
+        
+        return try XCTUnwrap(sections.first, "Expected to have Fast Section", file: file, line: line)
+    }
+    
+    func fastSectionQRButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> ButtonIconTextView.ViewModel {
+        
+        let buttons = try fastSection(file: file, line: line).items
+        
+        return try XCTUnwrap(buttons.first, "Expected to have QR Button as first", file: file, line: line)
+    }
+    
+    func tapFastSectionQRButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try fastSectionQRButton(file: file, line: line).action()
     }
 }
