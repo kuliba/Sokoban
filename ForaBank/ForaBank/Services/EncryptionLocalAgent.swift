@@ -10,7 +10,7 @@ import Foundation
 final class EncryptionLocalAgent<E>: LocalAgent where E: EncryptionAgent {
     
     private let encryptionAgent: E
-    private let lock = NSLock()
+    private let lock = NSRecursiveLock()
     
     init(context: Context, encryptionAgent: E) {
         self.encryptionAgent = encryptionAgent
