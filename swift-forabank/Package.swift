@@ -47,6 +47,7 @@ let package = Package(
         .banners,
         // MarketShowcase
         .marketShowcase,
+        .modifyC2BSubscriptionService,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
@@ -186,6 +187,7 @@ let package = Package(
         // MarketShowcase
         .marketShowcase,
         .marketShowcaseTests,
+        .modifyC2BSubscriptionService,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -793,6 +795,12 @@ private extension Product {
         ]
     )
     
+    static let modifyC2BSubscriptionService = library(
+        name: .modifyC2BSubscriptionService,
+        targets: [
+            .modifyC2BSubscriptionService,
+        ]
+    )
     // MARK: - Services
     
     static let cardStatementAPI = library(
@@ -1735,6 +1743,16 @@ private extension Target {
         path: "Tests/\(String.marketShowcaseTests)"
     )
 
+    static let modifyC2BSubscriptionService = target(
+        name: .modifyC2BSubscriptionService,
+        dependencies: [
+            .genericRemoteService,
+            .remoteServices,
+            .foraTools
+        ],
+        path: "Sources/Services/\(String.modifyC2BSubscriptionService)"
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = target(
@@ -3277,6 +3295,10 @@ private extension Target.Dependency {
     static let marketShowcase = byName(
         name: .marketShowcase
     )
+    
+    static let modifyC2BSubscriptionService = byName(
+        name: .modifyC2BSubscriptionService
+    )
 
     static let manageSubscriptionsUI = byName(
         name: .manageSubscriptionsUI
@@ -3617,6 +3639,8 @@ private extension String {
     
     static let marketShowcase = "MarketShowcase"
     static let marketShowcaseTests = "MarketShowcaseTests"
+
+    static let modifyC2BSubscriptionService = "ModifyC2BSubscriptionService"
 
     // MARK: - Services
     
