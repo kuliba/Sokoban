@@ -11,8 +11,8 @@ import XCTest
 
 class QRFailureTests: XCTestCase {
     
-    typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
-    typealias Categories = ClosingScanQR
+    typealias Domain = QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment>
+    typealias CategoryPicker = ClosingScanQR
     typealias DetailPayment = ClosingScanQR
     
     typealias Select = Domain.Select
@@ -89,7 +89,7 @@ class QRFailureTests: XCTestCase {
         return .init()
     }
     
-    func makeCategories() -> ClosingScanQR {
+    func makeCategoryPicker() -> ClosingScanQR {
         
         return .init()
     }
@@ -99,7 +99,7 @@ class QRFailureTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case let .categories(node):
+        case let .categoryPicker(node):
             return .categories(.init(node.model))
             
         case let .detailPayment(node):

@@ -7,68 +7,90 @@
 
 import Combine
 import CombineSchedulers
-import UIKit
 import MarketShowcase
+import PayHubUI
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    private var bindings = Set<AnyCancellable>()
     
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private lazy var rootViewModel = {
+    private lazy var binder: RootViewDomain.Binder = {
         
+        var bindings = Set<AnyCancellable>()
         let rootViewModel = factory.makeRootViewModel(
             featureFlags,
             bindings: &bindings
         )
         
-        bind(rootViewModel: rootViewModel)
+        let getNavigation = factory.makeGetRootNavigation(featureFlags)
+        let composer = RootViewDomain.BinderComposer(
+            bindings: bindings,
+            dismiss: { [weak self] in
+                
+                let root = self?.window?.rootViewController
+                root?.dismiss(animated: false, completion: nil)
+            },
+            getNavigation: getNavigation,
+            schedulers: .init(),
+            witnesses: .default
+        )
         
-        return rootViewModel
+        return composer.compose(with: rootViewModel)
     }()
-
+    
     private lazy var rootViewFactory = factory.makeRootViewFactory(featureFlags)
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+        
+        configureWindow()
+        
+        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+        
+        if let userActivity = connectionOptions.userActivities.first {
+            
+            self.scene(scene, continue: userActivity)
+        }
+    }
+    
+    func configureWindow() {
+        
         let rootViewController = RootViewHostingViewController(
-            with: rootViewModel,
+            with: binder,
             rootViewFactory: rootViewFactory
         )
+        
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
         //FIXME: remove after refactor payments
         NotificationCenter.default
             .addObserver(self,
-                         selector:#selector(dismissAll),
+                         selector: #selector(dismissAll),
                          name: .dismissAllViewAndSwitchToMainTab,
                          object: nil)
-    
+        
         legacyNavigationBarBackground()
         setAlertAppearance()
-        
-        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
-        
-        if let userActivity = connectionOptions.userActivities.first {
-            self.scene(scene, continue: userActivity)
-        }
     }
     
-    //FIXME: remove after refactor paymnets
+    // FIXME: remove after refactor payments
     @objc func dismissAll() {
-        self.rootViewModel.action.send(RootViewModelAction.DismissAll())
-        self.rootViewModel.action.send(RootViewModelAction.SwitchTab(tabType: .main))
+        
+        self.binder.content.action.send(RootViewModelAction.DismissAll())
+        self.binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
 }
 
-//MARK: - helpers
+// MARK: - helpers
 
 private extension SceneDelegate {
     
@@ -83,35 +105,42 @@ private extension SceneDelegate {
     }
 }
 
-//MARK: - Bindings
-
-extension SceneDelegate {
+private extension RootViewDomain.Witnesses {
     
-    func bind(rootViewModel: RootViewModel) {
-        
-        rootViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+    static let `default`: Self = .init(
+        content: .init(
+            emitting: { _ in Empty().eraseToAnyPublisher() },
+            receiving: { _ in {}}
+        ),
+        dismiss: .init(
+            dismissAll: {
                 
-                switch action {
-                case _ as RootViewModelAction.DismissAll:
-                    window?.rootViewController?.dismiss(animated: false, completion: nil)
-                    rootViewModel.resetLink()
-                    rootViewModel.reset()
+                $0.action
+                    .compactMap { $0 as? RootViewModelAction.DismissAll }
+                    .eraseToAnyPublisher()
+            },
+            reset: { content in
+                
+                return {
                     
-                default:
-                    break
+                    content.resetLink()
+                    content.reset()
                 }
             }
-            .store(in: &bindings)
-    }
+        )
+    )
+}
+
+// MARK: - appearance
+
+extension SceneDelegate {
     
     func legacyNavigationBarBackground() {
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white
         UINavigationBar.appearance().backgroundColor = .white
         UINavigationBar.appearance().titleTextAttributes =
-            [.foregroundColor: UIColor.black]
+        [.foregroundColor: UIColor.black]
         UINavigationBar.appearance().isTranslucent = true
     }
     
@@ -122,7 +151,7 @@ extension SceneDelegate {
     
 }
 
-//MARK: - Scene Lyfecycle
+// MARK: - Scene Lifecycle
 
 extension SceneDelegate {
     
@@ -130,7 +159,7 @@ extension SceneDelegate {
         
         self.window?.deleteBlure()
     }
-
+    
     func sceneWillResignActive(_ scene: UIScene) {
         
         self.window?.addBlure()
@@ -147,22 +176,22 @@ extension SceneDelegate {
     }
 }
 
-//MARK: - DeepLinks
+// MARK: - DeepLinks
 
 extension SceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-
+        
         guard let context = URLContexts.first, let deepLinkType = DeepLinkType(url: context.url) else { return }
-          
+        
         AppDelegate.shared.model.action.send(ModelAction.DeepLink.Set(type: deepLinkType))
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-
+        
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-                   let url = userActivity.webpageURL else { return }
-
+              let url = userActivity.webpageURL else { return }
+        
         guard let deepLink = DeepLinkType(url: url) else { return }
         
         AppDelegate.shared.model.action.send(ModelAction.DeepLink.Set(type: deepLink))

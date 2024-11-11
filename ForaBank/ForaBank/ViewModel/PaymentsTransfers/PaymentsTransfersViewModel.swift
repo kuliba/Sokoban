@@ -1685,17 +1685,17 @@ extension PaymentsTransfersViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:
             handleUnknownQR()
 
-        case let .mixed(mixed, qrCode, qrMapping):
-            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+        case let .mixed(mixed):
+            makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
 
-        case let .multiple(multipleOperators, qrCode, qrMapping):
-            searchOperators(multipleOperators, with: qrCode)
+        case let .multiple(multiple):
+            searchOperators(multiple.operators, with: multiple.qrCode)
             
         case let .none(qrCode):
             payByInstructions(with: qrCode)
@@ -1703,11 +1703,11 @@ extension PaymentsTransfersViewModel {
         case let .provider(payload):
             makeServicePicker(payload)
 
-        case let .single(`operator`, qrCode, qrMapping):
+        case let .single(single):
             let viewModel = InternetTVDetailsViewModel(
                 model: model,
-                qrCode: qrCode,
-                mapping: qrMapping
+                qrCode: single.qrCode,
+                mapping: single.qrMapping
             )
             
             self.route.destination = .operatorView(viewModel)

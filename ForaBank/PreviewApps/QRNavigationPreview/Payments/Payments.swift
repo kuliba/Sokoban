@@ -25,9 +25,9 @@ final class Payments {
         self.source = .url(url)
     }
     
-    init(qrCode: QRCode) {
+    init(qrCode: QRCode?) {
         
-        self.source = .qrCode(qrCode)
+        self.source = qrCode.map { .qrCode($0) } ?? .nothing
     }
     
     var isClosedPublisher: AnyPublisher<Bool, Never> {
@@ -52,7 +52,10 @@ final class Payments {
     
     enum Source {
         
+        case details(QRCode)
+        case nothing
         case qrCode(QRCode)
         case url(URL)
+        case source(QRNavigationPreview.Source)
     }
 }

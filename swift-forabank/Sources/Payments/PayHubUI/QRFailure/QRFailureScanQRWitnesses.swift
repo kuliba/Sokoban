@@ -7,19 +7,19 @@
 
 import Combine
 
-public struct QRFailureScanQRWitnesses<Categories, DetailPayment> {
+public struct QRFailureScanQRWitnesses<CategoryPicker, DetailPayment> {
     
-    public let categories: CategoriesWitness
+    public let categoryPicker: CategoryPickerWitness
     public let detailPayment: DetailPaymentWitness
     
     public init(
-        categories: @escaping CategoriesWitness,
+        categoryPicker: @escaping CategoryPickerWitness,
         detailPayment: @escaping DetailPaymentWitness
     ) {
-        self.categories = categories
+        self.categoryPicker = categoryPicker
         self.detailPayment = detailPayment
     }
     
-    public typealias CategoriesWitness = (Categories) -> AnyPublisher<Void, Never>
+    public typealias CategoryPickerWitness = (CategoryPicker) -> AnyPublisher<Void, Never>
     public typealias DetailPaymentWitness = (DetailPayment) -> AnyPublisher<Void, Never>
 }
