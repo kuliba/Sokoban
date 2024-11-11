@@ -71,21 +71,40 @@ extension PaymentsProductView {
     }
 }
 
+//MARK: - ViewFactory
+
+struct PaymentsProductViewFactory {
+    
+    let makeProductSelectorView: MakeProductSelectorView
+}
+
+extension PaymentsProductViewFactory {
+    
+    static let preview: Self = .init(makeProductSelectorView: {_ in fatalError()})
+}
+
 //MARK: - View
 
 struct PaymentsProductView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: PaymentsProductViewFactory
 
     var body: some View {
         
-        ProductSelectorView(viewModel: viewModel.selector)
+        viewFactory.makeProductSelectorView(viewModel.selector)
     }
 }
 
 //MARK: - Preview
 
 struct PaymentsCardView_Previews: PreviewProvider {
+    
+    static func preview(
+        viewModel: PaymentsProductView.ViewModel
+    ) -> PaymentsProductView {
+        .init(viewModel: viewModel, viewFactory: .init(makeProductSelectorView: {_ in fatalError()}))
+    }
     
     static var previews: some View {
         
@@ -103,8 +122,8 @@ struct PaymentsCardView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsProductView(viewModel: .sample)
-            PaymentsProductView(viewModel: .sampleExpanded)
+            preview(viewModel: .sample)
+            preview(viewModel: .sampleExpanded)
         }
     }
 }

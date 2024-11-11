@@ -8,7 +8,7 @@
 import PayHub
 
 /// A namespace.
-public enum QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {}
+public enum QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {}
 
 public extension QRNavigationDomain {
     
@@ -25,7 +25,8 @@ public extension QRNavigationDomain {
             case chat
         }
 
-        public typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
+        public typealias QRResult = PayHub.QRResult<QRCode, QRMappedResult>
+        public typealias QRMappedResult = PayHub.QRMappedResult<Operator, Provider, QRCode, QRMapping, Source>
     }
     
     enum Navigation {
@@ -38,6 +39,6 @@ public extension QRNavigationDomain {
             case chat
         }
         
-        public typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, Payments, QRFailure>
+        public typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, MultiplePicker, Payments, QRFailure>
     }
 }

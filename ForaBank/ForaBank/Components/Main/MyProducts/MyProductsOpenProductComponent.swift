@@ -76,7 +76,7 @@ struct MyProductsOpenProductView: View {
                     
                 ForEach(viewModel.newProducts.items) { item in
                         
-                    ButtonNewProduct(viewModel: item)
+                    NewProductButton(viewModel: item)
                         .frame(height: 124)
                 }
             }
