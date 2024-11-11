@@ -37,17 +37,7 @@ extension Date {
         let month = calendar.component(.month, from: self)
         let day = calendar.component(.day, from: self)
 
-        let components = [year, month, day]
-        
-        var result: Int = 0
-        
-        for value in components {
-            
-            result += value
-            result = result * 100
-        }
-        
-        return result / 100
+        return year*100*100+month*100+day
     }
     
     var groupMonthIndex: Int {
@@ -75,8 +65,8 @@ extension Date {
     
     var startOfDay: Date {
         
-         return Calendar.current.startOfDay(for: self)
-     }
+        return Calendar.current.startOfDay(for: self)
+    }
     
     static func getStartOfCurrentMonth(for date: Date) -> Date {
         

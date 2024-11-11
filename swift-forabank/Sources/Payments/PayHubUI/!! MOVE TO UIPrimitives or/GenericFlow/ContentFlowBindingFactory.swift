@@ -48,3 +48,16 @@ public extension ContentFlowBindingFactory {
         return [select, dismiss]
     }
 }
+
+public extension ContentFlowBindingFactory {
+    
+    func bind<Content, Flow, Select, Navigation>(
+        with witnesses: ContentFlowWitnesses<Content, Flow, Select, Navigation>
+    ) -> (Content, Flow) -> Set<AnyCancellable> {
+        
+        return { content, flow in
+            
+            return self.bind(content: content, flow: flow, witnesses: witnesses)
+        }
+    }
+}

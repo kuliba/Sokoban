@@ -82,7 +82,7 @@ extension MainViewController: UICollectionViewDelegate {
                     model, dismissAction: {},
                     updateFastAll: {}
                 )
-                let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
+                let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel, viewFactory: .preview)
                 templatesViewController.delegate = self
                 let navigationViewController = UINavigationController(rootViewController: templatesViewController)
                 present(navigationViewController, animated: true)

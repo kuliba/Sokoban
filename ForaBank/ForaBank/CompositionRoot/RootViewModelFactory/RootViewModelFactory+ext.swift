@@ -10,7 +10,6 @@ import CodableLanding
 import CollateralLoanLandingShowCaseBackend
 import Combine
 import Fetcher
-import Fetcher
 import ForaTools
 import Foundation
 import GenericRemoteService
@@ -25,6 +24,16 @@ import PaymentSticker
 import RemoteServices
 import SberQR
 import SerialComponents
+import SwiftUI
+import PayHub
+import PayHubUI
+import Fetcher
+import LandingUIComponent
+import LandingMapping
+import CodableLanding
+import MarketShowcase
+import CalendarUI
+import GenericRemoteService
 import SharedAPIInfra
 import SwiftUI
 
@@ -40,7 +49,8 @@ extension RootViewModelFactory {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        savingsAccountFlag: SavingsAccountFlag
     ) -> RootViewModel {
         
         func performOrWaitForActive(
@@ -195,9 +205,53 @@ extension RootViewModelFactory {
                 self.model.action.send(action)
             })
         
+        let historyEffectHandlerMicroServices = HistoryEffectHandlerMicroServices(
+            makeFilterModel: { payload, completion in
+                
+                let reducer = FilterModelReducer()
+                let composer = FilterEffectHandlerMicroServicesComposer(model: self.model)
+                let filterEffectHandler = FilterModelEffectHandler(
+                    microServices: composer.compose()
+                )
+                let firstDay = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+                let services = self.model.historyCategories(range: payload.state.selectDates ?? firstDay...Date(), productId: payload.productId)
+                let viewModel = FilterViewModel(
+                    initialState: .init(
+                        productId: payload.productId,
+                        calendar: .init(
+                            date: Date(),
+                            range: .init(range: payload.state.selectDates ?? firstDay...Date()),
+                            monthsData: .generate(startDate: self.model.calendarDayStart(payload.productId)),
+                            periods: FilterHistoryState.Period.allCases
+                        ),
+                        filter: .init(
+                            title: "Фильтры",
+                            selectDates: payload.state.selectDates ?? firstDay...Date(),
+                            selectedPeriod: .dates,
+                            selectedTransaction: payload.state.selectedTransaction,
+                            selectedServices: payload.state.selectedServices,
+                            periods: FilterHistoryState.Period.allCases,
+                            transactionType: FilterHistoryState.TransactionType.allCases,
+                            services: services
+                        ),
+                        status: services.isEmpty ? .empty : .normal
+                    ),
+                    reduce: reducer.reduce,
+                    handleEffect: filterEffectHandler.handleEffect
+                )
+                completion(viewModel)
+            }
+        )
+        
+        let historyEffectHandler = HistoryEffectHandler(
+            microServices: historyEffectHandlerMicroServices
+        )
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
-            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            handleEffect: ProductNavigationStateEffectHandler(
+                handleHistoryEffect: historyEffectHandler.handleEffect
+            ).handleEffect,
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
@@ -453,7 +507,7 @@ extension ProductProfileViewModel {
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     static func make(
         with model: Model,
@@ -476,7 +530,7 @@ extension ProductProfileViewModel {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> MakeProductProfileViewModel {
         
-        return { product, rootView, dismissAction in
+        return { product, rootView, filterState, dismissAction in
             
             let makeProductProfileViewModel = ProductProfileViewModel.make(
                 with: model,
@@ -575,6 +629,16 @@ extension ProductProfileViewModel {
                 product: product,
                 productNavigationStateManager: productNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
+                filterHistoryRequest: { lowerDate, upperDate, operationType, category in
+
+                    model.action.send(ModelAction.Statement.List.Request(
+                        productId: product.id,
+                        direction: .custom(start: lowerDate, end: upperDate),
+                        operationType: .init(rawValue: operationType ?? .avtodorGroupTitle),
+                        category: category
+                    ))
+                },
+                filterState: filterState,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
@@ -606,7 +670,7 @@ private extension RootViewModelFactory {
         return rsaKeyPairStore.deleteCacheIgnoringResult
     }
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     

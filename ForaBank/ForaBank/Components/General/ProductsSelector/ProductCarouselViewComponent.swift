@@ -716,24 +716,42 @@ extension ProductCarouselView.ViewModel {
     }
 }
 
+// MARK: - ViewFactory
+
+struct ProductCarouselViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension ProductCarouselViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 //MARK: - View
 
 struct ProductCarouselView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
-    private let buttonNewProduct: () -> ButtonNewProduct?
+    private let newProductButton: () -> NewProductButton?
+    private let viewFactory: ProductCarouselViewFactory
     
     init(
         viewModel: ViewModel,
-        buttonNewProduct: @escaping () -> ButtonNewProduct?
+        newProductButton: @escaping () -> NewProductButton?,
+        viewFactory: ProductCarouselViewFactory
     ) {
         self.viewModel = viewModel
-        self.buttonNewProduct = buttonNewProduct
+        self.newProductButton = newProductButton
+        self.viewFactory = viewFactory
     }
     
-    init(viewModel: ViewModel) {
-        self.init(viewModel: viewModel, buttonNewProduct: { nil })
+    init(
+        viewModel: ViewModel,
+        viewFactory: ProductCarouselViewFactory
+    ) {
+        self.init(viewModel: viewModel, newProductButton: { nil }, viewFactory: viewFactory)
     }
     
     private let newProductButtonHeight = ProductGroupView.ViewModel.Dimensions.regular.sizes.product.height
@@ -746,7 +764,7 @@ struct ProductCarouselView: View {
             
             viewModel.selector.map {
                 
-                OptionSelectorView(viewModel: $0)
+                viewFactory.makeOptionSelectorView($0)
                     .frame(height: selectorFrameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")
                     .padding(
@@ -791,7 +809,7 @@ struct ProductCarouselView: View {
                             }
                         }
                         
-                        buttonNewProduct().map {
+                        newProductButton().map {
                             $0.frame(height: newProductButtonHeight)
                         }
                     }
@@ -1050,7 +1068,7 @@ extension ProductCarouselView {
 struct ProdCarouselView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: ProductCarouselView.ViewModel) -> some View {
-        ProductCarouselView(viewModel: viewModel)
+        ProductCarouselView(viewModel: viewModel, viewFactory: .preview)
     }
 
     static func previewsGroup() -> some View {
@@ -1171,7 +1189,7 @@ extension ProductCarouselView.ViewModel {
     )
 }
 
-extension ButtonNewProduct.ViewModel {
+extension NewProductButton.ViewModel {
     
-    static let sampleWantCard = ButtonNewProduct.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+    static let sampleWantCard = NewProductButton.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
 }
