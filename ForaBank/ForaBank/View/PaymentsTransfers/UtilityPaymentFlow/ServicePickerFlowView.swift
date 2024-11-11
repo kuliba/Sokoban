@@ -39,7 +39,7 @@ where ContentView: View,
             
             return alert.serviceFailure.alert(
                 connectivityErrorTitle: "Ошибка",
-                connectivityErrorMessage: "alert message",
+                connectivityErrorMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
                 serverErrorTitle: "Ошибка",
                 event: event,
                 map: {

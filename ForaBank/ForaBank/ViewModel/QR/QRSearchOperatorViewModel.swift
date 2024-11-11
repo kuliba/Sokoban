@@ -52,7 +52,7 @@ class QRSearchOperatorViewModel: ObservableObject {
                             guard let self = self else { return }
                             let puref = operatorData.code
                             let paymentsViewModel = PaymentsViewModel(
-                                source: .servicePayment(puref: puref, additionalList: nil, amount: 0),
+                                source: .servicePayment(puref: puref, additionalList: nil, amount: 0, productId: nil),
                                 model: model,
                                 closeAction: {
                                     
@@ -100,7 +100,7 @@ class QRSearchOperatorViewModel: ObservableObject {
                         let additionalList = model.additionalList(for: operatorValue, qrCode: qrCode)
                         let amount: Double = qrCode.rawData["sum"]?.toDouble() ?? 0
                         let paymentsViewModel = PaymentsViewModel(
-                            source: .servicePayment(puref: puref, additionalList: additionalList, amount: amount/100),
+                            source: .servicePayment(puref: puref, additionalList: additionalList, amount: amount/100, productId: nil),
                             model: model,
                             closeAction: {
                                 self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())

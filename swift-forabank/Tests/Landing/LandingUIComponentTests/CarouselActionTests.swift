@@ -125,6 +125,28 @@ final class CarouselActionTests: XCTestCase {
             link: link,
             [.openLink])
     }
+    
+    func test_itemAction_action_housingAndCommumalService_LinkNil_shouldCallPaymentAction() {
+          
+        let type = String.housingAndCommumalService
+        
+        assertItemAction(
+            for: .init(type: type, target: nil),
+            link: nil,
+            [.payment(type)])
+    }
+
+    func test_itemAction_action_housingAndCommumalService_LinkNotNil_shouldCallPaymentAction() {
+        
+        let link = anyMessage()
+        let type = String.housingAndCommumalService
+
+        assertItemAction(
+            for: .init(type: type, target: nil),
+            link: link,
+            [.payment(type)])
+    }
+
 
     // MARK: - Helpers
    
@@ -145,7 +167,8 @@ final class CarouselActionTests: XCTestCase {
                 openUrl: { _ in received.append(.openLink) },
                 goToMain: { received.append(.goMain) }, 
                 orderCard: { received.append(.orderCard) },
-                landing: { received.append(.landing($0)) }
+                landing: { received.append(.landing($0)) },
+                payment: { received.append(.payment($0)) }
             ))()
         
         XCTAssertEqual(received, expectedActionTypes)
@@ -157,5 +180,11 @@ final class CarouselActionTests: XCTestCase {
         case landing(String?)
         case openLink
         case orderCard
+        case payment(String)
     }
+}
+
+private extension String {
+    
+    static let housingAndCommumalService = "HOUSING_AND_COMMUNAL_SERVICE"
 }
