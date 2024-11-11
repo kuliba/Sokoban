@@ -15,7 +15,7 @@ extension RequestFactory {
     ) throws -> URLRequest {
 
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.modifyC2BSubAccData
+        let endpoint = modifyC2BSubscription.productType == .card ? Services.Endpoint.modifyC2BSubCardData : Services.Endpoint.modifyC2BSubAccData
         let url = try! endpoint.url(withBase: base)
         
         var request = URLRequest(url: url)
@@ -31,12 +31,6 @@ public struct ModifyC2BSubscription {
     let productId: Int
     let productType: ProductType
     let subscriptionToken: String
-    
-    enum ProductType {
-        
-        case card
-        case account
-    }
     
     init(
         productId: Int,
