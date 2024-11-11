@@ -445,7 +445,7 @@ struct PaymentCodeView_Previews: PreviewProvider {
         height: CGFloat
     ) -> some View {
         
-        PaymentsGroupView(viewModel: .init(items: [item]))
+        PaymentsGroupView(viewModel: .init(items: [item]), viewFactory: .preview)
             .previewLayout(.fixed(width: 375, height: height))
     }
 }

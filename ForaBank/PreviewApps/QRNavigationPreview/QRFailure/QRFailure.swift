@@ -6,13 +6,14 @@
 //
 
 import Combine
+import PayHubUI
 
 final class QRFailure {
     
-    let qrCode: QRCode
+    let qrCode: QRCode?
     private let selectSubject = PassthroughSubject<Select, Never>()
     
-    init(qrCode: QRCode) {
+    init(with qrCode: QRCode?) {
      
         self.qrCode = qrCode
     }

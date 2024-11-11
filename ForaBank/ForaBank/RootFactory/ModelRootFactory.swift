@@ -42,13 +42,14 @@ extension ModelRootFactory: RootFactory {
             bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
-            utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
-            historyFilterFlag: featureFlags.historyFilterFlag,
+            utilitiesPaymentsFlag: .init(.active(.live)),
+            historyFilterFlag: true,
             changeSVCardLimitsFlag: .init(.active),
             getProductListByTypeV6Flag: .init(.active),
-            marketplaceFlag: featureFlags.marketplaceFlag,
+            marketplaceFlag: .init(.active),
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
         
         let binder = MarketShowcaseToRootViewModelBinder(
@@ -62,6 +63,19 @@ extension ModelRootFactory: RootFactory {
         return rootViewModel
     }
     
+    func makeGetRootNavigation(
+        _ featureFlags: FeatureFlags
+    ) -> RootViewDomain.GetNavigation {
+        
+        return { select, notify, completion in
+        
+            switch select {
+            case .scanQR:
+                completion(.scanQR)
+            }
+        }
+    }
+    
     func makeRootViewFactory(
         _ featureFlags: FeatureFlags
     ) -> RootViewFactory {
@@ -70,7 +84,8 @@ extension ModelRootFactory: RootFactory {
             model: model,
             httpClient: httpClient,
             historyFeatureFlag: featureFlags.historyFilterFlag,
-            marketFeatureFlag: featureFlags.marketplaceFlag
+            marketFeatureFlag: featureFlags.marketplaceFlag,
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
         
         return composer.compose()

@@ -215,7 +215,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.getNavigation(with: .mapped(.missingINN))
+        sut.getNavigation(with: .mapped(.missingINN(makeQR())))
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
@@ -227,7 +227,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         expect(
             sut,
-            with: .mapped(.missingINN),
+            with: .mapped(.missingINN(makeQR())),
             toDeliver: .failure(.init(failure)),
             on: { microServices.makeQRFailure.complete(with: failure) }
         )
@@ -238,7 +238,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.getNavigation(with: .mapped(.missingINN), notify: { events.append($0) })
+        sut.getNavigation(with: .mapped(.missingINN(makeQR())), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
@@ -249,7 +249,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.getNavigation(with: .mapped(.missingINN), notify: { events.append($0) })
+        sut.getNavigation(with: .mapped(.missingINN(makeQR())), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
@@ -260,7 +260,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_mixed_shouldCallMakeProviderPickerWithPayload() {
         
         let (mixed, qrCode, qrMapping) = makeMixed()
-        let result: QRModelResult = .mapped(.mixed(mixed, qrCode, qrMapping))
+        let result: QRModelResult = .mapped(.mixed(.init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)))
         let (sut, microServices) = makeSUT()
         
         sut.getNavigation(with: result)
@@ -367,7 +367,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_multiple_shouldCallMakeOperatorSearchWithPayload() {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        let result: QRModelResult = .mapped(.multiple(multiple, qrCode, qrMapping))
+        let result: QRModelResult = .mapped(.multiple(.init(
+            operators: multiple, 
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        )))
         let (sut, microServices) = makeSUT()
         
         sut.getNavigation(with: result)
@@ -576,9 +580,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, microServices) = makeSUT()
         
-        sut.getNavigation(with: .mapped(.single(
-            makeSegmentedOperatorData(), qrCode, qrMapping
-        )))
+        sut.getNavigation(with: .mapped(.single(.init(
+            operator: makeSegmentedOperatorData(), 
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        ))))
         
         XCTAssertNoDiff(microServices.makeInternetTV.payloads.map(\.0), [qrCode])
         XCTAssertNoDiff(microServices.makeInternetTV.payloads.map(\.1), [qrMapping])
@@ -940,7 +946,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     private func makeMappedMixed() -> QRModelResult {
         
-        return .mapped(.mixed(makeMixedOperators(), makeQR(), makeQRMapping()))
+        return .mapped(.mixed(.init(operators: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())))
     }
     
     private func makeProviderPicker() -> QRNavigation.ProviderPicker {
@@ -958,7 +964,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
     private func makeMappedMultiple() -> QRModelResult {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        return .mapped(.multiple(multiple, qrCode, qrMapping))
+        return .mapped(.multiple(.init(
+            operators: multiple, 
+            qrCode: qrCode, 
+            qrMapping: qrMapping
+        )))
     }
     
     private func makeOperatorSearch() -> QRNavigation.OperatorSearch {
@@ -991,7 +1001,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
         qrMapping: QRMapping? = nil
     ) -> QRModelResult {
         
-        return .mapped(.single(`operator` ?? makeSegmentedOperatorData(), qrCode ?? makeQR(), qrMapping ?? makeQRMapping()))
+        return .mapped(.single(.init(
+            operator: `operator` ?? makeSegmentedOperatorData(), 
+            qrCode: qrCode ?? makeQR(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )))
     }
     
     private func makeInternetTVModel(

@@ -35,3 +35,7 @@ typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorDa
 typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
 
 typealias QRModelResult = PayHub.QRModelResult<SegmentedOperatorData, SegmentedProvider, QRCode, QRMapping, Payments.Operation.Source>
+typealias QRMappedResult = PayHub.QRMappedResult<SegmentedOperatorData, SegmentedProvider, QRCode, QRMapping, Payments.Operation.Source>
+
+typealias MixedQRResult = PayHub.MixedQRResult<SegmentedOperatorData, SegmentedProvider, QRCode, QRMapping>
+typealias MultipleQRResult = PayHub.MultipleQRResult<SegmentedOperatorData, SegmentedProvider, QRCode, QRMapping>

@@ -11,6 +11,7 @@ import IQKeyboardManagerSwift
 struct PaymentsGroupView: View {
     
     let viewModel: PaymentsGroupViewModel
+    let viewFactory: PaymentsProductViewFactory
     
     var body: some View {
         
@@ -18,33 +19,41 @@ struct PaymentsGroupView: View {
             
             ForEach(viewModel.items) { itemViewModel in
                 
-                Self.separatedItemView(for: itemViewModel, items: viewModel.items)
+                SeparatedItemView(for: itemViewModel, items: viewModel.items, viewFactory: viewFactory)
             }
         }
     }
 }
 
-extension PaymentsGroupView {
+struct SeparatedItemView: View {
     
-    @ViewBuilder
-    static func separatedItemView(
+    let items: [PaymentsParameterViewModel]
+    let viewModel: PaymentsParameterViewModel
+    let viewFactory: PaymentsProductViewFactory
+    
+    init(
         for viewModel: PaymentsParameterViewModel,
-        items: [PaymentsParameterViewModel]
-    ) -> some View {
+        items: [PaymentsParameterViewModel],
+        viewFactory: PaymentsProductViewFactory
+    ) {
+        self.items = items
+        self.viewModel = viewModel
+        self.viewFactory = viewFactory
+    }
+    
+    var body: some View {
+
+        itemView()
+            .frame(minHeight: frameMinHeight())
+            .background(background())
+            .padding(.horizontal, horizontalPadding())
         
-        itemView(for: viewModel)
-            .frame(minHeight: frameMinHeight(for: viewModel))
-            .background(background(for: viewModel, items: items))
-            .padding(.horizontal, horizontalPadding(for: viewModel))
-        
-        separatorView(for: viewModel, items: items)
+        separatorView()
             .padding(.horizontal, 16)
     }
     
     @ViewBuilder
-    static func itemView(
-        for viewModel: PaymentsParameterViewModel
-    ) -> some View {
+    func itemView() -> some View {
         
         switch viewModel {
         case let amountViewModel as PaymentsAmountView.ViewModel:
@@ -89,7 +98,7 @@ extension PaymentsGroupView {
             PaymentsNameView(viewModel: nameViewModel)
             
         case let productViewModel as PaymentsProductView.ViewModel:
-            PaymentsProductView(viewModel: productViewModel)
+            PaymentsProductView(viewModel: productViewModel, viewFactory: viewFactory)
             
         case let productTemplateViewModel as PaymentsProductTemplateView.ViewModel:
             PaymentsProductTemplateView(viewModel: productTemplateViewModel)
@@ -148,31 +157,25 @@ extension PaymentsGroupView {
         }
     }
     
-    static func background(
-        for itemViewModel: PaymentsParameterViewModel,
-        items: [PaymentsParameterViewModel]
-    ) -> some View {
+    func background() -> some View {
         
         RoundedCorner(
             radius: 12,
-            corners: backgroundCorners(for: itemViewModel, items: items)
+            corners: backgroundCorners()
         )
-        .foregroundColor(backgroundColor(for: itemViewModel))
+        .foregroundColor(backgroundColor())
     }
     
-    static func backgroundCorners(
-        for itemViewModel: PaymentsParameterViewModel,
-        items: [PaymentsParameterViewModel]
-    ) -> UIRectCorner {
+    func backgroundCorners() -> UIRectCorner {
         
-        switch itemViewModel.source {
+        switch viewModel.source {
         case _ as Payments.ParameterMessage:
             return []
             
         default:
             if items.count > 1 {
                 
-                switch itemViewModel.id  {
+                switch viewModel.id  {
                 case items.first?.id:
                     return [.topLeft, .topRight]
                     
@@ -189,11 +192,9 @@ extension PaymentsGroupView {
         }
     }
     
-    static func backgroundColor(
-        for itemViewModel: PaymentsParameterViewModel
-    ) -> Color {
+    func backgroundColor() -> Color {
         
-        switch itemViewModel.source {
+        switch viewModel.source {
         case _ as Payments.ParameterMessage:
             return .mainColorsBlack
             
@@ -214,7 +215,7 @@ extension PaymentsGroupView {
             return .clear
             
         default:
-            switch itemViewModel.source.style {
+            switch viewModel.source.style {
             case .light:
                 return .mainColorsGrayLightest
                 
@@ -224,11 +225,9 @@ extension PaymentsGroupView {
         }
     }
     
-    static func horizontalPadding(
-        for itemViewModel: PaymentsParameterViewModel
-    ) -> CGFloat {
+    func horizontalPadding() -> CGFloat {
         
-        switch itemViewModel.source {
+        switch viewModel.source {
         case _ as Payments.ParameterAmount,
             _ as Payments.ParameterMessage,
             _ as Payments.ParameterSuccessAdditionalButtons:
@@ -239,11 +238,9 @@ extension PaymentsGroupView {
         }
     }
     
-    static func frameMinHeight(
-        for itemViewModel: PaymentsParameterViewModel
-    ) -> CGFloat {
+    func frameMinHeight() -> CGFloat {
         
-        switch itemViewModel.source {
+        switch viewModel.source {
         case _ as Payments.ParameterSuccessStatus,
             _ as Payments.ParameterSuccessText,
             _ as Payments.ParameterSuccessIcon,
@@ -261,13 +258,10 @@ extension PaymentsGroupView {
     }
     
     @ViewBuilder
-    static func separatorView(
-        for itemViewModel: PaymentsParameterViewModel,
-        items: [PaymentsParameterViewModel]
-    ) -> some View {
+    func separatorView() -> some View {
         
         if items.count > 1,
-           itemViewModel.id != items.last?.id {
+           viewModel.id != items.last?.id {
             
             Rectangle()
                 .frame(height: 1)
@@ -281,16 +275,16 @@ extension PaymentsGroupView {
     }
 }
 
-//MARK: - Factory
+//MARK: - PaymentGroupView
 
-extension PaymentsGroupView {
-    
-    @ViewBuilder
-    static func groupView(
-        for groupViewModel: PaymentsGroupViewModel
-    ) -> some View {
+struct PaymentGroupView: View {
+
+    let viewModel: PaymentsGroupViewModel
+    let viewFactory: PaymentsProductViewFactory
+
+    var body: some View {
         
-        switch groupViewModel {
+        switch viewModel {
         case let contactGroupViewModel as PaymentsContactGroupViewModel:
             PaymentsContactGroupView(viewModel: contactGroupViewModel)
             
@@ -301,7 +295,7 @@ extension PaymentsGroupView {
             PaymentsSpoilerGroupView(viewModel: spoilerGroupViewModel)
             
         default:
-            PaymentsGroupView(viewModel: groupViewModel)
+            PaymentsGroupView(viewModel: viewModel, viewFactory: viewFactory)
         }
     }
 }
@@ -311,7 +305,7 @@ extension PaymentsGroupView {
 struct PaymentsGroupView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
-        PaymentsGroupView(viewModel: viewModel)
+        PaymentsGroupView(viewModel: viewModel, viewFactory: .init(makeProductSelectorView: {_ in fatalError()}))
     }
 
     static var previews: some View {
