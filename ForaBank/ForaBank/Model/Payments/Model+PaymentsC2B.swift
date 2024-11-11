@@ -249,7 +249,9 @@ extension Model {
         return parameters
     }
     
-    func paymentsC2BSubscribe(parameters: [PaymentsParameterRepresentable]) async throws -> Payments.Success {
+    func paymentsC2BSubscribe(
+        parameters: [PaymentsParameterRepresentable]
+    ) async throws -> Payments.Success {
         
         guard let token = token else {
             throw Payments.Error.notAuthorized
@@ -277,16 +279,21 @@ extension Model {
         
         switch product {
         case let card as ProductCardData:
-            let command = ServerCommands.SubscriptionController.ConfirmC2BSubCard(
-                token: token,
-                payload: .init(qrcId: qrcIdParamValue, productId: String(card.id))
-            )
-            let result = try await serverAgent.executeCommand(command: command)
-            
-            if result.title == "Такая привязка счета уже существует!" {
+            if let title = parameters.first(where: { $0.parameter.id == "success_title" }),
+               title.value == "Такая привязка счета уже существует!" {
+                
+                let result = try await Services.makeModifyC2B(
+                    httpClient: self.authenticatedHTTPClient(),
+                    logger: LoggerAgent.shared,
+                    payload: .init(
+                        productId: product.id,
+                        productType: .card,
+                        subscriptionToken: qrcIdParamValue
+                    )
+                )
                 
                 return .init(with: C2BSubscriptionData(
-                    operationStatus: result.operationStatus,
+                    operationStatus: C2BSubscriptionData.Status(rawValue: result.operationStatus.rawValue) ?? .unknown,
                     title: "Привязка счета сохранена",
                     brandIcon: result.brandIcon,
                     brandName: result.brandName,
@@ -295,9 +302,16 @@ extension Model {
                 ))
                 
             } else {
-                
+            
+                let command = ServerCommands.SubscriptionController.ConfirmC2BSubCard(
+                    token: token,
+                    payload: .init(qrcId: qrcIdParamValue, productId: String(card.id))
+                )
+                let result = try await serverAgent.executeCommand(command: command)
                 return .init(with: result)
+
             }
+
         case let account as ProductAccountData:
             let command = ServerCommands.SubscriptionController.ConfirmC2BSubAcc(
                 token: token,
@@ -561,7 +575,7 @@ func paymentsProcessDependencyReducerC2B(
             return nil
         }
         
-        if parameters.contains(where: {$0.value == "Такая привязка счета уже существует!" }) {
+        if parameters.contains(where: { $0.value == "Такая привязка счета уже существует!" }) {
             
             let subscribeParameter = subscribeParameter
             let saveButton = subscribeParameter.buttons.first(where: { $0.title == "Сохранить" })
@@ -571,7 +585,12 @@ func paymentsProcessDependencyReducerC2B(
             let mainButton = subscribeParameter.buttons.last {
                 
                 let subscribeParameter = subscribeParameter.updated(buttons: [
-                    .init(title: saveButton.title, style: .primary, action: saveButton.action, precondition: saveButton.precondition),
+                    .init(
+                        title: saveButton.title,
+                        style: .primary,
+                        action: saveButton.action,
+                        precondition: saveButton.precondition
+                    ),
                     mainButton
                 ])
                 
