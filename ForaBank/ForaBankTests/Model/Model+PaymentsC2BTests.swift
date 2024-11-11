@@ -97,6 +97,42 @@ final class Model_PaymentsC2BTests: XCTestCase {
         XCTAssertNoDiff(parameter?.id, "id")
     }
     
+    func test_paymentsC2BMakeButton_updateAccountLinking_shouldReturnParameterSubscriber() {
+
+        let sut = Model.emptyMock
+        let buttons = sut.makeButtons(
+            [Payments.ParameterSuccessText(with: .init(
+                id: "id",
+                value: "Такая привязка счета уже существует!",
+                style: .title
+            ))],
+            nil
+        )
+        
+        XCTAssertNoDiff(
+            buttons.buttons.map(\.title),
+            ["Сохранить", "На главный"]
+        )
+    }
+    
+    func test_paymentsC2BMakeButton_accountLinking_shouldReturnParameterSubscriber() {
+
+        let sut = Model.emptyMock
+        let buttons = sut.makeButtons(
+            [Payments.ParameterSuccessText(with: .init(
+                id: "id",
+                value: "value",
+                style: .title
+            ))],
+            nil
+        )
+        
+        XCTAssertNoDiff(
+            buttons.buttons.map(\.title),
+            ["Привязать счет", "Пока нет"]
+        )
+    }
+    
     // MARK: - Helpers
     
     private func parameterProductStub(
