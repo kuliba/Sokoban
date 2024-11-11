@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
 import CombineSchedulers
 import PayHub
 import PayHubUI
@@ -21,7 +22,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderComposer<Navigation, QR, QRResult>
+    private typealias SUT = QRBinderComposer<Navigation, QR, Select>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -38,17 +39,53 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )
-        let makeQRFailure = MakeQRFailure()
+        
+        let makeConfirmSberQR = MakeConfirmSberQR()
+        let makeMixedPicker = MakeMixedPicker()
+        let makeMultiplePicker = MakeMultiplePicker()
+        let makeOperatorModel = MakeOperatorModel()
         let makePayments = MakePayments()
+        let makeQRFailure = MakeQRFailure()
+        let makeServicePicker = MakeServicePicker()
+        
         let getNavigationComposer = NavigationComposer(
-            microServices: .init(
-                makeQRFailure: makeQRFailure.call,
-                makePayments: makePayments.call
-            ), 
+            firstMicroServices: .init(
+                makePayments: makePayments.call,
+                makeQRFailure: makeQRFailure.call
+            ),
+            secondMicroServices: .init(
+                makeConfirmSberQR: makeConfirmSberQR.process,
+                makeMixedPicker: makeMixedPicker.call,
+                makeMultiplePicker: makeMultiplePicker.call,
+                makeOperatorModel: makeOperatorModel.call,
+                makeServicePicker: makeServicePicker.call
+            ),
             witnesses: .init(
-                isClosed: { $0.isClosed },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.scanQRPublisher }
+                addCompany: .init(
+                    mixedPicker: { $0.publisher(for: \.addCompany) },
+                    multiplePicker: { $0.publisher(for: \.addCompany) },
+                    servicePicker: { $0.publisher(for: \.goToChat) }
+                ),
+                goToMain: .init(
+                    servicePicker: { $0.publisher(for: \.goToChat) }
+                ),
+                goToPayments: .init(
+                    servicePicker: { $0.publisher(for: \.goToPayments) }
+                ),
+                isClosed: .init(
+                    mixedPicker: { $0.publisher(for: \.isClosed) },
+                    multiplePicker: { $0.publisher(for: \.isClosed) },
+                    payments: { $0.publisher(for: \.isClosed) },
+                    qrFailure: { $0.publisher(for: \.isClosed) },
+                    servicePicker: { _ in Empty().eraseToAnyPublisher() }
+                ),
+                scanQR: .init(
+                    mixedPicker: { $0.publisher(for: \.scanQR) },
+                    multiplePicker: { $0.publisher(for: \.scanQR) },
+                    payments: { $0.publisher(for: \.scanQR) },
+                    qrFailure: { $0.publisher(for: \.scanQR) },
+                    servicePicker: { $0.publisher(for: \.scanQR) }
+                )
             )
         )
         let sut = QRBinderComposer(

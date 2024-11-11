@@ -145,10 +145,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(
-            mainScheduler: .immediate,
-            interactiveScheduler: .immediate
-        )
+        let sut = SUT(schedulers: .immediate)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -185,6 +182,16 @@ final class ContentViewModelComposerTests: XCTestCase {
     }
 }
 
+extension Schedulers {
+    
+    static let immediate: Self = .init(
+        main: .immediate,
+        interactive: .immediate,
+        userInitiated: .immediate,
+        background: .immediate
+    )
+}
+
 // MARK: - DSL
 
 private extension ContentViewDomain.Flow {
@@ -193,14 +200,14 @@ private extension ContentViewDomain.Flow {
         
         get throws {
             
-            guard case let .payments(node) = try qrFlow.state.navigation
+            guard case let .qrNavigation(.payments(node)) = try qrFlow.state.navigation
             else { throw NSError(domain: "Expected Payments", code: -1)}
             
             return node.model
         }
     }
     
-    var qrNavigation: QRNavigationPreview.QRNavigation? {
+    var qrNavigation: QRNavigationPreview.QRNavigationDomain.Navigation? {
         
         try? qrFlow.state.navigation
     }

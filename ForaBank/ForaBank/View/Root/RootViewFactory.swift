@@ -10,6 +10,7 @@ import AnywayPaymentDomain
 import SberQR
 import SwiftUI
 import MarketShowcase
+import LoadableResourceComponent
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -42,7 +43,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeAnywayFlowView: MakeAnywayFlowView
+    let components: ViewComponents
 }
 
 extension RootViewFactory {
@@ -71,7 +72,7 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            makeAnywayFlowView: makeAnywayFlowView
+            components: components
         )
     }
 }

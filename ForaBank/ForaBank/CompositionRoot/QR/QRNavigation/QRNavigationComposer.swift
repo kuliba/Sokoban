@@ -113,7 +113,7 @@ private extension QRNavigationComposer {
     }
     
     func handle(
-        mapped: QRModelResult.Mapped,
+        mapped: QRMappedResult,
         with notify: @escaping Notify,
         and completion: @escaping QRNavigationCompletion
     ) {
@@ -121,11 +121,11 @@ private extension QRNavigationComposer {
         case .missingINN:
             makeQRFailure(with: notify) { completion(.failure($0)) }
             
-        case let .mixed(mixed, qrCode, qrMapping):
+        case let .mixed(mixed):
             let payload = MicroServices.MakeProviderPickerPayload(
-                mixed: mixed,
-                qrCode: qrCode,
-                qrMapping: qrMapping
+                mixed: mixed.operators,
+                qrCode: mixed.qrCode,
+                qrMapping: mixed.qrMapping
             )
             microServices.makeProviderPicker(payload) { [weak self] in
                 
@@ -137,11 +137,11 @@ private extension QRNavigationComposer {
                 )))
             }
             
-        case let .multiple(multiple, qrCode, qrMapping):
+        case let .multiple(multiple):
             let payload = MicroServices.MakeOperatorSearchPayload(
-                multiple: multiple,
-                qrCode: qrCode,
-                qrMapping: qrMapping,
+                multiple: multiple.operators,
+                qrCode: multiple.qrCode,
+                qrMapping: multiple.qrMapping,
                 chat: { notify(.outside(.chat)) },
                 detailPayment: { notify(.detailPayment(nil)) },
                 dismiss: { notify(.dismiss) }
@@ -162,8 +162,8 @@ private extension QRNavigationComposer {
                 )))
             }
             
-        case let .single(_, qrCode, qrMapping):
-            microServices.makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
+        case let .single(single):
+            microServices.makeInternetTV((single.qrCode, single.qrMapping)) { completion(.internetTV($0)) }
             
         case let .source(source):
             handle(.operationSource(source), with: notify, and: completion)
