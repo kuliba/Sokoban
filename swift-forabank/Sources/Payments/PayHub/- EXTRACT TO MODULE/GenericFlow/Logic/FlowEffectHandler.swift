@@ -10,18 +10,22 @@ import Foundation
 
 public final class FlowEffectHandler<Select, Navigation> {
     
+    private let delay: Delay
     private let microServices: MicroServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
+        delay: Delay = .milliseconds(100),
         microServices: MicroServices,
         scheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive)
     ) {
+        self.delay = delay
         self.microServices = microServices
         self.scheduler = scheduler
     }
     
     public typealias MicroServices = FlowEffectHandlerMicroServices<Select, Navigation>
+    public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }
 
 public extension FlowEffectHandler {
@@ -64,7 +68,9 @@ public extension FlowEffectHandler {
         
         microServices.getNavigation(select, notify) { [weak self] navigation in
             
-            self?.scheduler.delay(for: .milliseconds(100)) {
+            guard let self else { return }
+            
+            scheduler.delay(for: delay) {
                 
                 dispatch(.receive(navigation))
             }
@@ -75,9 +81,11 @@ public extension FlowEffectHandler {
 extension AnySchedulerOf<DispatchQueue> {
     
     func delay(
-        for timeout: DispatchTimeInterval,
+        for timeout: Delay,
         _ action: @escaping () -> Void
     ) {
-        schedule(after: .init(.now() + timeout), action)
+        schedule(after: .init(.init(uptimeNanoseconds: 0)).advanced(by: timeout), action)
     }
+    
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }

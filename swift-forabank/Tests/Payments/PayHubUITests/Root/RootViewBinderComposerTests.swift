@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import ForaBank
+import PayHubUI
 import XCTest
 
 final class RootViewBinderComposerTests: XCTestCase {
@@ -54,10 +54,43 @@ final class RootViewBinderComposerTests: XCTestCase {
         XCTAssertNotNil(binder)
     }
     
+    func test_compose_shouldSetContent() {
+        
+        let content = makeRootViewModel()
+        let (sut, _) = makeSUT()
+        
+        let binder = sut.compose(with: content)
+        
+        XCTAssertTrue(binder.content === content)
+    }
+    
+    func test_flow_shouldSetScanQRNavigationOnContentScanQRSelect() {
+        
+        let (sut, _) = makeSUT()
+        let binder = sut.compose(with: makeRootViewModel())
+        XCTAssertNil(binder.flow.state.navigation)
+        
+        binder.content.emit(.scanQR)
+        
+        XCTAssertNoDiff(binder.flow.state.navigation, .scanQR)
+    }
+    
+    func test_content_shouldReceiveOnFlowNavigationDismiss() {
+        
+        let (sut, _) = makeSUT()
+        let binder = sut.compose(with: makeRootViewModel())
+        binder.content.emit(.scanQR)
+        XCTAssertEqual(binder.content.receiveCount, 0)
+        
+        binder.flow.event(.dismiss)
+
+        XCTAssertEqual(binder.content.receiveCount, 1)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = RootViewBinderComposer<RootViewModel>
-    private typealias DismissAllSubject = PassthroughSubject<RootViewModelAction.DismissAll, Never>
+    private typealias SUT = RootViewBinderComposer<RootViewModel, DismissAll>
+    private typealias DismissAllSubject = PassthroughSubject<DismissAll, Never>
     
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
@@ -74,14 +107,18 @@ final class RootViewBinderComposerTests: XCTestCase {
         let sut = SUT(
             bindings: bindings,
             dismiss: dismiss,
-            getNavigation: { _,_,_ in },
+            getNavigation: { select, notify, completion in
+                
+                switch select {
+                case .scanQR:
+                    completion(.scanQR)
+                }
+            },
             schedulers: .immediate,
             witnesses: .init(
-                contentFlow: .init(
-                    contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-                    contentReceiving: { _ in {}},
-                    flowEmitting: { _ in Empty().eraseToAnyPublisher() },
-                    flowReceiving: { _ in { _ in }}
+                content: .init(
+                    emitting: { $0.selectPublisher },
+                    receiving: { $0.receive }
                 ),
                 dismiss: .init(
                     dismissAll: { _ in dismissAllSubject.eraseToAnyPublisher() },
@@ -103,10 +140,33 @@ final class RootViewBinderComposerTests: XCTestCase {
         sut.compose(with: makeRootViewModel())
     }
     
-    private final class RootViewModel {}
+    private final class RootViewModel {
+        
+        typealias Select = SUT.RootDomain.Select
+        
+        private let selectSubject = PassthroughSubject<Select, Never>()
+        private(set) var receiveCount = 0
+        
+        var selectPublisher: AnyPublisher<Select, Never> {
+            
+            selectSubject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ select: Select) {
+            
+            selectSubject.send(select)
+        }
+        
+        func receive() {
+            
+            receiveCount += 1
+        }
+    }
     
     private func makeRootViewModel() -> RootViewModel {
         
         return .init()
     }
+    
+    private struct DismissAll: Equatable {}
 }

@@ -82,7 +82,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.payWithDetails(qrCode))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
@@ -102,7 +102,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
@@ -118,7 +118,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.payWithDetails(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         
         try composed.flow.detailPayment.scanQR()
         scheduler.advance(by: .seconds(500))
@@ -137,7 +137,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         
         try composed.flow.detailPayment.scanQR()
         scheduler.advance(by: .seconds(500))
@@ -156,7 +156,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.payWithDetails(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         XCTAssertNotNil(composed.flow.state.navigation)
         
         try composed.flow.detailPayment.close()
@@ -173,7 +173,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         XCTAssertNotNil(composed.flow.state.navigation)
         
         try composed.flow.detailPayment.close()
@@ -208,7 +208,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
@@ -224,7 +224,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         
         try composed.flow.categoryPicker.scanQR()
         scheduler.advance(by: .seconds(500))
@@ -243,7 +243,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        scheduler.advance(by: .seconds(500))
         XCTAssertNotNil(composed.flow.state.navigation)
         
         try composed.flow.categoryPicker.close()
