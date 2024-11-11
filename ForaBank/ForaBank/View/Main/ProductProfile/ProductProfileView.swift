@@ -28,120 +28,40 @@ struct ProductProfileView: View {
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
     }
     
+    private let offsetHeight: CGFloat = 204 - 48
+
     var body: some View {
         
         ZStack(alignment: .top) {
             
             ScrollView {
                 
-                ZStack {
+                ZStack(alignment: .top) {
                     
-                    Group {
-                        
-                        GeometryReader { geometry in
-                            
-                            ZStack {
-                                
-                                if geometry.frame(in: .global).minY <= 0 {
-                                    
-                                    accentColor
-                                        .frame(width: geometry.size.width, height: 204 - 48)
-                                        .offset(y: geometry.frame(in: .global).minY / 9)
-                                        .clipped()
-                                    
-                                } else {
-                                    
-                                    accentColor
-                                        .frame(width: geometry.size.width, height: 204 - 48 + geometry.frame(in: .global).minY)
-                                        .clipped()
-                                        .offset(y: -geometry.frame(in: .global).minY)
-                                }
-                            }
-                        }
-                    }
-                    .zIndex(0)
-                    
-                    VStack(spacing: 12) {
-                        
-                        ProductProfileCardView(
-                            viewModel: viewModel.product,
-                            makeSliderActivateView: productProfileViewFactory.makeActivateSliderView,
-                            makeSliderViewModel: viewModel.makeSliderViewModel()
-                        )
-                        
-                        VStack(spacing: 32) {
-                            
-                            ProductProfileButtonsView(viewModel: viewModel.buttons)
-                                .padding(.horizontal, 20)
-                            
-                            if let detailAccount = viewModel.detail {
-                                
-                                ProductProfileDetailView(viewModel: detailAccount)
-                                    .padding(.horizontal, 20)
-                            }
-                            
-                            if let historyViewModel = viewModel.history {
-                                
-                                ProductProfileHistoryView(
-                                    viewModel: historyViewModel,
-                                    makeHistoryButton: { isHistoryLoading in
-                                        
-                                        if isHistoryLoading {
-                                            
-                                            return productProfileViewFactory.makeHistoryButton(
-                                                {
-                                                    viewModel.event(.button($0))
-                                                },{
-                                                    viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week || viewModel.filterState.filter.selectDates != nil
-                                                },{
-                                                    return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil) && viewModel.filterState.filter.selectedTransaction == nil &&
-                                                    viewModel.filterState.filter.selectedServices.isEmpty
-                                                }, {
-                                                    
-                                                    viewModel.filterState.filter.selectedServices = []
-                                                    viewModel.filterState.filter.selectedTransaction = nil
-                                                    viewModel.filterState.filter.selectedPeriod = .month
-                                                    viewModel.filterState.filter.selectDates = nil
-                                                    viewModel.filterState.calendar.range = nil
-                                                    
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                                        self.viewModel.history?.action.send(
-                                                            ProductProfileHistoryViewModelAction.Filter(
-                                                                filterState: viewModel.filterState,
-                                                                period: (
-                                                                    lowerDate: .distantPast,
-                                                                    upperDate: Date()
-                                                                ))
-                                                        )   
-                                                    }
-                                                })
-                                        } else {
-                                            return nil
-                                        }
-                                    }
-                                )
-                                .padding(.horizontal, 20)
-                            }
-                        }
-                    }
-                    .padding(.top, 56 - 48)
-                    .zIndex(1)
+                    filler()
+
+                    content()
+                        .padding(.top, 56 - 48)
                 }
-                .background(GeometryReader { geo in
-                    
-                    Color.clear
-                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-                    
-                })
-                .onPreferenceChange(ScrollOffsetKey.self) { offset in
-                    
-                    if offset < -100 {
+                .background(
+                    GeometryReader { geo in
                         
-                        viewModel.action.send(ProductProfileViewModelAction.PullToRefresh())
+                        Color.clear
+                            .preference(
+                                key: ScrollOffsetKey.self,
+                                value: -geo.frame(in: .named("scroll")).origin.y
+                            )
                     }
-                }
+                )
+            }
+            .onPreferenceChange(ScrollOffsetKey.self) { offset in
                 
-            }.coordinateSpace(name: "scroll")
+                if offset < -100 {
+                    
+                    viewModel.action.send(ProductProfileViewModelAction.PullToRefresh())
+                }
+            }
+            .coordinateSpace(name: "scroll")
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -152,21 +72,11 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
                
-            if viewModel.historyState != nil {
-                
-                historySheet()
-            }
+            historySheet()
             
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
-            viewModel.spinner.map { spinner in
-                
-                VStack {
-                    SpinnerView(viewModel: spinner)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .zIndex(.greatestFiniteMagnitude)
-            }
+            spinner()
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
@@ -188,16 +98,6 @@ struct ProductProfileView: View {
             content: fullScreenCoverContent
         )
         .sheet(item: $viewModel.sheet, content: sheetContent)
-    }
-    
-    private func historySheet() -> some View {
-        
-        Color.clear
-            .sheet(
-                modal: viewModel.historyState?.showSheet,
-                dismissModal: { viewModel.event(.history(.dismiss)) },
-                content: historySheetContent
-            )
     }
     
     private func historySheetContent(
@@ -282,7 +182,7 @@ struct ProductProfileView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(
                         destination: viewModel.historyState?.calendarState,
-                        dismissDestination: { viewModel.event(.history(.filter(.dismissCalendar))) },
+                        dismiss: { viewModel.event(.history(.filter(.dismissCalendar))) },
                         content: { state in
                             
                             CalendarWrapperView(
@@ -771,6 +671,135 @@ extension ProductProfileView {
         static var defaultValue = CGFloat.zero
         static func reduce(value: inout Value, nextValue: () -> Value) {
             value += nextValue()
+        }
+    }
+}
+
+private extension ProductProfileView {
+
+    func filler() -> some View {
+        
+        GeometryReader { geometry in
+            
+            let geoY = geometry.frame(in: .global).minY
+            
+            let condition = geoY <= 0
+            let height = offsetHeight + (condition ? 0 : geoY)
+            let offsetY = condition ? geoY / 9 : -geoY
+            
+            accentColor
+                .frame(width: geometry.size.width, height: height)
+                .offset(y: offsetY)
+        }
+    }
+    
+    @ViewBuilder
+    func historyView() -> some View {
+    
+        if let historyViewModel = viewModel.history {
+            
+            ProductProfileHistoryView(
+                viewModel: historyViewModel,
+                makeHistoryButton: { isHistoryLoading in
+                    
+                    if isHistoryLoading {
+                        return historyButton()
+                        
+                    } else {
+                        return nil
+                    }
+                }
+            )
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    @ViewBuilder
+    func historyButton() -> HistoryButtonView? {
+    
+        productProfileViewFactory.makeHistoryButton(
+            {
+                viewModel.event(.button($0))
+            },{
+                viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week || viewModel.filterState.filter.selectDates != nil
+            },{
+                return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil) && viewModel.filterState.filter.selectedTransaction == nil &&
+                viewModel.filterState.filter.selectedServices.isEmpty
+            }, {
+                
+                viewModel.filterState.filter.selectedServices = []
+                viewModel.filterState.filter.selectedTransaction = nil
+                viewModel.filterState.filter.selectedPeriod = .month
+                viewModel.filterState.filter.selectDates = nil
+                viewModel.filterState.calendar.range = nil
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    self.viewModel.history?.action.send(
+                        ProductProfileHistoryViewModelAction.Filter(
+                            filterState: viewModel.filterState,
+                            period: (
+                                lowerDate: .distantPast,
+                                upperDate: Date()
+                            ))
+                    )
+                }
+            })
+    }
+    
+    @ViewBuilder
+    func productProfileDetailView() -> some View {
+        
+        viewModel.detail.map {
+            
+            ProductProfileDetailView(viewModel: $0)
+                .padding(.horizontal, 20)
+        }
+    }
+    
+    func content() -> some View {
+        
+        VStack(spacing: 12) {
+            
+            ProductProfileCardView(
+                viewModel: viewModel.product,
+                makeSliderActivateView: productProfileViewFactory.makeActivateSliderView,
+                makeSliderViewModel: viewModel.makeSliderViewModel()
+            )
+            
+            VStack(spacing: 32) {
+                
+                ProductProfileButtonsView(viewModel: viewModel.buttons)
+                    .padding(.horizontal, 20)
+                
+                productProfileDetailView()
+                
+                historyView()
+            }
+        }
+    }
+
+    @ViewBuilder
+    func spinner() -> some View {
+    
+        viewModel.spinner.map { spinner in
+            
+            SpinnerView(viewModel: spinner)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .zIndex(.greatestFiniteMagnitude)
+        }
+    }
+    
+    @ViewBuilder
+    func historySheet() -> some View {
+        
+        if viewModel.historyState != nil {
+            
+            Color.clear
+                .sheet(
+                    modal: viewModel.historyState?.showSheet,
+                    dismiss: { viewModel.event(.history(.dismiss)) },
+                    content: historySheetContent
+                )
         }
     }
 }
