@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
 import CombineSchedulers
 import PayHub
 import PayHubUI
@@ -38,33 +39,46 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )
-        let makeQRFailure = MakeQRFailure()
-        let makePayments = MakePayments()
         let makeMixedPicker = MakeMixedPicker()
         let makeMultiplePicker = MakeMultiplePicker()
+        let makeOperatorModel = MakeOperatorModel()
+        let makePayments = MakePayments()
+        let makeQRFailure = MakeQRFailure()
+        let makeServicePicker = MakeServicePicker()
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
-                makeQRFailure: makeQRFailure.call,
-                makePayments: makePayments.call,
                 makeMixedPicker: makeMixedPicker.call,
-                makeMultiplePicker: makeMultiplePicker.call
+                makeMultiplePicker: makeMultiplePicker.call,
+                makeOperatorModel: makeOperatorModel.call,
+                makePayments: makePayments.call,
+                makeQRFailure: makeQRFailure.call,
+                makeServicePicker: makeServicePicker.call
             ),
             witnesses: .init(
                 addCompany: .init(
-                    mixedPicker: { $0.addCompanyPublisher },
-                    multiplePicker: { $0.addCompanyPublisher }
+                    mixedPicker: { $0.publisher(for: \.addCompany) },
+                    multiplePicker: { $0.publisher(for: \.addCompany) },
+                    servicePicker: { $0.publisher(for: \.goToChat) }
+                ),
+                goToMain: .init(
+                    servicePicker: { $0.publisher(for: \.goToChat) }
+                ),
+                goToPayments: .init(
+                    servicePicker: { $0.publisher(for: \.goToPayments) }
                 ),
                 isClosed: .init(
-                    mixedPicker: { $0.isClosed },
-                    multiplePicker: { $0.isClosed },
-                    payments: { $0.isClosed },
-                    qrFailure: { $0.isClosed }
+                    mixedPicker: { $0.publisher(for: \.isClosed) },
+                    multiplePicker: { $0.publisher(for: \.isClosed) },
+                    payments: { $0.publisher(for: \.isClosed) },
+                    qrFailure: { $0.publisher(for: \.isClosed) },
+                    servicePicker: { _ in Empty().eraseToAnyPublisher() }
                 ),
                 scanQR: .init(
-                    mixedPicker: { $0.scanQRPublisher },
-                    multiplePicker: { $0.scanQRPublisher },
-                    payments: { $0.scanQRPublisher },
-                    qrFailure: { $0.scanQRPublisher }
+                    mixedPicker: { $0.publisher(for: \.scanQR) },
+                    multiplePicker: { $0.publisher(for: \.scanQR) },
+                    payments: { $0.publisher(for: \.scanQR) },
+                    qrFailure: { $0.publisher(for: \.scanQR) },
+                    servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
         )

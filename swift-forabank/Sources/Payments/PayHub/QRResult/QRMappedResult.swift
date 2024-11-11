@@ -15,11 +15,12 @@ public enum QRMappedResult<Operator, Provider, QRCode, QRMapping, Source> {
     case multiple(Multiple)
     case none(QRCode)
     case provider(ProviderPayload<Provider, QRCode, QRMapping>)
-    case single(Operator, QRCode, QRMapping)
+    case single(Single)
     case source(Source) // Payments.Operation.Source
     
     public typealias Mixed = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     public typealias Multiple = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    public typealias Single = SinglePayload<Operator, QRCode, QRMapping>
 }
 
 extension QRMappedResult: Equatable where Operator: Equatable, Provider: Equatable, QRCode: Equatable, QRMapping: Equatable, Source: Equatable {}

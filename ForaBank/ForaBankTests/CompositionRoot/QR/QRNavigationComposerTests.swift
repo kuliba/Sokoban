@@ -580,9 +580,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, microServices) = makeSUT()
         
-        sut.getNavigation(with: .mapped(.single(
-            makeSegmentedOperatorData(), qrCode, qrMapping
-        )))
+        sut.getNavigation(with: .mapped(.single(.init(
+            operator: makeSegmentedOperatorData(), 
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        ))))
         
         XCTAssertNoDiff(microServices.makeInternetTV.payloads.map(\.0), [qrCode])
         XCTAssertNoDiff(microServices.makeInternetTV.payloads.map(\.1), [qrMapping])
@@ -999,7 +1001,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
         qrMapping: QRMapping? = nil
     ) -> QRModelResult {
         
-        return .mapped(.single(`operator` ?? makeSegmentedOperatorData(), qrCode ?? makeQR(), qrMapping ?? makeQRMapping()))
+        return .mapped(.single(.init(
+            operator: `operator` ?? makeSegmentedOperatorData(), 
+            qrCode: qrCode ?? makeQR(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )))
     }
     
     private func makeInternetTVModel(

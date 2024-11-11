@@ -162,8 +162,8 @@ private extension QRNavigationComposer {
                 )))
             }
             
-        case let .single(_, qrCode, qrMapping):
-            microServices.makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
+        case let .single(single):
+            microServices.makeInternetTV((single.qrCode, single.qrMapping)) { completion(.internetTV($0)) }
             
         case let .source(source):
             handle(.operationSource(source), with: notify, and: completion)
