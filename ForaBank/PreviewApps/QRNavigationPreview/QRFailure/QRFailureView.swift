@@ -23,22 +23,22 @@ struct QRFailureView: View {
             
             Group {
                 
-                switch qrFailure.details {
-                case let .missingINN(qrCode):
+                switch qrFailure.qrCode {
+                case .none:
                     Group {
                         
                         Button("TBD: Add Company") {
                             
-                           // qrFailure.select(.search)
+                            // qrFailure.select(.search)
                         }
                         
-                        Button("Pay with details with QR Code") {
+                        Button("Pay with raw details - INN is missing or URL can't be handled") {
                             
                             qrFailure.select(.payWithDetails(nil))
                         }
                     }
                     
-                case let .qrCode(qrCode):
+                case let .some(qrCode):
                     
                     Group {
                         
@@ -66,7 +66,7 @@ struct QRFailureView: View {
     NavigationView {
         
         QRFailureView(
-            qrFailure: .init(with: .qrCode(.init(value: UUID().uuidString)))
+            qrFailure: .init(with: .init(value: UUID().uuidString))
         )
     }
 }

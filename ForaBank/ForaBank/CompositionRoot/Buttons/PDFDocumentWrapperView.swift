@@ -32,7 +32,10 @@ struct PDFDocumentWrapperView: View {
             
             ActivityView(
                 viewModel: .init(
-                    activityItems: [pdfDocument.dataRepresentation() as Any]
+                    activityItems: [pdfDocument.dataRepresentation() as Any],
+                    completion: {
+                        isShowingSheet = false
+                    }
                 )
             )
         }
