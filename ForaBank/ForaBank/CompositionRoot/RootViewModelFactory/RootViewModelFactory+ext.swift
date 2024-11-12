@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentBackend
+import CalendarUI
 import CodableLanding
 import CollateralLoanLandingShowCaseBackend
 import Combine
@@ -24,23 +25,13 @@ import PaymentSticker
 import RemoteServices
 import SberQR
 import SerialComponents
-import SwiftUI
-import PayHub
-import PayHubUI
-import Fetcher
-import LandingUIComponent
-import LandingMapping
-import CodableLanding
-import MarketShowcase
-import CalendarUI
-import GenericRemoteService
 import SharedAPIInfra
 import SwiftUI
 
 extension RootViewModelFactory {
     
     func make(
-        bindings: inout Set<AnyCancellable>,
+        dismiss: @escaping () -> Void,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
@@ -51,7 +42,9 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         savingsAccountFlag: SavingsAccountFlag
-    ) -> RootViewModel {
+    ) -> RootViewDomain.Binder {
+        
+        var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
             _ work: @escaping () -> Void
@@ -324,7 +317,7 @@ extension RootViewModelFactory {
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
-                
+        
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map
@@ -472,11 +465,11 @@ extension RootViewModelFactory {
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
         
-        return make(
+        let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
-            fastPaymentsFactory: fastPaymentsFactory, 
+            fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
@@ -493,6 +486,64 @@ extension RootViewModelFactory {
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
             marketShowcaseBinder: marketShowcaseBinder
+        )
+        
+        let marketBinder = MarketShowcaseToRootViewModelBinder(
+            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
+            rootViewModel: rootViewModel,
+            scheduler: .main
+        )
+        
+        bindings.formUnion(marketBinder.bind())
+        
+        let getNavigation = makeGetRootNavigation()
+        let witness: RootViewDomain.ContentWitnesses = .init(
+            emitting: { _ in Empty().eraseToAnyPublisher() },
+            receiving: { _ in {}}
+        )
+        
+        let composer = RootViewDomain.BinderComposer(
+            bindings: bindings,
+            dismiss: dismiss,
+            getNavigation: getNavigation,
+            schedulers: .init(),
+            witnesses: .init(content: witness, dismiss: .default)
+        )
+        
+        return composer.compose(with: rootViewModel)
+    }
+    
+    func makeGetRootNavigation() -> RootViewDomain.GetNavigation {
+        
+        return { select, notify, completion in
+            
+            switch select {
+            case .scanQR:
+                completion(.scanQR)
+            }
+        }
+    }
+}
+
+private extension RootViewDomain.Witnesses.DismissWitnesses<RootViewModel> {
+    
+    static var `default`: Self {
+        
+        return .init(
+            dismissAll: {
+                
+                $0.action
+                    .compactMap { $0 as? RootViewModelAction.DismissAll }
+                    .eraseToAnyPublisher()
+            },
+            reset: { content in
+                
+                return {
+                    
+                    content.resetLink()
+                    content.reset()
+                }
+            }
         )
     }
 }

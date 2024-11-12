@@ -21,11 +21,11 @@ public extension RootViewDomain {
     
     struct Witnesses {
         
-        public let content: ContentWitnesses<Content, Select, Navigation>
+        public let content: ContentWitnesses
         public let dismiss: DismissWitnesses<Content>
         
         public init(
-            content: ContentWitnesses<Content, Select, Navigation>, 
+            content: ContentWitnesses, 
             dismiss: DismissWitnesses<Content>
         ) {
             self.content = content
@@ -47,6 +47,8 @@ public extension RootViewDomain {
         }
     }
     
+    typealias ContentWitnesses = PayHubUI.ContentWitnesses<Content, Select>
+    
     // MARK: - Content
     
     typealias Content = RootViewModel
@@ -58,7 +60,7 @@ public extension RootViewDomain {
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    enum Select {
+    enum Select: Equatable {
         
         case scanQR
     }

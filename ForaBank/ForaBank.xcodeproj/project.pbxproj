@@ -1143,6 +1143,7 @@
 		2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
+		2A707A5C2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A707A5B2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift */; };
 		2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */; };
 		2A7183BA2C5E284C008B222B /* QRScanResultMapperNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */; };
 		2A7183BC2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */; };
@@ -4760,6 +4761,7 @@
 		2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSPrototypeView.swift; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
+		2A707A5B2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelEmittingWitnessTests.swift; sourceTree = "<group>"; };
 		2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeDecoratedGetBankDefault.swift"; sourceTree = "<group>"; };
 		2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperNanoServices.swift; sourceTree = "<group>"; };
 		2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRScanResultMapperComposer+ext.swift"; sourceTree = "<group>"; };
@@ -11142,6 +11144,14 @@
 				2AB352DD2B6BC549000EADC2 /* UserAccountNavigationStateManager.swift */,
 			);
 			path = UserAccount;
+			sourceTree = "<group>";
+		};
+		2A707A5A2CE220AF0097DA20 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				2A707A5B2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift */,
+			);
+			path = Root;
 			sourceTree = "<group>";
 		};
 		2A7183B82C5E283A008B222B /* QR */ = {
@@ -17968,6 +17978,7 @@
 			isa = PBXGroup;
 			children = (
 				2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */,
+				2A707A5A2CE220AF0097DA20 /* Root */,
 				2A7688D42AF3A72000045293 /* CompositionRoot */,
 				2A3599A62ADA7F3C00820369 /* Infra */,
 				2AD437682B00BD090027286A /* TestHelpers */,
@@ -23477,6 +23488,7 @@
 				2A0439C92BB420040063B7AB /* NanoServicesTestHelpers.swift in Sources */,
 				2A3BD6002B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift in Sources */,
 				77D73EE629094D7A00A956A3 /* PaymentsProcessTests.swift in Sources */,
+				2A707A5C2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift in Sources */,
 				C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */,
 				C1750D4C290FFBBF00122D2B /* ServerCommandsSettingsTests.swift in Sources */,
 				C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */,

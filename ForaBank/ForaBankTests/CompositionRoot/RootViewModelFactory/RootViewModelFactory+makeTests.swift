@@ -14,7 +14,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotCallHTTPClientOnInactiveSessionState() {
         
-        let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
             sessionState: .inactive
         )
         XCTAssertEqual(httpClient.callCount, 0)
@@ -24,12 +24,12 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         backgroundScheduler.advance()
         
         XCTAssertNoDiff(httpClient.callCount, 0)
-        XCTAssertNotNil(bindings)
+        XCTAssertNotNil(sut)
     }
     
     func test_shouldCallHTTPClientOnActiveSessionState() {
         
-        let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
             sessionState: active()
         )
         
@@ -38,12 +38,12 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         backgroundScheduler.advance()
         
         XCTAssertGreaterThan(httpClient.callCount, 0)
-        XCTAssertNotNil(bindings)
+        XCTAssertNotNil(sut)
     }
     
     func test_shouldCallHTTPClientOnSessionStateChangeToActive() {
         
-        let (_, httpClient, sessionAgent, backgroundScheduler, bindings) = makeSUT(
+        let (sut, httpClient, sessionAgent, backgroundScheduler) = makeSUT(
             sessionState: .inactive
         )
         XCTAssertEqual(httpClient.callCount, 0)
@@ -51,16 +51,15 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         sessionAgent.sessionState.value = active()
         backgroundScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
         
         XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
-        XCTAssertNotNil(bindings)
+        XCTAssertNotNil(sut)
     }
     
     func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSession() throws {
         
         let request = try createGetServiceCategoryListRequest(serial: nil)
-        let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
             sessionState: active()
         )
         
@@ -69,37 +68,37 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         backgroundScheduler.advance()
         
         XCTAssert(httpClient.requests.contains(request))
-        XCTAssertNotNil(bindings)
+        XCTAssertNotNil(sut)
     }
     
     func test_shouldSetCategoryPickerStateToLoading() throws {
         
-        let (sut, _,_,_,_) = makeSUT()
+        let (sut, _,_,_) = makeSUT()
         
-        let initialState = try sut.categoryPickerContent().state
+        let initialState = try sut.content.categoryPickerContent().state
         
         XCTAssertNoDiff(initialState.isLoading, true)
     }
     
     func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
-        let (sut, _,_, backgroundScheduler, bindings) = makeSUT(
+        let (sut, _,_, backgroundScheduler) = makeSUT(
             sessionState: active()
         )
-        let initialState = try sut.categoryPickerContent().state
+        let initialState = try sut.content.categoryPickerContent().state
         
         backgroundScheduler.advance()
         awaitActorThreadHop()
         backgroundScheduler.advance()
         
-        let state = try sut.categoryPickerContent().state
+        let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
-        XCTAssertNotNil(bindings)
+        XCTAssertNotNil(sut)
     }
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
         
-        let (sut, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
             sessionState: active()
         )
         
@@ -109,14 +108,14 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         awaitActorThreadHop()
         backgroundScheduler.advance()
         
-        let state = try sut.categoryPickerContent().state
+        let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
-        XCTAssertNotNil(bindings)
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = RootViewModel
+    private typealias SUT = RootViewDomain.Binder
     
     private func makeSUT(
         sessionState: SessionState = .inactive,
@@ -126,12 +125,10 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         sut: SUT,
         httpClient: HTTPClientSpy,
         sessionAgent: SessionAgentEmptyMock,
-        backgroundScheduler: TestSchedulerOf<DispatchQueue>,
-        bindings: Set<AnyCancellable>
+        backgroundScheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let httpClient = HTTPClientSpy()
         let backgroundScheduler = DispatchQueue.test
-        var bindings = Set<AnyCancellable>()
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
@@ -142,7 +139,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             mainScheduler: .immediate,
             backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         ).make(
-            bindings: &bindings,
+            dismiss: {},
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
             utilitiesPaymentsFlag: .init(.active(.live)),
@@ -155,7 +152,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             savingsAccountFlag: .init(.active)
         )
         
-        return (sut, httpClient, sessionAgent, backgroundScheduler, bindings)
+        return (sut, httpClient, sessionAgent, backgroundScheduler)
     }
     
     private func createGetServiceCategoryListRequest(
@@ -238,7 +235,7 @@ private extension RootViewModel {
     
     private var personal: PaymentsTransfersPersonal? {
         
-        guard case let .v1(switcher) = tabsViewModel.paymentsModel,
+        guard case let .v1(switcher as PaymentsTransfersSwitcher) = tabsViewModel.paymentsModel,
               case let .personal(personal) = switcher.state
         else { return nil }
         
