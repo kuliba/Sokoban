@@ -1,8 +1,8 @@
 //
 //  Retry.swift
-//  
 //
-//  Created by Igor Malyarov on 07.08.2023.
+//
+//  Created by Nikolay Pochekuev on 12.11.2024.
 //
 
 public func retry<T>(
