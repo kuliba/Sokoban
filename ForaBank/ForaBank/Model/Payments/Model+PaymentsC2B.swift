@@ -278,7 +278,9 @@ extension Model {
         }
         
         if let title = parameters.first(where: { $0.parameter.id == "success_title" }),
-           title.value == "Такая привязка счета уже существует!" {
+           title.value == "Такая привязка счета уже существует!",
+           let parameterSubscriptionToken = parameters.first(where: { $0.id == "subscriptionToken" }),
+           let subscriptionToken = parameterSubscriptionToken.parameter.value?.description {
             
             let result = try await Services.makeModifyC2B(
                 httpClient: self.authenticatedHTTPClient(),
@@ -286,17 +288,17 @@ extension Model {
                 payload: .init(
                     productId: product.id,
                     productType: product.productType,
-                    subscriptionToken: qrcIdParamValue
+                    subscriptionToken: subscriptionToken
                 )
             )
             
             return .init(with: C2BSubscriptionData(
                 operationStatus: C2BSubscriptionData.Status(rawValue: result.operationStatus.rawValue) ?? .unknown,
-                title: "Привязка счета сохранена",
+                title: result.title,
                 brandIcon: result.brandIcon,
                 brandName: result.brandName,
                 legalName: result.legalName,
-                redirectUrl: result.redirectUrl
+                redirectUrl: nil
             ))
             
         } else {
@@ -477,6 +479,12 @@ extension Model {
             case let dataInt as PaymentParameterDataInt:
                 parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.successOperationDetailID.rawValue, value: dataInt.value.description)))
                 
+            case let data as PaymentParameterDataString:
+                if data.id == "subscriptionToken" {
+                    parameters.append(Payments.ParameterDataValue(parameter: .init(id: "subscriptionToken", value: data.value)))
+                } else {
+                    continue
+                }
             default:
                 continue
             }
