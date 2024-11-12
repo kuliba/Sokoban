@@ -8,11 +8,9 @@
 import PayHub
 import PayHubUI
 
-typealias QRDomain = PayHubUI.QRDomain<QRNavigation, QRModel, QRResult>
+typealias QRNavigationDomain = PayHubUI.QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailureDomain.Binder, QRMapping, ServicePicker, Source>
 
-typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, Payments, QRFailureDomain.Binder>
-
-typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
+typealias QRDomain = PayHubUI.QRDomain<QRNavigationDomain.Navigation, QRModel, QRNavigationDomain.Select>
 
 struct Operator: Equatable {}
 struct Provider: Equatable {}

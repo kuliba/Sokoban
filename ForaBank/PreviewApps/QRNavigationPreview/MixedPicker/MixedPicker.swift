@@ -9,26 +9,46 @@ import Combine
 
 final class MixedPicker {
     
-    private let isClosedSubject = CurrentValueSubject<Bool, Never>(false)
-    private let scanQRSubject = PassthroughSubject<Void, Never>()
+    // MARK: - close
+    
+    private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
     
     var isClosedPublisher: AnyPublisher<Bool, Never> {
         
-        isClosedSubject.eraseToAnyPublisher()
+        isCloseSubject.eraseToAnyPublisher()
     }
+    
+    func close() {
+        
+        isCloseSubject.value = true
+    }
+    
+    // MARK: - scanQR
+    
+    private let scanQRSubject = PassthroughSubject<Void, Never>()
     
     var scanQRPublisher: AnyPublisher<Void, Never> {
         
         scanQRSubject.eraseToAnyPublisher()
     }
     
-    func close() {
-        
-        isClosedSubject.send(true)
-    }
-    
     func scanQR() {
         
         scanQRSubject.send(())
+    }
+    
+    
+    // MARK: - addCompany
+    
+    private let addCompanySubject = PassthroughSubject<Void, Never>()
+    
+    var addCompanyPublisher: AnyPublisher<Void, Never> {
+        
+        addCompanySubject.eraseToAnyPublisher()
+    }
+    
+    func addCompany() {
+        
+        addCompanySubject.send(())
     }
 }

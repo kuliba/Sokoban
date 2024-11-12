@@ -13,7 +13,7 @@ struct MixedPickerView: View {
     
     var body: some View {
         
-        Text("TBD: MixedPickerView")
+        Button("Add Company", action: model.addCompany)
             .navigationTitle("MixedPicker")
             .navigationBarBackButtonHidden()
             .toolbar {

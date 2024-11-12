@@ -49,7 +49,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, De
 
 public extension QRFailureBinderComposer {
     
-    func compose(qrCode: QRCode) -> Domain.Binder {
+    func compose(with qrCode: QRCode?) -> Domain.Binder {
         
         let factory = ContentFlowBindingFactory(
             delay: delay,
@@ -57,6 +57,7 @@ public extension QRFailureBinderComposer {
         )
         
         let composer = Domain.FlowComposer(
+            delay: delay,
             getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive

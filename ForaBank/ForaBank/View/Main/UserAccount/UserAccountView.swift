@@ -14,10 +14,24 @@ import SearchBarComponent
 import SwiftUI
 import UIPrimitives
 
+struct UserAccountViewFactory {
+    
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+    let makeSbpPayView: MakeSbpPayView
+}
+
+extension UserAccountViewFactory {
+    
+    static let preview: Self = .init(
+        makePaymentsSuccessView: {_ in fatalError()},
+        makeSbpPayView: {_ in fatalError()})
+}
+
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
     let config: UserAccountConfig
+    let viewFactory: UserAccountViewFactory
     
     var body: some View {
         
@@ -231,7 +245,7 @@ struct UserAccountView: View {
             )
             
         case let .successView(successViewModel):
-            PaymentsSuccessView(viewModel: successViewModel)
+            viewFactory.makePaymentsSuccessView(successViewModel)
         }
     }
     
@@ -402,7 +416,7 @@ struct UserAccountView: View {
                 .navigationBarBackButtonHidden(false)
             
         case let .sbpay(viewModel):
-            SbpPayView(viewModel: viewModel)
+            viewFactory.makeSbpPayView(viewModel)
         }
     }
 }
@@ -510,7 +524,8 @@ struct UserAccountView_Previews: PreviewProvider {
         
         UserAccountView(
             viewModel: .sample,
-            config: .preview
+            config: .preview, 
+            viewFactory: .preview
         )
     }
 }

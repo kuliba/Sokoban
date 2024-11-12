@@ -30,7 +30,7 @@ public extension QRFailureDomain {
     
     enum Select {
         
-        case payWithDetails(QRCode)
+        case payWithDetails(QRCode?)
         case search(QRCode)
         case scanQR
     }
@@ -40,5 +40,11 @@ public extension QRFailureDomain {
         case categoryPicker(Node<CategoryPicker>)
         case detailPayment(Node<DetailPayment>)
         case scanQR
+        
+        var scanQR: Void? {
+            
+            guard case .scanQR = self else { return nil }
+            return ()
+        }
     }
 }
