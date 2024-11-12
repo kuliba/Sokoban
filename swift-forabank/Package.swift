@@ -2032,8 +2032,12 @@ private extension Target {
     
     static let transferPublicKey = target(
         name: .transferPublicKey,
+        dependencies: [
+            .foraTools
+        ],
         path: "Sources/Services/\(String.transferPublicKey)"
     )
+
     static let transferPublicKeyTests = testTarget(
         name: .transferPublicKeyTests,
         dependencies: [
