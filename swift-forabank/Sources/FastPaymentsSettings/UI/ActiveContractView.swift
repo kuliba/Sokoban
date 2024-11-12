@@ -75,12 +75,6 @@ struct ActiveContractView: View {
             )
         }
         .padding()
-        
-        AccountLinkingSettingsButton(
-            action: { event(.accountLinking) },
-            config: config.accountLinking
-        )
-        .padding()
     }
 }
 
