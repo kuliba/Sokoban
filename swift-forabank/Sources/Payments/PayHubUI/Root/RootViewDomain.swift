@@ -8,6 +8,8 @@
 import Combine
 import PayHub
 
+public protocol QRScanner {}
+
 /// A namespace.
 public enum RootViewDomain<RootViewModel, DismissAll> {}
 
@@ -67,6 +69,6 @@ public extension RootViewDomain {
     
     enum Navigation {
         
-        case scanQR
+        case scanQR(QRScanner)
     }
 }
