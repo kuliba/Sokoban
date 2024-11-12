@@ -22,23 +22,16 @@ public extension ResponseMapper {
         _ data: _Data
     ) throws -> C2BSubscriptionData {
         
-        .init(data: data.data)
+        .init(data: data)
     }
 }
 
 private extension ResponseMapper {
     
-    typealias _Data = _DTO
+    typealias _Data = C2BSubscriptionCodable
 }
 
 private extension ResponseMapper {
-    
-    struct _DTO: Decodable {
-        
-        let statusCode: Int
-        let errorMessage: String?
-        let data: C2BSubscriptionCodable
-    }
     
     struct C2BSubscriptionCodable: Decodable {
         
@@ -79,12 +72,6 @@ public struct C2BSubscriptionData: Decodable, Equatable {
     public let brandName: String
     public let legalName: String?
     public let redirectUrl: URL?
-    
-    enum MapperError: Error, Equatable {
-        
-        case mapError(String)
-        case status3122
-    }
 }
 
 extension C2BSubscriptionData {
