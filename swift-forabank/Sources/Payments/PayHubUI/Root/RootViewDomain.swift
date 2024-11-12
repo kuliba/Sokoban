@@ -47,7 +47,7 @@ public extension RootViewDomain {
         }
     }
     
-    typealias ContentWitnesses = PayHubUI.ContentWitnesses<Content, Select, Navigation>
+    typealias ContentWitnesses = PayHubUI.ContentWitnesses<Content, Select>
     
     // MARK: - Content
     

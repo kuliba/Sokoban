@@ -175,7 +175,7 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Domain = ForaBank.RootViewDomain
-    private typealias Witnesses = ContentWitnesses<RootViewModel, Domain.Select, Domain.Navigation>
+    private typealias Witnesses = ContentWitnesses<RootViewModel, Domain.Select>
     private typealias SUT = RootViewModel
     private typealias Emitting = Witnesses.Emitting
     private typealias Spy = ValueSpy<Domain.Select>

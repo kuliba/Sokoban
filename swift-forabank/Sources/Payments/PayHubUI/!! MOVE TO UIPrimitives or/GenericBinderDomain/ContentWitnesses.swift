@@ -1,13 +1,13 @@
 //
 //  ContentWitnesses.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 10.11.2024.
 //
 
 import Combine
 
-public struct ContentWitnesses<Content, Select, Navigation> {
+public struct ContentWitnesses<Content, Select> {
     
     public let emitting: Emitting
     public let receiving: Receiving
