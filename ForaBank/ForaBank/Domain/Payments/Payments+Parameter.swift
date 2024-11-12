@@ -241,7 +241,13 @@ extension Payments {
         
         init(with parameter: PaymentParameterButton) {
             
-            self.init(parameterId: parameter.id, title: parameter.value, style: parameter.color, acton: parameter.action, placement: parameter.placement)
+            self.init(
+                parameterId: parameter.id,
+                title: parameter.value,
+                style: parameter.color,
+                acton: parameter.action,
+                placement: parameter.placement
+            )
         }
         
         enum Style: String {
