@@ -593,7 +593,7 @@ func paymentsProcessDependencyReducerC2B(
                 let subscribeParameter = subscribeParameter.updated(buttons: [
                     .init(
                         title: saveButton.title,
-                        style: .primary,
+                        style: .secondary,
                         action: saveButton.action,
                         precondition: saveButton.precondition
                     ),
