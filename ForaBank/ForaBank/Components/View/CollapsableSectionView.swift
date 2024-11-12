@@ -16,7 +16,7 @@ struct CollapsableSectionView<Content: View>: View {
     let maxWidth: Bool
     let backgroundColor: Color
     let isShevronVisible: Bool
-    let canCollapse: Bool // MyProducts and FastPayments are not temporarily hidden
+    let canCollapse: Bool // temporarily, MyProducts and FastPayments without Chevron
 
     @Binding var isCollapsed: Bool
     var content: () -> Content
