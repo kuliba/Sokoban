@@ -37,7 +37,6 @@ final class MultiplePicker {
         scanQRSubject.send(())
     }
     
-    
     // MARK: - addCompany
     
     private let addCompanySubject = PassthroughSubject<Void, Never>()

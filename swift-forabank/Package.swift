@@ -104,7 +104,6 @@ let package = Package(
         .combineSchedulers,
         .customDump,
         .phoneNumberKit,
-        .nonEmpty,
         .tagged,
         .shimmer,
         .svgKit,
