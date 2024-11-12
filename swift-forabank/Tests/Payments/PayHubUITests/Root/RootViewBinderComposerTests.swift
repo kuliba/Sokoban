@@ -93,7 +93,7 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Domain = PayHubUI.RootViewDomain<RootViewModel, DismissAll>
+    private typealias Domain = PayHubUI.RootViewDomain<RootViewModel, DismissAll, QRScanner>
     private typealias SUT = Domain.BinderComposer
     private typealias DismissAllSubject = PassthroughSubject<DismissAll, Never>
     
@@ -176,7 +176,7 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private struct DismissAll: Equatable {}
     
-    private final class QRScanner: PayHubUI.QRScanner {}
+    private final class QRScanner {}
     
     private func makeQRScanner() -> QRScanner {
         
@@ -188,11 +188,8 @@ final class RootViewBinderComposerTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case let .scanQR(qrScanner as QRScanner):
+        case let .scanQR(qrScanner):
             return .qrScanner(.init(qrScanner))
-            
-        default:
-            fatalError()
         }
     }
     
