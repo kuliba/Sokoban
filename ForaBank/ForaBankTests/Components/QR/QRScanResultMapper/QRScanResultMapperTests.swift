@@ -73,7 +73,7 @@ final class QRScanResultMapperTests: XCTestCase {
         let `operator` = makeOperator()
         let (sut, spy) = makeSUT(qrMapping: qrMapping)
         
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.single(`operator`, qr, qrMapping))) {
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.single(.init(operator: `operator`, qrCode: qr, qrMapping: qrMapping)))) {
             
             spy.complete(with: .operator(`operator`))
         }

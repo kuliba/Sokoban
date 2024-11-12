@@ -112,7 +112,9 @@ private extension SegmentedOperatorData {
     ) -> QRMappedResult {
         
         guard let source = origin.serviceSource(matching: qrCode)
-        else { return .single(self, qrCode, qrMapping) }
+        else {
+            return .single(.init(operator: self, qrCode: qrCode, qrMapping: qrMapping))
+        }
         
         return .source(source)
     }
