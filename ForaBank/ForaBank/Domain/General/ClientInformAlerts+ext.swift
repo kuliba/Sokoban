@@ -43,9 +43,7 @@ extension ClientInformAlerts {
     }
     
     mutating func showAgain(blockingAlert: ClientInformAlerts.Alert) {
-        
-        guard let alert = alert else { return }
-        
+
         required = .init(
             title: blockingAlert.title,
             text: blockingAlert.text,

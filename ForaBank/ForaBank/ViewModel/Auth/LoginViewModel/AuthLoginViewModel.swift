@@ -118,7 +118,9 @@ extension AuthLoginViewModel {
                    alert.authBlocking {
                     
                     self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                    self.alertType = .clientInformAlerts(alert)
                 } else {
+                    
                     self.clientInformAlerts?.dropFirst()
                 }
                 
