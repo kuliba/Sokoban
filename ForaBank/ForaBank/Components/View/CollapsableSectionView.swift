@@ -16,17 +16,19 @@ struct CollapsableSectionView<Content: View>: View {
     let maxWidth: Bool
     let backgroundColor: Color
     let isShevronVisible: Bool
+    let canCollapse: Bool // MyProducts and FastPayments are not temporarily hidden
 
     @Binding var isCollapsed: Bool
     var content: () -> Content
     
     init(title: String,
-         edges: Edge.Set = [],
-         padding: CGFloat? = nil,
+         edges: Edge.Set = .horizontal,
+         padding: CGFloat? = 20,
          isEnabled: Bool = true,
          maxWidth: Bool = false,
          backgroundColor: Color = .mainColorsWhite,
          isShevronVisible: Bool = true,
+         canCollapse: Bool = true,
          isCollapsed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
         
         self.title = title
@@ -37,6 +39,7 @@ struct CollapsableSectionView<Content: View>: View {
         self.maxWidth = maxWidth
         self.backgroundColor = backgroundColor
         self.isShevronVisible = isShevronVisible
+        self.canCollapse = canCollapse
         self.content = content
     }
     
@@ -54,9 +57,12 @@ struct CollapsableSectionView<Content: View>: View {
                     
                     if maxWidth { backgroundColor.frame(maxHeight: 20) }
                         
-                    Image.ic24ChevronDown
-                        .rotationEffect(isCollapsed ? .degrees(0) : .degrees(-180))
-                        .foregroundColor(isShevronVisible ? .iconGray : backgroundColor)
+                    if canCollapse {
+                        
+                        Image.ic24ChevronDown
+                            .rotationEffect(isCollapsed ? .degrees(0) : .degrees(-180))
+                            .foregroundColor(isShevronVisible ? .iconGray : backgroundColor)
+                    }
 
                     if !maxWidth { Spacer() }
                     
@@ -65,9 +71,11 @@ struct CollapsableSectionView<Content: View>: View {
                 .background(backgroundColor)
                 .onTapGesture {
                     
-                    withAnimation {
-
-                        isCollapsed.toggle()
+                    if canCollapse {
+                        
+                        withAnimation {
+                            isCollapsed.toggle()
+                        }
                     }
                 }
 
@@ -79,8 +87,11 @@ struct CollapsableSectionView<Content: View>: View {
                         .font(.textH2Sb20282())
                         .foregroundColor(.textDisabled)
 
-                    Image.ic24ChevronDown
-                        .foregroundColor(isShevronVisible ? .iconGray : backgroundColor)
+                    if canCollapse {
+                        
+                        Image.ic24ChevronDown
+                            .foregroundColor(isShevronVisible ? .iconGray : backgroundColor)
+                    }
 
                     Spacer()
 
