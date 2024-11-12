@@ -74,7 +74,7 @@ extension ClientInformAlerts.Alert {
             return Alert(
                 title: Text(title),
                 message: Text(linkableText),
-                primaryButton: .cancel(Text("Позже")),
+                primaryButton: .default(Text("Позже")),
                 secondaryButton: .default(Text("Обновить"), action: { action(.optional) })
             )
             
