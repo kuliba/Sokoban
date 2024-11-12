@@ -91,7 +91,8 @@ final class MyProductsViewModelTests: XCTestCase {
             model,
             makeProductProfileViewModel: { _,_,_,_   in nil },
             openOrderSticker: {},
-            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { return nil }))
+            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { return nil }),
+            collateralLoanLandingFlag: .init(.inactive))
         
         trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)

@@ -129,6 +129,7 @@ final class MainViewModelTests: XCTestCase {
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
+            collateralLoanLandingFlag: .init(.inactive),
             onRegister: {},
             bannersBinder: .preview
         )
@@ -605,6 +606,7 @@ final class MainViewModelTests: XCTestCase {
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
+            collateralLoanLandingFlag: .init(.inactive),
             onRegister: {},
             bannersBinder: .preview
         )
@@ -639,6 +641,7 @@ final class MainViewModelTests: XCTestCase {
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
+            collateralLoanLandingFlag: .init(.inactive),
             onRegister: {},
             bannersBinder: .preview
         )
@@ -677,6 +680,7 @@ final class MainViewModelTests: XCTestCase {
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
+            collateralLoanLandingFlag: .init(.inactive),
             onRegister: {},
             bannersBinder: .preview
         )
@@ -733,7 +737,8 @@ final class MainViewModelTests: XCTestCase {
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
-            onRegister: {},
+            collateralLoanLandingFlag: .init(.inactive),
+            onRegister: {}, 
             bannersBinder: .preview
         )
 
