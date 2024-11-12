@@ -42,7 +42,7 @@ extension RootViewModelFactory {
                 configurator: .init(
                     backgroundColor: .mainColorsGrayLightest
                 ),
-                scheduler: self.mainScheduler
+                scheduler: self.schedulers.main
             )
         }
     }
