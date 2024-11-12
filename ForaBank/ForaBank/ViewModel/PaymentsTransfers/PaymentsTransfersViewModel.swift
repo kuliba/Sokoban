@@ -1509,7 +1509,7 @@ private extension PaymentsTransfersViewModel {
                 case .direct:
                     break
                     
-                case .sfp:
+                case .sfp, .mock(_):
                     self.action.send(DelayWrappedAction(
                         delayMS: 300,
                         action: PaymentsTransfersViewModelAction.Show.Contacts())
