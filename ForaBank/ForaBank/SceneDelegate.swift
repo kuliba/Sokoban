@@ -36,7 +36,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             },
             getNavigation: getNavigation,
             schedulers: .init(),
-            witnesses: .default
+            witnesses: .init(
+                content: .init(
+                    emitting: { _ in Empty().eraseToAnyPublisher() },
+                    receiving: { _ in {}}
+                ),
+                dismiss: .default
+            )
         )
         
         return composer.compose(with: rootViewModel)
@@ -105,14 +111,11 @@ private extension SceneDelegate {
     }
 }
 
-private extension RootViewDomain.Witnesses {
+private extension RootViewDomain.Witnesses.DismissWitnesses<RootViewModel> {
     
-    static let `default`: Self = .init(
-        content: .init(
-            emitting: { _ in Empty().eraseToAnyPublisher() },
-            receiving: { _ in {}}
-        ),
-        dismiss: .init(
+    static var `default`: Self {
+        
+        return .init(
             dismissAll: {
                 
                 $0.action
@@ -128,7 +131,7 @@ private extension RootViewDomain.Witnesses {
                 }
             }
         )
-    )
+    }
 }
 
 // MARK: - appearance
