@@ -62,7 +62,7 @@ private extension QRScanResultMapper {
     func resolveMapped(
         _ qrCode: QRCode,
         _ qrMapping: QRMapping,
-        _ completion: @escaping (QRModelResult.Mapped) -> Void
+        _ completion: @escaping (QRMappedResult) -> Void
     ) {
         microServices.getOperators(qrCode, qrMapping) { [weak self] loadResult in
             
@@ -109,10 +109,12 @@ private extension SegmentedOperatorData {
     func match(
         _ qrCode: QRCode,
         qrMapping: QRMapping
-    ) -> QRModelResult.Mapped {
+    ) -> QRMappedResult {
         
         guard let source = origin.serviceSource(matching: qrCode)
-        else { return .single(self, qrCode, qrMapping) }
+        else {
+            return .single(.init(operator: self, qrCode: qrCode, qrMapping: qrMapping))
+        }
         
         return .source(source)
     }

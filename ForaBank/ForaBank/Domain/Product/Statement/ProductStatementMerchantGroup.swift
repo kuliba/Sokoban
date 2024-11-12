@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum ProductStatementMerchantGroup: String, Identifiable, CaseIterable {
+enum ProductStatementMerchantGroup: String, Identifiable, CaseIterable, Equatable {
  
     case internalOperations = "Перевод внутри банка"
     case services = "Услуги"

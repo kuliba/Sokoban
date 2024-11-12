@@ -13,24 +13,34 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
-    typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
+    typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias FirstMicroServices = NavigationComposer.FirstMicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
-
+    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
     typealias QRResult = Select.QRResult
     
     typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
     
+    typealias MakeConfirmSberQR = Spy<URL, ConfirmSberQR?>
+    
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
     
-    typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
+    typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMultiplePicker = CallSpy<MakeMultiplePickerPayload, MultiplePicker>
+    
+    typealias SinglePayload = PayHub.SinglePayload<Operator, QRCode, QRMapping>
+    typealias MakeOperatorModel = CallSpy<SinglePayload, OperatorModel>
+    
+    typealias MakePaymentsPayload = FirstMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
-    typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
+    typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
+    
+    typealias MakeServicePicker = CallSpy<ProviderPayload, ServicePicker>
     
     struct Operator: Equatable {
         
@@ -54,6 +64,21 @@ class QRBinderTests: XCTestCase {
     ) -> Provider {
         
         return .init(value: value)
+    }
+    
+    typealias ProviderPayload = PayHub.ProviderPayload<Provider, QRCode, QRMapping>
+    
+    func makeProviderPayload(
+        provider: Provider? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> ProviderPayload {
+        
+        return .init(
+            provider: provider ?? makeProvider(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
     }
     
     struct QRCode: Equatable {
@@ -96,6 +121,28 @@ class QRBinderTests: XCTestCase {
         return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
     }
     
+    func makeMultiple(
+        first: Operator? = nil,
+        second: Operator? = nil,
+        tail: Operator...
+    ) -> MultiElementArray<Operator> {
+        
+        return .init(first ?? makeOperator(), second ?? makeOperator(), tail)
+    }
+    
+    func makeMakeMultiplePickerPayload(
+        operators: MultipleQRResult<Operator, Provider, QRCode, QRMapping>.MultipleOperators? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> MakeMultiplePickerPayload {
+        
+        return .init(
+            operators: operators ?? makeMultiple(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
+    }
+    
     struct Source: Equatable {
         
         let value: String
@@ -109,6 +156,36 @@ class QRBinderTests: XCTestCase {
     }
     
     func equatable(
+        _ select: Select
+    ) -> EquatableSelect {
+        
+        switch select {
+        case .outside(.chat):
+            return .outside(.chat)
+            
+        case .outside(.main):
+            return .outside(.main)
+            
+        case .outside(.payments):
+            return .outside(.payments)
+            
+        case let .qrResult(qrResult):
+            return .qrResult(qrResult)
+        }
+    }
+    
+    enum EquatableSelect: Equatable {
+        
+        case outside(Outside)
+        case qrResult(QRResult)
+        
+        enum Outside: Equatable {
+            
+            case chat, main, payments
+        }
+    }
+    
+    func equatable(
         _ event: NavigationComposer.FlowDomain.NotifyEvent
     ) -> EquatableNotifyEvent {
         
@@ -119,7 +196,13 @@ class QRBinderTests: XCTestCase {
         case let .select(select):
             switch select {
             case .outside(.chat):
-                return .chat
+                return .outside(.chat)
+                
+            case .outside(.main):
+                return .outside(.main)
+                
+            case .outside(.payments):
+                return .outside(.payments)
                 
             case let .qrResult(qrResult):
                 return .qrResult(qrResult)
@@ -129,17 +212,37 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableNotifyEvent: Equatable {
         
-        case chat
         case dismiss
+        case outside(Outside)
         case qrResult(QRResult)
+        
+        enum Outside: Equatable {
+            
+            case chat, main, payments
+        }
     }
     
     enum EquatableNavigation: Equatable {
         
-        case chat
+        case confirmSberQR(ObjectIdentifier)
+        case failure(Failure)
+        case outside(Outside)
         case mixedPicker(ObjectIdentifier)
+        case multiplePicker(ObjectIdentifier)
+        case operatorModel(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
+        
+        enum Failure: Equatable {
+            
+            case sberQR(URL)
+        }
+        
+        enum Outside: Equatable {
+            
+            case chat, main, payments
+        }
     }
     
     func equatable(
@@ -148,18 +251,39 @@ class QRBinderTests: XCTestCase {
         
         switch navigation {
         case .outside(.chat):
-            return .chat
+            return .outside(.chat)
+            
+        case .outside(.main):
+            return .outside(.main)
+            
+        case .outside(.payments):
+            return .outside(.payments)
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
+            case let .confirmSberQR(node):
+                return .confirmSberQR(.init(node.model))
+                
+            case let .failure(.sberQR(url)):
+                return .failure(.sberQR(url))
+                
             case let .mixedPicker(node):
                 return .mixedPicker(.init(node.model))
+                
+            case let .multiplePicker(node):
+                return .multiplePicker(.init(node.model))
+                
+            case let .operatorModel(operatorModel):
+                return .operatorModel(.init(operatorModel))
                 
             case let .payments(node):
                 return .payments(.init(node.model))
                 
             case let .qrFailure(node):
                 return .qrFailure(.init(node.model))
+                
+            case let .servicePicker(node):
+                return .servicePicker(.init(node.model))
             }
         }
     }
@@ -191,69 +315,156 @@ class QRBinderTests: XCTestCase {
         return .init()
     }
     
-    typealias Payments = ClosingScanQR
+    func makeSinglePayload(
+        `operator`: QRBinderTests.Operator? = nil,
+        qrCode: QRBinderTests.QRCode? = nil,
+        qrMapping: QRBinderTests.QRMapping? = nil
+    ) -> SinglePayload {
+        
+        return .init(
+            operator: `operator` ?? makeOperator(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
+    }
+    
+    final class OperatorModel {}
+    
+    func makeOperatorModel() -> OperatorModel {
+        
+        return .init()
+    }
+    
+    typealias Payments = Mock
     
     func makePayments() -> Payments {
         
         return .init()
     }
     
-    typealias QRFailure = ClosingScanQR
+    typealias QRFailure = Mock
     
     func makeQRFailure() -> QRFailure {
         
         return .init()
     }
     
-    typealias MixedPicker = ClosingScanQR
+    typealias MixedPicker = Mock
     
     func makeMixedPicker() -> MixedPicker {
         
         return .init()
     }
     
-    final class ClosingScanQR {
+    typealias MultiplePicker = Mock
+    
+    func makeMultiplePicker() -> MultiplePicker {
         
-        // MARK: - close
+        return .init()
+    }
+    
+    final class Mock {
         
-        private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
-        
-        var isClosed: AnyPublisher<Bool, Never> {
+        func publisher<T>(
+            for keyPath: KeyPath<Event, T?>
+        ) -> AnyPublisher<T, Never> {
             
-            isCloseSubject.eraseToAnyPublisher()
+            return eventSubject
+                .compactMap { $0[keyPath: keyPath] }
+                .eraseToAnyPublisher()
         }
         
-        func close() {
+        func emit(_ event: Event) {
             
-            isCloseSubject.value = true
-        }
-
-        // MARK: - scanQR
-        
-        private let scanQRSubject = PassthroughSubject<Void, Never>()
-        
-        var scanQRPublisher: AnyPublisher<Void, Never> {
-            
-            scanQRSubject.eraseToAnyPublisher()
+            eventSubject.send(event)
         }
         
-        func scanQR() {
-            
-            scanQRSubject.send(())
-        }
-
-        // MARK: - addCompany
+        private let eventSubject = PassthroughSubject<Event, Never>()
         
-        private let addCompanySubject = PassthroughSubject<Void, Never>()
-        
-        var addCompanyPublisher: AnyPublisher<Void, Never> {
+        enum Event {
             
-            addCompanySubject.eraseToAnyPublisher()
+            case addCompany
+            case isClosed(Bool)
+            case scanQR
+            
+            var addCompany: Void? {
+                
+                guard case .addCompany = self else { return nil }
+                
+                return ()
+            }
+            
+            var isClosed: Bool? {
+                
+                guard case let .isClosed(value) = self else { return nil }
+                
+                return value
+            }
+            
+            var scanQR: Void? {
+                
+                guard case .scanQR = self else { return nil }
+                
+                return ()
+            }
+        }
+    }
+    
+    final class ConfirmSberQR {}
+    
+    func makeConfirmSberQR() -> ConfirmSberQR {
+        
+        return .init()
+    }
+    
+    final class ServicePicker {
+        
+        func publisher(
+            for keyPath: KeyPath<Event, Void?>
+        ) -> AnyPublisher<Void, Never> {
+            
+            return eventSubject
+                .compactMap { $0[keyPath: keyPath] }
+                .eraseToAnyPublisher()
         }
         
-        func addCompany() {
+        func emit(_ event: Event) {
             
-            addCompanySubject.send(())
+            eventSubject.send(event)
         }
+        
+        // MARK: - Event
+        
+        private let eventSubject = PassthroughSubject<Event, Never>()
+        
+        enum Event {
+            
+            case goToChat, goToMain, goToPayments
+            case scanQR
+            
+            var goToChat: Void? { self == .goToChat ? () : nil }
+            var goToMain: Void? { self == .goToMain ? () : nil }
+            var goToPayments: Void? { self == .goToPayments ? () : nil }
+            var scanQR: Void? { self == .scanQR ? () : nil }
+        }
+        
+        // MARK: - isLoading
+        
+        private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+        
+        var isLoading: AnyPublisher<Bool, Never> {
+            
+            isLoadingSubject.eraseToAnyPublisher()
+        }
+        
+        func isLoading(_ input: Bool) {
+            
+            isLoadingSubject.send(input)
+        }
+    }
+    
+    func makeServicePicker() -> ServicePicker {
+        
+        return .init()
     }
 }

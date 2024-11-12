@@ -1100,7 +1100,7 @@ extension MainViewModel {
     }
     
     private func handleMapped(
-        _ mapped: QRModelResult.Mapped
+        _ mapped: QRMappedResult
     ) {
         switch mapped {
         case .missingINN:
@@ -1118,11 +1118,11 @@ extension MainViewModel {
         case let .provider(payload):
             makeServicePicker(payload)
             
-        case let .single(`operator`, qrCode, qrMapping):
+        case let .single(single):
             let viewModel = InternetTVDetailsViewModel(
                 model: model,
-                qrCode: qrCode,
-                mapping: qrMapping
+                qrCode: single.qrCode,
+                mapping: single.qrMapping
             )
             
             self.route.destination = .operatorView(viewModel)

@@ -7,18 +7,24 @@
 
 import Combine
 
-public struct QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure> {
+public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker> {
     
     public let addCompany: AddCompanyWitnesses
+    public let goToMain: GoToMainWitnesses
+    public let goToPayments: GoToPaymentsWitnesses
     public let isClosed: IsClosedWitnesses
     public let scanQR: ScanQRWitnesses
     
     public init(
         addCompany: AddCompanyWitnesses,
+        goToMain: GoToMainWitnesses,
+        goToPayments: GoToPaymentsWitnesses,
         isClosed: IsClosedWitnesses,
         scanQR: ScanQRWitnesses
     ) {
         self.addCompany = addCompany
+        self.goToMain = goToMain
+        self.goToPayments = goToPayments
         self.isClosed = isClosed
         self.scanQR = scanQR
     }
@@ -26,14 +32,46 @@ public struct QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure> {
     public struct AddCompanyWitnesses {
         
         public let mixedPicker: MakeAddCompanyPublisher<MixedPicker>
+        public let multiplePicker: MakeAddCompanyPublisher<MultiplePicker>
+        public let servicePicker: MakeAddCompanyPublisher<ServicePicker>
         
         public init(
-            mixedPicker: @escaping MakeAddCompanyPublisher<MixedPicker>
+            mixedPicker: @escaping MakeAddCompanyPublisher<MixedPicker>,
+            multiplePicker: @escaping MakeAddCompanyPublisher<MultiplePicker>,
+            servicePicker: @escaping MakeAddCompanyPublisher<ServicePicker>
         ) {
             self.mixedPicker = mixedPicker
+            self.multiplePicker = multiplePicker
+            self.servicePicker = servicePicker
         }
         
         public typealias MakeAddCompanyPublisher<V> = (V) -> AnyPublisher<Void, Never>
+    }
+    
+    public struct GoToMainWitnesses {
+        
+        public let servicePicker: MakeGoToMainPublisher<ServicePicker>
+        
+        public init(
+            servicePicker: @escaping MakeGoToMainPublisher<ServicePicker>
+        ) {
+            self.servicePicker = servicePicker
+        }
+
+        public typealias MakeGoToMainPublisher<V> = (V) -> AnyPublisher<Void, Never>
+    }
+    
+    public struct GoToPaymentsWitnesses {
+        
+        public let servicePicker: MakeGoToPaymentsPublisher<ServicePicker>
+        
+        public init(
+            servicePicker: @escaping MakeGoToPaymentsPublisher<ServicePicker>
+        ) {
+            self.servicePicker = servicePicker
+        }
+
+        public typealias MakeGoToPaymentsPublisher<V> = (V) -> AnyPublisher<Void, Never>
     }
     
     public typealias IsClosedWitnesses = Witness<Bool>
@@ -42,17 +80,23 @@ public struct QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure> {
     public struct Witness<Value> {
         
         public let mixedPicker: MakePublisher<MixedPicker>
+        public let multiplePicker: MakePublisher<MultiplePicker>
         public let payments: MakePublisher<Payments>
         public let qrFailure: MakePublisher<QRFailure>
+        public let servicePicker: MakePublisher<ServicePicker>
         
         public init(
             mixedPicker: @escaping MakePublisher<MixedPicker>,
+            multiplePicker: @escaping MakePublisher<MultiplePicker>,
             payments: @escaping MakePublisher<Payments>,
-            qrFailure: @escaping MakePublisher<QRFailure>
+            qrFailure: @escaping MakePublisher<QRFailure>,
+            servicePicker: @escaping MakePublisher<ServicePicker>
         ) {
             self.mixedPicker = mixedPicker
+            self.multiplePicker = multiplePicker
             self.payments = payments
             self.qrFailure = qrFailure
+            self.servicePicker = servicePicker
         }
         
         public typealias MakePublisher<V> = (V) -> AnyPublisher<Value, Never>
