@@ -383,6 +383,7 @@ extension TemplateButtonView {
                 
                 ThreeBounceAnimationView(color: isAnimating ? .black : .white)
             }
+            .frame(height: 120)
             .onAppear {
                 
                 withAnimation(.linear(duration: 0.5)) {
@@ -593,7 +594,6 @@ struct TemplateButtonView: View {
             
             bottomView(viewModel: viewModel)
         }
-        .frame(height: 120)
         .frame(maxWidth: 100)
     }
 }
