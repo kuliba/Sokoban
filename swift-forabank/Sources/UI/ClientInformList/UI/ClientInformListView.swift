@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import LinkableText
 
 @available(iOS 15, *)
 public struct ClientInformListView: View {
