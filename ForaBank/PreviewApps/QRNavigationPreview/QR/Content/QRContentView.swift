@@ -35,6 +35,17 @@ struct QRContentView: View {
                     }
                     .foregroundColor(.red)
                     
+                    Button("SberQR failure") {
+                        
+                        model.emit(.sberQR(.init(string: "failure")!))
+                    }
+                    .foregroundColor(.red)
+                    
+                    Button("SberQR") {
+                        
+                        model.emit(.sberQR(.init(string: "sberQR")!))
+                    }
+                    
                     Button("missing INN") {
                         
                         model.emit(.mapped(.missingINN(.init(value: "QRCOde"))))
@@ -51,6 +62,54 @@ struct QRContentView: View {
                             qrCode: .init(value: UUID().uuidString),
                             qrMapping: .init()
                         ))))
+                    }
+                    
+                    Button("Multiple Operators") {
+                        
+                        model.emit(.mapped(.multiple(.init(
+                            operators: .init(.init(), .init()),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
+                    
+                    Button("none") {
+                        
+                        model.emit(.mapped(.none(.init(value: .init(UUID().uuidString.prefix(4))))))
+                    }
+                    .foregroundColor(.red)
+                    
+                    Button("provider") {
+                        
+                        model.emit(.mapped(.provider(.init(
+                            provider: .init(),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
+                    
+                    Button("single operator") {
+                        
+                        model.emit(.mapped(.single(.init(
+                            operator: .init(),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
+                    
+                    Button("source") {
+                        
+                        model.emit(.mapped(.source(.init())))
+                    }
+                    
+                    Button("url") {
+                        
+                        model.emit(.url(.init(string: "any-url")!))
+                    }
+                    
+                    Button("unknown") {
+                        
+                        model.emit(.unknown)
                     }
                 }
                 .foregroundColor(.blue)

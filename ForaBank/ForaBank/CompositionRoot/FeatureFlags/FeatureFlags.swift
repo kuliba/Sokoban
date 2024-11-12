@@ -13,4 +13,5 @@ struct FeatureFlags: Equatable {
     let historyFilterFlag: HistoryFilterFlag
     let paymentsTransfersFlag: PaymentsTransfersFlag
     let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
+    let savingsAccountFlag: SavingsAccountFlag
 }

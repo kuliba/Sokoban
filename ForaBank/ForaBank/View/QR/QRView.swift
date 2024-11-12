@@ -6,9 +6,15 @@
 //
 import SwiftUI
 
+struct QRViewFactory {
+    
+    let makeQRFailedView: (QRFailedViewModel) -> QRFailedView
+}
+
 struct QRView: View {
     
     @ObservedObject var viewModel: QRViewModel
+    let viewFactory: QRViewFactory
     
     var body: some View {
         
@@ -85,8 +91,8 @@ struct QRView: View {
                     
                     switch link {
                         
-                    case .failedView(let view):
-                        QRFailedView(viewModel: view)
+                    case let .failedView(viewModel):
+                        viewFactory.makeQRFailedView(viewModel)
                     }
                 }
             }
@@ -279,10 +285,12 @@ struct QRView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        QRView(viewModel: .init(
-            closeAction: {},
-            qrResolve: { _ in .unknown }
-        ))
+        QRView(
+            viewModel: .init(
+                closeAction: {},
+                qrResolve: { _ in .unknown }
+            ),
+            viewFactory: .init(makeQRFailedView: {_ in fatalError() }))
     }
 }
 

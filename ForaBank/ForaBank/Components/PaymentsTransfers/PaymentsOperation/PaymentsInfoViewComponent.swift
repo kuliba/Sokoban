@@ -254,7 +254,7 @@ struct PaymentsInfoView_Previews: PreviewProvider {
             PaymentsInfoView(viewModel: .sampleParameter, isCompact: true)
                 .previewLayout(.fixed(width: 375, height: 80))
             
-            PaymentsGroupView(viewModel: .sampleSingleInfo)
+            PaymentsGroupView(viewModel: .sampleSingleInfo, viewFactory: .preview)
                 .previewLayout(.fixed(width: 375, height: 140))
             
             PaymentsInfoGroupView(viewModel: .sampleInfo)
