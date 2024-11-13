@@ -15,7 +15,8 @@ extension CategoryPickerSectionContentViewConfig {
             config: .init(
                 textFont: .title3.bold(),
                 textColor: .primary
-            )
+            ),
+            leadingPadding: 20
         ),
         titlePlaceholder: .init(
             color: .gray.opacity(0.5),

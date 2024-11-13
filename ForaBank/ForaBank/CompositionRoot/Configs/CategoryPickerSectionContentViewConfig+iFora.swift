@@ -17,7 +17,8 @@ extension CategoryPickerSectionContentViewConfig {
             config: .init(
                 textFont: .textH2Sb20282(),
                 textColor: .textSecondary
-            )
+            ),
+            leadingPadding: 20
         ),
         titlePlaceholder: .init(
             color: .gray.opacity(0.5),
