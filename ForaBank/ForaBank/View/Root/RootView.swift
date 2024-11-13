@@ -729,28 +729,9 @@ private extension RootView {
             flow: transfers.flow,
             contentView: {
                 
-                RxWrapperView(model: transfers.content) { state, event in
-                    
-                    VStack {
-                        
-                        PTSectionTransfersButtonsView(
-                            title: PaymentsTransfersSectionType.transfers.name,
-                            buttons: state.elements.compactMap { element in
-                                
-                                switch element {
-                                case let .buttonType(buttonType):
-                                    return .init(type: buttonType) {
-                                        
-                                        event(.select(.buttonType(buttonType)))
-                                    }
-                                    
-                                default:
-                                    return nil
-                                }
-                            }
-                        )
-                    }
-                }
+                ComposedPaymentsTransfersTransfersContentView(
+                    content: transfers.content
+                )
             },
             factory: .init(
                 makeContactsView: rootViewFactory.components.makeContactsView,

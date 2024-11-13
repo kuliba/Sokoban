@@ -1318,6 +1318,7 @@
 		2A945B442CE46C9A00A68FB1 /* ComposedCategoryPickerSectionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B432CE46C9A00A68FB1 /* ComposedCategoryPickerSectionContentView.swift */; };
 		2A945B462CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */; };
 		2A945B482CE49F1800A68FB1 /* ComposedPaymentsTransfersTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B472CE49F1800A68FB1 /* ComposedPaymentsTransfersTransfersView.swift */; };
+		2A945B4A2CE4A21000A68FB1 /* ComposedPaymentsTransfersTransfersContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B492CE4A21000A68FB1 /* ComposedPaymentsTransfersTransfersContentView.swift */; };
 		2A94991B2B728F4D00C67F05 /* StubbedFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */; };
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
 		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
@@ -4937,6 +4938,7 @@
 		2A945B432CE46C9A00A68FB1 /* ComposedCategoryPickerSectionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCategoryPickerSectionContentView.swift; sourceTree = "<group>"; };
 		2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalTransfersFlowViewFactory.swift; sourceTree = "<group>"; };
 		2A945B472CE49F1800A68FB1 /* ComposedPaymentsTransfersTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedPaymentsTransfersTransfersView.swift; sourceTree = "<group>"; };
+		2A945B492CE4A21000A68FB1 /* ComposedPaymentsTransfersTransfersContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedPaymentsTransfersTransfersContentView.swift; sourceTree = "<group>"; };
 		2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedFeatureFlag.swift; sourceTree = "<group>"; };
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
@@ -11707,6 +11709,7 @@
 				2A945B472CE49F1800A68FB1 /* ComposedPaymentsTransfersTransfersView.swift */,
 				2A8DF0E92CC8FCC700FB76D4 /* PaymentsTransfersPersonalTransfersView.swift */,
 				2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */,
+				2A945B492CE4A21000A68FB1 /* ComposedPaymentsTransfersTransfersContentView.swift */,
 			);
 			path = TransfersSection;
 			sourceTree = "<group>";
@@ -21859,6 +21862,7 @@
 				2A2E3FC42BB2CB5E00730D37 /* RequestFactory+createMakeTransferRequest.swift in Sources */,
 				2A2137F92B28A2F20044647C /* Config+iFora.swift in Sources */,
 				2A94991B2B728F4D00C67F05 /* StubbedFeatureFlag.swift in Sources */,
+				2A945B4A2CE4A21000A68FB1 /* ComposedPaymentsTransfersTransfersContentView.swift in Sources */,
 				7789794629CB696100ECF684 /* ProductGroupViewComponent.swift in Sources */,
 				2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */,
 				830AF2D52AB2E0FC00C2F29C /* AbroadType.swift in Sources */,
