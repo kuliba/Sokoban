@@ -20,14 +20,11 @@ public struct ClientInformListConfig {
 
     public struct Colors {
         
-        let grayBackground: Color
         let bgIconRedLight: Color
         
         public init(
-            grayBackground: Color,
             bgIconRedLight: Color
         ) {
-            self.grayBackground = grayBackground
             self.bgIconRedLight = bgIconRedLight
         }
     }

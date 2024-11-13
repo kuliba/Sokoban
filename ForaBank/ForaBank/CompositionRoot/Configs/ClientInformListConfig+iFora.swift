@@ -11,7 +11,6 @@ extension ClientInformListConfig {
     
     static let iFora: Self = .init(
         colors: .init(
-            grayBackground: .mainColorsGrayLightest,
             bgIconRedLight: .bgIconRedLight
         ),
         strings: .init(

@@ -11,7 +11,6 @@ extension ClientInformListConfig.Colors {
     
     static let preview: Self = .init(
 
-        grayBackground: Color(red: 0.97, green: 0.97, blue: 0.97),
         bgIconRedLight: Color(red: 1.00, green: 0.62, blue: 0.62)
     )
 }

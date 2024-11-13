@@ -61,7 +61,7 @@ public struct ClientInformListView: View {
         
         ZStack(alignment: .top) {
 
-            config.colors.grayBackground
+            Color.white
                 .frame(height: config.sizes.navBarHeight)
                 .ignoresSafeArea()
                         
@@ -77,7 +77,7 @@ public struct ClientInformListView: View {
             .padding(.horizontal, config.paddings.horizontal)
             .padding(.vertical, config.paddings.vertical)
             .frame(maxWidth: .infinity, maxHeight: config.sizes.navBarMaxWidth, alignment: .leading)
-            .background(config.colors.grayBackground)
+            .background(.white)
     }
     
     private func contentStack() -> some View {
