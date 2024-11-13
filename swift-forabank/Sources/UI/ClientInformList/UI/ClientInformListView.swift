@@ -48,12 +48,11 @@ public struct ClientInformListView: View {
             .zIndex(-1)
             .frame(height: maxHeight < contentHeight ? maxHeight : contentHeight)
             .onPreferenceChange(ContentHeightKey.self) { contentHeight in
-                    
-                self.contentHeight = (contentHeight < maxHeight / 2) ? 
-                (maxHeight / 2) : contentHeight
 
                 isShowNavBar = contentHeight > UIScreen.main.bounds.height
                 shouldScroll = contentHeight > UIScreen.main.bounds.height
+                
+                self.contentHeight = contentHeight < maxHeight ? contentHeight + config.paddings.bottom : maxHeight
             }
         }
     }
