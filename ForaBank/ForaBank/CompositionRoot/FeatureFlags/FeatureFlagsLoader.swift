@@ -31,7 +31,8 @@ extension FeatureFlagsLoader {
             historyFilterFlag: loadHistoryFilterFlag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             utilitiesPaymentsFlag: loadUtilitiesPaymentsFlag(),
-            savingsAccountFlag: loadSavingsAccountFlag()
+            savingsAccountFlag: loadSavingsAccountFlag(),
+            collateralLoanLandingFlag: loadCollateralLoanLandingFlag()
         )
     }
 }
@@ -44,6 +45,7 @@ enum FeatureFlagKey: String {
     case historyFilterFlag = "history_filter"
     case paymentsTransfersFlag = "payments_transfers"
     case utilitiesPaymentsFlag = "sber_providers"
+    case collateralLoanLandingFlag = "collateralLoanLanding"
     case savingsAccountFlag = "savingsAccount"
 }
 
@@ -102,6 +104,14 @@ private extension FeatureFlagsLoader {
         case "sber_providers_live": return .init(.active(.live))
         case "sber_providers_stub": return .init(.active(.stub))
         default:                    return .init(.inactive)
+        }
+    }
+    
+    func loadCollateralLoanLandingFlag() -> CollateralLoanLandingFlag {
+        
+        switch retrieve(.collateralLoanLandingFlag) {
+        case "1":  return .init(.active)
+        default:   return .init(.inactive)
         }
     }
 }

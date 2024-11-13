@@ -141,7 +141,6 @@ class ProductProfileViewModel: ObservableObject {
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.filterState = filterState
         self.cardAction = createCardAction(cvvPINServicesClient, model)
-      
         
         // TODO: add removeDuplicates
         self.bottomSheetSubject

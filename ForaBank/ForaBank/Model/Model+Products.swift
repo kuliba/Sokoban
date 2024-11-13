@@ -24,7 +24,6 @@ typealias LoansData = [PersonsCreditData]
 extension Model {
     
     var productsOpenAccountURL: URL { URL(string: "https://promo2.forabank.ru/")! }
-    var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
         

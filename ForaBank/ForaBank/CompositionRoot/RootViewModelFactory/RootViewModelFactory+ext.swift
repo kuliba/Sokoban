@@ -37,13 +37,13 @@ extension RootViewModelFactory {
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         savingsAccountFlag: SavingsAccountFlag
     ) -> RootViewDomain.Binder {
-        
         var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
@@ -62,6 +62,10 @@ extension RootViewModelFactory {
         
         if marketplaceFlag.isActive {
             model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
+        }
+        
+        if collateralLoanLandingFlag.isActive {
+            model.featureFlags.productsOpenLoanURL = nil
         }
         
         let rsaKeyPairStore = makeLoggingStore(
@@ -479,6 +483,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             updateInfoStatusFlag: updateInfoStatusFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
@@ -743,6 +748,7 @@ private extension RootViewModelFactory {
         qrViewModelFactory: QRViewModelFactory,
         landingServices: LandingServices,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,

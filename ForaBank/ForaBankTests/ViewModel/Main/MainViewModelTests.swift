@@ -733,7 +733,7 @@ final class MainViewModelTests: XCTestCase {
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
-            onRegister: {},
+            onRegister: {}, 
             bannersBinder: .preview
         )
 
