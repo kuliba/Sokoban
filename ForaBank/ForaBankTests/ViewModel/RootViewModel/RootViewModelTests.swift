@@ -407,7 +407,6 @@ final class RootViewModelTests: XCTestCase {
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .init(.inactive),
-                    collateralLoanLandingFlag: .init(.inactive),
                     onRegister: {},
                     bannersBinder: .preview
                 ),
@@ -481,7 +480,6 @@ final class RootViewModelTests: XCTestCase {
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .init(.inactive),
-                    collateralLoanLandingFlag: .init(.inactive),
                     onRegister: {},
                     bannersBinder: .preview
                 ),
