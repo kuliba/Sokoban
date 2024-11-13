@@ -38,7 +38,8 @@ extension ClientInformListConfig {
         paddings: .init(
             topImage: 20,
             horizontal: 20,
-            vertical: 12
+            vertical: 12,
+            bottom: 40
         ),
         image: .ic24Info
     )

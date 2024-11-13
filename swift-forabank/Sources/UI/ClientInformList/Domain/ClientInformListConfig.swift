@@ -67,15 +67,18 @@ public struct ClientInformListConfig {
         let topImage: CGFloat
         let horizontal: CGFloat
         let vertical: CGFloat
+        let bottom: CGFloat
         
         public init(
             topImage: CGFloat,
             horizontal: CGFloat,
-            vertical: CGFloat
+            vertical: CGFloat,
+            bottom: CGFloat
         ) {
             self.topImage = topImage
             self.horizontal = horizontal
             self.vertical = vertical
+            self.bottom = bottom
         }
     }
     
