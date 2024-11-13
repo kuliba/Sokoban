@@ -15,7 +15,7 @@ public class SubscriptionViewModel: ObservableObject, Identifiable {
     let token: Token
     public let name: String
     @Published public private(set) var image: Icon
-    let subtitle: String
+    let subtitle: String?
     let purposeTitle: String
     let trash: Image
     let config: ConfigSubscription
@@ -28,7 +28,7 @@ public class SubscriptionViewModel: ObservableObject, Identifiable {
         token: SubscriptionViewModel.Token,
         name: String,
         image: Icon,
-        subtitle: String,
+        subtitle: String?,
         purposeTitle: String,
         trash: Image,
         config: ConfigSubscription,
@@ -94,7 +94,13 @@ struct SubscriptionView: View {
                         
                         header(font: viewModel.config.headerFont)
                         
-                        subtitle(font: viewModel.config.subtitle)
+                        if let subtitleText = viewModel.subtitle {
+                            
+                            subtitle(
+                                subtitle: subtitleText,
+                                font: viewModel.config.subtitle
+                            )
+                        }
                     }
                     
                     Spacer()
@@ -135,11 +141,14 @@ struct SubscriptionView: View {
         }
     }
     
-    private func subtitle(font: Font) -> some View {
+    private func subtitle(
+        subtitle: String,
+        font: Font
+    ) -> some View {
         
         HStack {
             
-            Text(viewModel.subtitle)
+            Text(subtitle)
                 .font(font)
                 .foregroundColor(.gray)
                 .frame(alignment: .leading)
