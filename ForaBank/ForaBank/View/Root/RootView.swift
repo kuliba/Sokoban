@@ -733,11 +733,7 @@ private extension RootView {
                     content: transfers.content
                 )
             },
-            factory: .init(
-                makeContactsView: rootViewFactory.components.makeContactsView,
-                makePaymentsMeToMeView: rootViewFactory.components.makePaymentsMeToMeView,
-                makePaymentsView: rootViewFactory.components.makePaymentsView
-            )
+            factory: rootViewFactory.personalTransfersFlowViewFactory
         )
     }
     
@@ -775,6 +771,20 @@ private extension RootView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+}
+
+// MARK: - View Factories
+
+private extension RootViewFactory {
+    
+    var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
+        
+        return .init(
+            makeContactsView: components.makeContactsView,
+            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
+            makePaymentsView: components.makePaymentsView
+        )
     }
 }
 
