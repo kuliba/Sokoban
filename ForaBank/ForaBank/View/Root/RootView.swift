@@ -725,43 +725,39 @@ private extension RootView {
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        RxWrapperView(model: transfers.flow) {
-            
-            PaymentsTransfersPersonalTransfersFlowView(
-                state: $0,
-                event: $1,
-                contentView: {
+        ComposedPaymentsTransfersTransfersView(
+            flow: transfers.flow,
+            contentView: {
+                
+                RxWrapperView(model: transfers.content) { state, event in
                     
-                    RxWrapperView(model: transfers.content) { state, event in
+                    VStack {
                         
-                        VStack {
-                            
-                            PTSectionTransfersButtonsView(
-                                title: PaymentsTransfersSectionType.transfers.name,
-                                buttons: state.elements.compactMap { element in
-                                    
-                                    switch element {
-                                    case let .buttonType(buttonType):
-                                        return .init(type: buttonType) {
-                                            
-                                            event(.select(.buttonType(buttonType)))
-                                        }
+                        PTSectionTransfersButtonsView(
+                            title: PaymentsTransfersSectionType.transfers.name,
+                            buttons: state.elements.compactMap { element in
+                                
+                                switch element {
+                                case let .buttonType(buttonType):
+                                    return .init(type: buttonType) {
                                         
-                                    default:
-                                        return nil
+                                        event(.select(.buttonType(buttonType)))
                                     }
+                                    
+                                default:
+                                    return nil
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
-                },
-                viewFactory: .init(
-                    makeContactsView: rootViewFactory.components.makeContactsView,
-                    makePaymentsMeToMeView: rootViewFactory.components.makePaymentsMeToMeView,
-                    makePaymentsView: rootViewFactory.components.makePaymentsView
-                )
+                }
+            },
+            factory: .init(
+                makeContactsView: rootViewFactory.components.makeContactsView,
+                makePaymentsMeToMeView: rootViewFactory.components.makePaymentsMeToMeView,
+                makePaymentsView: rootViewFactory.components.makePaymentsView
             )
-        }
+        )
     }
     
     private func itemLabel(
