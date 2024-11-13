@@ -116,6 +116,22 @@ extension UserAccountViewModel {
             navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
         }
     }
+    
+    public func subscriptionsViewModel() -> SubscriptionsViewModel {
+        
+        return navigationStateManager.makeSubscriptionsViewModel(
+            { [weak self] token, title in
+                
+                self?.event(.navigate(.alert(.cancelC2BSub(
+                    title: title,
+                    event: .cancelC2BSub(token)
+                ))))
+            },
+            { [weak self] token in
+                
+                self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+            })
+    }
 }
 
 // MARK: - Bindings
@@ -408,20 +424,7 @@ private extension UserAccountViewModel {
             ))))
             
         case _ as UserAccountViewModelAction.OpenManagingSubscription:
-            let viewModel = navigationStateManager.makeSubscriptionsViewModel(
-                { [weak self] token, title in
-                    
-                    self?.event(.navigate(.alert(.cancelC2BSub(
-                        title: title,
-                        event: .cancelC2BSub(token)
-                    ))))
-                },
-                { [weak self] token in
-                    
-                    self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
-                })
-            
-            self.event(.navigate(.link(.managingSubscription(viewModel))))
+            self.event(.navigate(.link(.managingSubscription(subscriptionsViewModel()))))
             
         case _ as UserAccountViewModelAction.OpenFastPayment:
             switch navigationStateManager.fastPaymentsFactory.fastPaymentsViewModel {

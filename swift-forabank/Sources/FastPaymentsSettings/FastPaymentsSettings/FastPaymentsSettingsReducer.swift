@@ -64,6 +64,9 @@ public extension FastPaymentsSettingsReducer {
         case let .subscription(subscriptions):
 #warning("add tests")
             (state, effect) = reduce(state, with: subscriptions)
+        
+        case .accountLinking:
+            state = .init(status: .accountLink)
         }
         
         return (state, effect)

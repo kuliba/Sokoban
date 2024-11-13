@@ -103,7 +103,6 @@ let package = Package(
         .combineSchedulers,
         .customDump,
         .phoneNumberKit,
-        .nonEmpty,
         .tagged,
         .shimmer,
         .svgKit,
@@ -604,6 +603,7 @@ private extension Product {
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
+            .manageSubscriptionsUI
         ]
     )
 
@@ -2365,7 +2365,10 @@ private extension Target {
     )
     
     static let manageSubscriptionsUI = target(
-        name: .manageSubscriptionsUI
+        name: .manageSubscriptionsUI,
+        dependencies: [
+        ],
+        path: "Sources/\(String.manageSubscriptionsUI)"
     )
     
     static let otpInputComponent = target(
@@ -2571,6 +2574,7 @@ private extension Target {
             .otpInputComponent,
             .rxViewModel,
             .uiPrimitives,
+            .manageSubscriptionsUI
         ],
         path: "Sources/UI/\(String.userAccountNavigationComponent)"
     )
@@ -3305,6 +3309,10 @@ private extension Target.Dependency {
         name: .marketShowcase
     )
 
+    static let manageSubscriptionsUI = byName(
+        name: .manageSubscriptionsUI
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = byName(

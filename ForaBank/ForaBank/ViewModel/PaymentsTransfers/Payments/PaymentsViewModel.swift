@@ -29,7 +29,7 @@ class PaymentsViewModel: ObservableObject {
         
         case loading
         case service(PaymentsServiceViewModel)
-        case operation(PaymentsOperationViewModel)
+        case operation(Node<PaymentsOperationViewModel>)
         case linkNotActive(PaymentsSuccessViewModel)
     }
     
@@ -73,12 +73,12 @@ class PaymentsViewModel: ObservableObject {
                     let operation = try await model.paymentsOperation(with: service)
                     let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
                     operationViewModel.rootActions = rootActions
-                    bind(operationViewModel: operationViewModel)
+                    let cancellable = bind(operationViewModel: operationViewModel)
                     
                     await MainActor.run {
                         
                         withAnimation {
-                            content = .operation(operationViewModel)
+                            content = .operation(.init(model: operationViewModel, cancellable: cancellable))
                         }
                     }
                 }
@@ -114,12 +114,12 @@ class PaymentsViewModel: ObservableObject {
                 let operation = try await model.paymentsOperation(with: service)
                 let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
                 operationViewModel.rootActions = rootActions
-                bind(operationViewModel: operationViewModel)
+                let cancellable = bind(operationViewModel: operationViewModel)
                 
                 await MainActor.run {
                     
                     withAnimation {
-                        content = .operation(operationViewModel)
+                        content = .operation(.init(model: operationViewModel, cancellable: cancellable))
                     }
                 }
                 
@@ -164,7 +164,7 @@ class PaymentsViewModel: ObservableObject {
                                     
                                     if case .operation(let operationViewModel) = content {
                                         
-                                        operationViewModel.action.send(PaymentsOperationViewModelAction.ShowWarning(parameterId: parameterId, message: message))
+                                        operationViewModel.model.action.send(PaymentsOperationViewModelAction.ShowWarning(parameterId: parameterId, message: message))
                                         
                                     } else {
                                         
@@ -191,7 +191,7 @@ class PaymentsViewModel: ObservableObject {
                                         return
                                     }
                                     
-                                    operationViewModel.action.send(PaymentsOperationViewModelAction.IcorrectCodeEnterred())
+                                    operationViewModel.model.action.send(PaymentsOperationViewModelAction.IcorrectCodeEnterred())
                                     
                                 } else if message.contains("Вы исчерпали") {
                                     
@@ -295,13 +295,15 @@ class PaymentsViewModel: ObservableObject {
                     switch content {
                         
                     case .linkNotActive:
+                        
                         if let source {
                             sourceOperation(
                                 model,
                                 source,
                                 closeAction)
-                        }
-                        else { self.action.send(PaymentsViewModelAction.Dismiss()) }
+                            
+                        } else {
+                            self.action.send(PaymentsViewModelAction.Dismiss()) }
                         
                     default:
                         self.action.send(PaymentsViewModelAction.Dismiss())
@@ -314,7 +316,7 @@ class PaymentsViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    private func bind(operationViewModel: PaymentsOperationViewModel) {
+    private func bind(operationViewModel: PaymentsOperationViewModel) -> AnyCancellable {
         
         operationViewModel.action
             .receive(on: DispatchQueue.main)
@@ -332,13 +334,12 @@ class PaymentsViewModel: ObservableObject {
                     //TODO: setup open edit name sheet action
                 
                 case _ as PaymentsSuccessAction.Button.Repeat:
-                    self.content = .operation(operationViewModel)
+                    self.content = .operation(.init(model: operationViewModel, cancellables: []))
 
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
     }
 }
 
@@ -461,8 +462,11 @@ extension PaymentsViewModel {
         _ closeAction: @escaping () -> Void
     ) {
         Task {
-            await MainActor.run { content = .loading }
+            await MainActor.run {
+                content = .loading
+            }
             do {
+                self.action.send(PaymentsViewModelAction.CloseSuccessView())
                 
                 let operation = try await model.paymentsOperation(with: source)
                 let operationViewModel = PaymentsOperationViewModel(
@@ -471,12 +475,12 @@ extension PaymentsViewModel {
                     closeAction: closeAction
                 )
                 operationViewModel.rootActions = rootActions
-                bind(operationViewModel: operationViewModel)
+                let cancellable = bind(operationViewModel: operationViewModel)
                 
                 await MainActor.run {
                     
                     withAnimation {
-                        content = .operation(operationViewModel)
+                        content = .operation(.init(model: operationViewModel, cancellable: cancellable))
                     }
                 }
             } catch {

@@ -83,15 +83,35 @@ final class ModelSuccessTests: XCTestCase {
         XCTAssertNoDiff(sut, .refresh)
     }
     
-    func test_templateButtonState_shouldReturnComplete_onC2bOperation() {
-                
+    func test_templateButtonState_shouldReturnComplete_onC2bOperation_whenDataMatches() {
+        
         let sut = makeSUT(
-            template: templateWithParameterList(),
+            template: templateWithParameterList(
+                with: TransferGeneralData.generalStub(
+                    payeeExternal: .stub(name: "ForaService"),
+                    amount: 10
+                )
+            ),
             operation: makeC2bOperation(),
             detail: anyDetailWithCardID()
         )
         
         XCTAssertNoDiff(sut, .complete)
+    }
+    
+    func test_templateButtonState_shouldReturnRefresh_onC2bOperation_whenDataDiffers() {
+        
+        let sut = makeSUT(
+            template: templateWithParameterList(
+                with: TransferGeneralData.generalStub(
+                    payeeExternal: .stub(name: "Bad service and amount dif")
+                )
+            ),
+            operation: makeC2bOperation(),
+            detail: anyDetailWithCardID()
+        )
+        
+        XCTAssertNoDiff(sut, .refresh)
     }
     
     func test_templateButtonState_shouldReturnComplete_onC2bOperation_withParameterAnyway() {
@@ -254,7 +274,10 @@ final class ModelSuccessTests: XCTestCase {
                 value: "40702810238170103538"),
             Payments.ParameterMock(
                 id: Payments.Parameter.Identifier.requisitsName.rawValue,
-                value: "Эстейт Сервис"),
+                value: "ForaService"),
+            Payments.ParameterMock(
+                id: Payments.Parameter.Identifier.requisitsBankBic.rawValue,
+                value: "044525225"),
             Payments.ParameterMock(
                 id: Payments.Parameter.Identifier.requisitsMessage.rawValue,
                 value: "comment")
@@ -311,7 +334,7 @@ final class ModelSuccessTests: XCTestCase {
     }
     
     private func templateWithGeneralParameter(
-        payeeExternal: TransferGeneralData.PayeeExternal? = .stub,
+        payeeExternal: TransferGeneralData.PayeeExternal? = .stub(),
         amount: Double? = 100.0
     ) -> PaymentTemplateData {
         

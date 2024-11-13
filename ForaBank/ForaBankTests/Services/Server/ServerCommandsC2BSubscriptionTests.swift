@@ -86,6 +86,7 @@ class ServerCommandsC2BSubscriptionTests: XCTestCase {
                         brandIcon: "12123344",
                         brandName: "Тестовый ТСП ТИВ",
                         subscriptionPurpose: "Подписка на получение QR для теста 560",
+                        subscriptionServiceName: "ООО Цветы у дома",
                         cancelAlert: "Вы действительно хотите отключить подписку <brandName>?"
                     )]
                 )]
