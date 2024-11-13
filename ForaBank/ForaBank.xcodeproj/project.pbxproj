@@ -1316,6 +1316,7 @@
 		2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */; };
 		2A945B422CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B412CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift */; };
 		2A945B442CE46C9A00A68FB1 /* ComposedCategoryPickerSectionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B432CE46C9A00A68FB1 /* ComposedCategoryPickerSectionContentView.swift */; };
+		2A945B462CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */; };
 		2A94991B2B728F4D00C67F05 /* StubbedFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */; };
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
 		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
@@ -4933,6 +4934,7 @@
 		2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+selectEmitting.swift"; sourceTree = "<group>"; };
 		2A945B412CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCategoryPickerSectionView.swift; sourceTree = "<group>"; };
 		2A945B432CE46C9A00A68FB1 /* ComposedCategoryPickerSectionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCategoryPickerSectionContentView.swift; sourceTree = "<group>"; };
+		2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalTransfersFlowViewFactory.swift; sourceTree = "<group>"; };
 		2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedFeatureFlag.swift; sourceTree = "<group>"; };
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
@@ -11701,6 +11703,7 @@
 			isa = PBXGroup;
 			children = (
 				2A8DF0E92CC8FCC700FB76D4 /* PaymentsTransfersPersonalTransfersView.swift */,
+				2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */,
 			);
 			path = TransfersSection;
 			sourceTree = "<group>";
@@ -21861,6 +21864,7 @@
 				6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */,
 				2A80C6D12B6E403D00293FE5 /* MicroServices.Facade+ext.swift in Sources */,
 				839914772C6CF72300E9D275 /* GetProductListByTypeV6Flag.swift in Sources */,
+				2A945B462CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift in Sources */,
 				77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */,
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
 				2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */,
