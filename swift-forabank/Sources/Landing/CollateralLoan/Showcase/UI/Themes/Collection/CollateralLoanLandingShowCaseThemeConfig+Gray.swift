@@ -1,8 +1,8 @@
 //
-//  CollateralLoanLandingShowCaseThemeConfig+Black.swift
+//  CollateralLoanLandingShowCaseThemeConfig+Gray.swift
 //
 //
-//  Created by Valentin Ozerov on 09.10.2024.
+//  Created by Valentin Ozerov on 12.11.2024.
 //
 
 import SwiftUI
