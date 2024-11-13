@@ -78,7 +78,12 @@ class MainViewModel: ObservableObject, Resetable {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = Self.getSections(model, bannersBinder, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
+        self.sections = Self.getSections(
+            model,
+            bannersBinder,
+            updateInfoStatusFlag: updateInfoStatusFlag,
+            stickerViewModel: nil
+        )
         
         self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -539,6 +544,9 @@ private extension MainViewModel {
                                 
                                 openCard()
                                 
+                            case .loan:
+                                
+                                    openCollateralLoanLanding()
                             default:
                                 //MARK: Action for Sticker Product
                                 
@@ -618,8 +626,7 @@ private extension MainViewModel {
                                     return .updateFailureInfo
                                 }
                                 return nil
-                            })
-                        )
+                            }))
                         myProductsViewModel.rootActions = rootActions
                         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
                         route.destination = .myProducts(myProductsViewModel)
@@ -956,6 +963,11 @@ private extension MainViewModel {
         }
     }
         
+    private func openCollateralLoanLanding() {
+        
+        route.destination = .collateralLoanLanding
+    }
+    
     private typealias DepositeID = Int
     private func returnFirstExpiredDepositID(
         previousData: (expired: Date?, DepositeID?),
@@ -1673,6 +1685,7 @@ extension MainViewModel {
         case paymentSticker
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
+        case collateralLoanLanding
         
         var id: Case {
             
@@ -1721,6 +1734,8 @@ extension MainViewModel {
                 return .paymentProviderPicker
             case .providerServicePicker:
                 return .providerServicePicker
+            case .collateralLoanLanding:
+                return .collateralLoanLanding
             }
         }
         
@@ -1748,6 +1763,7 @@ extension MainViewModel {
             case sberQRPayment
             case paymentProviderPicker
             case providerServicePicker
+            case collateralLoanLanding
         }
     }
     

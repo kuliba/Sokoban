@@ -26,7 +26,8 @@ final class RootViewModelTests: XCTestCase {
     func test_resetLink_shouldSetLinkToNil() {
         
         let (sut, model, linkSpy, _) = makeSUT()
-        model.sendC2bDeepLink()
+        model.sendC2bDeepLink(timeout: 0.31)
+        
         XCTAssertNoDiff(linkSpy.values, [nil, .payments])
         
         sut.resetLink()
@@ -42,7 +43,7 @@ final class RootViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        model.sendC2bDeepLink()
+        model.sendC2bDeepLink(timeout: 0.31)
         
         XCTAssertNoDiff(linkSpy.values, [nil, .payments])
         XCTAssertNotNil(sut)

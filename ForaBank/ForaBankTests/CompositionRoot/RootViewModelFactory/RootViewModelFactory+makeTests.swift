@@ -147,6 +147,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             utilitiesPaymentsFlag: .init(.active(.live)),
             historyFilterFlag: .init(true),
             changeSVCardLimitsFlag: .init(.active),
+            collateralLoanLandingFlag: .init(.active), 
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.inactive),
             paymentsTransfersFlag: .init(.active),
