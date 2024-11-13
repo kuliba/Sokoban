@@ -1314,6 +1314,7 @@
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
 		2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */; };
+		2A945B422CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B412CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift */; };
 		2A94991B2B728F4D00C67F05 /* StubbedFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */; };
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
 		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
@@ -4929,6 +4930,7 @@
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+selectEmitting.swift"; sourceTree = "<group>"; };
+		2A945B412CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCategoryPickerSectionView.swift; sourceTree = "<group>"; };
 		2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedFeatureFlag.swift; sourceTree = "<group>"; };
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
@@ -9183,6 +9185,7 @@
 			children = (
 				2AD8243C2C87249F0007B8DF /* CategoryPickerSectionDomain.swift */,
 				2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */,
+				2A945B412CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift */,
 				2A387E8C2CA687DD002450B1 /* CategoryPickerSectionFlowView.swift */,
 				2A387E8B2CA687DD002450B1 /* CategoryPickerSectionFlowViewFactory.swift */,
 			);
@@ -21707,6 +21710,7 @@
 				2A6679E32C58B0DD003ACA31 /* PaymentCompleteViewConfig.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
+				2A945B422CE46AB400A68FB1 /* ComposedCategoryPickerSectionView.swift in Sources */,
 				0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */,
 				7772979327C77C190099EF91 /* MainViewModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
