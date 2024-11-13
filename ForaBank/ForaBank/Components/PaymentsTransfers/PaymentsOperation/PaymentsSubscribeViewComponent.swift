@@ -46,7 +46,12 @@ extension PaymentsSubscribeView {
                     case let payload as PaymentsParameterViewModelAction.Subscribe.ButtonDidTapped:
                         update(value: payload.action.rawValue)
                         
-                        self.action.send(PaymentsParameterViewModelAction.Button.DidTapped(action: .continue))
+                        if payload.action == .main {
+                            self.action.send(PaymentsParameterViewModelAction.Button.DidTapped(action: .main))
+                        } else {
+                            
+                            self.action.send(PaymentsParameterViewModelAction.Button.DidTapped(action: .continue))
+                        }
                         
                     default:
                         break

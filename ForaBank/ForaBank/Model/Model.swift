@@ -618,7 +618,7 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
-                
+                    
                 case let payload as ModelAction.Products.UpdateVisibility:
                     handleProductsUpdateVisibility(payload)
                     
@@ -948,9 +948,6 @@ class Model {
                     
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
-                    
-                case _ as ModelAction.Deposits.Info.All:
-                    handleDepositsInfoAllRequest()
                     
                 case let payload as ModelAction.Deposits.Info.Single.Request:
                     handleDepositsInfoSingleRequest(payload)

@@ -88,8 +88,11 @@ struct RootView: View {
             case let .legacy(paymentsViewModel):
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
-            case let .v1(switcher):
+            case let .v1(switcher as PaymentsTransfersSwitcher):
                 paymentsTransfersSwitcherView(switcher)
+
+            default:
+                EmptyView()
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)

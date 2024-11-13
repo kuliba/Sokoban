@@ -71,6 +71,7 @@ extension ButtonSimpleView.ViewModel.ButtonStyle {
         switch style {
         case .primary: self = .red
         case .secondary: self = .gray
+        case .gray: self = .gray
         }
     }
 }

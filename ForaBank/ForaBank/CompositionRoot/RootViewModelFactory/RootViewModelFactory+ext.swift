@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentBackend
+import CalendarUI
 import CodableLanding
 import CollateralLoanLandingShowCaseBackend
 import Combine
@@ -24,23 +25,13 @@ import PaymentSticker
 import RemoteServices
 import SberQR
 import SerialComponents
-import SwiftUI
-import PayHub
-import PayHubUI
-import Fetcher
-import LandingUIComponent
-import LandingMapping
-import CodableLanding
-import MarketShowcase
-import CalendarUI
-import GenericRemoteService
 import SharedAPIInfra
 import SwiftUI
 
 extension RootViewModelFactory {
     
     func make(
-        bindings: inout Set<AnyCancellable>,
+        dismiss: @escaping () -> Void,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
@@ -50,9 +41,11 @@ extension RootViewModelFactory {
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        
         savingsAccountFlag: SavingsAccountFlag,
         collateralLoanLandingFlag: CollateralLoanLandingFlag
-    ) -> RootViewModel {
+    ) -> RootViewDomain.Binder {
+        var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
             _ work: @escaping () -> Void
@@ -271,7 +264,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
@@ -290,7 +283,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
         
@@ -319,7 +312,7 @@ extension RootViewModelFactory {
             factory: servicePickerFlowModelFactory,
             microServices: asyncPickerComposer.compose(),
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
@@ -329,7 +322,7 @@ extension RootViewModelFactory {
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
-                
+        
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map
@@ -365,7 +358,7 @@ extension RootViewModelFactory {
         )
         
         // threading
-        let operatorsService = backgroundScheduler.scheduled(servicePaymentOperatorService)
+        let operatorsService = schedulers.background.scheduled(servicePaymentOperatorService)
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
@@ -391,14 +384,14 @@ extension RootViewModelFactory {
         )
         
         // threading
-        let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
+        let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
         let qrScannerComposer = QRScannerComposer(
             model: model,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
@@ -459,7 +452,7 @@ extension RootViewModelFactory {
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
             corporate: paymentsTransfersCorporate,
             personal: paymentsTransfersPersonal,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let getLandingByType = nanoServiceComposer.compose(
@@ -473,15 +466,15 @@ extension RootViewModelFactory {
                 loadLanding: { getLandingByType(( "", $0), $1) },
                 orderCard: {_ in },
                 orderSticker: {_ in }),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
         
-        return make(
+        let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
-            fastPaymentsFactory: fastPaymentsFactory, 
+            fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
@@ -499,6 +492,68 @@ extension RootViewModelFactory {
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
             marketShowcaseBinder: marketShowcaseBinder
+        )
+        
+        let marketBinder = MarketShowcaseToRootViewModelBinder(
+            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
+            rootViewModel: rootViewModel,
+            scheduler: schedulers.main
+        )
+        
+        bindings.formUnion(marketBinder.bind())
+        
+        let getNavigation = makeGetRootNavigation(
+            makeQRScanner: QRScannerModel.init
+        )
+        let witness: RootViewDomain.ContentWitnesses = .init(
+            emitting: { _ in Empty().eraseToAnyPublisher() },
+            receiving: { _ in {}}
+        )
+        
+        let composer = RootViewDomain.BinderComposer(
+            bindings: bindings,
+            dismiss: dismiss,
+            getNavigation: getNavigation,
+            schedulers: .init(),
+            witnesses: .init(content: witness, dismiss: .default)
+        )
+        
+        return composer.compose(with: rootViewModel)
+    }
+    
+    func makeGetRootNavigation(
+        makeQRScanner: @escaping () -> QRScannerModel
+    ) -> RootViewDomain.GetNavigation {
+        
+        return { select, notify, completion in
+            
+            switch select {
+            case .scanQR:
+                completion(.scanQR(makeQRScanner()))
+            }
+        }
+    }
+}
+
+private extension RootViewDomain.Witnesses.DismissWitnesses<RootViewModel> {
+    
+    static var `default`: Self {
+        
+        return .init(
+            dismissAll: {
+                
+                $0.action
+                    .compactMap { $0 as? RootViewModelAction.DismissAll }
+                    .eraseToAnyPublisher()
+            },
+            reset: { content in
+                
+                return {
+                    
+                    content.resetLink()
+                    content.reset()
+                }
+            }
         )
     }
 }

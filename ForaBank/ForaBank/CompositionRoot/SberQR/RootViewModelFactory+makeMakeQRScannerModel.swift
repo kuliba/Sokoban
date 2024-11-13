@@ -16,7 +16,7 @@ extension RootViewModelFactory {
             model: model,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         return composer.compose

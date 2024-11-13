@@ -81,7 +81,7 @@ extension RootViewModelFactory {
                 )
             },
             prepareSetBankDefault: otpServices.prepareSetBankDefault,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let userAccountEffectHandler = UserAccountEffectHandler(

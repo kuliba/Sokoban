@@ -42,7 +42,7 @@ extension RootViewModelFactory {
                 configurator: .init(
                     backgroundColor: .mainColorsGrayLightest
                 ),
-                scheduler: self.mainScheduler
+                scheduler: self.schedulers.main
             )
         }
     }
@@ -167,8 +167,8 @@ private extension C2BSubscription.ProductSubscription.Subscription {
             token: subscriptionToken,
             name: brandName,
             image: image,
-            subtitle: subscriptionPurpose,
-            purposeTitle: cancelAlert,
+            subtitle: subscriptionServiceName,
+            purposeTitle: subscriptionPurpose,
             trash: .ic24Trash2,
             config: .init(
                 headerFont: .textH4M16240(),
