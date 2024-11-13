@@ -181,7 +181,7 @@ extension ProductData.Filter {
                 return nil
             }
 
-            return productCard.status == .active && productCard.statusPc == .active
+            return (productCard.status == .active || productCard.status == .issuedToClient) && productCard.statusPc == .active
         }
     }
     
