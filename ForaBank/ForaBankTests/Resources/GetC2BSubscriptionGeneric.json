@@ -17,7 +17,8 @@
             "brandIcon": "12123344",
             "brandName": "Тестовый ТСП ТИВ",
             "subscriptionPurpose": "Подписка на получение QR для теста 560",
-            "cancelAlert": "Вы действительно хотите отключить подписку <brandName>?"
+            "cancelAlert": "Вы действительно хотите отключить подписку <brandName>?",
+            "subscriptionServiceName": "ООО Цветы у дома"
           }
         ]
       }
