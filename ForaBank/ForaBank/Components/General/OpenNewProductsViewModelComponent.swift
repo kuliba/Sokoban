@@ -69,7 +69,7 @@ class OpenNewProductsViewModel: ObservableObject {
                 let title = type.openButtonTitle
                 let subTitle = description(for: type)
                 
-                if let url = model.productsOpenLoanURL, case .loan = type {
+                if let url = model.featureFlags.productsOpenLoanURL, case .loan = type {
                     viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
                         subTitle: subTitle, url: url))
                 } else {

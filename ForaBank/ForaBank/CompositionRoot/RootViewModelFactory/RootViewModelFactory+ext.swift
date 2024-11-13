@@ -37,13 +37,12 @@ extension RootViewModelFactory {
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        
-        savingsAccountFlag: SavingsAccountFlag,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag
+        savingsAccountFlag: SavingsAccountFlag
     ) -> RootViewDomain.Binder {
         var bindings = Set<AnyCancellable>()
         
@@ -66,7 +65,7 @@ extension RootViewModelFactory {
         }
         
         if collateralLoanLandingFlag.isActive {
-            model.productsOpenLoanURL = nil
+            model.featureFlags.productsOpenLoanURL = nil
         }
         
         let rsaKeyPairStore = makeLoggingStore(

@@ -45,12 +45,12 @@ extension ModelRootFactory: RootFactory {
             utilitiesPaymentsFlag: .init(.active(.live)),
             historyFilterFlag: true,
             changeSVCardLimitsFlag: .init(.active),
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.active),
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
             updateInfoStatusFlag: .init(.active),
-            savingsAccountFlag: featureFlags.savingsAccountFlag,
-            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
     }
     
