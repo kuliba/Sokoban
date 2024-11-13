@@ -115,19 +115,6 @@ extension ProductData.Filter {
         }
     }
     
-    struct CardActiveOrIssuedToClientRule: ProductDataFilterRule {
-        
-        func result(_ productData: ProductData) -> Bool? {
-            
-            guard let productCard = productData as? ProductCardData else {
-                return nil
-            }
-
-            return productCard.status == .active && productCard.statusPc == .active ||
-                   productCard.status == .issuedToClient
-        }
-    }
-    
     struct ProductRestrictedRule: ProductDataFilterRule {
         
         let restricted: Set<ProductData.ID>

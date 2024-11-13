@@ -64,30 +64,25 @@ extension ProductsSwapView {
             case .demandDeposit:
                 
                 let productFromFilter = ProductData.Filter(
-                    rules: [
-                        ProductData.Filter.DebitRule(),
-                        ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                        ProductData.Filter.DemandDepositRule(),
-                        ProductData.Filter.CardActiveRule(),
-                        ProductData.Filter.CardActiveOrIssuedToClientRule(),
-                        ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
-                        ProductData.Filter.CardAdditionalSelfRule(),
-                        ProductData.Filter.AccountActiveRule()
-                    ])
-               
+                    rules: [ProductData.Filter.DebitRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.DemandDepositRule(),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                
                 guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
                     return nil
                 }
 
                 let productToFilter = ProductData.Filter(
-                    rules: [
-                        ProductData.Filter.CreditRule(),
-                        ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                        ProductData.Filter.CardActiveRule(),
-                        ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
-                        ProductData.Filter.CardAdditionalSelfRule(),
-                        ProductData.Filter.AccountActiveRule()
-                    ])
+                    rules: [ProductData.Filter.CreditRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
+                            ProductData.Filter.AccountActiveRule()])
 
                 let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: productFromFilter)
                 let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: productToFilter)
