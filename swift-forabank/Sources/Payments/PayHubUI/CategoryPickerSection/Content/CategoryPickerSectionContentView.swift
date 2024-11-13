@@ -36,10 +36,11 @@ where ItemLabel: View,
     public var body: some View {
         
         if state.isLoadingFailed {
-            Text("Failed to load categories")
-                .foregroundColor(.red)
-                .frame(maxHeight: .infinity)
+            
+            failureView(config: config.failure)
+            
         } else {
+            
             VStack(spacing: config.spacing) {
                 
                 headerTitle()
@@ -73,6 +74,19 @@ private extension LoadablePickerState {
 }
 
 private extension CategoryPickerSectionContentView {
+    
+    func failureView(
+        config: LabelConfig
+    ) -> some View {
+        
+        VStack(spacing: config.spacing) {
+            
+            config.imageConfig.render()
+                .clipShape(Circle())
+            
+            config.textConfig.render()
+        }
+    }
     
     func headerTitle() -> some View {
         
@@ -145,6 +159,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
             categoryPickerSectionContentView(.placeholders(count: 5))
             categoryPickerSectionContentView(.preview)
             categoryPickerSectionContentView(.placeholders(count: 0))
+                .previewDisplayName("Failure")
         }
     }
     
