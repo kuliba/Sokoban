@@ -28,7 +28,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
         else { throw ResponseFailure() }
 
         self.init(
-            list: notAuthorized.compactMap(ResponseMapper.GetNotAuthorizedZoneClientInformData.init),
+            list: notAuthorized.filter { $0.update?.platform == "iOS" }.compactMap(ResponseMapper.GetNotAuthorizedZoneClientInformData.init),
             serial: serial
         )
     }

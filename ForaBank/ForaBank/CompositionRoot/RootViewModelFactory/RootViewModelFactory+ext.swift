@@ -554,8 +554,7 @@ extension RootViewModelFactory {
                     list.notRequired = response.list.filter {
                         if let update = $0.update {
                             
-                            return $0.update?.type == "not_required" && 
-                            $0.update?.platform == "iOS"
+                            return $0.update?.type == "not_required"
                         } else { return true }
                     }.compactMap {
                         
@@ -568,7 +567,7 @@ extension RootViewModelFactory {
                     
                     if let required = response.list.first(where: {
                         
-                        $0.update?.platform == "iOS"
+                        $0.update?.type != "not_required"
                     }) {
                         
                         if required.update?.type == "required" {
