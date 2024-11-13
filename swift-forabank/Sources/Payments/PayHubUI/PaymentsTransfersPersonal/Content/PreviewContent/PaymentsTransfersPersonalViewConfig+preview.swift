@@ -8,8 +8,8 @@
 extension PaymentsTransfersPersonalViewConfig {
     
     static let preview: Self = .init(
-        titleSpacing: 16,
         spacing: 32,
+        titleSpacing: 16,
         title: .init(
             text: "Payments",
             config: .init(
