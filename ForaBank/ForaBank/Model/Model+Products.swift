@@ -519,7 +519,10 @@ extension Model {
                     let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
                     queue.delay(
                         for: .seconds((1 + index) * interval),
-                        execute: { self.updateProduct(command, productType: productType) })
+                        execute: {
+                            self.updateProduct(command, productType: productType)
+                        })
+                  
                 }
             }
         }
@@ -542,20 +545,26 @@ extension Model {
             self.productsUpdating.value.append(payload.productType)
 
             let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: payload.productType)
-
             updateProduct(command, productType: payload.productType)
         }
     }
     
-    func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
+    func updateProduct(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        productType: ProductType
+    ) {
         if let getProductsV6 {
             getProducts_V6(getProductsV6, command, productType)
+            
         } else {
             getProductsV5(command, productType)
         }
     }
     
-    func getProductsV5(_ command: ServerCommands.ProductController.GetProductListByType, _ productType: ProductType) {
+    func getProductsV5(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ productType: ProductType
+    ) {
         
         getProducts(productType) { response in
             
@@ -598,16 +607,7 @@ extension Model {
                 }
                 
                 // update additional products data
-                switch productType {
-                case .deposit:
-                    self.action.send(ModelAction.Deposits.Info.All())
-                    
-                case .loan:
-                    self.action.send(ModelAction.Loans.Update.All())
-                    
-                default:
-                    break
-                }
+                self.additionalUpdateIfNeed(productType: productType)
             }
             else {
                 // updating status
@@ -665,6 +665,7 @@ extension Model {
         let updatedProducts = Self.reduce(products: productsData, with: productsList, for: productType)
         products.value = updatedProducts
         updateInfo(true, productType)
+        
         return updatedProducts
     }
     
@@ -708,9 +709,7 @@ extension Model {
         productType: ProductType
     ) {
         switch productType {
-        case .deposit:
-            action.send(ModelAction.Deposits.Info.All())
-            
+        
         case .loan:
             action.send(ModelAction.Loans.Update.All())
             

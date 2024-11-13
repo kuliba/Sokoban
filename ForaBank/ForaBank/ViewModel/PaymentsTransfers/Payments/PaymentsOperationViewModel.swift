@@ -123,10 +123,16 @@ class PaymentsOperationViewModel: ObservableObject {
                         self.operation.value = operation
                         
                     case .confirm(let operation):
-                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model, closeAction: { [weak self] in
-                            
-                            self?.link = nil
-                        })
+                        
+                        let closeAction: () -> Void = operation.service == .abroad
+                            ? closeAction
+                            : { [weak self] in self?.link = nil }
+                        
+                        let confirmViewModel = PaymentsConfirmViewModel(
+                            operation: operation,
+                            model: model,
+                            closeAction: closeAction
+                        )
                         confirmViewModel.rootActions = rootActions
                         bind(confirmViewModel: confirmViewModel)
                         link = .confirm(confirmViewModel)
