@@ -585,6 +585,13 @@
         "identifier" : "CollateralLoanLandingGetJsonAbroadUITests",
         "name" : "CollateralLoanLandingGetJsonAbroadUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
+      }
     }
   ],
   "version" : 1
