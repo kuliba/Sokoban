@@ -1143,7 +1143,7 @@
 		2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
-		2A707A5C2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A707A5B2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift */; };
+		2A707A5C2CE220EB0097DA20 /* RootViewModel+rootEventPublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A707A5B2CE220EB0097DA20 /* RootViewModel+rootEventPublisherTests.swift */; };
 		2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */; };
 		2A7183BA2C5E284C008B222B /* QRScanResultMapperNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */; };
 		2A7183BC2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */; };
@@ -1313,6 +1313,7 @@
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
+		2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */; };
 		2A94991B2B728F4D00C67F05 /* StubbedFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */; };
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
 		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
@@ -4761,7 +4762,7 @@
 		2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSPrototypeView.swift; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
-		2A707A5B2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelEmittingWitnessTests.swift; sourceTree = "<group>"; };
+		2A707A5B2CE220EB0097DA20 /* RootViewModel+rootEventPublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+rootEventPublisherTests.swift"; sourceTree = "<group>"; };
 		2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeDecoratedGetBankDefault.swift"; sourceTree = "<group>"; };
 		2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperNanoServices.swift; sourceTree = "<group>"; };
 		2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRScanResultMapperComposer+ext.swift"; sourceTree = "<group>"; };
@@ -4927,6 +4928,7 @@
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
+		2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+selectEmitting.swift"; sourceTree = "<group>"; };
 		2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedFeatureFlag.swift; sourceTree = "<group>"; };
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
@@ -11149,7 +11151,7 @@
 		2A707A5A2CE220AF0097DA20 /* Root */ = {
 			isa = PBXGroup;
 			children = (
-				2A707A5B2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift */,
+				2A707A5B2CE220EB0097DA20 /* RootViewModel+rootEventPublisherTests.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -11174,6 +11176,7 @@
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */,
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
 				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
@@ -21512,6 +21515,7 @@
 				6833E0CB273920CE004C070F /* LockerCoordinator.swift in Sources */,
 				77B6B35F2852305B00E3001B /* TimeInterval+Extensions.swift in Sources */,
 				0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */,
+				2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */,
 				7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */,
 				2AECBC292BEBA96E000B0C0E /* PaymentsTransfersFlowEvent.swift in Sources */,
 				0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */,
@@ -23488,7 +23492,7 @@
 				2A0439C92BB420040063B7AB /* NanoServicesTestHelpers.swift in Sources */,
 				2A3BD6002B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift in Sources */,
 				77D73EE629094D7A00A956A3 /* PaymentsProcessTests.swift in Sources */,
-				2A707A5C2CE220EB0097DA20 /* RootViewModelEmittingWitnessTests.swift in Sources */,
+				2A707A5C2CE220EB0097DA20 /* RootViewModel+rootEventPublisherTests.swift in Sources */,
 				C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */,
 				C1750D4C290FFBBF00122D2B /* ServerCommandsSettingsTests.swift in Sources */,
 				C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */,

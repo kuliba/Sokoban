@@ -259,7 +259,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
@@ -278,7 +278,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
         
@@ -307,7 +307,7 @@ extension RootViewModelFactory {
             factory: servicePickerFlowModelFactory,
             microServices: asyncPickerComposer.compose(),
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
@@ -353,7 +353,7 @@ extension RootViewModelFactory {
         )
         
         // threading
-        let operatorsService = backgroundScheduler.scheduled(servicePaymentOperatorService)
+        let operatorsService = schedulers.background.scheduled(servicePaymentOperatorService)
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
@@ -379,14 +379,14 @@ extension RootViewModelFactory {
         )
         
         // threading
-        let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
+        let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
         let qrScannerComposer = QRScannerComposer(
             model: model,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
@@ -447,7 +447,7 @@ extension RootViewModelFactory {
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
             corporate: paymentsTransfersCorporate,
             personal: paymentsTransfersPersonal,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let getLandingByType = nanoServiceComposer.compose(
@@ -461,7 +461,7 @@ extension RootViewModelFactory {
                 loadLanding: { getLandingByType(( "", $0), $1) },
                 orderCard: {_ in },
                 orderSticker: {_ in }),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
         
@@ -491,12 +491,14 @@ extension RootViewModelFactory {
         let marketBinder = MarketShowcaseToRootViewModelBinder(
             marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
             rootViewModel: rootViewModel,
-            scheduler: .main
+            scheduler: schedulers.main
         )
         
         bindings.formUnion(marketBinder.bind())
         
-        let getNavigation = makeGetRootNavigation()
+        let getNavigation = makeGetRootNavigation(
+            makeQRScanner: QRScannerModel.init
+        )
         let witness: RootViewDomain.ContentWitnesses = .init(
             emitting: { _ in Empty().eraseToAnyPublisher() },
             receiving: { _ in {}}
@@ -513,13 +515,15 @@ extension RootViewModelFactory {
         return composer.compose(with: rootViewModel)
     }
     
-    func makeGetRootNavigation() -> RootViewDomain.GetNavigation {
+    func makeGetRootNavigation(
+        makeQRScanner: @escaping () -> QRScannerModel
+    ) -> RootViewDomain.GetNavigation {
         
         return { select, notify, completion in
             
             switch select {
             case .scanQR:
-                completion(.scanQR)
+                completion(.scanQR(makeQRScanner()))
             }
         }
     }

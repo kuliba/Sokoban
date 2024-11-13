@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHub
 
-public final class RootViewBinderComposer<RootViewModel, DismissAll> {
+public final class RootViewBinderComposer<RootViewModel, DismissAll, QRScanner> {
     
     private let bindings: Set<AnyCancellable>
     private let dismiss: () -> Void
@@ -32,7 +32,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll> {
         self.witnesses = witnesses
     }
     
-    public typealias RootDomain = RootViewDomain<RootViewModel, DismissAll>
+    public typealias RootDomain = RootViewDomain<RootViewModel, DismissAll, QRScanner>
 }
 
 public extension RootViewBinderComposer {

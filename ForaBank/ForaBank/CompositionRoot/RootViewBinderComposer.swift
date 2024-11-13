@@ -7,4 +7,4 @@
 
 import PayHubUI
 
-typealias RootViewBinderComposer = PayHubUI.RootViewBinderComposer<RootViewModel, RootViewModelAction.DismissAll>
+typealias RootViewBinderComposer = PayHubUI.RootViewBinderComposer<RootViewModel, RootViewModelAction.DismissAll, QRScannerModel>

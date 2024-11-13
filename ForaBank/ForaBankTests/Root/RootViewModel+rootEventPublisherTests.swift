@@ -1,133 +1,15 @@
 //
-//  RootViewModelEmittingWitnessTests.swift
+//  RootViewModel+rootEventPublisherTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 11.11.2024.
 //
 
-import Combine
-
-extension RootViewModel {
-    
-    typealias Domain = ForaBank.RootViewDomain
-    typealias Select = Domain.Select
-    
-    var selectEmitting: AnyPublisher<Select, Never> {
-        
-        return Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
-    }
-}
-
-private extension RootViewModel {
-    
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        mainViewRootEventPublishers + paymentsTransfersRootEventPublishers
-    }
-    
-    private var mainViewRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        tabsViewModel.mainViewModel.rootEventPublishers
-    }
-    
-    private var paymentsTransfersRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        switch tabsViewModel.paymentsModel {
-        case let .legacy(legacy):
-            return legacy.rootEventPublishers
-            
-        default:
-            return []
-        }
-    }
-}
-
-private extension MainViewModel {
-
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        explicitRootEventPublishers + fastRootEventPublishers
-    }
-
-    private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-     
-        sections
-            .map(\.action)
-            .map { $0.compactMap { $0 as? RootEvent }.eraseToAnyPublisher() }
-    }
-
-    private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        sections
-            .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
-            .map(\.rootEventPublisher)
-    }
-}
-
-private extension MainSectionFastOperationView.ViewModel {
-    
-    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
-        
-        action
-            .compactMap { $0 as? MainSectionViewModelAction.FastPayment.ButtonTapped }
-            .map(\.operationType)
-            .compactMap(\.rootEvent)
-            .eraseToAnyPublisher()
-    }
-}
-
-private extension MainSectionFastOperationView.ViewModel.FastOperations {
-    
-    var rootEvent: RootEvent? {
-        
-        switch self {
-        case .byQr: return .scanQR
-        default:    return nil
-        }
-    }
-}
-
-private extension PaymentsTransfersViewModel {
-    
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        sections
-            .filter { $0.type == .payments }
-            .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
-            .map(\.rootEventPublisher)
-    }
-}
-
-private extension PTSectionPaymentsView.ViewModel {
-    
-    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
-        
-        action
-            .compactMap { $0 as? PTSectionPaymentsViewAction.ButtonTapped.Payment }
-            .compactMap(\.rootEvent)
-            .eraseToAnyPublisher()
-    }
-}
-
-private extension PTSectionPaymentsViewAction.ButtonTapped.Payment {
-    
-    var rootEvent: RootEvent? {
-        
-        switch type {
-        case .qrPayment: return .scanQR
-        default:         return nil
-        }
-    }
-}
-
-typealias RootEvent = ForaBank.RootViewDomain.Select
-extension RootEvent: Action {}
-
 @testable import ForaBank
 import PayHubUI
 import XCTest
 
-final class RootViewModelEmittingWitnessTests: XCTestCase {
+final class RootViewModel_rootEventPublisherTests: XCTestCase {
     
     func test_init_shouldNotEmit() {
         
@@ -228,7 +110,7 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
             mainScheduler: .immediate
         )
         
-        let spy = Spy(sut.selectEmitting)
+        let spy = Spy(sut.rootEventPublisher)
         
         // FIXME: fie Model memory leaks
         // trackForMemoryLeaks(model, file: file, line: line)

@@ -136,8 +136,10 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
-            mainScheduler: .immediate,
-            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+            schedulers: .test(
+                main: .immediate,
+                background: backgroundScheduler.eraseToAnyScheduler()
+            ).0
         ).make(
             dismiss: {},
             qrResolverFeatureFlag: .init(.active),
