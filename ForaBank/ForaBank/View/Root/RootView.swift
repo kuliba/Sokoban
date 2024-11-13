@@ -321,8 +321,8 @@ private extension RootView {
                 makeAlert: makeCategoryPickerSectionAlert(binder: binder),
                 makeContentView: {
                     
-                    RxWrapperView(
-                        model: binder.content,
+                    ComposedCategoryPickerSectionContentView(
+                        content: binder.content,
                         makeContentView: { state, event in
                             
                             CategoryPickerSectionContentView(
