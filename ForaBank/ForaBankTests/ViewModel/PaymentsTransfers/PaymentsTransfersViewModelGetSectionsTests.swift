@@ -95,8 +95,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             updateInfoStatusFlag: .init(.inactive), 
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview,
-            collateralLoanLandingFlag: .init(.inactive)
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         )
         
         return .init(

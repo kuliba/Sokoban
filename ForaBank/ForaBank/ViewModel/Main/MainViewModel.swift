@@ -55,7 +55,6 @@ class MainViewModel: ObservableObject, Resetable {
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
-    private let collateralLoanLandingFlag: CollateralLoanLandingFlag
     
     let bannersBinder: BannersBinder
     
@@ -72,20 +71,17 @@ class MainViewModel: ObservableObject, Resetable {
         landingServices: LandingServices,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping () -> Void,
         bannersBinder: BannersBinder,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
-        self.collateralLoanLandingFlag = collateralLoanLandingFlag
         self.navButtonsRight = []
         self.sections = Self.getSections(
             model,
             bannersBinder,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            collateralLoanLandingFlag: collateralLoanLandingFlag,
             stickerViewModel: nil
         )
         
@@ -111,7 +107,6 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         _ binder: BannersBinder,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
         
@@ -124,7 +119,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionPromoView.ViewModel(model),
         //    BannerPickerSectionBinderWrapper.init(binder: binder),
             MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model, collateralLoanLandingFlag: collateralLoanLandingFlag),
+            MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
         if updateInfoStatusFlag.isActive {
@@ -550,13 +545,7 @@ private extension MainViewModel {
                                 
                             case .loan:
                                 
-                                if collateralLoanLandingFlag.isActive {
-                                    
                                     openCollateralLoanLanding()
-                                } else {
-                                    fallthrough
-                                }
-                                
                             default:
                                 //MARK: Action for Sticker Product
                                 
@@ -636,8 +625,7 @@ private extension MainViewModel {
                                     return .updateFailureInfo
                                 }
                                 return nil
-                            }), collateralLoanLandingFlag: collateralLoanLandingFlag
-                        )
+                            }))
                         myProductsViewModel.rootActions = rootActions
                         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
                         route.destination = .myProducts(myProductsViewModel)
@@ -976,8 +964,6 @@ private extension MainViewModel {
         
     private func openCollateralLoanLanding() {
         
-        guard collateralLoanLandingFlag.isActive else { return }
-
         route.destination = .collateralLoanLanding
     }
     

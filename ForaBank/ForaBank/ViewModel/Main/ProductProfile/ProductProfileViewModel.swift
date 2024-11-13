@@ -64,7 +64,6 @@ class ProductProfileViewModel: ObservableObject {
     
     var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     let model: Model
-    let collateralLoanLandingFlag: CollateralLoanLandingFlag
     private let fastPaymentsFactory: FastPaymentsFactory
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
@@ -115,8 +114,7 @@ class ProductProfileViewModel: ObservableObject {
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         filterState: FilterState,
         rootView: String,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
-        collateralLoanLandingFlag: CollateralLoanLandingFlag
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navigationBar = navigationBar
         self.product = product
@@ -141,7 +139,6 @@ class ProductProfileViewModel: ObservableObject {
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.filterState = filterState
-        self.collateralLoanLandingFlag = collateralLoanLandingFlag
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         // TODO: add removeDuplicates
@@ -196,8 +193,7 @@ class ProductProfileViewModel: ObservableObject {
         filterState: FilterState,
         rootView: String,
         dismissAction: @escaping () -> Void,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
-        collateralLoanLandingFlag: CollateralLoanLandingFlag
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
@@ -233,8 +229,7 @@ class ProductProfileViewModel: ObservableObject {
             productProfileViewModelFactory: productProfileViewModelFactory,
             filterState: filterState,
             rootView: rootView,
-            scheduler: scheduler,
-            collateralLoanLandingFlag: collateralLoanLandingFlag
+            scheduler: scheduler
         )
         
         self.product = ProductProfileCardView.ViewModel(
@@ -1062,7 +1057,7 @@ private extension ProductProfileViewModel {
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
                             openOrderSticker: {}, 
-                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure), collateralLoanLandingFlag: collateralLoanLandingFlag
+                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure)
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -1738,8 +1733,7 @@ private extension ProductProfileViewModel {
             filterHistoryRequest: { _,_,_,_ in },
             filterState: filterState,
             rootView: rootView,
-            dismissAction: dismissAction,
-            collateralLoanLandingFlag: collateralLoanLandingFlag
+            dismissAction: dismissAction
         )
     }
 }

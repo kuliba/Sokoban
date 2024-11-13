@@ -18,7 +18,6 @@ class OpenNewProductsViewModel: ObservableObject {
     
     private let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
     private let model: Model
-    private let collateralLoanLandingFlag: CollateralLoanLandingFlag
     private var bindings = Set<AnyCancellable>()
     
     var displayButtons: [String] {
@@ -28,25 +27,16 @@ class OpenNewProductsViewModel: ObservableObject {
         return items
     }
     
-    init(
-        items: [NewProductButton.ViewModel],
-        model: Model = .emptyMock,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag
-    ) {
+    init(items: [NewProductButton.ViewModel], model: Model = .emptyMock) {
         
         self.items = items
         self.model = model
-        self.collateralLoanLandingFlag = collateralLoanLandingFlag
     }
     
-    init(
-        _ model: Model,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag
-    ) {
+    init(_ model: Model) {
         
         self.items = []
         self.model = model
-        self.collateralLoanLandingFlag = collateralLoanLandingFlag
         self.items = createItems()
         
         bind()
@@ -79,15 +69,10 @@ class OpenNewProductsViewModel: ObservableObject {
                 let title = type.openButtonTitle
                 let subTitle = description(for: type)
                 
-                switch type {
-                case .loan:
-                    if collateralLoanLandingFlag.isActive {
-                        fallthrough
-                    } else {
-                        viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
-                                                                    subTitle: subTitle, url: model.productsOpenLoanURL))
-                    }
-                default:
+                if let url = model.productsOpenLoanURL, case .loan = type {
+                    viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
+                        subTitle: subTitle, url: url))
+                } else {
                     viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
                         subTitle: subTitle, action: { [weak self] in
                             self?.action.send(OpenNewProductsViewModelAction

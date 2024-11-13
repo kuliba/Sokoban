@@ -139,6 +139,8 @@ class Model {
     
     var getProductsV6: Services.GetProductListByTypeV6?
 
+    var productsOpenLoanURL = URL(string: "https://www.forabank.ru/private/credits/")
+
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol

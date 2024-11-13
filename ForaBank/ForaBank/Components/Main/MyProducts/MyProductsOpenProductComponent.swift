@@ -23,23 +23,16 @@ extension MyProductsOpenProductView {
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
-        private let collateralLoanLandingFlag: CollateralLoanLandingFlag
-        
-        init(
-            newProducts: OpenNewProductsViewModel,
-            model: Model = .emptyMock,
-            collateralLoanLandingFlag: CollateralLoanLandingFlag
-        ) {
+
+        init(newProducts: OpenNewProductsViewModel, model: Model = .emptyMock) {
             
             self.newProducts = newProducts
             self.model = model
-            self.collateralLoanLandingFlag = collateralLoanLandingFlag
         }
         
-        init(_ model: Model, collateralLoanLandingFlag: CollateralLoanLandingFlag) {
+        init(_ model: Model) {
             
-            self.collateralLoanLandingFlag = collateralLoanLandingFlag
-            self.newProducts = .init(model, collateralLoanLandingFlag: collateralLoanLandingFlag)
+            self.newProducts = .init(model)
             self.model = model
             
             bind()
@@ -108,13 +101,9 @@ struct MyProductsOpenProductView_Previews: PreviewProvider {
 
 extension MyProductsOpenProductView.ViewModel {
 
-    static let previewSample = MyProductsOpenProductView.ViewModel(newProducts: .init(
-        items: [
-            .sample,
-            .sampleAccount,
-            .sampleEmptySubtitle,
-            .sampleLongSubtitle
-        ],
-        collateralLoanLandingFlag: .init(.active)
-    ), collateralLoanLandingFlag: .init(.active))
+    static let previewSample = MyProductsOpenProductView
+                                .ViewModel(newProducts: .init(items: [.sample,
+                                                                      .sampleAccount,
+                                                                      .sampleEmptySubtitle,
+                                                                      .sampleLongSubtitle]))
 }

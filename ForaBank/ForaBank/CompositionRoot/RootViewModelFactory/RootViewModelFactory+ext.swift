@@ -72,6 +72,10 @@ extension RootViewModelFactory {
             model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         }
         
+        if collateralLoanLandingFlag.isActive {
+            model.productsOpenLoanURL = nil
+        }
+        
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
         )
@@ -352,8 +356,7 @@ extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder,
-            collateralLoanLandingFlag: collateralLoanLandingFlag
+            makeServicePaymentBinder: makeServicePaymentBinder
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
@@ -530,8 +533,7 @@ extension ProductProfileViewModel {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -554,8 +556,7 @@ extension ProductProfileViewModel {
                 updateInfoStatusFlag: updateInfoStatusFlag,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-                makeServicePaymentBinder: makeServicePaymentBinder,
-                collateralLoanLandingFlag: collateralLoanLandingFlag
+                makeServicePaymentBinder: makeServicePaymentBinder
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -645,8 +646,7 @@ extension ProductProfileViewModel {
                 },
                 filterState: filterState,
                 rootView: rootView,
-                dismissAction: dismissAction,
-                collateralLoanLandingFlag: collateralLoanLandingFlag
+                dismissAction: dismissAction
             )
         }
     }
@@ -732,7 +732,6 @@ private extension RootViewModelFactory {
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: onRegister,
             bannersBinder: bannersBinder
         )

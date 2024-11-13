@@ -1036,8 +1036,7 @@ final class ProductProfileViewModelTests: XCTestCase {
             filterHistoryRequest: {_,_,_,_  in},
             filterState: .preview,
             rootView: rootView,
-            dismissAction: {},
-            collateralLoanLandingFlag: .init(.inactive)
+            dismissAction: {}
         )
     }
     
@@ -1076,8 +1075,7 @@ final class ProductProfileViewModelTests: XCTestCase {
                 filterHistoryRequest: {_,_,_,_  in},
                 filterState: .preview,
                 rootView: "",
-                dismissAction: {}, 
-                collateralLoanLandingFlag: .init(.inactive)
+                dismissAction: {}
             )
         )
         
@@ -1115,8 +1113,7 @@ final class ProductProfileViewModelTests: XCTestCase {
                 filterHistoryRequest: {_,_,_,_  in},
                 filterState: .preview,
                 rootView: "",
-                dismissAction: {},
-                collateralLoanLandingFlag: .init(.inactive)
+                dismissAction: {}
             )
         )
         

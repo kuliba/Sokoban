@@ -85,8 +85,7 @@ extension PaymentsTransfersFactory {
             updateInfoStatusFlag: .init(.inactive),
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview,
-            collateralLoanLandingFlag: .init(.active)
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         )
         
         return .init(

@@ -593,8 +593,7 @@ extension ProductProfileViewModel  {
         updateInfoStatusFlag: .init(.active),
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-        makeServicePaymentBinder: ServicePaymentBinder.preview,
-        collateralLoanLandingFlag: .init(.active)
+        makeServicePaymentBinder: ServicePaymentBinder.preview
     )
 }
 
@@ -609,7 +608,6 @@ extension MainViewModel {
         landingServices: .empty(), 
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        collateralLoanLandingFlag: .init(.active),
         onRegister: {},
         bannersBinder: .preview
     )
