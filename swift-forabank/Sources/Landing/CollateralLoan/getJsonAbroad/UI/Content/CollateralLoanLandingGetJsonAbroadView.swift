@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetJsonAbroadView: View {
+public struct CollateralLoanLandingGetJsonAbroadView: View {
     
-    @ObservedObject private(set) var content: Content
+    private(set) var content: Content
     
     private let factory: Factory
     

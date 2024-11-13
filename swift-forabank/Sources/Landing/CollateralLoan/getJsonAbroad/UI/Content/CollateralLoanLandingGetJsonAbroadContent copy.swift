@@ -11,7 +11,7 @@ public final class CollateralLoanLandingGetJsonAbroadContent {
         
     let data: GetJsonAbroadData
 
-    public init(
+    init(
         data: GetJsonAbroadData
     ) {
         
