@@ -307,6 +307,23 @@ struct UserAccountView: View {
         ZStack {
             
             switch fpsDestination {
+            case .accountLink:
+
+                ManagingSubscriptionView(
+                    subscriptionViewModel: viewModel.subscriptionsViewModel(),
+                    configurator: .init(
+                        titleFont: .textBodyMR14180(),
+                        titleColor: .textPlaceholder,
+                        nameFont: .textH4M16240(),
+                        nameColor: .mainColorsBlack,
+                        descriptionFont: .textBodyMR14180()
+                    ),
+                    footerImage: Image.ic72Sbp,
+                    searchCancelAction: {
+                         
+                    }
+                )
+                
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
                 let title = "Введите код из сообщения"
 
