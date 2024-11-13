@@ -71,8 +71,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            mainScheduler: .immediate,
-            backgroundScheduler: .immediate
+            schedulers: .immediate
         )
         let sut = factory.makePaymentsTransfersPersonal(
             nanoServices: .init(

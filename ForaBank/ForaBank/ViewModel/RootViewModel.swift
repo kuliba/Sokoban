@@ -579,7 +579,7 @@ extension RootViewModel {
     enum PaymentsModel {
         
         case legacy(PaymentsTransfersViewModel)
-        case v1(PaymentsTransfersSwitcher)
+        case v1(PaymentsTransfersSwitcherProtocol)
     }
 }
 
@@ -611,7 +611,7 @@ extension RootViewModel.PaymentsModel: Resetable {
     }
 }
 
-extension PaymentsTransfersSwitcher {
+extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         

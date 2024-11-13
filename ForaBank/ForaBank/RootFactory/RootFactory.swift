@@ -9,16 +9,12 @@ import Combine
 
 protocol RootFactory {
     
-    func makeRootViewModel(
-        _: FeatureFlags,
-        bindings: inout Set<AnyCancellable>
-    ) -> RootViewModel
-    
-    func makeGetRootNavigation(
-        _: FeatureFlags
-    ) -> RootViewDomain.GetNavigation
+    func makeBinder(
+        featureFlags: FeatureFlags,
+        dismiss: @escaping () -> Void
+    ) -> RootViewDomain.Binder
     
     func makeRootViewFactory(
-        _: FeatureFlags
+        featureFlags: FeatureFlags
     ) -> RootViewFactory
 }

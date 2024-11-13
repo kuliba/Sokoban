@@ -118,6 +118,7 @@ private extension GetC2BSubscription {
                 brandIcon: "b8b31e25a275e3f04ae189f4a538536a",
                 brandName: "Цветы  у дома",
                 subscriptionPurpose: "Функциональная ссылка для теста №563",
+                subscriptionServiceName: "ООО Цветы у дома",
                 cancelAlert: "Вы действительно хотите отключить подписку Цветы  у дома?"
             )]
         )]
@@ -160,7 +161,8 @@ private let jsonString_j1 = """
             "brandIcon": "b8b31e25a275e3f04ae189f4a538536a",
             "brandName": "Цветы  у дома",
             "subscriptionPurpose": "Функциональная ссылка для теста №563",
-            "cancelAlert": "Вы действительно хотите отключить подписку Цветы  у дома?"
+            "cancelAlert": "Вы действительно хотите отключить подписку Цветы  у дома?",
+            "subscriptionServiceName": "ООО Цветы у дома"
           }
         ]
       }

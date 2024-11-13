@@ -18,31 +18,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private lazy var binder: RootViewDomain.Binder = {
-        
-        var bindings = Set<AnyCancellable>()
-        let rootViewModel = factory.makeRootViewModel(
-            featureFlags,
-            bindings: &bindings
-        )
-        
-        let getNavigation = factory.makeGetRootNavigation(featureFlags)
-        let composer = RootViewDomain.BinderComposer(
-            bindings: bindings,
-            dismiss: { [weak self] in
-                
-                let root = self?.window?.rootViewController
-                root?.dismiss(animated: false, completion: nil)
-            },
-            getNavigation: getNavigation,
-            schedulers: .init(),
-            witnesses: .default
-        )
-        
-        return composer.compose(with: rootViewModel)
-    }()
+    private lazy var binder = factory.makeBinder(
+        featureFlags: featureFlags,
+        dismiss: { [weak self] in
+            
+            let root = self?.window?.rootViewController
+            root?.dismiss(animated: false, completion: nil)
+        }
+    )
     
-    private lazy var rootViewFactory = factory.makeRootViewFactory(featureFlags)
+    private lazy var rootViewFactory = factory.makeRootViewFactory(
+        featureFlags: featureFlags
+    )
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -103,32 +90,6 @@ private extension SceneDelegate {
         
         return loader.load()
     }
-}
-
-private extension RootViewDomain.Witnesses {
-    
-    static let `default`: Self = .init(
-        content: .init(
-            emitting: { _ in Empty().eraseToAnyPublisher() },
-            receiving: { _ in {}}
-        ),
-        dismiss: .init(
-            dismissAll: {
-                
-                $0.action
-                    .compactMap { $0 as? RootViewModelAction.DismissAll }
-                    .eraseToAnyPublisher()
-            },
-            reset: { content in
-                
-                return {
-                    
-                    content.resetLink()
-                    content.reset()
-                }
-            }
-        )
-    )
 }
 
 // MARK: - appearance
