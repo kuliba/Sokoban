@@ -27,10 +27,10 @@ final class ModelRootFactory {
 
 extension ModelRootFactory: RootFactory {
     
-    func makeRootViewModel(
-        _ featureFlags: FeatureFlags,
-        bindings: inout Set<AnyCancellable>
-    ) -> RootViewModel {
+    func makeBinder(
+        featureFlags: FeatureFlags,
+        dismiss: @escaping () -> Void
+    ) -> RootViewDomain.Binder {
         
         let factory = RootViewModelFactory(
             model: model,
@@ -38,8 +38,8 @@ extension ModelRootFactory: RootFactory {
             logger: logger
         )
         
-        let rootViewModel = factory.make(
-            bindings: &bindings,
+        return factory.make(
+            dismiss: dismiss,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
             utilitiesPaymentsFlag: .init(.active(.live)),
@@ -51,33 +51,10 @@ extension ModelRootFactory: RootFactory {
             updateInfoStatusFlag: .init(.active),
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-        
-        let binder = MarketShowcaseToRootViewModelBinder(
-            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
-            rootViewModel: rootViewModel,
-            scheduler: .main
-        )
-
-        bindings.formUnion(binder.bind())
-
-        return rootViewModel
-    }
-    
-    func makeGetRootNavigation(
-        _ featureFlags: FeatureFlags
-    ) -> RootViewDomain.GetNavigation {
-        
-        return { select, notify, completion in
-        
-            switch select {
-            case .scanQR:
-                completion(.scanQR)
-            }
-        }
     }
     
     func makeRootViewFactory(
-        _ featureFlags: FeatureFlags
+        featureFlags: FeatureFlags
     ) -> RootViewFactory {
         
         let composer = RootViewFactoryComposer(

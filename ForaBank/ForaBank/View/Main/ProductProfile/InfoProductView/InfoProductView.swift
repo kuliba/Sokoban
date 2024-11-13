@@ -87,10 +87,13 @@ struct InfoProductView: View {
                 isPresented: $viewModel.isShareViewPresented,
                 onDismiss: viewModel.hideCheckBox,
                 content: {
-                    
-                    ActivityView(viewModel: .init(
-                        activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)])
-                    )
+                    ActivityView(
+                        viewModel: .init(
+                            activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)],
+                            completion: {
+                                viewModel.isShareViewPresented = false
+                                viewModel.bottomSheet = nil
+                            }))
                 })
             .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
                 if let sendAll = viewModel.sendAllButtonVM,

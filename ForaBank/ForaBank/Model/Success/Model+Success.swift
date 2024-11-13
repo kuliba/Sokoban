@@ -126,7 +126,7 @@ extension TemplateButton {
                 tax: nil
             )
             
-            if payeeExternal != external, template.parameterList.first?.comment != comment {
+            if payeeExternal != external || template.parameterList.first?.comment != comment {
                 
                 return .refresh(templateId: template.id)
                 

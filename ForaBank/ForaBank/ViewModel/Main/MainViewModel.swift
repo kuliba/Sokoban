@@ -357,6 +357,7 @@ private extension MainViewModel {
                     route.destination = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
+                    
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
                     
@@ -854,7 +855,8 @@ private extension MainViewModel {
                     
                     guard let self else { return }
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    resetDestination()
+                    
                     self.action.send(DelayWrappedAction(
                         delayMS: 300,
                         action: MainViewModelAction.Show.Contacts())
@@ -1140,7 +1142,7 @@ extension MainViewModel {
             model: model,
             closeAction: { [weak self] in
                 
-                self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.rootActions?.dismissAll()
             }
         )
         let cancellable = bind(paymentsViewModel)

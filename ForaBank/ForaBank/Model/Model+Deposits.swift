@@ -261,18 +261,6 @@ extension Model {
         }
     }
     
-    func handleDepositsInfoAllRequest() {
-        
-        guard let depositsProducts = products.value[.deposit], depositsProducts.isEmpty == false else {
-            return
-        }
-        
-        for deposit in depositsProducts {
-            
-            action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
-        }
-    }
-    
     func handleDepositsInfoSingleRequest(_ payload: ModelAction.Deposits.Info.Single.Request) {
         
         guard let token = token else {
@@ -297,11 +285,9 @@ extension Model {
                     self.depositsInfo.value = Self.reduce(depositsInfoData: self.depositsInfo.value, productId: payload.productId, info: info)
                     
                     do {
-                        
                         try self.localAgent.store(self.depositsInfo.value, serial: nil)
                         
-                    } catch(let error){
-                        
+                    } catch(let error) {
                         self.handleServerCommandCachingError(error: error, command: command)
                     }
   
