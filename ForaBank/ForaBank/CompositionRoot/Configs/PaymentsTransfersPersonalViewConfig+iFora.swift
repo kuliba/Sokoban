@@ -17,7 +17,8 @@ extension PaymentsTransfersPersonalViewConfig {
             config: .init(
                 textFont: .textH1Sb24322(),
                 textColor: .textSecondary
-            )
+            ),
+            leadingPadding: 20
         )
     )
 }
