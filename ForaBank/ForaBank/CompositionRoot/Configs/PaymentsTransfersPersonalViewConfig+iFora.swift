@@ -11,13 +11,13 @@ extension PaymentsTransfersPersonalViewConfig {
     
     static let iFora: Self = .init(
         titleSpacing: 16,
-        spacing: 32,
         title: .init(
             text: "Платежи",
             config: .init(
                 textFont: .textH1Sb24322(),
                 textColor: .textSecondary
-            )
+            ),
+            leadingPadding: 20
         )
     )
 }
