@@ -3170,6 +3170,8 @@
 		C19738E42AF2B5A800101B1B /* StickerDeliveryOffice.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */; };
 		C19738E72AF3970100101B1B /* _StickerDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E62AF3970100101B1B /* _StickerDictionary.swift */; };
 		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
+		C197FD622CE178180005A93E /* Service+modifyC2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197FD612CE178180005A93E /* Service+modifyC2B.swift */; };
+		C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */ = {isa = PBXBuildFile; productRef = C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */; };
 		C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C19980792B7EB8F500D85C09 /* OperatorsListComponents */; };
 		C19C36672B04B57E0052D7F0 /* OperationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */; };
 		C19C37872B84E19000159A18 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = C19C37862B84E19000159A18 /* RxViewModel */; };
@@ -6737,6 +6739,7 @@
 		C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerDeliveryOffice.json; sourceTree = "<group>"; };
 		C19738E62AF3970100101B1B /* _StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _StickerDictionary.swift; sourceTree = "<group>"; };
 		C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionaryResponse.swift; sourceTree = "<group>"; };
+		C197FD612CE178180005A93E /* Service+modifyC2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+modifyC2B.swift"; sourceTree = "<group>"; };
 		C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationWrapperView.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -7475,6 +7478,7 @@
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
+				C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
@@ -16256,6 +16260,7 @@
 		834E3F662AC2C3BC00E49C2B /* C2BService */ = {
 			isa = PBXGroup;
 			children = (
+				C197FD602CE177FC0005A93E /* ModifyC2B */,
 				834E3F672AC2C40900E49C2B /* Services+getScenarioQRData.swift */,
 				83E455E02AC2D85C0045BEC1 /* QRLink.swift */,
 				834E3F692AC2C77600E49C2B /* QRDataMapper.swift */,
@@ -16984,6 +16989,14 @@
 				C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */,
 			);
 			path = Domain;
+			sourceTree = "<group>";
+		};
+		C197FD602CE177FC0005A93E /* ModifyC2B */ = {
+			isa = PBXGroup;
+			children = (
+				C197FD612CE178180005A93E /* Service+modifyC2B.swift */,
+			);
+			path = ModifyC2B;
 			sourceTree = "<group>";
 		};
 		C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
@@ -19522,6 +19535,7 @@
 				EC7A0A252CC9350300FA652F /* СlientInformList */,
 				A7875EF82CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend */,
 				836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */,
+				C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -22067,6 +22081,7 @@
 				830AF2D72AB3236000C2F29C /* Factory.swift in Sources */,
 				2A945B482CE49F1800A68FB1 /* ComposedPaymentsTransfersTransfersView.swift in Sources */,
 				2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */,
+				C197FD622CE178180005A93E /* Service+modifyC2B.swift in Sources */,
 				0C5D7DA529894C8800BC0CCF /* ClientInformViewModel.swift in Sources */,
 				ED733D602858963200F22D42 /* ChooseCountryView+Legacy.swift in Sources */,
 				833D3E3F2C2EDF6E006626F2 /* ControlPanelWrapperView.swift in Sources */,
@@ -29669,6 +29684,10 @@
 		C152489F2B83FB090043F412 /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
+		};
+		C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ModifyC2BSubscriptionService;
 		};
 		C19980792B7EB8F500D85C09 /* OperatorsListComponents */ = {
 			isa = XCSwiftPackageProductDependency;
