@@ -1309,11 +1309,19 @@ extension Payments {
         
         struct Button {
             
-            let title: String
+            let title: Title
             let style: Style
             let action: Action
             let precondition: Precondition?
 
+            enum Title: String, Equatable {
+            
+                case save = "Сохранить"
+                case main = "На главный"
+                case accountLinking = "Привязать счет"
+                case notYet = "Пока нет"
+            }
+            
             enum Action: String {
                 
                 case confirm

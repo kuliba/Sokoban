@@ -56,15 +56,15 @@ extension Model {
         if responseParameters.contains(where: { $0.value == "Такая привязка счета уже существует!" }) {
                         
             buttons = [
-                .init(title: "Сохранить", style: .secondary, action: .confirm, precondition: precondition),
-                .init(title: "На главный", style: .primary, action: .main, precondition: nil)
+                .init(title: .save, style: .secondary, action: .confirm, precondition: precondition),
+                .init(title: .main, style: .primary, action: .main, precondition: nil)
             ]
             
         } else {
             
             buttons = [
-                .init(title: "Привязать счет", style: .primary, action: .confirm, precondition: precondition),
-                .init(title: "Пока нет", style: .secondary, action: .deny, precondition: nil)
+                .init(title: .accountLinking, style: .primary, action: .confirm, precondition: precondition),
+                .init(title: .notYet, style: .secondary, action: .deny, precondition: nil)
             ]
         }
         
@@ -556,8 +556,8 @@ func subscribeButtons(
     
     let subscribeParameter = Payments.ParameterSubscribe(
         buttons: [
-            .init(title: "Сохранить", style: saveStyle, action: .confirm, precondition: precondition),
-            .init(title: "На главный", style: .primary, action: .main, precondition: nil)
+            .init(title: .main, style: saveStyle, action: .confirm, precondition: precondition),
+            .init(title: .main, style: .primary, action: .main, precondition: nil)
         ],
         icon: "ic72Sbp"
     )
@@ -583,7 +583,7 @@ func paymentsProcessDependencyReducerC2B(
         if parameters.contains(where: { $0.value == "Такая привязка счета уже существует!" }) {
             
             let subscribeParameter = subscribeParameter
-            let saveButton = subscribeParameter.buttons.first(where: { $0.title == "Сохранить" })
+            let saveButton = subscribeParameter.buttons.first(where: { $0.title == .save })
             
             if operation.parameters.parameterProduct?.productId != parameters.parameterProduct?.productId,
             let saveButton,
