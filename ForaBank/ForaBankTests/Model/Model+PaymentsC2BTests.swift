@@ -101,11 +101,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
 
         let sut = Model.emptyMock
         let buttons = sut.makeButtons(
-            [Payments.ParameterSuccessText(with: .init(
-                id: "id",
-                value: "Такая привязка счета уже существует!",
-                style: .title
-            ))],
+             [makeSuccessText(value: "Такая привязка счета уже существует!")],
             nil
         )
         
@@ -119,11 +115,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
 
         let sut = Model.emptyMock
         let buttons = sut.makeButtons(
-            [Payments.ParameterSuccessText(with: .init(
-                id: "id",
-                value: "value",
-                style: .title
-            ))],
+            [makeSuccessText(value: "value")],
             nil
         )
         
@@ -332,5 +324,19 @@ private extension ProductData.Filter {
              cardAdditionalOwnedRestrictedRule,
              cardAdditionalNotOwnedRestrictedRule,
              productActiveRule
+    }
+}
+
+private extension Model_PaymentsC2BTests {
+    
+    func makeSuccessText(
+        value: String
+    ) -> Payments.ParameterSuccessText {
+        
+        Payments.ParameterSuccessText(with: .init(
+            id: "id",
+            value: value,
+            style: .title
+        ))
     }
 }
