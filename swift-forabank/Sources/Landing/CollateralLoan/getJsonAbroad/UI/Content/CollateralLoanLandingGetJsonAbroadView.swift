@@ -27,7 +27,7 @@ public struct CollateralLoanLandingGetJsonAbroadView: View {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadView {
+public extension CollateralLoanLandingGetJsonAbroadView {
     
     typealias Content = CollateralLoanLandingGetJsonAbroadContent
     typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
