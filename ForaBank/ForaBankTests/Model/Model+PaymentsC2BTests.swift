@@ -97,7 +97,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
         XCTAssertNoDiff(parameter?.id, "id")
     }
     
-    func test_paymentsC2BMakeButton_updateAccountLinking_shouldReturnParameterSubscriber() {
+    func test_paymentsC2BMakeButton_accountLinking_shouldReturnButtons() {
 
         let sut = Model.emptyMock
         let buttons = sut.makeButtons(
@@ -115,7 +115,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
         )
     }
     
-    func test_paymentsC2BMakeButton_accountLinking_shouldReturnParameterSubscriber() {
+    func test_paymentsC2BMakeButton_shouldReturnButtons() {
 
         let sut = Model.emptyMock
         let buttons = sut.makeButtons(
