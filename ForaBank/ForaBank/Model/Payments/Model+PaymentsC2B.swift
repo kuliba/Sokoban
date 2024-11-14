@@ -50,29 +50,25 @@ extension Model {
         _ responseParameters: [PaymentsParameterRepresentable],
         _ precondition: Payments.ParameterSubscribe.Button.Precondition?
     ) -> Payments.ParameterSubscribe {
+        
+        let buttons: [Payments.ParameterSubscribe.Button]
+        
         if responseParameters.contains(where: { $0.value == "Такая привязка счета уже существует!" }) {
-            
-            let subscribeParameter = Payments.ParameterSubscribe(
-                buttons: [
-                    .init(title: "Сохранить", style: .secondary, action: .confirm, precondition: precondition),
-                    .init(title: "На главный", style: .primary, action: .main, precondition: nil)
-                ],
-                icon: "ic72Sbp"
-            )
-            
-            return subscribeParameter
+                        
+            buttons = [
+                .init(title: "Сохранить", style: .secondary, action: .confirm, precondition: precondition),
+                .init(title: "На главный", style: .primary, action: .main, precondition: nil)
+            ]
             
         } else {
-            let subscribeParameter = Payments.ParameterSubscribe(
-                buttons: [
-                    .init(title: "Привязать счет", style: .primary, action: .confirm, precondition: precondition),
-                    .init(title: "Пока нет", style: .secondary, action: .deny, precondition: nil)
-                ],
-                icon: "ic72Sbp"
-            )
             
-            return subscribeParameter
+            buttons = [
+                .init(title: "Привязать счет", style: .primary, action: .confirm, precondition: precondition),
+                .init(title: "Пока нет", style: .secondary, action: .deny, precondition: nil)
+            ]
         }
+        
+        return .init(buttons: buttons, icon: "ic72Sbp")
     }
     
     func paymentsStepC2B(
