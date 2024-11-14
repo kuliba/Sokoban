@@ -7,6 +7,7 @@
 
 import Foundation
 import ServerAgent
+import ModifyC2BSubscriptionService
 
 extension Model {
         
@@ -287,7 +288,9 @@ extension Model {
                 logger: LoggerAgent.shared,
                 payload: .init(
                     productId: product.id,
-                    productType: product.productType,
+                    productType: .init(
+                        productType: product.productType
+                    ),
                     subscriptionToken: subscriptionToken
                 )
             )
@@ -631,6 +634,18 @@ extension Result {
             self = .success(success)
         } catch {
             self = .failure(error)
+        }
+    }
+}
+
+private extension ModifyC2BSubscription.ProductType {
+    
+    init(productType: ProductType) {
+        switch productType {
+        case .card:
+            self = .card
+        default:
+            self = .account
         }
     }
 }

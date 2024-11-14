@@ -1800,7 +1800,8 @@ private extension Target {
         dependencies: [
             .genericRemoteService,
             .remoteServices,
-            .foraTools
+            .foraTools,
+            .uiPrimitives
         ],
         path: "Sources/Services/\(String.modifyC2BSubscriptionService)"
     )
