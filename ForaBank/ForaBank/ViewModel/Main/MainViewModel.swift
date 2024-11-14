@@ -5,17 +5,15 @@
 //  Created by Max Gribov on 24.02.2022.
 //
 
+import CalendarUI
 import Combine
 import CombineSchedulers
 import ForaTools
 import Foundation
-#warning("remove GenericRemoteService")
-import GenericRemoteService
-import SberQR
-import SwiftUI
 import LandingUIComponent
 import PaymentSticker
-import CalendarUI
+import SberQR
+import SwiftUI
 
 class MainViewModel: ObservableObject, Resetable {
     
