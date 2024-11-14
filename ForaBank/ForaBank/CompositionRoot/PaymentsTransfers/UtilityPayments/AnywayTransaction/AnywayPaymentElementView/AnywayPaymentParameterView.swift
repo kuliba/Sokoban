@@ -34,7 +34,7 @@ struct AnywayPaymentParameterView: View {
                 .paddedRoundedBackground()
             
         case let .textInput(node):
-            inputView(keyboard: .decimal, model: node.model)
+            inputView(keyboard: .default, model: node.model)
             
         case .unknown:
             EmptyView()
