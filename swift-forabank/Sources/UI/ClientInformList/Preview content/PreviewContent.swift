@@ -38,7 +38,14 @@ extension ClientInformListDataState {
         title: Label(image: .infoCircle, title: "Информация"),
         items: [
             Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
-            Label(image: .infoCircle, title: "Информация на главном портале обновилась")
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00")
         ]
     ))
 }
