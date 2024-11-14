@@ -22,7 +22,7 @@ public struct CollateralLoanLandingGetJsonAbroadBodyView: View {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadBodyView {
+public extension CollateralLoanLandingGetJsonAbroadBodyView {
     
     typealias HeaderView = CollateralLoanLandingGetJsonAbroadHeaderView
     typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
