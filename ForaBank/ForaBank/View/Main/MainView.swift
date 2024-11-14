@@ -212,7 +212,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .failedView(failedViewModel):
-            viewFactory.components.makeQRFailedView(failedViewModel)
+            viewFactory.components.makeQRFailedWrapperView(failedViewModel)
             
         case let .searchOperators(viewModel):
             viewFactory.components.makeQRSearchOperatorView(viewModel)

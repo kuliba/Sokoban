@@ -14,7 +14,7 @@ final class QRFailedViewModelWrapper: ObservableObject {
     @Published private(set) var navigation: Navigation?
     
     private let navigationSubject: PassthroughSubject<Navigation?, Never>
-    private let viewModel: QRFailedViewModel
+    let qrFailedViewModel: QRFailedViewModel
     
     init(
         model: Model,
@@ -23,7 +23,7 @@ final class QRFailedViewModelWrapper: ObservableObject {
     ) {
         let navigationSubject = PassthroughSubject<Navigation?, Never>()
         
-        viewModel = .init(
+        qrFailedViewModel = .init(
             model: model,
             addCompanyAction: { navigationSubject.send(.outside(.chat))},
             requisitsAction: {
@@ -62,6 +62,11 @@ final class QRFailedViewModelWrapper: ObservableObject {
         navigationSubject
             .receive(on: scheduler)
             .assign(to: &$navigation)
+    }
+    
+    func dismiss() {
+        
+        navigationSubject.send(nil)
     }
     
     enum Navigation {
