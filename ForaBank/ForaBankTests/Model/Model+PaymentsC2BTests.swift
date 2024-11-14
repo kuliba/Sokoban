@@ -97,39 +97,27 @@ final class Model_PaymentsC2BTests: XCTestCase {
         XCTAssertNoDiff(parameter?.id, "id")
     }
     
-    func test_paymentsC2BMakeButton_updateAccountLinking_shouldReturnParameterSubscriber() {
+    func test_paymentsC2BMakeButtonTitle_accountLinking_shouldReturnButtons() {
 
-        let sut = Model.emptyMock
-        let buttons = sut.makeButtons(
-            [Payments.ParameterSuccessText(with: .init(
-                id: "id",
-                value: "Такая привязка счета уже существует!",
-                style: .title
-            ))],
-            nil
+        let buttons = makeButtonTitles(
+            value: "Такая привязка счета уже существует!"
         )
         
         XCTAssertNoDiff(
             buttons.buttons.map(\.title),
-            ["Сохранить", "На главный"]
+            [.save, .main]
         )
     }
     
-    func test_paymentsC2BMakeButton_accountLinking_shouldReturnParameterSubscriber() {
+    func test_paymentsC2BMakeButtonTitle_shouldReturnButtons() {
 
-        let sut = Model.emptyMock
-        let buttons = sut.makeButtons(
-            [Payments.ParameterSuccessText(with: .init(
-                id: "id",
-                value: "value",
-                style: .title
-            ))],
-            nil
+        let buttons = makeButtonTitles(
+            value: "value"
         )
-        
+
         XCTAssertNoDiff(
             buttons.buttons.map(\.title),
-            ["Привязать счет", "Пока нет"]
+            [.accountLinking, .notYet]
         )
     }
     
@@ -334,3 +322,28 @@ private extension ProductData.Filter {
              productActiveRule
     }
 }
+
+private extension Model_PaymentsC2BTests {
+
+    private func makeButtonTitles(
+        _ sut: Model = .emptyMock,
+        value: String
+    ) -> Payments.ParameterSubscribe {
+        
+        sut.makeButtons(
+            [makeSuccessText(value: value)],
+            nil)
+    }
+
+    private func makeSuccessText(
+        value: String
+    ) -> Payments.ParameterSuccessText {
+        
+        Payments.ParameterSuccessText(with: .init(
+            id: "id",
+            value: value,
+            style: .title
+        ))
+    }
+}
+

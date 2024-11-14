@@ -92,7 +92,7 @@ extension PaymentsSubscribeView {
                 
                 let buttonStyle = ButtonSimpleView.ViewModel.ButtonStyle(style: button.style, isPreconditionPassed: isPreconditionPassed ?? true)
 
-                let buttonViewModel = ButtonSimpleView.ViewModel(title: button.title, style: buttonStyle) {[weak self] in
+                let buttonViewModel = ButtonSimpleView.ViewModel(title: button.title.rawValue, style: buttonStyle) {[weak self] in
                     
                     self?.action.send(PaymentsParameterViewModelAction.Subscribe.ButtonDidTapped(action: button.action))
                 }
