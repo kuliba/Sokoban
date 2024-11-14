@@ -10,7 +10,6 @@ import PayHubUI
 extension PaymentsTransfersPersonalViewConfig {
     
     static let iFora: Self = .init(
-        spacing: 32,
         titleSpacing: 16,
         title: .init(
             text: "Платежи",

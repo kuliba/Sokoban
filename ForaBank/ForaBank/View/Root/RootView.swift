@@ -338,6 +338,7 @@ private extension RootView {
                 makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
             )
         )
+        .padding(.top, 20)
     }
     
     func makeCategoryPickerSectionAlert(
