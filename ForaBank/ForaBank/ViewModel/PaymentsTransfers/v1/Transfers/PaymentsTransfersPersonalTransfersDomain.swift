@@ -9,15 +9,23 @@ import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
     
+    // MARK: - Binder
+    
     typealias Binder = PlainPickerBinder<Select, NavigationResult>
     typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, NavigationResult>
     
+    // MARK: - Content
+    
+    typealias Content = PlainPickerContent<Select>
+    
+    // MARK: - Flow
+    
     typealias FlowState = FlowDomain.State
     typealias FlowEvent = FlowDomain.Event
     typealias FlowEffect = FlowDomain.Effect
-
+    
     typealias NotifyEvent = FlowDomain.NotifyEvent
     
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
