@@ -2045,6 +2045,7 @@ private extension Target {
             .customDump,
             // internal modules
             .transferPublicKey,
+            .foraTools
         ],
         path: "Tests/Services/\(String.transferPublicKeyTests)"
     )
