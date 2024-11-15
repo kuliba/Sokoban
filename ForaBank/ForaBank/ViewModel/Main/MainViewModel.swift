@@ -598,36 +598,7 @@ private extension MainViewModel {
                 .receive(on: scheduler)
                 .sink { [unowned self] action in
                     
-                    switch action {
-                    case _ as MainSectionViewModelAction.Products.StickerDidTapped:
-                        handleLandingAction(.sticker)
-                        
-                    case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(
-                            model,
-                            makeProductProfileViewModel: makeProductProfileViewModel,
-                            openOrderSticker: {
-                                
-                                self.route = .empty
-                                
-                                self.delay(for: .milliseconds(700)) { [self] in
-                                    
-                                    handleLandingAction(.sticker)
-                                }
-                            },
-                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
-                                
-                                guard let self else { return nil }
-                                
-                                if self.updateInfoStatusFlag.isActive {
-                                    return .updateFailureInfo
-                                }
-                                return nil
-                            }))
-                        myProductsViewModel.rootActions = rootActions
-                        myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
-                        route.destination = .myProducts(myProductsViewModel)
-                        
+                    switch action {                                                
                         // CurrencyMetall section
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
@@ -680,7 +651,49 @@ private extension MainViewModel {
                 .sink { [weak self] action in
                     self?.action.send(MainViewModelAction.Show.ProductProfile(productId: action.productId))
                 }.store(in: &bindings)
+            
+            section.action
+                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] action in
+                    self?.openMoreProducts()
+                }.store(in: &bindings)
+          
+            section.action
+                .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] action in
+                    self?.handleLandingAction(.sticker)
+                }.store(in: &bindings)
         }
+    }
+    
+    func openMoreProducts() {
+        
+        let myProductsViewModel = MyProductsViewModel(
+            model,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            openOrderSticker: {
+                
+                self.route = .empty
+                
+                self.delay(for: .milliseconds(700)) { [weak self] in
+                    
+                    self?.handleLandingAction(.sticker)
+                }
+            },
+            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
+                
+                guard let self else { return nil }
+                
+                if self.updateInfoStatusFlag.isActive {
+                    return .updateFailureInfo
+                }
+                return nil
+            }))
+        myProductsViewModel.rootActions = rootActions
+        myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
+        route.destination = .myProducts(myProductsViewModel)
     }
     
     func bind(_ qrModel: QRModel) -> AnyCancellable {
