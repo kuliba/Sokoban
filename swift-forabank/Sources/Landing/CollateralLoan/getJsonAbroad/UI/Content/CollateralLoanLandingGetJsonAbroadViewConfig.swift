@@ -12,33 +12,33 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
     public let fonts: Fonts
     public let backgroundImageHeight: CGFloat
     public let paddings: Paddings
-    public let headerView: HeaderView
-    public let conditionsView: ConditionsView
-    public let calculatorView: CalculatorView
-    public let frequentlyAskedQuestionView: FrequentlyAskedQuestionView
-    public let documentsView: DocumentsView
-    public let footerView: FooterView
+    public let header: Header
+    public let conditions: Conditions
+    public let calculator: Calculator
+    public let frequentlyAskedQuestion: FrequentlyAskedQuestion
+    public let documents: Documents
+    public let footer: Footer
         
     public init(
         fonts: Fonts,
         backgroundImageHeight: CGFloat,
         paddings: Paddings,
-        headerView: HeaderView,
-        conditionsView: ConditionsView,
-        calculatorView: CalculatorView,
-        frequentlyAskedQuestionView: FrequentlyAskedQuestionView,
-        documentsView: DocumentsView,
-        footerView: FooterView
+        header: Header,
+        conditions: Conditions,
+        calculator: Calculator,
+        frequentlyAskedQuestion: FrequentlyAskedQuestion,
+        documents: Documents,
+        footer: Footer
     ) {
         self.fonts = fonts
         self.backgroundImageHeight = backgroundImageHeight
         self.paddings = paddings
-        self.headerView = headerView
-        self.conditionsView = conditionsView
-        self.calculatorView = calculatorView
-        self.frequentlyAskedQuestionView = frequentlyAskedQuestionView
-        self.documentsView = documentsView
-        self.footerView = footerView
+        self.header = header
+        self.conditions = conditions
+        self.calculator = calculator
+        self.frequentlyAskedQuestion = frequentlyAskedQuestion
+        self.documents = documents
+        self.footer = footer
     }
     
     public struct Fonts {
@@ -52,7 +52,7 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
     
     public struct Paddings {}
 
-    public struct HeaderView {
+    public struct Header {
         
         public let height: CGFloat
         public let labelTag: LabelTag
@@ -118,30 +118,30 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
         }
     }
 
-    public struct ConditionsView {}
+    public struct Conditions {}
 
-    public struct CalculatorView {}
+    public struct Calculator {}
     
-    public struct FrequentlyAskedQuestionView {}
+    public struct FrequentlyAskedQuestion {}
 
-    public struct DocumentsView {}
+    public struct Documents {}
 
-    public struct FooterView {}
+    public struct Footer {}
     
     public struct FontConfig {
         
         public let font: Font
-        public let foregroundColor: Color
-        public let backgroundColor: Color
+        public let foreground: Color
+        public let background: Color
         
         public init(
             _ font: Font,
-            foregroundColor: Color = .primary,
-            backgroundColor: Color = Color(UIColor.systemBackground)
+            foreground: Color = .primary,
+            background: Color = Color(UIColor.systemBackground)
         ) {
             self.font = font
-            self.foregroundColor = foregroundColor
-            self.backgroundColor = backgroundColor
+            self.foreground = foreground
+            self.background = background
         }
     }
 }
@@ -152,13 +152,13 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
         fonts: .init(body: FontConfig(Font.system(size: 14))),
         backgroundImageHeight: 703,
         paddings: .init(),
-        headerView: .init(
+        header: .init(
             height: 642,
             labelTag: .init(
                 fontConfig: .init(
                     Font.system(size: 32).bold(),
-                    foregroundColor: .white,
-                    backgroundColor: Color(UIColor(red: 255/255, green: 54/255, blue: 54/255, alpha: 1))
+                    foreground: .white,
+                    background: Color(UIColor(red: 255/255, green: 54/255, blue: 54/255, alpha: 1))
                 ),
                 cornerSize: 10,
                 topOuterPadding: 215,
@@ -174,10 +174,10 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
                 topPadding: 30
             )
         ),
-        conditionsView: .init(),
-        calculatorView: .init(),
-        frequentlyAskedQuestionView: .init(),
-        documentsView: .init(),
-        footerView: .init()
+        conditions: .init(),
+        calculator: .init(),
+        frequentlyAskedQuestion: .init(),
+        documents: .init(),
+        footer: .init()
     )
 }

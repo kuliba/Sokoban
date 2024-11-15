@@ -17,41 +17,58 @@ public struct CollateralLoanLandingGetJsonAbroadHeaderView: View {
 
     public var body: some View {
 
+        headerView(config: config)
+    }
+    
+    private func headerView(config: Config) -> some View {
+        
         VStack {
             
-            labelTag.text(
-                withConfig: .init(
-                    textFont: config.headerView.labelTag.fontConfig.font,
-                    textColor: config.headerView.labelTag.fontConfig.foregroundColor
-                )
-            )
-            .padding(.vertical, config.headerView.labelTag.verticalInnerPadding)
-            .padding(.horizontal, config.headerView.labelTag.horizontalInnerPadding)
-            .background(
-                RoundedRectangle(cornerRadius: config.headerView.labelTag.cornerSize)
-                    .fill(config.headerView.labelTag.fontConfig.backgroundColor)
-            )
-            .rotationEffect(Angle(degrees: config.headerView.labelTag.rotationDegrees))
-            .padding(.leading, config.headerView.labelTag.leadingOuterPadding)
-            .padding(.top, config.headerView.labelTag.topOuterPadding)
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            VStack(spacing: config.headerView.params.spacing) {
-                ForEach(params, id: \.self) {
-                    
-                    "• \($0)".text(withConfig: .init(
-                        textFont: config.fonts.body.font,
-                        textColor: config.fonts.body.foregroundColor
-                    ))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .padding(.top, config.headerView.params.topPadding)
-            .padding(.leading, config.headerView.params.leadingPadding)
+            labelTagView(config: config.header.labelTag)
+            paramsView(config: config.header.params, fonts: config.fonts)
 
             Spacer()
         }
-        .frame(height: config.headerView.height)
+        .frame(height: config.header.height)
+    }
+    
+    private func labelTagView(config: Config.Header.LabelTag) -> some View {
+        
+        labelTag.text(
+            withConfig: .init(
+                textFont: config.fontConfig.font,
+                textColor: config.fontConfig.foreground
+            )
+        )
+        .padding(.vertical, config.verticalInnerPadding)
+        .padding(.horizontal, config.horizontalInnerPadding)
+        .background(
+            RoundedRectangle(cornerRadius: config.cornerSize)
+                .fill(config.fontConfig.background)
+        )
+        .rotationEffect(Angle(degrees: config.rotationDegrees))
+        .padding(.leading, config.leadingOuterPadding)
+        .padding(.top, config.topOuterPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private func paramsView(
+        config: Config.Header.Params,
+        fonts: Config.Fonts
+    ) -> some View {
+        
+        VStack(spacing: config.spacing) {
+            ForEach(params, id: \.self) {
+                
+                "• \($0)".text(withConfig: .init(
+                    textFont: fonts.body.font,
+                    textColor: fonts.body.foreground
+                ))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .padding(.top, config.topPadding)
+        .padding(.leading, config.leadingPadding)
     }
 }
 
