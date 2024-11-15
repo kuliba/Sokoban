@@ -128,7 +128,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
@@ -447,7 +447,7 @@ final class MainViewModelTests: XCTestCase {
 
     /*func test_updateSections_updateInfoFullPath_updateInfoStatusFlagActive_shouldAddUpdateSections()  {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.active))
+        let (sut, model) = makeSUT(updateInfoStatusFlag: .active)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
          
         assert(sections: sut.sections, count: 6, type: .products)
@@ -495,7 +495,7 @@ final class MainViewModelTests: XCTestCase {
    */
     func test_updateSections_updateInfoFullPath_updateInfoStatusFlagInActive_shouldAddUpdateSections()  {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.inactive))
+        let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
          
         assert(sections: sut.sections, count: 6, type: .products)
@@ -581,7 +581,7 @@ final class MainViewModelTests: XCTestCase {
     private func makeSUT(
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -638,7 +638,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
@@ -676,7 +676,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
@@ -732,7 +732,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {}, 
             bannersBinder: .preview
         )

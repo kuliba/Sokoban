@@ -54,32 +54,32 @@ private extension FeatureFlagsLoader {
     func loadChangeSVCardLimitsFlag() -> ChangeSVCardLimitsFlag {
         
         switch retrieve(.changeSVCardLimitsFlag) {
-        case "1":  return .init(.active)
-        default:   return .init(.inactive)
+        case "1":  return .active
+        default:   return .inactive
         }
     }
     
     func loadGetProductListByTypeV6Flag() -> GetProductListByTypeV6Flag {
         
         switch retrieve(.getProductListByTypeV6Flag) {
-        case "1":  return .init(.active)
-        default:   return .init(.inactive)
+        case "1":  return .active
+        default:   return .inactive
         }
     }
 
     func loadMarketplaceFlag() -> MarketplaceFlag {
         
         switch retrieve(.marketplaceFlag) {
-        case "1":  return .init(.active)
-        default:   return .init(.inactive)
+        case "1":  return .active
+        default:   return .inactive
         }
     }
 
     func loadSavingsAccountFlag() -> SavingsAccountFlag {
         
         switch retrieve(.savingsAccountFlag) {
-        case "1":  return .init(.active)
-        default:   return .init(.inactive)
+        case "1":  return .active
+        default:   return .inactive
         }
     }
 
@@ -93,25 +93,25 @@ private extension FeatureFlagsLoader {
     
     func loadPaymentsTransfersFlag() -> PaymentsTransfersFlag {
         switch retrieve(.paymentsTransfersFlag) {
-        case "1":  return .init(.active)
-        default:   return .init(.inactive)
+        case "1":  return .active
+        default:   return .inactive
         }
     }
     
     func loadUtilitiesPaymentsFlag() -> UtilitiesPaymentsFlag {
         
         switch retrieve(.utilitiesPaymentsFlag) {
-        case "sber_providers_live": return .init(.active(.live))
-        case "sber_providers_stub": return .init(.active(.stub))
-        default:                    return .init(.inactive)
+        case "sber_providers_live": return .live
+        case "sber_providers_stub": return .stub
+        default:                    return .inactive
         }
     }
     
     func loadCollateralLoanLandingFlag() -> CollateralLoanLandingFlag {
         
         switch retrieve(.collateralLoanLandingFlag) {
-        case "1":  return .init(.active)
-        default:   return .init(.inactive)
+        case "1":  return .active
+        default:   return .inactive
         }
     }
 }

@@ -40,16 +40,16 @@ extension ModelRootFactory: RootFactory {
         
         return factory.make(
             dismiss: dismiss,
-            qrResolverFeatureFlag: .init(.active),
-            fastPaymentsSettingsFlag: .init(.active(.live)),
-            utilitiesPaymentsFlag: .init(.active(.live)),
+            qrResolverFeatureFlag: .active,
+            fastPaymentsSettingsFlag: .live,
+            utilitiesPaymentsFlag: .live,
             historyFilterFlag: true,
-            changeSVCardLimitsFlag: .init(.active),
+            changeSVCardLimitsFlag: .active,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-            getProductListByTypeV6Flag: .init(.active),
-            marketplaceFlag: .init(.active),
+            getProductListByTypeV6Flag: .active,
+            marketplaceFlag: .active,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            updateInfoStatusFlag: .init(.active),
+            updateInfoStatusFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
     }

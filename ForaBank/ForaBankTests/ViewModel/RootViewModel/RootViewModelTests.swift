@@ -407,7 +407,7 @@ final class RootViewModelTests: XCTestCase {
                     qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
-                    updateInfoStatusFlag: .init(.inactive),
+                    updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     bannersBinder: .preview
                 ),
@@ -480,7 +480,7 @@ final class RootViewModelTests: XCTestCase {
                     qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
-                    updateInfoStatusFlag: .init(.inactive),
+                    updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     bannersBinder: .preview
                 ),
