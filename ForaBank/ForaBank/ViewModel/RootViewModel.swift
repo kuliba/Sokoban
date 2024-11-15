@@ -159,7 +159,7 @@ class RootViewModel: ObservableObject, Resetable {
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) { [unowned self] in
+                    delay(for: .milliseconds(600)) { [unowned self] in
                         
                         guard let clientInformData = self.model.clientInform.value.data?.authorized,
                               let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
@@ -169,6 +169,13 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                 }
             }
+    }
+    
+    private func delay(
+        for timeout: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        DispatchQueue.main.delay(for: timeout, execute: action)
     }
     
     fileprivate func resetRootView() {
@@ -287,7 +294,7 @@ class RootViewModel: ObservableObject, Resetable {
             case .history:
                 rootActions.dismissAll()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
+                delay(for: .milliseconds(800)) { [weak self] in
                     
                     guard let self else { return }
                     
@@ -340,7 +347,7 @@ class RootViewModel: ObservableObject, Resetable {
                 
                 self.action.send(RootViewModelAction.DismissAll())
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                delay(for: .milliseconds(300)) { [weak self] in
                     
                     self?.link = .me2me(.init(model: consentData.getConcentLegacy()))
                 }
@@ -368,7 +375,7 @@ class RootViewModel: ObservableObject, Resetable {
                 
                 self.action.send(RootViewModelAction.DismissAll())
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
+                delay(for: .milliseconds(800)) { [weak self] in
                     
                     self?.action.send(RootViewModelAction.ShowUserProfile(
                         tokenIntent: payload.tokenIntent,
@@ -475,7 +482,7 @@ class RootViewModel: ObservableObject, Resetable {
             }
         )
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+        delay(for: .milliseconds(300)) { [weak self] in
             
             self?.link = .payments(operationViewModel)
         }
