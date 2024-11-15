@@ -712,11 +712,12 @@ extension AuthPinCodeViewModel {
             switch action {
             case .notRequired:
                 
-                if let alert = self.clientInformAlerts?.alert,
-                   alert.authBlocking {
-//                    
-//                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                if let alert = self.clientInformAlerts?.notRequired.first(where: { $0.authBlocking
+                }) {
+                    
+                    self.clientInformAlerts?.showAgain(notRequeared: alert)
                 }
+
                 if let alert = self.clientInformAlerts?.alert {
                     
                     self.clientInformAlerts?.dropFirst()

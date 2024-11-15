@@ -42,15 +42,32 @@ extension ClientInformAlerts {
         }
     }
     
-    mutating func showAgain(blockingAlert: ClientInformAlerts.Alert) {
-
+    mutating func showAgain(notRequeared: ClientInformAlerts.NotRequiredAlert) {
+        
+        guard let alert = alert,
+              alert.authBlocking else { return }
         required = .init(
-            title: blockingAlert.title,
-            text: blockingAlert.text,
-            type: blockingAlert.type,
-            link: blockingAlert.link,
-            version: blockingAlert.version,
-            authBlocking: blockingAlert.authBlocking
+            title: notRequeared.title,
+            text: notRequeared.text,
+            type: .notRequired,
+            link: nil,
+            version: nil,
+            authBlocking: notRequeared.authBlocking
+        )
+    }
+
+    mutating func showAgain(requiredAlert: ClientInformAlerts.RequiredAlert) {
+       
+        guard let alert = alert,
+              alert.isRequired || alert.authBlocking else { return }
+        
+        required = .init(
+            title: requiredAlert.title,
+            text: requiredAlert.text,
+            type: requiredAlert.type,
+            link: requiredAlert.link,
+            version: requiredAlert.version,
+            authBlocking: requiredAlert.authBlocking
         )
     }
 }
