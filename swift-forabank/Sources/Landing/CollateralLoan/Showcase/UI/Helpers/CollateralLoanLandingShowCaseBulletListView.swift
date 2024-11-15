@@ -8,16 +8,22 @@
 import SwiftUI
 import Foundation
 
-struct CollateralLoanLandingShowCaseBulletListView: View {
+public struct CollateralLoanLandingShowCaseBulletListView: View {
 
-    let listItems: [(bullet: Bool, text: String)]
-    let bullet: String = "•"
-    let bulletWidth: CGFloat? = nil
-    let bulletAlignment: Alignment = .leading
-    let theme: Theme
-    let config: Config
+    public let listItems: [(bullet: Bool, text: String)]
+    public let bullet: String = "•"
+    public let bulletWidth: CGFloat? = nil
+    public let bulletAlignment: Alignment = .leading
+    public let theme: Theme
+    public let config: Config
     
-    var body: some View {
+    public init(listItems: [(bullet: Bool, text: String)], theme: Theme, config: Config) {
+        self.listItems = listItems
+        self.theme = theme
+        self.config = config
+    }
+    
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: config.bulletsView.itemSpacing) {
             ForEach(listItems, id: \.self.text) { data in
@@ -40,7 +46,8 @@ struct CollateralLoanLandingShowCaseBulletListView: View {
     }
 }
 
-extension CollateralLoanLandingShowCaseBulletListView {
+public extension CollateralLoanLandingShowCaseBulletListView {
+
     typealias Theme = CollateralLoanLandingShowCaseTheme
     typealias Config = CollateralLoanLandingShowCaseViewConfig
 }

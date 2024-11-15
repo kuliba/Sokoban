@@ -7,13 +7,19 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseProductTermsView: View {
+public struct CollateralLoanLandingShowCaseProductTermsView: View {
 
-    let params: Params
-    let config: Config
-    let theme: Theme
+    public let params: Params
+    public let config: Config
+    public let theme: Theme
     
-    var body: some View {
+    public init(params: Params, config: Config, theme: Theme) {
+        self.params = params
+        self.config = config
+        self.theme = theme
+    }
+    
+    public var body: some View {
         
         HStack {
             
@@ -62,7 +68,7 @@ private extension CollateralLoanLandingShowCaseProductTermsView {
     }
 }
 
-extension CollateralLoanLandingShowCaseProductTermsView {
+public extension CollateralLoanLandingShowCaseProductTermsView {
     
     typealias Params = CollateralLoanLandingShowCaseData.Product.KeyMarketingParams
     typealias Config = CollateralLoanLandingShowCaseViewConfig

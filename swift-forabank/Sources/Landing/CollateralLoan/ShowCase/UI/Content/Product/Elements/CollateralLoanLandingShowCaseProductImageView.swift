@@ -7,12 +7,17 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseProductImageView: View {
+public struct CollateralLoanLandingShowCaseProductImageView: View {
     
-    let url: String
-    let config: Config
+    public let url: String
+    public let config: Config
 
-    var body: some View {
+    public init(url: String, config: Config) {
+        self.url = url
+        self.config = config
+    }
+    
+    public var body: some View {
 
         ZStack {
             
@@ -29,7 +34,7 @@ struct CollateralLoanLandingShowCaseProductImageView: View {
     }
 }
 
-extension CollateralLoanLandingShowCaseProductImageView {
+public extension CollateralLoanLandingShowCaseProductImageView {
     
     typealias Config = CollateralLoanLandingShowCaseViewConfig
 }

@@ -7,13 +7,19 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseProductHeaderView: View {
+public struct CollateralLoanLandingShowCaseProductHeaderView: View {
     
-    let title: String
-    let config: Config
-    let theme: Theme
+    public let title: String
+    public let config: Config
+    public let theme: Theme
 
-    var body: some View {
+    public  init(title: String, config: Config, theme: Theme) {
+        self.title = title
+        self.config = config
+        self.theme = theme
+    }
+    
+    public var body: some View {
 
         Text(title)
             .multilineTextAlignment(.leading)
@@ -31,7 +37,7 @@ struct CollateralLoanLandingShowCaseProductHeaderView: View {
     }
 }
 
-extension CollateralLoanLandingShowCaseProductHeaderView {
+public extension CollateralLoanLandingShowCaseProductHeaderView {
     
     typealias Config = CollateralLoanLandingShowCaseViewConfig
     typealias Theme = CollateralLoanLandingShowCaseTheme

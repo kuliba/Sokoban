@@ -7,12 +7,17 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseProductFooterView: View {
+public struct CollateralLoanLandingShowCaseProductFooterView: View {
     
-    let config: Config
-    let theme: Theme
+    public let config: Config
+    public let theme: Theme
 
-    var body: some View {
+    public init(config: Config, theme: Theme) {
+        self.config = config
+        self.theme = theme
+    }
+    
+    public var body: some View {
 
         HStack(spacing: 4) {
             
@@ -49,7 +54,7 @@ struct CollateralLoanLandingShowCaseProductFooterView: View {
     }
 }
 
-extension CollateralLoanLandingShowCaseProductFooterView {
+public extension CollateralLoanLandingShowCaseProductFooterView {
     
     typealias Config = CollateralLoanLandingShowCaseViewConfig
     typealias Theme = CollateralLoanLandingShowCaseTheme

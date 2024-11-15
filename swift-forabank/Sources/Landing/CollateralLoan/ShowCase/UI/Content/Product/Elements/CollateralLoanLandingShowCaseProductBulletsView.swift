@@ -7,14 +7,21 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseProductBulletsView: View {
+public struct CollateralLoanLandingShowCaseProductBulletsView: View {
     
-    let header: String?
-    let bulletsData: [(Bool, String)]
-    let config: Config
-    let theme: Theme
+    public let header: String?
+    public let bulletsData: [(Bool, String)]
+    public let config: Config
+    public let theme: Theme
     
-    var body: some View {
+    public init(header: String?, bulletsData: [(Bool, String)], config: Config, theme: Theme) {
+        self.header = header
+        self.bulletsData = bulletsData
+        self.config = config
+        self.theme = theme
+    }
+    
+    public var body: some View {
         
         Group {
             
@@ -39,7 +46,7 @@ struct CollateralLoanLandingShowCaseProductBulletsView: View {
     }
 }
 
-extension CollateralLoanLandingShowCaseProductBulletsView {
+public extension CollateralLoanLandingShowCaseProductBulletsView {
 
     typealias Config = CollateralLoanLandingShowCaseViewConfig
     typealias Theme = CollateralLoanLandingShowCaseTheme

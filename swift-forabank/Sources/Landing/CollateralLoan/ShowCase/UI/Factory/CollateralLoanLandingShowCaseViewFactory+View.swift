@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension CollateralLoanLandingShowCaseViewFactory {
+public extension CollateralLoanLandingShowCaseViewFactory {
     
     func makeView(with model: CollateralLoanLandingShowCaseData.Product)
     -> CollateralLoanLandingShowCaseProductView {
