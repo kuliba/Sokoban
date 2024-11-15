@@ -182,7 +182,8 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
             sut = RootViewModelFactory(
                 model: .mockWithEmptyExcept(),
                 httpClient: HTTPClientSpy(),
-                logger: LoggerSpy()
+                logger: LoggerSpy(),
+                schedulers: .immediate
             ).makeLoadLatestOperations(
                 getAllLoadedCategories: getAllLoadedCategoriesSpy.process(completion:),
                 getLatestPayments: getLatestPaymentsSpy.process(_:completion:),
@@ -192,7 +193,8 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
             sut = RootViewModelFactory(
                 model: .mockWithEmptyExcept(),
                 httpClient: HTTPClientSpy(),
-                logger: LoggerSpy()
+                logger: LoggerSpy(),
+                schedulers: .immediate
             ).makeLoadLatestOperations(
                 getAllLoadedCategories: getAllLoadedCategoriesSpy.process(completion:),
                 getLatestPayments: getLatestPaymentsSpy.process(_:completion:)

@@ -59,7 +59,8 @@ extension BannersBinder {
     static let preview: BannersBinder = RootViewModelFactory(
         model: .emptyMock,
         httpClient: Model.emptyMock.authenticatedHTTPClient(),
-        logger: LoggerAgent()
+        logger: LoggerAgent(),
+        schedulers: .init()
     ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,
         nanoServices: .init(

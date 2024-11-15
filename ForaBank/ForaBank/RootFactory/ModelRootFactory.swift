@@ -7,21 +7,25 @@
 
 import Combine
 import Foundation
+import PayHubUI
 
 final class ModelRootFactory {
     
     private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
     private let model: Model
-    
+    private let schedulers: Schedulers
+
     init(
         httpClientFactory: HTTPClientFactory,
         logger: LoggerAgentProtocol,
-        model: Model
+        model: Model,
+        schedulers: Schedulers = .init()
     ) {
         self.httpClient = httpClientFactory.makeHTTPClient()
         self.logger = logger
         self.model = model
+        self.schedulers = schedulers
     }
 }
 
@@ -35,7 +39,8 @@ extension ModelRootFactory: RootFactory {
         let factory = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
-            logger: logger
+            logger: logger,
+            schedulers: schedulers
         )
         
         return factory.make(
