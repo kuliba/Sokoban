@@ -100,6 +100,7 @@ class MainViewModel: ObservableObject, Resetable {
         
         bind()
         update(sections, with: model.settingsMainSections)
+        bind(productsSections: sections)
         bind(sections)
     }
     
@@ -162,7 +163,7 @@ class MainViewModel: ObservableObject, Resetable {
                 model,
                 stickerViewModel: stickerViewModel
             )
-            bind(sections)
+            bind(productsSections: sections)
         }
     }
     
@@ -174,7 +175,7 @@ class MainViewModel: ObservableObject, Resetable {
                 model,
                 stickerViewModel: nil
             )
-            bind(sections)
+            bind(productsSections: sections)
         }
     }
     
@@ -190,7 +191,7 @@ class MainViewModel: ObservableObject, Resetable {
                     stickerViewModel: section.productCarouselViewModel.stickerViewModel
                 )
             }
-            bind(sections)
+            bind(productsSections: sections)
         }
     }
 }
@@ -598,10 +599,6 @@ private extension MainViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
-                        // products section
-                    case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                        
                     case _ as MainSectionViewModelAction.Products.StickerDidTapped:
                         handleLandingAction(.sticker)
                         
@@ -671,6 +668,18 @@ private extension MainViewModel {
                         
                     }.store(in: &bindings)
             }
+        }
+    }
+    
+    func bind(productsSections: [MainSectionViewModel]) {
+        
+        for section in sections {
+            section.action
+                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] action in
+                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: action.productId))
+                }.store(in: &bindings)
         }
     }
     
