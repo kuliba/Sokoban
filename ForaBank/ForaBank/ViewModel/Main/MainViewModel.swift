@@ -545,9 +545,6 @@ private extension MainViewModel {
                                 
                                 openCard()
                                 
-                            case .loan:
-                                
-                                    openCollateralLoanLanding()
                             default:
                                 //MARK: Action for Sticker Product
                                 
@@ -598,7 +595,7 @@ private extension MainViewModel {
                 .receive(on: scheduler)
                 .sink { [unowned self] action in
                     
-                    switch action {                                                
+                    switch action {
                         // CurrencyMetall section
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
