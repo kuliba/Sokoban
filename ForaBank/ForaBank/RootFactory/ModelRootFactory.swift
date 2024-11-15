@@ -66,8 +66,8 @@ extension ModelRootFactory: RootFactory {
         let composer = RootViewFactoryComposer(
             model: model,
             httpClient: httpClient,
-            historyFeatureFlag: featureFlags.historyFilterFlag,
-            marketFeatureFlag: featureFlags.marketplaceFlag,
+            historyFeatureFlag: true,
+            marketFeatureFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
         
