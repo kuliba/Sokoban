@@ -114,21 +114,22 @@ extension AuthLoginViewModel {
             switch action {
             case .notRequired:
                 
-                if let alert = self.clientInformAlerts?.alert,
-                   alert.authBlocking {
+                if let alert = self.clientInformAlerts?.notRequired.first(where: { $0.authBlocking
+                }) {
                     
-                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
-                    self.alertType = .clientInformAlerts(alert)
-                } else {
+                    self.clientInformAlerts?.showAgain(notRequeared: alert)
+                }
+
+                if let alert = self.clientInformAlerts?.alert {
                     
                     self.clientInformAlerts?.dropFirst()
                 }
                 
             case .required, .optional:
                 
-                if let alert = self.clientInformAlerts?.alert {
+                if let alert = self.clientInformAlerts?.required {
                     
-                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                    self.clientInformAlerts?.showAgain(requiredAlert: alert)
                 }
             }
             
