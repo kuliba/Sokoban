@@ -271,6 +271,90 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.route.case, .openCard)
     }
     
+    func test_tapOpenAccount_accountProductsListWithOutValue_shouldNotChangeDestination() {
+        
+        let (sut, model) = makeSUT()
+                
+        XCTAssertNil(sut.route.destination)
+        
+        model.accountProductsList.value = .init()
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .account)
+
+        XCTAssertNil(sut.route.destination)
+    }
+
+    func test_tapOpenAccount_accountProductsListNotNil_shouldSetModalToOpenAccount() {
+        
+        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+                
+        XCTAssertNil(sut.route.destination)
+        
+        model.accountProductsList.value = [.test]
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .account)
+
+        XCTAssertNoDiff(sut.route.modal?.case, .openAccount)
+    }
+
+    func test_tapOpenDeposit_shouldSetRouteToOpenDepositsList() {
+        
+        let (sut, _) = makeSUT()
+                
+        XCTAssertNil(sut.route.destination)
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .deposit)
+
+        XCTAssertNoDiff(sut.route.case, .openDepositsList)
+    }
+
+    func test_openProducts_tapOpenSticker_shouldSetRouteToLanding() {
+        
+        let (sut, _) = makeSUT()
+                
+        XCTAssertNil(sut.route.destination)
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .loan)
+
+        XCTAssertNoDiff(sut.route.case, .landing)
+    }
+    
+    func test_productsSection_tapOpenSticker_shouldSetRouteToLanding() {
+        
+        let (sut, _) = makeSUT()
+                
+        XCTAssertNil(sut.route.destination)
+
+        sut.mainSection?.showStickerAndWait()
+
+        XCTAssertNoDiff(sut.route.case, .landing)
+    }
+    
+    func test_productsSection_tapMoreProduct_shouldSetRouteToMyProducts() {
+        
+        let (sut, _) = makeSUT()
+                
+        XCTAssertNil(sut.route.destination)
+
+        sut.mainSection?.openMoreProductAndWait()
+
+        XCTAssertNoDiff(sut.route.case, .myProducts)
+    }
+    
+    func test_productsSection_tapProductProfile_shouldSetRouteToProductProfile() {
+        
+        let (sut, model) = makeSUT()
+        let productID = 1
+        
+        model.products.value[.card] = [makeCardProduct(id: productID, cardType: .main, isMain: true)]
+                
+        XCTAssertNil(sut.route.destination)
+
+        sut.mainSection?.openProductProfileAndWait(productId: productID)
+
+        XCTAssertNoDiff(sut.route.case, .productProfile)
+    }
+
     func test_tapCurrencyWallet_buy_onlyCorporateCards_shouldShowAlert() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
@@ -598,7 +682,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
+            makeProductProfileViewModel: { _,_,_,_ in .sample },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -895,6 +979,15 @@ private extension MainViewModel {
         }
         .first
     }
+    
+    var mainSection: MainSectionProductsView.ViewModel? {
+        
+        sections.compactMap {
+            
+            $0 as? MainSectionProductsView.ViewModel
+        }
+        .first
+    }
 }
 
 private extension MainViewModel.Route {
@@ -902,14 +995,28 @@ private extension MainViewModel.Route {
     var `case`: Case? {
         
         switch destination {
-        case .none:           return .none
-        case .templates:      return .templates
-        case .paymentSticker: return .paymentSticker
-        case .openCard:       return .openCard
-        case .landing:        return .landing
-        case .currencyWallet: return .currencyWallet
-        case .payments:       return .payments
-        default:              return .other
+        case .none:
+            return .none
+        case .currencyWallet: 
+            return .currencyWallet
+        case .landing:         
+            return .landing
+        case .myProducts:      
+            return .myProducts
+        case .openCard:         
+            return .openCard
+        case .openDepositsList: 
+            return .openDepositsList
+        case .payments:          
+            return .payments
+        case .paymentSticker:    
+            return .paymentSticker
+        case .productProfile:
+            return .productProfile
+        case .templates:
+            return .templates
+        default:                  
+            return .other
         }
     }
     
@@ -917,11 +1024,14 @@ private extension MainViewModel.Route {
         
         case currencyWallet
         case landing
+        case myProducts
         case openCard
+        case openDepositsList
+        case other
         case payments
         case paymentSticker
+        case productProfile
         case templates
-        case other
     }
 }
 
@@ -940,25 +1050,31 @@ private extension MainViewModel.Modal {
             case .byPhone: return .byPhone
             default: return .other
             }
-        case let .alert(viewModel):
+        case .alert:
             return .alert
-        default: return .other
+        case let .bottomSheet(bottomSheet):
+            switch bottomSheet.type {
+            case .openAccount: return .openAccount
+            case .clientInform: return .clientInform
+            }
         }
     }
     
     enum Case: Equatable {
         
+        case alert
+        case byPhone
+        case clientInform
+        case openAccount
+        case other
         case qrScanner
         case success
-        case byPhone
-        case other
-        case alert
     }
 }
 
 private extension MainSectionFastOperationView.ViewModel {
     
-    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.05) {
+    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.1) {
         
         let fastPaymentAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: type)
         action.send(fastPaymentAction)
@@ -1047,12 +1163,28 @@ private extension MainSectionOpenProductView.ViewModel {
     }
 }
 
-private extension MainViewModel {
+private extension MainSectionProductsView.ViewModel {
     
     func showStickerAndWait(timeout: TimeInterval = 0.05) {
         
         let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
         action.send(stickerAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func openMoreProductAndWait(timeout: TimeInterval = 0.05) {
+        
+        let moreAction = MainSectionViewModelAction.Products.MoreButtonTapped()
+        action.send(moreAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func openProductProfileAndWait(productId: Int, timeout: TimeInterval = 0.1) {
+        
+        let productProfileAction = MainSectionViewModelAction.Products.ProductDidTapped(productId: productId)
+        action.send(productProfileAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -1097,4 +1229,9 @@ private extension CurrencyWalletData {
         currAmount: 1,
         nameCw: ""
     )
+}
+
+private extension OpenAccountProductData {
+    
+    static let test: Self = .init(currencyAccount: "", open: true, breakdownAccount: "", accountType: "", currencyCode: 810, currency: .rub, designMd5hash: "", designSmallMd5hash: "", detailedConditionUrl: "", detailedRatesUrl: nil, txtConditionList: [.init(name: "", description: "", type: .green)])
 }
