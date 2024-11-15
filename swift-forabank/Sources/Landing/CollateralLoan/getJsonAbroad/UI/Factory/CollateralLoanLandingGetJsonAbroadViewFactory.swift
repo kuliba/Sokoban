@@ -7,7 +7,7 @@
 
 public struct CollateralLoanLandingGetJsonAbroadViewFactory {
 
-    let config: CollateralLoanLandingGetJsonAbroadViewConfig = .base
+    let config: CollateralLoanLandingGetJsonAbroadViewConfig = .default
 
     public init() {}
 }
@@ -19,7 +19,9 @@ public extension CollateralLoanLandingGetJsonAbroadViewFactory {
         let headerView = makeHeaderView(with: product)
         
         return .init(
+            backgroundImage: product.marketing.image,
             headerView: headerView,
+            config: .default,
             theme: product.theme.map()
         )
     }

@@ -1239,7 +1239,9 @@ private extension Target {
 
     static let collateralLoanLandingGetJsonAbroadUI = target(
         name: .collateralLoanLandingGetJsonAbroadUI,
-        dependencies: [],
+        dependencies: [
+            .uiPrimitives
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.getJsonAbroad)/UI"
     )
     
