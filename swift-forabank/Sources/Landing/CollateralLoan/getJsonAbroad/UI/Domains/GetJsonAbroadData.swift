@@ -16,14 +16,14 @@ public struct GetJsonAbroadData {
     
     public struct Product {
         
-        public let theme: String
+        public let theme: Theme
         public let name: String
         public let marketing: Marketing
         public let conditions: [Condition]
         public let calc: Calc
         
         public init(
-            theme: String,
+            theme: Theme,
             name: String,
             marketing: Marketing,
             conditions: [Condition],
@@ -34,6 +34,13 @@ public struct GetJsonAbroadData {
             self.marketing = marketing
             self.conditions = conditions
             self.calc = calc
+        }
+        
+        public enum Theme: String {
+
+            case gray
+            case white
+            case unknown
         }
         
         public struct Marketing {
@@ -163,10 +170,10 @@ public struct GetJsonAbroadData {
             public struct Document {
                 
                 public let title: String
-                public let icon: String
+                public let icon: String?
                 public let link: String
                 
-                public init(title: String, icon: String, link: String) {
+                public init(title: String, icon: String?, link: String) {
                     
                     self.title = title
                     self.icon = icon
@@ -208,6 +215,22 @@ public struct GetJsonAbroadData {
                     self.city = city
                 }
             }
+        }
+    }
+}
+
+extension GetJsonAbroadData.Product.Theme {
+    
+    public func map() -> CollateralLoanLandingGetJsonAbroadTheme {
+
+        switch self {
+
+        case .white:
+            return .white
+        case .gray:
+            return .gray
+        default:
+            return .white
         }
     }
 }

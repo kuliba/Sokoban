@@ -590,7 +590,7 @@ extension ProductProfileViewModel  {
         productNavigationStateManager: .preview,
         makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
         makeSubscriptionsViewModel: { _,_ in .preview },
-        updateInfoStatusFlag: .init(.active),
+        updateInfoStatusFlag: .active,
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
         makeServicePaymentBinder: ServicePaymentBinder.preview
@@ -607,7 +607,7 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         landingServices: .empty(), 
         paymentsTransfersFactory: .preview,
-        updateInfoStatusFlag: .init(.active),
+        updateInfoStatusFlag: .active,
         onRegister: {},
         bannersBinder: .preview
     )

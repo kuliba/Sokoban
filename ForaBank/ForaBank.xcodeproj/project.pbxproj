@@ -3153,6 +3153,7 @@
 		C1750D4C290FFBBF00122D2B /* ServerCommandsSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1750D4B290FFBBF00122D2B /* ServerCommandsSettingsTests.swift */; };
 		C1750D4E290FFCA500122D2B /* GetAppSettingsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C1750D4D290FFCA500122D2B /* GetAppSettingsResponseGeneric.json */; };
 		C1750D50290FFE7C00122D2B /* BeforeClosingResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C1750D4F290FFE7C00122D2B /* BeforeClosingResponseGeneric.json */; };
+		C179D4002CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C179D3FF2CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift */; };
 		C17F3C952BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
 		C182A3682B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */; };
@@ -3171,6 +3172,8 @@
 		C19738E42AF2B5A800101B1B /* StickerDeliveryOffice.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */; };
 		C19738E72AF3970100101B1B /* _StickerDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E62AF3970100101B1B /* _StickerDictionary.swift */; };
 		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
+		C197FD622CE178180005A93E /* Service+modifyC2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197FD612CE178180005A93E /* Service+modifyC2B.swift */; };
+		C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */ = {isa = PBXBuildFile; productRef = C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */; };
 		C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C19980792B7EB8F500D85C09 /* OperatorsListComponents */; };
 		C19C36672B04B57E0052D7F0 /* OperationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */; };
 		C19C37872B84E19000159A18 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = C19C37862B84E19000159A18 /* RxViewModel */; };
@@ -6721,6 +6724,7 @@
 		C1750D4B290FFBBF00122D2B /* ServerCommandsSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsSettingsTests.swift; sourceTree = "<group>"; };
 		C1750D4D290FFCA500122D2B /* GetAppSettingsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAppSettingsResponseGeneric.json; sourceTree = "<group>"; };
 		C1750D4F290FFE7C00122D2B /* BeforeClosingResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BeforeClosingResponseGeneric.json; sourceTree = "<group>"; };
+		C179D3FF2CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+ModifyC2B.swift"; sourceTree = "<group>"; };
 		C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift"; sourceTree = "<group>"; };
 		C181083828E3535E002FCC3A /* Model+DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DeepLink.swift"; sourceTree = "<group>"; };
 		C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBannerCatalogLandingListResponseGenericFromServer.json; sourceTree = "<group>"; };
@@ -6739,6 +6743,7 @@
 		C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerDeliveryOffice.json; sourceTree = "<group>"; };
 		C19738E62AF3970100101B1B /* _StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _StickerDictionary.swift; sourceTree = "<group>"; };
 		C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionaryResponse.swift; sourceTree = "<group>"; };
+		C197FD612CE178180005A93E /* Service+modifyC2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+modifyC2B.swift"; sourceTree = "<group>"; };
 		C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationWrapperView.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -7477,6 +7482,7 @@
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
+				C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
@@ -10313,6 +10319,7 @@
 				C1F15F382C58E69100D7DDE4 /* RequestFactory+getInfoForRepeatPayment.swift */,
 				8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */,
 				83CC9D2D2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift */,
+				C179D3FF2CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -16259,6 +16266,7 @@
 		834E3F662AC2C3BC00E49C2B /* C2BService */ = {
 			isa = PBXGroup;
 			children = (
+				C197FD602CE177FC0005A93E /* ModifyC2B */,
 				834E3F672AC2C40900E49C2B /* Services+getScenarioQRData.swift */,
 				83E455E02AC2D85C0045BEC1 /* QRLink.swift */,
 				834E3F692AC2C77600E49C2B /* QRDataMapper.swift */,
@@ -16987,6 +16995,14 @@
 				C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */,
 			);
 			path = Domain;
+			sourceTree = "<group>";
+		};
+		C197FD602CE177FC0005A93E /* ModifyC2B */ = {
+			isa = PBXGroup;
+			children = (
+				C197FD612CE178180005A93E /* Service+modifyC2B.swift */,
+			);
+			path = ModifyC2B;
 			sourceTree = "<group>";
 		};
 		C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
@@ -19525,6 +19541,7 @@
 				EC7A0A252CC9350300FA652F /* СlientInformList */,
 				A7875EF82CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend */,
 				836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */,
+				C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -22071,6 +22088,7 @@
 				830AF2D72AB3236000C2F29C /* Factory.swift in Sources */,
 				2A945B482CE49F1800A68FB1 /* ComposedPaymentsTransfersTransfersView.swift in Sources */,
 				2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */,
+				C197FD622CE178180005A93E /* Service+modifyC2B.swift in Sources */,
 				0C5D7DA529894C8800BC0CCF /* ClientInformViewModel.swift in Sources */,
 				ED733D602858963200F22D42 /* ChooseCountryView+Legacy.swift in Sources */,
 				833D3E3F2C2EDF6E006626F2 /* ControlPanelWrapperView.swift in Sources */,
@@ -22644,6 +22662,7 @@
 				2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				C179D4002CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift in Sources */,
 				2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */,
 				C139D9122AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift in Sources */,
 				C154986E2907DB6900D00670 /* ContactsListSectionViewModel.swift in Sources */,
@@ -26726,6 +26745,8 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 25;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -27273,6 +27294,8 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -28334,6 +28357,8 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 25;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -28371,6 +28396,8 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -29665,6 +29692,10 @@
 		C152489F2B83FB090043F412 /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
+		};
+		C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ModifyC2BSubscriptionService;
 		};
 		C19980792B7EB8F500D85C09 /* OperatorsListComponents */ = {
 			isa = XCSwiftPackageProductDependency;
