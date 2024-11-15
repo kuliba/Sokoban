@@ -26,7 +26,8 @@ class RootViewModelFactoryTests: XCTestCase {
         let sut = SUT(
             model: model,
             httpClient: httpClient,
-            logger: logger
+            logger: logger,
+            schedulers: .immediate
         )
         
         // factory is captured by long-running closures
