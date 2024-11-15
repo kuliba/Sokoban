@@ -85,7 +85,7 @@ final class RootViewModel_rootEventPublisherTests: XCTestCase {
                     qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
-                    updateInfoStatusFlag: .init(.inactive),
+                    updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     bannersBinder: .preview
                 ),

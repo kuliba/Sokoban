@@ -82,7 +82,7 @@ extension PaymentsTransfersFactory {
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
@@ -93,7 +93,7 @@ extension PaymentsTransfersFactory {
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
-            makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
+            makeSections: { Model.emptyMock.makeSections(flag: .inactive) },
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeTemplates: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _,_ in }

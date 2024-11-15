@@ -30,7 +30,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            paymentsTransfersFlag: .init(.inactive)
+            paymentsTransfersFlag: .inactive
         ))
     }
     
@@ -41,7 +41,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            paymentsTransfersFlag: .init(.inactive)
+            paymentsTransfersFlag: .inactive
         ))
     }
     
@@ -52,7 +52,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            paymentsTransfersFlag: .init(.active)
+            paymentsTransfersFlag: .active
         ))
     }
     
@@ -69,7 +69,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            changeSVCardLimitsFlag: .init(.active)
+            changeSVCardLimitsFlag: .active
         ))
     }
     
@@ -80,7 +80,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            changeSVCardLimitsFlag: .init(.inactive)
+            changeSVCardLimitsFlag: .inactive
         ))
     }
     
@@ -93,7 +93,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            getProductListByTypeV6Flag: .init(.active)
+            getProductListByTypeV6Flag: .active
         ))
     }
     
@@ -104,7 +104,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            getProductListByTypeV6Flag: .init(.inactive)
+            getProductListByTypeV6Flag: .inactive
         ))
     }
     
@@ -117,7 +117,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            marketplaceFlag: .init(.active)
+            marketplaceFlag: .active
         ))
     }
     
@@ -128,7 +128,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            marketplaceFlag: .init(.inactive)
+            marketplaceFlag: .inactive
         ))
     }
     
@@ -215,7 +215,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            collateralLoanLandingFlag: .init(.active)
+            collateralLoanLandingFlag: .active
         ))
     }
     
@@ -226,7 +226,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            collateralLoanLandingFlag: .init(.inactive)
+            collateralLoanLandingFlag: .inactive
         ))
     }
     
@@ -239,7 +239,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            savingsAccountFlag: .init(.active)
+            savingsAccountFlag: .active
         ))
     }
     
@@ -250,7 +250,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            savingsAccountFlag: .init(.inactive)
+            savingsAccountFlag: .inactive
         ))
     }
     
@@ -283,14 +283,14 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     ) -> FeatureFlags {
         
         .init(
-            changeSVCardLimitsFlag: changeSVCardLimitsFlag?.map { $0 } ?? .init(.inactive),
-            getProductListByTypeV6Flag: getProductListByTypeV6Flag?.map { $0 } ?? .init(.inactive),
-            marketplaceFlag: marketplaceFlag?.map { $0 } ?? .init(.inactive),
+            changeSVCardLimitsFlag: changeSVCardLimitsFlag?.map { $0 } ?? .inactive,
+            getProductListByTypeV6Flag: getProductListByTypeV6Flag?.map { $0 } ?? .inactive,
+            marketplaceFlag: marketplaceFlag?.map { $0 } ?? .inactive,
             historyFilterFlag: historyFilterFlag?.map { $0 } ?? .init(false),
-            paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .init(.inactive),
+            paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             utilitiesPaymentsFlag: UtilitiesPaymentsFlag(rawValue: utilitiesPaymentsFlag ?? .inactive),
-            savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .init(.inactive),
-            collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .init(.inactive)
+            savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,
+            collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive
         )
     }
 }
