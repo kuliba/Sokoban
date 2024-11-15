@@ -120,7 +120,6 @@ class AuthPinCodeViewModel: ObservableObject {
                 switch sessionState {
                 case .active:
                     
-                    guard viewDidAppear else { return }
                     withAnimation {
                         self.spinner = nil
                     }
@@ -128,6 +127,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     self.clientInformAlerts = clientInformAlerts
                     guard let alert = clientInformAlerts.alert else { return }
                     self.alertType = .clientInformAlerts(alert)
+                
                 default:
                     withAnimation {
                         self.spinner = .init()
@@ -692,6 +692,15 @@ class AuthPinCodeViewModel: ObservableObject {
 
 extension AuthPinCodeViewModel {
     
+    func handleLink() -> URL? {
+        
+        guard let updateVersion = clientInformAlerts?.alert?.version,
+              Bundle.main.appVersionLong < updateVersion else { return nil }
+        
+        let link = clientInformAlerts?.alert?.link
+        return URL(string: link ?? String.appStoreFora)
+    }
+    
     func showNextAlert(action: ClientInformActionType) {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
@@ -705,34 +714,20 @@ extension AuthPinCodeViewModel {
                 
                 if let alert = self.clientInformAlerts?.alert,
                    alert.authBlocking {
+//                    
+//                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                }
+                if let alert = self.clientInformAlerts?.alert {
                     
-                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
-                    self.alertType = .clientInformAlerts(alert)
-                } else {
                     self.clientInformAlerts?.dropFirst()
                 }
                 
             case .required, .optional:
                 
-                if let alert = self.clientInformAlerts?.alert {
+                guard let alert = self.clientInformAlerts?.required else { return }
+                self.clientInformAlerts?.showAgain(requiredAlert: alert)
                     
-                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
-                }
             }
-        }
-    }
-    
-    private func handleAppVersionResponse(_ response: ModelAction.AppVersion.Response) {
-        
-        switch response.result {
-        case .success(let appInfo):
-            
-            let appVersion = appInfo.version
-            print("App Version: \(appVersion)")
-            
-        case .failure(let error):
-            
-            print("Failed to fetch app version: \(error.localizedDescription)")
         }
     }
 }
