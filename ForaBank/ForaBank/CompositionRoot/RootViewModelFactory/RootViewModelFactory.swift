@@ -32,7 +32,7 @@ final class RootViewModelFactory {
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         settings: RootViewModelFactorySettings = .iFora,
-        schedulers: Schedulers = .init()
+        schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient

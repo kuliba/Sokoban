@@ -187,7 +187,8 @@ private extension QRNavigationComposerMicroServicesComposer {
             let make = RootViewModelFactory(
                 model: model,
                 httpClient: httpClient,
-                logger: logger
+                logger: logger,
+                schedulers: .init()
             ).makeSberQRConfirmPaymentViewModel()
             
             do {

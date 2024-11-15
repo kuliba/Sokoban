@@ -11,7 +11,8 @@ public extension CollateralLoanLandingGetJsonAbroadViewFactory {
         -> CollateralLoanLandingGetJsonAbroadHeaderView {
 
             .init(
-                title: product.name,
+                labelTag: product.marketing.labelTag,
+                params: product.marketing.params,
                 config: config,
                 theme: product.theme.map()
             )

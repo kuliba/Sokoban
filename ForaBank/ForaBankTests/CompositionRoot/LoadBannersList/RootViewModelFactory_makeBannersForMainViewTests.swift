@@ -60,7 +60,8 @@ final class RootViewModelFactory_makeBannersForMainViewTests: XCTestCase {
         let sut = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
-            logger: LoggerSpy()
+            logger: LoggerSpy(),
+            schedulers: .immediate
         ).makeBannersForMainView(
             bannerPickerPlaceholderCount: bannerPickerPlaceholderCount,
             nanoServices: .init(
