@@ -11,6 +11,7 @@ public struct CollateralLoanLandingGetJsonAbroadBodyView: View {
     
     let backgroundImage: String
     let headerView: HeaderView
+    let conditionsView: ConditionsView
     let config: Config
     let theme: Theme
     
@@ -53,15 +54,19 @@ private extension CollateralLoanLandingGetJsonAbroadBodyView {
         VStack {
             
             headerView
+            conditionsView
             
             Spacer()
         }
         .background(Color.clear)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .ignoresSafeArea(edges: .all)
     }
 }
 
 public extension CollateralLoanLandingGetJsonAbroadBodyView {
     
     typealias HeaderView = CollateralLoanLandingGetJsonAbroadHeaderView
+    typealias ConditionsView = CollateralLoanLandingGetJsonAbroadConditionsView
     typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
 }

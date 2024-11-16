@@ -38,7 +38,6 @@ public extension CollateralLoanLandingGetJsonAbroadView {
 struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
     
     static var previews: some View {
-        
         CollateralLoanLandingGetJsonAbroadView(
             content: content,
             factory: factory
