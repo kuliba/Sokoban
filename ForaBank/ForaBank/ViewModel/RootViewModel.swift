@@ -6,13 +6,13 @@
 //
 
 import Combine
-import Foundation
 import ForaTools
+import Foundation
+import LandingUIComponent
+import MarketShowcase
 import PayHub
 import RemoteServices
 import SwiftUI
-import MarketShowcase
-import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -34,7 +34,8 @@ class RootViewModel: ObservableObject, Resetable {
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
     let landingServices: LandingServices
-    private let mainScheduler: AnySchedulerOfDispatchQueue
+    
+    let mainScheduler: AnySchedulerOfDispatchQueue
     
     let stickerViewFactory: StickerViewFactory
 
@@ -102,7 +103,7 @@ class RootViewModel: ObservableObject, Resetable {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
         
         auithBinding = model.auth
-            .receive(on: DispatchQueue.main)
+            .receive(on: mainScheduler)
             .sink { [unowned self] auth in
                 
                 switch auth {
@@ -175,7 +176,7 @@ class RootViewModel: ObservableObject, Resetable {
         for timeout: DispatchTimeInterval,
         _ action: @escaping () -> Void
     ) {
-        DispatchQueue.main.delay(for: timeout, execute: action)
+        mainScheduler.delay(for: timeout, action)
     }
     
     fileprivate func resetRootView() {
@@ -190,7 +191,7 @@ class RootViewModel: ObservableObject, Resetable {
     private func bind() {
         
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: mainScheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -200,7 +201,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                 case let payload as RootViewModelAction.SwitchTab:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.SwitchTab, tab: .\(payload.tabType.rawValue)")
-                    withAnimation {
+                    mainScheduler.animation(.default).schedule {
                         selected = payload.tabType
                     }
                     
@@ -248,7 +249,7 @@ class RootViewModel: ObservableObject, Resetable {
         model.action
             .compactMap { $0 as? ModelAction.DeepLink.Process }
             .map(\.type)
-            .receive(on: DispatchQueue.main)
+            .receive(on: mainScheduler)
             .sink { [unowned self] deepLink in
                 
                 switch deepLink {
@@ -279,7 +280,7 @@ class RootViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
         
         model.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: mainScheduler)
             .sink { [weak self] in self?.handleModelAction($0) }
             .store(in: &bindings)
     }
@@ -465,8 +466,8 @@ class RootViewModel: ObservableObject, Resetable {
             .combineLatest(paymentsViewModelHasDestination)
             .map { $0 || $1 }
             .removeDuplicates()
-            .debounce(for: 0.1, scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
+            .debounce(for: 0.1, scheduler: mainScheduler)
+            .receive(on: mainScheduler)
             .assign(to: &$isTabBarHidden)
     }
     

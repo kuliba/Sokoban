@@ -5,17 +5,15 @@
 //  Created by Max Gribov on 24.02.2022.
 //
 
+import CalendarUI
 import Combine
 import CombineSchedulers
 import ForaTools
 import Foundation
-#warning("remove GenericRemoteService")
-import GenericRemoteService
-import SberQR
-import SwiftUI
 import LandingUIComponent
 import PaymentSticker
-import CalendarUI
+import SberQR
+import SwiftUI
 
 class MainViewModel: ObservableObject, Resetable {
     
@@ -1221,9 +1219,9 @@ extension MainViewModel {
                     self?.action.send(MainViewModelAction.Close.Link())})
                 let cancellable = bind(operationViewModel)
                 
-                await MainActor.run {
+                scheduler.schedule { [weak self] in
                     
-                    self.route.destination = .payments(.init(
+                    self?.route.destination = .payments(.init(
                         model: operationViewModel,
                         cancellable: cancellable
                     ))
@@ -1231,9 +1229,9 @@ extension MainViewModel {
                 
             } catch {
                 
-                await MainActor.run {
+                scheduler.schedule { [weak self] in
                     
-                    self.route.modal = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.resetModal() })))
+                    self?.route.modal = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.resetModal() })))
                 }
                 
                 LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
@@ -1812,20 +1810,24 @@ extension MainViewModel {
     
     func handleLandingAction(_ abroadType: String) {
         
-        landingServices.loadLandingByType(abroadType) {
+        landingServices.loadLandingByType(abroadType) { [weak self] in
+            
+            
             switch $0 {
             case let .success(landing):
-                Task { @MainActor [weak self] in
+                self?.scheduler.schedule { [weak self] in
                     
                     guard let self else { return }
-
+                    
                     let viewModel = model.landingViewModelFactory(
                         result: landing,
                         config: .default,
                         landingActions: landingActions(for:),
-                        outsideAction: {_ in }, 
-                        orderCard: {}, 
-                        payment: {_ in })
+                        outsideAction: {_ in },
+                        orderCard: {},
+                        payment: { _ in },
+                        scheduler: scheduler
+                    )
                     
                     route.destination = .landing(viewModel, false)
                 }
