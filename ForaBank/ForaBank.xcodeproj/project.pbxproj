@@ -1574,6 +1574,7 @@
 		2AC8478E2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */; };
 		2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */; };
 		2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */; };
+		2ACBA6762CE9BC7E00758D71 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACBA6752CE9BC7E00758D71 /* ViewInspector */; };
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE8C9C2CDCAF27006EC9F4 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8C9B2CDCAF27006EC9F4 /* CategoryPickerView.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
@@ -7505,6 +7506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3039362A17D48C0008701D /* CustomDump in Frameworks */,
+				2ACBA6762CE9BC7E00758D71 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19566,6 +19568,7 @@
 			name = ForaBankTests;
 			packageProductDependencies = (
 				2A3039352A17D48B0008701D /* CustomDump */,
+				2ACBA6752CE9BC7E00758D71 /* ViewInspector */,
 			);
 			productName = ForaBankTests;
 			productReference = EDB14393265FDA430028EF5A /* ForaBankTests.xctest */;
@@ -19730,6 +19733,7 @@
 				2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */,
 				2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 				836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */,
+				2ACBA6742CE9BC7E00758D71 /* XCRemoteSwiftPackageReference "ViewInspector" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -28939,6 +28943,14 @@
 				minimumVersion = 0.10.0;
 			};
 		};
+		2ACBA6742CE9BC7E00758D71 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nalexn/ViewInspector";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.0;
+			};
+		};
 		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
@@ -29430,6 +29442,11 @@
 		2AC3282F2ADEF41D00443A84 /* CVVPINServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CVVPINServices;
+		};
+		2ACBA6752CE9BC7E00758D71 /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2ACBA6742CE9BC7E00758D71 /* XCRemoteSwiftPackageReference "ViewInspector" */;
+			productName = ViewInspector;
 		};
 		2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */ = {
 			isa = XCSwiftPackageProductDependency;
