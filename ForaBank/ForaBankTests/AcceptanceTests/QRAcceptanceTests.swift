@@ -54,25 +54,6 @@ final class QRAcceptanceTests: AcceptanceTests {
             try app.openQRWithFlowEvent()
         }
     }
-    
-    private func wait(
-        timeout: TimeInterval = 1,
-        for action: @escaping () throws -> Void
-    ) {
-        let exp = expectation(description: "Wait for action")
-        
-        DispatchQueue.main.async {
-            
-            do {
-                try action()
-                exp.fulfill()
-            } catch {
-                XCTFail("Failure: \(error)")
-            }
-        }
-        
-        wait(for: [exp], timeout: timeout)
-    }
 }
 
 extension InspectableFullScreenCoverWithItem: ItemPopupPresenter { }
