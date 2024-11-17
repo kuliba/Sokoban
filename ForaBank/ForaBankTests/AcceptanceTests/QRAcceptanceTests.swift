@@ -11,15 +11,37 @@ import XCTest
 
 final class QRAcceptanceTests: XCTestCase {
     
-    func test_openQR_shouldOpenQRScreenCover() throws {
+    func test_openQRWithFlowEvent_shouldOpenQRScreenCover() throws {
         
         let app = TestApp()
         try app.launch()
         
-        try app.openQR()
+        try app.openQRWithFlowEvent()
         
         try XCTAssertNoThrow(app.qrFullScreenCover())
     }
+    
+    // TODO: - fix flaky tests
+    
+//    func test_tapMainViewQRButton_shouldOpenQRScreenCover() throws {
+//        
+//        let app = TestApp()
+//        try app.launch()
+//        
+//        try app.tapMainViewQRButton()
+//        
+//        try XCTAssertNoThrow(app.qrFullScreenCover())
+//    }
+//    
+//    func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
+//        
+//        let app = TestApp()
+//        try app.launch()
+//        
+//        try app.tapMainViewQRButton()
+//        
+//        try XCTAssertNoThrow(app.qrLegacyFullScreenCover(timeout: 1))
+//    }
     
     // MARK: - Helpers
     
@@ -35,11 +57,18 @@ final class QRAcceptanceTests: XCTestCase {
             try XCTUnwrap(window.rootViewController as? RootViewHostingViewController)
         }
         
-        init() {
-            
+        init(
+            featureFlags: FeatureFlags = .active,
+            dismiss: @escaping () -> Void = {}
+        ) {
             self.factory = .immediateEmpty()
-            self.binder = factory.makeBinder(featureFlags: .active, dismiss: {})
-            self.rootViewFactory = factory.makeRootViewFactory(featureFlags: .active)
+            self.binder = factory.makeBinder(
+                featureFlags: featureFlags,
+                dismiss: dismiss
+            )
+            self.rootViewFactory = factory.makeRootViewFactory(
+                featureFlags: .active
+            )
         }
         
         func launch() throws {
@@ -54,14 +83,15 @@ final class QRAcceptanceTests: XCTestCase {
             _ = try root()
         }
         
-        func openQR(
+        func openQRWithFlowEvent(
+            timeout: TimeInterval = 0.5,
             file: StaticString = #file,
             line: UInt = #line
         ) throws {
             
             binder.flow.event(.select(.scanQR))
             
-            _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+            wait(timeout: timeout)
             
             switch binder.flow.state.navigation {
             case .scanQR:
@@ -72,9 +102,47 @@ final class QRAcceptanceTests: XCTestCase {
             }
         }
         
-        func qrFullScreenCover() throws {
+        func qrFullScreenCover(
+            timeout: TimeInterval = 0.1,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) throws {
+            
+            wait(timeout: timeout)
             
             _ = try root().rootView.qrFullScreenCover()
+            
+            switch binder.flow.state.navigation {
+            case .scanQR:
+                break
+                
+            default:
+                XCTFail("Expected Scan QR", file: file, line: line)
+            }
+        }
+        
+        func qrLegacyFullScreenCover(
+            timeout: TimeInterval = 0.1,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) throws {
+            
+            wait(timeout: timeout)
+            
+            _ = try root().rootView.qrLegacyFullScreenCover()
+        }
+        
+        func tapMainViewQRButton(
+            file: StaticString = #file,
+            line: UInt = #line
+        ) throws {
+            
+            try root().rootView.tapMainViewQRButton()
+        }
+        
+        private func wait(timeout: TimeInterval = 0.1) {
+            
+            _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
         }
     }
 }
@@ -89,6 +157,23 @@ private extension RootViewBinderView {
         try inspect()
             .find(RootView.self)
             .fullScreenCover()
-            .find(viewWithAccessibilityIdentifier: RootWrapperView.ElementIDs.qrFullScreenCover.rawValue)
+            .find(viewWithAccessibilityIdentifier: ElementIDs.rootView(.qrFullScreenCover).rawValue)
+    }
+    
+    func qrLegacyFullScreenCover(
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        
+        try inspect()
+            .find(viewWithAccessibilityIdentifier: ElementIDs.mainView(.fullScreenCoverAnchor).rawValue)
+            .fullScreenCover()
+            .find(viewWithAccessibilityIdentifier: ElementIDs.mainView(.qrScanner).rawValue)
+    }
+    
+    func tapMainViewQRButton() throws {
+        
+        _ = try inspect()
+            .find(MainSectionFastOperationView.self)
+            .find(button: FastOperationsTitles.qr)
+            .tap()
     }
 }

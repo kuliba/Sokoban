@@ -52,20 +52,12 @@ struct RootWrapperView: View {
                             switch $0 {
                             case .scanQR:
                                 Text("TBD: QR Scanner")
-                                    .accessibilityIdentifier(ElementIDs.qrFullScreenCover.rawValue)
+                                    .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
                             }
                         }
                     )
             }
         }
-    }
-}
-
-extension RootWrapperView {
-    
-    enum ElementIDs: String {
-        
-        case qrFullScreenCover
     }
 }
 
