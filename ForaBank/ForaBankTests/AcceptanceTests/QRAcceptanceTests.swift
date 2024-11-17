@@ -9,7 +9,7 @@
 import ViewInspector
 import XCTest
 
-final class QRAcceptanceTests: XCTestCase {
+final class QRAcceptanceTests: AcceptanceTests {
     
     func test_openQRWithFlowEvent_shouldOpenQRScreenCover() throws {
         
@@ -72,62 +72,6 @@ final class QRAcceptanceTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: timeout)
-    }
-    
-    private struct TestApp {
-        
-        private let window = UIWindow()
-        
-        private let factory: ModelRootFactory
-        private let binder: RootViewDomain.Binder
-        private let rootViewFactory: RootViewFactory
-        
-        private func root() throws -> RootViewHostingViewController {
-            
-            try XCTUnwrap(window.rootViewController as? RootViewHostingViewController)
-        }
-        
-        init(
-            featureFlags: FeatureFlags = .active,
-            dismiss: @escaping () -> Void = {}
-        ) {
-            self.factory = .immediateEmpty()
-            self.binder = factory.makeBinder(
-                featureFlags: featureFlags,
-                dismiss: dismiss
-            )
-            self.rootViewFactory = factory.makeRootViewFactory(
-                featureFlags: .active
-            )
-        }
-        
-        func launch() throws -> RootViewBinderView {
-            
-            let rootViewController = RootViewHostingViewController(
-                with: binder,
-                rootViewFactory: rootViewFactory
-            )
-            window.rootViewController = rootViewController
-            window.makeKeyAndVisible()
-            
-            return try root().rootView
-        }
-        
-        func openQRWithFlowEvent(
-            file: StaticString = #file,
-            line: UInt = #line
-        ) throws {
-            
-            binder.flow.event(.select(.scanQR))
-            
-            switch binder.flow.state.navigation {
-            case .scanQR:
-                break
-                
-            default:
-                XCTFail("Expected Scan QR", file: file, line: line)
-            }
-        }
     }
 }
 
