@@ -34,16 +34,25 @@ final class SceneDelegateTests: XCTestCase {
         XCTAssertNotNil(rootController, "Expected RootViewHostingViewController as root, got \(String(describing: root)) instead.")
     }
     
+    func test_connectScene_shouldSetWindow() throws {
+        
+        let sceneDelegate = try connectScene()
+        
+        XCTAssertNotNil(sceneDelegate.window)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SceneDelegate
     
     private func makeSUT(
+        factory: RootFactory = ModelRootFactory.immediateEmpty(),
+        featureFlags: FeatureFlags = .active,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(factory: factory, featureFlags: featureFlags)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -58,5 +67,21 @@ final class SceneDelegateTests: XCTestCase {
             
             makeKeyAndVisibleCallCount = 1
         }
+    }
+    
+    private func connectScene(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> SceneDelegate {
+        
+        let sceneDelegate = makeSUT()
+        
+        let scene: UIWindowScene = try make()
+        let session: UISceneSession = try make()
+        let options: UIScene.ConnectionOptions = try make()
+        
+        sceneDelegate.scene(scene, willConnectTo: session, options: options)
+        
+        return sceneDelegate
     }
 }
