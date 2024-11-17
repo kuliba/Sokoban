@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import PayHubUI
 
 extension ModelRootFactory {
     
@@ -16,6 +17,21 @@ extension ModelRootFactory {
             logger: LoggerSpy(),
             model: .mockWithEmptyExcept(),
             schedulers: .immediate
+        )
+    }
+    
+    static func test(
+        httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
+        logger: any LoggerAgentProtocol = LoggerSpy(),
+        model: Model = .mockWithEmptyExcept(),
+        schedulers: Schedulers
+    ) -> ModelRootFactory {
+        
+        return .init(
+            httpClientFactory: httpClientFactory, 
+            logger: logger,
+            model: model,
+            schedulers: schedulers
         )
     }
 }
