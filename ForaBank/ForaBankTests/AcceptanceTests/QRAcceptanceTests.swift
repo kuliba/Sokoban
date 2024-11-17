@@ -14,40 +14,70 @@ final class QRAcceptanceTests: XCTestCase {
     func test_openQRWithFlowEvent_shouldOpenQRScreenCover() throws {
         
         let app = TestApp()
-        try app.launch()
+        let rootView = try app.launch()
         
-        try app.openQRWithFlowEvent()
+        openQRWithFlowEvent(app)
         
-        try XCTAssertNoThrow(app.qrFullScreenCover())
+        try XCTAssertNoThrow(rootView.qrFullScreenCover())
     }
     
     // TODO: - fix flaky tests
     
-//    func test_tapMainViewQRButton_shouldOpenQRScreenCover() throws {
-//        
-//        let app = TestApp()
-//        try app.launch()
-//        
-//        try app.tapMainViewQRButton()
-//        
-//        try XCTAssertNoThrow(app.qrFullScreenCover())
-//    }
-//    
-//    func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
-//        
-//        let app = TestApp()
-//        try app.launch()
-//        
-//        try app.tapMainViewQRButton()
-//        
-//        try XCTAssertNoThrow(app.qrLegacyFullScreenCover(timeout: 1))
-//    }
+    //    func test_tapMainViewQRButton_shouldOpenQRScreenCover() throws {
+    //
+    //        let app = TestApp()
+    //        try app.launch()
+    //
+    //        try app.tapMainViewQRButton()
+    //
+    //        try XCTAssertNoThrow(app.qrFullScreenCover())
+    //    }
+    //
+    //    func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
+    //
+    //        let app = TestApp()
+    //        try app.launch()
+    //
+    //        try app.tapMainViewQRButton()
+    //
+    //        try XCTAssertNoThrow(app.qrLegacyFullScreenCover(timeout: 1))
+    //    }
     
     // MARK: - Helpers
+    
+    private func openQRWithFlowEvent(
+        _ app: TestApp,
+        timeout: TimeInterval = 1
+    ) {
+        wait(timeout: timeout) {
+            
+            try app.openQRWithFlowEvent()
+        }
+    }
+    
+    private func wait(
+        timeout: TimeInterval = 1,
+        for action: @escaping () throws -> Void
+    ) {
+        let exp = expectation(description: "Wait for action")
+        
+        DispatchQueue.main.async {
+            
+            do {
+                try action()
+                exp.fulfill()
+            } catch {
+                XCTFail("Failure: \(error)")
+            }
+        }
+        
+        wait(for: [exp], timeout: timeout)
+    }
     
     private struct TestApp {
         
         private let window = UIWindow()
+        
         private let factory: ModelRootFactory
         private let binder: RootViewDomain.Binder
         private let rootViewFactory: RootViewFactory
@@ -71,7 +101,7 @@ final class QRAcceptanceTests: XCTestCase {
             )
         }
         
-        func launch() throws {
+        func launch() throws -> RootViewBinderView {
             
             let rootViewController = RootViewHostingViewController(
                 with: binder,
@@ -80,19 +110,16 @@ final class QRAcceptanceTests: XCTestCase {
             window.rootViewController = rootViewController
             window.makeKeyAndVisible()
             
-            _ = try root()
+            return try root().rootView
         }
         
         func openQRWithFlowEvent(
-            timeout: TimeInterval = 0.5,
             file: StaticString = #file,
             line: UInt = #line
         ) throws {
             
             binder.flow.event(.select(.scanQR))
             
-            wait(timeout: timeout)
-            
             switch binder.flow.state.navigation {
             case .scanQR:
                 break
@@ -100,49 +127,6 @@ final class QRAcceptanceTests: XCTestCase {
             default:
                 XCTFail("Expected Scan QR", file: file, line: line)
             }
-        }
-        
-        func qrFullScreenCover(
-            timeout: TimeInterval = 0.1,
-            file: StaticString = #file,
-            line: UInt = #line
-        ) throws {
-            
-            wait(timeout: timeout)
-            
-            _ = try root().rootView.qrFullScreenCover()
-            
-            switch binder.flow.state.navigation {
-            case .scanQR:
-                break
-                
-            default:
-                XCTFail("Expected Scan QR", file: file, line: line)
-            }
-        }
-        
-        func qrLegacyFullScreenCover(
-            timeout: TimeInterval = 0.1,
-            file: StaticString = #file,
-            line: UInt = #line
-        ) throws {
-            
-            wait(timeout: timeout)
-            
-            _ = try root().rootView.qrLegacyFullScreenCover()
-        }
-        
-        func tapMainViewQRButton(
-            file: StaticString = #file,
-            line: UInt = #line
-        ) throws {
-            
-            try root().rootView.tapMainViewQRButton()
-        }
-        
-        private func wait(timeout: TimeInterval = 0.1) {
-            
-            _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
         }
     }
 }
