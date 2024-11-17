@@ -12,8 +12,8 @@ final class SceneDelegateTests: XCTestCase {
     
     func test_configureWindow_shouldSetWindowAsKeyAndVisible() {
         
+        let sut = makeSUT()
         let window = UIWindowSpy()
-        let sut = SceneDelegate()
         sut.window = window
         
         sut.configureWindow()
@@ -23,7 +23,7 @@ final class SceneDelegateTests: XCTestCase {
     
     func test_configureWindow_shouldConfigureRootViewController() {
         
-        let sut = SceneDelegate()
+        let sut = makeSUT()
         sut.window = UIWindowSpy()
         
         sut.configureWindow()
@@ -35,6 +35,20 @@ final class SceneDelegateTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private typealias SUT = SceneDelegate
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let sut = SUT()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
     
     private class UIWindowSpy: UIWindow {
         
