@@ -21,27 +21,29 @@ final class QRAcceptanceTests: AcceptanceTests {
         try XCTAssertNoThrow(rootView.qrFullScreenCover())
     }
     
-    // TODO: - fix flaky tests
+    func test_tapMainViewQRButton_shouldOpenQRScreenCoverOnActiveFlag() throws {
+        
+        let app = TestApp(featureFlags: .activeExcept(
+            paymentsTransfersFlag: .active
+        ))
+        let rootView = try app.launch()
+        
+        tapMainViewQRButton(rootView)
+        
+        try XCTAssertNoThrow(rootView.qrFullScreenCover())
+    }
     
-    //    func test_tapMainViewQRButton_shouldOpenQRScreenCover() throws {
-    //
-    //        let app = TestApp()
-    //        try app.launch()
-    //
-    //        try app.tapMainViewQRButton()
-    //
-    //        try XCTAssertNoThrow(app.qrFullScreenCover())
-    //    }
-    //
-    //    func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
-    //
-    //        let app = TestApp()
-    //        try app.launch()
-    //
-    //        try app.tapMainViewQRButton()
-    //
-    //        try XCTAssertNoThrow(app.qrLegacyFullScreenCover(timeout: 1))
-    //    }
+    func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
+        
+        let app = TestApp(featureFlags: .activeExcept(
+            paymentsTransfersFlag: .inactive
+        ))
+        let rootView = try app.launch()
+        
+        tapMainViewQRButton(rootView)
+        
+        try XCTAssertNoThrow(rootView.qrLegacyFullScreenCover())
+    }
     
     // MARK: - Helpers
     
@@ -52,6 +54,16 @@ final class QRAcceptanceTests: AcceptanceTests {
         wait(timeout: timeout) {
             
             try app.openQRWithFlowEvent()
+        }
+    }
+    
+    private func tapMainViewQRButton(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1
+    ) {
+        wait(timeout: timeout) {
+            
+            try rootView.tapMainViewQRButton()
         }
     }
 }

@@ -504,9 +504,8 @@ extension RootViewModelFactory {
         let getNavigation = makeGetRootNavigation(
             makeQRScanner: QRScannerModel.init
         )
-        let witness: RootViewDomain.ContentWitnesses = .init(
-            emitting: { _ in Empty().eraseToAnyPublisher() },
-            receiving: { _ in {}}
+        let witness = RootViewDomain.ContentWitnesses(
+            isFlagActive: paymentsTransfersFlag == .active
         )
         
         let composer = RootViewDomain.BinderComposer(
