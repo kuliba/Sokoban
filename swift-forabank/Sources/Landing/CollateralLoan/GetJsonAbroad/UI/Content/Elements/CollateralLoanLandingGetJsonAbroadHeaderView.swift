@@ -17,10 +17,10 @@ public struct CollateralLoanLandingGetJsonAbroadHeaderView: View {
 
     public var body: some View {
 
-        headerView(config: config)
+        headerView
     }
     
-    private func headerView(config: Config) -> some View {
+    private var headerView: some View {
         
         VStack {
             
@@ -76,25 +76,4 @@ public extension CollateralLoanLandingGetJsonAbroadHeaderView {
     
     typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
     typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
-}
-
-// MARK: - Previews
-
-struct CollateralLoanLandingGetJsonAbroadHeaderView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        CollateralLoanLandingGetJsonAbroadView(
-            content: content,
-            factory: factory
-        )
-    }
-    
-    static let cardData = GetJsonAbroadData.cardStub
-    static let realEstateData = GetJsonAbroadData.realEstateStub
-    static let content = Content(data: cardData)
-    static let factory = Factory()
-    
-    typealias Content = CollateralLoanLandingGetJsonAbroadContent
-    typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
 }
