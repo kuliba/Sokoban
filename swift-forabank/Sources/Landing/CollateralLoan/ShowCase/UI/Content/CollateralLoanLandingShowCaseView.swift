@@ -15,7 +15,7 @@ struct CollateralLoanLandingShowCaseView {
     
     private let factory: Factory
     
-    public init(
+    init(
         content: Content,
         factory: Factory
     ) {
@@ -23,7 +23,7 @@ struct CollateralLoanLandingShowCaseView {
         self.factory = factory
     }
     
-    public var body: some View {
+    var body: some View {
         
         ScrollView(showsIndicators: false) {
             
