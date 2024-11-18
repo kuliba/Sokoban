@@ -84,6 +84,7 @@ let package = Package(
         .prePaymentPicker,
         .productUI,
         .rxViewModel,
+        .savingsAccount,
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
@@ -267,6 +268,7 @@ let package = Package(
         .productUI,
         .rxViewModel,
         .rxViewModelTests,
+        .savingsAccount,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -574,6 +576,13 @@ private extension Product {
         name: .rxViewModel,
         targets: [
             .rxViewModel,
+        ]
+    )
+    
+    static let savingsAccount = library(
+        name: .savingsAccount,
+        targets: [
+            .savingsAccount,
         ]
     )
     
@@ -2520,6 +2529,11 @@ private extension Target {
         path: "Tests/UI/\(String.rxViewModelTests)"
     )
     
+    static let savingsAccount = target(
+        name: .savingsAccount,
+        path: "Sources/UI/\(String.savingsAccount)"
+    )
+
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -3167,6 +3181,10 @@ private extension Target.Dependency {
         name: .rxViewModel
     )
     
+    static let savingsAccount = byName(
+        name: .savingsAccount
+    )
+
     static let searchBarComponent = byName(
         name: .searchBarComponent
     )
@@ -3574,6 +3592,8 @@ private extension String {
     
     static let rxViewModel = "RxViewModel"
     static let rxViewModelTests = "RxViewModelTests"
+    
+    static let savingsAccount = "SavingsAccount"
     
     static let searchBarComponent = "SearchBarComponent"
     
