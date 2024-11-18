@@ -42,14 +42,17 @@ struct RootWrapperView: View {
             RxWrapperView(model: flow) { state, event in
                 
                 rootView()
-                    .fullScreenCover(
-                        cover: state.navigation?.fullScreenCover,
-                        dismiss: { event(.dismiss) },
+                    .fullScreenCoverInspectable(
+                        item: .init(
+                            get: { state.navigation?.fullScreenCover },
+                            set: { if $0 == nil { event(.dismiss) }}
+                        ),
                         content: {
                             
                             switch $0 {
                             case .scanQR:
                                 Text("TBD: QR Scanner")
+                                    .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
                             }
                         }
                     )
