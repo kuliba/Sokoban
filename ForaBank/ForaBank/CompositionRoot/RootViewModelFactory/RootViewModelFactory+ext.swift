@@ -519,19 +519,6 @@ extension RootViewModelFactory {
         
         return composer.compose(with: rootViewModel)
     }
-    
-    func makeGetRootNavigation(
-        makeQRScanner: @escaping () -> QRScannerModel
-    ) -> RootViewDomain.GetNavigation {
-        
-        return { select, notify, completion in
-            
-            switch select {
-            case .scanQR:
-                completion(.scanQR(makeQRScanner()))
-            }
-        }
-    }
 }
 
 private extension RootViewDomain.Witnesses.DismissWitnesses<RootViewModel> {

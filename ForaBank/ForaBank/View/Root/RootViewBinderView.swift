@@ -66,24 +66,25 @@ private extension RootWrapperView {
         
         switch fullScreenCover {
         case let .scanQR(qrScanner):
-            makeQRScannerView(qrScanner.qrModel)
+            makeQRScannerView(qrScanner)
                 .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
         }
     }
 }
+
 extension RootViewDomain.Navigation {
     
     var fullScreenCover: FullScreenCover? {
         
         switch self {
-        case let .scanQR(qrScanner):
-            return .scanQR(qrScanner)
+        case let .scanQR(node):
+            return .scanQR(node.model.qrModel)
         }
     }
     
     enum FullScreenCover {
         
-        case scanQR(QRScannerModel)
+        case scanQR(QRViewModel)
     }
 }
 
