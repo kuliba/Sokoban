@@ -1,5 +1,5 @@
 //
-//  ModelRootFactory+immediateEmpty.swift
+//  ModelRootFactory+ext.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 17.11.2024.
@@ -10,12 +10,16 @@ import PayHubUI
 
 extension ModelRootFactory {
     
-    static func immediateEmpty() -> ModelRootFactory {
+    static func immediate(
+        httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
+        logger: any LoggerAgentProtocol = LoggerSpy(),
+        model: Model = .mockWithEmptyExcept()
+    ) -> ModelRootFactory {
         
         return .init(
-            httpClientFactory: HTTPClientFactorySpy(),
-            logger: LoggerSpy(),
-            model: .mockWithEmptyExcept(),
+            httpClientFactory: httpClientFactory,
+            logger: logger,
+            model: model,
             schedulers: .immediate
         )
     }

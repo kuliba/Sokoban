@@ -1576,7 +1576,7 @@
 		2AC8478E2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */; };
 		2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */; };
 		2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */; };
-		2ACBA66F2CE9B40400758D71 /* ModelRootFactory+immediateEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBA66E2CE9B40400758D71 /* ModelRootFactory+immediateEmpty.swift */; };
+		2ACBA66F2CE9B40400758D71 /* ModelRootFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBA66E2CE9B40400758D71 /* ModelRootFactory+ext.swift */; };
 		2ACBA6712CE9B43200758D71 /* HTTPClientFactorySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBA6702CE9B43200758D71 /* HTTPClientFactorySpy.swift */; };
 		2ACBA6732CE9B45000758D71 /* FeatureFlags+active.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBA6722CE9B45000758D71 /* FeatureFlags+active.swift */; };
 		2ACBA6762CE9BC7E00758D71 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACBA6752CE9BC7E00758D71 /* ViewInspector */; };
@@ -5198,7 +5198,7 @@
 		2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = createC2BPaymentAcc_5_1.json; sourceTree = "<group>"; };
 		2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewComponent.swift; sourceTree = "<group>"; };
 		2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSubscriptionsViewModel.swift"; sourceTree = "<group>"; };
-		2ACBA66E2CE9B40400758D71 /* ModelRootFactory+immediateEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelRootFactory+immediateEmpty.swift"; sourceTree = "<group>"; };
+		2ACBA66E2CE9B40400758D71 /* ModelRootFactory+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelRootFactory+ext.swift"; sourceTree = "<group>"; };
 		2ACBA6702CE9B43200758D71 /* HTTPClientFactorySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientFactorySpy.swift; sourceTree = "<group>"; };
 		2ACBA6722CE9B45000758D71 /* FeatureFlags+active.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeatureFlags+active.swift"; sourceTree = "<group>"; };
 		2ACBA6782CE9BD4A00758D71 /* QRAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRAcceptanceTests.swift; sourceTree = "<group>"; };
@@ -12840,7 +12840,7 @@
 				2AB4FA5B2B8F480C0061CBD7 /* ProcessSpy.swift */,
 				2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */,
 				2A85775F2CC6512C003BE84E /* XCTestCase+makeServiceCategory.swift */,
-				2ACBA66E2CE9B40400758D71 /* ModelRootFactory+immediateEmpty.swift */,
+				2ACBA66E2CE9B40400758D71 /* ModelRootFactory+ext.swift */,
 				2ACBA6702CE9B43200758D71 /* HTTPClientFactorySpy.swift */,
 				2ACBA6722CE9B45000758D71 /* FeatureFlags+active.swift */,
 			);
@@ -23688,7 +23688,7 @@
 				83B614802B036C9D002EE299 /* Model+AntifraudDataTests.swift in Sources */,
 				2A3039282A17D2150008701D /* PhoneKitTransformerTests.swift in Sources */,
 				2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */,
-				2ACBA66F2CE9B40400758D71 /* ModelRootFactory+immediateEmpty.swift in Sources */,
+				2ACBA66F2CE9B40400758D71 /* ModelRootFactory+ext.swift in Sources */,
 				83C918192C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift in Sources */,
 				2AB197AC2B24A98E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequestTests.swift in Sources */,
 				2A2E3FC12BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift in Sources */,
