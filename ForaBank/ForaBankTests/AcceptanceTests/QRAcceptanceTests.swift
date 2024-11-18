@@ -31,6 +31,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         tapMainViewQRButton(rootView)
         
         try XCTAssertNoThrow(rootView.qrFullScreenCover())
+        try XCTAssertThrowsError(rootView.qrLegacyFullScreenCover())
     }
     
     func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
@@ -43,6 +44,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         tapMainViewQRButton(rootView)
         
         try XCTAssertNoThrow(rootView.qrLegacyFullScreenCover())
+        try XCTAssertThrowsError(rootView.qrFullScreenCover())
     }
     
     // MARK: - Helpers

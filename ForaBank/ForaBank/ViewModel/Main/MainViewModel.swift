@@ -226,7 +226,9 @@ extension MainViewModel {
     
     private func openScanner() {
         
-        let qrModel = qrViewModelFactory.makeQRScannerModel()
+        guard let qrModel = qrViewModelFactory.makeQRScannerModel()
+        else { return }
+        
         let cancellable = bind(qrModel)
         var route = route
         route.modal = .fullScreenSheet(.init(
