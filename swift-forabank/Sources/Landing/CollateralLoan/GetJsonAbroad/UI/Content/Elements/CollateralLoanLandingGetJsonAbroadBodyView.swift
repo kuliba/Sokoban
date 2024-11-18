@@ -17,12 +17,15 @@ public struct CollateralLoanLandingGetJsonAbroadBodyView: View {
     
     public var body: some View {
 
-        ZStack {
-            
-            backgroundImageView
-            contentView
+        ScrollView {
+            ZStack {
+                
+                backgroundImageView
+                contentView
+            }
+            .background(theme.backgroundColor)
         }
-        .background(theme.backgroundColor)
+        .ignoresSafeArea()
     }
     
     typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig

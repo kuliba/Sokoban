@@ -28,31 +28,84 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
         
         ZStack {
             
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: config.cornerRadius)
                 .fill(Color.grayLightest)
                 .frame(maxWidth: .infinity)
-                .padding(.leading, 16)
-                .padding(.trailing, 15)
             
             conditionsListView
         }
+        .padding(.leading, config.paddings.outerLeading)
+        .padding(.trailing, config.paddings.outerTrailing)
     }
     
     private var conditionsListView: some View {
-        
-        Text("Выгодные условия")
-        
-        VStack {
-            ForEach(conditions, id: \.title) {
                 
-                conditionView($0)
+        VStack {
+        
+            config.conditions.header.text.text(
+                withConfig: .init(
+                    textFont: config.conditions.header.headerFont.font,
+                    textColor: config.conditions.header.headerFont.foreground
+                )
+            )
+            .padding(.horizontal, config.conditions.horizontalPadding)
+            .padding(.vertical, config.conditions.listTopPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack {
+                ForEach(conditions, id: \.title) {
+                    
+                    conditionView($0)
+                }
+                .padding(.horizontal, config.conditions.horizontalPadding)
+                .padding(.bottom, config.conditions.spacing)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .padding(.top, config.conditions.listTopPadding)
         }
     }
     
     private func conditionView(_ condition: Condition) -> some View {
         
-        Text(condition.title)
+        HStack(spacing: 0) {
+            
+            VStack {
+                
+                // simulacrum
+                Circle()
+                    .fill(config.conditions.iconBackground)
+                    .frame(
+                        width: config.conditions.iconSize.width,
+                        height: config.conditions.iconSize.height
+                    )
+                    .padding(.trailing, config.conditions.iconTrailingPadding)
+                
+                Spacer()
+            }
+            
+            VStack(spacing: 0) {
+                
+                condition.title.text(
+                    withConfig: .init(
+                        textFont: config.conditions.titleFont.font,
+                        textColor: config.conditions.titleFont.foreground
+                    )
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                condition.subTitle.text(
+                    withConfig: .init(
+                        textFont: config.conditions.subTitleFont.font,
+                        textColor: config.conditions.subTitleFont.foreground
+                    )
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, config.conditions.subTitleTopPadding)
+                
+                Spacer()
+            }
+        }
     }
 }
 
@@ -65,7 +118,7 @@ public extension CollateralLoanLandingGetJsonAbroadConditionsView {
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetJsonAbroadConditionsView_Previews: PreviewProvider {
+struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
     
     static var previews: some View {
         CollateralLoanLandingGetJsonAbroadView(
@@ -82,4 +135,3 @@ struct CollateralLoanLandingGetJsonAbroadConditionsView_Previews: PreviewProvide
     typealias Content = CollateralLoanLandingGetJsonAbroadContent
     typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
 }
-

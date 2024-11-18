@@ -33,26 +33,6 @@ public extension CollateralLoanLandingGetJsonAbroadView {
     typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
 }
 
-// MARK: - Previews
-
-struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        CollateralLoanLandingGetJsonAbroadView(
-            content: content,
-            factory: factory
-        )
-    }
-    
-    static let cardData = GetJsonAbroadData.cardStub
-    static let realEstateData = GetJsonAbroadData.realEstateStub
-    static let content = Content(data: cardData)
-    static let factory = Factory()
-    
-    typealias Content = CollateralLoanLandingGetJsonAbroadContent
-    typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
-}
-
 extension GetJsonAbroadData {
     
     static let cardStub = Self(
