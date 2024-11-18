@@ -1224,15 +1224,13 @@ extension MainViewModel {
         route.destination = .searchOperators(operatorsViewModel)
     }
     
-    private func handleFailure(
-        _ qrCode: QRCode
-    ) {
-        let failedView = QRFailedViewModel(
-            model: self.model,
-            addCompanyAction: { [weak self] in self?.addCompany() },
-            requisitsAction: { [weak self] in self?.payByInstructions(with: qrCode) }
-        )
-        self.route.destination = .failedView(failedView)
+    private func handleFailure(_ qrCode: QRCode) {
+        
+        route.destination = .failedView(.init(
+            model: model,
+            qrCode: qrCode,
+            scheduler: scheduler
+        ))
     }
     
     private func handleC2bURL(
@@ -1368,27 +1366,22 @@ extension MainViewModel {
         }
     }
     
-    private func handleURL(
-        _ url: URL
-    ) {
-        let failedView = QRFailedViewModel(
-            model: self.model,
-            addCompanyAction: { [weak self] in self?.addCompany() },
-            requisitsAction: { [weak self] in self?.payByInstructions() }
-        )
+    private func handleURL(_ url: URL) {
         
-        self.route.destination = .failedView(failedView)
+        route.destination = .failedView(.init(
+            model: model,
+            qrCode: nil,
+            scheduler: scheduler
+        ))
     }
     
     private func handleUnknownQR() {
         
-        let failedView = QRFailedViewModel(
-            model: self.model,
-            addCompanyAction: { [weak self] in self?.addCompany() },
-            requisitsAction: { [weak self] in self?.payByInstructions() }
-        )
-        
-        self.route.destination = .failedView(failedView)
+        route.destination = .failedView(.init(
+            model: model,
+            qrCode: nil,
+            scheduler: scheduler
+        ))
     }
     
     private func addCompany() {
@@ -1698,7 +1691,7 @@ extension MainViewModel {
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
         case serviceOperators(OperatorsViewModel)
-        case failedView(QRFailedViewModel)
+        case failedView(QRFailedViewModelWrapper)
         case searchOperators(QRSearchOperatorViewModel)
         case openCard(AuthProductsViewModel)
         case payments(Node<PaymentsViewModel>)
