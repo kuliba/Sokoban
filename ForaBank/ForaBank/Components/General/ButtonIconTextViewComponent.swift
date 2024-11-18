@@ -25,6 +25,7 @@ extension ButtonIconTextView {
             let image: Image
             var style: Style = .color(.iconBlack)
             let background: Background
+            var badge: Badge? = nil
             
             enum Style {
                 
@@ -37,6 +38,20 @@ extension ButtonIconTextView {
                 case circleSmall
                 case circle
                 case square
+            }
+            
+            struct Badge {
+                
+                let text: Text
+                var backgroundColor: Color
+                var textColor: Color
+                
+                struct Text {
+                    
+                    let title: String
+                    let font: Font
+                    let fontWeight: Font.Weight
+                }
             }
         }
         
@@ -95,7 +110,7 @@ struct ButtonIconTextView: View {
             
             switch viewModel.orientation {
             case .vertical:
-
+                
                 VStack {
                     
                     IconView(viewModel: viewModel.icon)
@@ -108,7 +123,7 @@ struct ButtonIconTextView: View {
                 }
                 
             case .horizontal:
-
+                
                 if viewModel.isActive {
                     
                     HStack(spacing: 16) {
@@ -137,8 +152,8 @@ struct ButtonIconTextView: View {
                     }.opacity(0.6)
                 }
             }
-            
-        }.buttonStyle(PushButtonStyle())
+        }
+        .buttonStyle(PushButtonStyle())
         .disabled(!viewModel.isActive)
     }
 }
@@ -158,22 +173,59 @@ extension ButtonIconTextView {
             }
         }
         
+        var badgeOffsetX: CGFloat {
+            
+            switch viewModel.background {
+            case .circleSmall: return 10.7
+            case .circle: return 15
+            case .square: return 12.9
+            }
+        }
+        
+        var badgeOffsetY: CGFloat {
+            
+            switch viewModel.background {
+            case .circleSmall: return -8.6
+            case .circle: return -12
+            case .square: return -10.3
+            }
+        }
+        
         var body: some View {
             
-            switch viewModel.style {
-            case .original:
-                viewModel.image
-                    .renderingMode(.original)
-                    .background(ButtonIconTextView.IconBackgroundView(viewModel: viewModel.background))
-                    .frame(width: side, height: side)
+            ZStack {
                 
-            case .color(let color):
-                viewModel.image
-                    .renderingMode(.template)
-                    .foregroundColor(color)
-                    .background(ButtonIconTextView.IconBackgroundView(viewModel: viewModel.background))
-                    .frame(width: side, height: side)
+                ButtonIconTextView.IconBackgroundView(viewModel: viewModel.background)
+                
+                switch viewModel.style {
+                case .original:
+                    viewModel.image
+                        .renderingMode(.original)
+                    
+                case .color(let color):
+                    viewModel.image
+                        .renderingMode(.template)
+                        .foregroundColor(color)
+                }
+                
+                if let badge = viewModel.badge {
+                    
+                    ZStack {
+                        
+                        CornerBadgeShape()
+                            .fill(badge.backgroundColor)
+                        
+                        Text(badge.text.title)
+                            .font(badge.text.font)
+                            .fontWeight(badge.text.fontWeight)
+                            .foregroundColor(badge.textColor)
+                            .rotationEffect(.degrees(45))
+                            .offset(x: badgeOffsetX, y: badgeOffsetY)
+                    }
+                    .clipShape(Circle())
+                }
             }
+            .frame(width: side, height: side)
         }
     }
     
@@ -228,6 +280,22 @@ struct FastOperationButtonView_Previews: PreviewProvider {
             ButtonIconTextView(viewModel: .horizontalCircleBoldOriginal)
                 .previewLayout(.fixed(width: 375, height: 200))
         }
+    }
+}
+
+struct CornerBadgeShape: Shape {
+    
+    func path(in rect: CGRect) -> Path {
+        
+        var path = Path()
+        let size = rect.size
+        
+        path.move(to: CGPoint(x: size.width * 0.33, y: 0))
+        path.addLine(to: CGPoint(x: size.width, y: 0))
+        path.addLine(to: CGPoint(x: size.width, y: size.height * 0.6))
+        path.addLine(to: CGPoint(x: size.width * 1.25, y: size.height))
+        
+        return path
     }
 }
 
