@@ -503,7 +503,7 @@ extension RootViewModelFactory {
         bindings.formUnion(marketBinder.bind())
         
         let getNavigation = makeGetRootNavigation(
-            makeQRScanner: QRScannerModel.init
+            makeQRScanner: qrScannerComposer.compose
         )
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active

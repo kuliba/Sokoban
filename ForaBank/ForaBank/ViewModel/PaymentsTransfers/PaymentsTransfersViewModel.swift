@@ -511,7 +511,7 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             
-            case qrScanner(Node<QRModel>)
+            case qrScanner(Node<QRScannerModel>)
             case paymentCancelled(expired: Bool)
             case success(PaymentsSuccessViewModel)
         }
@@ -1573,7 +1573,7 @@ private extension PaymentsTransfersViewModel {
         )
     }
     
-    func bind(_ qrModel: QRModel) -> AnyCancellable {
+    func bind(_ qrModel: QRScannerModel) -> AnyCancellable {
         
         qrModel.$state
             .compactMap { $0 }

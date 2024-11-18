@@ -15,13 +15,17 @@ struct RootViewBinderView: View {
     
     var body: some View {
         
-        RootWrapperView(flow: binder.flow) {
-            
-            RootView(
-                viewModel: binder.content,
-                rootViewFactory: rootViewFactory
-            )
-        }
+        RootWrapperView(
+            flow: binder.flow,
+            rootView: {
+                
+                RootView(
+                    viewModel: binder.content,
+                    rootViewFactory: rootViewFactory
+                )
+            },
+            makeQRScannerView: rootViewFactory.components.makeQRView
+        )
     }
 }
 
@@ -30,6 +34,7 @@ struct RootWrapperView: View {
     @ObservedObject var flow: RootViewDomain.Flow
     
     let rootView: () -> RootView
+    let makeQRScannerView: MakeQRView
     
     var body: some View {
         
@@ -43,36 +48,42 @@ struct RootWrapperView: View {
                 
                 rootView()
                     .fullScreenCoverInspectable(
-                        item: .init(
-                            get: { state.navigation?.fullScreenCover },
-                            set: { if $0 == nil { event(.dismiss) }}
-                        ),
-                        content: {
-                            
-                            switch $0 {
-                            case .scanQR:
-                                Text("TBD: QR Scanner")
-                                    .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
-                            }
-                        }
+                        item: { state.navigation?.fullScreenCover },
+                        dismiss: { event(.dismiss) },
+                        content: fullScreenCoverContent
                     )
             }
         }
     }
 }
 
+private extension RootWrapperView {
+    
+    @ViewBuilder
+    func fullScreenCoverContent(
+        fullScreenCover: RootViewDomain.Navigation.FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case let .scanQR(qrScanner):
+            makeQRScannerView(qrScanner.qrModel)
+                .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
+        }
+    }
+}
 extension RootViewDomain.Navigation {
     
     var fullScreenCover: FullScreenCover? {
         
         switch self {
-        case .scanQR: return .scanQR
+        case let .scanQR(qrScanner):
+            return .scanQR(qrScanner)
         }
     }
     
     enum FullScreenCover {
         
-        case scanQR
+        case scanQR(QRScannerModel)
     }
 }
 
@@ -81,12 +92,13 @@ extension RootViewDomain.Navigation.FullScreenCover: Identifiable {
     var id: ID {
         
         switch self {
-        case .scanQR: return .scanQR
+        case let .scanQR(qrRScanner):
+            return .scanQR(.init(qrRScanner))
         }
     }
     
     enum ID: Hashable {
         
-        case scanQR
+        case scanQR(ObjectIdentifier)
     }
 }

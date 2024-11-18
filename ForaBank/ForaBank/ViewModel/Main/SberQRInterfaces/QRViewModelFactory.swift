@@ -14,7 +14,7 @@ struct QRViewModelFactory {
     let makeQRScannerModel: MakeQRScannerModel
     
     typealias MakePaymentsSuccessViewModel = (CreateSberQRPaymentResponse) -> PaymentsSuccessViewModel
-    typealias MakeQRScannerModel = () -> QRModel?
+    typealias MakeQRScannerModel = () -> QRScannerModel?
 }
 
 // MARK: - Preview Content

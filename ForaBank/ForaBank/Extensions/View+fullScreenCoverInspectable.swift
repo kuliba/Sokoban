@@ -7,7 +7,23 @@
 
 import SwiftUI
 
+/// For use with ViewInspector.
 extension View {
+    
+    func fullScreenCoverInspectable<Item, FullScreenCover>(
+        item: @escaping () -> Item?,
+        dismiss: @escaping () -> Void,
+        content: @escaping (Item) -> FullScreenCover
+    ) -> some View where Item: Identifiable, FullScreenCover: View{
+        
+        return fullScreenCoverInspectable(
+            item: .init(
+                get: item,
+                set: { if $0 == nil { dismiss() }}
+            ),
+            content: content
+        )
+    }
     
     func fullScreenCoverInspectable<Item, FullScreenCover>(
         item: Binding<Item?>,

@@ -15,7 +15,7 @@ typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, Mappi
 typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
 typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel
 
-typealias QRModel = QRModelWrapper<QRModelResult, QRViewModel>
+typealias QRScannerModel = QRModelWrapper<QRModelResult, QRViewModel>
 
 extension QRViewModel: QRScanner {
     
