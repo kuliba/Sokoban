@@ -787,7 +787,8 @@ private extension RootViewModelFactory {
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
-            bannersBinder: bannersBinder
+            bannersBinder: bannersBinder,
+            scheduler: schedulers.main
         )
         
         let paymentsTransfersViewModel = PaymentsTransfersViewModel(
@@ -796,7 +797,8 @@ private extension RootViewModelFactory {
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            scheduler: schedulers.main
         )
         
         let paymentsModel: RootViewModel.PaymentsModel = {
