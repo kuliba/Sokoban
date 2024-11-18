@@ -53,6 +53,7 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack {
+                
                 ForEach(conditions, id: \.title) {
                     
                     conditionView($0, config: config)
@@ -121,6 +122,7 @@ public extension CollateralLoanLandingGetJsonAbroadConditionsView {
 struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
         CollateralLoanLandingGetJsonAbroadView(
             content: content,
             factory: factory
