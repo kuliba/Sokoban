@@ -526,6 +526,12 @@ extension RootViewModelFactory {
         return { select, notify, completion in
             
             switch select {
+            case .openCollateral:
+                completion(.openCollateral)
+                
+            case .openProduct:
+                completion(.openProduct)
+                
             case .scanQR:
                 completion(.scanQR(makeQRScanner()))
             }

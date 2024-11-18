@@ -62,11 +62,15 @@ public extension RootViewDomain {
     
     enum Select: Equatable {
         
+        case openCollateral
+        case openProduct
         case scanQR
     }
     
     enum Navigation {
         
+        case openCollateral
+        case openProduct
         case scanQR(QRScanner)
     }
 }
