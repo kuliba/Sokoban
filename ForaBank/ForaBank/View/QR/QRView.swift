@@ -115,6 +115,7 @@ private extension QRView {
                 .frame(height: 48)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 50)
+                .accessibilityIdentifier(ElementIDs.fullScreenCover(.closeButton).rawValue)
         }
     }
     

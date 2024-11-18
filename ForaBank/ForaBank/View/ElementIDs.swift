@@ -7,8 +7,14 @@
 
 enum ElementIDs {
     
+    case fullScreenCover(FullScreenCover)
     case mainView(MainView)
     case rootView(RootView)
+    
+    enum FullScreenCover: String {
+        
+        case closeButton
+    }
     
     enum MainView: String {
         
@@ -27,8 +33,14 @@ extension ElementIDs {
     var rawValue: String {
         
         switch self {
-        case let .mainView(mainView): return mainView.rawValue
-        case let .rootView(rootView): return rootView.rawValue
+        case let .fullScreenCover(fullScreenCover):
+            return fullScreenCover.rawValue
+            
+        case let .mainView(mainView):
+            return mainView.rawValue
+            
+        case let .rootView(rootView):
+            return rootView.rawValue
         }
     }
 }

@@ -48,6 +48,21 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectNoRootViewQRScannerFullScreenCover(rootView)
     }
     
+    func test_closeQRScanner_shouldCloseRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
+        
+        let app = TestApp(featureFlags: .activeExcept(
+            paymentsTransfersFlag: .active
+        ))
+        let rootView = try app.launch()
+        tapMainViewQRButton(rootView)
+        expectRootViewQRScannerFullScreenCover(rootView)
+        
+        tapRootViewFullScreenCoverCloseQRButton(rootView)
+        
+        expectNoRootViewQRScannerFullScreenCover(rootView)
+        expectNoMainViewQRScannerFullScreenCover(rootView)
+    }
+    
     // MARK: - Helpers
     
     private func openQRWithFlowEvent(
@@ -67,6 +82,16 @@ final class QRAcceptanceTests: AcceptanceTests {
         wait(timeout: timeout) {
             
             try rootView.tapMainViewQRButton()
+        }
+    }
+    
+    private func tapRootViewFullScreenCoverCloseQRButton(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1
+    ) {
+        wait(timeout: timeout) {
+            
+            try rootView.tapRootViewFullScreenCoverCloseQRButton()
         }
     }
     
@@ -130,6 +155,14 @@ private extension RootViewBinderView {
         _ = try inspect()
             .find(MainSectionFastOperationView.self)
             .find(button: FastOperationsTitles.qr)
+            .tap()
+    }
+    
+    func tapRootViewFullScreenCoverCloseQRButton() throws {
+        
+        try rootViewQRScannerFullScreenCover()
+            .find(viewWithAccessibilityIdentifier: ElementIDs.fullScreenCover(.closeButton).rawValue)
+            .find(button: "Отмена")
             .tap()
     }
 }
