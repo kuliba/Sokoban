@@ -27,7 +27,7 @@ class AcceptanceTests: XCTestCase {
             featureFlags: FeatureFlags = .active,
             dismiss: @escaping () -> Void = {}
         ) {
-            self.factory = .immediateEmpty()
+            self.factory = .immediate()
             self.binder = factory.makeBinder(
                 featureFlags: featureFlags,
                 dismiss: dismiss

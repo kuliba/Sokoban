@@ -46,7 +46,7 @@ final class SceneDelegateTests: XCTestCase {
     private typealias SUT = SceneDelegate
     
     private func makeSUT(
-        factory: RootFactory = ModelRootFactory.immediateEmpty(),
+        factory: RootFactory = ModelRootFactory.immediate(),
         featureFlags: FeatureFlags = .active,
         file: StaticString = #file,
         line: UInt = #line
