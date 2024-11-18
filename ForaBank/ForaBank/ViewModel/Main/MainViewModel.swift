@@ -642,26 +642,30 @@ private extension MainViewModel {
     func bind(productsSections: [MainSectionViewModel]) {
         
         for section in sections {
-            section.action
-                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] action in
-                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: action.productId))
-                }.store(in: &bindings)
             
-            section.action
+            let shared = section.action.share()
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                .map(\.productId)
+                .receive(on: scheduler)
+                .sink { [weak self] in
+                    
+                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+                }
+                .store(in: &bindings)
+            
+            shared
                 .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
                 .receive(on: scheduler)
-                .sink { [weak self] action in
-                    self?.openMoreProducts()
-                }.store(in: &bindings)
-          
-            section.action
+                .sink { [weak self] _ in self?.openMoreProducts() }
+                .store(in: &bindings)
+            
+            shared
                 .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
                 .receive(on: scheduler)
-                .sink { [weak self] action in
-                    self?.handleLandingAction(.sticker)
-                }.store(in: &bindings)
+                .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
+                .store(in: &bindings)
         }
     }
     
@@ -670,24 +674,28 @@ private extension MainViewModel {
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            openOrderSticker: {
+            openOrderSticker: { [weak self] in
                 
-                self.route = .empty
+                self?.route = .empty
                 
-                self.delay(for: .milliseconds(700)) { [weak self] in
+                self?.delay(for: .milliseconds(700)) { [weak self] in
                     
                     self?.handleLandingAction(.sticker)
                 }
             },
-            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
-                
-                guard let self else { return nil }
-                
-                if self.updateInfoStatusFlag.isActive {
-                    return .updateFailureInfo
+            makeMyProductsViewFactory: .init(
+                makeInformerDataUpdateFailure: { [weak self] in
+                    
+                    guard let self else { return nil }
+                    
+                    if self.updateInfoStatusFlag.isActive {
+                        return .updateFailureInfo
+                    }
+                    return nil
                 }
-                return nil
-            }))
+            )
+        )
+        
         myProductsViewModel.rootActions = rootActions
         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
         route.destination = .myProducts(myProductsViewModel)
