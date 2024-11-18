@@ -11,18 +11,18 @@ import XCTest
 
 final class QRAcceptanceTests: AcceptanceTests {
     
-    func test_openQRWithFlowEvent_shouldOpenQRScreenCover() throws {
+    func test_openQRWithFlowEvent_shouldOpenRootViewQRScannerFullScreenCover() throws {
         
         let app = TestApp()
         let rootView = try app.launch()
         
         openQRWithFlowEvent(app)
         
-        try XCTAssertNoThrow(rootView.qrFullScreenCover())
-        try XCTAssertThrowsError(rootView.qrLegacyFullScreenCover())
+        try XCTAssertNoThrow(rootView.rootViewQRScannerFullScreenCover())
+        try XCTAssertThrowsError(rootView.mainViewQRScannerFullScreenCover())
     }
     
-    func test_tapMainViewQRButton_shouldOpenQRScreenCoverOnActiveFlag() throws {
+    func test_tapMainViewQRButton_shouldOpenRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
         
         let app = TestApp(featureFlags: .activeExcept(
             paymentsTransfersFlag: .active
@@ -31,11 +31,11 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         tapMainViewQRButton(rootView)
         
-        try XCTAssertNoThrow(rootView.qrFullScreenCover())
-        try XCTAssertThrowsError(rootView.qrLegacyFullScreenCover())
+        try XCTAssertNoThrow(rootView.rootViewQRScannerFullScreenCover())
+        try XCTAssertThrowsError(rootView.mainViewQRScannerFullScreenCover())
     }
     
-    func test_tapMainViewQRButton_shouldOpenLegacyQRScreenCover() throws {
+    func test_tapMainViewQRButton_shouldOpenMainViewQRScannerFullScreenCover() throws {
         
         let app = TestApp(featureFlags: .activeExcept(
             paymentsTransfersFlag: .inactive
@@ -44,8 +44,8 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         tapMainViewQRButton(rootView)
         
-        try XCTAssertNoThrow(rootView.qrLegacyFullScreenCover())
-        try XCTAssertThrowsError(rootView.qrFullScreenCover())
+        try XCTAssertNoThrow(rootView.mainViewQRScannerFullScreenCover())
+        try XCTAssertThrowsError(rootView.rootViewQRScannerFullScreenCover())
     }
     
     // MARK: - Helpers
@@ -75,7 +75,7 @@ extension InspectableFullScreenCoverWithItem: ItemPopupPresenter { }
 
 private extension RootViewBinderView {
     
-    func qrFullScreenCover(
+    func rootViewQRScannerFullScreenCover(
     ) throws -> InspectableView<ViewType.ClassifiedView> {
         
         try inspect()
@@ -84,7 +84,7 @@ private extension RootViewBinderView {
             .find(viewWithAccessibilityIdentifier: ElementIDs.rootView(.qrFullScreenCover).rawValue)
     }
     
-    func qrLegacyFullScreenCover(
+    func mainViewQRScannerFullScreenCover(
     ) throws -> InspectableView<ViewType.ClassifiedView> {
         
         try inspect()
