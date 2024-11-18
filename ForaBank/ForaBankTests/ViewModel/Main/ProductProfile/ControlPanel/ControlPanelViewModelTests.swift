@@ -95,7 +95,8 @@ extension ControlPanelReducer.MakeViewModels {
                     publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
                 )}),
             limitsViewModel: nil,
-            config: .stickerDefault,
+            scheduler: .main,
+            config: .stickerDefault, 
             landingActions: {_ in })
     )
 }

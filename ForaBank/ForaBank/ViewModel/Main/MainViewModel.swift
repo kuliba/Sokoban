@@ -98,6 +98,7 @@ class MainViewModel: ObservableObject, Resetable {
         
         bind()
         update(sections, with: model.settingsMainSections)
+        bind(productsSections: sections)
         bind(sections)
     }
     
@@ -160,7 +161,7 @@ class MainViewModel: ObservableObject, Resetable {
                 model,
                 stickerViewModel: stickerViewModel
             )
-            bind(sections)
+            bind(productsSections: sections)
         }
     }
     
@@ -172,7 +173,7 @@ class MainViewModel: ObservableObject, Resetable {
                 model,
                 stickerViewModel: nil
             )
-            bind(sections)
+            bind(productsSections: sections)
         }
     }
     
@@ -188,7 +189,7 @@ class MainViewModel: ObservableObject, Resetable {
                     stickerViewModel: section.productCarouselViewModel.stickerViewModel
                 )
             }
-            bind(sections)
+            bind(productsSections: sections)
         }
     }
 }
@@ -542,9 +543,6 @@ private extension MainViewModel {
                                 
                                 openCard()
                                 
-                            case .loan:
-                                
-                                    openCollateralLoanLanding()
                             default:
                                 //MARK: Action for Sticker Product
                                 
@@ -596,39 +594,6 @@ private extension MainViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
-                        // products section
-                    case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                        
-                    case _ as MainSectionViewModelAction.Products.StickerDidTapped:
-                        handleLandingAction(.sticker)
-                        
-                    case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(
-                            model,
-                            makeProductProfileViewModel: makeProductProfileViewModel,
-                            openOrderSticker: {
-                                
-                                self.route = .empty
-                                
-                                self.delay(for: .milliseconds(700)) { [self] in
-                                    
-                                    handleLandingAction(.sticker)
-                                }
-                            },
-                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
-                                
-                                guard let self else { return nil }
-                                
-                                if self.updateInfoStatusFlag.isActive {
-                                    return .updateFailureInfo
-                                }
-                                return nil
-                            }))
-                        myProductsViewModel.rootActions = rootActions
-                        myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
-                        route.destination = .myProducts(myProductsViewModel)
-                        
                         // CurrencyMetall section
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
@@ -670,6 +635,68 @@ private extension MainViewModel {
                     }.store(in: &bindings)
             }
         }
+    }
+    
+    func bind(productsSections: [MainSectionViewModel]) {
+        
+        for section in sections {
+            
+            let shared = section.action.share()
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                .map(\.productId)
+                .receive(on: scheduler)
+                .sink { [weak self] in
+                    
+                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+                }
+                .store(in: &bindings)
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] _ in self?.openMoreProducts() }
+                .store(in: &bindings)
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
+                .store(in: &bindings)
+        }
+    }
+    
+    func openMoreProducts() {
+        
+        let myProductsViewModel = MyProductsViewModel(
+            model,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            openOrderSticker: { [weak self] in
+                
+                self?.route = .empty
+                
+                self?.delay(for: .milliseconds(700)) { [weak self] in
+                    
+                    self?.handleLandingAction(.sticker)
+                }
+            },
+            makeMyProductsViewFactory: .init(
+                makeInformerDataUpdateFailure: { [weak self] in
+                    
+                    guard let self else { return nil }
+                    
+                    if self.updateInfoStatusFlag.isActive {
+                        return .updateFailureInfo
+                    }
+                    return nil
+                }
+            )
+        )
+        
+        myProductsViewModel.rootActions = rootActions
+        myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
+        route.destination = .myProducts(myProductsViewModel)
     }
     
     func bind(_ qrModel: QRModel) -> AnyCancellable {
@@ -1217,9 +1244,9 @@ extension MainViewModel {
                     self?.action.send(MainViewModelAction.Close.Link())})
                 let cancellable = bind(operationViewModel)
                 
-                await MainActor.run {
+                scheduler.schedule { [weak self] in
                     
-                    self.route.destination = .payments(.init(
+                    self?.route.destination = .payments(.init(
                         model: operationViewModel,
                         cancellable: cancellable
                     ))
@@ -1227,9 +1254,9 @@ extension MainViewModel {
                 
             } catch {
                 
-                await MainActor.run {
+                scheduler.schedule { [weak self] in
                     
-                    self.route.modal = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.resetModal() })))
+                    self?.route.modal = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.resetModal() })))
                 }
                 
                 LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
@@ -1803,20 +1830,24 @@ extension MainViewModel {
     
     func handleLandingAction(_ abroadType: String) {
         
-        landingServices.loadLandingByType(abroadType) {
+        landingServices.loadLandingByType(abroadType) { [weak self] in
+            
+            
             switch $0 {
             case let .success(landing):
-                Task { @MainActor [weak self] in
+                self?.scheduler.schedule { [weak self] in
                     
                     guard let self else { return }
-
+                    
                     let viewModel = model.landingViewModelFactory(
                         result: landing,
                         config: .default,
                         landingActions: landingActions(for:),
-                        outsideAction: {_ in }, 
-                        orderCard: {}, 
-                        payment: {_ in })
+                        outsideAction: {_ in },
+                        orderCard: {},
+                        payment: { _ in },
+                        scheduler: scheduler
+                    )
                     
                     route.destination = .landing(viewModel, false)
                 }
