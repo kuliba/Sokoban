@@ -642,26 +642,30 @@ private extension MainViewModel {
     func bind(productsSections: [MainSectionViewModel]) {
         
         for section in sections {
-            section.action
-                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] action in
-                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: action.productId))
-                }.store(in: &bindings)
             
-            section.action
+            let shared = section.action.share()
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                .map(\.productId)
+                .receive(on: scheduler)
+                .sink { [weak self] in
+                    
+                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+                }
+                .store(in: &bindings)
+            
+            shared
                 .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
                 .receive(on: scheduler)
-                .sink { [weak self] action in
-                    self?.openMoreProducts()
-                }.store(in: &bindings)
-          
-            section.action
+                .sink { [weak self] _ in self?.openMoreProducts() }
+                .store(in: &bindings)
+            
+            shared
                 .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
                 .receive(on: scheduler)
-                .sink { [weak self] action in
-                    self?.handleLandingAction(.sticker)
-                }.store(in: &bindings)
+                .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
+                .store(in: &bindings)
         }
     }
     
