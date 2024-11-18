@@ -76,7 +76,7 @@ extension ClientInformListConfig {
             topImage: 20,
             horizontal: 20,
             vertical: 12,
-            bottom: 40
+            bottom: 80
         ),
         image: .infoCircle
     )

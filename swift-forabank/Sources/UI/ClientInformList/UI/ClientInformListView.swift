@@ -55,7 +55,9 @@ public struct ClientInformListView: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
-            .frame(height: maxHeight < contentHeight ? maxHeight : contentHeight)
+            .frame(height: maxHeight < contentHeight ?
+                   maxHeight + config.paddings.bottom :
+                    contentHeight + config.paddings.bottom)
         }
     }
     
