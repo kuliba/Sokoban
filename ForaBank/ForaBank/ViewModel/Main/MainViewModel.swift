@@ -674,24 +674,28 @@ private extension MainViewModel {
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            openOrderSticker: {
+            openOrderSticker: { [weak self] in
                 
-                self.route = .empty
+                self?.route = .empty
                 
-                self.delay(for: .milliseconds(700)) { [weak self] in
+                self?.delay(for: .milliseconds(700)) { [weak self] in
                     
                     self?.handleLandingAction(.sticker)
                 }
             },
-            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
-                
-                guard let self else { return nil }
-                
-                if self.updateInfoStatusFlag.isActive {
-                    return .updateFailureInfo
+            makeMyProductsViewFactory: .init(
+                makeInformerDataUpdateFailure: { [weak self] in
+                    
+                    guard let self else { return nil }
+                    
+                    if self.updateInfoStatusFlag.isActive {
+                        return .updateFailureInfo
+                    }
+                    return nil
                 }
-                return nil
-            }))
+            )
+        )
+        
         myProductsViewModel.rootActions = rootActions
         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
         route.destination = .myProducts(myProductsViewModel)
