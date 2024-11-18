@@ -24,7 +24,7 @@ struct QRView: View {
                 .navigationBarHidden(true)
                 .edgesIgnoringSafeArea(.all)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
     }
     
     var zStack: some View {
@@ -37,26 +37,10 @@ struct QRView: View {
                 
                 Color.clear
                     .frame(height: 30)
-                    .background(Color.black.opacity(0.5))
                 
-                HStack {
-                    
-                    VStack(alignment: .center, spacing: 10) {
-                        
-                        Text(viewModel.title)
-                            .foregroundColor(.white)
-                            .font(Font.textH1Sb24322())
-                            .frame(maxWidth: .infinity)
-                        
-                        Text(viewModel.subTitle)
-                            .foregroundColor(.white)
-                            .font(Font.textH1Sb24322())
-                            .frame(alignment: .center)
-                        
-                    }
+                headerView()
                     .padding(.top)
                     .background(Color.black.opacity(0.5))
-                }
                 
                 GeometryReader { geometry in
                     
@@ -65,23 +49,8 @@ struct QRView: View {
                     QRCenterRectangleView(qrCenterRect: qrCenterRect, geometry: geometry)
                 }
                 
-                VStack {
-                    
-                    HStack(spacing: 20) {
-                        
-                        ForEach(viewModel.buttons) { buttons in
-                            
-                            ButtonIconTextView(viewModel: buttons)
-                        }
-                    }
-                    
-                    ButtonSimpleView(viewModel: viewModel.closeButton)
-                        .frame(height: 48)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 50)
-                }
-                .background(Color.black.opacity(0.5))
-                
+                buttonsView()
+                    .background(Color.black.opacity(0.5))
             }
             .edgesIgnoringSafeArea(.vertical)
             
@@ -100,60 +69,121 @@ struct QRView: View {
             Color.clear
                 .bottomSheet(
                     item: $viewModel.bottomSheet,
-                    content: { sheet in
-                        switch sheet.sheetType {
-                            
-                        case let .imageCapture(imageCapture):
-                            QRImagePickerController(viewModel: imageCapture)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarBackButtonHidden(false)
-                            
-                        case let .choiseDocument(choiseDocument):
-                            QRButtonsView(viewModel: choiseDocument)
-                            
-                        case let .info(infoViewModel) :
-                            QRInfoViewComponent(viewModel: infoViewModel)
-                                .frame(height: 450, alignment: .top)
-                                .padding(.horizontal, 30)
-                                .padding(.top, 20)
-                            
-                        case .qRAccessViewComponent(_):
-                            
-                            QRAccessView(viewModel: .init(input: .camera,  closeAction: {
-                                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                            }))
-                            .frame(height: 330)
-                            .padding(.horizontal, 30)
-                            
-                        case .photoAccessViewComponent(_):
-                            QRAccessView(viewModel: .init(input: .photo,  closeAction: {
-                                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                            }))
-                            .frame(height: 330)
-                            .padding(.horizontal, 30)
-                        }
-                    })
+                    content: bottomSheetContent
+                )
         }
         .alert(
             item: $viewModel.alert,
             content: { alertViewModel in Alert(with: alertViewModel) }
         )
-        .sheet(item: $viewModel.sheet) { item in
+        .sheet(item: $viewModel.sheet, content: sheetView)
+    }
+}
+
+private extension QRView {
+    
+    func headerView() -> some View {
+        
+        VStack(alignment: .center, spacing: 10) {
             
-            switch item.sheetType {
-            case .documentPicker(let documentPicker):
-                //TODO: move Navigation to DocumentPicker
-                NavigationView {
-                    DocumentPicker(viewModel: documentPicker)
-                        .navigationBarTitle("Из документов", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
+            Text(viewModel.title)
+                .foregroundColor(.white)
+                .font(Font.textH1Sb24322())
+                .frame(maxWidth: .infinity)
+            
+            Text(viewModel.subTitle)
+                .foregroundColor(.white)
+                .font(Font.textH1Sb24322())
+                .frame(alignment: .center)
+            
+        }
+    }
+    
+    func buttonsView() -> some View {
+        
+        VStack {
+            
+            HStack(spacing: 20) {
+                
+                ForEach(viewModel.buttons) { buttons in
+                    
+                    ButtonIconTextView(viewModel: buttons)
                 }
-            case .imagePicker(let imagePicker):
-                NavigationView {
-                    QRImagePickerController(viewModel: imagePicker)
-                        .navigationBarTitle("Из фото", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
-                }
+            }
+            
+            ButtonSimpleView(viewModel: viewModel.closeButton)
+                .frame(height: 48)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 50)
+        }
+    }
+    
+    @ViewBuilder
+    func bottomSheetContent(
+        bottomSheet: QRViewModel.BottomSheet
+    ) -> some View {
+        
+        switch bottomSheet.sheetType {
+        case let .imageCapture(imageCapture):
+            QRImagePickerController(viewModel: imageCapture)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarBackButtonHidden(false)
+            
+        case let .choiseDocument(choiseDocument):
+            QRButtonsView(viewModel: choiseDocument)
+            
+        case let .info(infoViewModel) :
+            QRInfoViewComponent(viewModel: infoViewModel)
+                .frame(height: 450, alignment: .top)
+                .padding(.horizontal, 30)
+                .padding(.top, 20)
+            
+        case .qRAccessViewComponent(_):
+            QRAccessView(
+                viewModel: .init(input: .camera, closeAction: closeAction)
+            )
+            .frame(height: 330)
+            .padding(.horizontal, 30)
+            
+        case .photoAccessViewComponent(_):
+            QRAccessView(
+                viewModel: .init(input: .photo, closeAction: closeAction)
+            )
+            .frame(height: 330)
+            .padding(.horizontal, 30)
+        }
+    }
+    
+    func closeAction() {
+        
+        UIApplication.shared.open(
+            URL(string: UIApplication.openSettingsURLString)!,
+            options: [:],
+            completionHandler: nil
+        )
+    }
+    
+    @ViewBuilder
+    func sheetView(
+        sheet: QRViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.sheetType {
+        case .documentPicker(let documentPicker):
+            //TODO: move Navigation to DocumentPicker
+            NavigationView {
+                
+                DocumentPicker(viewModel: documentPicker)
+                    .navigationBarTitle("Из документов", displayMode: .inline)
+                    .navigationBarBackButtonHidden(true)
+            }
+            
+        case .imagePicker(let imagePicker):
+            NavigationView {
+                
+                QRImagePickerController(viewModel: imagePicker)
+                    .navigationBarTitle("Из фото", displayMode: .inline)
+                    .navigationBarBackButtonHidden(true)
             }
         }
     }
