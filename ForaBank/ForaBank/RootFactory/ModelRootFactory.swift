@@ -68,7 +68,8 @@ extension ModelRootFactory: RootFactory {
             httpClient: httpClient,
             historyFeatureFlag: true,
             marketFeatureFlag: .active,
-            savingsAccountFlag: featureFlags.savingsAccountFlag
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
+            schedulers: schedulers
         )
         
         return composer.compose()
