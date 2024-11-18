@@ -24,6 +24,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         self.model = model
         self.scheduler = scheduler
     }
+    
+    typealias MakeQRScannerModel = () -> QRModel
 }
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
