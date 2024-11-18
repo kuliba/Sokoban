@@ -18,8 +18,8 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         openQRWithFlowEvent(app)
         
-        try XCTAssertNoThrow(rootView.rootViewQRScannerFullScreenCover())
-        try XCTAssertThrowsError(rootView.mainViewQRScannerFullScreenCover())
+        expectRootViewQRScannerFullScreenCover(rootView)
+        expectNoMainViewQRScannerFullScreenCover(rootView)
     }
     
     func test_tapMainViewQRButton_shouldOpenRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
@@ -31,8 +31,8 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         tapMainViewQRButton(rootView)
         
-        try XCTAssertNoThrow(rootView.rootViewQRScannerFullScreenCover())
-        try XCTAssertThrowsError(rootView.mainViewQRScannerFullScreenCover())
+        expectRootViewQRScannerFullScreenCover(rootView)
+        expectNoMainViewQRScannerFullScreenCover(rootView)
     }
     
     func test_tapMainViewQRButton_shouldOpenMainViewQRScannerFullScreenCover() throws {
@@ -44,8 +44,8 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         tapMainViewQRButton(rootView)
         
-        try XCTAssertNoThrow(rootView.mainViewQRScannerFullScreenCover())
-        try XCTAssertThrowsError(rootView.rootViewQRScannerFullScreenCover())
+        expectMainViewQRScannerFullScreenCover(rootView)
+        expectNoRootViewQRScannerFullScreenCover(rootView)
     }
     
     // MARK: - Helpers
@@ -68,6 +68,38 @@ final class QRAcceptanceTests: AcceptanceTests {
             
             try rootView.tapMainViewQRButton()
         }
+    }
+    
+    func expectRootViewQRScannerFullScreenCover(
+        _ rootView: RootViewBinderView,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoThrow(try rootView.rootViewQRScannerFullScreenCover(), "Expected Root View FullScreenCover with QRScanner", file: file, line: line)
+    }
+    
+    func expectNoRootViewQRScannerFullScreenCover(
+        _ rootView: RootViewBinderView,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertThrowsError(try rootView.rootViewQRScannerFullScreenCover(), "Expected No Root View FullScreenCover with QRScanner", file: file, line: line)
+    }
+    
+    func expectMainViewQRScannerFullScreenCover(
+        _ rootView: RootViewBinderView,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoThrow(try rootView.mainViewQRScannerFullScreenCover(), "Expected Main View FullScreenCover with QRScanner", file: file, line: line)
+    }
+    
+    func expectNoMainViewQRScannerFullScreenCover(
+        _ rootView: RootViewBinderView,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertThrowsError(try rootView.mainViewQRScannerFullScreenCover(), "Expected No Main View FullScreenCover with QRScanner", file: file, line: line)
     }
 }
 
