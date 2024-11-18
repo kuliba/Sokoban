@@ -513,7 +513,7 @@ extension RootViewModelFactory {
             bindings: bindings,
             dismiss: dismiss,
             getNavigation: getNavigation,
-            schedulers: .init(),
+            schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
         
