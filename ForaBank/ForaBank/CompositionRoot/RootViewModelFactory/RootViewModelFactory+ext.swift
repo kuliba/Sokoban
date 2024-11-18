@@ -551,24 +551,35 @@ extension RootViewModelFactory {
                     
                     var list = ClientInformAlerts(notRequired: [], required: nil)
                     
-                    list.notRequired = response.list.filter {
-                        if let update = $0.update {
-                            
-                            return $0.update?.type == "not_required"
-                        } else { return true }
-                    }.compactMap {
+                    response.list.forEach {
                         
-                        .init(
-                            title: $0.title,
-                            text: $0.text,
-                            authBlocking: $0.authBlocking
-                        )
+                        if $0.update == nil {
+                            
+                            list.notRequired.append(
+                                .init(
+                                    title: $0.title,
+                                    text: $0.text,
+                                    authBlocking: $0.authBlocking
+                                )
+                            )
+                        }
                     }
                     
                     if let required = response.list.first(where: {
                         
-                        $0.update?.type != "not_required"
+                        $0.update != nil
                     }) {
+                        
+                        if required.update?.type == "not_required" {
+                            list.required = .init(
+                                title: required.title,
+                                text: required.text,
+                                type: .notRequired,
+                                link: required.update?.link,
+                                version: required.update?.version,
+                                authBlocking: required.authBlocking
+                            )
+                        }
                         
                         if required.update?.type == "required" {
                             list.required = .init(
