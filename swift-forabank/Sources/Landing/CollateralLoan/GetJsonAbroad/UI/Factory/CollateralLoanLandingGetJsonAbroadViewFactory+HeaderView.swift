@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  CollateralLoanLandingGetJsonAbroadViewFactory.swift
+//
 //
 //  Created by Valentin Ozerov on 14.11.2024.
 //
