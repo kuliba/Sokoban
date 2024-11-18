@@ -587,6 +587,7 @@ final class ControlPanelReducerTests: XCTestCase {
             imageLoader: { _ in },
             imageViewFactory: makeImageViewFactory,
             limitsViewModel: nil,
+            scheduler: .immediate,
             config: .default,
             landingActions: { _ in
                 return {}()
