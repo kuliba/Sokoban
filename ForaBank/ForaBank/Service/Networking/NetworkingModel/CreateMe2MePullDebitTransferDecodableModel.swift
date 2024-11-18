@@ -61,7 +61,7 @@ struct CreateMe2MePullDebitTransferDataClass: Codable {
     let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
     let currencyRate: JSONNull?
-    let debitAmount: Double?
+    let debitAmount: Decimal?
     let payeeName: String?
     let paymentOperationDetailID: Int?
     let documentStatus: JSONNull?
@@ -104,7 +104,7 @@ extension CreateMe2MePullDebitTransferDataClass {
         currencyPayer: String?? = nil,
         currencyPayee: String?? = nil,
         currencyRate: JSONNull?? = nil,
-        debitAmount: Double?? = nil,
+        debitAmount: Decimal?? = nil,
         payeeName: String?? = nil,
         paymentOperationDetailID: Int?? = nil,
         documentStatus: JSONNull?? = nil,
