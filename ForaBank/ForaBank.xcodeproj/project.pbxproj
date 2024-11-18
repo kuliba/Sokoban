@@ -12644,8 +12644,8 @@
 		2ACBA6772CE9BD2F00758D71 /* AcceptanceTests */ = {
 			isa = PBXGroup;
 			children = (
-				2A3887182CEA415300022B2D /* AcceptanceTests.swift */,
 				2ACBA6782CE9BD4A00758D71 /* QRAcceptanceTests.swift */,
+				2A3887182CEA415300022B2D /* AcceptanceTests.swift */,
 			);
 			path = AcceptanceTests;
 			sourceTree = "<group>";
