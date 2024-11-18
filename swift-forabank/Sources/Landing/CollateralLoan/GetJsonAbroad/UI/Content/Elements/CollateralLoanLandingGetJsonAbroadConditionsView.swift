@@ -32,40 +32,40 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                 .fill(Color.grayLightest)
                 .frame(maxWidth: .infinity)
             
-            conditionsListView
+            conditionsListView(config.conditions)
         }
         .padding(.leading, config.paddings.outerLeading)
         .padding(.trailing, config.paddings.outerTrailing)
     }
     
-    private var conditionsListView: some View {
+    private func conditionsListView(_ config: Config.Conditions) -> some View {
                 
         VStack {
         
-            config.conditions.header.text.text(
+            config.header.text.text(
                 withConfig: .init(
-                    textFont: config.conditions.header.headerFont.font,
-                    textColor: config.conditions.header.headerFont.foreground
+                    textFont: config.header.headerFont.font,
+                    textColor: config.header.headerFont.foreground
                 )
             )
-            .padding(.horizontal, config.conditions.horizontalPadding)
-            .padding(.vertical, config.conditions.listTopPadding)
+            .padding(.horizontal, config.horizontalPadding)
+            .padding(.vertical, config.listTopPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack {
                 ForEach(conditions, id: \.title) {
                     
-                    conditionView($0)
+                    conditionView($0, config: config)
                 }
-                .padding(.horizontal, config.conditions.horizontalPadding)
-                .padding(.bottom, config.conditions.spacing)
+                .padding(.horizontal, config.horizontalPadding)
+                .padding(.bottom, config.spacing)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.top, config.conditions.listTopPadding)
+            .padding(.top, config.listTopPadding)
         }
     }
     
-    private func conditionView(_ condition: Condition) -> some View {
+    private func conditionView(_ condition: Condition, config: Config.Conditions) -> some View {
         
         HStack(spacing: 0) {
             
@@ -73,12 +73,12 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                 
                 // simulacrum
                 Circle()
-                    .fill(config.conditions.iconBackground)
+                    .fill(config.iconBackground)
                     .frame(
-                        width: config.conditions.iconSize.width,
-                        height: config.conditions.iconSize.height
+                        width: config.iconSize.width,
+                        height: config.iconSize.height
                     )
-                    .padding(.trailing, config.conditions.iconTrailingPadding)
+                    .padding(.trailing, config.iconTrailingPadding)
                 
                 Spacer()
             }
@@ -87,21 +87,21 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                 
                 condition.title.text(
                     withConfig: .init(
-                        textFont: config.conditions.titleFont.font,
-                        textColor: config.conditions.titleFont.foreground
+                        textFont: config.titleFont.font,
+                        textColor: config.titleFont.foreground
                     )
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 condition.subTitle.text(
                     withConfig: .init(
-                        textFont: config.conditions.subTitleFont.font,
-                        textColor: config.conditions.subTitleFont.foreground
+                        textFont: config.subTitleFont.font,
+                        textColor: config.subTitleFont.foreground
                     )
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, config.conditions.subTitleTopPadding)
+                .padding(.top, config.subTitleTopPadding)
                 
                 Spacer()
             }
