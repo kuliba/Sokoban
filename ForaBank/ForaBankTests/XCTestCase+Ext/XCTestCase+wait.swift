@@ -17,9 +17,9 @@ extension XCTestCase {
     func wait(
         delay: TimeInterval = 0.05,
         timeout: TimeInterval = 1.0,
-        action: @escaping () throws -> Void,
         file: StaticString = #file,
-        line: UInt = #line
+        line: UInt = #line,
+        action: @escaping () throws -> Void
     ) {
         let exp = expectation(description: "wait for async execution")
         
