@@ -15,7 +15,7 @@ final class ModelRootFactory {
     private let logger: LoggerAgentProtocol
     private let model: Model
     private let schedulers: Schedulers
-
+    
     init(
         httpClientFactory: HTTPClientFactory,
         logger: LoggerAgentProtocol,
@@ -45,16 +45,8 @@ extension ModelRootFactory: RootFactory {
         
         return factory.make(
             dismiss: dismiss,
-            qrResolverFeatureFlag: .active,
-            fastPaymentsSettingsFlag: .live,
-            utilitiesPaymentsFlag: .live,
-            historyFilterFlag: true,
-            changeSVCardLimitsFlag: .active,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-            getProductListByTypeV6Flag: .active,
-            marketplaceFlag: .active,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            updateInfoStatusFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
     }

@@ -57,14 +57,6 @@ extension RootViewModelFactory {
             )
         }
         
-        func makeQR() -> QRScannerModel {
-            
-            makeMakeQRScannerModel(
-                qrResolverFeatureFlag: .active,
-                utilitiesPaymentsFlag: .live
-            )()
-        }
-        
         let makeStandard = makeStandard(
             loadLatestForCategory: nanoServices.loadLatestForCategory,
             loadOperators: loadOperators,
@@ -91,7 +83,7 @@ extension RootViewModelFactory {
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeQR: makeQR,
+                makeQR: makeMakeQRScannerModel,
                 makeQRNavigation: getQRNavigation,
                 makeStandard: makeStandard,
                 makeTax: makeTax,

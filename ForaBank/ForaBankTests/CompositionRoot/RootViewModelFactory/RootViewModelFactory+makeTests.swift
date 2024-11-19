@@ -142,16 +142,8 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             ).0
         ).make(
             dismiss: {},
-            qrResolverFeatureFlag: .active,
-            fastPaymentsSettingsFlag: .live,
-            utilitiesPaymentsFlag: .live,
-            historyFilterFlag: .init(true),
-            changeSVCardLimitsFlag: .active,
             collateralLoanLandingFlag: .active,
-            getProductListByTypeV6Flag: .active,
-            marketplaceFlag: .inactive,
             paymentsTransfersFlag: .active,
-            updateInfoStatusFlag: .active,
             savingsAccountFlag: .active
         )
         

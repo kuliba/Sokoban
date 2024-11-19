@@ -32,16 +32,8 @@ extension RootViewModelFactory {
     
     func make(
         dismiss: @escaping () -> Void,
-        qrResolverFeatureFlag: QRResolverFeatureFlag,
-        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
-        historyFilterFlag: HistoryFilterFlag,
-        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
         collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
-        marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         savingsAccountFlag: SavingsAccountFlag
     ) -> RootViewDomain.Binder {
         var bindings = Set<AnyCancellable>()
@@ -128,8 +120,6 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
-            qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             paymentsTransfersFlag: paymentsTransfersFlag
         )
         
@@ -270,10 +260,10 @@ extension RootViewModelFactory {
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
         
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
-            if changeSVCardLimitsFlag.isActive {
-                return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
+            if self.changeSVCardLimitsFlag.isActive {
+                return .fullScreen(.cardGuardian($0, self.changeSVCardLimitsFlag))
             } else {
-                return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
+                return .bottomSheet(.cardGuardian($0, self.changeSVCardLimitsFlag))
             }
         }
         
@@ -503,13 +493,7 @@ extension RootViewModelFactory {
         bindings.formUnion(marketBinder.bind())
         
         let getRootNavigation = makeGetRootNavigation(
-            makeQRScanner: {
-             
-                self.makeQRScannerBinder(
-                    qrResolverFeatureFlag: qrResolverFeatureFlag,
-                    utilitiesPaymentsFlag: utilitiesPaymentsFlag
-                )
-            }
+            makeQRScanner: makeQRScannerBinder
         )
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active
