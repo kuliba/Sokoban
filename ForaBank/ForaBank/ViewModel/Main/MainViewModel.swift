@@ -240,6 +240,11 @@ extension MainViewModel {
         routeSubject.send(route)
     }
     
+    func openPayment(_ type: String) {
+        
+        self.rootActions?.openUtilityPayment(type)
+    }
+    
     func openTemplates() {
         
         let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
@@ -1040,21 +1045,6 @@ private extension MainViewModel {
             sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
         default:
             break
-        }
-    }
-}
-
-private extension MainViewModel {
-    
-    func openPayment(_ type: String) {
-        
-        if model.onlyCorporateCards {
-            self.route.modal = .alert(.disableForCorporateCard { [weak self] in
-                self?.action.send(RootViewModelAction.CloseAlert())
-            })
-            
-        } else {
-            self.rootActions?.openUtilityPayment(type)
         }
     }
 }

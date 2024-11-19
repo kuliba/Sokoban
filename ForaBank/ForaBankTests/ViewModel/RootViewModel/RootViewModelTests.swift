@@ -442,6 +442,20 @@ final class RootViewModelTests: XCTestCase {
         XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
     }
     
+    func test_openPaymentFromMainView_housingAndCommunalService_shouldSelectPayment() {
+        
+        let (sut, scheduler, linkSpy, _) = makeSUT(
+            product: .cardActiveMainDebitOnlyRub,
+            selected: .market
+        )
+        
+        sut.tabsViewModel.mainViewModel.openPayment(.housingAndCommunalService)
+        scheduler.advance()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        XCTAssertNoDiff(sut.selected, .payments)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
