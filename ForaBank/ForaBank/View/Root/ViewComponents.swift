@@ -35,6 +35,7 @@ typealias MakeProductCarouselView = (ProductCarouselView.ViewModel, @escaping ()
 typealias MakeProductSelectorView = (ProductSelectorView.ViewModel) -> ProductSelectorView
 typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapView
 typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
+typealias MakeQRFailedWrapperView = (QRFailedViewModelWrapper) -> QRFailedViewModelWrapperView
 typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOperatorView
 typealias MakeQRView = (QRViewModel) -> QRView
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
@@ -57,6 +58,7 @@ struct ViewComponents {
     let makePaymentsSuccessView: MakePaymentsSuccessView
     let makePaymentsView: MakePaymentsView
     let makeQRFailedView: MakeQRFailedView
+    let makeQRFailedWrapperView: MakeQRFailedWrapperView
     let makeQRSearchOperatorView: MakeQRSearchOperatorView
     let makeQRView: MakeQRView
     let makeTemplatesListFlowView: MakeTemplatesListFlowView
@@ -80,6 +82,7 @@ extension ViewComponents {
         makePaymentsSuccessView: makePaymentsSuccessView,
         makePaymentsView: makePaymentsView,
         makeQRFailedView: makeQRFailedView,
+        makeQRFailedWrapperView: makeQRFailedWrapperView,
         makeQRSearchOperatorView: makeQRSearchOperatorView,
         makeQRView: makeQRView,
         makeTemplatesListFlowView: { _ in fatalError() },
@@ -96,6 +99,9 @@ extension ViewComponents {
     static let makePaymentsMeToMeView: MakePaymentsMeToMeView = { .init(viewModel: $0, viewFactory: .init(makeProductsSwapView: {.init(viewModel: $0, viewFactory: .preview)})) }
     static let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView = { .init(viewModel: $0, viewFactory: .preview) }
     static let makeQRFailedView: MakeQRFailedView = { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))})) }
+    static let makeQRFailedWrapperView: MakeQRFailedWrapperView = {
+        .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}), paymentsViewFactory: .preview)
+    }
     static let makeQRSearchOperatorView: MakeQRSearchOperatorView = { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView)) }
     static let makeQRView: MakeQRView = { .init(viewModel: $0, viewFactory: .init(makeQRFailedView: { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}))})) }
 }

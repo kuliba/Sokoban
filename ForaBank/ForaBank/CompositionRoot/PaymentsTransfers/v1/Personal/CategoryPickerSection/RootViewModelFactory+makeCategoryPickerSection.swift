@@ -57,7 +57,7 @@ extension RootViewModelFactory {
             )
         }
         
-        func makeQR() -> QRModel {
+        func makeQR() -> QRScannerModel {
             
             makeMakeQRScannerModel(
                 qrResolverFeatureFlag: .active,

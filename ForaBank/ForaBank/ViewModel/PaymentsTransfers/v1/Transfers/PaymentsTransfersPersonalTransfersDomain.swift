@@ -56,7 +56,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
-        case scanQR(Node<QRModel>)
+        case scanQR(Node<QRScannerModel>)
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     

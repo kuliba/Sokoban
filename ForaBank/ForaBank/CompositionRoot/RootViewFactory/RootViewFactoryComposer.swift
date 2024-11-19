@@ -94,6 +94,7 @@ extension RootViewFactoryComposer {
             makePaymentsSuccessView: makePaymentsSuccessView,
             makePaymentsView: makePaymentsView,
             makeQRFailedView: makeQRFailedView,
+            makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
@@ -407,6 +408,17 @@ private extension RootViewFactoryComposer {
         .init(viewModel: viewModel, viewFactory: makeQRFailedViewFactory())
     }
     
+    func makeQRFailedWrapperView(
+        viewModel: QRFailedViewModelWrapper
+    ) -> QRFailedViewModelWrapperView {
+        
+        return .init(
+            viewModel: viewModel, 
+            viewFactory: makeQRFailedViewFactory(),
+            paymentsViewFactory: makePaymentsViewFactory()
+        )
+    }
+    
     func makeQRFailedViewFactory() -> QRFailedViewFactory {
         .init(makeQRSearchOperatorView: makeQRSearchOperatorView)
     }
@@ -556,7 +568,8 @@ private extension RootViewFactoryComposer {
     func makeQRView(
         viewModel: QRViewModel
     ) -> QRView {
-        .init(
+        
+        return .init(
             viewModel: viewModel,
             viewFactory: .init(makeQRFailedView: makeQRFailedView)
         )
