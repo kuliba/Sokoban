@@ -5,10 +5,12 @@
 //  Created by Andryusina Nataly on 14.09.2023.
 //
 
-import SwiftUI
-import LandingUIComponent
 import Combine
+import CombineSchedulers
+import Foundation
 import LandingMapping
+import LandingUIComponent
+import SwiftUI
 
 extension Model {
     
@@ -110,7 +112,8 @@ extension Model {
         landingActions: @escaping (LandingEvent) -> Void,
         outsideAction: @escaping (String) -> Void,
         orderCard: @escaping () -> Void,
-        payment: @escaping (String) -> Void
+        payment: @escaping (String) -> Void,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) -> LandingWrapperViewModel {
         
         let actions = CarouselActions(
@@ -128,7 +131,7 @@ extension Model {
             imageViewFactory: makeImageViewFactory(),
             carouselViewFactory: makeCarouselFactory(actions: actions),
             limitsViewModel: nil,
-            scheduler: .main,
+            scheduler: scheduler,
             config: config,
             landingActions: landingActions
         )

@@ -7,6 +7,4 @@
 
 import PayHubUI
 
-typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelAction.DismissAll, QRScannerModel>
-
-final class QRScannerModel {}
+typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelAction.DismissAll, Node<QRScannerModel>>

@@ -85,8 +85,8 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
         }
     }
     
-    // bind QRModel
-    // PaymentsTransfersViewModel.swift:1567
+    // bind QRScannerModel
+    // PaymentsTransfersViewModel.swift:1576
     func compose(
         for qr: Domain.Select.QR,
         using notify: @escaping Notify

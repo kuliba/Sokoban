@@ -10,6 +10,21 @@ import PayHubUI
 extension CategoryPickerSectionContentViewConfig {
     
     static let iFora: Self = .init(
+        failure: .init(
+            imageConfig: .init(
+                color: .iconGray,
+                image: .ic24Search,
+                backgroundColor: .mainColorsGrayLightest,
+                backgroundSize: .init(width: 64, height: 64),
+                size: .init(width: 24, height: 24)
+            ),
+            spacing: 24,
+            textConfig: .init(
+                text: "Мы не смогли загрузить данные.\nПопробуйте позже.",
+                alignment: .center,
+                config: .secondary
+            )
+        ),
         headerHeight: 24,
         spacing: 16,
         title: .init(
@@ -17,7 +32,8 @@ extension CategoryPickerSectionContentViewConfig {
             config: .init(
                 textFont: .textH2Sb20282(),
                 textColor: .textSecondary
-            )
+            ),
+            leadingPadding: 20
         ),
         titlePlaceholder: .init(
             color: .gray.opacity(0.5),
