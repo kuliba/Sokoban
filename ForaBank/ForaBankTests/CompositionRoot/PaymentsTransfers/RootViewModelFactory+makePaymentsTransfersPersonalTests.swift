@@ -52,7 +52,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
-    private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
+    private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
         file: StaticString = #file,

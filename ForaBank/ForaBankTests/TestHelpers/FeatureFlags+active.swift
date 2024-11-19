@@ -9,14 +9,28 @@
 
 extension FeatureFlags {
     
-    static let active: Self = .init(
-        changeSVCardLimitsFlag: .active,
-        getProductListByTypeV6Flag: .active,
-        marketplaceFlag: .active,
-        historyFilterFlag: true,
-        paymentsTransfersFlag: .active,
-        utilitiesPaymentsFlag: .stub,
-        savingsAccountFlag: .active,
-        collateralLoanLandingFlag: .active
-    )
+    static let active: Self = activeExcept()
+    
+    static func activeExcept(
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active,
+        getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active,
+        marketplaceFlag: MarketplaceFlag = .active,
+        historyFilterFlag: HistoryFilterFlag = true,
+        paymentsTransfersFlag: PaymentsTransfersFlag = .active,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .live,
+        savingsAccountFlag: SavingsAccountFlag = .active,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag = .active
+    ) -> Self {
+        
+        return .init(
+            changeSVCardLimitsFlag: changeSVCardLimitsFlag,
+            getProductListByTypeV6Flag: getProductListByTypeV6Flag,
+            marketplaceFlag: marketplaceFlag,
+            historyFilterFlag: historyFilterFlag,
+            paymentsTransfersFlag: paymentsTransfersFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            savingsAccountFlag: savingsAccountFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag
+        )
+    }
 }

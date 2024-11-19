@@ -129,7 +129,8 @@ extension RootViewModelFactory {
         
         let qrViewModelFactory = makeQRViewModelFactory(
             qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            paymentsTransfersFlag: paymentsTransfersFlag
         )
         
         let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
@@ -502,11 +503,10 @@ extension RootViewModelFactory {
         bindings.formUnion(marketBinder.bind())
         
         let getNavigation = makeGetRootNavigation(
-            makeQRScanner: QRScannerModel.init
+            makeQRScanner: qrScannerComposer.compose
         )
-        let witness: RootViewDomain.ContentWitnesses = .init(
-            emitting: { _ in Empty().eraseToAnyPublisher() },
-            receiving: { _ in {}}
+        let witness = RootViewDomain.ContentWitnesses(
+            isFlagActive: paymentsTransfersFlag == .active
         )
         
         let composer = RootViewDomain.BinderComposer(
@@ -518,19 +518,6 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
-    }
-    
-    func makeGetRootNavigation(
-        makeQRScanner: @escaping () -> QRScannerModel
-    ) -> RootViewDomain.GetNavigation {
-        
-        return { select, notify, completion in
-            
-            switch select {
-            case .scanQR:
-                completion(.scanQR(makeQRScanner()))
-            }
-        }
     }
 }
 

@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     
     func makeTransfers(
         buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
-        makeQRModel: @escaping () -> QRModel
+        makeQRModel: @escaping () -> QRScannerModel
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         
         let elements = buttonTypes.map {
