@@ -240,11 +240,6 @@ extension MainViewModel {
         routeSubject.send(route)
     }
     
-    func openPayment(_ type: String) {
-        
-        self.rootActions?.openUtilityPayment(type)
-    }
-    
     func openTemplates() {
         
         let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
@@ -930,7 +925,7 @@ private extension MainViewModel {
             case .byQr:
                 openScanner()
             case .zku:
-                openPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             }
         }
     }

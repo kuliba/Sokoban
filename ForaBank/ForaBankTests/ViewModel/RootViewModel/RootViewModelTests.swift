@@ -449,7 +449,7 @@ final class RootViewModelTests: XCTestCase {
             selected: .market
         )
         
-        sut.tabsViewModel.mainViewModel.openPayment(.housingAndCommunalService)
+        sut.tabsViewModel.mainViewModel.fastPayment?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: .zku))
         scheduler.advance()
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -920,4 +920,16 @@ extension BannersBinder {
             loadLandingByType: { _,_ in }
         )
     )
+}
+
+private extension MainViewModel {
+    
+    var fastPayment: MainSectionFastOperationView.ViewModel? {
+        
+        sections.compactMap {
+            
+            $0 as? MainSectionFastOperationView.ViewModel
+        }
+        .first
+    }
 }
