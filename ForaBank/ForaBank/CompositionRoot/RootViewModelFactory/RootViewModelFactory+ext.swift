@@ -502,8 +502,14 @@ extension RootViewModelFactory {
         
         bindings.formUnion(marketBinder.bind())
         
-        let getNavigation = makeGetRootNavigation(
-            makeQRScanner: qrScannerComposer.compose
+        let getRootNavigation = makeGetRootNavigation(
+            makeQRScanner: {
+             
+                self.makeQRScannerBinder(
+                    qrResolverFeatureFlag: qrResolverFeatureFlag,
+                    utilitiesPaymentsFlag: utilitiesPaymentsFlag
+                )
+            }
         )
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active
@@ -512,7 +518,7 @@ extension RootViewModelFactory {
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
             dismiss: dismiss,
-            getNavigation: getNavigation,
+            getNavigation: getRootNavigation,
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )

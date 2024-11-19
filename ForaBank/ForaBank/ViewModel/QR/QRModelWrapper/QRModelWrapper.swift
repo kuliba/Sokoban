@@ -87,6 +87,9 @@ private extension QRModelWrapper {
         case let .qrResult(qrResult):
             state = .qrResult(qrResult)
             
+        case .reset:
+            state = nil
+            
         case let .scanResult(scanResult):
             state = .inflight
             effect = .scanResult(scanResult)

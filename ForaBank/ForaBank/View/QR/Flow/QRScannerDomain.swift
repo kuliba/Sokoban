@@ -16,6 +16,7 @@ extension QRScannerDomain {
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
+    typealias BinderComposer = PayHubUI.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -25,12 +26,15 @@ extension QRScannerDomain {
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     enum Select {
-        
+    
+        case qrResult(QRModelResult)
     }
     
     enum Navigation {
         
+        case payments(ClosePaymentsViewModelWrapper)
     }
 }
