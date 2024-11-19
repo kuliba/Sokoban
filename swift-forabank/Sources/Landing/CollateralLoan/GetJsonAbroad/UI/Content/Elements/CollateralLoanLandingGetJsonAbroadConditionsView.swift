@@ -7,19 +7,19 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
+struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
     
-    public let config: Config
-    public let theme: Theme
-    public let conditions: [Condition]
+    private let config: Config
+    private let theme: Theme
+    private let conditions: [Condition]
     
-    public init(config: Config, theme: Theme, conditions: [Condition]) {
+    init(config: Config, theme: Theme, conditions: [Condition]) {
         self.config = config
         self.theme = theme
         self.conditions = conditions
     }
     
-    public var body: some View {
+    var body: some View {
         
         conditionsView
     }
@@ -29,7 +29,7 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
         ZStack {
             
             RoundedRectangle(cornerRadius: config.cornerRadius)
-                .fill(Color.grayLightest)
+                .fill(config.conditions.backgroundColor)
                 .frame(maxWidth: .infinity)
             
             conditionsListView(config.conditions)
@@ -110,30 +110,9 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
     }
 }
 
-public extension CollateralLoanLandingGetJsonAbroadConditionsView {
+extension CollateralLoanLandingGetJsonAbroadConditionsView {
     
     typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
     typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
     typealias Condition = GetJsonAbroadData.Product.Condition
-}
-
-// MARK: - Previews
-
-struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        CollateralLoanLandingGetJsonAbroadView(
-            content: content,
-            factory: factory
-        )
-    }
-    
-    static let cardData = GetJsonAbroadData.cardStub
-    static let realEstateData = GetJsonAbroadData.realEstateStub
-    static let content = Content(data: cardData)
-    static let factory = Factory()
-    
-    typealias Content = CollateralLoanLandingGetJsonAbroadContent
-    typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
 }

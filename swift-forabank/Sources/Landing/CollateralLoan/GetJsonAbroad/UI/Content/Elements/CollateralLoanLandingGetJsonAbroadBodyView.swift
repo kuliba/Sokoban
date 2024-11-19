@@ -7,15 +7,16 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetJsonAbroadBodyView: View {
+struct CollateralLoanLandingGetJsonAbroadBodyView: View {
     
     let backgroundImage: String
     let headerView: HeaderView
     let conditionsView: ConditionsView
+    let calculatorView: CalculatorView
     let config: Config
     let theme: Theme
     
-    public var body: some View {
+    var body: some View {
 
         ScrollView {
             ZStack {
@@ -32,7 +33,7 @@ public struct CollateralLoanLandingGetJsonAbroadBodyView: View {
 }
 
 private extension CollateralLoanLandingGetJsonAbroadBodyView {
-
+    
     var backgroundImageView: some View {
         
         VStack {
@@ -53,23 +54,24 @@ private extension CollateralLoanLandingGetJsonAbroadBodyView {
     }
     
     var contentView: some View {
-
+        
         VStack {
             
             headerView
             conditionsView
-            
-            Spacer()
+            calculatorView
         }
         .background(Color.clear)
         .frame(maxHeight: .infinity, alignment: .top)
+        .padding(.bottom, config.paddings.outerBottom)
         .ignoresSafeArea(edges: .all)
     }
 }
 
-public extension CollateralLoanLandingGetJsonAbroadBodyView {
+extension CollateralLoanLandingGetJsonAbroadBodyView {
     
     typealias HeaderView = CollateralLoanLandingGetJsonAbroadHeaderView
     typealias ConditionsView = CollateralLoanLandingGetJsonAbroadConditionsView
+    typealias CalculatorView = CollateralLoanLandingGetJsonAbroadCalculatorView
     typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
 }
