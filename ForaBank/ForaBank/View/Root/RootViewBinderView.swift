@@ -30,7 +30,7 @@ struct RootViewBinderView: View {
                 
                 return QRWrapperView(
                     binder: binder,
-                    makeQRView: { components.makeQRView(binder.content.qrModel) },
+                    makeQRView: { components.makeQRView(binder.content.qrScanner) },
                     makePaymentsView: components.makePaymentsView
                 )
             }

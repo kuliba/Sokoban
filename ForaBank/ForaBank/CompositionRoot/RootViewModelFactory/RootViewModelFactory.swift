@@ -19,6 +19,16 @@ final class RootViewModelFactory {
     
     let settings: RootViewModelFactorySettings
     
+    // active flags
+    let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active
+    let fastPaymentsSettingsFlag: FastPaymentsSettingsFlag = .live
+    let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
+    let historyFilterFlag: HistoryFilterFlag = true
+    let marketplaceFlag: MarketplaceFlag = .active
+    let qrResolverFeatureFlag: QRResolverFeatureFlag = .active
+    let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
+    let utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .live
+    
     let schedulers: Schedulers
     
     // reusable components & factories

@@ -11,18 +11,12 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    func makeQRScannerBinder(
-        qrResolverFeatureFlag: QRResolverFeatureFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
-    ) -> QRScannerDomain.Binder {
+    func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
         let qrScannerBinderComposer = QRScannerDomain.BinderComposer(
             delay: .milliseconds(100),
             getNavigation: getQRNavigation,
-            makeContent: makeMakeQRScannerModel(
-                qrResolverFeatureFlag: qrResolverFeatureFlag,
-                utilitiesPaymentsFlag: utilitiesPaymentsFlag
-            ),
+            makeContent: makeMakeQRScannerModel,
             schedulers: schedulers,
             witnesses: .default
         )

@@ -14,11 +14,11 @@ protocol QRScanner {
     var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> { get }
 }
 
-final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
+final class QRModelWrapper<QRResult>: ObservableObject {
     
     @Published private(set) var state: State?
     
-    let qrModel: QRModel
+    let qrScanner: QRScanner
     
     private let mapScanResult: MapScanResult
     
@@ -27,14 +27,14 @@ final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
     
     init(
         mapScanResult: @escaping MapScanResult,
-        makeQRModel: MakeQRModel,
+        makeQRScanner: MakeQRScanner,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.mapScanResult = mapScanResult
         let subject = PassthroughSubject<Void, Never>()
-        self.qrModel = makeQRModel { [subject] in subject.send(()) }
+        self.qrScanner = makeQRScanner { [subject] in subject.send(()) }
         
-        qrModel.scanResultPublisher
+        qrScanner.scanResultPublisher
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.scanResult($0)) }
             .store(in: &cancellables)
@@ -53,7 +53,7 @@ final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
 extension QRModelWrapper {
     
     typealias State = QRModelWrapperState<QRResult>
-    typealias MakeQRModel = (@escaping () -> Void) -> QRModel
+    typealias MakeQRScanner = (@escaping () -> Void) -> QRScanner
     typealias MapScanResult = (QRViewModel.ScanResult, @escaping (QRResult) -> Void) -> Void
 }
 
