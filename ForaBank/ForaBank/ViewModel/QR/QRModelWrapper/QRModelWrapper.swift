@@ -18,7 +18,7 @@ final class QRModelWrapper<QRResult>: ObservableObject {
     
     @Published private(set) var state: State?
     
-    let qrModel: QRScanner
+    let qrScanner: QRScanner
     
     private let mapScanResult: MapScanResult
     
@@ -27,14 +27,14 @@ final class QRModelWrapper<QRResult>: ObservableObject {
     
     init(
         mapScanResult: @escaping MapScanResult,
-        makeQRModel: MakeQRScanner,
+        makeQRScanner: MakeQRScanner,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.mapScanResult = mapScanResult
         let subject = PassthroughSubject<Void, Never>()
-        self.qrModel = makeQRModel { [subject] in subject.send(()) }
+        self.qrScanner = makeQRScanner { [subject] in subject.send(()) }
         
-        qrModel.scanResultPublisher
+        qrScanner.scanResultPublisher
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.scanResult($0)) }
             .store(in: &cancellables)

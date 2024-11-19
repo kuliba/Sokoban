@@ -698,7 +698,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         return .init(
             mapScanResult: mapScanResult,
-            makeQRModel: makeQRModel,
+            makeQRScanner: makeQRModel,
             scheduler: scheduler
         )
     }

@@ -24,7 +24,7 @@ final class QRModelWrapperTests: XCTestCase {
         let result = QRViewModelAction.Result(result: scanResult)
         let (sut, spy) = makeSUT(scanResult: scanResult)
         
-        (sut.qrModel as? QRViewModel)?.action.send(result)
+        (sut.qrScanner as? QRViewModel)?.action.send(result)
         
         XCTAssertNoDiff(spy.payloads, [scanResult])
     }
@@ -36,7 +36,7 @@ final class QRModelWrapperTests: XCTestCase {
         let (sut, _) = makeSUT(scanResult: scanResult)
         let stateSpy = ValueSpy(sut.$state)
         
-        (sut.qrModel as? QRViewModel)?.action.send(result)
+        (sut.qrScanner as? QRViewModel)?.action.send(result)
         
         XCTAssertNoDiff(stateSpy.values, [nil, .inflight])
     }
@@ -49,7 +49,7 @@ final class QRModelWrapperTests: XCTestCase {
         let (sut, spy) = makeSUT(scanResult: scanResult)
         let stateSpy = ValueSpy(sut.$state)
         
-        (sut.qrModel as? QRViewModel)?.action.send(result)
+        (sut.qrScanner as? QRViewModel)?.action.send(result)
         spy.complete(with: qrResult)
         
         XCTAssertNoDiff(stateSpy.values, [nil, .inflight, .qrResult(qrResult)])
@@ -61,7 +61,7 @@ final class QRModelWrapperTests: XCTestCase {
         let (sut, _) = makeSUT(scanResult: scanResult)
         let stateSpy = ValueSpy(sut.$state)
         
-        (sut.qrModel as? QRViewModel)?.closeButton.action()
+        (sut.qrScanner as? QRViewModel)?.closeButton.action()
         
         XCTAssertNoDiff(stateSpy.values, [nil, .cancelled])
     }
@@ -84,7 +84,7 @@ final class QRModelWrapperTests: XCTestCase {
         let spy = MapScanResultSpy()
         let sut = SUT(
             mapScanResult: spy.process,
-            makeQRModel: {
+            makeQRScanner: {
                 
                 return QRViewModel(
                     closeAction: $0,

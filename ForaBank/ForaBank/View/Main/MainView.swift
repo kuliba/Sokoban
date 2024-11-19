@@ -314,7 +314,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            viewFactory.components.makeQRView(node.model.qrModel)
+            viewFactory.components.makeQRView(node.model.qrScanner)
                 .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
             
         case let .success(viewModel):

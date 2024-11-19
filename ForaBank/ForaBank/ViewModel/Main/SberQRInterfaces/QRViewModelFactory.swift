@@ -45,7 +45,7 @@ where QRResult == QRViewModel.ScanResult {
         
         return .init(
             mapScanResult: { _, completion in completion(.unknown) },
-            makeQRModel: QRViewModel.preview,
+            makeQRScanner: QRViewModel.preview,
             scheduler: .main
         )
     }
@@ -58,7 +58,7 @@ where QRResult == QRModelResult {
         
         return .init(
             mapScanResult: { _, completion in completion(.unknown) },
-            makeQRModel: QRViewModel.preview,
+            makeQRScanner: QRViewModel.preview,
             scheduler: .main
         )
     }

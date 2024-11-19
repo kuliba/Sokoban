@@ -1246,7 +1246,7 @@ extension PaymentsTransfersViewModel {
         guard case let .qrScanner(node) = route.modal?.fullScreenSheet?.type
         else { return nil }
         
-        return node.model.qrModel as? QRViewModel
+        return node.model.qrScanner as? QRViewModel
     }
     
     func tapQRButtonAndWait(

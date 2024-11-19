@@ -50,7 +50,7 @@ extension QRScannerComposer {
         
         return .init(
             mapScanResult: mapper.mapScanResult(_:_:),
-            makeQRModel: { QRViewModel(closeAction: $0, qrResolve: qrResolve) },
+            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: qrResolve) },
             scheduler: scheduler
         )
     }
