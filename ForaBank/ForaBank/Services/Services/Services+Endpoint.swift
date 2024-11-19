@@ -85,6 +85,7 @@ extension Services {
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
+            case getConsents
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
@@ -468,6 +469,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getAllLatestPayments
+    )
+    
+    static let getConsents: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getConsents
     )
     
     static let getAllLatestPaymentsV3: Self = .init(
