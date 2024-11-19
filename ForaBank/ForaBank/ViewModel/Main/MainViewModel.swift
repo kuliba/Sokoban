@@ -226,7 +226,9 @@ extension MainViewModel {
     
     private func openScanner() {
         
-        let qrModel = qrViewModelFactory.makeQRScannerModel()
+        guard let qrModel = qrViewModelFactory.makeQRScannerModel()
+        else { return }
+        
         let cancellable = bind(qrModel)
         var route = route
         route.modal = .fullScreenSheet(.init(
@@ -699,7 +701,7 @@ private extension MainViewModel {
         route.destination = .myProducts(myProductsViewModel)
     }
     
-    func bind(_ qrModel: QRModel) -> AnyCancellable {
+    func bind(_ qrModel: QRScannerModel) -> AnyCancellable {
         
         qrModel.$state
             .compactMap { $0 }
@@ -1804,7 +1806,7 @@ extension MainViewModel {
         
         enum Kind {
             
-            case qrScanner(Node<QRModel>)
+            case qrScanner(Node<QRScannerModel>)
             case success(PaymentsSuccessViewModel)
         }
         

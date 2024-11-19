@@ -568,7 +568,8 @@ private extension RootViewFactoryComposer {
     func makeQRView(
         viewModel: QRViewModel
     ) -> QRView {
-        .init(
+        
+        return .init(
             viewModel: viewModel,
             viewFactory: .init(makeQRFailedView: makeQRFailedView)
         )
