@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapCollateralLoanLandingGetConsents.swift
+//  ResponseMapper+mapGetConsentsResponse.swift
 //
 //
 //  Created by Valentin Ozerov on 18.11.2024.
@@ -11,7 +11,7 @@ import PDFKit
 
 public extension ResponseMapper {
     
-    static func mapCollateralLoanLandingGetConsents(
+    static func mapGetConsentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> MappingResult<PDFDocument> {

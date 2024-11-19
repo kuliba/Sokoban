@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift
+//  RequestFactory+createGetConsentsRequest.swift
 //
 //
 //  Created by Valentin Ozerov on 18.11.2024.
@@ -14,15 +14,15 @@ public extension RequestFactory {
     struct CreateCollateralLoanLandingGetConsentsPayload: Encodable, Equatable {
         
         public let applicationId: Int
-        public let files: [String]
+        public let docIds: [String]
         
-        public init(applicationId: Int, files: [String]) {
+        public init(applicationId: Int, docIds: [String]) {
             self.applicationId = applicationId
-            self.files = files
+            self.docIds = docIds
         }
     }
     
-    static func createCollateralLoanLandingGetConsentsRequest(
+    static func createGetConsentsRequest(
         url: URL,
         payload: CreateCollateralLoanLandingGetConsentsPayload
     ) throws -> URLRequest {
@@ -40,7 +40,7 @@ extension RequestFactory.CreateCollateralLoanLandingGetConsentsPayload {
 
             [
                 "applicationId": String(applicationId),
-                "files": try mapFiles
+                "docIds": try mapFiles
             ]
         }
     }
@@ -49,7 +49,7 @@ extension RequestFactory.CreateCollateralLoanLandingGetConsentsPayload {
 
         get throws {
             
-            let data = try JSONSerialization.data(withJSONObject: files as [String])
+            let data = try JSONSerialization.data(withJSONObject: docIds as [String])
             
             guard
                 let output = String(data: data, encoding: String.Encoding.utf8)

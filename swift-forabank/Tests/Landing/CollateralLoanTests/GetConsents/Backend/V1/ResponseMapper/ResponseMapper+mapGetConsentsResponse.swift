@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapCollateralLoanLandingGetConsentsTests.swift
+//  ResponseMapper+mapGetConsentsResponse.swift
 //
 //
 //  Created by Valentin Ozerov on 18.11.2024.
@@ -9,7 +9,7 @@ import RemoteServices
 import XCTest
 import PDFKit
 
-final class ResponseMapper_mapCollateralLoanLandingGetConsentsTests: XCTestCase {
+final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
     
     func test_map_shouldDeliverValidPDF() throws {
 
@@ -121,7 +121,7 @@ final class ResponseMapper_mapCollateralLoanLandingGetConsentsTests: XCTestCase 
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> MappingResult {
-        ResponseMapper.mapCollateralLoanLandingGetConsents(data, httpURLResponse)
+        ResponseMapper.mapGetConsentsResponse(data, httpURLResponse)
     }
 }
 
