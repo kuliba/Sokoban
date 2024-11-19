@@ -14,11 +14,11 @@ protocol QRScanner {
     var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> { get }
 }
 
-final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
+final class QRModelWrapper<QRResult>: ObservableObject {
     
     @Published private(set) var state: State?
     
-    let qrModel: QRModel
+    let qrModel: QRScanner
     
     private let mapScanResult: MapScanResult
     
@@ -27,7 +27,7 @@ final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
     
     init(
         mapScanResult: @escaping MapScanResult,
-        makeQRModel: MakeQRModel,
+        makeQRModel: MakeQRScanner,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.mapScanResult = mapScanResult
@@ -53,7 +53,7 @@ final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
 extension QRModelWrapper {
     
     typealias State = QRModelWrapperState<QRResult>
-    typealias MakeQRModel = (@escaping () -> Void) -> QRModel
+    typealias MakeQRScanner = (@escaping () -> Void) -> QRScanner
     typealias MapScanResult = (QRViewModel.ScanResult, @escaping (QRResult) -> Void) -> Void
 }
 

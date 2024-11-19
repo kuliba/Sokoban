@@ -1518,6 +1518,8 @@
 		2ABB63122C640B6300541DE7 /* TextInputConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63112C640B6300541DE7 /* TextInputConfig+iFora.swift */; };
 		2ABB63162C648BBD00541DE7 /* TextInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63152C648BBD00541DE7 /* TextInputWrapperView.swift */; };
 		2ABB63182C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63172C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift */; };
+		2ABB84EF2CECBA50007ABFAD /* QRScanner_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB84EE2CECBA50007ABFAD /* QRScanner_View.swift */; };
+		2ABB84F12CECBC1C007ABFAD /* QRScannerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB84F02CECBC1C007ABFAD /* QRScannerSpy.swift */; };
 		2ABBD6BF2CDD1BEC0078E977 /* MixedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6BD2CDD1BD60078E977 /* MixedPicker.swift */; };
 		2ABBD6C52CDD35650078E977 /* MixedPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */; };
 		2ABBD6C72CDD61BD0078E977 /* RootViewDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */; };
@@ -5152,6 +5154,8 @@
 		2ABB63112C640B6300541DE7 /* TextInputConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextInputConfig+iFora.swift"; sourceTree = "<group>"; };
 		2ABB63152C648BBD00541DE7 /* TextInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputWrapperView.swift; sourceTree = "<group>"; };
 		2ABB63172C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModelMapper+makeInputViewModel.swift"; sourceTree = "<group>"; };
+		2ABB84EE2CECBA50007ABFAD /* QRScanner_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner_View.swift; sourceTree = "<group>"; };
+		2ABB84F02CECBC1C007ABFAD /* QRScannerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerSpy.swift; sourceTree = "<group>"; };
 		2ABBD6BD2CDD1BD60078E977 /* MixedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedPicker.swift; sourceTree = "<group>"; };
 		2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedPickerView.swift; sourceTree = "<group>"; };
 		2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewDomain.swift; sourceTree = "<group>"; };
@@ -7821,6 +7825,7 @@
 				0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */,
 				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
+				2ABB84EE2CECBA50007ABFAD /* QRScanner_View.swift */,
 				2A61C5052CEC515000EA9BB7 /* Flow */,
 				2A3834B02C4EDEBE00A5DF8C /* PaymentProviderSegments */,
 			);
@@ -12870,6 +12875,7 @@
 				2ACBA66E2CE9B40400758D71 /* ModelRootFactory+ext.swift */,
 				2ACBA6702CE9B43200758D71 /* HTTPClientFactorySpy.swift */,
 				2ACBA6722CE9B45000758D71 /* FeatureFlags+active.swift */,
+				2ABB84F02CECBC1C007ABFAD /* QRScannerSpy.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -21624,6 +21630,7 @@
 				0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */,
 				2AB109AF2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift in Sources */,
 				508BC629286050B600F15DCD /* TextFieldToolbarViewComponent.swift in Sources */,
+				2ABB84EF2CECBA50007ABFAD /* QRScanner_View.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				6833E0CB273920CE004C070F /* LockerCoordinator.swift in Sources */,
 				77B6B35F2852305B00E3001B /* TimeInterval+Extensions.swift in Sources */,
@@ -23713,6 +23720,7 @@
 				6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */,
 				7788096B2A3B749B0004EA73 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2AA429052AC1D54E00919C4A /* PaymentsProductViewModelTests.swift in Sources */,
+				2ABB84F12CECBC1C007ABFAD /* QRScannerSpy.swift in Sources */,
 				2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */,
 				77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */,
 				2A89FB9A2A836179008F6B87 /* Crypto+AESTests.swift in Sources */,

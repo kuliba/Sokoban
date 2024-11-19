@@ -37,7 +37,7 @@ typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapVie
 typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
 typealias MakeQRFailedWrapperView = (QRFailedViewModelWrapper) -> QRFailedViewModelWrapperView
 typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOperatorView
-typealias MakeQRView = (QRViewModel) -> QRView
+typealias MakeQRView = (QRScanner) -> QRScanner_View
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (LoadableResourceViewModel<MosParkingPickerData>, TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
@@ -103,6 +103,5 @@ extension ViewComponents {
         .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}), paymentsViewFactory: .preview)
     }
     static let makeQRSearchOperatorView: MakeQRSearchOperatorView = { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView)) }
-    static let makeQRView: MakeQRView = { .init(viewModel: $0, viewFactory: .init(makeQRFailedView: { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}))})) }
+    static let makeQRView: MakeQRView = { .init(qrScanner: $0, viewFactory: .init(makeQRFailedView: { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}))})) }
 }
- 

@@ -11,7 +11,7 @@ import SwiftUI
 struct QRWrapperView: View {
     
     let binder: QRScannerDomain.Binder
-    let makeQRView: () -> QRView
+    let makeQRView: () -> QRScanner_View
     let makePaymentsView: (PaymentsViewModel) -> PaymentsView
     
     var body: some View {

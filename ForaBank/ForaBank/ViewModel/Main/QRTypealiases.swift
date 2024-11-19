@@ -15,18 +15,7 @@ typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, Mappi
 typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
 typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel
 
-typealias QRScannerModel = QRModelWrapper<QRModelResult, QRViewModel>
-
-extension QRViewModel: QRScanner {
-    
-    var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> {
-        
-        action
-            .compactMap { $0 as? QRViewModelAction.Result }
-            .map(\.result)
-            .eraseToAnyPublisher()
-    }
-}
+typealias QRScannerModel = QRModelWrapper<QRModelResult>
 
 typealias SegmentedOperatorProvider = OperatorProvider<SegmentedOperatorData, SegmentedProvider>
 
