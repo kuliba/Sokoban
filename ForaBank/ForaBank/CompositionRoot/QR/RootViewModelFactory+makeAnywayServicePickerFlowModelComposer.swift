@@ -20,12 +20,12 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let anywayComposer = AnywayFlowComposer(
             makeAnywayTransactionViewModel: transactionModelComposer.compose(transaction:),
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
             flag: flag,
@@ -54,7 +54,7 @@ extension RootViewModelFactory {
             makeAnywayFlowModel: anywayComposer.compose(transaction:),
             microServices: pickerMicroServicesComposer.compose(),
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
     }
 }

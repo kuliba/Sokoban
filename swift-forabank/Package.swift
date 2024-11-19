@@ -23,6 +23,7 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
+        .collateralLoanLandingGetJsonAbroadUI,
         .collateralLoanLandingSaveConsentsBackend,
         .collateralLoanLandingShowCaseBackend,
         .collateralLoanLandingShowCaseUI,
@@ -48,6 +49,7 @@ let package = Package(
         .banners,
         // MarketShowcase
         .marketShowcase,
+        .modifyC2BSubscriptionService,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
@@ -82,6 +84,7 @@ let package = Package(
         .prePaymentPicker,
         .productUI,
         .rxViewModel,
+        .savingsAccount,
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
@@ -134,6 +137,8 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
+        .collateralLoanLandingGetJsonAbroadUI,
+        .collateralLoanLandingGetJsonAbroadUITests,
         .collateralLoanLandingSaveConsentsBackend,
         .collateralLoanLandingSaveConsentsBackendTests,
         .collateralLoanLandingShowCaseBackend,
@@ -188,6 +193,7 @@ let package = Package(
         // MarketShowcase
         .marketShowcase,
         .marketShowcaseTests,
+        .modifyC2BSubscriptionService,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -262,6 +268,7 @@ let package = Package(
         .productUI,
         .rxViewModel,
         .rxViewModelTests,
+        .savingsAccount,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -405,6 +412,13 @@ private extension Product {
         name: .landingUIComponent,
         targets: [
             .landingUIComponent
+        ]
+    )
+    
+    static let collateralLoanLandingGetJsonAbroadUI = library(
+        name: .collateralLoanLandingGetJsonAbroadUI,
+        targets: [
+            .collateralLoanLandingGetJsonAbroadUI
         ]
     )
     
@@ -565,6 +579,13 @@ private extension Product {
         ]
     )
     
+    static let savingsAccount = library(
+        name: .savingsAccount,
+        targets: [
+            .savingsAccount,
+        ]
+    )
+    
     static let searchBarComponent = library(
         name: .searchBarComponent,
         targets: [
@@ -603,6 +624,7 @@ private extension Product {
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
+            .manageSubscriptionsUI
         ]
     )
 
@@ -801,6 +823,12 @@ private extension Product {
         ]
     )
     
+    static let modifyC2BSubscriptionService = library(
+        name: .modifyC2BSubscriptionService,
+        targets: [
+            .modifyC2BSubscriptionService,
+        ]
+    )
     // MARK: - Services
     
     static let cardStatementAPI = library(
@@ -1216,6 +1244,23 @@ private extension Target {
             .sharedConfigs
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
+    )
+
+    static let collateralLoanLandingGetJsonAbroadUI = target(
+        name: .collateralLoanLandingGetJsonAbroadUI,
+        dependencies: [
+            .uiPrimitives
+        ],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.getJsonAbroad)/UI"
+    )
+    
+    static let collateralLoanLandingGetJsonAbroadUITests = testTarget(
+        name: .collateralLoanLandingGetJsonAbroadUITests,
+        dependencies: [
+            .collateralLoanLandingGetJsonAbroadUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.getJsonAbroad)/UI"
     )
 
     static let collateralLoanLandingSaveConsentsBackend = target(
@@ -1761,6 +1806,17 @@ private extension Target {
         path: "Tests/\(String.marketShowcaseTests)"
     )
 
+    static let modifyC2BSubscriptionService = target(
+        name: .modifyC2BSubscriptionService,
+        dependencies: [
+            .genericRemoteService,
+            .remoteServices,
+            .foraTools,
+            .uiPrimitives
+        ],
+        path: "Sources/Services/\(String.modifyC2BSubscriptionService)"
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = target(
@@ -2364,7 +2420,10 @@ private extension Target {
     )
     
     static let manageSubscriptionsUI = target(
-        name: .manageSubscriptionsUI
+        name: .manageSubscriptionsUI,
+        dependencies: [
+        ],
+        path: "Sources/\(String.manageSubscriptionsUI)"
     )
     
     static let otpInputComponent = target(
@@ -2470,6 +2529,11 @@ private extension Target {
         path: "Tests/UI/\(String.rxViewModelTests)"
     )
     
+    static let savingsAccount = target(
+        name: .savingsAccount,
+        path: "Sources/UI/\(String.savingsAccount)"
+    )
+
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -2570,6 +2634,7 @@ private extension Target {
             .otpInputComponent,
             .rxViewModel,
             .uiPrimitives,
+            .manageSubscriptionsUI
         ],
         path: "Sources/UI/\(String.userAccountNavigationComponent)"
     )
@@ -3026,6 +3091,10 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
     
+    static let collateralLoanLandingGetJsonAbroadUI = byName(
+        name: .collateralLoanLandingGetJsonAbroadUI
+    )
+    
     static let collateralLoanLandingSaveConsentsBackend = byName(
         name: .collateralLoanLandingSaveConsentsBackend
     )
@@ -3112,6 +3181,10 @@ private extension Target.Dependency {
         name: .rxViewModel
     )
     
+    static let savingsAccount = byName(
+        name: .savingsAccount
+    )
+
     static let searchBarComponent = byName(
         name: .searchBarComponent
     )
@@ -3303,7 +3376,15 @@ private extension Target.Dependency {
     static let marketShowcase = byName(
         name: .marketShowcase
     )
+    
+    static let modifyC2BSubscriptionService = byName(
+        name: .modifyC2BSubscriptionService
+    )
 
+    static let manageSubscriptionsUI = byName(
+        name: .manageSubscriptionsUI
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = byName(
@@ -3442,6 +3523,10 @@ private extension String {
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
+    static let getJsonAbroad = "GetJsonAbroad"
+    static let collateralLoanLandingGetJsonAbroadUI = "CollateralLoanLandingGetJsonAbroadUI"
+    static let collateralLoanLandingGetJsonAbroadUITests = "CollateralLoanLandingGetJsonAbroadUITests"
+
     static let SaveConsents = "SaveConsents"
     static let collateralLoanLandingSaveConsentsBackend = "CollateralLoanLandingSaveConsentsBackend"
     static let collateralLoanLandingSaveConsentsBackendTests = "CollateralLoanLandingSaveConsentsBackendTests"
@@ -3507,6 +3592,8 @@ private extension String {
     
     static let rxViewModel = "RxViewModel"
     static let rxViewModelTests = "RxViewModelTests"
+    
+    static let savingsAccount = "SavingsAccount"
     
     static let searchBarComponent = "SearchBarComponent"
     
@@ -3643,6 +3730,8 @@ private extension String {
     
     static let marketShowcase = "MarketShowcase"
     static let marketShowcaseTests = "MarketShowcaseTests"
+
+    static let modifyC2BSubscriptionService = "ModifyC2BSubscriptionService"
 
     // MARK: - Services
     

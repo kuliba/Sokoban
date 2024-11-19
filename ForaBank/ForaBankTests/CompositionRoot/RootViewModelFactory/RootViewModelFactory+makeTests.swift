@@ -136,20 +136,23 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
-            mainScheduler: .immediate,
-            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+            schedulers: .test(
+                main: .immediate,
+                background: backgroundScheduler.eraseToAnyScheduler()
+            ).0
         ).make(
             dismiss: {},
-            qrResolverFeatureFlag: .init(.active),
-            fastPaymentsSettingsFlag: .init(.active(.live)),
-            utilitiesPaymentsFlag: .init(.active(.live)),
+            qrResolverFeatureFlag: .active,
+            fastPaymentsSettingsFlag: .live,
+            utilitiesPaymentsFlag: .live,
             historyFilterFlag: .init(true),
-            changeSVCardLimitsFlag: .init(.active),
-            getProductListByTypeV6Flag: .init(.active),
-            marketplaceFlag: .init(.inactive),
-            paymentsTransfersFlag: .init(.active),
-            updateInfoStatusFlag: .init(.active), 
-            savingsAccountFlag: .init(.active)
+            changeSVCardLimitsFlag: .active,
+            collateralLoanLandingFlag: .active,
+            getProductListByTypeV6Flag: .active,
+            marketplaceFlag: .inactive,
+            paymentsTransfersFlag: .active,
+            updateInfoStatusFlag: .active,
+            savingsAccountFlag: .active
         )
         
         return (sut, httpClient, sessionAgent, backgroundScheduler)

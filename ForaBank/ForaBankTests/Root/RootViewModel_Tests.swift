@@ -1,186 +1,24 @@
 //
-//  RootViewModelEmittingWitnessTests.swift
+//  RootViewModel_Tests.swift
 //  ForaBankTests
 //
-//  Created by Igor Malyarov on 11.11.2024.
+//  Created by Igor Malyarov on 18.11.2024.
 //
-
-import Combine
-
-extension RootViewModel {
-    
-    typealias Domain = ForaBank.RootViewDomain
-    typealias Select = Domain.Select
-    
-    var selectEmitting: AnyPublisher<Select, Never> {
-        
-        return Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
-    }
-}
-
-private extension RootViewModel {
-    
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        mainViewRootEventPublishers + paymentsTransfersRootEventPublishers
-    }
-    
-    private var mainViewRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        tabsViewModel.mainViewModel.rootEventPublishers
-    }
-    
-    private var paymentsTransfersRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        switch tabsViewModel.paymentsModel {
-        case let .legacy(legacy):
-            return legacy.rootEventPublishers
-            
-        default:
-            return []
-        }
-    }
-}
-
-private extension MainViewModel {
-
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        explicitRootEventPublishers + fastRootEventPublishers
-    }
-
-    private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-     
-        sections
-            .map(\.action)
-            .map { $0.compactMap { $0 as? RootEvent }.eraseToAnyPublisher() }
-    }
-
-    private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        sections
-            .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
-            .map(\.rootEventPublisher)
-    }
-}
-
-private extension MainSectionFastOperationView.ViewModel {
-    
-    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
-        
-        action
-            .compactMap { $0 as? MainSectionViewModelAction.FastPayment.ButtonTapped }
-            .map(\.operationType)
-            .compactMap(\.rootEvent)
-            .eraseToAnyPublisher()
-    }
-}
-
-private extension MainSectionFastOperationView.ViewModel.FastOperations {
-    
-    var rootEvent: RootEvent? {
-        
-        switch self {
-        case .byQr: return .scanQR
-        default:    return nil
-        }
-    }
-}
-
-private extension PaymentsTransfersViewModel {
-    
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        sections
-            .filter { $0.type == .payments }
-            .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
-            .map(\.rootEventPublisher)
-    }
-}
-
-private extension PTSectionPaymentsView.ViewModel {
-    
-    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
-        
-        action
-            .compactMap { $0 as? PTSectionPaymentsViewAction.ButtonTapped.Payment }
-            .compactMap(\.rootEvent)
-            .eraseToAnyPublisher()
-    }
-}
-
-private extension PTSectionPaymentsViewAction.ButtonTapped.Payment {
-    
-    var rootEvent: RootEvent? {
-        
-        switch type {
-        case .qrPayment: return .scanQR
-        default:         return nil
-        }
-    }
-}
-
-typealias RootEvent = ForaBank.RootViewDomain.Select
-extension RootEvent: Action {}
 
 @testable import ForaBank
 import PayHubUI
 import XCTest
 
-final class RootViewModelEmittingWitnessTests: XCTestCase {
-    
-    func test_init_shouldNotEmit() {
-        
-        let (sut, spy) = makeSUT()
-        
-        XCTAssertNoDiff(spy.values, [])
-        XCTAssertNotNil(sut)
-    }
-    
-    func test_init_shouldEmitScanQROnMainViewSectionsEmitScanQR() throws {
-        
-        let (sut, spy) = makeSUT()
-        let sections = sut.mainViewSections
-        
-        for index in sections.indices {
-            
-            sections[index].emit(.scanQR)
-            
-            let value = spy.values[index]
-            XCTAssertNoDiff(value, .scanQR, "Expected `scanQR` RootEvent from \(sections[index]) at \(index), but got \(value) instead.")
-        }
-        
-        XCTAssertEqual(sections.count, 6)
-        XCTAssertNoDiff(spy.values, .init(repeating: .scanQR, count: 6), "Expected \(6) `scanQR` RootEvents, but got \(spy.values.count) instead.")
-    }
-    
-    func test_init_shouldEmitScanQROnMainViewFastOperationSectionQRButtonAction() throws {
-        
-        let (sut, spy) = makeSUT()
-        
-        try sut.tapMainViewFastSectionQRButton()
-        
-        XCTAssertNoDiff(spy.values, [.scanQR])
-    }
-    
-    func test_init_shouldEmitScanQROnLegacyPaymentsTransfersPaymentsSectionQRButtonAction() throws {
-        
-        let (sut, spy) = makeSUT()
-        
-        try sut.tapLegacyPaymentsSectionQRButton()
-        
-        XCTAssertNoDiff(spy.values, [.scanQR])
-    }
+class RootViewModel_Tests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Domain = ForaBank.RootViewDomain
-    private typealias Witnesses = ContentWitnesses<RootViewModel, Domain.Select>
-    private typealias SUT = RootViewModel
-    private typealias Emitting = Witnesses.Emitting
-    private typealias Spy = ValueSpy<Domain.Select>
+    typealias Domain = ForaBank.RootViewDomain
+    typealias Witnesses = ContentWitnesses<RootViewModel, Domain.Select>
+    typealias SUT = RootViewModel
+    typealias Spy = ValueSpy<Domain.Select>
     
-    private func makeSUT(
+    func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -203,7 +41,7 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
                     qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
-                    updateInfoStatusFlag: .init(.inactive),
+                    updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     bannersBinder: .preview
                 ),
@@ -228,13 +66,41 @@ final class RootViewModelEmittingWitnessTests: XCTestCase {
             mainScheduler: .immediate
         )
         
-        let spy = Spy(sut.selectEmitting)
+        let spy = Spy(sut.rootEventPublisher)
         
         // FIXME: fie Model memory leaks
         // trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, spy)
+    }
+    
+    func mainViewSections(
+        _ sut: SUT
+    ) -> [MainSectionViewModel] {
+        
+        sut.mainViewSections
+    }
+    
+    func emit(
+        _ event: RootEvent,
+        from section: MainSectionViewModel
+    ) {
+        section.emit(event)
+    }
+    
+    func tapMainViewFastSectionQRButton(
+        _ sut: SUT
+    ) throws {
+        
+        try sut.tapMainViewFastSectionQRButton()
+    }
+    
+    func tapLegacyPaymentsSectionQRButton(
+        _ sut: SUT
+    ) throws {
+        
+        try sut.tapLegacyPaymentsSectionQRButton()
     }
 }
 
@@ -328,7 +194,7 @@ private extension PaymentsTransfersViewModel {
     ) throws -> PaymentsSection {
         
         let sections = sections.compactMap { $0 as? PaymentsSection }
-            
+        
         return try XCTUnwrap(sections.first, "Expected to have Payments Section", file: file, line: line)
     }
     

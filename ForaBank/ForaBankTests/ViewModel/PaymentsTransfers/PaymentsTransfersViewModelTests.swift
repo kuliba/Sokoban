@@ -999,7 +999,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .default,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

@@ -9,13 +9,13 @@ extension PaymentsTransfersPersonalViewConfig {
     
     static let preview: Self = .init(
         titleSpacing: 16,
-        spacing: 32,
         title: .init(
             text: "Payments",
             config: .init(
                 textFont: .title3.bold(),
                 textColor: .black
-            )
+            ),
+            leadingPadding: 20
         )
     )
 }

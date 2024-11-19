@@ -124,6 +124,9 @@ private extension UserAccountNavigationFPSReducer {
         var effect: Effect?
         
         switch status {
+        case .accountLink:
+            state.fpsRoute?.destination = .accountLink
+            
         case .inflight:
             state.spinner = .init()
             

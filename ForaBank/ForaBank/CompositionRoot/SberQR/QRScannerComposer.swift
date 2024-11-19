@@ -30,7 +30,7 @@ final class QRScannerComposer {
 
 extension QRScannerComposer {
     
-    func compose() -> QRModel {
+    func compose() -> QRScannerModel {
         
         // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
         let qrResolve: QRViewModel.QRResolve = { [self] string in
