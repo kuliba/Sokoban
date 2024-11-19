@@ -20,6 +20,7 @@ extension ModelRootFactory {
             httpClientFactory: httpClientFactory,
             logger: logger,
             model: model,
+            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
             schedulers: .immediate
         )
     }
@@ -35,6 +36,7 @@ extension ModelRootFactory {
             httpClientFactory: httpClientFactory, 
             logger: logger,
             model: model,
+            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
             schedulers: schedulers
         )
     }

@@ -81,6 +81,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
+            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
             schedulers: .immediate
         ).makeSegmentedPaymentProviderPickerFlowModel(
             flag: flag
