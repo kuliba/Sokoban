@@ -69,7 +69,8 @@ struct MainView<NavigationOperationView: View>: View {
                 )
             
             Color.clear
-                .fullScreenCover(
+                .accessibilityIdentifier(ElementIDs.mainView(.fullScreenCoverAnchor).rawValue)
+                .fullScreenCoverInspectable(
                     item: .init(
                         get: { viewModel.route.modal?.fullScreenSheet },
                         set: { if $0 == nil { viewModel.resetModal() } }
@@ -212,7 +213,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .failedView(failedViewModel):
-            viewFactory.components.makeQRFailedView(failedViewModel)
+            viewFactory.components.makeQRFailedWrapperView(failedViewModel)
             
         case let .searchOperators(viewModel):
             viewFactory.components.makeQRSearchOperatorView(viewModel)
@@ -259,6 +260,11 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
+            
+        case .collateralLoanLanding:
+            // TODO: There are will added integration in next commit
+            Color.clear
+                .edgesIgnoringSafeArea(.bottom)
         }
     }
     
@@ -309,6 +315,7 @@ struct MainView<NavigationOperationView: View>: View {
         switch fullScreenSheet.type {
         case let .qrScanner(node):
             viewFactory.components.makeQRView(node.model.qrModel)
+                .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
             
         case let .success(viewModel):
             viewFactory.components.makePaymentsSuccessView(viewModel)
@@ -585,7 +592,7 @@ extension ProductProfileViewModel  {
         productNavigationStateManager: .preview,
         makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
         makeSubscriptionsViewModel: { _,_ in .preview },
-        updateInfoStatusFlag: .init(.active),
+        updateInfoStatusFlag: .active,
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
         makeServicePaymentBinder: ServicePaymentBinder.preview
@@ -602,8 +609,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         landingServices: .empty(), 
         paymentsTransfersFactory: .preview,
-        updateInfoStatusFlag: .init(.active),
-        onRegister: {}, 
+        updateInfoStatusFlag: .active,
+        onRegister: {},
         bannersBinder: .preview
     )
 }

@@ -84,6 +84,7 @@ class ProductProfileViewModel: ObservableObject {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
         
+    private let depositResponseSubject = CurrentValueSubject<Bool, Never>(false)
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
@@ -140,7 +141,6 @@ class ProductProfileViewModel: ObservableObject {
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.filterState = filterState
         self.cardAction = createCardAction(cvvPINServicesClient, model)
-      
         
         // TODO: add removeDuplicates
         self.bottomSheetSubject
@@ -481,6 +481,19 @@ private extension ProductProfileViewModel {
                 
             }.store(in: &bindings)
         
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.DepositTransferButtonDidTapped }
+            .flatMap { [unowned self] _ in
+                self.depositResponseSubject
+                    .filter { $0 }
+                    .first()
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                self.handleDepositTransfer()
+            }.store(in: &bindings)
+        
         // Confirm OTP
         
         action
@@ -559,29 +572,37 @@ private extension ProductProfileViewModel {
             }.store(in: &bindings)
         
         action
+            .compactMap { $0 as? ProductProfileViewModelAction.PullToRefresh }
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                if let productType = productData?.productType {
+                    model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
+                }
+               
+                model.action.send(ModelAction.Statement.List.Request(
+                    productId: product.activeProductId,
+                    direction: .latest,
+                    operationType: nil,
+                    category: nil
+                ))
+                
+                switch product.productType {
+                case .deposit:
+                    model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
+                case .loan:
+                    model.action.send(ModelAction.Loans.Update.Single.Request(productId: product.activeProductId))
+                default:
+                    break
+                }
+            }
+            .store(in: &bindings)
+        
+        action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case _ as ProductProfileViewModelAction.PullToRefresh:
-                    
-                    if let productType = productData?.productType {
-                        model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
-                    }
-                    model.action.send(ModelAction.Statement.List.Request(
-                        productId: product.activeProductId,
-                        direction: .latest,
-                        operationType: nil,
-                        category: nil
-                    ))
-                    switch product.productType {
-                    case .deposit:
-                        model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
-                    case .loan:
-                        model.action.send(ModelAction.Loans.Update.Single.Request(productId: product.activeProductId))
-                        
-                    default:
-                        break
-                    }
                     
                 case let payload as ProductProfileViewModelAction.Show.OptionsPannel:
                     bind(optionsPannel: payload.viewModel)
@@ -787,12 +808,14 @@ private extension ProductProfileViewModel {
                     }
                     
                 case let payload as ModelAction.Deposits.Info.Single.Response:
+                    
+                    hideSpinner()
+                    
                     switch payload {
                     case .success(data: _):
                         
-                        guard let productData = productData else {
-                            return
-                        }
+                        guard let productData else { return }
+                        depositResponseSubject.send(true)
                         buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
                         
                     default:
@@ -950,9 +973,10 @@ private extension ProductProfileViewModel {
                 }
                 self.product.productType = product.productType
                 
-                if let deposit = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData, model.depositsInfo.value[self.product.activeProductId] == nil {
+                if let deposit = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData {
                     
                     self.model.action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
+                    depositResponseSubject.send(false)
                 }
                 // status bar update
 //                withAnimation {
@@ -1078,9 +1102,8 @@ private extension ProductProfileViewModel {
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
         
-        guard let history = history else {
-            return
-        }
+        guard let history = history else { return }
+        
         history.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -1089,28 +1112,32 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
+                    
                     guard let storage = self.model.statements.value[self.product.activeProductId],
-                          let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
-                          statementData.paymentDetailType != .notFinance,
-                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
+                          let latestStatementData = storage.statements
+                        .filter({ $0.operationId == payload.statementId })
+                        .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
+                        .first,
+                          latestStatementData.paymentDetailType != .notFinance,
+                          let productData = self.model.products.value.values
+                        .flatMap({ $0 })
+                        .first(where: { $0.id == self.product.activeProductId }) 
                     else { return }
                     
                     let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
-                        statementData,
+                        latestStatementData,
                         productData,
                         self.model
                     )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     
                     if #unavailable(iOS 14.5) {
-                        
                         self.bind(operationDetailViewModel)
                     }
                     
                 default:
                     break
                 }
-                
             }.store(in: &bindings)
     }
     
@@ -1213,32 +1240,11 @@ private extension ProductProfileViewModel {
                             self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             
                         case .deposit:
-                            guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData,
-                                  let depositInfo = model.depositsInfo.value[self.product.activeProductId],
-                                  let transferType = depositProduct.availableTransferType(with: depositInfo) else {
-                                return
-                            }
                             
-                            switch transferType {
-                            case .remains:
-                                // перевести
-                                
-                                guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferDeposit(depositProduct, 0)) else {
-                                    return
-                                }
-                                
-                                self.bind(viewModel)
-                                
-                                self.bottomSheet = .init(type: .meToMe(viewModel))
-                                
-                            case let .interest(amount):
-                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
-                                
-                            case let .close(amount):
-                                let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                            if !self.depositResponseSubject.value {
+                                self.showSpinner()
                             }
+                            self.action.send(ProductProfileViewModelAction.DepositTransferButtonDidTapped())
                             
                         default:
                             break
@@ -1321,6 +1327,32 @@ private extension ProductProfileViewModel {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    private func handleDepositTransfer() {
+        
+        guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData,
+              let depositInfo = model.depositsInfo.value[self.product.activeProductId],
+              let transferType = depositProduct.availableTransferType(with: depositInfo) else {
+            return
+        }
+
+        switch transferType {
+        case .remains:
+            guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferDeposit(depositProduct, 0)) else {
+                return
+            }
+            self.bind(viewModel)
+            self.bottomSheet = .init(type: .meToMe(viewModel))
+
+        case let .interest(amount):
+            let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
+            self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+
+        case let .close(amount):
+            let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
+            self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+        }
     }
     
     func bind(product: InfoProductViewModel) {
@@ -1678,6 +1710,7 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
+                    
                     model.action.send(ModelAction.Products.Update.Total.All())
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
@@ -2011,7 +2044,7 @@ fileprivate extension NavigationBarView.ViewModel {
         self.title = ProductViewModel.name(
             product: product,
             style: .profile,
-            creditProductName: .productView
+            creditProductName: .productViewNavTitle
         )
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
@@ -2639,6 +2672,7 @@ enum ProductProfileViewModelAction {
     }
     
     struct TransferButtonDidTapped: Action {}
+    struct DepositTransferButtonDidTapped: Action {}
     
     enum Spinner {
         

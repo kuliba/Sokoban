@@ -7,85 +7,69 @@
 
 import Combine
 import Foundation
+import PayHubUI
 
 final class ModelRootFactory {
     
     private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
     private let model: Model
-    
+    private let schedulers: Schedulers
+
     init(
         httpClientFactory: HTTPClientFactory,
         logger: LoggerAgentProtocol,
-        model: Model
+        model: Model,
+        schedulers: Schedulers = .init()
     ) {
         self.httpClient = httpClientFactory.makeHTTPClient()
         self.logger = logger
         self.model = model
+        self.schedulers = schedulers
     }
 }
 
 extension ModelRootFactory: RootFactory {
     
-    func makeRootViewModel(
-        _ featureFlags: FeatureFlags,
-        bindings: inout Set<AnyCancellable>
-    ) -> RootViewModel {
+    func makeBinder(
+        featureFlags: FeatureFlags,
+        dismiss: @escaping () -> Void
+    ) -> RootViewDomain.Binder {
         
         let factory = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
-            logger: logger
+            logger: logger,
+            schedulers: schedulers
         )
         
-        let rootViewModel = factory.make(
-            bindings: &bindings,
-            qrResolverFeatureFlag: .init(.active),
-            fastPaymentsSettingsFlag: .init(.active(.live)),
-            utilitiesPaymentsFlag: .init(.active(.live)),
+        return factory.make(
+            dismiss: dismiss,
+            qrResolverFeatureFlag: .active,
+            fastPaymentsSettingsFlag: .live,
+            utilitiesPaymentsFlag: .live,
             historyFilterFlag: true,
-            changeSVCardLimitsFlag: .init(.active),
-            getProductListByTypeV6Flag: .init(.active),
-            marketplaceFlag: .init(.active),
+            changeSVCardLimitsFlag: .active,
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+            getProductListByTypeV6Flag: .active,
+            marketplaceFlag: .active,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            updateInfoStatusFlag: .init(.active),
+            updateInfoStatusFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-        
-        let binder = MarketShowcaseToRootViewModelBinder(
-            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
-            rootViewModel: rootViewModel,
-            scheduler: .main
-        )
-
-        bindings.formUnion(binder.bind())
-
-        return rootViewModel
-    }
-    
-    func makeGetRootNavigation(
-        _ featureFlags: FeatureFlags
-    ) -> RootViewDomain.GetNavigation {
-        
-        return { select, notify, completion in
-        
-            switch select {
-            case .scanQR:
-                completion(.scanQR)
-            }
-        }
     }
     
     func makeRootViewFactory(
-        _ featureFlags: FeatureFlags
+        featureFlags: FeatureFlags
     ) -> RootViewFactory {
         
         let composer = RootViewFactoryComposer(
             model: model,
             httpClient: httpClient,
-            historyFeatureFlag: featureFlags.historyFilterFlag,
-            marketFeatureFlag: featureFlags.marketplaceFlag,
-            savingsAccountFlag: featureFlags.savingsAccountFlag
+            historyFeatureFlag: true,
+            marketFeatureFlag: .active,
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
+            schedulers: schedulers
         )
         
         return composer.compose()

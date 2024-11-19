@@ -22,7 +22,7 @@ extension RootViewModelFactory {
         
         let getBannerListLoader = AnyLoader { completion in
             
-            self.backgroundScheduler.delay(for: .seconds(2)) {
+            self.schedulers.background.delay(for: .seconds(2)) {
                 
                 localBannerListLoader.serial {
                     
@@ -59,7 +59,8 @@ extension BannersBinder {
     static let preview: BannersBinder = RootViewModelFactory(
         model: .emptyMock,
         httpClient: Model.emptyMock.authenticatedHTTPClient(),
-        logger: LoggerAgent()
+        logger: LoggerAgent(),
+        schedulers: .init()
     ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,
         nanoServices: .init(

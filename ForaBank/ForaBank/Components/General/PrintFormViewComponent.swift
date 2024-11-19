@@ -340,7 +340,13 @@ struct PrintFormView: View {
                     
                     switch item.type {
                     case .activity(let activityViewModel):
-                        ActivityView(viewModel: activityViewModel)
+                        
+                        ActivityView(
+                            viewModel: ActivityView.ViewModel(
+                                activityItems: activityViewModel.activityItems,
+                                completion: {
+                                    viewModel.sheet = nil
+                                }))
                     }
                 }
                 

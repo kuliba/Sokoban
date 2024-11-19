@@ -16,7 +16,7 @@ final class MainViewModelTests: XCTestCase {
         
         let (sut, _) = makeSUT()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-                
+        
         XCTAssertNil(sut.sections.stickerViewModel)
     }
     
@@ -36,7 +36,7 @@ final class MainViewModelTests: XCTestCase {
         
         model.images.value = ["1": .tiny()]
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-                
+        
         XCTAssertNoDiff(stickerSpy.values, [nil, nil])
     }
     
@@ -70,7 +70,7 @@ final class MainViewModelTests: XCTestCase {
         let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.C2B.GetC2BSubscription.Request })
         XCTAssertNoDiff(spy.values.count, 0)
         XCTAssertNoDiff(model.subscriptions.value, nil)
-
+        
         sut.tapUserAccount()
         
         XCTAssertNoDiff(spy.values.count, 1)
@@ -104,10 +104,10 @@ final class MainViewModelTests: XCTestCase {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         XCTAssertNoDiff(sutActionSpy.values.count, 1)
-       
+        
         XCTAssertNotNil(sutActionSpy.values.first)
     }
- 
+    
     func test_orderSticker_showsAlert_whenNoCards() {
         
         let localAgentDataStubClear: [String: Data] = [
@@ -115,11 +115,11 @@ final class MainViewModelTests: XCTestCase {
         ]
         let localAgent = LocalAgentStub(stub: localAgentDataStubClear)
         let model = Model.mockWithEmptyExcept(
-          localAgent: localAgent
+            localAgent: localAgent
         )
         
         let qrViewModelFactory = QRViewModelFactory.preview()
-
+        
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_,_   in nil },
@@ -128,12 +128,12 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
-     
-      sut.orderSticker()
+        
+        sut.orderSticker()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNotNil(sut.route.modal?.alert)
@@ -162,7 +162,7 @@ final class MainViewModelTests: XCTestCase {
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
@@ -181,9 +181,9 @@ final class MainViewModelTests: XCTestCase {
         ]
         
         XCTAssertNil(sut.route.modal)
-
+        
         sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byQr)
-
+        
         XCTAssertNotNil(sut.route.modal?.alert)
     }
     
@@ -196,12 +196,12 @@ final class MainViewModelTests: XCTestCase {
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.modal)
-
+        
         sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byQr)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .qrScanner)
     }
     
@@ -215,12 +215,12 @@ final class MainViewModelTests: XCTestCase {
         ]
         
         XCTAssertNil(sut.route.modal)
-
+        
         sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
-
+        
         XCTAssertNotNil(sut.route.modal?.alert)
     }
-
+    
     func test_tapByPhone_notOnlyCorporateCards_shouldSetModalToByPhone() {
         
         let (sut, model) = makeSUT()
@@ -230,11 +230,11 @@ final class MainViewModelTests: XCTestCase {
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.modal)
-
+        
         sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .byPhone)
     }
     
@@ -248,9 +248,9 @@ final class MainViewModelTests: XCTestCase {
         ]
         
         XCTAssertNil(sut.route.destination)
-
+        
         sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
-
+        
         XCTAssertNil(sut.route.destination)
     }
     
@@ -263,12 +263,86 @@ final class MainViewModelTests: XCTestCase {
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.destination)
-
+        
         sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
-
+        
         XCTAssertNoDiff(sut.route.case, .openCard)
+    }
+    
+    func test_tapOpenAccount_accountProductsListWithOutValue_shouldNotChangeDestination() {
+        
+        let (sut, model) = makeSUT()
+        model.accountProductsList.value = .init()
+        XCTAssertNil(sut.route.destination)
+        
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .account)
+        
+        XCTAssertNil(sut.route.destination)
+    }
+    
+    func test_tapOpenAccount_accountProductsListNotNil_shouldSetModalToOpenAccount() {
+        
+        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        model.accountProductsList.value = [.test]
+        XCTAssertNil(sut.route.destination)
+        
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .account)
+        
+        XCTAssertNoDiff(sut.route.modal?.case, .openAccount)
+    }
+    
+    func test_tapOpenDeposit_shouldSetRouteToOpenDepositsList() {
+        
+        let (sut, _) = makeSUT()
+        XCTAssertNil(sut.route.destination)
+        
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .deposit)
+        
+        XCTAssertNoDiff(sut.route.case, .openDepositsList)
+    }
+    
+    func test_openProducts_tapOpenSticker_shouldSetRouteToLanding() {
+        
+        let (sut, _) = makeSUT()
+        XCTAssertNil(sut.route.destination)
+        
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .loan)
+        
+        XCTAssertNoDiff(sut.route.case, .landing)
+    }
+    
+    func test_productsSection_tapOpenSticker_shouldSetRouteToLanding() {
+        
+        let (sut, _) = makeSUT()
+        XCTAssertNil(sut.route.destination)
+        
+        sut.mainSection?.showStickerAndWait()
+        
+        XCTAssertNoDiff(sut.route.case, .landing)
+    }
+    
+    func test_productsSection_tapMoreProduct_shouldSetRouteToMyProducts() {
+        
+        let (sut, _) = makeSUT()
+        XCTAssertNil(sut.route.destination)
+        
+        sut.mainSection?.openMoreProductAndWait()
+        
+        XCTAssertNoDiff(sut.route.case, .myProducts)
+    }
+    
+    func test_productsSection_tapProductProfile_shouldSetRouteToProductProfile() {
+        
+        let (sut, model) = makeSUT()
+        let productID = 1
+        model.products.value[.card] = [makeCardProduct(id: productID, cardType: .main, isMain: true)]
+        XCTAssertNil(sut.route.destination)
+        
+        sut.mainSection?.openProductProfileAndWait(productId: productID)
+        
+        XCTAssertNoDiff(sut.route.case, .productProfile)
     }
     
     func test_tapCurrencyWallet_buy_onlyCorporateCards_shouldShowAlert() {
@@ -282,29 +356,29 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
-
+        
         sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .buy)
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_buy_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
-
+        
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.destination)
-
+        
         sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .buy)
-
+        
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
- 
+    
     func test_tapCurrencyWallet_item_onlyCorporateCards_shouldShowAlert() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
@@ -316,29 +390,29 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
-
+        
         sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .item)
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_item_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
-
+        
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.destination)
-
+        
         sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .item)
-
+        
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
-
+    
     func test_tapCurrencyWallet_sell_onlyCorporateCards_shouldShowAlert() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
@@ -350,26 +424,26 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
-
+        
         sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .sell)
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_sell_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
-
+        
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.destination)
-
+        
         sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .sell)
-
+        
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
@@ -384,27 +458,27 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
-
+        
         sut.openMigTransfer(.init(countryId: "810"))
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_openMigTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
-
+        
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.destination)
-
+        
         sut.openMigTransfer(.init(countryId: "810"))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-
+        
         XCTAssertNoDiff(sut.route.case, .payments)
     }
     
@@ -419,125 +493,125 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
-
+        
         sut.openContactTransfer(.init(countryId: "810"))
-
+        
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_openContactTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
         
         let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
-
+        
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
             makeCardProduct(id: 2, cardType: .corporate),
             makeCardProduct(id: 3, cardType: .main, isMain: true),
         ]
-
+        
         XCTAssertNil(sut.route.destination)
-
+        
         sut.openContactTransfer(.init(countryId: "810"))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-
+        
         XCTAssertNoDiff(sut.route.case, .payments)
     }
-
+    
     // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
-
+    
     /*func test_updateSections_updateInfoFullPath_updateInfoStatusFlagActive_shouldAddUpdateSections()  {
-        
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.active))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-         
-        assert(sections: sut.sections, count: 6, type: .products)
-
-        model.updateInfo.value.setValue(false, for: .card)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-        
-        model.updateInfo.value.setValue(false, for: .loan)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-
-        model.updateInfo.value.setValue(false, for: .deposit)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-
-        model.updateInfo.value.setValue(false, for: .account)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-
-        model.updateInfo.value.setValue(true, for: .card)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-
-        model.updateInfo.value.setValue(true, for: .loan)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-        
-        model.updateInfo.value.setValue(true, for: .deposit)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 7, type: .updateInfo)
-
-        model.updateInfo.value.setValue(true, for: .account)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        assert(sections: sut.sections, count: 6, type: .products)
-    }
-   */
+     
+     let (sut, model) = makeSUT(updateInfoStatusFlag: .active)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+     
+     assert(sections: sut.sections, count: 6, type: .products)
+     
+     model.updateInfo.value.setValue(false, for: .card)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(false, for: .loan)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(false, for: .deposit)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(false, for: .account)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(true, for: .card)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(true, for: .loan)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(true, for: .deposit)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 7, type: .updateInfo)
+     
+     model.updateInfo.value.setValue(true, for: .account)
+     _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+     
+     assert(sections: sut.sections, count: 6, type: .products)
+     }
+     */
     func test_updateSections_updateInfoFullPath_updateInfoStatusFlagInActive_shouldAddUpdateSections()  {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.inactive))
+        let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-         
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(false, for: .card)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(false, for: .loan)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(false, for: .deposit)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(false, for: .account)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(true, for: .card)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(true, for: .loan)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(true, for: .deposit)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
-
+        
         model.updateInfo.value.setValue(true, for: .account)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         assert(sections: sut.sections, count: 6, type: .products)
     }
     
@@ -557,31 +631,31 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.route.case, .landing)
         XCTAssertNil(sut.route.modal)
     }
-
+    
     func test_landingAction_tapGoToBack_shouldSetDestinationToNil() {
         
         let (sut, _) = makeSUT()
         let type = anyMessage()
         
         let destinationSpy = ValueSpy(sut.$route.map(\.case))
-
+        
         sut.handleLandingAction(type)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         sut.landingWrapperViewModel?.action(.goToBack)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-
+        
         XCTAssertNoDiff(destinationSpy.values, [nil, .landing, nil])
     }
-
+    
     // MARK: - Helpers
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
-
+    
     private func makeSUT(
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -598,7 +672,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
+            makeProductProfileViewModel: { _,_,_,_ in .sample },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -629,7 +703,7 @@ final class MainViewModelTests: XCTestCase {
             createSberQRPaymentResultStub: .success(.empty()),
             getSberQRDataResultStub: .success(.empty())
         )
-
+        
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_,_   in nil },
@@ -638,11 +712,11 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
-
+        
         // trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
@@ -667,7 +741,7 @@ final class MainViewModelTests: XCTestCase {
             createSberQRPaymentResultStub: .success(.empty()),
             getSberQRDataResultStub: .success(.empty())
         )
-
+        
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_,_   in nil },
@@ -676,18 +750,18 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
-
+        
         // trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
         
         return (sut, model)
     }
-
+    
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = ProductCarouselView.StickerViewModel
     
@@ -714,7 +788,7 @@ final class MainViewModelTests: XCTestCase {
         sut: MainViewModel,
         model: Model
     ) {
-    
+        
         let sessionAgent = ActiveSessionAgentStub()
         let serverAgent = ServerAgentTestStub(getC2bResponseStub)
         
@@ -732,11 +806,11 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .init(.inactive),
+            updateInfoStatusFlag: .inactive,
             onRegister: {},
             bannersBinder: .preview
         )
-
+        
         // trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
@@ -895,6 +969,15 @@ private extension MainViewModel {
         }
         .first
     }
+    
+    var mainSection: MainSectionProductsView.ViewModel? {
+        
+        sections.compactMap {
+            
+            $0 as? MainSectionProductsView.ViewModel
+        }
+        .first
+    }
 }
 
 private extension MainViewModel.Route {
@@ -902,14 +985,28 @@ private extension MainViewModel.Route {
     var `case`: Case? {
         
         switch destination {
-        case .none:           return .none
-        case .templates:      return .templates
-        case .paymentSticker: return .paymentSticker
-        case .openCard:       return .openCard
-        case .landing:        return .landing
-        case .currencyWallet: return .currencyWallet
-        case .payments:       return .payments
-        default:              return .other
+        case .none:
+            return .none
+        case .currencyWallet:
+            return .currencyWallet
+        case .landing:
+            return .landing
+        case .myProducts:
+            return .myProducts
+        case .openCard:
+            return .openCard
+        case .openDepositsList:
+            return .openDepositsList
+        case .payments:
+            return .payments
+        case .paymentSticker:
+            return .paymentSticker
+        case .productProfile:
+            return .productProfile
+        case .templates:
+            return .templates
+        default:
+            return .other
         }
     }
     
@@ -917,11 +1014,14 @@ private extension MainViewModel.Route {
         
         case currencyWallet
         case landing
+        case myProducts
         case openCard
+        case openDepositsList
+        case other
         case payments
         case paymentSticker
+        case productProfile
         case templates
-        case other
     }
 }
 
@@ -940,25 +1040,31 @@ private extension MainViewModel.Modal {
             case .byPhone: return .byPhone
             default: return .other
             }
-        case let .alert(viewModel):
+        case .alert:
             return .alert
-        default: return .other
+        case let .bottomSheet(bottomSheet):
+            switch bottomSheet.type {
+            case .openAccount: return .openAccount
+            case .clientInform: return .clientInform
+            }
         }
     }
     
     enum Case: Equatable {
         
+        case alert
+        case byPhone
+        case clientInform
+        case openAccount
+        case other
         case qrScanner
         case success
-        case byPhone
-        case other
-        case alert
     }
 }
 
 private extension MainSectionFastOperationView.ViewModel {
     
-    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.05) {
+    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.1) {
         
         let fastPaymentAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: type)
         action.send(fastPaymentAction)
@@ -993,18 +1099,18 @@ private extension MainSectionCurrencyMetallView.ViewModel {
                 switch actionType {
                 case .buy:
                     return MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy(code: currency)
-
+                    
                 case .item:
                     return MainSectionViewModelAction.CurrencyMetall.DidTapped.Item(code: currency)
-
+                    
                 case .sell:
                     return MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell(code: currency)
                 }
             }()
-        action.send(currencyAction)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-    }
+            action.send(currencyAction)
+            
+            _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        }
 }
 
 private extension TemplatesListViewModel {
@@ -1047,12 +1153,28 @@ private extension MainSectionOpenProductView.ViewModel {
     }
 }
 
-private extension MainViewModel {
+private extension MainSectionProductsView.ViewModel {
     
     func showStickerAndWait(timeout: TimeInterval = 0.05) {
         
         let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
         action.send(stickerAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func openMoreProductAndWait(timeout: TimeInterval = 0.05) {
+        
+        let moreAction = MainSectionViewModelAction.Products.MoreButtonTapped()
+        action.send(moreAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func openProductProfileAndWait(productId: Int, timeout: TimeInterval = 0.1) {
+        
+        let productProfileAction = MainSectionViewModelAction.Products.ProductDidTapped(productId: productId)
+        action.send(productProfileAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -1091,10 +1213,15 @@ private extension CurrencyWalletData {
         code: "RUB",
         rateBuy: 100,
         rateBuyDelta: nil,
-        rateSell: 100, 
+        rateSell: 100,
         rateSellDelta: nil,
         md5hash: "",
         currAmount: 1,
         nameCw: ""
     )
+}
+
+private extension OpenAccountProductData {
+    
+    static let test: Self = .init(currencyAccount: "", open: true, breakdownAccount: "", accountType: "", currencyCode: 810, currency: .rub, designMd5hash: "", designSmallMd5hash: "", detailedConditionUrl: "", detailedRatesUrl: nil, txtConditionList: [.init(name: "", description: "", type: .green)])
 }

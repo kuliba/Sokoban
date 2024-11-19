@@ -173,7 +173,9 @@ extension PaymentsTransfersViewModel {
     
     func openScanner() {
         
-        let qrModel = qrViewModelFactory.makeQRScannerModel()
+        guard let qrModel = qrViewModelFactory.makeQRScannerModel()
+        else { return }
+
         let cancellable = bind(qrModel)
         var route = route
         route.modal = .fullScreenSheet(.init(
@@ -509,7 +511,7 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             
-            case qrScanner(Node<QRModel>)
+            case qrScanner(Node<QRScannerModel>)
             case paymentCancelled(expired: Bool)
             case success(PaymentsSuccessViewModel)
         }
@@ -1507,12 +1509,9 @@ private extension PaymentsTransfersViewModel {
                 
                 switch source {
                 case .direct:
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 300,
-                        action: PaymentsTransfersViewModelAction.Show.Countries())
-                    )
+                    break
                     
-                case .sfp:
+                case .sfp, .mock(_):
                     self.action.send(DelayWrappedAction(
                         delayMS: 300,
                         action: PaymentsTransfersViewModelAction.Show.Contacts())
@@ -1574,7 +1573,7 @@ private extension PaymentsTransfersViewModel {
         )
     }
     
-    func bind(_ qrModel: QRModel) -> AnyCancellable {
+    func bind(_ qrModel: QRScannerModel) -> AnyCancellable {
         
         qrModel.$state
             .compactMap { $0 }
@@ -1703,11 +1702,11 @@ extension PaymentsTransfersViewModel {
         case let .provider(payload):
             makeServicePicker(payload)
 
-        case let .single(`operator`, qrCode, qrMapping):
+        case let .single(single):
             let viewModel = InternetTVDetailsViewModel(
                 model: model,
-                qrCode: qrCode,
-                mapping: qrMapping
+                qrCode: single.qrCode,
+                mapping: single.qrMapping
             )
             
             self.route.destination = .operatorView(viewModel)

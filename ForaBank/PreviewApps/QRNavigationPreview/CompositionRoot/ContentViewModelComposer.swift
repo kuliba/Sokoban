@@ -106,6 +106,14 @@ private extension ContentViewModelComposer {
                 case .chat:
                     print("Need to switch to chat tab")
                     notify(.dismiss)
+                    
+                case .main:
+                    print("Need to switch to main tab")
+                    notify(.dismiss)
+                    
+                case .payments:
+                    print("Need to switch to payments tab")
+                    notify(.dismiss)
                 }
             }
         
@@ -145,46 +153,83 @@ private extension ContentViewModelComposer {
         )
     }
     
-    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailureDomain.Binder, QRMapping, ServicePicker, Source>
     
     private func makeNavigationComposer() -> NavigationComposer {
         
         return .init(
-            microServices: .init(
-                makeQRFailure: qrFailureBinderComposer.compose,
+            firstMicroServices: .init(
                 makePayments: makePayments,
+                makeQRFailure: qrFailureBinderComposer.compose
+            ),
+            secondMicroServices: .init(
+                makeConfirmSberQR: { url, completion in
+                    
+                    if url.absoluteString.contains("failure") {
+                        completion(nil)
+                    } else {
+                        completion(.init())
+                    }
+                },
                 makeMixedPicker: { _ in .init() },
-                makeMultiplePicker: { _ in .init() }
+                makeMultiplePicker: { _ in .init() },
+                makeOperatorModel: { _ in .init() },
+                makeServicePicker: { _ in .init() }
             ),
             witnesses: .init(
                 addCompany: .init(
                     mixedPicker: { $0.addCompanyPublisher },
-                    multiplePicker: { $0.addCompanyPublisher }
+                    multiplePicker: { $0.addCompanyPublisher },
+                    servicePicker: { $0.publisher(for: \.goToChat) }
+                ),
+                goToMain: .init(
+                    servicePicker: { $0.publisher(for: \.goToMain) }
+                ),
+                goToPayments: .init(
+                    servicePicker: { $0.publisher(for: \.goToPayments) }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosedPublisher },
                     multiplePicker: { $0.isClosedPublisher },
                     payments: { $0.isClosedPublisher },
-                    qrFailure: { _ in Empty().eraseToAnyPublisher() }
+                    qrFailure: { _ in Empty().eraseToAnyPublisher() },
+                    servicePicker: { _ in fatalError() }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.scanQRPublisher },
                     multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
-                    qrFailure: { _ in Empty().eraseToAnyPublisher() }
+                    qrFailure: { $0.scanQRPublisher },
+                    servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
         )
     }
     
     private func makePayments(
-        payload: NavigationComposer.MicroServices.MakePaymentsPayload
+        payload: NavigationComposer.FirstMicroServices.MakePaymentsPayload
     ) -> Payments {
         
         switch payload {
         case let .c2bSubscribe(url), let .c2b(url):
-            return Payments(url: url)
+            return .init(url: url)
+            
+        case let .details(qrCode):
+            return .init(source: .details(qrCode))
+            
+        case let .source(source):
+            return .init(source: .source(source))
         }
+    }
+}
+
+extension QRFailureDomain.Binder {
+    
+    var scanQRPublisher: AnyPublisher<Void, Never> {
+        
+        flow.$state
+            .compactMap(\.navigation?.scanQR)
+            .eraseToAnyPublisher()
     }
 }
 

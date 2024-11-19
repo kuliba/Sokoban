@@ -109,7 +109,7 @@ struct PaymentsSubscriberView: View {
             VStack(spacing: 24) {
                 
                 IconView(viewModel: viewModel.icon)
-                    .frame(width: 64, height: 64)
+                    .frame(width: 40, height: 40)
             
                 VStack(spacing: 8) {
                     

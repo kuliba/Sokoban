@@ -10,14 +10,15 @@ import AnywayPaymentDomain
 import Combine
 import GenericRemoteService
 import InfoComponent
+import LandingUIComponent
+import LoadableResourceComponent
+import MarketShowcase
 import PaymentComponents
+import PayHubUI
 import PDFKit
 import SberQR
 import SwiftUI
 import UIPrimitives
-import MarketShowcase
-import LandingUIComponent
-import LoadableResourceComponent
 
 final class RootViewFactoryComposer {
     
@@ -26,19 +27,22 @@ final class RootViewFactoryComposer {
     private let historyFeatureFlag: HistoryFilterFlag
     private let marketFeatureFlag: MarketplaceFlag
     private let savingsAccountFlag: SavingsAccountFlag
+    private let schedulers: Schedulers
 
     init(
         model: Model,
         httpClient: HTTPClient,
         historyFeatureFlag: HistoryFilterFlag,
         marketFeatureFlag: MarketplaceFlag,
-        savingsAccountFlag: SavingsAccountFlag
+        savingsAccountFlag: SavingsAccountFlag,
+        schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
         self.historyFeatureFlag = historyFeatureFlag
         self.marketFeatureFlag = marketFeatureFlag
         self.savingsAccountFlag = savingsAccountFlag
+        self.schedulers = schedulers
     }
 }
 
@@ -90,6 +94,7 @@ extension RootViewFactoryComposer {
             makePaymentsSuccessView: makePaymentsSuccessView,
             makePaymentsView: makePaymentsView,
             makeQRFailedView: makeQRFailedView,
+            makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
@@ -403,6 +408,17 @@ private extension RootViewFactoryComposer {
         .init(viewModel: viewModel, viewFactory: makeQRFailedViewFactory())
     }
     
+    func makeQRFailedWrapperView(
+        viewModel: QRFailedViewModelWrapper
+    ) -> QRFailedViewModelWrapperView {
+        
+        return .init(
+            viewModel: viewModel, 
+            viewFactory: makeQRFailedViewFactory(),
+            paymentsViewFactory: makePaymentsViewFactory()
+        )
+    }
+    
     func makeQRFailedViewFactory() -> QRFailedViewFactory {
         .init(makeQRSearchOperatorView: makeQRSearchOperatorView)
     }
@@ -552,7 +568,8 @@ private extension RootViewFactoryComposer {
     func makeQRView(
         viewModel: QRViewModel
     ) -> QRView {
-        .init(
+        
+        return .init(
             viewModel: viewModel,
             viewFactory: .init(makeQRFailedView: makeQRFailedView)
         )
@@ -809,36 +826,37 @@ private extension RootViewFactoryComposer {
             result: landing,
             config: .default,
             landingActions: {
-            
-            // TODO: add case
-            switch $0 {
                 
-            case let .card(action):
-                switch action {
+                // TODO: add case
+                switch $0 {
                     
-                case .goToMain:
-                    flowEvent(.select(.goToMain))
-                case let .openUrl(url):
-                    flowEvent(.select(.openURL(url)))
-                default:
-                    break
+                case let .card(action):
+                    switch action {
+                        
+                    case .goToMain:
+                        flowEvent(.select(.goToMain))
+                    case let .openUrl(url):
+                        flowEvent(.select(.openURL(url)))
+                    default:
+                        break
+                    }
+                case let .sticker(action):
+                    switch action {
+                    case .goToMain:
+                        flowEvent(.select(.goToMain))
+                    default:
+                        break
+                    }
+                default:break
                 }
-            case let .sticker(action):
-                switch action {
-                case .goToMain:
-                    flowEvent(.select(.goToMain))
-                default:
-                    break
-                }
-            default:break
-            }
-            }, 
+            },
             outsideAction: { flowEvent(.select(.landing($0))) },
-            orderCard: orderCard, 
-            payment: payment
+            orderCard: orderCard,
+            payment: payment,
+            scheduler: schedulers.main
         )
         
-       return LandingWrapperView(viewModel: landingViewModel)
+        return LandingWrapperView(viewModel: landingViewModel)
     }
     
     func makeMarketShowcaseView(

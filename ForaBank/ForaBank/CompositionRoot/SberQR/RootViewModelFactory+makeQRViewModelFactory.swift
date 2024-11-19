@@ -12,16 +12,27 @@ extension RootViewModelFactory {
     
     func makeQRViewModelFactory(
         qrResolverFeatureFlag: QRResolverFeatureFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> QRViewModelFactory {
         
-        .init(
-            makeQRScannerModel: makeMakeQRScannerModel(
-                qrResolverFeatureFlag: qrResolverFeatureFlag,
-                utilitiesPaymentsFlag: utilitiesPaymentsFlag
-            ),
+        return .init(
+            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel(),
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(),
-            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel()
+            makeQRScannerModel: {
+                
+                switch paymentsTransfersFlag.rawValue {
+                case .active:
+                    return nil
+                    
+                case .inactive:
+                    let make = self.makeMakeQRScannerModel(
+                        qrResolverFeatureFlag: qrResolverFeatureFlag,
+                        utilitiesPaymentsFlag: utilitiesPaymentsFlag
+                    )
+                    return make()
+                }
+            }
         )
     }
 }
