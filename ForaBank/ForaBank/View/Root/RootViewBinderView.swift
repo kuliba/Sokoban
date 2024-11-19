@@ -24,7 +24,16 @@ struct RootViewBinderView: View {
                     rootViewFactory: rootViewFactory
                 )
             },
-            makeQRScannerView: rootViewFactory.components.makeQRView
+            makeQRScannerView: { binder in
+                
+                let components = rootViewFactory.components
+                
+                return QRWrapperView(
+                    binder: binder,
+                    makeQRView: { components.makeQRView(binder.content.qrScanner) },
+                    makePaymentsView: components.makePaymentsView
+                )
+            }
         )
     }
 }
@@ -35,6 +44,8 @@ struct RootWrapperView: View {
     
     let rootView: () -> RootView
     let makeQRScannerView: MakeQRView
+    
+    typealias MakeQRView = (QRScannerDomain.Binder) -> QRWrapperView
     
     var body: some View {
         
@@ -78,13 +89,13 @@ extension RootViewDomain.Navigation {
         
         switch self {
         case let .scanQR(node):
-            return .scanQR(node.model.qrModel)
+            return .scanQR(node.model)
         }
     }
     
     enum FullScreenCover {
         
-        case scanQR(QRViewModel)
+        case scanQR(QRScannerDomain.Binder)
     }
 }
 

@@ -27,6 +27,7 @@ class RootViewModelFactoryTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: logger,
+            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
             schedulers: .immediate
         )
         

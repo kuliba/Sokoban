@@ -912,6 +912,7 @@ extension BannersBinder {
         model: .emptyMock,
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
+        makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
         schedulers: .immediate
     ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,

@@ -413,7 +413,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         return .init(
             mapScanResult: { _,_ in },
-            makeQRModel: { .preview(closeAction: $0) },
+            makeQRScanner: { QRViewModel.preview(closeAction: $0) },
             scheduler: .immediate
         )
     }

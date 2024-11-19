@@ -41,6 +41,7 @@ struct CollateralLoanLandingShowCaseBulletListView: View {
 }
 
 extension CollateralLoanLandingShowCaseBulletListView {
+
     typealias Theme = CollateralLoanLandingShowCaseTheme
     typealias Config = CollateralLoanLandingShowCaseViewConfig
 }
