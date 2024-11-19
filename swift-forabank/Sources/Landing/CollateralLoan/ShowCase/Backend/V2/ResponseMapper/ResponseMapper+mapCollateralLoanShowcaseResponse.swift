@@ -35,29 +35,43 @@ private extension ResponseMapper._Data {
     
     func getCollateralLoanLandingShowCaseModel() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel {
         
-        guard let serial = self.serial else {
+        guard
+            let serial,
+            let products
+        else {
             throw ResponseMapper.InvalidResponse()
         }
         
         return .init(
             serial: serial,
-            products: self.products?.map(\.self.map) ?? []
+            products: try products.map { try $0.map() }
         )
     }
 }
 
 private extension ResponseMapper._Data.Product {
 
-    var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product {
+    func map() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel.Product {
         
-        .init(
+        guard
+            let name,
+            let terms,
+            let landingId,
+            let image,
+            let keyMarketingParams,
+            let features
+        else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        return .init(
             theme: themeMap,
-            name: self.name,
-            terms: self.terms,
-            landingId: self.landingId,
-            image: self.image,
-            keyMarketingParams: self.keyMarketingParams?.map,
-            features: self.features?.map
+            name: name,
+            terms: terms,
+            landingId: landingId,
+            image: image,
+            keyMarketingParams: try keyMarketingParams.map(),
+            features: try features.map()
         )
     }
 }
@@ -81,31 +95,55 @@ private extension ResponseMapper._Data.Product {
 
 private extension ResponseMapper._Data.Product.Features {
 
-    var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Features {
-        .init(
-            header: self.header,
-            list: self.list?.map(\.self.map) ?? []
+    func map() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Features {
+        
+        guard
+            let list
+        else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        return .init(
+            header: header,
+            list: try list.map { try $0.map() }
         )
     }
 }
 
 private extension ResponseMapper._Data.Product.Features.List {
 
-    var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Features.List {
-        .init(
-            bullet: self.bullet,
-            text: self.text
+    func map() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Features.List {
+        
+        guard
+            let bullet,
+            let text
+        else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        return .init(
+            bullet: bullet,
+            text: text
         )
     }
 }
 
 private extension ResponseMapper._Data.Product.KeyMarketingParams {
 
-    var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.KeyMarketingParams {
-        .init(
-            rate: self.rate,
-            amount: self.amount,
-            term: self.term
+    func map() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel.Product.KeyMarketingParams {
+        
+        guard
+            let rate,
+            let amount,
+            let term
+        else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        return .init(
+            rate: rate,
+            amount: amount,
+            term: term
         )
     }
 }
