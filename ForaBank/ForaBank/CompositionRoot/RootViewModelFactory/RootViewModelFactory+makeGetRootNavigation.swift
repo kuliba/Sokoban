@@ -10,7 +10,7 @@ import Combine
 extension RootViewModelFactory {
     
     func makeGetRootNavigation(
-        makeQRScanner: @escaping () -> QRScannerModel
+        makeQRScanner: @escaping () -> QRScannerDomain.Binder
     ) -> RootViewDomain.GetNavigation {
         
         return { [bind] select, notify, completion in
@@ -18,7 +18,8 @@ extension RootViewModelFactory {
             switch select {
             case .scanQR:
                 let qrScanner = makeQRScanner()
-                let cancellable = bind(qrScanner, notify)
+                let cancellable = bind(qrScanner.content, notify)
+                
                 completion(.scanQR(.init(
                     model: qrScanner,
                     cancellable: cancellable
@@ -26,7 +27,7 @@ extension RootViewModelFactory {
             }
         }
     }
-        
+    
     private func bind(
         _ scanQR: QRScannerModel,
         using notify: @escaping RootViewDomain.Notify
@@ -35,7 +36,7 @@ extension RootViewModelFactory {
         // PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer.swift:308
         return scanQR.$state
             .compactMap { $0 }
-            // .debounce(for: 0.1, scheduler: scheduler)
+        // .debounce(for: 0.1, scheduler: scheduler)
             .sink {
                 
                 switch $0 {
@@ -47,7 +48,7 @@ extension RootViewModelFactory {
                     break
                     
                 case let .qrResult(qrResult):
-                   // notify(.select(.qr(.result(qrResult))))
+                    // notify(.select(.qr(.result(qrResult))))
                     break
                 }
             }

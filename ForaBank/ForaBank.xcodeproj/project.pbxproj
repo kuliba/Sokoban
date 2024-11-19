@@ -935,6 +935,9 @@
 		2A60A84F2CA283F000BD8338 /* PaymentProviderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A60A84E2CA283F000BD8338 /* PaymentProviderPicker.swift */; };
 		2A617E6B2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A617E6A2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */; };
 		2A617E6D2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A617E6C2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */; };
+		2A61C5072CEC516900EA9BB7 /* QRScannerDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61C5062CEC516900EA9BB7 /* QRScannerDomain.swift */; };
+		2A61C5092CEC535A00EA9BB7 /* QRWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61C5082CEC535A00EA9BB7 /* QRWrapperView.swift */; };
+		2A61C50B2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */; };
 		2A61D0632BECB59E00802C95 /* UtilityPaymentTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */; };
 		2A61D0672BECB65A00802C95 /* UtilityPrepaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */; };
 		2A61D07B2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */; };
@@ -4579,6 +4582,9 @@
 		2A60A84E2CA283F000BD8338 /* PaymentProviderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPicker.swift; sourceTree = "<group>"; };
 		2A617E6A2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowMakeNavigationComposer.swift; sourceTree = "<group>"; };
 		2A617E6C2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowMakeNavigationComposer.swift; sourceTree = "<group>"; };
+		2A61C5062CEC516900EA9BB7 /* QRScannerDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerDomain.swift; sourceTree = "<group>"; };
+		2A61C5082CEC535A00EA9BB7 /* QRWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRWrapperView.swift; sourceTree = "<group>"; };
+		2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRScannerBinder.swift"; sourceTree = "<group>"; };
 		2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityPaymentTypes.swift; sourceTree = "<group>"; };
 		2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentViewModel.swift; sourceTree = "<group>"; };
 		2A61D0782BECBCCA00802C95 /* UtilityPrepaymentCompletionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentCompletionEvent.swift; sourceTree = "<group>"; };
@@ -7817,6 +7823,7 @@
 				0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */,
 				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
+				2A61C5052CEC515000EA9BB7 /* Flow */,
 				2A3834B02C4EDEBE00A5DF8C /* PaymentProviderSegments */,
 			);
 			path = QR;
@@ -10601,6 +10608,15 @@
 			path = PaymentProviderPicker;
 			sourceTree = "<group>";
 		};
+		2A61C5052CEC515000EA9BB7 /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				2A61C5062CEC516900EA9BB7 /* QRScannerDomain.swift */,
+				2A61C5082CEC535A00EA9BB7 /* QRWrapperView.swift */,
+			);
+			path = Flow;
+			sourceTree = "<group>";
+		};
 		2A61D0772BECBCB800802C95 /* UtilityPrepaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
@@ -11240,6 +11256,7 @@
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
 				2AA258642CEB969F0038642C /* RootViewModelFactory+makeGetRootNavigation.swift */,
+				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
 				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
@@ -22187,6 +22204,7 @@
 				2AD15D152C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift in Sources */,
 				2AAC45D62CB987640096DD71 /* Model+runOnceWhenAuthorised.swift in Sources */,
 				83BD071B2C75F72D0074F444 /* DisableCorCardsView.swift in Sources */,
+				2A61C50B2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift in Sources */,
 				2AA3A96E2BFF91EA00AEBCC9 /* AnywayPaymentFooterConfig.swift in Sources */,
 				2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */,
 				77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */,
@@ -22729,6 +22747,7 @@
 				83B6F3D82AB1EF8600A4C427 /* CodableToUILanding.swift in Sources */,
 				774A82C327BAD58300E5A5E9 /* SettingsAgentProtocol.swift in Sources */,
 				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,
+				2A61C5072CEC516900EA9BB7 /* QRScannerDomain.swift in Sources */,
 				5A5ABFB327ABCA5100D548AA /* DepositInfoDataItem.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
 				77517FE027A98A94005CFB77 /* ServerCommands+User.swift in Sources */,
@@ -23129,6 +23148,7 @@
 				5011B1E8291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift in Sources */,
 				ED2D89F3286C84950000B391 /* CameraAgent.swift in Sources */,
 				2A1E76B22AEE995200B33AF7 /* ComposedCVVPINService.swift in Sources */,
+				2A61C5092CEC535A00EA9BB7 /* QRWrapperView.swift in Sources */,
 				2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */,
 				F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */,
 				F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */,
