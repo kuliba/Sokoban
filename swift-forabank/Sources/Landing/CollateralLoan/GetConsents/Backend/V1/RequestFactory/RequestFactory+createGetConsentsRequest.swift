@@ -11,7 +11,7 @@ import ForaTools
 
 public extension RequestFactory {
 
-    struct CreateCollateralLoanLandingGetConsentsPayload: Encodable, Equatable {
+    struct GetConsentsPayload: Encodable, Equatable {
         
         public let applicationId: Int
         public let docIds: [String]
@@ -24,7 +24,7 @@ public extension RequestFactory {
     
     static func createGetConsentsRequest(
         url: URL,
-        payload: CreateCollateralLoanLandingGetConsentsPayload
+        payload: GetConsentsPayload
     ) throws -> URLRequest {
                 
         let url = try url.appendingQueryItems(parameters: payload.parameters)
@@ -32,7 +32,7 @@ public extension RequestFactory {
     }
 }
 
-extension RequestFactory.CreateCollateralLoanLandingGetConsentsPayload {
+extension RequestFactory.GetConsentsPayload {
 
     var parameters: [String: String] {
 

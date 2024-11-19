@@ -11,8 +11,8 @@ import CollateralLoanLandingGetConsentsBackend
 
 extension RequestFactory {
     
-    static func createCollateralLoanLandingGetConsentsRequest(
-        with payload: RemoteServices.RequestFactory.CreateCollateralLoanLandingGetConsentsPayload
+    static func createGetConsentsRequest(
+        with payload: RemoteServices.RequestFactory.GetConsentsPayload
     ) throws -> URLRequest {
         
         let endpoint = Services.Endpoint.getConsents

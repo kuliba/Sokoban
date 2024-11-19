@@ -50,12 +50,12 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
 
 extension RequestFactory_createGetConsentsRequestTests {
     
-    typealias Payload = RequestFactory.CreateCollateralLoanLandingGetConsentsPayload
+    typealias Payload = RequestFactory.GetConsentsPayload
 }
 
 // MARK: - Helpers
 
-private extension RequestFactory.CreateCollateralLoanLandingGetConsentsPayload {
+private extension RequestFactory.GetConsentsPayload {
     
     static func stub(
         applicationId: Int = .random(in: (0...Int.max)),
