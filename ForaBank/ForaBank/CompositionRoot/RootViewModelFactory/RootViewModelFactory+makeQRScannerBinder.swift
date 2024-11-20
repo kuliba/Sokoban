@@ -49,6 +49,18 @@ private extension RootViewModelFactory {
                     cancellable: bind(payments, with: notify)
                 )))
                 
+            case let .c2bURL(url):
+                let payments = ClosePaymentsViewModelWrapper(
+                    model: model,
+                    source: .c2b(url),
+                    scheduler: schedulers.main
+                )
+                
+                completion(.payments(.init(
+                    model: payments,
+                    cancellable: bind(payments, with: notify)
+                )))
+                
             default:
                 break
             }
