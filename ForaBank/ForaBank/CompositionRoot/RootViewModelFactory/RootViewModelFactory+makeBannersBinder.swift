@@ -60,7 +60,7 @@ extension BannersBinder {
         model: .emptyMock,
         httpClient: Model.emptyMock.authenticatedHTTPClient(),
         logger: LoggerAgent(), 
-        makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
+        resolveQR: { _ in .unknown },
         schedulers: .init()
     ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,

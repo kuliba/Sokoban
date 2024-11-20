@@ -14,20 +14,20 @@ final class ModelRootFactory {
     private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
     private let model: Model
-    private let makeQRScanner: RootViewModelFactory.MakeQRScanner
+    private let resolveQR: RootViewModelFactory.ResolveQR
     private let schedulers: Schedulers
     
     init(
         httpClientFactory: HTTPClientFactory,
         logger: LoggerAgentProtocol,
         model: Model,
-        makeQRScanner: @escaping RootViewModelFactory.MakeQRScanner,
+        resolveQR: @escaping RootViewModelFactory.ResolveQR,
         schedulers: Schedulers = .init()
     ) {
         self.httpClient = httpClientFactory.makeHTTPClient()
         self.logger = logger
         self.model = model
-        self.makeQRScanner = makeQRScanner
+        self.resolveQR = resolveQR
         self.schedulers = schedulers
     }
 }
@@ -43,7 +43,7 @@ extension ModelRootFactory: RootFactory {
             model: model,
             httpClient: httpClient,
             logger: logger, 
-            makeQRScanner: makeQRScanner,
+            resolveQR: resolveQR,
             schedulers: schedulers
         )
         

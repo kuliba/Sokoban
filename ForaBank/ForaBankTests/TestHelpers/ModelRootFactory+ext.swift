@@ -13,14 +13,15 @@ extension ModelRootFactory {
     static func immediate(
         httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
         logger: any LoggerAgentProtocol = LoggerSpy(),
-        model: Model = .mockWithEmptyExcept()
+        model: Model = .mockWithEmptyExcept(),
+        resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown }
     ) -> ModelRootFactory {
         
         return .init(
             httpClientFactory: httpClientFactory,
             logger: logger,
             model: model,
-            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
+            resolveQR: resolveQR,
             schedulers: .immediate
         )
     }
@@ -29,6 +30,7 @@ extension ModelRootFactory {
         httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
         logger: any LoggerAgentProtocol = LoggerSpy(),
         model: Model = .mockWithEmptyExcept(),
+        resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
         schedulers: Schedulers
     ) -> ModelRootFactory {
         
@@ -36,7 +38,7 @@ extension ModelRootFactory {
             httpClientFactory: httpClientFactory, 
             logger: logger,
             model: model,
-            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
+            resolveQR: resolveQR,
             schedulers: schedulers
         )
     }

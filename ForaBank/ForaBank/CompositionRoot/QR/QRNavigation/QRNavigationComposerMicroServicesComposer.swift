@@ -188,7 +188,7 @@ private extension QRNavigationComposerMicroServicesComposer {
                 model: model,
                 httpClient: httpClient,
                 logger: logger,
-                makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: self.qrResolve) },
+                resolveQR: self.qrResolve,
                 schedulers: .init()
             ).makeSberQRConfirmPaymentViewModel()
             

@@ -17,7 +17,7 @@ final class RootViewModelFactory {
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
     
-    let makeQRScanner: MakeQRScanner
+    let resolveQR: ResolveQR
     
     let settings: RootViewModelFactorySettings
     
@@ -40,7 +40,7 @@ final class RootViewModelFactory {
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        makeQRScanner: @escaping MakeQRScanner,
+        resolveQR: @escaping ResolveQR,
         settings: RootViewModelFactorySettings = .iFora,
         schedulers: Schedulers
     ) {
@@ -49,7 +49,7 @@ final class RootViewModelFactory {
         self.logger = logger
         self.settings = settings
         self.schedulers = schedulers
-        self.makeQRScanner = makeQRScanner
+        self.resolveQR = resolveQR
 
         // reusable components & factories
         
@@ -79,5 +79,5 @@ final class RootViewModelFactory {
         self.nanoServiceComposer = nanoServiceComposer
     }
     
-    typealias MakeQRScanner = (@escaping () -> Void) -> QRScanner
+    typealias ResolveQR = (String) -> QRViewModel.ScanResult
 }

@@ -5,15 +5,39 @@
 //  Created by Igor Malyarov on 11.12.2023.
 //
 
+import Combine
+
 extension RootViewModelFactory {
     
     func makeMakeQRScannerModel() -> QRScannerModel {
         
-        let composer = QRScannerComposer(
-            model: model,
+        // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
+        
+        let composer = QRScanResultMapperComposer(model: model)
+        let mapper = composer.compose()
+        
+        return .init(
+            mapScanResult: mapper.mapScanResult(_:_:),
+            makeQRScanner: makeQRScanner,
             scheduler: schedulers.main
         )
+    }
+    
+    func makeQRScanner(
+        closeAction: @escaping () -> Void
+    ) -> QRScanner {
         
-        return composer.compose()
+        QRViewModel(closeAction: closeAction, qrResolve: resolveQR)
+    }
+}
+
+extension QRViewModel: QRScanner {
+    
+    var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> {
+        
+        action
+            .compactMap { $0 as? QRViewModelAction.Result }
+            .map(\.result)
+            .eraseToAnyPublisher()
     }
 }

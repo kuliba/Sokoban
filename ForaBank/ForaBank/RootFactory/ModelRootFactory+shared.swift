@@ -10,13 +10,7 @@ extension ModelRootFactory {
     static var shared: ModelRootFactory {
         
         let model: Model = .shared
-        
-        let qrResolve: QRViewModel.QRResolve = { string in
-            
-            let resolver = QRResolver(isSberQR: model.isSberQR)
-            
-            return resolver.resolve(string: string)
-        }
+        let resolver = QRResolver(isSberQR: model.isSberQR)
         
         return .init(
             httpClientFactory: ModelHTTPClientFactory(
@@ -25,7 +19,7 @@ extension ModelRootFactory {
             ),
             logger: LoggerAgent.shared,
             model: model,
-            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: qrResolve) }
+            resolveQR: resolver.resolve
         )
     }
 }
