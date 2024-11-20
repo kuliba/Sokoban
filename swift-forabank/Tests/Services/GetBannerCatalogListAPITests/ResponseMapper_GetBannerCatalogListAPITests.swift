@@ -124,6 +124,19 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
         ]))
     }
     
+    func test_map_actionLandingV2_shouldDeliverValidData() throws {
+        
+        let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.actionSavingLanding.utf8))).get()
+        
+        XCTAssertNoDiff(result, .init(serial: "", bannerCatalogList: [
+            .init(
+                productName: "Накопительный счет",
+                conditions: ["Сохраняй"],
+                links: .init(image: "imageLink", order: "", condition: ""),
+                action: .init(type: .savingLanding("DEFAULT")))
+        ]))
+    }
+
     func test_map_actionService_shouldDeliverValidData() throws {
         
         let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.serviceLanding.utf8))).get()
@@ -350,6 +363,30 @@ private extension String {
       }
     }
     """
+
+    static let actionSavingLanding: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "serial": "",
+        "BannerCatalogList": [
+          {
+            "productName": "Накопительный счет",
+            "txtСondition": [
+              "Сохраняй"
+            ],
+            "imageLink": "imageLink",
+            "action": {
+              "type": "SAVING_LANDING",
+              "target": "DEFAULT"
+            }
+          }
+        ]
+      }
+    }
+    """
+
     
     static let serviceLanding: Self = """
     {

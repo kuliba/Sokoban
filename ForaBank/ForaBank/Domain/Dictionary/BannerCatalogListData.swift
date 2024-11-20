@@ -57,7 +57,11 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
             case .landing:
                 let action = try? container.decodeIfPresent(BannerActionLanding.self, forKey: .action)
                 self.action = action
-                
+             
+            case .savingLanding:
+                let action = try? container.decodeIfPresent(BannerActionSavingLanding.self, forKey: .action)
+                self.action = action
+
             case .openDeposit:
                 let action = try container.decodeIfPresent(BannerActionDepositOpen.self, forKey: .action)
                 self.action = action
@@ -112,6 +116,7 @@ enum BannerActionType: String, Codable, Equatable {
     case contact = "CONTACT_TRANSFER"
     case depositTransfer = "DEPOSIT_TRANSFER"
     case landing = "LANDING"
+    case savingLanding = "SAVING_LANDING"
     case payment = "HOUSING_AND_COMMUNAL_SERVICE"
 }
 
@@ -320,6 +325,37 @@ class BannerActionLanding: BannerAction {
     internal init(target: String) {
         self.target = target
         super.init(type: .landing)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        target = try container.decodeIfPresent(String.self, forKey: .target) ?? ""
+        
+        try super.init(from: decoder)
+    }
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(target, forKey: .target)
+        
+        try super.encode(to: encoder)
+    }
+}
+
+class BannerActionSavingLanding: BannerAction {
+    
+    let target: String
+    
+    private enum CodingKeys: String, CodingKey {
+        
+        case target
+    }
+    
+    internal init(target: String) {
+        self.target = target
+        super.init(type: .savingLanding)
     }
     
     required init(from decoder: Decoder) throws {
