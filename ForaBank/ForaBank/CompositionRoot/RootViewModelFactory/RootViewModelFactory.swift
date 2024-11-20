@@ -27,7 +27,6 @@ final class RootViewModelFactory {
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
     let historyFilterFlag: HistoryFilterFlag = true
     let marketplaceFlag: MarketplaceFlag = .active
-    let qrResolverFeatureFlag: QRResolverFeatureFlag = .active
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
     let utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .live
     
