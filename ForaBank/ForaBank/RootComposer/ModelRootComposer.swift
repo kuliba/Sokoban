@@ -1,5 +1,5 @@
 //
-//  ModelRootFactory.swift
+//  ModelRootComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 21.10.2024.
@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import PayHubUI
 
-final class ModelRootFactory {
+final class ModelRootComposer {
     
     private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
@@ -32,7 +32,7 @@ final class ModelRootFactory {
     }
 }
 
-extension ModelRootFactory: RootFactory {
+extension ModelRootComposer: RootComposer {
     
     func makeBinder(
         featureFlags: FeatureFlags,

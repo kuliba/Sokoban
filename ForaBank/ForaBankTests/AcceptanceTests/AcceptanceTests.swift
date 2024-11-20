@@ -14,7 +14,7 @@ class AcceptanceTests: XCTestCase {
         
         private let window = UIWindow()
         
-        private let factory: ModelRootFactory
+        private let rootComposer: ModelRootComposer
         private let binder: RootViewDomain.Binder
         private let rootViewFactory: RootViewFactory
         
@@ -27,12 +27,12 @@ class AcceptanceTests: XCTestCase {
             featureFlags: FeatureFlags = .active,
             dismiss: @escaping () -> Void = {}
         ) {
-            self.factory = .immediate()
-            self.binder = factory.makeBinder(
+            self.rootComposer = .immediate()
+            self.binder = rootComposer.makeBinder(
                 featureFlags: featureFlags,
                 dismiss: dismiss
             )
-            self.rootViewFactory = factory.makeRootViewFactory(
+            self.rootViewFactory = rootComposer.makeRootViewFactory(
                 featureFlags: .active
             )
         }

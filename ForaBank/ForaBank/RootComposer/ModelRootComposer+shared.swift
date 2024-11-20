@@ -1,13 +1,13 @@
 //
-//  ModelRootFactory+shared.swift
+//  ModelRootComposer+shared.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 22.10.2024.
 //
 
-extension ModelRootFactory {
+extension ModelRootComposer {
     
-    static var shared: ModelRootFactory {
+    static var shared: ModelRootComposer {
         
         let model: Model = .shared
         let resolver = QRResolver(isSberQR: model.isSberQR)
