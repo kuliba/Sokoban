@@ -219,13 +219,22 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
         public let periodTitleText: String
         public let percentTitleText: String
         public let depositTitleText: String
-        public let depositTopPadding: CGFloat
         public let desiredAmountTitleText: String
         public let desiredAmountMaxText: String
-        public let desiredAmountTopPadding: CGFloat
+        public let monthlyPaymentTitleText: String
+        public let infoTitleText: String
+        public let infoTitleTopPadding: CGFloat
+        public let infoTitleBottomPadding: CGFloat
+        public let monthlyPaymentTitleTopPadding: CGFloat
+        public let monthlyPaymentValueTopPadding: CGFloat
+        public let depositTitleTopPadding: CGFloat
+        public let desiredAmountTitleTopPadding: CGFloat
         public let spacingBetweenTitleAndValue: CGFloat
         public let chevronColor: Color
         public let chevronSpacing: CGFloat
+        public let sliderBottomPadding: CGFloat
+        public let bottomPanelCornerRadius: CGFloat
+        public let bottomPanelBackgroundColor: Color
 
         public init(
             contentLeadingPadding: CGFloat,
@@ -249,13 +258,22 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
             periodTitleText: String,
             percentTitleText: String,
             depositTitleText: String,
-            depositTopPadding: CGFloat,
+            monthlyPaymentTitleText: String,
+            infoTitleText: String,
+            infoTitleTopPadding: CGFloat,
+            infoTitleBottomPadding: CGFloat,
+            monthlyPaymentTitleTopPadding: CGFloat,
+            monthlyPaymentValueTopPadding: CGFloat,
+            depositTitleTopPadding: CGFloat,
             desiredAmountTitleText: String,
             desiredAmountMaxText: String,
-            desiredAmountTopPadding: CGFloat,
+            desiredAmountTitleTopPadding: CGFloat,
             spacingBetweenTitleAndValue: CGFloat,
             chevronColor: Color,
-            chevronSpacing: CGFloat
+            chevronSpacing: CGFloat,
+            sliderBottomPadding: CGFloat,
+            bottomPanelCornerRadius: CGFloat,
+            bottomPanelBackgroundColor: Color
 
         ) {
             self.contentLeadingPadding = contentLeadingPadding
@@ -279,13 +297,22 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
             self.periodTitleText = periodTitleText
             self.percentTitleText = percentTitleText
             self.depositTitleText = depositTitleText
-            self.depositTopPadding = depositTopPadding
+            self.monthlyPaymentTitleText = monthlyPaymentTitleText
+            self.infoTitleText = infoTitleText
+            self.infoTitleTopPadding = infoTitleTopPadding
+            self.infoTitleBottomPadding = infoTitleBottomPadding
+            self.monthlyPaymentTitleTopPadding = monthlyPaymentTitleTopPadding
+            self.monthlyPaymentValueTopPadding = monthlyPaymentValueTopPadding
+            self.depositTitleTopPadding = depositTitleTopPadding
             self.desiredAmountTitleText = desiredAmountTitleText
             self.desiredAmountMaxText = desiredAmountMaxText
-            self.desiredAmountTopPadding = desiredAmountTopPadding
+            self.desiredAmountTitleTopPadding = desiredAmountTitleTopPadding
             self.spacingBetweenTitleAndValue = spacingBetweenTitleAndValue
             self.chevronColor = chevronColor
             self.chevronSpacing = chevronSpacing
+            self.sliderBottomPadding = sliderBottomPadding
+            self.bottomPanelCornerRadius = bottomPanelCornerRadius
+            self.bottomPanelBackgroundColor = bottomPanelBackgroundColor
         }
     }
     
@@ -381,20 +408,29 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
             salaryBottomPadding: 18,
             toggleTrailingPadding: 22,
             toggleColor: .buttonPrimaryDisabled,
-            dividerColor: .dividerColor,
+            dividerColor: .divider,
             middleSectionSpacing: 11,
             titleFont: .init(Font.system(size: 12), foreground: .textPlaceholder),
             valueFont: .init(Font.system(size: 20), foreground: .white),
             periodTitleText: "Срок кредита",
             percentTitleText: "Процентная ставка",
             depositTitleText: "Залог",
-            depositTopPadding: 24,
+            monthlyPaymentTitleText: "Ежемесячный платеж",
+            infoTitleText: "Представленные параметры являются расчетными и носят справочный характер",
+            infoTitleTopPadding: 15,
+            infoTitleBottomPadding: 15,
+            monthlyPaymentTitleTopPadding: 16,
+            monthlyPaymentValueTopPadding: 8,
+            depositTitleTopPadding: 24,
             desiredAmountTitleText: "Желаемая сумма кредита",
             desiredAmountMaxText: "До 15 млн. ₽",
-            desiredAmountTopPadding: 20,
+            desiredAmountTitleTopPadding: 20,
             spacingBetweenTitleAndValue: 8,
-            chevronColor: .dividerColor,
-            chevronSpacing: 4
+            chevronColor: .divider,
+            chevronSpacing: 4,
+            sliderBottomPadding: 12,
+            bottomPanelCornerRadius: 12,
+            bottomPanelBackgroundColor: .bottomPanelBackground
         ),
         frequentlyAskedQuestion: .init(),
         documents: .init(),
@@ -409,5 +445,6 @@ private extension Color {
     static let iconBackground: Self = .init(red: 0.5, green: 0.8, blue: 0.76)
     static let textPlaceholder: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
     static let buttonPrimaryDisabled: Self = .init(red: 0.83, green: 0.83, blue: 0.83)
-    static let dividerColor: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
+    static let divider: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
+    static let bottomPanelBackground: Self = .init(red: 0.16, green: 0.16, blue: 0.16)
 }
