@@ -54,7 +54,10 @@ extension ModelRootComposer: RootComposer {
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
     }
-    
+}
+
+extension ModelRootComposer: RootViewComposer {
+
     func makeRootViewFactory(
         featureFlags: FeatureFlags
     ) -> RootViewFactory {

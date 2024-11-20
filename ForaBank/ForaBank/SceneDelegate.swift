@@ -16,6 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     private lazy var rootComposer: RootComposer = ModelRootComposer.shared
+    private lazy var rootViewComposer: RootViewComposer = ModelRootComposer.shared
     private lazy var featureFlags = loadFeatureFlags()
     
     private lazy var binder = rootComposer.makeBinder(
@@ -27,16 +28,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     )
     
-    private lazy var rootViewFactory = rootComposer.makeRootViewFactory(
+    private lazy var rootViewFactory = rootViewComposer.makeRootViewFactory(
         featureFlags: featureFlags
     )
     
     convenience init(
         rootComposer: RootComposer,
+        rootViewComposer: RootViewComposer,
         featureFlags: FeatureFlags
     ) {
         self.init()
         self.rootComposer = rootComposer
+        self.rootViewComposer = rootViewComposer
         self.featureFlags = featureFlags
     }
     
