@@ -23,7 +23,6 @@ final class RootViewModelFactory {
     
     // active flags
     let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active
-    let fastPaymentsSettingsFlag: FastPaymentsSettingsFlag = .live
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
     let historyFilterFlag: HistoryFilterFlag = true
     let marketplaceFlag: MarketplaceFlag = .active

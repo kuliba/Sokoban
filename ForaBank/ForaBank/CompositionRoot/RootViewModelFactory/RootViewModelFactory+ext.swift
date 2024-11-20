@@ -74,27 +74,12 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
-        ? HTTPClientStub.fastPaymentsSettings()
-        : httpClient
-        
-        // TODO: Remove after `legacy` case eliminated
-        let fastPaymentsFactory: FastPaymentsFactory = {
-            
-            switch fastPaymentsSettingsFlag.rawValue {
-            case .active:
-                return .init(fastPaymentsViewModel: .new({
-                    
-                    self.makeNewFastPaymentsViewModel()
-                }))
+        let fastPaymentsFactory = FastPaymentsFactory(
+            fastPaymentsViewModel: .new({
                 
-            case .inactive:
-                return .init(fastPaymentsViewModel: .legacy({
-                    
-                    .init(model: $0,newModel: self.model,closeAction: $1)
-                }))
-            }
-        }()
+                self.makeNewFastPaymentsViewModel()
+            })
+        )
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,
@@ -104,14 +89,14 @@ extension RootViewModelFactory {
         
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
-            otpServices: .init(fpsHTTPClient, logger),
-            otpDeleteBankServices: .init(for: fpsHTTPClient, infoNetworkLog),
+            otpServices: .init(httpClient, logger),
+            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts,
                 c2bSubscription: model.subscriptions.value
             ),
-            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60
+            duration: 60
         )
         
         let sberQRServices = Services.makeSberQRServices(

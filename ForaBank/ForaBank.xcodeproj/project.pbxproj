@@ -839,7 +839,6 @@
 		2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */; };
 		2A45AF752AA729D500762DEE /* RequestFactory+createLandingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45AF742AA729D500762DEE /* RequestFactory+createLandingRequest.swift */; };
 		2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45AF772AA72B5300762DEE /* Services+getLandingService.swift */; };
-		2A46DCAA2B3EF212001C896C /* FastPaymentsSettingsFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */; };
 		2A4863D32BB1DF5700BBCC76 /* RemoteServices in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4863D22BB1DF5700BBCC76 /* RemoteServices */; };
 		2A49221A2ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */; };
 		2A49221C2ABC6ABA00880784 /* Services+bindKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */; };
@@ -4462,7 +4461,6 @@
 		2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+EndpointBindPublicKeyWithEventIDTests.swift"; sourceTree = "<group>"; };
 		2A45AF742AA729D500762DEE /* RequestFactory+createLandingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createLandingRequest.swift"; sourceTree = "<group>"; };
 		2A45AF772AA72B5300762DEE /* Services+getLandingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingService.swift"; sourceTree = "<group>"; };
-		2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsFlag.swift; sourceTree = "<group>"; };
 		2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecoratedRequestCreator.swift; sourceTree = "<group>"; };
 		2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+bindKeyService.swift"; sourceTree = "<group>"; };
 		2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceLogTests.swift; sourceTree = "<group>"; };
@@ -10661,7 +10659,6 @@
 				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
 				83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */,
 				839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */,
-				2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */,
 				C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */,
 				2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */,
 				83CC9D282C85BCCA00ABA4C7 /* MarketplaceFlag.swift */,
@@ -22222,7 +22219,6 @@
 				2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */,
 				2AA619532C16BD8000043997 /* __AnywayTransactionViewModelComposer.swift in Sources */,
 				774A8B6E2865FEA100B81140 /* NewProductButtonComponent.swift in Sources */,
-				2A46DCAA2B3EF212001C896C /* FastPaymentsSettingsFlag.swift in Sources */,
 				77CCEA6A28F58DB600C62215 /* OpenDepositDetailViewModel.swift in Sources */,
 				774A8B2A2865FC6F00B81140 /* MyProductsSectionItemViewModel.swift in Sources */,
 				2A33459C2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift in Sources */,
