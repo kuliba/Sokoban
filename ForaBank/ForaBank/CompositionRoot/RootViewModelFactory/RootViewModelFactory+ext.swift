@@ -74,27 +74,12 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
-        ? HTTPClientStub.fastPaymentsSettings()
-        : httpClient
-        
-        // TODO: Remove after `legacy` case eliminated
-        let fastPaymentsFactory: FastPaymentsFactory = {
-            
-            switch fastPaymentsSettingsFlag.rawValue {
-            case .active:
-                return .init(fastPaymentsViewModel: .new({
-                    
-                    self.makeNewFastPaymentsViewModel()
-                }))
+        let fastPaymentsFactory = FastPaymentsFactory(
+            fastPaymentsViewModel: .new({
                 
-            case .inactive:
-                return .init(fastPaymentsViewModel: .legacy({
-                    
-                    .init(model: $0,newModel: self.model,closeAction: $1)
-                }))
-            }
-        }()
+                self.makeNewFastPaymentsViewModel()
+            })
+        )
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,
@@ -104,14 +89,14 @@ extension RootViewModelFactory {
         
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
-            otpServices: .init(fpsHTTPClient, logger),
-            otpDeleteBankServices: .init(for: fpsHTTPClient, infoNetworkLog),
+            otpServices: .init(httpClient, logger),
+            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts,
                 c2bSubscription: model.subscriptions.value
             ),
-            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60
+            duration: 60
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -123,16 +108,11 @@ extension RootViewModelFactory {
             paymentsTransfersFlag: paymentsTransfersFlag
         )
         
-        let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
-        ? HTTPClientStub.utilityPayments()
-        : httpClient
-        
         let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
             model: model
         )
         let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(
-            log: infoNetworkLog,
-            isActive: utilitiesPaymentsFlag.isActive
+            log: infoNetworkLog
         )
         
         let unblockCardServices = Services.makeUnblockCardServices(
@@ -244,13 +224,11 @@ extension RootViewModelFactory {
         )
         
         let templatesComposer = makeTemplatesComposer(
-            paymentsTransfersFlag: paymentsTransfersFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+            paymentsTransfersFlag: paymentsTransfersFlag
         )
         let makeTemplates = templatesComposer.compose
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
-            flag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
             log: logger.log,
@@ -269,7 +247,6 @@ extension RootViewModelFactory {
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
             fraudDelay: settings.fraudDelay,
-            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: logger.log,
@@ -286,7 +263,6 @@ extension RootViewModelFactory {
             validator: .init()
         )
         let utilityNanoServicesComposer = UtilityPaymentNanoServicesComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: logger.log,
@@ -305,13 +281,9 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
+        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel()
         
-        let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
+        let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel()
         
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
@@ -379,8 +351,6 @@ extension RootViewModelFactory {
         
         let qrScannerComposer = QRScannerComposer(
             model: model,
-            qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: schedulers.main
         )
         

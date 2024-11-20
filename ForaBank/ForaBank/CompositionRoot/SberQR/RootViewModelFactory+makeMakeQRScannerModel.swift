@@ -11,8 +11,6 @@ extension RootViewModelFactory {
         
         let composer = QRScannerComposer(
             model: model,
-            qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: schedulers.main
         )
         

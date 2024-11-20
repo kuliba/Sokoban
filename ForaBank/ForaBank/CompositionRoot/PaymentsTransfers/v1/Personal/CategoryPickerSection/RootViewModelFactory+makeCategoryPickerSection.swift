@@ -158,8 +158,7 @@ extension RootViewModelFactory {
         ) -> SegmentedPaymentProviderPickerFlowModel {
             
             let make = makeSegmentedPaymentProviderPickerFlowModel(
-                pageSize: pageSize,
-                flag: .live
+                pageSize: pageSize
             )
             
             return make(multi, qrCode, qrMapping)
@@ -169,9 +168,7 @@ extension RootViewModelFactory {
             payload: PaymentProviderServicePickerPayload,
             completion: @escaping (AnywayServicePickerFlowModel) -> Void
         ) {
-            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-                flag: .live
-            )
+            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
             
             completion(servicePickerComposer.compose(payload: payload))
         }
