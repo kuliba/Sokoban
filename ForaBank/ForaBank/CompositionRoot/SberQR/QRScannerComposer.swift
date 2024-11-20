@@ -12,16 +12,13 @@ import Foundation
 final class QRScannerComposer {
     
     let model: Model
-    let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
-        self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
         self.scheduler = scheduler
     }
 }
@@ -38,10 +35,7 @@ extension QRScannerComposer {
             return resolver.resolve(string: string)
         }
         
-        let composer = QRScanResultMapperComposer(
-            flag: utilitiesPaymentsFlag,
-            model: model
-        )
+        let composer = QRScanResultMapperComposer(model: model)
         let mapper = composer.compose()
         
         return .init(

@@ -28,7 +28,6 @@ final class RootViewModelFactory {
     let historyFilterFlag: HistoryFilterFlag = true
     let marketplaceFlag: MarketplaceFlag = .active
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
-    let utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .live
     
     let schedulers: Schedulers
     
