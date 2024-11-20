@@ -46,8 +46,8 @@ final class SceneDelegateTests: XCTestCase {
     private typealias SUT = SceneDelegate
     
     private func makeSUT(
-        rootComposer: RootComposer = ModelRootComposer.immediate(),
-        rootViewComposer: RootViewComposer = ModelRootComposer.immediate(),
+        rootComposer: RootComposer = ModelRootComposer(schedulers: .immediate),
+        rootViewComposer: RootViewComposer = ModelRootComposer(schedulers: .immediate),
         featureFlags: FeatureFlags = .active,
         file: StaticString = #file,
         line: UInt = #line

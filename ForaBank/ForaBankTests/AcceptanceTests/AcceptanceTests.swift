@@ -27,7 +27,7 @@ class AcceptanceTests: XCTestCase {
             featureFlags: FeatureFlags = .active,
             dismiss: @escaping () -> Void = {}
         ) {
-            self.rootComposer = .immediate()
+            self.rootComposer = .init(schedulers: .immediate)
             self.binder = rootComposer.makeBinder(
                 featureFlags: featureFlags,
                 dismiss: dismiss

@@ -10,43 +10,15 @@ import PayHubUI
 
 extension ModelRootComposer {
     
-    static func immediate(
-        httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
-        logger: any LoggerAgentProtocol = LoggerSpy(),
-        model: Model = .mockWithEmptyExcept(),
-        resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown }
-    ) -> ModelRootComposer {
-        
-        return .init(
-            httpClientFactory: httpClientFactory,
-            logger: logger,
-            model: model,
-            resolveQR: resolveQR,
-            schedulers: .immediate,
-            makeRootViewFactoryComposer: { featureFlags in
-                
-                return .init(
-                    model: model,
-                    httpClient: httpClientFactory.makeHTTPClient(),
-                    historyFeatureFlag: true,
-                    marketFeatureFlag: .active,
-                    savingsAccountFlag: featureFlags.savingsAccountFlag,
-                    schedulers: .immediate
-                )
-            }
-        )
-    }
-    
-    static func test(
+    convenience init(
         httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
         logger: any LoggerAgentProtocol = LoggerSpy(),
         model: Model = .mockWithEmptyExcept(),
         resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
         schedulers: Schedulers
-    ) -> ModelRootComposer {
-        
-        return .init(
-            httpClientFactory: httpClientFactory, 
+    ) {
+        self.init(
+            httpClientFactory: httpClientFactory,
             logger: logger,
             model: model,
             resolveQR: resolveQR,
