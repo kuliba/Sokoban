@@ -78,12 +78,13 @@ private extension RootWrapperView {
         switch fullScreenCover {
         case let .scanQR(qrScanner):
             NavigationView {
- 
+                
                 makeQRScannerView(qrScanner)
-                    .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
+                    .navigationBarTitleDisplayMode(.inline)
                     .navigationBarHidden(true)
             }
             .navigationViewStyle(.stack)
+            .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
         }
     }
 }

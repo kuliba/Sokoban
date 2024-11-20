@@ -18,13 +18,9 @@ struct QRView: View {
     
     var body: some View {
         
-        NavigationView {
-            
-            zStack
-                .navigationBarHidden(true)
-                .edgesIgnoringSafeArea(.all)
-        }
-        .navigationViewStyle(.stack)
+        zStack
+            .navigationBarHidden(true)
+            .edgesIgnoringSafeArea(.all)
     }
     
     var zStack: some View {
