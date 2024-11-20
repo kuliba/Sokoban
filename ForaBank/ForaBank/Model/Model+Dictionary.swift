@@ -1650,7 +1650,7 @@ extension Model {
         let command = ServerCommandsGetBannerCatalogList(token: token, serial: serial)
 
         if let getBannerCatalogListV2 {
-            getBannerCatalogList(getBannerCatalogListV2, command, serial, typeDict)
+            getBannerCatalogList(getBannerCatalogListV2, command, nil, typeDict)
         } else {
             getBannerCatalogListV1(command, serial, typeDict)
         }
