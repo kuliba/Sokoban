@@ -12,6 +12,7 @@ public struct SavingsAccountConfig {
     
     let chevronDownImage: Image
     let cornerRadius: CGFloat
+    let continueButton: ContinueButton
     let divider: Color
     let icon: Icon
     let list: List
@@ -20,9 +21,10 @@ public struct SavingsAccountConfig {
     let paddings: Paddings
     let spacing: CGFloat
     
-    public init(chevronDownImage: Image, cornerRadius: CGFloat, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat) {
+    public init(chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat) {
         self.chevronDownImage = chevronDownImage
         self.cornerRadius = cornerRadius
+        self.continueButton = continueButton
         self.divider = divider
         self.icon = icon
         self.list = list
@@ -31,7 +33,21 @@ public struct SavingsAccountConfig {
         self.paddings = paddings
         self.spacing = spacing
     }
+       
+    public struct ContinueButton {
+        let background: Color
+        let cornerRadius: CGFloat
+        let height: CGFloat
+        let title: TextConfig
         
+        public init(background: Color, cornerRadius: CGFloat, height: CGFloat, title: TextConfig) {
+            self.background = background
+            self.cornerRadius = cornerRadius
+            self.height = height
+            self.title = title
+        }
+    }
+    
     public struct Icon {
         let leading: CGFloat
         let widthAndHeight: CGFloat

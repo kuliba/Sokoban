@@ -36,46 +36,68 @@ struct SavingsAccountView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: config.spacing) {
-            ScrollView(showsIndicators: false) {
-                VStack {
-                    factory.makeBannerImageView(state.imageLink)
-                        .aspectRatio(contentMode: .fit)
-                        .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
-                    
-                    list(items: state.advantages)
-                    list(items: state.basicConditions)
-                    questionsView()
-                }
-                .background(
-                    GeometryReader {
-                        Color.clear.preference(
-                            key: ViewOffsetKey.self,
-                            value: -$0.frame(in: .named(coordinateSpace)).origin.y)
+        // MARK: - remove `if #available` after update platforms in package
+        
+        if #available(iOS 15.0, *) {
+            VStack(alignment: .leading, spacing: config.spacing) {
+                ScrollView(showsIndicators: false) {
+                    VStack {
+                        factory.makeBannerImageView(state.imageLink)
+                            .aspectRatio(contentMode: .fit)
+                            .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
+                        
+                        list(items: state.advantages)
+                        list(items: state.basicConditions)
+                        questionsView()
                     }
-                )
+                    .background(
+                        GeometryReader {
+                            Color.clear.preference(
+                                key: ViewOffsetKey.self,
+                                value: -$0.frame(in: .named(coordinateSpace)).origin.y)
+                        }
+                    )
+                }
+                .onPreferenceChange(ViewOffsetKey.self) { value in
+                    isShowHeader = value > config.offsetForDisplayHeader
+                }
+                .coordinateSpace(name: coordinateSpace)
             }
-            .onPreferenceChange(ViewOffsetKey.self) { value in
-                isShowHeader = value > config.offsetForDisplayHeader
+            .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+            .toolbar {
+                
+                ToolbarItem(placement: .principal) {
+                    header()
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    backButton()
+                }
             }
-            .coordinateSpace(name: coordinateSpace)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                continueButton()
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
+        } else {
+            Text("Only ios 15.0")
         }
-        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-        .toolbar {
-            
-            ToolbarItem(placement: .principal) {
-                header()
-            }
-            
-            ToolbarItem(placement: .navigationBarLeading) {
-                backButton
-            }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
     }
     
-    var backButton : some View {
+    private func continueButton() -> some View {
+        
+        Button(action: { event(.continue) }, label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: config.continueButton.cornerRadius)
+                    .foregroundColor(config.continueButton.background)
+                "Продолжить".text(withConfig: config.continueButton.title)
+            }
+        })
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, idealHeight: config.continueButton.height)
+    }
+    
+    private func backButton() -> some View {
         
         Button(action: { event(.dismiss) }) { Image(systemName: "chevron.backward") }
     }
@@ -102,7 +124,7 @@ struct SavingsAccountView: View {
                 $0.text(withConfig: config.list.title)
                     .accessibilityIdentifier("ItemsTitle")
             }
-                      
+            
             ForEach(items.list, content: itemView)
                 .accessibilityIdentifier("Items")
         }
@@ -293,7 +315,7 @@ private struct PaddingsModifier: ViewModifier {
             content
                 .padding(.vertical, vertical)
                 .padding(.bottom, bottom)
-
+            
         case let (bottom, horizontal, .none):
             content
                 .padding(.horizontal, horizontal)
