@@ -5,21 +5,27 @@
 //  Created by Константин Савялов on 01.11.2022.
 //
 
-import Foundation
-import Combine
-import SwiftUI
 import AVFoundation
+import Combine
+import Foundation
+import SwiftUI
+
+protocol QRScannerViewModel {
+    
+    var qrScannerViewActionPublisher: AnyPublisher<QRScannerViewAction, Never> { get }
+}
 
 class QRViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    let scanner: QRScannerView.ViewModel
+    let scanner: QRScannerViewModel
     let title: String
     let subTitle: String
     let getUImage: (Md5hash) -> UIImage?
     private let model: Model
     
     var flashLight: FlashLight = .on
+    
     @Published var buttons: [ButtonIconTextView.ViewModel]
     @Published var closeButton: ButtonSimpleView.ViewModel
     
@@ -32,7 +38,7 @@ class QRViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     
     init(
-        scanner: QRScannerView.ViewModel,
+        scanner: QRScannerViewModel,
         title: String,
         subTitle: String,
         buttons: [ButtonIconTextView.ViewModel],
@@ -52,7 +58,8 @@ class QRViewModel: ObservableObject {
     
     convenience init(
         closeAction: @escaping () -> Void,
-        qrResolve: @escaping QRResolve
+        qrResolve: @escaping QRResolve,
+        scanner: QRScannerViewModel
     ) {
         let closeButton = ButtonSimpleView.ViewModel(
             title: "Отмена",
@@ -61,7 +68,7 @@ class QRViewModel: ObservableObject {
         )
         
         self.init(
-            scanner: QRScannerView.ViewModel(),
+            scanner: scanner,
             title: "Наведите камеру",
             subTitle: "на QR-код",
             buttons: [],
@@ -90,7 +97,7 @@ class QRViewModel: ObservableObject {
             }
             .store(in: &bindings)
         
-        scanner.action
+        scanner.qrScannerViewActionPublisher
             .compactMap(\.scannedString)
             .map(qrResolve)
             .receive(on: DispatchQueue.main)

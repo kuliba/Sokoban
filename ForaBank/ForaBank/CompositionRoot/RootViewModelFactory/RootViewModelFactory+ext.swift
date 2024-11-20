@@ -349,11 +349,6 @@ extension RootViewModelFactory {
         let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
-        let qrScannerComposer = QRScannerComposer(
-            model: model,
-            scheduler: schedulers.main
-        )
-        
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             nanoServices: .init(
                 loadCategories: loadCategories,
@@ -361,7 +356,7 @@ extension RootViewModelFactory {
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
-            makeQRModel: qrScannerComposer.compose
+            makeQRModel: makeMakeQRScannerModel
         )
         
         if paymentsTransfersFlag.isActive {

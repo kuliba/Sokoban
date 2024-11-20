@@ -442,6 +442,19 @@ final class RootViewModelTests: XCTestCase {
         XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
     }
     
+    func test_openPaymentFromMainView_housingAndCommunalService_shouldSelectPayment() {
+        
+        let (sut, scheduler, linkSpy, _) = makeSUT(
+            product: .cardActiveMainDebitOnlyRub,
+            selected: .main
+        )
+        sut.tabsViewModel.mainViewModel.fastPayment?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: .zku))
+        scheduler.advance()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        XCTAssertNoDiff(sut.selected, .payments)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -898,7 +911,8 @@ extension BannersBinder {
         model: .emptyMock,
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
-        makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
+        resolveQR: { _ in .unknown },
+        scanner: QRScannerViewModelSpy(),
         schedulers: .immediate
     ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,
@@ -907,4 +921,16 @@ extension BannersBinder {
             loadLandingByType: { _,_ in }
         )
     )
+}
+
+private extension MainViewModel {
+    
+    var fastPayment: MainSectionFastOperationView.ViewModel? {
+        
+        sections.compactMap {
+            
+            $0 as? MainSectionFastOperationView.ViewModel
+        }
+        .first
+    }
 }

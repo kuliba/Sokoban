@@ -71,7 +71,8 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: { _ in .unknown }) },
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
         let sut = factory.makePaymentsTransfersPersonal(

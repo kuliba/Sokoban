@@ -46,13 +46,18 @@ final class SceneDelegateTests: XCTestCase {
     private typealias SUT = SceneDelegate
     
     private func makeSUT(
-        factory: RootFactory = ModelRootFactory.immediate(),
+        rootComposer: RootComposer = ModelRootComposer(schedulers: .immediate),
+        rootViewComposer: RootViewComposer = ModelRootComposer(schedulers: .immediate),
         featureFlags: FeatureFlags = .active,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(factory: factory, featureFlags: featureFlags)
+        let sut = SUT(
+            rootComposer: rootComposer, 
+            rootViewComposer: rootViewComposer, 
+            featureFlags: featureFlags
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
