@@ -19,6 +19,7 @@ final class QRNavigationComposerMicroServicesComposer {
     private let getSberQRData: GetSberQRData
     private let makeSegmented: MakeSegmented
     private let makeServicePicker: MicroServices.MakeServicePicker
+    private let scanner: any QRScannerViewModel
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
@@ -31,6 +32,7 @@ final class QRNavigationComposerMicroServicesComposer {
         makeSegmented: @escaping MakeSegmented,
         // static RootViewModelFactory.makeProviderServicePickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
         makeServicePicker: @escaping MicroServices.MakeServicePicker,
+        scanner: any QRScannerViewModel,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.httpClient = httpClient
@@ -40,6 +42,7 @@ final class QRNavigationComposerMicroServicesComposer {
         self.getSberQRData = getSberQRData
         self.makeSegmented = makeSegmented
         self.makeServicePicker = makeServicePicker
+        self.scanner = scanner
         self.scheduler = scheduler
     }
     
@@ -188,7 +191,8 @@ private extension QRNavigationComposerMicroServicesComposer {
                 model: model,
                 httpClient: httpClient,
                 logger: logger,
-                makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: self.qrResolve) },
+                resolveQR: self.qrResolve,
+                scanner: scanner,
                 schedulers: .init()
             ).makeSberQRConfirmPaymentViewModel()
             

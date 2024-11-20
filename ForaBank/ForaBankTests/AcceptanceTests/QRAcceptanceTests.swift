@@ -11,6 +11,8 @@ import XCTest
 
 final class QRAcceptanceTests: AcceptanceTests {
     
+    // TODO: - scan QR can be initiated from the main view, payments view, or toolbar
+    
     func test_openQRWithFlowEvent_shouldOpenRootViewQRScannerFullScreenCover() throws {
         
         let app = TestApp()
@@ -115,7 +117,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         XCTAssertNoThrow(try rootView.rootViewQRScannerFullScreenCover(), "Expected Root View FullScreenCover with QRScanner.", file: file, line: line)
     }
     
-    func expectNoRootViewQRScannerFullScreenCover(
+    private func expectNoRootViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
@@ -123,7 +125,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         XCTAssertThrowsError(try rootView.rootViewQRScannerFullScreenCover(), "Expected No Root View FullScreenCover with QRScanner, but there is one.", file: file, line: line)
     }
     
-    func expectMainViewQRScannerFullScreenCover(
+    private func expectMainViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
@@ -131,7 +133,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         XCTAssertNoThrow(try rootView.mainViewQRScannerFullScreenCover(), "Expected Main View FullScreenCover with QRScanner.", file: file, line: line)
     }
     
-    func expectNoMainViewQRScannerFullScreenCover(
+    private func expectNoMainViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line

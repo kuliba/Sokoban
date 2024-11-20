@@ -901,7 +901,8 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolve: { _ in .unknown }
+            qrResolve: { _ in .unknown },
+            scanner: QRScannerView.ViewModel()
         )
     }
 }

@@ -29,6 +29,7 @@ extension QRNavigationComposer {
             getSberQRData: getSberQRData,
             makeSegmented: makeSegmented,
             makeServicePicker: makeServicePicker,
+            scanner: QRScannerViewModelSpy(),
             scheduler: scheduler
         )
         self.init(microServices: composer.compose())
