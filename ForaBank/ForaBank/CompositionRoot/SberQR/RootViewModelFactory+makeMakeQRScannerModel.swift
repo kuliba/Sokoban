@@ -7,10 +7,7 @@
 
 extension RootViewModelFactory {
     
-    func makeMakeQRScannerModel(
-        qrResolverFeatureFlag: QRResolverFeatureFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
-    ) -> MakeQRScannerModel {
+    func makeMakeQRScannerModel() -> QRScannerModel {
         
         let composer = QRScannerComposer(
             model: model,
@@ -19,6 +16,6 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        return composer.compose
+        return composer.compose()
     }
 }

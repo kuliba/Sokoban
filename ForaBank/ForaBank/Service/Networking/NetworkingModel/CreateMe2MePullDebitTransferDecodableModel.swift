@@ -61,16 +61,18 @@ struct CreateMe2MePullDebitTransferDataClass: Codable {
     let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
     let currencyRate: JSONNull?
-    let debitAmount: Int?
+    let debitAmount: Decimal?
     let payeeName: String?
     let paymentOperationDetailID: Int?
     let documentStatus: JSONNull?
+    let needSum: Bool?
     let additionalList: [CreateMe2MePullDebitTransfer]?
 
     enum CodingKeys: String, CodingKey {
         case needMake, needOTP, amount, creditAmount, fee, currencyAmount, currencyPayer, currencyPayee, currencyRate, debitAmount, payeeName
         case paymentOperationDetailID = "paymentOperationDetailId"
         case documentStatus, additionalList
+        case needSum
     }
 }
 
@@ -102,10 +104,11 @@ extension CreateMe2MePullDebitTransferDataClass {
         currencyPayer: String?? = nil,
         currencyPayee: String?? = nil,
         currencyRate: JSONNull?? = nil,
-        debitAmount: Int?? = nil,
+        debitAmount: Decimal?? = nil,
         payeeName: String?? = nil,
         paymentOperationDetailID: Int?? = nil,
         documentStatus: JSONNull?? = nil,
+        needSum: Bool? = nil,
         additionalList: [CreateMe2MePullDebitTransfer]?? = nil
     ) -> CreateMe2MePullDebitTransferDataClass {
         return CreateMe2MePullDebitTransferDataClass(
@@ -122,6 +125,7 @@ extension CreateMe2MePullDebitTransferDataClass {
             payeeName: payeeName ?? self.payeeName,
             paymentOperationDetailID: paymentOperationDetailID ?? self.paymentOperationDetailID,
             documentStatus: documentStatus ?? self.documentStatus,
+            needSum: needSum ?? self.needSum,
             additionalList: additionalList ?? self.additionalList
         )
     }
@@ -137,7 +141,7 @@ extension CreateMe2MePullDebitTransferDataClass {
 
 // MARK: - CreateMe2MePullDebitTransfer
 struct CreateMe2MePullDebitTransfer: Codable {
-    let fieldName, fieldValue: String?
+    let fieldName, fieldValue, fieldTitle, svgImage: String?
 }
 
 // MARK: CreateMe2MePullDebitTransfer convenience initializers and mutators
@@ -160,11 +164,15 @@ extension CreateMe2MePullDebitTransfer {
 
     func with(
         fieldName: String?? = nil,
-        fieldValue: String?? = nil
+        fieldValue: String?? = nil,
+        fieldTitle: String?? = nil,
+        svgImage: String?? = nil
     ) -> CreateMe2MePullDebitTransfer {
         return CreateMe2MePullDebitTransfer(
             fieldName: fieldName ?? self.fieldName,
-            fieldValue: fieldValue ?? self.fieldValue
+            fieldValue: fieldValue ?? self.fieldValue,
+            fieldTitle: fieldTitle ?? self.fieldTitle,
+            svgImage: svgImage ?? self.svgImage
         )
     }
 

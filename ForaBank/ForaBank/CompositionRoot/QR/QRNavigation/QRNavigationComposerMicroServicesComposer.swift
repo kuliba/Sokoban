@@ -188,6 +188,7 @@ private extension QRNavigationComposerMicroServicesComposer {
                 model: model,
                 httpClient: httpClient,
                 logger: logger,
+                makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: self.qrResolve) },
                 schedulers: .init()
             ).makeSberQRConfirmPaymentViewModel()
             
@@ -206,5 +207,17 @@ extension QRNavigation.ErrorMessage {
     static var techError: Self {
         
         return .init(title: "Ошибка", message: "Возникла техническая ошибка")
+    }
+}
+
+private extension QRNavigationComposerMicroServicesComposer {
+    
+    func qrResolve(
+        string: String
+    ) -> QRViewModel.ScanResult {
+        
+        let resolver = QRResolver(isSberQR: model.isSberQR)
+        
+        return resolver.resolve(string: string)
     }
 }

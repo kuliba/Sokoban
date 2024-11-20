@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 25.10.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 
@@ -30,7 +31,7 @@ final class QRScannerComposer {
 
 extension QRScannerComposer {
     
-    func compose() -> QRModel {
+    func compose() -> QRScannerModel {
         
         // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
         let qrResolve: QRViewModel.QRResolve = { [self] string in
@@ -49,8 +50,19 @@ extension QRScannerComposer {
         
         return .init(
             mapScanResult: mapper.mapScanResult(_:_:),
-            makeQRModel: { .init(closeAction: $0, qrResolve: qrResolve) },
+            makeQRScanner: { QRViewModel(closeAction: $0, qrResolve: qrResolve) },
             scheduler: scheduler
         )
+    }
+}
+
+extension QRViewModel: QRScanner {
+    
+    var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> {
+        
+        action
+            .compactMap { $0 as? QRViewModelAction.Result }
+            .map(\.result)
+            .eraseToAnyPublisher()
     }
 }

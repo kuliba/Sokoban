@@ -11,17 +11,22 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeQRViewModelFactory(
-        qrResolverFeatureFlag: QRResolverFeatureFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
+        paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> QRViewModelFactory {
         
-        .init(
-            makeQRScannerModel: makeMakeQRScannerModel(
-                qrResolverFeatureFlag: qrResolverFeatureFlag,
-                utilitiesPaymentsFlag: utilitiesPaymentsFlag
-            ),
+        return .init(
+            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel(),
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(),
-            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel()
+            makeQRScannerModel: { [weak self] in
+                
+                switch paymentsTransfersFlag.rawValue {
+                case .active:
+                    return nil
+                    
+                case .inactive:
+                    return self?.makeMakeQRScannerModel()
+                }
+            }
         )
     }
 }

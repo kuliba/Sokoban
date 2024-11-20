@@ -69,7 +69,8 @@ struct MainView<NavigationOperationView: View>: View {
                 )
             
             Color.clear
-                .fullScreenCover(
+                .accessibilityIdentifier(ElementIDs.mainView(.fullScreenCoverAnchor).rawValue)
+                .fullScreenCoverInspectable(
                     item: .init(
                         get: { viewModel.route.modal?.fullScreenSheet },
                         set: { if $0 == nil { viewModel.resetModal() } }
@@ -212,7 +213,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .failedView(failedViewModel):
-            viewFactory.components.makeQRFailedView(failedViewModel)
+            viewFactory.components.makeQRFailedWrapperView(failedViewModel)
             
         case let .searchOperators(viewModel):
             viewFactory.components.makeQRSearchOperatorView(viewModel)
@@ -313,7 +314,8 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            viewFactory.components.makeQRView(node.model.qrModel)
+            viewFactory.components.makeQRView(node.model.qrScanner)
+                .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
             
         case let .success(viewModel):
             viewFactory.components.makePaymentsSuccessView(viewModel)

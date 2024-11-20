@@ -390,7 +390,7 @@ private extension RootView {
     func makeCategoryPickerSectionFullScreenCoverView(
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
-        rootViewFactory.components.makeQRView(cover.qr.qrModel)
+        rootViewFactory.components.makeQRView(cover.qr.qrScanner)
     }
     
     func paymentProviderPicker(

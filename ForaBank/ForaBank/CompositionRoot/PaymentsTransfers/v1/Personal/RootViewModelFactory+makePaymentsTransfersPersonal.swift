@@ -15,7 +15,7 @@ extension RootViewModelFactory {
     
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        makeQRModel: @escaping () -> QRModel
+        makeQRModel: @escaping () -> QRScannerModel
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
