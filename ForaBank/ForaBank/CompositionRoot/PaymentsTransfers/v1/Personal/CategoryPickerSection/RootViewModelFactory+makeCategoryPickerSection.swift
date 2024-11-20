@@ -186,6 +186,7 @@ extension RootViewModelFactory {
                 getSberQRData: getSberQRData,
                 makeSegmented: makeSegmented,
                 makeServicePicker: makeServicePicker,
+                scanner: scanner,
                 scheduler: schedulers.main
             )
             let microServices = microServicesComposer.compose()

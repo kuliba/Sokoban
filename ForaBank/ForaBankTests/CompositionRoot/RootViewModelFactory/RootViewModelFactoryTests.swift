@@ -28,6 +28,7 @@ class RootViewModelFactoryTests: XCTestCase {
             httpClient: httpClient,
             logger: logger,
             resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
         

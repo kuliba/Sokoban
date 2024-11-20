@@ -27,7 +27,11 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> QRScanner {
         
-        QRViewModel(closeAction: closeAction, qrResolve: resolveQR)
+        QRViewModel(
+            closeAction: closeAction, 
+            qrResolve: resolveQR,
+            scanner: scanner
+        )
     }
 }
 

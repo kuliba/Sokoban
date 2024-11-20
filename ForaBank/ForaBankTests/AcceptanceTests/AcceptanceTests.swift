@@ -25,9 +25,13 @@ class AcceptanceTests: XCTestCase {
         
         init(
             featureFlags: FeatureFlags = .active,
-            dismiss: @escaping () -> Void = {}
+            dismiss: @escaping () -> Void = {},
+            scanner: any QRScannerViewModel = QRScannerViewModelSpy()
         ) {
-            self.rootComposer = .init(schedulers: .immediate)
+            self.rootComposer = .init(
+                scanner: scanner,
+                schedulers: .immediate
+            )
             self.binder = rootComposer.makeBinder(
                 featureFlags: featureFlags,
                 dismiss: dismiss

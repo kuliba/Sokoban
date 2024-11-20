@@ -72,6 +72,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
         let sut = factory.makePaymentsTransfersPersonal(

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 22.10.2024.
 //
 
+import Combine
 import PayHubUI
 
 extension ModelRootComposer {
@@ -27,6 +28,7 @@ extension ModelRootComposer {
                 httpClient: httpClient,
                 logger: logger,
                 resolveQR: resolver.resolve,
+                scanner: QRScannerView.ViewModel(),
                 settings: .iFora,
                 schedulers: schedulers
             ),
@@ -42,5 +44,13 @@ extension ModelRootComposer {
                 )
             }
         )
+    }
+}
+
+extension QRScannerView.ViewModel: QRScannerViewModel {
+    
+    var qrScannerViewActionPublisher: AnyPublisher<QRScannerViewAction, Never> {
+        
+        action.eraseToAnyPublisher()
     }
 }

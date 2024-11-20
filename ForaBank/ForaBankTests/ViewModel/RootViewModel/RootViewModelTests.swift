@@ -899,6 +899,7 @@ extension BannersBinder {
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
         resolveQR: { _ in .unknown },
+        scanner: QRScannerViewModelSpy(),
         schedulers: .immediate
     ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,

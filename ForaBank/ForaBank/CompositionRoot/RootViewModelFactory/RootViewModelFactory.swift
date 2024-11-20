@@ -18,6 +18,7 @@ final class RootViewModelFactory {
     let logger: LoggerAgentProtocol
     
     let resolveQR: ResolveQR
+    let scanner: any QRScannerViewModel
     
     let settings: RootViewModelFactorySettings
     
@@ -41,15 +42,17 @@ final class RootViewModelFactory {
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         resolveQR: @escaping ResolveQR,
+        scanner: any QRScannerViewModel,
         settings: RootViewModelFactorySettings = .iFora,
         schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
         self.logger = logger
+        self.resolveQR = resolveQR
+        self.scanner = scanner
         self.settings = settings
         self.schedulers = schedulers
-        self.resolveQR = resolveQR
 
         // reusable components & factories
         

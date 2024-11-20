@@ -15,6 +15,7 @@ extension ModelRootComposer {
         logger: any LoggerAgentProtocol = LoggerSpy(),
         model: Model = .mockWithEmptyExcept(),
         resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
+        scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
         settings: RootViewModelFactorySettings = .iFora,
         schedulers: Schedulers
     ) {
@@ -24,6 +25,7 @@ extension ModelRootComposer {
                 httpClient: httpClient,
                 logger: logger,
                 resolveQR: resolveQR,
+                scanner: scanner,
                 settings: settings,
                 schedulers: schedulers
             ),

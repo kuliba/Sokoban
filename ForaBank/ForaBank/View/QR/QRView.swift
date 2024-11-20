@@ -31,7 +31,7 @@ struct QRView: View {
         
         ZStack {
             
-            QRScannerView(viewModel: viewModel.scanner)
+            QRScannerViewModelView(viewModel: viewModel.scanner)
             
             VStack(alignment: .center, spacing: 0)  {
                 
@@ -77,6 +77,19 @@ struct QRView: View {
             content: { alertViewModel in Alert(with: alertViewModel) }
         )
         .sheet(item: $viewModel.sheet, content: sheetView)
+    }
+}
+
+struct QRScannerViewModelView: View {
+    
+    let viewModel: QRScannerViewModel
+    
+    var body: some View {
+        
+        if let viewModel = viewModel as? QRScannerView.ViewModel {
+            
+            QRScannerView(viewModel: viewModel)
+        }
     }
 }
 
@@ -319,7 +332,8 @@ struct QRView_Previews: PreviewProvider {
         QRView(
             viewModel: .init(
                 closeAction: {},
-                qrResolve: { _ in .unknown }
+                qrResolve: { _ in .unknown },
+                scanner: QRScannerView.ViewModel()
             ),
             viewFactory: .init(makeQRFailedView: {_ in fatalError() }))
     }

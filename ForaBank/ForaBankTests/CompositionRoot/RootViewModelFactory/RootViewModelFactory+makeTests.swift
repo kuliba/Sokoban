@@ -137,6 +137,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             httpClient: httpClient,
             logger: LoggerSpy(),
             resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .test(
                 main: .immediate,
                 background: backgroundScheduler.eraseToAnyScheduler()
