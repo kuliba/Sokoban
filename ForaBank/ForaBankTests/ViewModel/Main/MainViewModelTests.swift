@@ -238,6 +238,22 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.route.modal?.case, .byPhone)
     }
     
+    func test_tapByZKU_onlyCorporateCards_shouldShowAlert() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.modal)
+        
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .zku)
+        
+        XCTAssertNotNil(sut.route.modal?.alert)
+    }
+    
     func test_tapOpenCard_onlyCorporateCards_shouldNotChangeDestination() {
         
         let (sut, model) = makeSUT()

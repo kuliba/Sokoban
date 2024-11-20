@@ -2384,7 +2384,7 @@ extension ProductProfileViewModel {
                 openDeposit(deposit.depositID)
                 
             case .payment:
-                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
+                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             }
         case let .listVerticalRoundImageAction(action):
             switch action {

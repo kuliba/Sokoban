@@ -76,11 +76,11 @@ extension RootViewModel {
     
     private func legacyPayment(by name: String) -> PTSectionPaymentsView.ViewModel.PaymentsType? {
         
-        return name == "HOUSING_AND_COMMUNAL_SERVICE" ? .service : nil
+        return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .service : nil
     }
     
     private func payment(by name: String) -> RemoteServices.ResponseMapper.ServiceCategory.CategoryType? {
         
-        return name == "HOUSING_AND_COMMUNAL_SERVICE" ? .housingAndCommunalService : nil
+        return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .housingAndCommunalService : nil
     }
 }
