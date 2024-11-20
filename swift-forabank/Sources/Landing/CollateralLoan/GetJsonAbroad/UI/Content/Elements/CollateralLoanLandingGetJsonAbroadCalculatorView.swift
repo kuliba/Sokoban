@@ -34,7 +34,7 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
         ZStack {
             
             RoundedRectangle(cornerRadius: config.cornerRadius)
-                .fill(config.calculator.backgroundColor)
+                .fill(config.calculator.root.colors.background)
                 .frame(maxWidth: .infinity)
             
             VStack(spacing: 0) {
@@ -55,8 +55,8 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             
             headerText(config: config)
                 .padding(.top, config.header.topPadding)
-                .padding(.leading, config.contentLeadingPadding)
-                .padding(.trailing, config.contentTrailingPadding)
+                .padding(.leading, config.root.layouts.contentLeadingPadding)
+                .padding(.trailing, config.root.layouts.contentTrailingPadding)
                 .padding(.bottom, config.header.bottomPadding)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -74,9 +74,9 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             .padding(.bottom, config.salary.bottomPadding)
             
             Divider()
-                .background(config.dividerColor)
-                .padding(.leading, config.contentLeadingPadding)
-                .padding(.trailing, config.contentTrailingPadding)
+                .background(config.root.colors.divider)
+                .padding(.leading, config.root.layouts.contentLeadingPadding)
+                .padding(.trailing, config.root.layouts.contentTrailingPadding)
         }
     }
     
@@ -90,7 +90,7 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
                 percentView(config: config)
             }
             .frame(minWidth: 0, maxWidth: .infinity)
-            .padding(.top, config.middleSectionSpacing)
+            .padding(.top, config.root.layouts.middleSectionSpacing)
             
             depositView(config: config)
             desiredAmountView(config: config)
@@ -101,8 +101,8 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
         
         ZStack {
             
-            RoundedRectangle(cornerRadius: config.calculator.bottomPanelCornerRadius)
-                .fill(config.calculator.bottomPanelBackgroundColor)
+            RoundedRectangle(cornerRadius: config.calculator.root.layouts.bottomPanelCornerRadius)
+                .fill(config.calculator.root.colors.bottomPanelBackground)
                 .frame(maxWidth: .infinity)
             
             calculatorBottomContentView(config: config)
@@ -115,25 +115,25 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             
             monthlyPaymentTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, config.calculator.contentLeadingPadding)
+                .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
                 .padding(.top, config.calculator.monthlyPayment.titleTopPadding)
                 .frame(minWidth: 0, maxWidth: .infinity)
             
             monthlyPaymentValueText(config: config)
-                .padding(.leading, config.calculator.contentLeadingPadding)
+                .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
                 .padding(.top, config.calculator.monthlyPayment.valueTopPadding)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             config.calculator.info.titleText.text(
                 withConfig: .init(
-                    textFont: config.calculator.titleFont.font,
-                    textColor: config.calculator.titleFont.foreground
+                    textFont: config.calculator.root.fonts.title.font,
+                    textColor: config.calculator.root.fonts.title.foreground
                 )
             )
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading, config.calculator.contentLeadingPadding)
-            .padding(.trailing, config.calculator.contentTrailingPadding)
+            .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
+            .padding(.trailing, config.calculator.root.layouts.contentTrailingPadding)
             .padding(.top, config.calculator.info.titleTopPadding)
             .padding(.bottom, config.calculator.info.titleBottomPadding)
         }
@@ -145,13 +145,13 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             
             periodTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, config.spacingBetweenTitleAndValue)
-                .padding(.leading, config.contentLeadingPadding)
+                .padding(.bottom, config.root.layouts.spacingBetweenTitleAndValue)
+                .padding(.leading, config.root.layouts.contentLeadingPadding)
             
             HStack {
                 
                 periodValueText(config: config)
-                    .padding(.leading, config.contentLeadingPadding)
+                    .padding(.leading, config.root.layouts.contentLeadingPadding)
                 
                 chevron(config: config)
             }
@@ -166,7 +166,7 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             
             percentTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, config.spacingBetweenTitleAndValue)
+                .padding(.bottom, config.root.layouts.spacingBetweenTitleAndValue)
             
             percentValueText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -181,13 +181,13 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             depositTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, config.deposit.titleTopPadding)
-                .padding(.leading, config.contentLeadingPadding)
+                .padding(.leading, config.root.layouts.contentLeadingPadding)
                 .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
                 
                 depositValueText(config: config)
-                    .padding(.leading, config.contentLeadingPadding)
+                    .padding(.leading, config.root.layouts.contentLeadingPadding)
 
                 chevron(config: config)
             }
@@ -202,22 +202,22 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             desiredAmountTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, config.desiredAmount.titleTopPadding)
-                .padding(.leading, config.contentLeadingPadding)
+                .padding(.leading, config.root.layouts.contentLeadingPadding)
                 .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
                 
                 desiredAmountValueText(config: config)
-                    .padding(.leading, config.contentLeadingPadding)
+                    .padding(.leading, config.root.layouts.contentLeadingPadding)
                 
                 // TODO: change icon
                 Image(systemName: "pencil")
-                    .foregroundColor(config.chevronColor)
+                    .foregroundColor(config.root.colors.chevron)
                     .frame(width: 10.5, height: 10.5)
-                    .padding(.leading, config.chevronSpacing)
+                    .padding(.leading, config.root.layouts.chevronSpacing)
                 
                 desiredAmountMaxText(config: config)
-                    .padding(.trailing, config.contentTrailingPadding)
+                    .padding(.trailing, config.root.layouts.contentTrailingPadding)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -225,8 +225,8 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             
             // TODO: Need to customize
             Slider(value: $sliderCurrentValue, in: (0...20))
-                .padding(.leading, config.contentLeadingPadding)
-                .padding(.trailing, config.contentTrailingPadding)
+                .padding(.leading, config.root.layouts.contentLeadingPadding)
+                .padding(.trailing, config.root.layouts.contentTrailingPadding)
                 .padding(.bottom, config.desiredAmount.sliderBottomPadding)
         }
     }
@@ -234,9 +234,11 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
     private func chevron(config: Config.Calculator) -> some View {
         
         Image(systemName: "chevron.down")
-            .foregroundColor(config.chevronColor)
+            .foregroundColor(config.root.colors.chevron)
             .frame(width: 10.5, height: 10.5)
-            .padding(.leading, config.chevronSpacing)
+            .padding(.leading, config.root.layouts.chevronSpacing)
+            .offset(y: config.root.layouts.chevronOffsetY)
+
     }
     
     // MARK: Content Subviews
@@ -253,61 +255,61 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
     
     private func monthlyPaymentTitleText(config: Config) -> some View {
         
-        formatText(config.calculator.monthlyPayment.titleText, with: config.calculator.titleFont)
+        formatText(config.calculator.monthlyPayment.titleText, with: config.calculator.root.fonts.title)
     }
     
     private func monthlyPaymentValueText(config: Config) -> some View {
         
         // TODO: Replace on real data
-        formatText("35 099,28 ₽", with: config.calculator.valueFont)
+        formatText("35 099,28 ₽", with: config.calculator.root.fonts.value)
     }
     
     private func periodTitleText(config: Config.Calculator) -> some View {
         
-        formatText(config.period.titleText, with: config.titleFont)
+        formatText(config.period.titleText, with: config.root.fonts.title)
     }
     
     private func periodValueText(config: Config.Calculator) -> some View {
         
         // TODO: Replace on real data
-        formatText("3 года", with: config.valueFont)
+        formatText("3 года", with: config.root.fonts.value)
     }
     
     private func percentTitleText(config: Config.Calculator) -> some View {
         
-        formatText(config.percent.titleText, with: config.titleFont)
+        formatText(config.percent.titleText, with: config.root.fonts.title)
     }
     
     private func percentValueText(config: Config.Calculator) -> some View {
         
         // TODO: Replace on real data
-        formatText("16%", with: config.valueFont)
+        formatText("16%", with: config.root.fonts.value)
     }
     
     private func depositTitleText(config: Config.Calculator) -> some View {
         
-        formatText(config.deposit.titleText, with: config.titleFont)
+        formatText(config.deposit.titleText, with: config.root.fonts.title)
     }
     
     private func depositValueText(config: Config.Calculator) -> some View {
         
-        formatText("Иное движимое имущество", with: config.valueFont)
+        formatText("Иное движимое имущество", with: config.root.fonts.value)
     }
     
     private func desiredAmountTitleText(config: Config.Calculator) -> some View {
         
-        formatText(config.desiredAmount.titleText, with: config.titleFont)
+        formatText(config.desiredAmount.titleText, with: config.root.fonts.title)
     }
     
     private func desiredAmountValueText(config: Config.Calculator) -> some View {
         
         // TODO: Replace on real data
-        formatText("1 325 457 ₽", with: config.valueFont)
+        formatText("1 325 457 ₽", with: config.desiredAmount.fontValue)
     }
     
     private func desiredAmountMaxText(config: Config.Calculator) -> some View {
         
-        formatText(config.desiredAmount.maxText, with: config.titleFont)
+        formatText(config.desiredAmount.maxText, with: config.root.fonts.title)
     }
     
     // MARK: Helpers

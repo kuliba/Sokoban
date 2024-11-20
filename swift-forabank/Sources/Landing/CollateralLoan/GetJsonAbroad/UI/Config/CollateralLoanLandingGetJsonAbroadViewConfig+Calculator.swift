@@ -12,19 +12,7 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
     
     public struct Calculator {
         
-        public let contentLeadingPadding: CGFloat
-        public let contentTrailingPadding: CGFloat
-        public let backgroundColor: Color
-        public let dividerColor: Color
-        public let middleSectionSpacing: CGFloat
-        public let titleFont: FontConfig
-        public let valueFont: FontConfig
-        public let spacingBetweenTitleAndValue: CGFloat
-        public let chevronColor: Color
-        public let chevronSpacing: CGFloat
-        public let bottomPanelCornerRadius: CGFloat
-        public let bottomPanelBackgroundColor: Color
-
+        public let root: Root
         public let header: Header
         public let salary: Salary
         public let period: Period
@@ -35,18 +23,7 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
         public let deposit: Deposit
 
         public init(
-            contentLeadingPadding: CGFloat,
-            contentTrailingPadding: CGFloat,
-            backgroundColor: Color,
-            dividerColor: Color,
-            middleSectionSpacing: CGFloat,
-            titleFont: FontConfig,
-            valueFont: FontConfig,
-            spacingBetweenTitleAndValue: CGFloat,
-            chevronColor: Color,
-            chevronSpacing: CGFloat,
-            bottomPanelCornerRadius: CGFloat,
-            bottomPanelBackgroundColor: Color,
+            root: Root,
             header: Header,
             salary: Salary,
             period: Period,
@@ -56,18 +33,7 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
             info: Info,
             deposit: Deposit
         ) {
-            self.contentLeadingPadding = contentLeadingPadding
-            self.contentTrailingPadding = contentTrailingPadding
-            self.backgroundColor = backgroundColor
-            self.dividerColor = dividerColor
-            self.middleSectionSpacing = middleSectionSpacing
-            self.titleFont = titleFont
-            self.valueFont = valueFont
-            self.spacingBetweenTitleAndValue = spacingBetweenTitleAndValue
-            self.chevronColor = chevronColor
-            self.chevronSpacing = chevronSpacing
-            self.bottomPanelCornerRadius = bottomPanelCornerRadius
-            self.bottomPanelBackgroundColor = bottomPanelBackgroundColor
+            self.root = root
             self.header = header
             self.salary = salary
             self.period = period
@@ -76,6 +42,79 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
             self.monthlyPayment = monthlyPayment
             self.info = info
             self.deposit = deposit
+        }
+        
+        public struct Root {
+            
+            public let layouts: Layouts
+            public let fonts: Fonts
+            public let colors: Colors
+
+            public init(layouts: Layouts, fonts: Fonts, colors: Colors) {
+                self.layouts = layouts
+                self.fonts = fonts
+                self.colors = colors
+            }
+            
+            public struct Layouts {
+                
+                public let contentLeadingPadding: CGFloat
+                public let contentTrailingPadding: CGFloat
+                public let middleSectionSpacing: CGFloat
+                public let spacingBetweenTitleAndValue: CGFloat
+                public let chevronSpacing: CGFloat
+                public let bottomPanelCornerRadius: CGFloat
+                public let chevronOffsetY: CGFloat
+                
+                public init(
+                    contentLeadingPadding: CGFloat,
+                    contentTrailingPadding: CGFloat,
+                    middleSectionSpacing: CGFloat,
+                    spacingBetweenTitleAndValue: CGFloat,
+                    chevronSpacing: CGFloat,
+                    bottomPanelCornerRadius: CGFloat,
+                    chevronOffsetY: CGFloat
+                ) {
+                    self.contentLeadingPadding = contentLeadingPadding
+                    self.contentTrailingPadding = contentTrailingPadding
+                    self.middleSectionSpacing = middleSectionSpacing
+                    self.spacingBetweenTitleAndValue = spacingBetweenTitleAndValue
+                    self.chevronSpacing = chevronSpacing
+                    self.bottomPanelCornerRadius = bottomPanelCornerRadius
+                    self.chevronOffsetY = chevronOffsetY
+                }
+            }
+            
+            public struct Fonts {
+                
+                public let title: FontConfig
+                public let value: FontConfig
+                
+                public init(title: FontConfig, value: FontConfig) {
+                    self.title = title
+                    self.value = value
+                }
+            }
+            
+            public struct Colors {
+                
+                public let background: Color
+                public let divider: Color
+                public let chevron: Color
+                public let bottomPanelBackground: Color
+                
+                public init(
+                    background: Color,
+                    divider: Color,
+                    chevron: Color,
+                    bottomPanelBackground: Color
+                ) {
+                    self.background = background
+                    self.divider = divider
+                    self.chevron = chevron
+                    self.bottomPanelBackground = bottomPanelBackground
+                }
+            }
         }
         
         public struct Header {
@@ -160,17 +199,20 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
             public let maxText: String
             public let titleTopPadding: CGFloat
             public let sliderBottomPadding: CGFloat
+            public let fontValue: FontConfig
 
             public init(
                 titleText: String,
                 maxText: String,
                 titleTopPadding: CGFloat,
-                sliderBottomPadding: CGFloat
+                sliderBottomPadding: CGFloat,
+                fontValue: FontConfig
             ) {
                 self.titleText = titleText
                 self.maxText = maxText
                 self.titleTopPadding = titleTopPadding
                 self.sliderBottomPadding = sliderBottomPadding
+                self.fontValue = fontValue
             }
         }
         
@@ -206,3 +248,69 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
         }
     }
 }
+
+extension CollateralLoanLandingGetJsonAbroadViewConfig.Calculator {
+ 
+    static let `default` = Self(
+        root: .init(
+            layouts: .init(
+                contentLeadingPadding: 16,
+                contentTrailingPadding: 22,
+                middleSectionSpacing: 11,
+                spacingBetweenTitleAndValue: 8,
+                chevronSpacing: 4,
+                bottomPanelCornerRadius: 12,
+                chevronOffsetY: 2
+            ),
+            fonts: .init(
+                title: .init(Font.system(size: 12), foreground: .textPlaceholder),
+                value: .init(Font.system(size: 16), foreground: .white)
+            ),
+            colors: .init(
+                background: .black,
+                divider: .divider,
+                chevron: .divider,
+                bottomPanelBackground: .bottomPanelBackground
+            )
+        ),
+        header: .init(
+            text: "Рассчитать кредит",
+            font: .init(Font.system(size: 20).bold(), foreground: .white),
+            topPadding: 16,
+            bottomPadding: 12
+        ),
+        salary: .init(
+            text: "Я получаю зарплату на счет в Фора-Банке",
+            font: .init(Font.system(size: 14), foreground: .white),
+            leadingPadding: 16,
+            trailingPadding: 17,
+            bottomPadding: 18,
+            toggleTrailingPadding: 22,
+            toggleColor: .buttonPrimaryDisabled
+        ),
+        period: .init(titleText: "Срок кредита"),
+        percent: .init(titleText: "Процентная ставка"),
+        desiredAmount: .init(
+            titleText: "Желаемая сумма кредита",
+            maxText: "До 15 млн. ₽",
+            titleTopPadding: 20,
+            sliderBottomPadding: 12,
+            fontValue: .init(Font.system(size: 24).bold(), foreground: .white)
+        ),
+        monthlyPayment: .init(
+            titleText: "Ежемесячный платеж",
+            titleTopPadding: 16,
+            valueTopPadding: 8
+        ),
+        info: .init(
+            titleText: "Представленные параметры являются расчетными и носят справочный характер",
+            titleTopPadding: 15,
+            titleBottomPadding: 15
+        ),
+        deposit: .init(
+            titleText: "Залог",
+            titleTopPadding: 24
+        )
+    )
+}
+

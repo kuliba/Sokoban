@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension CollateralLoanLandingGetJsonAbroadViewConfig {
     
@@ -27,30 +28,27 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
         
         public struct LabelTag {
 
-            public let fontConfig: FontConfig
-            public let cornerSize: CGFloat
-            public let topOuterPadding: CGFloat
-            public let leadingOuterPadding: CGFloat
-            public let horizontalInnerPadding: CGFloat
-            public let verticalInnerPadding: CGFloat
-            public let rotationDegrees: CGFloat
+            public let layouts: Layouts
+            public let fonts: Fonts
+
+            public init(layouts: Layouts, fonts: Fonts) {
+                self.layouts = layouts
+                self.fonts = fonts
+            }
             
-            public init(
-                fontConfig: FontConfig,
-                cornerSize: CGFloat,
-                topOuterPadding: CGFloat,
-                leadingOuterPadding: CGFloat,
-                horizontalInnerPadding: CGFloat,
-                verticalInnerPadding: CGFloat,
-                rotationDegrees: CGFloat
-            ) {
-                self.fontConfig = fontConfig
-                self.cornerSize = cornerSize
-                self.topOuterPadding = topOuterPadding
-                self.leadingOuterPadding = leadingOuterPadding
-                self.horizontalInnerPadding = horizontalInnerPadding
-                self.verticalInnerPadding = verticalInnerPadding
-                self.rotationDegrees = rotationDegrees
+            public struct Layouts {
+                
+                public let cornerSize: CGFloat
+                public let topOuterPadding: CGFloat
+                public let leadingOuterPadding: CGFloat
+                public let horizontalInnerPadding: CGFloat
+                public let verticalInnerPadding: CGFloat
+                public let rotationDegrees: CGFloat
+            }
+            
+            public struct Fonts {
+                
+                public let fontConfig: FontConfig
             }
         }
         
@@ -74,4 +72,32 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
             }
         }
     }
+}
+
+extension CollateralLoanLandingGetJsonAbroadViewConfig.Header {
+    
+    static let `default` = Self(
+        height: 642,
+        labelTag: .init(
+            layouts: .init(
+                cornerSize: 10,
+                topOuterPadding: 215,
+                leadingOuterPadding: 25,
+                horizontalInnerPadding: 10,
+                verticalInnerPadding: 6,
+                rotationDegrees: -5
+            ),
+            fonts: .init(fontConfig: .init(
+                Font.system(size: 32).bold(),
+                foreground: .white,
+                background: .red
+            ))
+        ),
+        params: .init(
+            fontConfig: .init(Font.system(size: 14)),
+            spacing: 20,
+            leadingPadding: 20,
+            topPadding: 30
+        )
+    )
 }

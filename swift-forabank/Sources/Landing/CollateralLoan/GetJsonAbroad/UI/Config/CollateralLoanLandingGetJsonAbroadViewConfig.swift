@@ -14,6 +14,7 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
     public let paddings: Paddings
     public let spacing: CGFloat
     public let cornerRadius: CGFloat
+    
     public let header: Header
     public let conditions: Conditions
     public let calculator: Calculator
@@ -103,105 +104,16 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
         ),
         spacing: 16,
         cornerRadius: 12,
-        header: .init(
-            height: 642,
-            labelTag: .init(
-                fontConfig: .init(
-                    Font.system(size: 32).bold(),
-                    foreground: .white,
-                    background: .red
-                ),
-                cornerSize: 10,
-                topOuterPadding: 215,
-                leadingOuterPadding: 25,
-                horizontalInnerPadding: 10,
-                verticalInnerPadding: 6,
-                rotationDegrees: -5
-            ),
-            params: .init(
-                fontConfig: .init(Font.system(size: 14)),
-                spacing: 20,
-                leadingPadding: 20,
-                topPadding: 30
-            )
-        ),
-        conditions: .init(
-            header: .init(
-                text: "Выгодные условия",
-                headerFont: .init(Font.system(size: 24).bold())
-            ),
-            backgroundColor: Color.grayLightest,
-            spacing: 13,
-            horizontalPadding: 16,
-            listTopPadding: 12,
-            iconSize: CGSize(width: 40, height: 40),
-            iconBackground: .iconBackground,
-            iconTrailingPadding: 16,
-            titleFont: .init(
-                Font.system(size: 14),
-                foreground: .textPlaceholder
-            ),
-            subTitleFont: .init(Font.system(size: 16)),
-            subTitleTopPadding: 2
-        ),
-        calculator: .init(
-            contentLeadingPadding: 16,
-            contentTrailingPadding: 22,
-            backgroundColor: .black,
-            dividerColor: .divider,
-            middleSectionSpacing: 11,
-            titleFont: .init(Font.system(size: 12), foreground: .textPlaceholder),
-            valueFont: .init(Font.system(size: 20), foreground: .white),
-            spacingBetweenTitleAndValue: 8,
-            chevronColor: .divider,
-            chevronSpacing: 4,
-            bottomPanelCornerRadius: 12,
-            bottomPanelBackgroundColor: .bottomPanelBackground,
-            header: .init(
-                text: "Рассчитать кредит",
-                font: .init(Font.system(size: 24).bold(), foreground: .white),
-                topPadding: 16,
-                bottomPadding: 12
-            ),
-            salary: .init(
-                text: "Я получаю зарплату на счет в Фора-Банке",
-                font: .init(Font.system(size: 14), foreground: .white),
-                leadingPadding: 16,
-                trailingPadding: 17,
-                bottomPadding: 18,
-                toggleTrailingPadding: 22,
-                toggleColor: .buttonPrimaryDisabled
-            ),
-            period: .init(titleText: "Срок кредита"),
-            percent: .init(titleText: "Процентная ставка"),
-            desiredAmount: .init(
-                titleText: "Желаемая сумма кредита",
-                maxText: "До 15 млн. ₽",
-                titleTopPadding: 20,
-                sliderBottomPadding: 12
-            ),
-            monthlyPayment: .init(
-                titleText: "Ежемесячный платеж",
-                titleTopPadding: 16,
-                valueTopPadding: 8
-            ),
-            info: .init(
-                titleText: "Представленные параметры являются расчетными и носят справочный характер",
-                titleTopPadding: 15,
-                titleBottomPadding: 15
-            ),
-            deposit: .init(
-                titleText: "Залог",
-                titleTopPadding: 24
-            )
-        ),
+        header: .default,
+        conditions: .default,
+        calculator: .default,
         frequentlyAskedQuestion: .init(),
         documents: .init(),
         footer: .init()
     )
 }
 
-private extension Color {
+extension Color {
     
     static let grayLightest: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
     static let red: Self = .init(red: 1, green: 0.21, blue: 0.21)
