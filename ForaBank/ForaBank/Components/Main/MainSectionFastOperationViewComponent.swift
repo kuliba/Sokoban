@@ -124,7 +124,11 @@ struct MainSectionFastOperationView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(
+            title: viewModel.title,
+            canCollapse: false,
+            isCollapsed: .constant(false)
+        ) {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 

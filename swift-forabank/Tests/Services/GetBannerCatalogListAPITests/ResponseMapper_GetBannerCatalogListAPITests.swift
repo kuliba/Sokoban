@@ -124,6 +124,32 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
         ]))
     }
     
+    func test_map_actionSavingLanding_shouldDeliverValidDataWithActionSavingLanding() {
+        
+        let productName = anyMessage()
+        let conditions = anyMessage()
+        let imageLink = anyMessage()
+        let actionType = "SAVING_LANDING"
+        let target = anyMessage()
+        
+        let json = json(
+            productName: productName,
+            conditions: conditions,
+            imageLink: imageLink,
+            actionType: actionType,
+            target: target)
+        
+        let result = map(statusCode: 200, data: Data(json.utf8))
+        
+        XCTAssertNoDiff(result, .success(.init(serial: "", bannerCatalogList: [
+            .init(
+                productName: productName,
+                conditions: [conditions],
+                links: .init(image: imageLink, order: "", condition: ""),
+                action: .init(type: .savingLanding(target)))
+        ])))
+    }
+
     func test_map_actionService_shouldDeliverValidData() throws {
         
         let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.serviceLanding.utf8))).get()
@@ -168,6 +194,40 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
         return .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
     }
     
+    func json(
+        productName: String,
+        conditions: String,
+        imageLink: String,
+        actionType: String,
+        target: String
+    ) -> String {
+        
+        """
+        {
+          "statusCode": 0,
+          "errorMessage": null,
+          "data": {
+            "serial": "",
+            "BannerCatalogList": [
+              {
+                "productName": "\(productName)",
+                "txtСondition": ["\(conditions)"],
+                "imageLink": "\(imageLink)",
+                "action": {
+                  "type": "\(actionType)",
+                  "target": "\(target)"
+                }
+              }
+            ]
+          }
+        }
+        """
+    }
+    
+    private func anyMessage() -> String {
+        
+        UUID().uuidString
+    }
 }
 
 private extension String {
@@ -350,6 +410,30 @@ private extension String {
       }
     }
     """
+
+    static let actionSavingLanding: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "serial": "",
+        "BannerCatalogList": [
+          {
+            "productName": "Накопительный счет",
+            "txtСondition": [
+              "Сохраняй"
+            ],
+            "imageLink": "imageLink",
+            "action": {
+              "type": "SAVING_LANDING",
+              "target": "DEFAULT"
+            }
+          }
+        ]
+      }
+    }
+    """
+
     
     static let serviceLanding: Self = """
     {
