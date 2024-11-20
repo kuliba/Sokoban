@@ -12,6 +12,7 @@ extension ModelRootComposer {
     static var shared: ModelRootComposer {
         
         let model: Model = .shared
+        let logger: LoggerAgent = .shared
         let httpClientFactory = ModelHTTPClientFactory(
             logger: LoggerAgent.shared,
             model: model
@@ -22,10 +23,18 @@ extension ModelRootComposer {
         
         return .init(
             httpClientFactory: httpClientFactory,
-            logger: LoggerAgent.shared,
+            logger: logger,
             model: model,
             resolveQR: resolver.resolve,
             schedulers: schedulers,
+            rootViewModelFactory: .init(
+                model: model,
+                httpClient: httpClient,
+                logger: logger,
+                resolveQR: resolver.resolve,
+                settings: .iFora,
+                schedulers: schedulers
+            ),
             makeRootViewFactoryComposer: { featureFlags in
                 
                 return .init(

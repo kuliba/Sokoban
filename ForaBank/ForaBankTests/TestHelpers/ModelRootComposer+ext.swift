@@ -15,6 +15,7 @@ extension ModelRootComposer {
         logger: any LoggerAgentProtocol = LoggerSpy(),
         model: Model = .mockWithEmptyExcept(),
         resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
+        settings: RootViewModelFactorySettings = .iFora,
         schedulers: Schedulers
     ) {
         self.init(
@@ -23,6 +24,14 @@ extension ModelRootComposer {
             model: model,
             resolveQR: resolveQR,
             schedulers: schedulers,
+            rootViewModelFactory: .init(
+                model: model,
+                httpClient: httpClientFactory.makeHTTPClient(),
+                logger: logger,
+                resolveQR: resolveQR,
+                settings: settings,
+                schedulers: schedulers
+            ),
             makeRootViewFactoryComposer: { featureFlags in
                 
                 return .init(

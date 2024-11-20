@@ -16,6 +16,7 @@ final class ModelRootComposer {
     private let model: Model
     private let resolveQR: RootViewModelFactory.ResolveQR
     private let schedulers: Schedulers
+    private let rootViewModelFactory: RootViewModelFactory
     private let makeRootViewFactoryComposer: MakeRootViewFactoryComposer
     
     init(
@@ -24,6 +25,7 @@ final class ModelRootComposer {
         model: Model,
         resolveQR: @escaping RootViewModelFactory.ResolveQR,
         schedulers: Schedulers = .init(),
+        rootViewModelFactory: RootViewModelFactory,
         makeRootViewFactoryComposer: @escaping MakeRootViewFactoryComposer
     ) {
         self.httpClient = httpClientFactory.makeHTTPClient()
@@ -31,6 +33,7 @@ final class ModelRootComposer {
         self.model = model
         self.resolveQR = resolveQR
         self.schedulers = schedulers
+        self.rootViewModelFactory = rootViewModelFactory
         self.makeRootViewFactoryComposer = makeRootViewFactoryComposer
     }
     
@@ -44,15 +47,7 @@ extension ModelRootComposer: RootComposer {
         dismiss: @escaping () -> Void
     ) -> RootViewDomain.Binder {
         
-        let factory = RootViewModelFactory(
-            model: model,
-            httpClient: httpClient,
-            logger: logger, 
-            resolveQR: resolveQR,
-            schedulers: schedulers
-        )
-        
-        return factory.make(
+        return rootViewModelFactory.make(
             dismiss: dismiss,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
