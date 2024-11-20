@@ -692,7 +692,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     private func makeQRModel(
         mapScanResult: @escaping (QRViewModel.ScanResult, @escaping (QRModelResult) -> Void) -> Void = { _,_ in },
-        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }) },
+        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }, scanner: QRScannerViewModelSpy()) },
         scheduler: AnySchedulerOfDispatchQueue = .immediate
     ) -> QRScannerModel {
         

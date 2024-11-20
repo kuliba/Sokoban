@@ -314,8 +314,12 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            viewFactory.components.makeQRView(node.model.qrScanner)
-                .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
+            NavigationView {
+                
+                viewFactory.components.makeQRView(node.model.qrScanner)
+                    .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
+            }
+            .navigationViewStyle(.stack)
             
         case let .success(viewModel):
             viewFactory.components.makePaymentsSuccessView(viewModel)
