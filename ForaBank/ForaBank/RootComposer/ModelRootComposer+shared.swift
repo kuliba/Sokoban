@@ -22,11 +22,6 @@ extension ModelRootComposer {
         let schedulers = Schedulers()
         
         return .init(
-            httpClientFactory: httpClientFactory,
-            logger: logger,
-            model: model,
-            resolveQR: resolver.resolve,
-            schedulers: schedulers,
             rootViewModelFactory: .init(
                 model: model,
                 httpClient: httpClient,

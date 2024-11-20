@@ -11,7 +11,7 @@ import PayHubUI
 extension ModelRootComposer {
     
     convenience init(
-        httpClientFactory: any HTTPClientFactory = HTTPClientFactorySpy(),
+        httpClient: any HTTPClient = HTTPClientSpy(),
         logger: any LoggerAgentProtocol = LoggerSpy(),
         model: Model = .mockWithEmptyExcept(),
         resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
@@ -19,14 +19,9 @@ extension ModelRootComposer {
         schedulers: Schedulers
     ) {
         self.init(
-            httpClientFactory: httpClientFactory,
-            logger: logger,
-            model: model,
-            resolveQR: resolveQR,
-            schedulers: schedulers,
             rootViewModelFactory: .init(
                 model: model,
-                httpClient: httpClientFactory.makeHTTPClient(),
+                httpClient: httpClient,
                 logger: logger,
                 resolveQR: resolveQR,
                 settings: settings,
@@ -36,7 +31,7 @@ extension ModelRootComposer {
                 
                 return .init(
                     model: model,
-                    httpClient: httpClientFactory.makeHTTPClient(),
+                    httpClient: httpClient,
                     historyFeatureFlag: true,
                     marketFeatureFlag: .active,
                     savingsAccountFlag: featureFlags.savingsAccountFlag,
