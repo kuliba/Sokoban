@@ -549,63 +549,66 @@ extension RootViewModelFactory {
                     
                 case let .success(response):
                     
-                    var list = ClientInformAlerts(notRequired: [], required: nil)
+                    var alerts = ClientInformAlerts(informAlert: [], updateAlert: nil)
                     
                     response.list.forEach {
                         
-                        if $0.update == nil {
+                        if $0.update == nil && $0.authBlocking == false {
                             
-                            list.notRequired.append(
+                            alerts.informAlert.append(
                                 .init(
                                     title: $0.title,
-                                    text: $0.text,
-                                    authBlocking: $0.authBlocking
+                                    text: $0.text
                                 )
                             )
                         }
+                        
+                        if $0.authBlocking == true {
+                            
+                            alerts.updateAlert = .init(
+                                title: $0.title,
+                                text: $0.text,
+                                link: $0.update?.link,
+                                version: $0.update?.version,
+                                actionType: .required
+                            )
+                        }
+                        
+                        if $0.update?.type == "required" {
+                            
+                            alerts.updateAlert = .init(
+                                title: $0.title,
+                                text: $0.text,
+                                link: $0.update?.link,
+                                version: $0.update?.version,
+                                actionType: .required
+                            )
+                        }
+                        
+                        if $0.update?.type == "optional" {
+                            
+                            alerts.updateAlert = .init(
+                                title: $0.title,
+                                text: $0.text,
+                                link: $0.update?.link,
+                                version: $0.update?.version,
+                                actionType: .optional
+                            )
+                        }
+                        
+                        if $0.update?.type == "not_required" {
+                            
+                            alerts.updateAlert = .init(
+                                title: $0.title,
+                                text: $0.text,
+                                link: $0.update?.link,
+                                version: $0.update?.version,
+                                actionType: .optional
+                            )
+                        }
                     }
                     
-                    if let required = response.list.first(where: {
-                        
-                        $0.update != nil
-                    }) {
-                        
-                        if required.update?.type == "not_required" {
-                            list.required = .init(
-                                title: required.title,
-                                text: required.text,
-                                type: .notRequired,
-                                link: required.update?.link,
-                                version: required.update?.version,
-                                authBlocking: required.authBlocking
-                            )
-                        }
-                        
-                        if required.update?.type == "required" {
-                            list.required = .init(
-                                title: required.title,
-                                text: required.text,
-                                type: .required,
-                                link: required.update?.link,
-                                version: required.update?.version,
-                                authBlocking: required.authBlocking
-                            )
-                        }
-                        
-                        if required.update?.type == "optional" {
-                            list.required = .init(
-                                title: required.title,
-                                text: required.text,
-                                type: .optional,
-                                link: required.update?.link,
-                                version: required.update?.version,
-                                authBlocking: required.authBlocking
-                                
-                            )
-                        }
-                    }
-                    
-                    completion(list)
+                    completion(alerts)
                 }
                 
                 _ = _createGetNotAuthorizedZoneClientInformData
