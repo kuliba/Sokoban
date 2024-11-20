@@ -17,7 +17,6 @@ extension FeatureFlags {
         marketplaceFlag: MarketplaceFlag = .active,
         historyFilterFlag: HistoryFilterFlag = true,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .live,
         savingsAccountFlag: SavingsAccountFlag = .active,
         collateralLoanLandingFlag: CollateralLoanLandingFlag = .active
     ) -> Self {
@@ -28,7 +27,6 @@ extension FeatureFlags {
             marketplaceFlag: marketplaceFlag,
             historyFilterFlag: historyFilterFlag,
             paymentsTransfersFlag: paymentsTransfersFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             savingsAccountFlag: savingsAccountFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag
         )

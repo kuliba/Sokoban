@@ -14,7 +14,6 @@ import PaymentComponents
 
 final class AnywayTransactionViewModelComposer {
     
-    private let flag: Flag
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
@@ -23,20 +22,17 @@ final class AnywayTransactionViewModelComposer {
     private let buttonTitle = "Продолжить"
     
     init(
-        flag: Flag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
         self.scheduler = scheduler
     }
     
-    typealias Flag = StubbedFeatureFlag.Option
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
@@ -50,7 +46,7 @@ extension AnywayTransactionViewModelComposer {
         typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
         
         let elementMapperComposer = AnywayElementModelMapperComposer(model: model)
-        let elementMapper = elementMapperComposer.compose(flag: flag)
+        let elementMapper = elementMapperComposer.compose()
         
         let composer = ReducerComposer()
         let reducer = composer.compose()
@@ -110,7 +106,6 @@ private extension AnywayTransactionViewModelComposer {
         typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
         
         let nanoServicesComposer = NanoServicesComposer(
-            flag: flag,
             httpClient: httpClient,
             log: log
         )

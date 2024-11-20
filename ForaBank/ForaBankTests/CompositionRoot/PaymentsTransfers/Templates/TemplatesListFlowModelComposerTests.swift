@@ -90,7 +90,6 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Flag = UtilitiesPaymentsFlag
     private typealias SUT = TemplatesListFlowModelComposer
     private typealias FlowModel = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
     private typealias Transaction = AnywayTransactionState.Transaction
@@ -109,7 +108,6 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         let model: Model = .emptyMock
         let spy = MakePaymentSpy()
         let transactionComposer = AnywayTransactionViewModelComposer(
-            flag: .stub,
             model: model,
             httpClient: httpClient,
             log: { _,_,_,_,_ in },

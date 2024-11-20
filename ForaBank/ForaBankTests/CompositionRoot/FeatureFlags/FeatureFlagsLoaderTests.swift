@@ -160,52 +160,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-    // MARK: - UtilitiesPaymentsFlag
-    
-    func test_load_shouldDeliverInactiveUtilitiesPaymentsFlagForRetrieveFailure() {
-        
-        let sut = makeSUT { _ in nil }
-        
-        let flags = sut.load()
-        
-        XCTAssertNoDiff(flags, makeFeatureFlags(
-            utilitiesPaymentsFlag: .inactive
-        ))
-    }
-    
-    func test_load_shouldDeliverInactiveUtilitiesPaymentsFlagForUnknownRetrieveResult() {
-        
-        let sut = makeSUT { _ in "junk" }
-        
-        let flags = sut.load()
-        
-        XCTAssertNoDiff(flags, makeFeatureFlags(
-            utilitiesPaymentsFlag: .inactive
-        ))
-    }
-    
-    func test_load_shouldDeliverActiveLiveUtilitiesPaymentsFlagForActiveLiveRetrieveResult() {
-        
-        let sut = makeSUT { _ in "sber_providers_live" }
-        
-        let flags = sut.load()
-        
-        XCTAssertNoDiff(flags, makeFeatureFlags(
-            utilitiesPaymentsFlag: .active(.live)
-        ))
-    }
-    
-    func test_load_shouldDeliverActiveStubUtilitiesPaymentsFlagForActiveStubRetrieveResult() {
-        
-        let sut = makeSUT { _ in "sber_providers_stub" }
-        
-        let flags = sut.load()
-        
-        XCTAssertNoDiff(flags, makeFeatureFlags(
-            utilitiesPaymentsFlag: .active(.stub)
-        ))
-    }
-    
     // MARK: - CollateralLoanLandingFlag
     
     func test_load_shouldDeliverActiveCollateralLoanLandingFlagForActiveRetrieveResult() {
@@ -277,7 +231,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
         marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
-        utilitiesPaymentsFlag: StubbedFeatureFlag? = nil,
         savingsAccountFlag: SavingsAccountFlag? = nil,
         collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
     ) -> FeatureFlags {
@@ -288,7 +241,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             marketplaceFlag: marketplaceFlag?.map { $0 } ?? .inactive,
             historyFilterFlag: historyFilterFlag?.map { $0 } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
-            utilitiesPaymentsFlag: UtilitiesPaymentsFlag(rawValue: utilitiesPaymentsFlag ?? .inactive),
             savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,
             collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive
         )

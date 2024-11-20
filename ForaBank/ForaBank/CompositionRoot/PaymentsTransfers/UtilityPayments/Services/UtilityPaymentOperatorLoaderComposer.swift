@@ -10,21 +10,17 @@ import Foundation
 
 final class UtilityPaymentOperatorLoaderComposer {
     
-    private let flag: Flag
     private let model: Model
     private let pageSize: PageSize
     
     init(
-        flag: Flag,
         model: Model,
         pageSize: PageSize
     ) {
-        self.flag = flag
         self.model = model
         self.pageSize = pageSize
     }
     
-    typealias Flag = StubbedFeatureFlag.Option
     typealias PageSize = Int
 }
 
@@ -32,10 +28,7 @@ extension UtilityPaymentOperatorLoaderComposer {
     
     func compose() -> LoadOperators {
         
-        switch flag {
-        case .live: return live
-        case .stub: return stub
-        }
+        return live
     }
     
     struct Payload: Equatable {
@@ -73,22 +66,6 @@ private extension UtilityPaymentOperatorLoaderComposer {
         DispatchQueue.global(qos: .userInitiated).async {
             
             self.model.loadOperators(payload, completion)
-        }
-    }
-    
-    func stub(
-        payload: Payload,
-        completion: @escaping LoadOperatorsCompletion
-    ) {
-        DispatchQueue.main.delay(for: .seconds(1)) {
-            
-            switch payload.operatorID {
-            case .none:
-                completion(.stub)
-                
-            case .some:
-                completion([])
-            }
         }
     }
 }
