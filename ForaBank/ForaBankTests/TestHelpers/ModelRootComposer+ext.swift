@@ -22,7 +22,18 @@ extension ModelRootComposer {
             logger: logger,
             model: model,
             resolveQR: resolveQR,
-            schedulers: .immediate
+            schedulers: .immediate,
+            makeRootViewFactoryComposer: { featureFlags in
+                
+                return .init(
+                    model: model,
+                    httpClient: httpClientFactory.makeHTTPClient(),
+                    historyFeatureFlag: true,
+                    marketFeatureFlag: .active,
+                    savingsAccountFlag: featureFlags.savingsAccountFlag,
+                    schedulers: .immediate
+                )
+            }
         )
     }
     
@@ -39,7 +50,18 @@ extension ModelRootComposer {
             logger: logger,
             model: model,
             resolveQR: resolveQR,
-            schedulers: schedulers
+            schedulers: schedulers,
+            makeRootViewFactoryComposer: { featureFlags in
+                
+                return .init(
+                    model: model,
+                    httpClient: httpClientFactory.makeHTTPClient(),
+                    historyFeatureFlag: true,
+                    marketFeatureFlag: .active,
+                    savingsAccountFlag: featureFlags.savingsAccountFlag,
+                    schedulers: schedulers
+                )
+            }
         )
     }
 }
