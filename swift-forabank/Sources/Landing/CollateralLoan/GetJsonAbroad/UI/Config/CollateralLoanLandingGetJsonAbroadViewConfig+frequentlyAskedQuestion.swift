@@ -1,8 +1,11 @@
 //
-//  File.swift
-//  
+//  CollateralLoanLandingGetJsonAbroadViewConfig+frequentlyAskedQuestion.swift
+//
 //
 //  Created by Valentin Ozerov on 20.11.2024.
 //
 
-import Foundation
+extension CollateralLoanLandingGetJsonAbroadViewConfig {
+    
+    public struct FrequentlyAskedQuestion {}
+}

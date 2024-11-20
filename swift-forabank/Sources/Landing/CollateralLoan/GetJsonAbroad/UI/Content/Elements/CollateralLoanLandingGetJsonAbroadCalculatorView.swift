@@ -50,38 +50,28 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
     }
     
     private func calculatorTopSectionView(config: Config.Calculator) -> some View {
-
+        
         VStack(spacing: 0) {
             
-            config.headerText.text(
-                withConfig: .init(
-                    textFont: config.headerFont.font,
-                    textColor: config.headerFont.foreground
-                )
-            )
-            .padding(.top, config.headerTopPadding)
-            .padding(.leading, config.contentLeadingPadding)
-            .padding(.trailing, config.contentTrailingPadding)
-            .padding(.bottom, config.headerBottomPadding)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            headerText(config: config)
+                .padding(.top, config.header.topPadding)
+                .padding(.leading, config.contentLeadingPadding)
+                .padding(.trailing, config.contentTrailingPadding)
+                .padding(.bottom, config.header.bottomPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack {
                 
-                config.salaryText.text(
-                    withConfig: .init(
-                        textFont: config.salaryFont.font,
-                        textColor: config.salaryFont.foreground
-                    )
-                )
-                .padding(.leading, config.salaryLeadingPadding)
-                .padding(.trailing, config.salaryTrailingPadding)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                salaryText(config: config)
+                    .padding(.leading, config.salary.leadingPadding)
+                    .padding(.trailing, config.salary.trailingPadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Toggle("", isOn: $toggleIsOn)
                     .toggleStyle(CalculatorToggleStyle(viewConfig: config))
-                    .padding(.trailing, config.toggleTrailingPadding)
+                    .padding(.trailing, config.salary.toggleTrailingPadding)
             }
-            .padding(.bottom, config.salaryBottomPadding)
+            .padding(.bottom, config.salary.bottomPadding)
             
             Divider()
                 .background(config.dividerColor)
@@ -101,57 +91,51 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity)
             .padding(.top, config.middleSectionSpacing)
-
+            
             depositView(config: config)
             desiredAmountView(config: config)
         }
     }
     
     private func calculatorBottomSectionView(config: Config) -> some View {
-
+        
         ZStack {
             
             RoundedRectangle(cornerRadius: config.calculator.bottomPanelCornerRadius)
                 .fill(config.calculator.bottomPanelBackgroundColor)
                 .frame(maxWidth: .infinity)
             
-            VStack(spacing: 0) {
-                
-                config.calculator.monthlyPaymentTitleText.text(
-                    withConfig: .init(
-                        textFont: config.calculator.titleFont.font,
-                        textColor: config.calculator.titleFont.foreground
-                    )
-                )
+            calculatorBottomContentView(config: config)
+        }
+    }
+    
+    private func calculatorBottomContentView(config: Config) -> some View {
+
+        VStack(spacing: 0) {
+            
+            monthlyPaymentTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, config.calculator.contentLeadingPadding)
-                .padding(.top, config.calculator.monthlyPaymentTitleTopPadding)
+                .padding(.top, config.calculator.monthlyPayment.titleTopPadding)
                 .frame(minWidth: 0, maxWidth: .infinity)
-                
-                // TODO: Replace on real data
-                "35 099,28 ₽".text(
-                    withConfig: .init(
-                        textFont: config.calculator.valueFont.font,
-                        textColor: config.calculator.valueFont.foreground
-                    )
-                )
+            
+            monthlyPaymentValueText(config: config)
                 .padding(.leading, config.calculator.contentLeadingPadding)
-                .padding(.top, config.calculator.monthlyPaymentValueTopPadding)
+                .padding(.top, config.calculator.monthlyPayment.valueTopPadding)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
-                config.calculator.infoTitleText.text(
-                    withConfig: .init(
-                        textFont: config.calculator.titleFont.font,
-                        textColor: config.calculator.titleFont.foreground
-                    )
+            
+            config.calculator.info.titleText.text(
+                withConfig: .init(
+                    textFont: config.calculator.titleFont.font,
+                    textColor: config.calculator.titleFont.foreground
                 )
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, config.calculator.contentLeadingPadding)
-                .padding(.trailing, config.calculator.contentTrailingPadding)
-                .padding(.top, config.calculator.infoTitleTopPadding)
-                .padding(.bottom, config.calculator.infoTitleBottomPadding)
-            }
+            )
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, config.calculator.contentLeadingPadding)
+            .padding(.trailing, config.calculator.contentTrailingPadding)
+            .padding(.top, config.calculator.info.titleTopPadding)
+            .padding(.bottom, config.calculator.info.titleBottomPadding)
         }
     }
     
@@ -159,121 +143,72 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
         
         VStack(spacing: 0) {
             
-            config.periodTitleText.text(
-                withConfig: .init(
-                    textFont: config.titleFont.font,
-                    textColor: config.titleFont.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, config.spacingBetweenTitleAndValue)
-            .padding(.leading, config.contentLeadingPadding)
+            periodTitleText(config: config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, config.spacingBetweenTitleAndValue)
+                .padding(.leading, config.contentLeadingPadding)
             
             HStack {
                 
-                // TODO: Replace on real data
-                "3 года".text(
-                    withConfig: .init(
-                        textFont: config.valueFont.font,
-                        textColor: config.valueFont.foreground
-                    )
-                )
-                .padding(.leading, config.contentLeadingPadding)
+                periodValueText(config: config)
+                    .padding(.leading, config.contentLeadingPadding)
                 
-                Image(systemName: "chevron.down")
-                    .foregroundColor(config.chevronColor)
-                    .frame(width: 10.5, height: 10.5)
-                    .padding(.leading, config.chevronSpacing)
+                chevron(config: config)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
     }
     
-    func percentView(config: Config.Calculator) -> some View {
+    private func percentView(config: Config.Calculator) -> some View {
         
         VStack(spacing: 0) {
-
-            config.percentTitleText.text(
-                withConfig: .init(
-                    textFont: config.titleFont.font,
-                    textColor: config.titleFont.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, config.spacingBetweenTitleAndValue)
-
-            // TODO: Replace on real data
-            "16%".text(
-                withConfig: .init(
-                    textFont: config.valueFont.font,
-                    textColor: config.valueFont.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            percentTitleText(config: config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, config.spacingBetweenTitleAndValue)
+            
+            percentValueText(config: config)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
     }
     
-    func depositView(config: Config.Calculator) -> some View {
+    private func depositView(config: Config.Calculator) -> some View {
         
         Group {
             
-            config.depositTitleText.text(
-                withConfig: .init(
-                    textFont: config.titleFont.font,
-                    textColor: config.titleFont.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, config.depositTitleTopPadding)
-            .padding(.leading, config.contentLeadingPadding)
-            .frame(minWidth: 0, maxWidth: .infinity)
+            depositTitleText(config: config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, config.deposit.titleTopPadding)
+                .padding(.leading, config.contentLeadingPadding)
+                .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
                 
-                "Иное движимое имущество".text(
-                    withConfig: .init(
-                        textFont: config.valueFont.font,
-                        textColor: config.valueFont.foreground
-                    )
-                )
-                .padding(.leading, config.contentLeadingPadding)
-                
-                Image(systemName: "chevron.down")
-                    .foregroundColor(config.chevronColor)
-                    .frame(width: 10.5, height: 10.5)
-                    .padding(.leading, config.chevronSpacing)
+                depositValueText(config: config)
+                    .padding(.leading, config.contentLeadingPadding)
+
+                chevron(config: config)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
-    func desiredAmountView(config: Config.Calculator) -> some View {
+    private func desiredAmountView(config: Config.Calculator) -> some View {
         
         Group {
             
-            config.desiredAmountTitleText.text(
-                withConfig: .init(
-                    textFont: config.titleFont.font,
-                    textColor: config.titleFont.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, config.desiredAmountTitleTopPadding)
-            .padding(.leading, config.contentLeadingPadding)
-            .frame(minWidth: 0, maxWidth: .infinity)
+            desiredAmountTitleText(config: config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, config.desiredAmount.titleTopPadding)
+                .padding(.leading, config.contentLeadingPadding)
+                .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
                 
-                // TODO: Replace on real data
-                "1 325 457 ₽".text(
-                    withConfig: .init(
-                        textFont: config.valueFont.font,
-                        textColor: config.valueFont.foreground
-                    )
-                )
-                .padding(.leading, config.contentLeadingPadding)
+                desiredAmountValueText(config: config)
+                    .padding(.leading, config.contentLeadingPadding)
                 
                 // TODO: change icon
                 Image(systemName: "pencil")
@@ -281,14 +216,9 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
                     .frame(width: 10.5, height: 10.5)
                     .padding(.leading, config.chevronSpacing)
                 
-                config.desiredAmountMaxText.text(
-                    withConfig: .init(
-                        textFont: config.titleFont.font,
-                        textColor: config.titleFont.foreground
-                    )
-                )
-                .padding(.trailing, config.contentTrailingPadding)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                desiredAmountMaxText(config: config)
+                    .padding(.trailing, config.contentTrailingPadding)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.top, 2)
@@ -297,8 +227,99 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
             Slider(value: $sliderCurrentValue, in: (0...20))
                 .padding(.leading, config.contentLeadingPadding)
                 .padding(.trailing, config.contentTrailingPadding)
-                .padding(.bottom, config.sliderBottomPadding)
+                .padding(.bottom, config.desiredAmount.sliderBottomPadding)
         }
+    }
+    
+    private func chevron(config: Config.Calculator) -> some View {
+        
+        Image(systemName: "chevron.down")
+            .foregroundColor(config.chevronColor)
+            .frame(width: 10.5, height: 10.5)
+            .padding(.leading, config.chevronSpacing)
+    }
+    
+    // MARK: Content Subviews
+    
+    private func headerText(config: Config.Calculator) -> some View {
+        
+        formatText(config.header.text, with: config.header.font)
+    }
+    
+    private func salaryText(config: Config.Calculator) -> some View {
+        
+        formatText(config.salary.text, with: config.salary.font)
+    }
+    
+    private func monthlyPaymentTitleText(config: Config) -> some View {
+        
+        formatText(config.calculator.monthlyPayment.titleText, with: config.calculator.titleFont)
+    }
+    
+    private func monthlyPaymentValueText(config: Config) -> some View {
+        
+        // TODO: Replace on real data
+        formatText("35 099,28 ₽", with: config.calculator.valueFont)
+    }
+    
+    private func periodTitleText(config: Config.Calculator) -> some View {
+        
+        formatText(config.period.titleText, with: config.titleFont)
+    }
+    
+    private func periodValueText(config: Config.Calculator) -> some View {
+        
+        // TODO: Replace on real data
+        formatText("3 года", with: config.valueFont)
+    }
+    
+    private func percentTitleText(config: Config.Calculator) -> some View {
+        
+        formatText(config.percent.titleText, with: config.titleFont)
+    }
+    
+    private func percentValueText(config: Config.Calculator) -> some View {
+        
+        // TODO: Replace on real data
+        formatText("16%", with: config.valueFont)
+    }
+    
+    private func depositTitleText(config: Config.Calculator) -> some View {
+        
+        formatText(config.deposit.titleText, with: config.titleFont)
+    }
+    
+    private func depositValueText(config: Config.Calculator) -> some View {
+        
+        formatText("Иное движимое имущество", with: config.valueFont)
+    }
+    
+    private func desiredAmountTitleText(config: Config.Calculator) -> some View {
+        
+        formatText(config.desiredAmount.titleText, with: config.titleFont)
+    }
+    
+    private func desiredAmountValueText(config: Config.Calculator) -> some View {
+        
+        // TODO: Replace on real data
+        formatText("1 325 457 ₽", with: config.valueFont)
+    }
+    
+    private func desiredAmountMaxText(config: Config.Calculator) -> some View {
+        
+        formatText(config.desiredAmount.maxText, with: config.titleFont)
+    }
+    
+    // MARK: Helpers
+    
+    private func formatText(_ text: String, with fontConfig: Config.FontConfig) -> some View {
+        
+        text.text(
+            withConfig: .init(
+                textFont: fontConfig.font,
+                textColor: fontConfig.foreground
+            )
+        )
     }
 }
 
@@ -337,11 +358,11 @@ private struct CalculatorToggleStyle: ToggleStyle {
     
         RoundedRectangle(cornerRadius: 16, style: .circular)
             .stroke(style: .init(lineWidth: 2))
-            .fill(viewConfig.toggleColor)
+            .fill(viewConfig.salary.toggleColor)
             .frame(width: 51, height: 31)
             .overlay(
                 Circle()
-                    .fill(viewConfig.toggleColor)
+                    .fill(viewConfig.salary.toggleColor)
                     .shadow(radius: 1, x: 0, y: 1)
                     .padding(4)
                     .offset(x: configuration.isOn ? 10 : -10)
