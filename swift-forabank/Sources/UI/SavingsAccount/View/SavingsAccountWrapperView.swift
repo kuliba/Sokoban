@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RxViewModel
 
 public struct SavingsAccountWrapperView: View {
     
@@ -26,11 +27,16 @@ public struct SavingsAccountWrapperView: View {
     
     public var body: some View {
         
-        SavingsAccountView(
-            state: viewModel.state,
-            event: viewModel.event,
-            config: config,
-            factory: imageViewFactory
+        RxWrapperView(
+            model: viewModel,
+            makeContentView: {
+                SavingsAccountView(
+                    state: $0,
+                    event: $1,
+                    config: config,
+                    factory: imageViewFactory
+                )
+            }
         )
     }
 }

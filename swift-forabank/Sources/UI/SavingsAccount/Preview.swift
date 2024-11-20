@@ -10,9 +10,10 @@ import SwiftUI
 extension SavingsAccountConfig {
     
     static let preview: Self = .init(
+        backImage: Image(systemName: "chevron.backward"),
         chevronDownImage: Image(systemName: "chevron.down"),
         cornerRadius: 16,
-        continueButton: .init(background: .red, cornerRadius: 12, height: 56, title: .init(textFont: .body, textColor: .white)),
+        continueButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Продолжить", title: .init(textFont: .body, textColor: .white)),
         divider: .gray,
         icon: .init(leading: 8, widthAndHeight: 40),
         list: .init(
@@ -29,7 +30,9 @@ extension SavingsAccountConfig {
             negativeBottomPadding: 60,
             vertical: 16,
             list: .init(horizontal: 16, vertical: 16)),
-        spacing: 16)
+        spacing: 16,
+        questionHeight: 64
+    )
 }
 
 extension SavingsAccountState {

@@ -10,6 +10,7 @@ import SharedConfigs
 
 public struct SavingsAccountConfig {
     
+    let backImage: Image
     let chevronDownImage: Image
     let cornerRadius: CGFloat
     let continueButton: ContinueButton
@@ -20,8 +21,10 @@ public struct SavingsAccountConfig {
     let offsetForDisplayHeader: CGFloat
     let paddings: Paddings
     let spacing: CGFloat
+    let questionHeight: CGFloat
     
-    public init(chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat) {
+    public init(backImage: Image, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
+        self.backImage = backImage
         self.chevronDownImage = chevronDownImage
         self.cornerRadius = cornerRadius
         self.continueButton = continueButton
@@ -32,18 +35,21 @@ public struct SavingsAccountConfig {
         self.offsetForDisplayHeader = offsetForDisplayHeader
         self.paddings = paddings
         self.spacing = spacing
+        self.questionHeight = questionHeight
     }
        
     public struct ContinueButton {
         let background: Color
         let cornerRadius: CGFloat
         let height: CGFloat
+        let label: String
         let title: TextConfig
         
-        public init(background: Color, cornerRadius: CGFloat, height: CGFloat, title: TextConfig) {
+        public init(background: Color, cornerRadius: CGFloat, height: CGFloat, label: String, title: TextConfig) {
             self.background = background
             self.cornerRadius = cornerRadius
             self.height = height
+            self.label = label
             self.title = title
         }
     }

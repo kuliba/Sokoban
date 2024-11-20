@@ -41,22 +41,7 @@ struct SavingsAccountView: View {
         if #available(iOS 15.0, *) {
             VStack(alignment: .leading, spacing: config.spacing) {
                 ScrollView(showsIndicators: false) {
-                    VStack {
-                        factory.makeBannerImageView(state.imageLink)
-                            .aspectRatio(contentMode: .fit)
-                            .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
-                        
-                        list(items: state.advantages)
-                        list(items: state.basicConditions)
-                        questionsView()
-                    }
-                    .background(
-                        GeometryReader {
-                            Color.clear.preference(
-                                key: ViewOffsetKey.self,
-                                value: -$0.frame(in: .named(coordinateSpace)).origin.y)
-                        }
-                    )
+                    landing()
                 }
                 .onPreferenceChange(ViewOffsetKey.self) { value in
                     isShowHeader = value > config.offsetForDisplayHeader
@@ -64,16 +49,7 @@ struct SavingsAccountView: View {
                 .coordinateSpace(name: coordinateSpace)
             }
             .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-            .toolbar {
-                
-                ToolbarItem(placement: .principal) {
-                    header()
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading) {
-                    backButton()
-                }
-            }
+            .toolbar(content: toolbarContent)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 continueButton()
             }
@@ -84,22 +60,54 @@ struct SavingsAccountView: View {
         }
     }
     
+    @ToolbarContentBuilder
+    private func toolbarContent() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .principal) {
+            header()
+        }
+        
+        ToolbarItem(placement: .navigationBarLeading) {
+            backButton()
+        }
+    }
+    
+    private func landing() -> some View {
+        VStack {
+            factory.makeBannerImageView(state.imageLink)
+                .aspectRatio(contentMode: .fit)
+                .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
+            
+            list(items: state.advantages)
+            list(items: state.basicConditions)
+            questionsView()
+        }
+        .background(
+            GeometryReader {
+                Color.clear.preference(
+                    key: ViewOffsetKey.self,
+                    value: -$0.frame(in: .named(coordinateSpace)).origin.y)
+            }
+        )
+    }
+    
     private func continueButton() -> some View {
         
         Button(action: { event(.continue) }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: config.continueButton.cornerRadius)
                     .foregroundColor(config.continueButton.background)
-                "Продолжить".text(withConfig: config.continueButton.title)
+                config.continueButton.label.text(withConfig: config.continueButton.title)
             }
         })
         .padding(.horizontal)
-        .frame(maxWidth: .infinity, idealHeight: config.continueButton.height)
+        .frame(height: config.continueButton.height)
+        .frame(maxWidth: .infinity)
     }
     
     private func backButton() -> some View {
         
-        Button(action: { event(.dismiss) }) { Image(systemName: "chevron.backward") }
+        Button(action: { event(.dismiss) }) { config.backImage }
     }
     
     @ViewBuilder
@@ -180,39 +188,51 @@ struct SavingsAccountView: View {
         .modifier(BackgroundAndCornerRadiusModifier(background: config.list.background, cornerRadius: config.cornerRadius))
     }
     
+    private func question(item: Question) -> some View {
+        return HStack {
+            
+            item.question.text(withConfig: config.list.item.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("Question")
+            
+            config.chevronDownImage
+                .foregroundColor(.gray)
+                .rotationEffect(selectedQuestion == item ? .degrees(180) : .degrees(0))
+                .accessibilityIdentifier("ItemChevron")
+        }
+        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+        .frame(height: config.questionHeight)
+    }
+    
+    private func answer(answer: String) -> some View {
+        return Text(answer)
+            .multilineTextAlignment(.leading)
+            .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("Answer")
+    }
+    
+    private func questionWithAnswer(item: Question) -> some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            Button(action: {
+                withAnimation { selectedQuestion = selectedQuestion == item ? nil : item }
+            }, label: {
+                question(item: item)
+            })
+            
+            if selectedQuestion == item {
+                answer(answer: item.answer)
+            }
+        }
+    }
+    
     private func questionView(item: Question) -> some View {
         
         VStack(alignment: .leading, spacing: 0) {
             
-            VStack(alignment: .leading, spacing: 0) {
-                
-                Button(action: {
-                    withAnimation { selectedQuestion = selectedQuestion == item ? nil : item }
-                }, label: {
-                    
-                    HStack {
-                        
-                        item.question.text(withConfig: config.list.item.title)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .accessibilityIdentifier("Question")
-                        
-                        config.chevronDownImage
-                            .foregroundColor(.gray)
-                            .rotationEffect(selectedQuestion == item ? .degrees(180) : .degrees(0))
-                            .accessibilityIdentifier("ItemChevron")
-                    }
-                    .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-                    .frame(height: 64)
-                })
-                
-                if selectedQuestion == item {
-                    Text(item.answer)
-                        .multilineTextAlignment(.leading)
-                        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityIdentifier("Answer")
-                }
-            }
+            questionWithAnswer(item: item)
             
             if state.questions.questions.last != item {
                 config.divider
