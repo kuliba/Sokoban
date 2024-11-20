@@ -446,9 +446,8 @@ final class RootViewModelTests: XCTestCase {
         
         let (sut, scheduler, linkSpy, _) = makeSUT(
             product: .cardActiveMainDebitOnlyRub,
-            selected: .market
+            selected: .main
         )
-        
         sut.tabsViewModel.mainViewModel.fastPayment?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: .zku))
         scheduler.advance()
         
