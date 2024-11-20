@@ -20,10 +20,9 @@ class AuthLoginViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     
     @Published var cardScanner: CardScannerViewModel?
-    @Published var alert: Alert.ViewModel?
+    @Published private var alert: Alert.ViewModel?
     @Published var buttons: [ButtonAuthView.ViewModel]
-    @Published var clientInformAlerts: ClientInformAlerts?
-    @Published var alertType: AlertType?
+    @Published private var clientInformAlerts: ClientInformAlerts?
 
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
@@ -78,6 +77,19 @@ class AuthLoginViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
+    var alertType: AlertType? {
+        switch (alert, clientInformAlerts?.alert) {
+        
+        case (let .some(alert), .none): 
+            return .alertViewModel(alert)
+            
+        case (_, let .some(alert)): 
+            return .clientInformAlerts(alert)
+            
+        case (.none, .none): return nil
+        }
+    }
+    
     func showTransfers() {
         handleLandingAction(.transfer)
     }
@@ -91,49 +103,86 @@ class AuthLoginViewModel: ObservableObject {
 
 extension AuthLoginViewModel {
     
-    func handleLink() -> URL? {
+    private func updateVersion() -> String? {
         
-        guard let updateVersion = clientInformAlerts?.alert?.version,
+        guard let updateVersion = clientInformAlerts?.updateAlert?.version,
               Bundle.main.appVersionLong < updateVersion else { return nil }
         
-        let link = clientInformAlerts?.alert?.link
-        return URL(string: link ?? String.appStoreFora)
+        return updateVersion
     }
     
-    func showNextAlert(action: ClientInformActionType) {
+    private func createAppStoreURL() -> URL? {
         
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+        guard updateVersion() != nil else { return nil }
         
-        eventHandlers.showSpinner()
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Call show spinner rootAction")
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+    }
+    
+    func clientInformAlertButtonTapped(
+        openURL: @escaping (URL) -> Void
+    ) {
         
-        DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
+        if let url = createAppStoreURL() { openURL(url) }
+    }
+    
+    func swiftUIAlert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
+        
+        switch alertType {
             
-            guard let self = self else { return }
+        case .clientInformAlerts:
             
-            switch action {
-            case .notRequired:
+            switch clientInformAlerts?.alert {
                 
-                if let alert = self.clientInformAlerts?.notRequired.first(where: { $0.authBlocking
-                }) {
+            case let .some(alert):
+                
+                switch alert {
+                case let .inform(alert):
                     
-                    self.clientInformAlerts?.showAgain(notRequeared: alert)
-                }
-
-                if let alert = self.clientInformAlerts?.alert {
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 dismissButton: .default(Text("Ok"), action: {
+                        self.clientInformAlerts?.next()
+                    })
+                    )
                     
-                    self.clientInformAlerts?.dropFirst()
+                case let .optionalRequired(alert):
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 primaryButton: .default(Text("Позже"), action: { }),
+                                 secondaryButton: .default(Text("Обновить"), action: {
+                        self.clientInformAlertButtonTapped() { _ in }
+                        self.clientInformAlerts?.showAgain(requiredAlert: alert)
+                    })
+                    )
+                    
+                case let .required(alert):
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 dismissButton: .default(Text("Обновить"), action: {
+                        self.clientInformAlertButtonTapped() { _ in }
+                        self.clientInformAlerts?.showAgain(requiredAlert: alert)
+                    })
+                    )
                 }
                 
-            case .required, .optional:
+            case .none : return .init(title: Text("Ошибка"))
                 
-                if let alert = self.clientInformAlerts?.required {
-                    
-                    self.clientInformAlerts?.showAgain(requiredAlert: alert)
-                }
             }
             
-            self.eventHandlers.hideSpinner()
+        case .alertViewModel:
+            
+            switch self.alert {
+                
+            case let .some(alert):
+                
+                return .init(title: Text(alert.title),
+                             message: Text(alert.message ?? ""),
+                             dismissButton: .cancel())
+                
+            case .none: return .init(title: Text("Ошибка"))
+            }
         }
     }
 }
@@ -202,15 +251,8 @@ private extension AuthLoginViewModel {
         
         eventPublishers.clientInformAlerts
             .receive(on: scheduler)
-            .sink { [weak self] in
-                
-                self?.clientInformAlerts = $0
-                
-                guard let alert = $0.alert else { return }
-                self?.alertType = .clientInformAlerts(alert)
-            }
-            .store(in: &bindings)
-
+            .map(Optional.some)
+            .assign(to: &$clientInformAlerts)
         eventPublishers.checkClientResponse
             .receive(on: scheduler)
             .sink { [weak self] payload in
@@ -283,9 +325,6 @@ private extension AuthLoginViewModel {
                     action: { [weak self] in self?.alert = nil }
                 )
             )
-            
-            guard let alert = alert else { return }
-            self.alertType = .alertViewModel(alert)
         }
     }
     
