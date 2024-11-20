@@ -201,118 +201,194 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
         public let contentLeadingPadding: CGFloat
         public let contentTrailingPadding: CGFloat
         public let backgroundColor: Color
-        public let headerText: String
-        public let headerFont: FontConfig
-        public let headerTopPadding: CGFloat
-        public let headerBottomPadding: CGFloat
-        public let salaryText: String
-        public let salaryFont: FontConfig
-        public let salaryLeadingPadding: CGFloat
-        public let salaryTrailingPadding: CGFloat
-        public let salaryBottomPadding: CGFloat
-        public let toggleTrailingPadding: CGFloat
-        public let toggleColor: Color
         public let dividerColor: Color
         public let middleSectionSpacing: CGFloat
         public let titleFont: FontConfig
         public let valueFont: FontConfig
-        public let periodTitleText: String
-        public let percentTitleText: String
-        public let depositTitleText: String
-        public let desiredAmountTitleText: String
-        public let desiredAmountMaxText: String
-        public let monthlyPaymentTitleText: String
-        public let infoTitleText: String
-        public let infoTitleTopPadding: CGFloat
-        public let infoTitleBottomPadding: CGFloat
-        public let monthlyPaymentTitleTopPadding: CGFloat
-        public let monthlyPaymentValueTopPadding: CGFloat
-        public let depositTitleTopPadding: CGFloat
-        public let desiredAmountTitleTopPadding: CGFloat
         public let spacingBetweenTitleAndValue: CGFloat
         public let chevronColor: Color
         public let chevronSpacing: CGFloat
-        public let sliderBottomPadding: CGFloat
         public let bottomPanelCornerRadius: CGFloat
         public let bottomPanelBackgroundColor: Color
+
+        public let header: Header
+        public let salary: Salary
+        public let period: Period
+        public let percent: Percent
+        public let desiredAmount: DesiredAmount
+        public let monthlyPayment: MonthlyPayment
+        public let info: Info
+        public let deposit: Deposit
 
         public init(
             contentLeadingPadding: CGFloat,
             contentTrailingPadding: CGFloat,
             backgroundColor: Color,
-            headerText: String,
-            headerFont: FontConfig,
-            headerTopPadding: CGFloat,
-            headerBottomPadding: CGFloat,
-            salaryText: String,
-            salaryFont: FontConfig,
-            salaryLeadingPadding: CGFloat,
-            salaryTrailingPadding: CGFloat,
-            salaryBottomPadding: CGFloat,
-            toggleTrailingPadding: CGFloat,
-            toggleColor: Color,
             dividerColor: Color,
             middleSectionSpacing: CGFloat,
             titleFont: FontConfig,
             valueFont: FontConfig,
-            periodTitleText: String,
-            percentTitleText: String,
-            depositTitleText: String,
-            monthlyPaymentTitleText: String,
-            infoTitleText: String,
-            infoTitleTopPadding: CGFloat,
-            infoTitleBottomPadding: CGFloat,
-            monthlyPaymentTitleTopPadding: CGFloat,
-            monthlyPaymentValueTopPadding: CGFloat,
-            depositTitleTopPadding: CGFloat,
-            desiredAmountTitleText: String,
-            desiredAmountMaxText: String,
-            desiredAmountTitleTopPadding: CGFloat,
             spacingBetweenTitleAndValue: CGFloat,
             chevronColor: Color,
             chevronSpacing: CGFloat,
-            sliderBottomPadding: CGFloat,
             bottomPanelCornerRadius: CGFloat,
-            bottomPanelBackgroundColor: Color
-
+            bottomPanelBackgroundColor: Color,
+            header: Header,
+            salary: Salary,
+            period: Period,
+            percent: Percent,
+            desiredAmount: DesiredAmount,
+            monthlyPayment: MonthlyPayment,
+            info: Info,
+            deposit: Deposit
         ) {
             self.contentLeadingPadding = contentLeadingPadding
             self.contentTrailingPadding = contentTrailingPadding
             self.backgroundColor = backgroundColor
-            self.headerText = headerText
-            self.headerFont = headerFont
-            self.headerTopPadding = headerTopPadding
-            self.headerBottomPadding = headerBottomPadding
-            self.salaryText = salaryText
-            self.salaryFont = salaryFont
-            self.salaryLeadingPadding = salaryLeadingPadding
-            self.salaryTrailingPadding = salaryTrailingPadding
-            self.salaryBottomPadding = salaryBottomPadding
-            self.toggleTrailingPadding = toggleTrailingPadding
-            self.toggleColor = toggleColor
             self.dividerColor = dividerColor
             self.middleSectionSpacing = middleSectionSpacing
             self.titleFont = titleFont
             self.valueFont = valueFont
-            self.periodTitleText = periodTitleText
-            self.percentTitleText = percentTitleText
-            self.depositTitleText = depositTitleText
-            self.monthlyPaymentTitleText = monthlyPaymentTitleText
-            self.infoTitleText = infoTitleText
-            self.infoTitleTopPadding = infoTitleTopPadding
-            self.infoTitleBottomPadding = infoTitleBottomPadding
-            self.monthlyPaymentTitleTopPadding = monthlyPaymentTitleTopPadding
-            self.monthlyPaymentValueTopPadding = monthlyPaymentValueTopPadding
-            self.depositTitleTopPadding = depositTitleTopPadding
-            self.desiredAmountTitleText = desiredAmountTitleText
-            self.desiredAmountMaxText = desiredAmountMaxText
-            self.desiredAmountTitleTopPadding = desiredAmountTitleTopPadding
             self.spacingBetweenTitleAndValue = spacingBetweenTitleAndValue
             self.chevronColor = chevronColor
             self.chevronSpacing = chevronSpacing
-            self.sliderBottomPadding = sliderBottomPadding
             self.bottomPanelCornerRadius = bottomPanelCornerRadius
             self.bottomPanelBackgroundColor = bottomPanelBackgroundColor
+            self.header = header
+            self.salary = salary
+            self.period = period
+            self.percent = percent
+            self.desiredAmount = desiredAmount
+            self.monthlyPayment = monthlyPayment
+            self.info = info
+            self.deposit = deposit
+        }
+        
+        public struct Header {
+
+            public let text: String
+            public let font: FontConfig
+            public let topPadding: CGFloat
+            public let bottomPadding: CGFloat
+            
+            public init(text: String, font: FontConfig, topPadding: CGFloat, bottomPadding: CGFloat) {
+                
+                self.text = text
+                self.font = font
+                self.topPadding = topPadding
+                self.bottomPadding = bottomPadding
+            }
+        }
+        
+        public struct Salary {
+            
+            public let text: String
+            public let font: FontConfig
+            public let leadingPadding: CGFloat
+            public let trailingPadding: CGFloat
+            public let bottomPadding: CGFloat
+            public let toggleTrailingPadding: CGFloat
+            public let toggleColor: Color
+            
+            public init(
+                text: String,
+                font: FontConfig,
+                leadingPadding: CGFloat,
+                trailingPadding: CGFloat,
+                bottomPadding: CGFloat,
+                toggleTrailingPadding: CGFloat,
+                toggleColor: Color
+            ) {
+                self.text = text
+                self.font = font
+                self.leadingPadding = leadingPadding
+                self.trailingPadding = trailingPadding
+                self.bottomPadding = bottomPadding
+                self.toggleTrailingPadding = toggleTrailingPadding
+                self.toggleColor = toggleColor
+            }
+        }
+        
+        public struct Period {
+            
+            public let titleText: String
+            
+            public init(titleText: String) {
+                
+                self.titleText = titleText
+            }
+        }
+        
+        public struct Percent {
+            
+            public let titleText: String
+
+            public init(titleText: String) {
+                
+                self.titleText = titleText
+            }
+        }
+        
+        public struct Deposit {
+            
+            public let titleText: String
+            public let titleTopPadding: CGFloat
+
+            public init(titleText: String, titleTopPadding: CGFloat) {
+                self.titleText = titleText
+                self.titleTopPadding = titleTopPadding
+            }
+        }
+        
+        public struct DesiredAmount {
+            
+            public let titleText: String
+            public let maxText: String
+            public let titleTopPadding: CGFloat
+            public let sliderBottomPadding: CGFloat
+
+            public init(
+                titleText: String,
+                maxText: String,
+                titleTopPadding: CGFloat,
+                sliderBottomPadding: CGFloat
+            ) {
+                self.titleText = titleText
+                self.maxText = maxText
+                self.titleTopPadding = titleTopPadding
+                self.sliderBottomPadding = sliderBottomPadding
+            }
+        }
+        
+        public struct MonthlyPayment {
+            
+            public let titleText: String
+            public let titleTopPadding: CGFloat
+            public let valueTopPadding: CGFloat
+            
+            public init(titleText: String, titleTopPadding: CGFloat, valueTopPadding: CGFloat) {
+                
+                self.titleText = titleText
+                self.titleTopPadding = titleTopPadding
+                self.valueTopPadding = valueTopPadding
+            }
+        }
+        
+        public struct Info {
+            
+            public let infoTitleText: String
+            public let infoTitleTopPadding: CGFloat
+            public let infoTitleBottomPadding: CGFloat
+            
+            public init(
+                infoTitleText: String,
+                infoTitleTopPadding: CGFloat,
+                infoTitleBottomPadding: CGFloat
+            ) {
+                self.infoTitleText = infoTitleText
+                self.infoTitleTopPadding = infoTitleTopPadding
+                self.infoTitleBottomPadding = infoTitleBottomPadding
+            }
         }
     }
     
@@ -397,40 +473,52 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
             contentLeadingPadding: 16,
             contentTrailingPadding: 22,
             backgroundColor: .black,
-            headerText: "Рассчитать кредит",
-            headerFont: .init(Font.system(size: 24).bold(), foreground: .white),
-            headerTopPadding: 16,
-            headerBottomPadding: 12,
-            salaryText: "Я получаю зарплату на счет в Фора-Банке",
-            salaryFont: .init(Font.system(size: 14), foreground: .white),
-            salaryLeadingPadding: 16,
-            salaryTrailingPadding: 17,
-            salaryBottomPadding: 18,
-            toggleTrailingPadding: 22,
-            toggleColor: .buttonPrimaryDisabled,
             dividerColor: .divider,
             middleSectionSpacing: 11,
             titleFont: .init(Font.system(size: 12), foreground: .textPlaceholder),
             valueFont: .init(Font.system(size: 20), foreground: .white),
-            periodTitleText: "Срок кредита",
-            percentTitleText: "Процентная ставка",
-            depositTitleText: "Залог",
-            monthlyPaymentTitleText: "Ежемесячный платеж",
-            infoTitleText: "Представленные параметры являются расчетными и носят справочный характер",
-            infoTitleTopPadding: 15,
-            infoTitleBottomPadding: 15,
-            monthlyPaymentTitleTopPadding: 16,
-            monthlyPaymentValueTopPadding: 8,
-            depositTitleTopPadding: 24,
-            desiredAmountTitleText: "Желаемая сумма кредита",
-            desiredAmountMaxText: "До 15 млн. ₽",
-            desiredAmountTitleTopPadding: 20,
             spacingBetweenTitleAndValue: 8,
             chevronColor: .divider,
             chevronSpacing: 4,
-            sliderBottomPadding: 12,
             bottomPanelCornerRadius: 12,
-            bottomPanelBackgroundColor: .bottomPanelBackground
+            bottomPanelBackgroundColor: .bottomPanelBackground,
+            header: .init(
+                text: "Рассчитать кредит",
+                font: .init(Font.system(size: 24).bold(), foreground: .white),
+                topPadding: 16,
+                bottomPadding: 12
+            ),
+            salary: .init(
+                text: "Я получаю зарплату на счет в Фора-Банке",
+                font: .init(Font.system(size: 14), foreground: .white),
+                leadingPadding: 16,
+                trailingPadding: 17,
+                bottomPadding: 18,
+                toggleTrailingPadding: 22,
+                toggleColor: .buttonPrimaryDisabled
+            ),
+            period: .init(titleText: "Срок кредита"),
+            percent: .init(titleText: "Процентная ставка"),
+            desiredAmount: .init(
+                titleText: "Желаемая сумма кредита",
+                maxText: "До 15 млн. ₽",
+                titleTopPadding: 20,
+                sliderBottomPadding: 12
+            ),
+            monthlyPayment: .init(
+                titleText: "Ежемесячный платеж",
+                titleTopPadding: 16,
+                valueTopPadding: 8
+            ),
+            info: .init(
+                infoTitleText: "Представленные параметры являются расчетными и носят справочный характер",
+                infoTitleTopPadding: 15,
+                infoTitleBottomPadding: 15
+            ),
+            deposit: .init(
+                titleText: "Залог",
+                titleTopPadding: 24
+            )
         ),
         frequentlyAskedQuestion: .init(),
         documents: .init(),
