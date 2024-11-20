@@ -14,7 +14,6 @@ import CollateralLoanLandingShowCaseUI
 
 final class CollateralLoanLandingComposer {
         
-    //    private let result: [CollateralLoadProduct]?
     private let json: String
     
     init(json: String = .stub) {
