@@ -344,7 +344,7 @@ class BannerActionLanding: BannerAction {
     }
 }
 
-class BannerActionSavingLanding: BannerAction {
+final class BannerActionSavingLanding: BannerAction {
     
     let target: String
     
