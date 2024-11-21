@@ -311,6 +311,22 @@ private extension RootView {
         )
     }
     
+    @ViewBuilder
+    func makeCategoryPickerSectionView(
+        categoryPicker: PayHubUI.CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
     func makeCategoryPickerSectionView(
         binder: CategoryPickerSectionDomain.Binder
     ) -> some View {

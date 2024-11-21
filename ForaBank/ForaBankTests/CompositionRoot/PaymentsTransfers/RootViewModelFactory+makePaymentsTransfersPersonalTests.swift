@@ -39,9 +39,9 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
     
-    func test_shouldSetCategoryPickerContentStateToLoading() {
+    func test_shouldSetCategoryPickerContentStateToLoading() throws {
         
-        let state = makeSUT().sut.content.categoryPicker.content.state
+        let state = try XCTUnwrap(makeSUT().sut.content.categoryPicker.sectionBinder?.content.state)
         
         XCTAssertTrue(state.isLoading)
     }

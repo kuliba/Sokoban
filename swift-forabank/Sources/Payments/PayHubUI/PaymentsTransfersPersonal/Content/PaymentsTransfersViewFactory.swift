@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView> {
+public struct PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView> {
     
     public let makeCategoryPickerView: MakeCategoryPickerView
     public let makeOperationPickerView: MakeOperationPickerView

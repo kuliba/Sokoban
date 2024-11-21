@@ -367,7 +367,14 @@ extension RootViewModelFactory {
                 reloadCategories { [weak paymentsTransfersPersonal] categories in
                     
                     // notify categoryPicker
-                    paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
+                    let categoryPicker = paymentsTransfersPersonal?.content.categoryPicker.sectionBinder
+                    
+                    guard let categoryPicker else {
+                        
+                        return self.logger.log(level: .info, category: .payments, message: "Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
+                    }
+                    
+                    categoryPicker.content.event(.loaded(categories ?? []))
                     
                     self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
                 }

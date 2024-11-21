@@ -11,6 +11,7 @@ import Foundation
 import LandingUIComponent
 import MarketShowcase
 import PayHub
+import PayHubUI
 import RemoteServices
 import SwiftUI
 
@@ -675,6 +676,14 @@ extension PaymentsTransfersPersonal {
         .map { $0 || $1 || $2 || $3 }
         .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
+    }
+}
+
+private extension PayHubUI.CategoryPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        sectionBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
     }
 }
 
