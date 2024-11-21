@@ -84,7 +84,7 @@ extension RootViewModelFactory {
 
 // MARK: - Content
 
-extension PaymentsTransfersPersonalDomain.Content {
+extension Domain.Content {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
