@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHubUI
 
 final class RootViewModelFactory {
     
@@ -16,11 +17,19 @@ final class RootViewModelFactory {
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
     
+    let resolveQR: ResolveQR
+    let scanner: any QRScannerViewModel
+    
     let settings: RootViewModelFactorySettings
     
-    let mainScheduler: AnySchedulerOf<DispatchQueue>
-    let interactiveScheduler: AnySchedulerOf<DispatchQueue>
-    let backgroundScheduler: AnySchedulerOf<DispatchQueue>
+    // active flags
+    let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active
+    let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
+    let historyFilterFlag: HistoryFilterFlag = true
+    let marketplaceFlag: MarketplaceFlag = .active
+    let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
+    
+    let schedulers: Schedulers
     
     // reusable components & factories
     let asyncLocalAgent: LocalAgentAsyncWrapper
@@ -32,19 +41,19 @@ final class RootViewModelFactory {
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
+        resolveQR: @escaping ResolveQR,
+        scanner: any QRScannerViewModel,
         settings: RootViewModelFactorySettings = .iFora,
-        mainScheduler: AnySchedulerOf<DispatchQueue> = .main,
-        interactiveScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive),
-        backgroundScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInitiated)
+        schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
         self.logger = logger
+        self.resolveQR = resolveQR
+        self.scanner = scanner
         self.settings = settings
-        self.mainScheduler = mainScheduler
-        self.interactiveScheduler = interactiveScheduler
-        self.backgroundScheduler = backgroundScheduler
-        
+        self.schedulers = schedulers
+
         // reusable components & factories
         
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
@@ -55,8 +64,8 @@ final class RootViewModelFactory {
         
         self.asyncLocalAgent = .init(
             agent: model.localAgent,
-            interactiveScheduler: interactiveScheduler,
-            backgroundScheduler: backgroundScheduler
+            interactiveScheduler: schedulers.interactive,
+            backgroundScheduler: schedulers.background
         )
         
         self.batchServiceComposer = .init(
@@ -72,4 +81,6 @@ final class RootViewModelFactory {
         
         self.nanoServiceComposer = nanoServiceComposer
     }
+    
+    typealias ResolveQR = (String) -> QRViewModel.ScanResult
 }

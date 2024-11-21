@@ -9,12 +9,21 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public struct CreateGetBannersMyProductListApplicationDomain: Equatable {
+    public struct GetBannersMyProductListResponse: Equatable {
         
+        public let serial: String
+        public let accountBannerList: [Banner]
         public let cardBannerList: [Banner]
         public let loanBannerList: [Banner]
 
-        public init(cardBannerList: [Banner], loanBannerList: [Banner]) {
+        public init(
+            serial: String,
+            accountBannerList: [Banner],
+            cardBannerList: [Banner],
+            loanBannerList: [Banner]
+        ) {
+            self.serial = serial
+            self.accountBannerList = accountBannerList
             self.cardBannerList = cardBannerList
             self.loanBannerList = loanBannerList
         }
@@ -36,25 +45,12 @@ extension ResponseMapper {
             
             public struct Action: Equatable {
                 
-                public let actionType: ActionType
-                public let landingData: String?
+                public let actionType: String
                 public let target: String?
                 
-                public init(actionType: ActionType, landingData: String?, target: String?) {
+                public init(actionType: String, target: String?) {
                     self.actionType = actionType
-                    self.landingData = landingData
                     self.target = target
-                }
-                
-                public enum ActionType {
-                    case openDeposit
-                    case depositList
-                    case migTransfer
-                    case migAuthTransfer
-                    case contact
-                    case depositTransfer
-                    case landing
-                    case unknown
                 }
             }
         }

@@ -63,6 +63,7 @@ public struct GetC2BSubscription: Equatable {
             public let brandIcon: String
             public let brandName: String
             public let subscriptionPurpose: String
+            public let subscriptionServiceName: String
             public let cancelAlert: String
             
             public init(
@@ -70,12 +71,14 @@ public struct GetC2BSubscription: Equatable {
                 brandIcon: String,
                 brandName: String,
                 subscriptionPurpose: String,
+                subscriptionServiceName: String,
                 cancelAlert: String
             ) {
                 self.subscriptionToken = subscriptionToken
                 self.brandIcon = brandIcon
                 self.brandName = brandName
                 self.subscriptionPurpose = subscriptionPurpose
+                self.subscriptionServiceName = subscriptionServiceName
                 self.cancelAlert = cancelAlert
             }
         }

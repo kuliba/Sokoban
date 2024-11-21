@@ -24,6 +24,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         self.model = model
         self.scheduler = scheduler
     }
+    
+    typealias MakeQRScannerModel = () -> QRScannerModel
 }
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
@@ -125,7 +127,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     
     func makeScanQR(
         notify: @escaping Notify
-    ) -> Node<QRModel> {
+    ) -> Node<QRScannerModel> {
         
         // openScanner
         // PaymentsTransfersViewModel.swift:173
@@ -304,7 +306,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     }
     
     private func bind(
-        _ scanQR: QRModel,
+        _ scanQR: QRScannerModel,
         using notify: @escaping Notify
     ) -> AnyCancellable {
         

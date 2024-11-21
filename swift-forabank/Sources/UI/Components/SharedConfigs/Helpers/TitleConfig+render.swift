@@ -14,5 +14,6 @@ public extension TitleConfig {
     ) -> some View {
         
         text.text(withConfig: config, alignment: alignment)
+            .padding(.leading, leadingPadding)
     }
 }

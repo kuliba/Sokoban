@@ -8,21 +8,13 @@
 import RxViewModel
 import SwiftUI
 
-struct PaymentsTransfersPersonalTransfersFlowViewFactory {
-    
-    let makeContactsView: MakeContactsView
-    let makePaymentsMeToMeView: MakePaymentsMeToMeView
-    let makePaymentsView: MakePaymentsView
-}
-
-
 struct PaymentsTransfersPersonalTransfersFlowView<ContentView>: View
 where ContentView: View {
     
     let state: Domain.FlowState
     let event: (Domain.FlowEvent) -> Void
     let contentView: () -> ContentView
-    let viewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory
+    let viewFactory: ViewFactory
     
     var body: some View {
         
@@ -48,6 +40,7 @@ where ContentView: View {
 extension PaymentsTransfersPersonalTransfersFlowView {
     
     typealias Domain = PaymentsTransfersPersonalTransfersDomain
+    typealias ViewFactory = PaymentsTransfersPersonalTransfersFlowViewFactory
 }
 
 private extension PaymentsTransfersPersonalTransfersFlowView {

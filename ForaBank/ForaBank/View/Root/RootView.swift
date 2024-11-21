@@ -88,8 +88,11 @@ struct RootView: View {
             case let .legacy(paymentsViewModel):
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
-            case let .v1(switcher):
+            case let .v1(switcher as PaymentsTransfersSwitcher):
                 paymentsTransfersSwitcherView(switcher)
+
+            default:
+                EmptyView()
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -312,36 +315,30 @@ private extension RootView {
         binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: {
-                
-                CategoryPickerSectionFlowView(
-                    state: $0,
-                    event: $1,
-                    factory: .init(
-                        makeAlert: makeCategoryPickerSectionAlert(binder: binder),
-                        makeContentView: {
+        ComposedCategoryPickerSectionView(
+            binder: binder,
+            factory: .init(
+                makeAlert: makeCategoryPickerSectionAlert(binder: binder),
+                makeContentView: {
+                    
+                    ComposedCategoryPickerSectionContentView(
+                        content: binder.content,
+                        makeContentView: { state, event in
                             
-                            RxWrapperView(
-                                model: binder.content,
-                                makeContentView: { state, event in
-                                    
-                                    CategoryPickerSectionContentView(
-                                        state: state,
-                                        event: event,
-                                        config: .iFora,
-                                        itemLabel: itemLabel
-                                    )
-                                }
+                            CategoryPickerSectionContentView(
+                                state: state,
+                                event: event,
+                                config: .iFora,
+                                itemLabel: itemLabel
                             )
-                        },
-                        makeDestinationView: makeCategoryPickerSectionDestinationView,
-                        makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+                        }
                     )
-                )
-            }
+                },
+                makeDestinationView: makeCategoryPickerSectionDestinationView,
+                makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+            )
         )
+        .padding(.top, 20)
     }
     
     func makeCategoryPickerSectionAlert(
@@ -393,7 +390,12 @@ private extension RootView {
     func makeCategoryPickerSectionFullScreenCoverView(
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
-        rootViewFactory.components.makeQRView(cover.qr.qrModel)
+        
+        NavigationView {
+            
+            rootViewFactory.components.makeQRView(cover.qr.qrScanner)
+        }
+        .navigationViewStyle(.stack)
     }
     
     func paymentProviderPicker(
@@ -729,43 +731,16 @@ private extension RootView {
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        RxWrapperView(model: transfers.flow) {
-            
-            PaymentsTransfersPersonalTransfersFlowView(
-                state: $0,
-                event: $1,
-                contentView: {
-                    
-                    RxWrapperView(model: transfers.content) { state, event in
-                        
-                        VStack {
-                            
-                            PTSectionTransfersButtonsView(
-                                title: PaymentsTransfersSectionType.transfers.name,
-                                buttons: state.elements.compactMap { element in
-                                    
-                                    switch element {
-                                    case let .buttonType(buttonType):
-                                        return .init(type: buttonType) {
-                                            
-                                            event(.select(.buttonType(buttonType)))
-                                        }
-                                        
-                                    default:
-                                        return nil
-                                    }
-                                }
-                            )
-                        }
-                    }
-                },
-                viewFactory: .init(
-                    makeContactsView: rootViewFactory.components.makeContactsView,
-                    makePaymentsMeToMeView: rootViewFactory.components.makePaymentsMeToMeView,
-                    makePaymentsView: rootViewFactory.components.makePaymentsView
+        ComposedPaymentsTransfersTransfersView(
+            flow: transfers.flow,
+            contentView: {
+                
+                ComposedPaymentsTransfersTransfersContentView(
+                    content: transfers.content
                 )
-            )
-        }
+            },
+            factory: rootViewFactory.personalTransfersFlowViewFactory
+        )
     }
     
     private func itemLabel(
@@ -802,6 +777,20 @@ private extension RootView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+}
+
+// MARK: - View Factories
+
+private extension RootViewFactory {
+    
+    var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
+        
+        return .init(
+            makeContactsView: components.makeContactsView,
+            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
+            makePaymentsView: components.makePaymentsView
+        )
     }
 }
 
