@@ -60,61 +60,61 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
     // MARK: - Events: clientInform alert: nil ClientInformData
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_nilClientInformData() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(nil)
-//
-//        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_nilClientInformData() {
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_nilClientInformData() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(nil)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(nil)
+
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_nilClientInformData() {
+
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(nil)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
 
     // MARK: - Events: clientInform alert: emptyAuthorized_nilNotAuthorized
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_emptyAuthorized_nilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
-//
-//        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_emptyAuthorized_nilNotAuthorized() {
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_emptyAuthorized_nilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
+
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_emptyAuthorized_nilNotAuthorized() {
+
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
 
     // MARK: - Events: clientInform alert: emptyAuthorized_notNilNotAuthorized
 
@@ -131,77 +131,79 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 //        XCTAssertNoDiff(spy.values, [nil, .alert(message: "notAuthorized")])
 //    }
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
+
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
 
     // MARK: - Events: clientInform alert: notEmptyAuthorized_nilNotAuthorized
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_notEmptyAuthorized_nilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
-//
-//        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_notEmptyAuthorized_nilNotAuthorized() {
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_notEmptyAuthorized_nilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
+
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_notEmptyAuthorized_nilNotAuthorized() {
+
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
 
     // MARK: - Events: clientInform alert: notEmptyAuthorized_notNilNotAuthorized
 
-//    func test_clientInform_shouldShowClientInformAlert_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
-//        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil, .alert(message: "notAuthorized")])
-//    }
+    func test_clientInform_shouldShowClientInformAlert_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
 
-//    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        XCTAssertNoDiff(spy.values, [nil])
-//
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+
+        XCTAssertNoDiff(spy.values, [nil])
+
 //        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNoDiff(spy.values, [nil])
-//    }
+        model.sendClientInformNotAuthorized(.init)
+        
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil, .alert(message: "notAuthorized")])
+    }
+
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
+
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        XCTAssertNoDiff(spy.values, [nil])
+
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
 
     // MARK: - Events: clientInform model property change: nil ClientInformData
 
@@ -255,30 +257,30 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
     // MARK: - Events: clientInform model property change: emptyAuthorized_notNilNotAuthorized
 
-//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_emptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let clientInformStatus = model.clientInformStatus
-//
-//        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-//        XCTAssertNotNil(sut)
-//    }
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_emptyAuthorized_notNilNotAuthorized() {
 
-//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let clientInformStatus = model.clientInformStatus
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized, timeout: 0.05)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-//        XCTAssertNotNil(sut)
-//    }
+        let (sut, model, _) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
+
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
+
+        let (sut, model, _) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized, timeout: 0.05)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
 
     // MARK: - Events: clientInform model property change: notEmptyAuthorized_nilNotAuthorized
 
@@ -307,30 +309,30 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
     // MARK: - Events: clientInform model property change: notEmptyAuthorized_notNilNotAuthorized
 
-//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let clientInformStatus = model.clientInformStatus
-//
-//        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-//        XCTAssertNotNil(sut)
-//    }
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
 
-//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
-//
-//        let (sut, model, _) = makeSUT()
-//        let clientInformStatus = model.clientInformStatus
-//        model.clientInformStatus.isShowNotAuthorized = true
-//
-//        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized, timeout: 0.05)
-//
-//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-//        XCTAssertNotNil(sut)
-//    }
+        let (sut, model, _) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
+
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
+
+        let (sut, model, _) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized, timeout: 0.05)
+
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
 
     // MARK: - Events: Auth.CheckClient.Response
 
@@ -381,45 +383,45 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNotNil(sut)
     }
 
-//    func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
-//
-//        let message = "failure message"
-//        let (sut, model, _) = makeSUT()
-//        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-//
-//        XCTAssertNoDiff(alertSpy.values, [nil])
-//
-//        model.checkClientFailure(message: message)
-//
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message)
-//        ])
-//        XCTAssertNotNil(sut)
-//    }
+    func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
 
-//    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
-//        
-//        let message = "failure message"
-//        let (sut, model, _) = makeSUT()
-//        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-//        
-//        model.checkClientFailure(message: message)
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message)
-//        ])
-//        
-//        sut.tapAlertPrimaryButton()
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message),
-//            nil
-//        ])
-//        XCTAssertNotNil(sut)
-//    }
+        let message = "failure message"
+        let (sut, model, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+
+        XCTAssertNoDiff(alertSpy.values, [nil])
+
+        model.checkClientFailure(message: message)
+
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        XCTAssertNotNil(sut)
+    }
+
+    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
+        
+        let message = "failure message"
+        let (sut, model, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        model.checkClientFailure(message: message)
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        
+        sut.tapAlertPrimaryButton()
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message),
+            nil
+        ])
+        XCTAssertNotNil(sut)
+    }
     
     // MARK: - Events: AuthLoginViewModelAction.Register
 
@@ -852,6 +854,24 @@ private extension Model {
         timeout: TimeInterval = 0.05
     ) {
         clientInform.send(.result(data))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func sendClientInformNotAuthorized(
+        _ data: ClientInformAlerts,
+        timeout: TimeInterval = 0.05
+    ) {
+        clientNotAuthorizedAlerts.send(data)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func sendClientInformAuthorized(
+        _ data: ClientAuthorizationState,
+        timeout: TimeInterval = 0.05
+    ) {
+        сlientAuthorizationState.send(data)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }

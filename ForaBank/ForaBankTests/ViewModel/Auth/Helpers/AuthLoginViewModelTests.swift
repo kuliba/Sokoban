@@ -217,12 +217,12 @@ extension AuthLoginViewModel {
     
     // MARK: - Publishers
     
-//    var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
-//        
-//        $alert
-//            .map(\.?.view)
-//            .eraseToAnyPublisher()
-//    }
+    var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
+        
+        $alert
+            .map(\.?.view)
+            .eraseToAnyPublisher()
+    }
     
     var registerCardNumber: AnyPublisher<String, Never> {
         
@@ -369,14 +369,14 @@ extension AuthLoginViewModel {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
     }
     
-//    func tapAlertPrimaryButton(
-//        timeout: TimeInterval = 0.05
-//    ) {
-//        alert?.primary.action()
-//        
-//        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-//
-//    }
+    func tapAlertPrimaryButton(
+        timeout: TimeInterval = 0.05
+    ) {
+        alert?.primary.action()
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+
+    }
 }
 
 // MARK: - Helpers

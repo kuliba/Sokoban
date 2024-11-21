@@ -20,7 +20,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     
     @Published var cardScanner: CardScannerViewModel?
-    @Published private var alert: Alert.ViewModel?
+    @Published private(set) var alert: Alert.ViewModel?
     @Published var buttons: [ButtonAuthView.ViewModel]
     @Published private var clientInformAlerts: ClientInformAlerts?
 
