@@ -15,23 +15,19 @@ import UtilityServicePrepaymentDomain
 final class UtilityPrepaymentFlowMicroServicesComposer {
     
     private let composer: AnywayTransactionComposer
-    private let flag: Flag
     private let nanoServices: NanoServices
     private let makeLegacyPaymentsServicesViewModel: MakeLegacyPaymentsServicesViewModel
     
     init(
         composer: AnywayTransactionComposer,
-        flag: Flag,
         nanoServices: NanoServices,
         makeLegacyPaymentsServicesViewModel: @escaping MakeLegacyPaymentsServicesViewModel
     ) {
         self.composer = composer
-        self.flag = flag
         self.nanoServices = nanoServices
         self.makeLegacyPaymentsServicesViewModel = makeLegacyPaymentsServicesViewModel
     }
     
-    typealias Flag = StubbedFeatureFlag
     typealias NanoServices = UtilityPaymentNanoServices
     typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service>
     
@@ -71,15 +67,9 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
             
         case .service:
-            switch flag {
-            case .inactive:
-                completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
+            nanoServices.getOperatorsListByParam { [weak self] in
                 
-            case .active:
-                nanoServices.getOperatorsListByParam { [weak self] in
-                    
-                    self?.getAllLatestPayments($0, completion)
-                }
+                self?.getAllLatestPayments($0, completion)
             }
             
         default:

@@ -1,20 +1,20 @@
 {
   "configurations" : [
     {
-      "id" : "5245B1A9-601E-464D-9438-CD50771AECEF",
-      "name" : "Configuration 1",
+      "id" : "5B9A1666-98A3-4AB1-9B10-DD307D112AFC",
+      "name" : "Test Scheme Action",
       "options" : {
 
       }
     }
   ],
   "defaultOptions" : {
-    "testTimeoutsEnabled" : true
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "CollateralLoanLandingShowCaseBackendTests",
         "name" : "CollateralLoanLandingShowCaseBackendTests"
       }

@@ -17,7 +17,7 @@ public extension BinderDomain {
     typealias Binder = PayHub.Binder<Content, Flow>
     typealias BinderComposer = PayHubUI.BinderComposer<Content, Select, Navigation>
     typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
-    typealias Witnesses = ContentWitnesses<Content, Select, Navigation>
+    typealias Witnesses = ContentWitnesses<Content, Select>
     
     // MARK: - Flow
     

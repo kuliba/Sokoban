@@ -46,7 +46,7 @@ extension RootViewModelFactory {
                 showBanner: selectBanner(composer: standardNanoServicesComposer)
             ),
             placeholderCount: bannerPickerPlaceholderCount,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let bannerPicker = bannerPickerComposer.compose(
             prefix: [],
@@ -72,7 +72,7 @@ extension RootViewModelFactory {
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         return .init(content: content, flow: flow, bind: { _,_ in [] })

@@ -19,4 +19,5 @@ public enum FastPaymentsSettingsEvent: Equatable {
     case contract(ContractEvent)
     case products(ProductsEvent)
     case subscription(SubscriptionEvent)
+    case accountLinking
 }

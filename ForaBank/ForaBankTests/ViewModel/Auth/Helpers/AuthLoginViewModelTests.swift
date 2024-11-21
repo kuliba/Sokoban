@@ -156,7 +156,9 @@ class AuthLoginViewModelTests: XCTestCase {
                 imagePublisher: imagePublisher,
                 imageLoader: { _ in },
                 imageViewFactory: makeImageViewFactory,
-                config: .default) { [weak self] event in
+                scheduler: .immediate, 
+                config: .default
+            ) { [weak self] event in
                     switch event {
                         
                     case let .card(card):

@@ -198,6 +198,7 @@ struct PaymentsSuccessOptionButtonsView: View {
                 }
             }
         }
+        .frame(height: 120)
     }
 }
 
@@ -236,9 +237,9 @@ extension PaymentsSuccessOptionButtonsView {
                     Text(title)
                         .font(.textBodySM12160())
                         .foregroundColor(.textSecondary)
-                        .frame(maxWidth: 100)
                         .accessibilityIdentifier("SuccessPageButtonTitle")
                 }
+                .frame(maxWidth: 100)
             }
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentBackend
+import CalendarUI
 import CodableLanding
 import CollateralLoanLandingShowCaseBackend
 import Combine
@@ -24,16 +25,6 @@ import PaymentSticker
 import RemoteServices
 import SberQR
 import SerialComponents
-import SwiftUI
-import PayHub
-import PayHubUI
-import Fetcher
-import LandingUIComponent
-import LandingMapping
-import CodableLanding
-import MarketShowcase
-import CalendarUI
-import GenericRemoteService
 import SharedAPIInfra
 import SwiftUI
 import GetClientInformDataServices
@@ -41,18 +32,13 @@ import GetClientInformDataServices
 extension RootViewModelFactory {
     
     func make(
-        bindings: inout Set<AnyCancellable>,
-        qrResolverFeatureFlag: QRResolverFeatureFlag,
-        fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
-        historyFilterFlag: HistoryFilterFlag,
-        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
-        getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
-        marketplaceFlag: MarketplaceFlag,
+        dismiss: @escaping () -> Void,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         savingsAccountFlag: SavingsAccountFlag
-    ) -> RootViewModel {
+    ) -> RootViewDomain.Binder {
+        
+        var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
             _ work: @escaping () -> Void
@@ -80,6 +66,10 @@ extension RootViewModelFactory {
             model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         }
         
+        if collateralLoanLandingFlag.isActive {
+            model.featureFlags.productsOpenLoanURL = nil
+        }
+        
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
         )
@@ -94,27 +84,12 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
-        ? HTTPClientStub.fastPaymentsSettings()
-        : httpClient
-        
-        // TODO: Remove after `legacy` case eliminated
-        let fastPaymentsFactory: FastPaymentsFactory = {
-            
-            switch fastPaymentsSettingsFlag.rawValue {
-            case .active:
-                return .init(fastPaymentsViewModel: .new({
-                    
-                    self.makeNewFastPaymentsViewModel()
-                }))
+        let fastPaymentsFactory = FastPaymentsFactory(
+            fastPaymentsViewModel: .new({
                 
-            case .inactive:
-                return .init(fastPaymentsViewModel: .legacy({
-                    
-                    .init(model: $0,newModel: self.model,closeAction: $1)
-                }))
-            }
-        }()
+                self.makeNewFastPaymentsViewModel()
+            })
+        )
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,
@@ -124,14 +99,14 @@ extension RootViewModelFactory {
         
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
-            otpServices: .init(fpsHTTPClient, logger),
-            otpDeleteBankServices: .init(for: fpsHTTPClient, infoNetworkLog),
+            otpServices: .init(httpClient, logger),
+            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts,
                 c2bSubscription: model.subscriptions.value
             ),
-            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60
+            duration: 60
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -140,20 +115,14 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
-            qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+            paymentsTransfersFlag: paymentsTransfersFlag
         )
-        
-        let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
-        ? HTTPClientStub.utilityPayments()
-        : httpClient
         
         let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
             model: model
         )
         let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(
-            log: infoNetworkLog,
-            isActive: utilitiesPaymentsFlag.isActive
+            log: infoNetworkLog
         )
         
         let unblockCardServices = Services.makeUnblockCardServices(
@@ -265,36 +234,33 @@ extension RootViewModelFactory {
         )
         
         let templatesComposer = makeTemplatesComposer(
-            paymentsTransfersFlag: paymentsTransfersFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+            paymentsTransfersFlag: paymentsTransfersFlag
         )
         let makeTemplates = templatesComposer.compose
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
-            flag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
         
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
-            if changeSVCardLimitsFlag.isActive {
-                return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
+            if self.changeSVCardLimitsFlag.isActive {
+                return .fullScreen(.cardGuardian($0, self.changeSVCardLimitsFlag))
             } else {
-                return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
+                return .bottomSheet(.cardGuardian($0, self.changeSVCardLimitsFlag))
             }
         }
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
             fraudDelay: settings.fraudDelay,
-            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
         
@@ -307,7 +273,6 @@ extension RootViewModelFactory {
             validator: .init()
         )
         let utilityNanoServicesComposer = UtilityPaymentNanoServicesComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: logger.log,
@@ -323,17 +288,13 @@ extension RootViewModelFactory {
             factory: servicePickerFlowModelFactory,
             microServices: asyncPickerComposer.compose(),
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
-        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
+        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel()
         
-        let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
-                
+        let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel()
+        
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map
@@ -369,7 +330,7 @@ extension RootViewModelFactory {
         )
         
         // threading
-        let operatorsService = backgroundScheduler.scheduled(servicePaymentOperatorService)
+        let operatorsService = schedulers.background.scheduled(servicePaymentOperatorService)
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
@@ -395,15 +356,8 @@ extension RootViewModelFactory {
         )
         
         // threading
-        let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
+        let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
-        
-        let qrScannerComposer = QRScannerComposer(
-            model: model,
-            qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
-        )
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             nanoServices: .init(
@@ -412,7 +366,7 @@ extension RootViewModelFactory {
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
-            makeQRModel: qrScannerComposer.compose
+            makeQRModel: makeMakeQRScannerModel
         )
         
         if paymentsTransfersFlag.isActive {
@@ -463,7 +417,7 @@ extension RootViewModelFactory {
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
             corporate: paymentsTransfersCorporate,
             personal: paymentsTransfersPersonal,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let getLandingByType = nanoServiceComposer.compose(
@@ -477,7 +431,7 @@ extension RootViewModelFactory {
                 loadLanding: { getLandingByType(( "", $0), $1) },
                 orderCard: {_ in },
                 orderSticker: {_ in }),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
 
@@ -605,11 +559,11 @@ extension RootViewModelFactory {
             _ = createGetNotAuthorizedZoneClientInformData
         }
         
-        return make(
+        let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
-            fastPaymentsFactory: fastPaymentsFactory, 
+            fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
@@ -619,6 +573,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             updateInfoStatusFlag: updateInfoStatusFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
@@ -626,6 +581,54 @@ extension RootViewModelFactory {
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
             marketShowcaseBinder: marketShowcaseBinder
+        )
+        
+        let marketBinder = MarketShowcaseToRootViewModelBinder(
+            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
+            rootViewModel: rootViewModel,
+            scheduler: schedulers.main
+        )
+        
+        bindings.formUnion(marketBinder.bind())
+        
+        let getRootNavigation = makeGetRootNavigation(
+            makeQRScanner: makeQRScannerBinder
+        )
+        let witness = RootViewDomain.ContentWitnesses(
+            isFlagActive: paymentsTransfersFlag == .active
+        )
+        
+        let composer = RootViewDomain.BinderComposer(
+            bindings: bindings,
+            dismiss: dismiss,
+            getNavigation: getRootNavigation,
+            schedulers: schedulers,
+            witnesses: .init(content: witness, dismiss: .default)
+        )
+        
+        return composer.compose(with: rootViewModel)
+    }
+}
+
+private extension RootViewDomain.Witnesses.DismissWitnesses<RootViewModel> {
+    
+    static var `default`: Self {
+        
+        return .init(
+            dismissAll: {
+                
+                $0.action
+                    .compactMap { $0 as? RootViewModelAction.DismissAll }
+                    .eraseToAnyPublisher()
+            },
+            reset: { content in
+                
+                return {
+                    
+                    content.resetLink()
+                    content.reset()
+                }
+            }
         )
     }
 }
@@ -821,6 +824,7 @@ private extension RootViewModelFactory {
         qrViewModelFactory: QRViewModelFactory,
         landingServices: LandingServices,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
@@ -859,7 +863,8 @@ private extension RootViewModelFactory {
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
-            bannersBinder: bannersBinder
+            bannersBinder: bannersBinder,
+            scheduler: schedulers.main
         )
         
         let paymentsTransfersViewModel = PaymentsTransfersViewModel(
@@ -868,7 +873,8 @@ private extension RootViewModelFactory {
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            scheduler: schedulers.main
         )
         
         let paymentsModel: RootViewModel.PaymentsModel = {
@@ -903,7 +909,8 @@ private extension RootViewModelFactory {
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
             chatViewModel: chatViewModel,
-            marketShowcaseBinder: marketShowcaseBinder)
+            marketShowcaseBinder: marketShowcaseBinder
+        )
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory, 
@@ -914,7 +921,8 @@ private extension RootViewModelFactory {
             informerViewModel: informerViewModel,
             model,
             showLoginAction: showLoginAction, 
-            landingServices: landingServices
+            landingServices: landingServices,
+            mainScheduler: schedulers.main
         )
     }
 }

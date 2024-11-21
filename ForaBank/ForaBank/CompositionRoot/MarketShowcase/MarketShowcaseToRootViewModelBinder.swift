@@ -143,7 +143,8 @@ private extension RootViewModel {
                     landingActions: { self.landingActions($0) },
                     outsideAction: {_ in },
                     orderCard: openCard, 
-                    payment: openPayment
+                    payment: openPayment,
+                    scheduler: mainScheduler
                 )
                 
                 setLink(to: .landing(viewModel, type == "abroadSticker"))

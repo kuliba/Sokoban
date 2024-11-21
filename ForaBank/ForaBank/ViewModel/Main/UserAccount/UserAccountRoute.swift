@@ -160,10 +160,13 @@ extension UserAccountRoute {
         
         case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)
         case confirmDeleteDefaultBank(TimedOTPInputViewModel, AnyCancellable)
-
+        case accountLink
+        
         public var id: Case {
             
             switch self {
+            case .accountLink:
+                return .accountLink
             case .confirmSetBankDefault:
                 return .confirmSetBankDefault
             case .confirmDeleteDefaultBank:
@@ -173,6 +176,7 @@ extension UserAccountRoute {
         
         public enum Case {
             
+            case accountLink
             case c2BSub
             case confirmSetBankDefault
             case confirmDeleteDefaultBank
@@ -187,18 +191,24 @@ extension UserAccountRoute.FPSDestination: Hashable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         
         switch (lhs, rhs) {
+        case let (.accountLink, .accountLink):
+            return true
         case let (.confirmSetBankDefault(lhs, _), .confirmSetBankDefault(rhs, _)):
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
         case (_, .confirmDeleteDefaultBank(_, _)):
             return false
         case (.confirmDeleteDefaultBank(_, _), .confirmSetBankDefault(_, _)):
             return false
+        default:
+            return true
         }
     }
     
     public func hash(into hasher: inout Hasher) {
         
         switch self {
+        case .accountLink:
+            hasher.combine(0)
         case let .confirmSetBankDefault(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
         case let .confirmDeleteDefaultBank(viewModel, _):

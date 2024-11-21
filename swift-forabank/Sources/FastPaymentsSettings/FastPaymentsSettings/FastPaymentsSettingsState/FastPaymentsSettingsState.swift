@@ -36,6 +36,7 @@ public extension FastPaymentsSettingsState {
     #warning("split to informer/error?")
     enum Status: Equatable {
         
+        case accountLink
         case inflight
         case serverError(String)
         case connectivityError

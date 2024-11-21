@@ -360,7 +360,8 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
             createSberQRPayment: spies.createSberQRPayment.process(_:completion:),
             getSberQRData: spies.getSberQRData.process(_:completion:),
             makeSegmented: spies.makeProviderPicker.call, 
-            makeServicePicker: spies.makeServicePicker.process(_:completion:),
+            makeServicePicker: spies.makeServicePicker.process(_:completion:), 
+            scanner: QRScannerViewModelSpy(),
             scheduler: .immediate
         )
         

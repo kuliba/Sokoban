@@ -9,6 +9,7 @@ enum QRModelWrapperEvent<QRResult> {
     
     case cancel
     case qrResult(QRResult)
+    case reset
     case scanResult(QRViewModel.ScanResult)
 }
 
