@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 15, *)
 struct ClientInformRowView: View {
     
     let logo: Image?
