@@ -253,6 +253,14 @@ private extension RootView {
                         ),
                         config: .iFora
                     )
+                },
+                makeFullScreenCoverView: { _ in
+                
+                    Text("TBD: FullScreenCoverView")
+                },
+                makeDestinationView: { _ in
+                
+                    Text("TBD: DestinationView")
                 }
             )
         )
@@ -306,6 +314,14 @@ private extension RootView {
                         ),
                         config: .iFora
                     )
+                },
+                makeFullScreenCoverView: { _ in
+                
+                    Text("TBD: FullScreenCoverView")
+                },
+                makeDestinationView: { _ in
+                
+                    Text("TBD: DestinationView")
                 }
             )
         )
