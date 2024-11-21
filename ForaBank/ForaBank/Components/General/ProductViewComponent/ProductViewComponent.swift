@@ -92,7 +92,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         let name = Self.name(
             product: productData,
             style: style,
-            creditProductName: .productView
+            creditProductName: .productViewNavTitle
         )
         let owner = Self.owner(from: productData)
         let cvvTitle = (productData is ProductCardData) ? .cvvTitle : ""
@@ -283,21 +283,22 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         switch product {
             
         case let cardProduct as ProductCardData:
+            
             switch style {
             case .main:
-                return !cardProduct.displayName.isEmpty ? cardProduct.displayName : "Кредитная карта"
+                return cardProduct.mainTitleName
                 
             case .profile:
                 switch creditProductName {
                     
                 case .cardTitle:
-                    return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
+                    return cardProduct.profileCardTitleName
                     
-                case .myProductsSectionItem:
-                    return cardProduct.displayName
+                case .myProductsSectionItemTitle:
+                    return cardProduct.sectionItemTitle
                     
-                case .productView:
-                    return cardProduct.navigationBarName
+                case .productViewNavTitle:
+                    return cardProduct.navigationBarTitle
                 }
             }
             

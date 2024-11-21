@@ -264,7 +264,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
-    private typealias MakeScanQR = CallSpy<Notify, Node<QRModel>>
+    private typealias MakeScanQR = CallSpy<Notify, Node<QRScannerModel>>
     private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
     private struct Spies {
@@ -286,7 +286,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         detail: ClosePaymentsViewModelWrapper? = nil,
         latestPayment: Node<ClosePaymentsViewModelWrapper>? = nil,
         meToMe: Node<PaymentsMeToMeViewModel>? = nil,
-        scanQR: Node<QRModel>? = nil,
+        scanQR: Node<QRScannerModel>? = nil,
         sourcePayment: Node<PaymentsViewModel>? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -409,18 +409,18 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         return .init(model: model ?? makePayments(), cancellables: [])
     }
     
-    private func makeScanQR() -> QRModel {
+    private func makeScanQR() -> QRScannerModel {
         
         return .init(
             mapScanResult: { _,_ in },
-            makeQRModel: { .preview(closeAction: $0) },
+            makeQRScanner: { QRViewModel.preview(closeAction: $0) },
             scheduler: .immediate
         )
     }
     
     private func makeScanQRNode(
-        _ qrModel: QRModel? = nil
-    ) -> Node<QRModel> {
+        _ qrModel: QRScannerModel? = nil
+    ) -> Node<QRScannerModel> {
         
         return .init(model: qrModel ?? makeScanQR(), cancellables: [])
     }

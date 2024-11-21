@@ -36,7 +36,7 @@ private extension String {
     
     static func visibilityTitle(
         by visibility: Bool,
-        _ flag: ChangeSVCardLimitsFlag = .init(.inactive)
+        _ flag: ChangeSVCardLimitsFlag = .inactive
     ) -> String {
         return visibility ? (flag.isActive ? "Скрыть\nс главного" : "Скрыть с главного") : "Вернуть на главный"
     }

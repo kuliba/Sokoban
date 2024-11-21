@@ -22,7 +22,7 @@ extension RootViewModelFactory {
                     completion(((try? $0.get()) ?? []).map { .latest($0) })
                 }
             },
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let operationPickerPlaceholderCount = settings.operationPickerPlaceholderCount
         let operationPickerContent = operationPickerContentComposer.compose(
@@ -35,7 +35,7 @@ extension RootViewModelFactory {
         )
         let operationPickerFlowComposer = OperationPickerFlowComposer(
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let operationPickerFlow = operationPickerFlowComposer.compose()
         

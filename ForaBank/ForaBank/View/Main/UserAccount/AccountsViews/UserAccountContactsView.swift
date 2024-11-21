@@ -62,7 +62,7 @@ struct UserAccountContactsView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 4) {
                 

@@ -285,7 +285,6 @@
         "ResponseMapper_mapGetPrintFormResponseTests",
         "ResponseMapper_mapOperationDetailByPaymentIDResponseTests",
         "RootViewFactoryComposerTests",
-        "RootViewModelTests",
         "SVGImageDataTest",
         "SberOperator_precedesTests",
         "SberQRProductTests",

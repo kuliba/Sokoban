@@ -8,7 +8,6 @@
 extension QRScanResultMapperComposer {
     
     convenience init(
-        flag: UtilitiesPaymentsFlag,
         model: Model
     ) {
         self.init(
@@ -16,29 +15,12 @@ extension QRScanResultMapperComposer {
                 getMapping: model.getMapping,
                 loadOperators: {
                     
-                    switch flag.rawValue {
-                    case .active:
-                        return model.segmentedFromDictionary($0, $1)?
-                            .filter(\.isNotSberProvider)
-                        
-                    case .inactive:
-                        return model.segmentedFromDictionary($0, $1)
-                    }
-                    
+                    return model.segmentedFromDictionary($0, $1)?
+                        .filter(\.isNotSberProvider)
                 },
                 loadProviders: {
                     
-                    switch flag.rawValue {
-                    case .active(.live):
-                        return model.segmentedFromCache($0, $1)
-                        
-                    case .active(.stub):
-                        // stub()
-                        return model.segmentedFromCache($0, $1)
-                        
-                    case .inactive:
-                        return nil
-                    }
+                    return model.segmentedFromCache($0, $1)
                 }
             )
         )

@@ -86,6 +86,7 @@ private extension ResponseMapper._Data.ProductSubscription.Subscription {
             brandIcon: brandIcon,
             brandName: brandName,
             subscriptionPurpose: subscriptionPurpose,
+            subscriptionServiceName: subscriptionServiceName,
             cancelAlert: cancelAlert
         )
     }
@@ -126,6 +127,7 @@ private extension ResponseMapper {
                 let brandIcon: String
                 let brandName: String
                 let subscriptionPurpose: String
+                let subscriptionServiceName: String
                 let cancelAlert: String
             }
         }

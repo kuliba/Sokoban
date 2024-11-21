@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     
     func makeTransfers(
         buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
-        makeQRModel: @escaping () -> QRModel
+        makeQRModel: @escaping () -> QRScannerModel
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         
         let elements = buttonTypes.map {
@@ -25,7 +25,7 @@ extension RootViewModelFactory {
         let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
             makeQRModel: makeQRModel,
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         let navigationComposer = PaymentsTransfersPersonalTransfersNavigationComposer(
@@ -40,8 +40,8 @@ extension RootViewModelFactory {
                     completion(navigation)
                 }
             ),
-            scheduler: mainScheduler,
-            interactiveScheduler: interactiveScheduler
+            scheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
         
         return composer.compose(elements: elements)
