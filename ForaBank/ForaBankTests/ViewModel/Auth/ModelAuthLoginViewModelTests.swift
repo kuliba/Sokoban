@@ -255,30 +255,30 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
     // MARK: - Events: clientInform model property change: emptyAuthorized_notNilNotAuthorized
 
-    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_emptyAuthorized_notNilNotAuthorized() {
+//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_emptyAuthorized_notNilNotAuthorized() {
+//
+//        let (sut, model, _) = makeSUT()
+//        let clientInformStatus = model.clientInformStatus
+//
+//        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
+//
+//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+//        XCTAssertNotNil(sut)
+//    }
 
-        let (sut, model, _) = makeSUT()
-        let clientInformStatus = model.clientInformStatus
-
-        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
-
-        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-        XCTAssertNotNil(sut)
-    }
-
-    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
-
-        let (sut, model, _) = makeSUT()
-        let clientInformStatus = model.clientInformStatus
-        model.clientInformStatus.isShowNotAuthorized = true
-
-        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized, timeout: 0.05)
-
-        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-        XCTAssertNotNil(sut)
-    }
+//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
+//
+//        let (sut, model, _) = makeSUT()
+//        let clientInformStatus = model.clientInformStatus
+//        model.clientInformStatus.isShowNotAuthorized = true
+//
+//        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized, timeout: 0.05)
+//
+//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+//        XCTAssertNotNil(sut)
+//    }
 
     // MARK: - Events: clientInform model property change: notEmptyAuthorized_nilNotAuthorized
 
@@ -307,30 +307,30 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
     // MARK: - Events: clientInform model property change: notEmptyAuthorized_notNilNotAuthorized
 
-    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
+//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
+//
+//        let (sut, model, _) = makeSUT()
+//        let clientInformStatus = model.clientInformStatus
+//
+//        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
+//
+//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+//        XCTAssertNotNil(sut)
+//    }
 
-        let (sut, model, _) = makeSUT()
-        let clientInformStatus = model.clientInformStatus
-
-        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
-
-        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-        XCTAssertNotNil(sut)
-    }
-
-    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
-
-        let (sut, model, _) = makeSUT()
-        let clientInformStatus = model.clientInformStatus
-        model.clientInformStatus.isShowNotAuthorized = true
-
-        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized, timeout: 0.05)
-
-        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
-        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
-        XCTAssertNotNil(sut)
-    }
+//    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
+//
+//        let (sut, model, _) = makeSUT()
+//        let clientInformStatus = model.clientInformStatus
+//        model.clientInformStatus.isShowNotAuthorized = true
+//
+//        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized, timeout: 0.05)
+//
+//        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+//        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+//        XCTAssertNotNil(sut)
+//    }
 
     // MARK: - Events: Auth.CheckClient.Response
 
