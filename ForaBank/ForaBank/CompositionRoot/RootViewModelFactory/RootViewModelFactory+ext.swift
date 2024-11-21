@@ -356,8 +356,7 @@ extension RootViewModelFactory {
                 reloadCategories: reloadCategories,
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
-            ),
-            makeQRModel: makeMakeQRScannerModel
+            )
         )
         
         if paymentsTransfersFlag.isActive {
