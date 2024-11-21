@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 04.09.2024.
 //
 
-public struct PaymentsTransfersCorporateContentViewFactory<BannerPicker, BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView> {
+public struct PaymentsTransfersCorporateContentViewFactory<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView> {
     
     public let makeBannerSectionView: MakeBannerSectionView
     public let makeRestrictionNoticeView: MakeRestrictionNoticeView
@@ -27,7 +27,7 @@ public struct PaymentsTransfersCorporateContentViewFactory<BannerPicker, BannerS
 
 public extension PaymentsTransfersCorporateContentViewFactory {
     
-    typealias MakeBannerSectionView = (BannerPicker) -> BannerSectionView
+    typealias MakeBannerSectionView = (CorporateBannerPicker) -> BannerSectionView
     typealias MakeRestrictionNoticeView = () -> RestrictionNoticeView
     typealias MakeTransfersSectionView = () -> TransfersSectionView
     typealias MakeToolbarView = () -> ToolbarView

@@ -7,13 +7,15 @@
 
 import Foundation
 
-public final class PaymentsTransfersCorporateContent<BannerPicker>: ObservableObject {
+public protocol CorporateBannerPicker {}
+
+public final class PaymentsTransfersCorporateContent: ObservableObject {
     
-    public let bannerPicker: BannerPicker
+    public let bannerPicker: any CorporateBannerPicker
     private let _reload: () -> Void
     
     public init(
-        bannerPicker: BannerPicker,
+        bannerPicker: any CorporateBannerPicker,
         reload: @escaping () -> Void
     ) {
         self.bannerPicker = bannerPicker

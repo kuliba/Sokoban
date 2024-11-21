@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersCorporateContentView<BannerPicker, BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>: View
+public struct PaymentsTransfersCorporateContentView<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>: View
 where BannerSectionView: View,
       RestrictionNoticeView: View,
       ToolbarView: ToolbarContent,
@@ -56,8 +56,8 @@ where BannerSectionView: View,
 
 public extension PaymentsTransfersCorporateContentView {
     
-    typealias Content = PaymentsTransfersCorporateContent<BannerPicker>
-    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerPicker, BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>
+    typealias Content = PaymentsTransfersCorporateContent
+    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>
     typealias Config = PaymentsTransfersCorporateContentViewConfig
 }
 
@@ -69,7 +69,7 @@ public extension PaymentsTransfersCorporateContentView {
         PaymentsTransfersCorporateContentView(
             content: .preview,
             factory: .init(
-                makeBannerSectionView: { (bannerPicker: PreviewBannerPicker) in
+                makeBannerSectionView: { _ in
                     
                     ZStack {
                         
@@ -117,16 +117,15 @@ public extension PaymentsTransfersCorporateContentView {
     .navigationViewStyle(.stack)
 }
 
-private extension PaymentsTransfersCorporateContent
-where BannerPicker == PreviewBannerPicker {
+private extension PaymentsTransfersCorporateContent {
     
     static var preview: PaymentsTransfersCorporateContent {
         
         return .init(
-            bannerPicker: .init(),
+            bannerPicker: PreviewBannerPicker(),
             reload: {}
         )
     }
 }
 
-private final class PreviewBannerPicker {}
+private final class PreviewBannerPicker: CorporateBannerPicker {}
