@@ -65,7 +65,7 @@ struct ContentView: View {
             })
     }
     
-    private func productView(product: Product) -> some View {
+    func productView(product: Product) -> some View {
         
         let factory = CollateralLoanLandingShowCaseViewFactory()
         
