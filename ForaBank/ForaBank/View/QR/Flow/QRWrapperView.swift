@@ -49,8 +49,8 @@ extension QRScannerDomain.Navigation {
     var destination: Destination {
         
         switch self {
-        case let .payments(payments):
-            return .payments(payments)
+        case let .payments(node):
+            return .payments(node.model)
         }
     }
     

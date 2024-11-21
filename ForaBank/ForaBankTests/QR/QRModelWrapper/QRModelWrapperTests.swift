@@ -88,7 +88,8 @@ final class QRModelWrapperTests: XCTestCase {
                 
                 return QRViewModel(
                     closeAction: $0,
-                    qrResolve: { _ in scanResult }
+                    qrResolve: { _ in scanResult },
+                    scanner: QRScannerViewModelSpy()
                 )
             },
             scheduler: .immediate

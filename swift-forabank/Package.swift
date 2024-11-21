@@ -2531,6 +2531,12 @@ private extension Target {
     
     static let savingsAccount = target(
         name: .savingsAccount,
+        dependencies: [
+            // internal packages
+            .sharedConfigs,
+            .uiPrimitives,
+            .rxViewModel,
+        ],
         path: "Sources/UI/\(String.savingsAccount)"
     )
 

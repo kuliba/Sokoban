@@ -11,38 +11,36 @@ import GetBannersMyProductListService
 
 final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
     
-    func test_map_shouldDeliverValidData() {
+    func test_map_onlyLoanBannerList_shouldDeliverValidData() {
+        
+        let (json, response) = createLoanBannerList()
         
         XCTAssertNoDiff(
-            map(.validData),
-            .success(.validStub)
+            map(Data(json.utf8)),
+            .success(response)
         )
     }
-
-    func test_map_shouldDeliverWithOnlyCardBanners() {
+    
+    func test_map_onlyCardBannerList_shouldDeliverValidData() {
+        
+        let (json, response) = createCardBannerList()
         
         XCTAssertNoDiff(
-            map(.onlyCardBannersData),
-            .success(.stubWithOnlyCardBanners)
+            map(Data(json.utf8)),
+            .success(response)
         )
     }
-
-    func test_map_shouldDeliverWithOnlyLoanBanners() {
+    
+    func test_map_allBannerList_shouldDeliverValidData() {
+        
+        let (json, response) = createBannerList()
         
         XCTAssertNoDiff(
-            map(.onlyLoanBannersData),
-            .success(.stubWithOnlyLoanBanners)
+            map(Data(json.utf8)),
+            .success(response)
         )
     }
-
-    func test_map_shouldDeliverWithoutBanners() {
-        
-        XCTAssertNoDiff(
-            map(.withoutBannersData),
-            .success(.stubWithoutBanners)
-        )
-    }
-
+    
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
         XCTAssertNoDiff(
@@ -118,17 +116,130 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Response = [ResponseMapper.CreateGetBannersMyProductListApplicationDomain]
-    private typealias MappingResult = Swift.Result<
-        ResponseMapper.CreateGetBannersMyProductListApplicationDomain,
-        ResponseMapper.MappingError
-    >
+    typealias List = ResponseMapper.GetBannersMyProductListResponse
+    typealias Banner = List.Banner
+    typealias Response = ResponseMapper.MappingResult<List>
     
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> MappingResult {
+    ) -> Response {
         ResponseMapper.mapGetBannersMyProductListResponse(data, httpURLResponse)
+    }
+    
+    private func createLoanBannerList(
+        serial: String = anySerial(),
+        productName: String = anyMessage(),
+        link: String = anyMessage(),
+        md5hash: String = anyMessage(),
+        actionType: String = anyMessage(),
+        target: String = anyMessage()
+    ) -> (String, List) {
+        
+        let banner = "[" + createBanner(productName: productName, link: link, md5hash: md5hash, actionType: actionType, target: target) + "]"
+        
+        return (
+            json(serial: serial, loanBannerList: banner),
+            .init(
+                serial: serial,
+                cardBannerList: [],
+                loanBannerList: [
+                    .init(
+                        productName: productName,
+                        link: link,
+                        md5hash: md5hash,
+                        action: .init(actionType: actionType, target: target))])
+        )
+    }
+    
+    private func createCardBannerList(
+        serial: String = anySerial(),
+        productName: String = anyMessage(),
+        link: String = anyMessage(),
+        md5hash: String = anyMessage(),
+        actionType: String = anyMessage(),
+        target: String = anyMessage()
+    ) -> (String, List) {
+        
+        let banner = "[" + createBanner(productName: productName, link: link, md5hash: md5hash, actionType: actionType, target: target) + "]"
+        
+        return (
+            json(serial: serial, cardBannerList: banner),
+            .init(
+                serial: serial,
+                cardBannerList: [.init(
+                    productName: productName,
+                    link: link,
+                    md5hash: md5hash,
+                    action: .init(actionType: actionType, target: target))],
+                loanBannerList: [])
+        )
+    }
+    
+    private func createBannerList(
+        serial: String = anySerial(),
+        productName: String = anyMessage(),
+        link: String = anyMessage(),
+        md5hash: String = anyMessage(),
+        actionType: String = anyMessage(),
+        target: String = anyMessage()
+    ) -> (String, List) {
+        
+        let banner = "[" + createBanner(productName: productName, link: link, md5hash: md5hash, actionType: actionType, target: target) + "]"
+        
+        return (
+            json(serial: serial, cardBannerList: banner, loanBannerList: banner),
+            .init(
+                serial: serial,
+                cardBannerList: [.init(
+                    productName: productName,
+                    link: link,
+                    md5hash: md5hash,
+                    action: .init(actionType: actionType, target: target))],
+                loanBannerList: [.init(
+                    productName: productName,
+                    link: link,
+                    md5hash: md5hash,
+                    action: .init(actionType: actionType, target: target))])
+        )
+    }
+    
+    private func createBanner(
+        productName: String,
+        link: String,
+        md5hash: String,
+        actionType: String,
+        target: String
+    ) -> String {
+        """
+        {
+            "productName": "\(productName)",
+            "link": "\(link)",
+            "md5hash": "\(md5hash)",
+            "action": {
+                "actionType": "\(actionType)",
+                "target": "\(target)"
+            }
+        },
+    """
+    }
+    
+    private func json(
+        serial: String,
+        cardBannerList: String = "null",
+        loanBannerList: String = "null"
+    ) -> String {
+            """
+        {
+            "statusCode": 0,
+            "errorMessage": null,
+            "data": {
+                "serial": "\(serial)",
+                "cardBannerList": \(cardBannerList),
+                "loanBannerList": \(loanBannerList)
+            }
+        }
+        """
     }
 }
 
@@ -142,9 +253,6 @@ private extension Data {
     static let nullServerResponse: Data = String.nullServerResponse.json
     static let serverError: Data = String.serverError.json
     static let validData: Data = String.validJson.json
-    static let onlyCardBannersData: Data = String.jsonWithOnlyCardBanners.json
-    static let onlyLoanBannersData: Data = String.jsonWithOnlyLoanBanners.json
-    static let withoutBannersData: Data = String.jsonWithoutBanners.json
 }
 
 private extension String {
@@ -192,7 +300,6 @@ private extension String {
   "data": []
 }
 """
-    
     static let validJson = """
 {
     "statusCode": 0,
@@ -205,7 +312,7 @@ private extension String {
             "md5hash": "baf4ce68d067b657e21ce34f2d6a92c9",
             "action": {
                 "actionType": "landing",
-                "landingData": "landingSticker"
+                "target": "landingSticker"
             }
         }],
         "loanBannerList": [{
@@ -228,230 +335,4 @@ private extension String {
     }
 }
 """
-    
-    static let jsonWithOnlyCardBanners = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": {
-        "serial": "7134778f549cab1edc68704066472e72",
-        "cardBannerList": [{
-            "productName": "Платежный стикер",
-            "link": "",
-            "md5hash": "baf4ce68d067b657e21ce34f2d6a92c9",
-            "action": {
-                "actionType": "landing",
-                "landingData": "landingSticker"
-            }
-        }],
-    }
-}
-"""
-    
-    static let jsonWithOnlyLoanBanners = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": {
-        "serial": "7134778f549cab1edc68704066472e72",
-        "loanBannerList": [{
-            "productName": "Кредит под залог транспорта",
-            "link": "https://www.forabank.ru/private/credits/zalogovyy/",
-            "md5hash": "0f2c00910196b526db03abd7ee2af4a1",
-            "action": {
-                "actionType": "landing",
-                "target": "COLLATERAL_LOAN_CALC_CAR"
-            }
-        }, {
-            "productName": "Кредит под залог транспорта",
-            "link": "https://www.forabank.ru/private/credits/zalogovyy/",
-            "md5hash": "0f2c00910196b526db03abd7ee2af4a1",
-            "action": {
-                "actionType": "landing",
-                "target": "COLLATERAL_LOAN_CALC_REAL_ESTATE"
-            }
-        }]
-    }
-}
-"""
-    
-    static let jsonWithoutBanners = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": {
-        "serial": "7134778f549cab1edc68704066472e72",
-    }
-}
-"""
-}
-
-private extension ResponseMapper.CreateGetBannersMyProductListApplicationDomain {
-    
-    static let validStub = makeStub(
-        cardBanner: [
-            Banner(
-                productName: "Платежный стикер",
-                link: "",
-                md5hash: "baf4ce68d067b657e21ce34f2d6a92c9",
-                action: .init(
-                    actionType: .landing,
-                    landingData: "landingSticker",
-                    target: nil
-                )
-            )
-        ],
-        loanBanner: [
-            Banner(
-                productName: "Кредит под залог транспорта",
-                link: "https://www.forabank.ru/private/credits/zalogovyy/",
-                md5hash: "0f2c00910196b526db03abd7ee2af4a1",
-                action: .init(
-                    actionType: .landing,
-                    landingData: nil,
-                    target: "COLLATERAL_LOAN_CALC_CAR"
-                )
-            ),
-            Banner(
-                productName: "Кредит под залог транспорта",
-                link: "https://www.forabank.ru/private/credits/zalogovyy/",
-                md5hash: "0f2c00910196b526db03abd7ee2af4a1",
-                action: .init(
-                    actionType: .landing,
-                    landingData: nil,
-                    target: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
-                )
-            )
-        ]
-    )
-    
-    static let stubWithOnlyCardBanners = makeStub(
-        cardBanner: [
-            Banner(
-                productName: "Платежный стикер",
-                link: "",
-                md5hash: "baf4ce68d067b657e21ce34f2d6a92c9",
-                action: .init(
-                    actionType: .landing,
-                    landingData: "landingSticker",
-                    target: nil
-                )
-            )
-        ],
-        loanBanner: nil
-    )
-    
-    static let stubWithOnlyLoanBanners = makeStub(
-        cardBanner: nil,
-        loanBanner: [
-            Banner(
-                productName: "Кредит под залог транспорта",
-                link: "https://www.forabank.ru/private/credits/zalogovyy/",
-                md5hash: "0f2c00910196b526db03abd7ee2af4a1",
-                action: .init(
-                    actionType: .landing,
-                    landingData: nil,
-                    target: "COLLATERAL_LOAN_CALC_CAR"
-                )
-            ),
-            Banner(
-                productName: "Кредит под залог транспорта",
-                link: "https://www.forabank.ru/private/credits/zalogovyy/",
-                md5hash: "0f2c00910196b526db03abd7ee2af4a1",
-                action: .init(
-                    actionType: .landing,
-                    landingData: nil,
-                    target: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
-                )
-            )
-        ]
-    )
-    
-    static let stubWithoutBanners = makeStub(
-        cardBanner: nil,
-        loanBanner: nil
-    )
-}
-
-extension ResponseMapper.CreateGetBannersMyProductListApplicationDomain {
-    
-    static func makeStub(cardBanner: [Banner]?, loanBanner: [Banner]?) -> Self {
-        
-        var cardBannerList: [Banner] = []
-        var loanBannerList: [Banner] = []
-        
-        if let cardBanner {
-            cardBannerList = cardBanner
-        }
-
-        if let loanBanner {
-            loanBannerList = loanBanner
-        }
-
-        return Self(cardBannerList: cardBannerList, loanBannerList: loanBannerList)
-    }
-    
-    typealias Banner = ResponseMapper.CreateGetBannersMyProductListApplicationDomain.Banner
-}
-
-extension ResponseMapper.CreateGetBannersMyProductListApplicationDomain.Banner {
-
-    static func makeStub(
-        productName: String = anyMessage(),
-        link: String = anyMessage(),
-        md5hash: String = anyMessage(),
-        actionType: Banner.Action.ActionType = .allCases.randomElement() ?? .unknown,
-        landingData: String? = anyMessage(),
-        target: String? = anyMessage()
-    ) -> Self {
-
-        var action: Action?
-        
-        action = .makeStub(
-            actionType: actionType,
-            landingData: landingData,
-            target: target
-        )
-        
-        return Self(
-            productName: productName,
-            link: link,
-            md5hash: md5hash,
-            action: action
-        )
-    }
-    
-    typealias Banner = ResponseMapper.CreateGetBannersMyProductListApplicationDomain.Banner
-}
-
-extension ResponseMapper.CreateGetBannersMyProductListApplicationDomain.Banner.Action {
-
-    static func makeStub(
-        actionType: Response.Banner.Action.ActionType,
-        landingData: String?,
-        target: String?
-    ) -> Self {
-
-        Self(
-            actionType: actionType,
-            landingData: landingData,
-            target: target
-        )
-    }
-    
-    typealias Response = ResponseMapper.CreateGetBannersMyProductListApplicationDomain
-}
-
-extension ResponseMapper.CreateGetBannersMyProductListApplicationDomain.Banner.Action.ActionType {
-    
-    static var allCases: [RemoteServices.ResponseMapper.CreateGetBannersMyProductListApplicationDomain.Banner.Action.ActionType] =
-    [
-        .depositList,
-        .migTransfer,
-        .migAuthTransfer,
-        .contact,
-        .depositTransfer,
-        .landing,
-        .unknown
-    ]
 }

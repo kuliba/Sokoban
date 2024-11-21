@@ -47,12 +47,6 @@
             reference = "container:CI.xctestplan"
             default = "YES">
          </TestPlanReference>
-         <TestPlanReference
-            reference = "container:TestPlans/CollateralLoanLandingShowCaseBackend.xctestplan">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:CollateralLoanLandingShowCaseUI.xctestplan">
-         </TestPlanReference>
       </TestPlans>
    </TestAction>
    <LaunchAction

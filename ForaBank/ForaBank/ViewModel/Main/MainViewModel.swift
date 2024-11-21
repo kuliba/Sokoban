@@ -42,7 +42,7 @@ class MainViewModel: ObservableObject, Resetable {
     private var disableAlertViewModel: Alert.ViewModel? { paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
     }
     
-     let model: Model
+    let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
@@ -792,7 +792,7 @@ private extension MainViewModel {
         case let payload:
 #warning("need change after analyst creates a new action type")
             if payload.type == .payment {
-                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
+                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             }
         }
     }
@@ -924,6 +924,8 @@ private extension MainViewModel {
                 
             case .byQr:
                 openScanner()
+            case .zku:
+                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             }
         }
     }

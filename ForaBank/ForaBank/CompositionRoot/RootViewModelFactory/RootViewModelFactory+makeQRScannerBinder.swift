@@ -38,16 +38,42 @@ private extension RootViewModelFactory {
         case let .qrResult(qrResult):
             switch qrResult {
             case let .c2bSubscribeURL(url):
-                completion(.payments(.init(
+                let payments = ClosePaymentsViewModelWrapper(
                     model: model,
                     source: .c2bSubscribe(url),
                     scheduler: schedulers.main
+                )
+                
+                completion(.payments(.init(
+                    model: payments,
+                    cancellable: bind(payments, with: notify)
+                )))
+                
+            case let .c2bURL(url):
+                let payments = ClosePaymentsViewModelWrapper(
+                    model: model,
+                    source: .c2b(url),
+                    scheduler: schedulers.main
+                )
+                
+                completion(.payments(.init(
+                    model: payments,
+                    cancellable: bind(payments, with: notify)
                 )))
                 
             default:
                 break
             }
         }
+    }
+    
+    // QRNavigationComposer.swift:201
+    private func bind(
+        _ wrapper: ClosePaymentsViewModelWrapper,
+        with notify: @escaping QRScannerDomain.Notify
+    ) -> AnyCancellable {
+        
+        wrapper.$isClosed.sink { _ in notify(.dismiss) }
     }
 }
 

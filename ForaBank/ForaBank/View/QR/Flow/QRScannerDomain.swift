@@ -35,6 +35,6 @@ extension QRScannerDomain {
     
     enum Navigation {
         
-        case payments(ClosePaymentsViewModelWrapper)
+        case payments(Node<ClosePaymentsViewModelWrapper>)
     }
 }
