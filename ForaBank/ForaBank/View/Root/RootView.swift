@@ -759,6 +759,22 @@ private extension RootView {
         )
     }
     
+    @ViewBuilder
+    private func makePaymentsTransfersTransfersView(
+        transfersPicker: PayHubUI.TransfersPicker
+    ) -> some View {
+        
+        if let binder = transfersPicker.transfersBinder {
+            
+            makePaymentsTransfersTransfersView(transfers: binder)
+            
+        } else {
+            
+            Text("Unexpected transfersPicker type \(String(describing: transfersPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
     private func makePaymentsTransfersTransfersView(
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
