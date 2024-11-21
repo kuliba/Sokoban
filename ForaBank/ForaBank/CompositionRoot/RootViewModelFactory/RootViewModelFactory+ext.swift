@@ -36,6 +36,7 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag,
         savingsAccountFlag: SavingsAccountFlag
     ) -> RootViewDomain.Binder {
+        
         var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
