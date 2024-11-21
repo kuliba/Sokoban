@@ -15,8 +15,12 @@ public extension PaymentsTransfersPersonalDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias Composer = PayHubUI.BinderComposer<Content, Select, Navigation>
+    typealias BinderDomain = PayHubUI.BinderDomain<Content, Select, Navigation>
+    typealias Binder = BinderDomain.Binder
+    typealias Composer = BinderDomain.BinderComposer
+    
+    typealias GetNavigation = BinderDomain.GetNavigation
+    typealias Witnesses = BinderDomain.Witnesses
     
     // MARK: - Content
     
@@ -24,7 +28,7 @@ public extension PaymentsTransfersPersonalDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = BinderDomain.FlowDomain
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = (NotifyEvent) -> Void

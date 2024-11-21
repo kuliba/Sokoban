@@ -73,8 +73,7 @@ extension RootViewModelFactory {
         )
     }
     
-    private func witnesses(
-    ) -> ContentWitnesses<Domain.Content, PaymentsTransfersPersonalSelect> {
+    private func witnesses() -> Domain.Witnesses {
         
         return .init(
             emitting: { $0.eventPublisher },
