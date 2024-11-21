@@ -716,6 +716,14 @@ private extension PickerFlowState {
     var hasDestination: Bool { navigation != nil }
 }
 
+private extension PayHubUI.PaymentsTransfersPersonalToolbar {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        toolbarBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
 private extension PaymentsTransfersPersonalToolbarBinder {
     
     var hasDestination: AnyPublisher<Bool, Never> {

@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPickerView, Toolbar, ToolbarView, TransfersView>: View
+public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View,
@@ -50,8 +50,8 @@ where CategoryPickerView: View,
 
 public extension PaymentsTransfersPersonalContentView {
     
-    typealias Content = PaymentsTransfersPersonalContent<Toolbar>
-    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, Toolbar, ToolbarView, TransfersView>
+    typealias Content = PaymentsTransfersPersonalContent
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView>
     typealias Config = PaymentsTransfersPersonalViewConfig
 }
 
@@ -100,15 +100,14 @@ public extension PaymentsTransfersPersonalContentView {
     )
 }
 
-private extension PaymentsTransfersPersonalContent
-where Toolbar == PreviewToolbar {
+private extension PaymentsTransfersPersonalContent {
     
     static var preview: PaymentsTransfersPersonalContent {
         
         return .init(
             categoryPicker: PreviewCategoryPicker(),
             operationPicker: PreviewOperationPicker(),
-            toolbar: .init(),
+            toolbar: PreviewToolbar(),
             transfers: PreviewTransfers(),
             reload: {}
         )
@@ -119,6 +118,6 @@ private final class PreviewCategoryPicker: CategoryPicker {}
 
 private final class PreviewOperationPicker: OperationPicker {}
 
-private final class PreviewToolbar {}
+private final class PreviewToolbar: PaymentsTransfersPersonalToolbar {}
 
 private final class PreviewTransfers: TransfersPicker {}

@@ -720,6 +720,22 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
+    func makePaymentsTransfersToolbarView(
+        toolbar: PayHubUI.PaymentsTransfersPersonalToolbar
+    ) -> some View {
+        
+        if let binder = toolbar.toolbarBinder {
+            
+            makePaymentsTransfersToolbarView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected toolbar type \(String(describing: toolbar))")
+                .foregroundColor(.red)
+        }
+    }
+    
     func makePaymentsTransfersToolbarView(
         binder: PaymentsTransfersPersonalToolbarBinder
     ) -> some View {

@@ -7,7 +7,7 @@
 
 import PayHubUI
 
-typealias PaymentsTransfersPersonalContent = PayHubUI.PaymentsTransfersPersonalContent<PaymentsTransfersPersonalToolbarBinder>
+typealias PaymentsTransfersPersonalContent = PayHubUI.PaymentsTransfersPersonalContent
 
 // MARK: - CategoryPicker
 
@@ -42,5 +42,17 @@ extension PayHubUI.TransfersPicker {
     var transfersBinder: PaymentsTransfersPersonalTransfersDomain.Binder? {
         
         return self as? PaymentsTransfersPersonalTransfersDomain.Binder
+    }
+}
+
+// MARK: - PaymentsTransfersPersonalToolbar
+
+extension PaymentsTransfersPersonalToolbarBinder: PayHubUI.PaymentsTransfersPersonalToolbar {}
+
+extension PayHubUI.PaymentsTransfersPersonalToolbar {
+    
+    var toolbarBinder: PaymentsTransfersPersonalToolbarBinder? {
+        
+        return self as? PaymentsTransfersPersonalToolbarBinder
     }
 }
