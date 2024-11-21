@@ -7,19 +7,19 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
+struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
     
-    public let config: Config
-    public let theme: Theme
-    public let conditions: [Condition]
+    private let config: Config
+    private let theme: Theme
+    private let conditions: [Condition]
     
-    public init(config: Config, theme: Theme, conditions: [Condition]) {
+    init(config: Config, theme: Theme, conditions: [Condition]) {
         self.config = config
         self.theme = theme
         self.conditions = conditions
     }
     
-    public var body: some View {
+    var body: some View {
         
         conditionsView
     }
@@ -29,7 +29,7 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
         ZStack {
             
             RoundedRectangle(cornerRadius: config.cornerRadius)
-                .fill(Color.grayLightest)
+                .fill(config.conditions.list.colors.background)
                 .frame(maxWidth: .infinity)
             
             conditionsListView(config.conditions)
@@ -48,8 +48,8 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                     textColor: config.header.headerFont.foreground
                 )
             )
-            .padding(.horizontal, config.horizontalPadding)
-            .padding(.vertical, config.listTopPadding)
+            .padding(.horizontal, config.list.layouts.horizontalPadding)
+            .padding(.vertical, config.list.layouts.listTopPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack {
@@ -58,11 +58,11 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                     
                     conditionView($0, config: config)
                 }
-                .padding(.horizontal, config.horizontalPadding)
-                .padding(.bottom, config.spacing)
+                .padding(.horizontal, config.list.layouts.horizontalPadding)
+                .padding(.bottom, config.list.layouts.spacing)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.top, config.listTopPadding)
+            .padding(.top, config.list.layouts.listTopPadding)
         }
     }
     
@@ -74,12 +74,12 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                 
                 // simulacrum
                 Circle()
-                    .fill(config.iconBackground)
+                    .fill(config.list.colors.iconBackground)
                     .frame(
-                        width: config.iconSize.width,
-                        height: config.iconSize.height
+                        width: config.list.layouts.iconSize.width,
+                        height: config.list.layouts.iconSize.height
                     )
-                    .padding(.trailing, config.iconTrailingPadding)
+                    .padding(.trailing, config.list.layouts.iconTrailingPadding)
                 
                 Spacer()
             }
@@ -88,21 +88,21 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
                 
                 condition.title.text(
                     withConfig: .init(
-                        textFont: config.titleFont.font,
-                        textColor: config.titleFont.foreground
+                        textFont: config.list.fonts.title.font,
+                        textColor: config.list.fonts.title.foreground
                     )
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 condition.subTitle.text(
                     withConfig: .init(
-                        textFont: config.subTitleFont.font,
-                        textColor: config.subTitleFont.foreground
+                        textFont: config.list.fonts.subTitle.font,
+                        textColor: config.list.fonts.subTitle.foreground
                     )
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, config.subTitleTopPadding)
+                .padding(.top, config.list.layouts.subTitleTopPadding)
                 
                 Spacer()
             }
@@ -110,30 +110,9 @@ public struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
     }
 }
 
-public extension CollateralLoanLandingGetJsonAbroadConditionsView {
+extension CollateralLoanLandingGetJsonAbroadConditionsView {
     
     typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
     typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
     typealias Condition = GetJsonAbroadData.Product.Condition
-}
-
-// MARK: - Previews
-
-struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        CollateralLoanLandingGetJsonAbroadView(
-            content: content,
-            factory: factory
-        )
-    }
-    
-    static let cardData = GetJsonAbroadData.cardStub
-    static let realEstateData = GetJsonAbroadData.realEstateStub
-    static let content = Content(data: cardData)
-    static let factory = Factory()
-    
-    typealias Content = CollateralLoanLandingGetJsonAbroadContent
-    typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
 }
