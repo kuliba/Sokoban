@@ -279,7 +279,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
                     
                     return .init(
                         mapScanResult: { _, completion in completion(qrResult) },
-                        makeQRModel: QRViewModel.preview,
+                        makeQRScanner: QRViewModel.preview,
                         scheduler: .immediate
                     )
                 },

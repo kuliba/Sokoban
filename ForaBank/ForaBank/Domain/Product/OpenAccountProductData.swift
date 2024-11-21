@@ -146,3 +146,45 @@ struct OpenAccountProductData: Codable, Equatable {
         }
     }
 }
+
+extension OpenAccountProductData {
+    
+    init(
+        currencyAccount: String,
+        open: Bool,
+        breakdownAccount: String,
+        accountType: String,
+        currencyCode: Int,
+        currency: Currency,
+        designMd5hash: String,
+        designSmallMd5hash: String,
+        detailedConditionUrl: String,
+        detailedRatesUrl: String?,
+        txtConditionList: [TxtConditionList]
+    ) {
+        self.currencyAccount = currencyAccount
+        self.open = open
+        self.breakdownAccount = breakdownAccount
+        self.accountType = accountType
+        self.currencyCode = currencyCode
+        self.currency = currency
+        self.designMd5hash = designMd5hash
+        self.designSmallMd5hash = designSmallMd5hash
+        self.detailedConditionUrl = detailedConditionUrl
+        self.detailedRatesUrl = detailedRatesUrl
+        self.txtConditionList = txtConditionList
+    }
+}
+
+extension OpenAccountProductData.TxtConditionList {
+    
+    init(
+        name: String,
+        description: String,
+        type: ColorType
+    ) {
+        self.name = name
+        self.descriptoin = description
+        self.type = type
+    }
+}

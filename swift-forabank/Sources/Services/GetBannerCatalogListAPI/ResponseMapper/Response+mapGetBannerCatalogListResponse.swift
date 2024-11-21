@@ -90,6 +90,10 @@ private extension ResponseMapper._DTO._Item._BannerAction {
             guard let target else { return nil }
             return .init(type: .landing(target))
             
+        case "SAVING_LANDING":
+            guard let target else { return nil }
+            return .init(type: .savingLanding(target))
+
         case "HOUSING_AND_COMMUNAL_SERVICE":
             return .init(type: .payment("HOUSING_AND_COMMUNAL_SERVICE"))
             

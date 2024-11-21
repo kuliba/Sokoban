@@ -75,7 +75,7 @@ final class Model_makeSectionsTests: XCTestCase {
                 makeCardProduct(id: 2, cardType: .individualBusinessman),
                 makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
             ]])
-        let sectionBeforeUpdate = sut.makeSections(flag: .init(.inactive))
+        let sectionBeforeUpdate = sut.makeSections(flag: .inactive)
         
         assert(sections: sectionBeforeUpdate, count: 4, firstType: .disableForCorCards)
     }
@@ -89,7 +89,7 @@ final class Model_makeSectionsTests: XCTestCase {
                 makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
                 makeCardProduct(id: 4, cardType: .main),
             ]])
-        let sectionBeforeUpdate = sut.makeSections(flag: .init(.inactive))
+        let sectionBeforeUpdate = sut.makeSections(flag: .inactive)
         
         assert(sections: sectionBeforeUpdate, count: 3, firstType: .latestPayments)
     }

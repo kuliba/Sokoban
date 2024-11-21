@@ -615,10 +615,10 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
     private typealias NotifySpy = CallSpy<SUT.NotifyEvent, Void>
-    private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
+    private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
-        qrModel: QRModel? = nil,
+        qrModel: QRScannerModel? = nil,
         model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
@@ -692,13 +692,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     private func makeQRModel(
         mapScanResult: @escaping (QRViewModel.ScanResult, @escaping (QRModelResult) -> Void) -> Void = { _,_ in },
-        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }) },
+        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }, scanner: QRScannerViewModelSpy()) },
         scheduler: AnySchedulerOfDispatchQueue = .immediate
-    ) -> QRModel {
+    ) -> QRScannerModel {
         
         return .init(
             mapScanResult: mapScanResult,
-            makeQRModel: makeQRModel,
+            makeQRScanner: makeQRModel,
             scheduler: scheduler
         )
     }

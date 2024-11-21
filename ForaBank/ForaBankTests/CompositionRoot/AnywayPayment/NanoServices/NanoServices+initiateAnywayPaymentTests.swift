@@ -13,7 +13,7 @@ final class NanoServices_initiateAnywayPaymentTests: XCTestCase {
     func test_live_shouldCallHTTPClient() {
         
         let puref = anyMessage()
-        let (sut, spy) = makeSUT(flag: .live)
+        let (sut, spy) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut(puref) { _ in exp.fulfill() }
@@ -24,24 +24,11 @@ final class NanoServices_initiateAnywayPaymentTests: XCTestCase {
         XCTAssertEqual(spy.callCount, 1)
     }
     
-    func test_stub_shouldNotCallHTTPClient() {
-        
-        let puref = anyMessage()
-        let (sut, spy) = makeSUT(flag: .stub)
-        let exp = expectation(description: "wait for completion")
-        
-        sut(puref) { _ in exp.fulfill() }
-        
-        wait(for: [exp], timeout: 0.1)
-        XCTAssertEqual(spy.callCount, 0)
-    }
-    
     // MARK: - Helpers
     
     private typealias SUT = NanoServices.MakeInitiateAnywayPayment
     
     private func makeSUT(
-        flag: StubbedFeatureFlag.Option,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -50,7 +37,6 @@ final class NanoServices_initiateAnywayPaymentTests: XCTestCase {
     ) {
         let httpClient = HTTPClientSpy()
         let sut = NanoServices.initiateAnywayPayment(
-            flag: flag,
             httpClient: httpClient,
             log: { _,_,_,_,_ in },
             scheduler: .immediate

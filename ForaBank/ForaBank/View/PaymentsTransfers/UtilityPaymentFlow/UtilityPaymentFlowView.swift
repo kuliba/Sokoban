@@ -23,7 +23,7 @@ where Content: View,
         content()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.dismiss(.destination)) },
+                dismiss: { event(.dismiss(.destination)) },
                 content: destinationView
             )
             .alert(

@@ -15,4 +15,7 @@ enum FeatureFlag {
 extension Tagged where RawValue == FeatureFlag {
     
     var isActive: Bool { rawValue == .active }
+    
+    static var active: Self { .init(.active) }
+    static var inactive: Self { .init(.inactive) }
 }
