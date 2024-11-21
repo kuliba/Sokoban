@@ -66,13 +66,14 @@ public struct GetBannerCatalogListResponse: Equatable {
     
     public enum BannerActionType: Equatable {
         
-        case openDeposit(String)
-        case depositsList
-        case migTransfer(String)
-        case migAuthTransfer(String)
         case contact(String)
+        case depositsList
         case depositTransfer(String)
         case landing(String)
+        case savingLanding(String)
+        case migAuthTransfer(String)
+        case migTransfer(String)
+        case openDeposit(String)
         case payment(String)
     }
 }

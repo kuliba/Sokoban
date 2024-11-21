@@ -9,11 +9,12 @@ import SberQR
 
 struct QRViewModelFactory {
     
-    typealias MakePaymentsSuccessViewModel = (CreateSberQRPaymentResponse) -> PaymentsSuccessViewModel
-    
-    let makeQRScannerModel: MakeQRScannerModel
-    let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
     let makePaymentsSuccessViewModel: MakePaymentsSuccessViewModel
+    let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
+    let makeQRScannerModel: MakeQRScannerModel
+    
+    typealias MakePaymentsSuccessViewModel = (CreateSberQRPaymentResponse) -> PaymentsSuccessViewModel
+    typealias MakeQRScannerModel = () -> QRScannerModel?
 }
 
 // MARK: - Preview Content
@@ -22,8 +23,8 @@ extension QRViewModelFactory {
     
     static func preview() -> Self {
         
-        .init(
-            makeQRScannerModel: QRModelWrapper.preview,
+        return .init(
+            makePaymentsSuccessViewModel: { _ in .sampleC2BSub },
             makeSberQRConfirmPaymentViewModel: { _,_ in
                 
                 return .init(
@@ -32,34 +33,32 @@ extension QRViewModelFactory {
                     scheduler: .makeMain()
                 )
             },
-            makePaymentsSuccessViewModel: { _ in .sampleC2BSub }
+            makeQRScannerModel: QRModelWrapper.preview
         )
     }
 }
 
 extension QRModelWrapper
-where QRResult == QRViewModel.ScanResult,
-      QRModel == QRViewModel {
+where QRResult == QRViewModel.ScanResult {
     
     static func preview() -> QRModelWrapper {
         
         return .init(
             mapScanResult: { _, completion in completion(.unknown) },
-            makeQRModel: QRViewModel.preview,
+            makeQRScanner: QRViewModel.preview,
             scheduler: .main
         )
     }
 }
 
 extension QRModelWrapper
-where QRResult == QRModelResult,
-      QRModel == QRViewModel {
+where QRResult == QRModelResult {
     
     static func preview() -> QRModelWrapper {
         
         return .init(
             mapScanResult: { _, completion in completion(.unknown) },
-            makeQRModel: QRViewModel.preview,
+            makeQRScanner: QRViewModel.preview,
             scheduler: .main
         )
     }

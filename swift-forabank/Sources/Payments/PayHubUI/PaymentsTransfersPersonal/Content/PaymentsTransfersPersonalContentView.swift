@@ -31,7 +31,7 @@ where CategoryPickerView: View,
     
     public var body: some View {
         
-        VStack(spacing: config.spacing) {
+        VStack(spacing: 0) {
             
             VStack(alignment: .leading, spacing: config.titleSpacing) {
                 

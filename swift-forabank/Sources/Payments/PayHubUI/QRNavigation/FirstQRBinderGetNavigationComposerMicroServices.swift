@@ -25,17 +25,7 @@ public struct FirstQRBinderGetNavigationComposerMicroServices<Payments, QRCode, 
 
 public extension FirstQRBinderGetNavigationComposerMicroServices {
     
-    typealias MakePayments = (MakePaymentsPayload) -> Payments
-    
-    enum MakePaymentsPayload {
-        
-        case c2bSubscribe(URL)
-        case c2b(URL)
-        case details(QRCode) // MainViewModelAction.Show.Requisites
-        case source(Source)
-    }
+    typealias MakePayments = (MakePaymentsPayload<QRCode, Source>) -> Payments
     
     typealias MakeQRFailure = (QRCode?) -> QRFailure
 }
-
-extension FirstQRBinderGetNavigationComposerMicroServices.MakePaymentsPayload: Equatable where QRCode: Equatable, Source: Equatable {}

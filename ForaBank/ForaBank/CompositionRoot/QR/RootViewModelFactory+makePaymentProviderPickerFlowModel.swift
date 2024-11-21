@@ -12,18 +12,15 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeSegmentedPaymentProviderPickerFlowModel(
-        pageSize: Int = 50,
-        flag: StubbedFeatureFlag.Option
+        pageSize: Int = 50
     ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {
         
-        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-            flag: flag
-        )
+        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
         
         let pickerFlowComposer = SegmentedPaymentProviderPickerFlowModelComposer(
             makeServicePickerFlowModel: servicePickerComposer.compose,
             model: model,
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         return pickerFlowComposer.compose

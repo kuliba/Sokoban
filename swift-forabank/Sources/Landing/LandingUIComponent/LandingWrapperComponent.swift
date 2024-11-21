@@ -42,7 +42,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         imageLoader: @escaping ImageLoader,
         imageViewFactory: ImageViewFactory,
         carouselViewFactory: CarouselViewFactory? = nil,
-        scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        scheduler: AnySchedulerOf<DispatchQueue>,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
     ) {
@@ -85,7 +85,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         imageViewFactory: ImageViewFactory,
         carouselViewFactory: CarouselViewFactory? = nil,
         limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
-        scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        scheduler: AnySchedulerOf<DispatchQueue>,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
     ) {

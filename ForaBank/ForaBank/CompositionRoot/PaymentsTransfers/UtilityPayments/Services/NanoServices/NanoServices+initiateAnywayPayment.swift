@@ -18,7 +18,6 @@ extension NanoServices {
     typealias MakeInitiateAnywayPayment = (Puref, @escaping CreateAnywayTransferCompletion) -> Void
     
     static func initiateAnywayPayment(
-        flag: StubbedFeatureFlag.Option,
         httpClient: HTTPClient,
         log: @escaping Log,
         scheduler: AnySchedulerOf<DispatchQueue>,
@@ -26,24 +25,12 @@ extension NanoServices {
         line: UInt = #line
     ) -> MakeInitiateAnywayPayment {
         
-        switch flag {
-        case .live:
-            let log = { log(.debug, .network, $0, $1, $2) }
-            let createTransfer = makeCreateAnywayTransferNewV2(httpClient, log, file: file, line: line)
+        let log = { log(.debug, .network, $0, $1, $2) }
+        let createTransfer = makeCreateAnywayTransferNewV2(httpClient, log, file: file, line: line)
+        
+        return {
             
-            return {
-                
-                createTransfer(.init(additional: [], check: true, puref: $0), $1)
-            }
-            
-        case .stub:
-            return { puref, completion in
-                
-                scheduler.delay(for: .seconds(1)) {
-                    
-                    completion(.failure(.connectivityError))
-                }
-            }
+            createTransfer(.init(additional: [], check: true, puref: $0), $1)
         }
     }
 }

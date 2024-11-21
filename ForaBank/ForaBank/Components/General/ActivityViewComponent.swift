@@ -14,6 +14,7 @@ extension ActivityView {
         
         let activityItems: [Any]
         let applicationActivities: [UIActivity]? = nil
+        var completion: (() -> Void)?
     }
 }
 
@@ -23,11 +24,29 @@ struct ActivityView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
         
-        return .init(
+        let controller = UIActivityViewController(
             activityItems: viewModel.activityItems,
             applicationActivities: viewModel.applicationActivities
         )
+        controller.modalPresentationStyle = .pageSheet
+        
+        controller.completionWithItemsHandler = { (_, completed, _, _) in
+            
+            if completed {
+                controller.dismiss(animated: true) {
+                    
+                    DispatchQueue.main.async {
+                        viewModel.completion?()
+                    }
+                }
+            }
+        }
+        
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityView>) {}
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: UIViewControllerRepresentableContext<ActivityView>
+    ) {}
 }
