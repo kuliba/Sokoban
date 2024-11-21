@@ -171,10 +171,9 @@ struct MainSectionProductsView: View {
         
         CollapsableSectionView(
             title: viewModel.title,
-            edges: .horizontal,
-            padding: 20,
             isShevronVisible: viewModel.isChevronVisible,
-            isCollapsed: $viewModel.isCollapsedContent
+            canCollapse: false,
+            isCollapsed: .constant(false)
         ) {
             
             viewFactory.makeProductCarouselView(viewModel.productCarouselViewModel, newProductButton)

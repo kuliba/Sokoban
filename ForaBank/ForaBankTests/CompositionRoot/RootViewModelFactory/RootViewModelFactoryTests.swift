@@ -26,7 +26,10 @@ class RootViewModelFactoryTests: XCTestCase {
         let sut = SUT(
             model: model,
             httpClient: httpClient,
-            logger: logger
+            logger: logger,
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
+            schedulers: .immediate
         )
         
         // factory is captured by long-running closures

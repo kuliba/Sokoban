@@ -5,6 +5,7 @@
 //  Created by Max Gribov on 23.06.2023.
 //
 
+import CombineSchedulers
 import SwiftUI
 
 extension PaymentsSuccessTransferNumberView {
@@ -14,7 +15,10 @@ extension PaymentsSuccessTransferNumberView {
         let title: String
         @Published private(set) var state: State
         
-        private let timeoutMS: Int
+        private let timeout: Timeout
+        private let scheduler: AnySchedulerOf<DispatchQueue>
+        
+        typealias Timeout = DispatchQueue.SchedulerTimeType.Stride
         
         enum State {
             
@@ -26,24 +30,28 @@ extension PaymentsSuccessTransferNumberView {
             title: String,
             state: State,
             source: PaymentsParameterRepresentable,
-            timeoutMS: Int = 2_000
+            timeout: Timeout = .seconds(2),
+            scheduler: AnySchedulerOf<DispatchQueue> = .main
         ) {
             self.title = title
             self.state = state
-            self.timeoutMS = timeoutMS
+            self.timeout = timeout
+            self.scheduler = scheduler
             
             super.init(source: source)
         }
         
         convenience init(
             _ source: Payments.ParameterSuccessTransferNumber,
-            timeoutMS: Int = 2_000
+            timeout: Timeout = .seconds(2),
+            scheduler: AnySchedulerOf<DispatchQueue> = .main
         ) {
             self.init(
                 title: source.value ?? "", 
                 state: .copy,
                 source: source,
-                timeoutMS: timeoutMS
+                timeout: timeout,
+                scheduler: scheduler
             )
         }
         
@@ -53,9 +61,9 @@ extension PaymentsSuccessTransferNumberView {
             
             state = .check
             
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + .milliseconds(timeoutMS)
-            ) { [weak self] in self?.state = .copy }
+            scheduler.delay(for: timeout.timeInterval) { [weak self] in
+                self?.state = .copy
+            }
         }
     }
 }

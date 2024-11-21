@@ -13,20 +13,19 @@ public extension ResponseMapper {
     static func mapGetBannersMyProductListResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<CreateGetBannersMyProductListApplicationDomain> {
+    ) -> MappingResult<GetBannersMyProductListResponse> {
 
-        map(
-            data, httpURLResponse,
-            mapOrThrow: map
-        )
+        map(data, httpURLResponse, mapOrThrow: map)
     }
     
-    private static func map(_ data: _Data) -> CreateGetBannersMyProductListApplicationDomain {
+    private static func map(
+        _ data: _Data
+    ) -> GetBannersMyProductListResponse {
 
         data.mapGetBannersMyProductListResponse()
     }
     
-    typealias ResponseGetBannersMyProductList = ResponseMapper.CreateGetBannersMyProductListApplicationDomain
+    typealias ResponseGetBannersMyProductList = ResponseMapper.GetBannersMyProductListResponse
 }
 
 private extension ResponseMapper._Data {
@@ -34,6 +33,8 @@ private extension ResponseMapper._Data {
     func mapGetBannersMyProductListResponse() -> ResponseMapper.ResponseGetBannersMyProductList {
         
         .init(
+            serial: serial,
+            accountBannerList: accountBannerList?.map { $0.map() } ?? [],
             cardBannerList: cardBannerList?.map { $0.map() } ?? [],
             loanBannerList: loanBannerList?.map { $0.map() } ?? []
         )
@@ -57,30 +58,7 @@ private extension ResponseMapper._Data.Banner.Action {
     
     func map() -> ResponseMapper.ResponseGetBannersMyProductList.Banner.Action {
         
-        .init(actionType: mapType(), landingData: landingData, target: target)
-    }
-    
-    func mapType()
-    -> ResponseMapper.ResponseGetBannersMyProductList.Banner.Action.ActionType {
-        
-        switch actionType.uppercased() {
-        case "DEPOSIT_OPEN":
-            return .openDeposit
-        case "DEPOSITS":
-            return .depositList
-        case "MIG_TRANSFER":
-            return .migTransfer
-        case "MIG_AUTH_TRANSFER":
-            return .migAuthTransfer
-        case "CONTACT_TRANSFER":
-            return .contact
-        case "DEPOSIT_TRANSFER":
-            return .depositTransfer
-        case "LANDING":
-            return .landing
-        default:
-            return .unknown
-        }
+        .init(actionType: actionType, target: target)
     }
 }
 
@@ -89,6 +67,7 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let serial: String
+        let accountBannerList: [Banner]?
         let cardBannerList: [Banner]?
         let loanBannerList: [Banner]?
 
@@ -100,7 +79,6 @@ private extension ResponseMapper {
             
             struct Action: Decodable {
                 let actionType: String
-                let landingData: String?
                 let target: String?
             }
         }

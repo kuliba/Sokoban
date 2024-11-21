@@ -241,13 +241,20 @@ extension Payments {
         
         init(with parameter: PaymentParameterButton) {
             
-            self.init(parameterId: parameter.id, title: parameter.value, style: parameter.color, acton: parameter.action, placement: parameter.placement)
+            self.init(
+                parameterId: parameter.id,
+                title: parameter.value,
+                style: parameter.color,
+                acton: parameter.action,
+                placement: parameter.placement
+            )
         }
         
         enum Style: String {
             
             case primary = "red"
             case secondary = "white"
+            case gray = "gray"
         }
         
         enum Action: String, Decodable {
@@ -1278,7 +1285,12 @@ extension Payments {
         let icon: String
         let placement: Payments.Parameter.Placement = .bottom
         
-        init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.subscribe.rawValue, value: Payments.Parameter.Value = nil, buttons: [Button], icon: String) {
+        init(
+            id: Payments.Parameter.ID = Payments.Parameter.Identifier.subscribe.rawValue,
+            value: Payments.Parameter.Value = nil,
+            buttons: [Button],
+            icon: String
+        ) {
             
             self.parameter = .init(id: id, value: value)
             self.buttons = buttons
@@ -1290,17 +1302,31 @@ extension Payments {
             ParameterSubscribe(id: parameter.id, value: value, buttons: buttons, icon: icon)
         }
         
+        func updated(buttons: [ParameterSubscribe.Button]) -> PaymentsParameterRepresentable {
+            
+            ParameterSubscribe(id: parameter.id, value: value, buttons: buttons, icon: icon)
+        }
+        
         struct Button {
             
-            let title: String
+            let title: Title
             let style: Style
             let action: Action
             let precondition: Precondition?
 
+            enum Title: String, Equatable {
+            
+                case save = "Сохранить"
+                case main = "На главный"
+                case accountLinking = "Привязать счет"
+                case notYet = "Пока нет"
+            }
+            
             enum Action: String {
                 
                 case confirm
                 case deny
+                case main
             }
             
             enum Style {

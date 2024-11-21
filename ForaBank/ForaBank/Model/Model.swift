@@ -145,6 +145,14 @@ class Model {
     
     var getProductsV6: Services.GetProductListByTypeV6?
 
+    var featureFlags = FeatureFlags()
+    
+    // TODO: Temporary solution. Need to move to CompositionRoot
+    struct FeatureFlags: Equatable {
+        
+        var productsOpenLoanURL = URL(string: "https://www.forabank.ru/private/credits/")
+    }
+    
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol
@@ -627,7 +635,7 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
-                
+                    
                 case let payload as ModelAction.Products.UpdateVisibility:
                     handleProductsUpdateVisibility(payload)
                     
@@ -957,9 +965,6 @@ class Model {
                     
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
-                    
-                case _ as ModelAction.Deposits.Info.All:
-                    handleDepositsInfoAllRequest()
                     
                 case let payload as ModelAction.Deposits.Info.Single.Request:
                     handleDepositsInfoSingleRequest(payload)

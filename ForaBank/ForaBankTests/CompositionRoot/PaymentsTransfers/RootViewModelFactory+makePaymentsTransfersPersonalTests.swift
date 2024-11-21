@@ -52,7 +52,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
-    private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
+    private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -71,8 +71,9 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            mainScheduler: .immediate,
-            backgroundScheduler: .immediate
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
+            schedulers: .immediate
         )
         let sut = factory.makePaymentsTransfersPersonal(
             nanoServices: .init(

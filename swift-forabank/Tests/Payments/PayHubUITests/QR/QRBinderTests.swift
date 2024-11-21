@@ -35,7 +35,7 @@ class QRBinderTests: XCTestCase {
     typealias SinglePayload = PayHub.SinglePayload<Operator, QRCode, QRMapping>
     typealias MakeOperatorModel = CallSpy<SinglePayload, OperatorModel>
     
-    typealias MakePaymentsPayload = FirstMicroServices.MakePaymentsPayload
+    typealias MakePaymentsPayload = PayHubUI.MakePaymentsPayload<QRCode, Source>
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
