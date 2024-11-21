@@ -12,7 +12,7 @@ struct QRScenarioData: Equatable {
     let qrcId: String
     //FIXME: refactor to [any QRScenarioParameter] after switch to Xcode 14+
     let parameters: [AnyPaymentParameter]
-    let required: [String]
+    let required: [String]?
 }
 
 //MARK: - Types
@@ -43,6 +43,6 @@ extension QRScenarioData: Decodable {
         
         self.qrcId = try container.decode(String.self, forKey: .qrcId)
         self.parameters = try AnyPaymentParameter.decode(container: try container.nestedUnkeyedContainer(forKey: .parameters))
-        self.required = try container.decode([String].self, forKey: .required)
+        self.required = try container.decodeIfPresent([String].self, forKey: .required)
     }
 }

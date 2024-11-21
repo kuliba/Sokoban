@@ -11,16 +11,13 @@ import SwiftUI
 public struct PaymentsTransfersPersonalViewConfig: Equatable {
     
     public let titleSpacing: CGFloat
-    public let spacing: CGFloat
     public let title: TitleConfig
 
     public init(
         titleSpacing: CGFloat,
-        spacing: CGFloat,
         title: TitleConfig
     ) {
         self.titleSpacing = titleSpacing
-        self.spacing = spacing
         self.title = title
     }
 }

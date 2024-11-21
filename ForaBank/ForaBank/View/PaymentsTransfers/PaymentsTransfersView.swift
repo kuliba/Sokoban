@@ -417,7 +417,11 @@ extension PaymentsTransfersView {
         
         switch fullScreenCover.type {
         case let .qrScanner(node):
-            viewFactory.components.makeQRView(node.model.qrModel)
+            NavigationView {
+                
+                viewFactory.components.makeQRView(node.model.qrScanner)
+            }
+            .navigationViewStyle(.stack)
             
         case let .paymentCancelled(expired: expired):
             PaymentCancelledView(state: expired, event: goToMain)

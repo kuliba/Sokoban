@@ -97,6 +97,30 @@ final class Model_PaymentsC2BTests: XCTestCase {
         XCTAssertNoDiff(parameter?.id, "id")
     }
     
+    func test_paymentsC2BMakeButtonTitle_accountLinking_shouldReturnButtons() {
+
+        let buttons = makeButtonTitles(
+            value: "Такая привязка счета уже существует!"
+        )
+        
+        XCTAssertNoDiff(
+            buttons.buttons.map(\.title),
+            [.save, .main]
+        )
+    }
+    
+    func test_paymentsC2BMakeButtonTitle_shouldReturnButtons() {
+
+        let buttons = makeButtonTitles(
+            value: "value"
+        )
+
+        XCTAssertNoDiff(
+            buttons.buttons.map(\.title),
+            [.accountLinking, .notYet]
+        )
+    }
+    
     // MARK: - Helpers
     
     private func parameterProductStub(
@@ -298,3 +322,28 @@ private extension ProductData.Filter {
              productActiveRule
     }
 }
+
+private extension Model_PaymentsC2BTests {
+
+    private func makeButtonTitles(
+        _ sut: Model = .emptyMock,
+        value: String
+    ) -> Payments.ParameterSubscribe {
+        
+        sut.makeButtons(
+            [makeSuccessText(value: value)],
+            nil)
+    }
+
+    private func makeSuccessText(
+        value: String
+    ) -> Payments.ParameterSuccessText {
+        
+        Payments.ParameterSuccessText(with: .init(
+            id: "id",
+            value: value,
+            style: .title
+        ))
+    }
+}
+

@@ -100,22 +100,12 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(name, "Visa")
     }
     
-    func testNameReturnsCustomNameForProfileStyle() {
+    func testNameReturnsMainFieldForProfileStyle() {
         
-        let product = ProductCardData.product
-        product.update(with: .init(balance: 100, balanceRub: 200, customName: "Кредитная полка"))
+        let product = ProductCardData.product()
         let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
         
-        XCTAssertEqual(name, "Кредитная полка")
-    }
-    
-    func testNameReturnsEmptyForEmptyCustomName() {
-        
-        let product = ProductCardData.product
-        product.update(with: .init(balance: 100, balanceRub: 200, customName: ""))
-        let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
-        
-        XCTAssertEqual(name, "")
+        XCTAssertEqual(name, "Дебетовая")
     }
     
     func testNameReturnsEmptyForEmptyFields() {
@@ -152,20 +142,12 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(name, "Кредитная\nVisa")
     }
     
-    func testNameReturnsDefaultCreditCardForEmptyFieldsAndMainStyle() {
-        
-        let product = ProductCardData.productWithCustomFields(mainField: "", customName: "")
-        let name = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
-        
-        XCTAssertEqual(name, "Кредитная карта")
-    }
-    
     func testNameReturnsDefaultCreditCardForNilCustomNameAndMainStyle() {
         
-        let product = ProductCardData.productWithCustomFields(mainField: "", customName: nil)
+        let product = ProductCardData.productWithCustomFields(customName: nil)
         let name = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
         
-        XCTAssertEqual(name, "Кредитная карта")
+        XCTAssertEqual(name, "Visa")
     }
     
     // MARK: - Test owner
@@ -754,6 +736,7 @@ private extension ProductCardData {
         currency: Currency = .init(description: "RUB"),
         number: String = "4444 4444 4444 4444",
         numberMasked: String = "4444 **** **** **44",
+        mainField: String = "Visa",
         ownerId: Int = 0,
         holderName: String? = "Иванов",
         allowCredit: Bool = true,
@@ -773,7 +756,7 @@ private extension ProductCardData {
             balance: nil,
             balanceRub: nil,
             currency: currency.description,
-            mainField: "Visa",
+            mainField: mainField,
             additionalField: nil,
             customName: nil,
             productName: "",
@@ -852,7 +835,10 @@ private extension ColorData {
 }
 private extension ProductCardData {
     
-    static let product = ProductCardData(id: 1, currency: .init(description: "qwe"), number: "1", numberMasked: "1", ownerId: 1, holderName: "1", allowCredit: true, allowDebit: true, status: .active, loanBaseParam: nil, statusPc: .active, isMain: true)
+    static func product(_ mainField: String = "Дебетовая") -> ProductCardData {
+        
+        .init(id: 1, currency: .init(description: "qwe"), number: "1", numberMasked: "1", mainField: mainField, ownerId: 1, holderName: "1", allowCredit: true, allowDebit: true, status: .active, loanBaseParam: nil, statusPc: .active, isMain: true)
+    }
     
     static func productWithCustomFields(
         mainField: String = "Visa",
