@@ -112,7 +112,7 @@ extension ServerCommands {
         struct GetC2bSubscriptions: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/getC2BSub"
+            let endpoint = "/rest/binding/v2/getC2BSub"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 

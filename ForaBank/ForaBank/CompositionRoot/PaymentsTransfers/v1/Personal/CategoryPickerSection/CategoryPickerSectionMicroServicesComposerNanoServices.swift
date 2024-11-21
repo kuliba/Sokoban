@@ -15,7 +15,7 @@ struct CategoryPickerSectionMicroServicesComposerNanoServices {
     let makeTransport: MakeTransport
     
     typealias MakeMobile = () -> ClosePaymentsViewModelWrapper
-    typealias MakeQR = () -> QRModel
+    typealias MakeQR = () -> QRScannerModel
     
     typealias MakeQRNavigationCompletion = (QRNavigation) -> Void
     typealias Notify = QRNavigationComposer.Notify

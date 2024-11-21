@@ -107,6 +107,8 @@ extension Services {
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
+            case modifyC2BSubCard
+            case modifyC2BSubAcc
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
@@ -262,7 +264,7 @@ extension Services.Endpoint {
 
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
-        version: .v1,
+        version: .v2,
         serviceName: .getC2BSub
     )
     
@@ -340,8 +342,20 @@ extension Services.Endpoint {
     
     static let getScenarioQRData: Self = .init(
         pathPrefix: .binding,
-        version: .v2,
+        version: .v3,
         serviceName: .getScenarioQRData
+    )
+    
+    static let modifyC2BSubCardData: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .modifyC2BSubCard
+    )
+    
+    static let modifyC2BSubAccData: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .modifyC2BSubAcc
     )
     
     static let getStickerPaymentRequest: Self = .init(

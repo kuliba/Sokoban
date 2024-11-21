@@ -21,7 +21,7 @@ extension PaymentsTransfersFactoryComposer {
     
     func makeUtilitiesViewModel(
         log: @escaping (String, StaticString, UInt) -> Void,
-        isActive: Bool
+        isActive: Bool = true
     ) -> MakeUtilitiesViewModel {
         
         return { [self] payload, completion in

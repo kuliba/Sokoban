@@ -11,6 +11,7 @@ import FastPaymentsSettings
 import OTPInputComponent
 import RxViewModel
 import UIPrimitives
+import ManageSubscriptionsUI
 
 public extension UserAccountNavigation {
     
@@ -52,6 +53,7 @@ public extension UserAccountNavigation.State {
 #warning("remove optionality: change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
         case c2BSub(GetC2BSubResponse, AnyCancellable?)
         case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
+        case accountLink
         
         public var id: Case {
             
@@ -61,6 +63,9 @@ public extension UserAccountNavigation.State {
                 
             case .confirmSetBankDefault:
                 return .confirmSetBankDefault
+                
+            case .accountLink:
+                return .accountLink
             }
         }
         
@@ -68,6 +73,7 @@ public extension UserAccountNavigation.State {
             
             case c2BSub
             case confirmSetBankDefault
+            case accountLink
         }
     }
 }
@@ -111,6 +117,9 @@ extension UserAccountNavigation.State.FPSDestination: Hashable {
             
         case let .c2BSub(getC2BSubResponse, _):
             hasher.combine(getC2BSubResponse)
+            
+        case .accountLink:
+            hasher.combine(0)
         }
     }
 }
