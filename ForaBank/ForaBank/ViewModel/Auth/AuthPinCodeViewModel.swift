@@ -26,10 +26,9 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var isPermissionsViewPresented: Bool
     var permissionsViewModel: AuthPermissionsViewModel?
     
-    @Published var alert: Alert.ViewModel?
+    @Published private var alert: Alert.ViewModel?
     @Published var mistakes: Int
-    @Published var clientInformAlerts: ClientInformAlerts?
-    @Published var alertType: AlertType?
+    @Published private var clientInformAlerts: ClientInformAlerts?
     
     private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
     private var viewDidAppear: CurrentValueSubject<Bool, Never>
@@ -108,6 +107,19 @@ class AuthPinCodeViewModel: ObservableObject {
         bind()
     }
     
+    var alertType: AlertType? {
+        switch (alert, clientInformAlerts?.alert) {
+        
+        case (let .some(alert), .none):
+            return .alertViewModel(alert)
+            
+        case (_, let .some(alert)):
+            return .clientInformAlerts(alert)
+            
+        case (.none, .none): return nil
+        }
+    }
+
     func bind() {
         
         model.sessionState
@@ -125,8 +137,6 @@ class AuthPinCodeViewModel: ObservableObject {
                     }
                     
                     self.clientInformAlerts = clientInformAlerts
-                    guard let alert = clientInformAlerts.alert else { return }
-                    self.alertType = .clientInformAlerts(alert)
                 
                 default:
                     withAnimation {
@@ -183,9 +193,6 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
                         
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
-                        
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .restricted:
@@ -202,18 +209,12 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Failed")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed())
                         }))
-                        
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
 
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: failure, message: \(message)")
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                        
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
 
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
@@ -255,9 +256,6 @@ class AuthPinCodeViewModel: ObservableObject {
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Sensor.Evaluate.Response: failure, message: \(message)")
                         
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil}))
-                                                
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
 
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
@@ -292,9 +290,6 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.alert = nil
                             
                         }))
-                                                
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
 
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
@@ -318,9 +313,6 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
-                                                
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
 
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
@@ -340,9 +332,6 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
-                        
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
 
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
@@ -409,9 +398,6 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
                         }))
                         
-                        guard let alert = alert else { return }
-                        self.alertType = .alertViewModel(alert)
-
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         AudioServicesPlaySystemSound(1156)
                         
@@ -586,9 +572,6 @@ class AuthPinCodeViewModel: ObservableObject {
                         self?.pincodeValue.value = ""
                         self?.numpad.isEnabled = true
                     }
-                    
-                    guard let alert = alert else { return }
-                    self.alertType = .alertViewModel(alert)
 
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "reset pincode")
                     
@@ -692,42 +675,85 @@ class AuthPinCodeViewModel: ObservableObject {
 
 extension AuthPinCodeViewModel {
     
-    func handleLink() -> URL? {
+    private func updateVersion() -> String? {
         
-        guard let updateVersion = clientInformAlerts?.alert?.version,
+        guard let updateVersion = clientInformAlerts?.updateAlert?.version,
               Bundle.main.appVersionLong < updateVersion else { return nil }
         
-        let link = clientInformAlerts?.alert?.link
-        return URL(string: link ?? String.appStoreFora)
+        return updateVersion
     }
     
-    func showNextAlert(action: ClientInformActionType) {
+    private func createAppStoreURL() -> URL? {
         
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+        guard updateVersion() != nil else { return nil }
         
-        DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+    }
+    
+    func clientInformAlertButtonTapped(
+        openURL: @escaping (URL) -> Void
+    ) {
+        
+        if let url = createAppStoreURL() { openURL(url) }
+    }
+    
+    func swiftUIAlert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
+        
+        switch alertType {
             
-            guard let self = self else { return }
+        case .clientInformAlerts:
             
-            switch action {
-            case .notRequired:
+            switch clientInformAlerts?.alert {
                 
-                if let alert = self.clientInformAlerts?.notRequired.first(where: { $0.authBlocking
-                }) {
+            case let .some(alert):
+                
+                switch alert {
+                case let .inform(alert):
                     
-                    self.clientInformAlerts?.showAgain(notRequeared: alert)
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 dismissButton: .default(Text("Ok"), action: {
+                        self.clientInformAlerts?.next()
+                    })
+                    )
+                    
+                case let .optionalRequired(alert):
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 primaryButton: .default(Text("Позже"), action: { }),
+                                 secondaryButton: .default(Text("Обновить"), action: {
+                        self.clientInformAlertButtonTapped() { _ in }
+                        self.clientInformAlerts?.showAgain(requiredAlert: alert)
+                    })
+                    )
+                    
+                case let .required(alert):
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 dismissButton: .default(Text("Обновить"), action: {
+                        self.clientInformAlertButtonTapped() { _ in }
+                        self.clientInformAlerts?.showAgain(requiredAlert: alert)
+                    })
+                    )
                 }
-
-                if let alert = self.clientInformAlerts?.alert {
-                    
-                    self.clientInformAlerts?.dropFirst()
-                }
                 
-            case .required, .optional:
+            case .none : return .init(title: Text("Ошибка"))
                 
-                guard let alert = self.clientInformAlerts?.required else { return }
-                self.clientInformAlerts?.showAgain(requiredAlert: alert)
-                    
+            }
+            
+        case .alertViewModel:
+            
+            switch self.alert {
+                
+            case let .some(alert):
+                
+                return .init(title: Text(alert.title),
+                             message: Text(alert.message ?? ""),
+                             dismissButton: .cancel())
+                
+            case .none: return .init(title: Text("Ошибка"))
             }
         }
     }
