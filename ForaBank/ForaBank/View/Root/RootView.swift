@@ -311,6 +311,22 @@ private extension RootView {
         )
     }
     
+    @ViewBuilder
+    func makeCategoryPickerSectionView(
+        categoryPicker: PayHubUI.CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
     func makeCategoryPickerSectionView(
         binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
@@ -655,6 +671,22 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
+    func makeOperationPickerView(
+        operationPicker: PayHubUI.OperationPicker
+    ) -> some View {
+        
+        if let binder = operationPicker.operationBinder {
+            
+            makeOperationPickerView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected operationPicker type \(String(describing: operationPicker))")
+                            .foregroundColor(.red)
+        }
+    }
+    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -685,6 +717,22 @@ private extension RootView {
             
         case let .templates(templates):
             Text("TBD: destination " + String(describing: templates))
+        }
+    }
+    
+    @ViewBuilder
+    func makePaymentsTransfersToolbarView(
+        toolbar: PayHubUI.PaymentsTransfersPersonalToolbar
+    ) -> some View {
+        
+        if let binder = toolbar.toolbarBinder {
+            
+            makePaymentsTransfersToolbarView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected toolbar type \(String(describing: toolbar))")
+                .foregroundColor(.red)
         }
     }
     
@@ -725,6 +773,22 @@ private extension RootView {
                 }
             )
         )
+    }
+    
+    @ViewBuilder
+    private func makePaymentsTransfersTransfersView(
+        transfersPicker: PayHubUI.TransfersPicker
+    ) -> some View {
+        
+        if let binder = transfersPicker.transfersBinder {
+            
+            makePaymentsTransfersTransfersView(transfers: binder)
+            
+        } else {
+            
+            Text("Unexpected transfersPicker type \(String(describing: transfersPicker))")
+                .foregroundColor(.red)
+        }
     }
     
     private func makePaymentsTransfersTransfersView(

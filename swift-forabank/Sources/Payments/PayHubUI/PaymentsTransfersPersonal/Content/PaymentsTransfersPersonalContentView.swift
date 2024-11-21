@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersPersonalContentView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>: View
+public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View,
@@ -50,8 +50,8 @@ where CategoryPickerView: View,
 
 public extension PaymentsTransfersPersonalContentView {
     
-    typealias Content = PaymentsTransfersPersonalContent<CategoryPicker, OperationPicker, Toolbar, Transfers>
-    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>
+    typealias Content = PaymentsTransfersPersonalContent
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView>
     typealias Config = PaymentsTransfersPersonalViewConfig
 }
 
@@ -61,14 +61,14 @@ public extension PaymentsTransfersPersonalContentView {
     PaymentsTransfersPersonalContentView(
         content: .preview,
         factory: .init(
-            makeCategoryPickerView: { (categoryPicker: PreviewCategoryPicker) in
+            makeCategoryPickerView: { _ in
                 
                 Text("Category Picker")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.orange.opacity(0.1))
             },
-            makeOperationPickerView: { (payHub: PreviewPayHub) in
+            makeOperationPickerView: { _ in
                 
                 Text("Operation Picker")
                     .frame(maxWidth: .infinity)
@@ -100,28 +100,24 @@ public extension PaymentsTransfersPersonalContentView {
     )
 }
 
-private extension PaymentsTransfersPersonalContent
-where CategoryPicker == PreviewCategoryPicker,
-      OperationPicker == PreviewPayHub,
-      Toolbar == PreviewToolbar,
-      Transfers == PreviewTransfers {
+private extension PaymentsTransfersPersonalContent {
     
     static var preview: PaymentsTransfersPersonalContent {
         
         return .init(
-            categoryPicker: .init(),
-            operationPicker: .init(),
-            toolbar: .init(),
-            transfers: .init(),
+            categoryPicker: PreviewCategoryPicker(),
+            operationPicker: PreviewOperationPicker(),
+            toolbar: PreviewToolbar(),
+            transfers: PreviewTransfers(),
             reload: {}
         )
     }
 }
 
-private final class PreviewCategoryPicker {}
+private final class PreviewCategoryPicker: CategoryPicker {}
 
-private final class PreviewPayHub {}
+private final class PreviewOperationPicker: OperationPicker {}
 
-private final class PreviewToolbar {}
+private final class PreviewToolbar: PaymentsTransfersPersonalToolbar {}
 
-private final class PreviewTransfers {}
+private final class PreviewTransfers: TransfersPicker {}

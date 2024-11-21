@@ -24,7 +24,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         let (sut, _,_, spy) = makeSUT()
         
-        sut.content.operationPicker.content.event(.load)
+        sut.content.operationPicker.operationBinder?.content.event(.load)
         
         XCTAssertEqual(spy.callCount, 1)
         XCTAssertNotNil(sut)
@@ -34,14 +34,14 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         let sut = makeSUT().sut
         
-        let prefix = sut.content.operationPicker.content.state.elements.prefix(2)
+        let prefix = sut.content.operationPicker.operationBinder?.content.state.elements.prefix(2)
         
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
     
-    func test_shouldSetCategoryPickerContentStateToLoading() {
+    func test_shouldSetCategoryPickerContentStateToLoading() throws {
         
-        let state = makeSUT().sut.content.categoryPicker.content.state
+        let state = try XCTUnwrap(makeSUT().sut.content.categoryPicker.sectionBinder?.content.state)
         
         XCTAssertTrue(state.isLoading)
     }
