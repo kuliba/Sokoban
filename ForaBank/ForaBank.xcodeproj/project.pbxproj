@@ -10679,7 +10679,6 @@
 			children = (
 				2AE350C62C770C6500A766EE /* PaymentsTransfers */,
 				2A273E8C2C770123009935E6 /* OperationPicker */,
-				2AE350CE2C770F0800A766EE /* CategoryPickerSection */,
 				2A8DF0E12CC8CF5400FB76D4 /* Transfers */,
 			);
 			path = v1;
@@ -13090,21 +13089,6 @@
 				833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */,
 			);
 			path = Content;
-			sourceTree = "<group>";
-		};
-		2AE350CE2C770F0800A766EE /* CategoryPickerSection */ = {
-			isa = PBXGroup;
-			children = (
-				2AE350D12C770F4700A766EE /* Binder */,
-			);
-			path = CategoryPickerSection;
-			sourceTree = "<group>";
-		};
-		2AE350D12C770F4700A766EE /* Binder */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Binder;
 			sourceTree = "<group>";
 		};
 		2AE350DE2C77223600A766EE /* v1 */ = {
