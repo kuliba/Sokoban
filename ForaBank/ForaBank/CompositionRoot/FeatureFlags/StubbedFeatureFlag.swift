@@ -37,6 +37,10 @@ extension Tagged where RawValue == StubbedFeatureFlag {
         if case .active(.stub) = rawValue { return true }
         return false
     }
+    
+    static var inactive: Self { .init(.inactive) }
+    static var live: Self { .init(.active(.live)) }
+    static var stub: Self { .init(.active(.stub)) }
 }
 
 extension Tagged where RawValue == StubbedFeatureFlag {

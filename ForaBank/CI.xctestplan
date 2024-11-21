@@ -597,6 +597,20 @@
         "identifier" : "GetBannersMyProductListServiceTests",
         "name" : "GetBannersMyProductListServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingGetJsonAbroadUITests",
+        "name" : "CollateralLoanLandingGetJsonAbroadUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
+      }
     }
   ],
   "version" : 1

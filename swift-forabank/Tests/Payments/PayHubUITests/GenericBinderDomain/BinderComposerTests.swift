@@ -111,9 +111,7 @@ final class BinderComposerTests: XCTestCase {
         schedulers: TestSchedulers
     ) {
         let content = Content()
-        let (test, testSchedulers) = Schedulers.test(
-            //            main: .immediate
-        )
+        let (test, testSchedulers) = Schedulers.test()
         
         let sut = SUT(
             delay: delay,

@@ -18,7 +18,7 @@ enum SelectedCategoryNavigation {
     
     typealias Mobile = ClosePaymentsViewModelWrapper
     typealias Standard = StandardSelectedCategoryDestination
-    typealias QR = Node<QRModel>
+    typealias QR = Node<QRScannerModel>
     typealias Tax = ClosePaymentsViewModelWrapper
     typealias Transport = TransportPaymentsViewModel
     
@@ -97,7 +97,7 @@ extension SelectedCategoryNavigation {
     struct FullScreenCover: Identifiable {
         
         let id: UUID
-        let qr: QRModel
+        let qr: QRScannerModel
     }
     
     enum Destination {

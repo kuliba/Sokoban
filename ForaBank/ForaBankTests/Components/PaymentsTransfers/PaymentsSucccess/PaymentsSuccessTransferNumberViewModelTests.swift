@@ -13,21 +13,21 @@ final class PaymentsSuccessTransferNumberViewModelTests: XCTestCase {
     func test_init_shouldSetTitle() {
         
         let title = UUID().uuidString
-        let (sut, _) = makeSUT(makeSuccessTransferNumber(number: title))
+        let (sut, _,_) = makeSUT(makeSuccessTransferNumber(number: title))
         
         XCTAssertNoDiff(sut.title, title)
     }
     
     func test_init_shouldSetStateToCopy() {
         
-        let (_, spy) = makeSUT()
+        let (_, spy,_) = makeSUT()
         
         XCTAssertNoDiff(spy.values, [.copy])
     }
     
     func test_copyButtonDidTapped_shouldSetStateToCheck() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, spy,_) = makeSUT()
         
         sut.copyButtonDidTapped()
         
@@ -36,15 +36,15 @@ final class PaymentsSuccessTransferNumberViewModelTests: XCTestCase {
     
     func test_copyButtonDidTapped_shouldSetStateBackToCopyAfterSpecifiedInterval() {
         
-        let (sut, spy) = makeSUT(timeoutMS: 100)
+        let (sut, spy, scheduler) = makeSUT(timeout: .milliseconds(100))
         
         sut.copyButtonDidTapped()
         XCTAssertNoDiff(spy.values, [.copy, .check])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.09)
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
         XCTAssertNoDiff(spy.values, [.copy, .check])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.01)
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
         XCTAssertNoDiff(spy.values, [.copy, .check, .copy])
     }
     
@@ -54,21 +54,27 @@ final class PaymentsSuccessTransferNumberViewModelTests: XCTestCase {
     
     private func makeSUT(
         _ source: Payments.ParameterSuccessTransferNumber = makeSuccessTransferNumber(),
-        timeoutMS: Int = 300,
+        timeout: SUT.Timeout = .milliseconds(300),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: ValueSpy<SUT.State>
+        spy: ValueSpy<SUT.State>,
+        scheduler: TestSchedulerOfDispatchQueue
     ) {
-        
-        let sut = SUT(source, timeoutMS: timeoutMS)
+        let scheduler = DispatchQueue.test
+        let sut = SUT(
+            source,
+            timeout: timeout,
+            scheduler: scheduler.eraseToAnyScheduler()
+        )
         let spy = ValueSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(scheduler, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, spy, scheduler)
     }
 }
 

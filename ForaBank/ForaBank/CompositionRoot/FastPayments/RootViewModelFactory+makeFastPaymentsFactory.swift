@@ -46,7 +46,7 @@ extension RootViewModelFactory {
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
     }
 }

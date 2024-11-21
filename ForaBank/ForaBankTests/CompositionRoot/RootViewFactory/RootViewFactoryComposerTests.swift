@@ -30,7 +30,8 @@ final class RootViewFactoryComposerTests: XCTestCase {
             httpClient: HTTPClientSpy(),
             historyFeatureFlag: .init(true), 
             marketFeatureFlag: .init(rawValue: .inactive), 
-            savingsAccountFlag: .init(rawValue: .inactive)
+            savingsAccountFlag: .init(rawValue: .inactive), 
+            schedulers: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

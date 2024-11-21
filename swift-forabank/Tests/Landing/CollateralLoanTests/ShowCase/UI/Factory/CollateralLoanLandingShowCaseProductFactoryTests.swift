@@ -117,16 +117,13 @@ where ContentView: View,
     
     // MARK: - Helpers
     
-    private typealias SUT = CollateralLoanLandingShowCaseViewFactory<ContentView, SpinnerView>
+    private typealias SUT = CollateralLoanLandingShowCaseViewFactory
     private typealias Product = CollateralLoanLandingShowCaseData.Product
     private typealias Theme = CollateralLoanLandingShowCaseTheme
     private typealias ModelTheme = CollateralLoanLandingShowCaseData.Product.Theme
     
     private func makeSUT() -> SUT {
-        .init(
-            makeContentView: { EmptyView() as! ContentView },
-            makeSpinnerView: { EmptyView() as! SpinnerView }
-        )
+        .init()
     }
 }
 

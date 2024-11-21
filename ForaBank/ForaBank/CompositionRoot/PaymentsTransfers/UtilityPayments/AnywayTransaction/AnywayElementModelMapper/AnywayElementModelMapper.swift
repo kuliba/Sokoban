@@ -21,12 +21,12 @@ final class AnywayElementModelMapper {
         currencyOfProduct: @escaping CurrencyOfProduct,
         format: @escaping Format,
         getProducts: @escaping GetProducts,
-        flag: StubbedFeatureFlag.Option
+        settings: Settings = .default
     ) {
         self.currencyOfProduct = currencyOfProduct
         self.format = format
         self.getProducts = getProducts
-        self.settings = flag == .stub ? .test : .default
+        self.settings = settings
     }
     
     typealias Currency = String
