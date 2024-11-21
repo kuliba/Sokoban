@@ -34,6 +34,7 @@ private extension ResponseMapper._Data {
         
         .init(
             serial: serial,
+            accountBannerList: accountBannerList?.map { $0.map() } ?? [],
             cardBannerList: cardBannerList?.map { $0.map() } ?? [],
             loanBannerList: loanBannerList?.map { $0.map() } ?? []
         )
@@ -66,6 +67,7 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let serial: String
+        let accountBannerList: [Banner]?
         let cardBannerList: [Banner]?
         let loanBannerList: [Banner]?
 

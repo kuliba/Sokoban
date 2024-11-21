@@ -11,6 +11,16 @@ import GetBannersMyProductListService
 
 final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
     
+    func test_map_onlyAccountBannerList_shouldDeliverValidData() {
+        
+        let (json, response) = createAccountBannerList()
+        
+        XCTAssertNoDiff(
+            map(Data(json.utf8)),
+            .success(response)
+        )
+    }
+
     func test_map_onlyLoanBannerList_shouldDeliverValidData() {
         
         let (json, response) = createLoanBannerList()
@@ -127,6 +137,31 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
         ResponseMapper.mapGetBannersMyProductListResponse(data, httpURLResponse)
     }
     
+    private func createAccountBannerList(
+        serial: String = anySerial(),
+        productName: String = anyMessage(),
+        link: String = anyMessage(),
+        md5hash: String = anyMessage(),
+        actionType: String = anyMessage(),
+        target: String = anyMessage()
+    ) -> (String, List) {
+        
+        let banner = "[" + createBanner(productName: productName, link: link, md5hash: md5hash, actionType: actionType, target: target) + "]"
+        
+        return (
+            json(serial: serial, accountBannerList: banner),
+            .init(
+                serial: serial,
+                accountBannerList: [.init(
+                    productName: productName,
+                    link: link,
+                    md5hash: md5hash,
+                    action: .init(actionType: actionType, target: target))],
+                cardBannerList: [],
+                loanBannerList: [])
+        )
+    }
+
     private func createLoanBannerList(
         serial: String = anySerial(),
         productName: String = anyMessage(),
@@ -142,6 +177,7 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
             json(serial: serial, loanBannerList: banner),
             .init(
                 serial: serial,
+                accountBannerList: [],
                 cardBannerList: [],
                 loanBannerList: [
                     .init(
@@ -167,6 +203,7 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
             json(serial: serial, cardBannerList: banner),
             .init(
                 serial: serial,
+                accountBannerList: [],
                 cardBannerList: [.init(
                     productName: productName,
                     link: link,
@@ -188,9 +225,14 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
         let banner = "[" + createBanner(productName: productName, link: link, md5hash: md5hash, actionType: actionType, target: target) + "]"
         
         return (
-            json(serial: serial, cardBannerList: banner, loanBannerList: banner),
+            json(serial: serial, accountBannerList: banner, cardBannerList: banner, loanBannerList: banner),
             .init(
                 serial: serial,
+                accountBannerList: [.init(
+                    productName: productName,
+                    link: link,
+                    md5hash: md5hash,
+                    action: .init(actionType: actionType, target: target))],
                 cardBannerList: [.init(
                     productName: productName,
                     link: link,
@@ -226,6 +268,7 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
     
     private func json(
         serial: String,
+        accountBannerList: String = "null",
         cardBannerList: String = "null",
         loanBannerList: String = "null"
     ) -> String {
@@ -235,6 +278,7 @@ final class ResponseMapper_mapGetBannersMyProductListResponseTests: XCTestCase {
             "errorMessage": null,
             "data": {
                 "serial": "\(serial)",
+                "accountBannerList": \(accountBannerList),
                 "cardBannerList": \(cardBannerList),
                 "loanBannerList": \(loanBannerList)
             }
@@ -306,6 +350,15 @@ private extension String {
     "errorMessage": null,
     "data": {
         "serial": "7134778f549cab1edc68704066472e72",
+        "accountBannerList": [{
+            "productName": "Накопительный счет",
+            "link": "https://www.forabank.ru/private/",
+            "md5hash": "",
+            "action": {
+                "target": "DEFAULT",
+                "actionType": "SAVING_LANDING"
+            }
+        }],
         "cardBannerList": [{
             "productName": "Платежный стикер",
             "link": "",
