@@ -7,13 +7,12 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetJsonAbroadView: View {
+struct CollateralLoanLandingGetJsonAbroadView: View {
     
     private let content: Content
-    
     private let factory: Factory
     
-    public init(
+    init(
         content: Content,
         factory: Factory
     ) {
@@ -21,13 +20,13 @@ public struct CollateralLoanLandingGetJsonAbroadView: View {
         self.factory = factory
     }
     
-    public var body: some View {
+    var body: some View {
         
         factory.makeView(content.data.product)
     }
 }
 
-public extension CollateralLoanLandingGetJsonAbroadView {
+extension CollateralLoanLandingGetJsonAbroadView {
     
     typealias Content = CollateralLoanLandingGetJsonAbroadContent
     typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory

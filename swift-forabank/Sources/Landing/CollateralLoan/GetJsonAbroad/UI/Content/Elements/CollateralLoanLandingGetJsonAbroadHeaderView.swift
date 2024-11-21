@@ -36,19 +36,19 @@ public struct CollateralLoanLandingGetJsonAbroadHeaderView: View {
         
         labelTag.text(
             withConfig: .init(
-                textFont: config.fontConfig.font,
-                textColor: config.fontConfig.foreground
+                textFont: config.fonts.fontConfig.font,
+                textColor: config.fonts.fontConfig.foreground
             )
         )
-        .padding(.vertical, config.verticalInnerPadding)
-        .padding(.horizontal, config.horizontalInnerPadding)
+        .padding(.vertical, config.layouts.verticalInnerPadding)
+        .padding(.horizontal, config.layouts.horizontalInnerPadding)
         .background(
-            RoundedRectangle(cornerRadius: config.cornerSize)
-                .fill(config.fontConfig.background)
+            RoundedRectangle(cornerRadius: config.layouts.cornerSize)
+                .fill(config.fonts.fontConfig.background)
         )
-        .rotationEffect(Angle(degrees: config.rotationDegrees))
-        .padding(.leading, config.leadingOuterPadding)
-        .padding(.top, config.topOuterPadding)
+        .rotationEffect(Angle(degrees: config.layouts.rotationDegrees))
+        .padding(.leading, config.layouts.leadingOuterPadding)
+        .padding(.top, config.layouts.topOuterPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
