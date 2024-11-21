@@ -13,10 +13,7 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
     
     func test_map_shouldDeliverValidPDF() throws {
 
-        let bundle = Bundle.module
-        let getValidURL = bundle.url(forResource: "valid", withExtension: "pdf")
-        let url = try XCTUnwrap(getValidURL)
-        let data = try Data(contentsOf: url)
+        let data = try getPDFData(valid: true)
         
         let pdfDocument = try XCTUnwrap(PDFDocument(data: data))
         let getData = try XCTUnwrap(map(data).get())
@@ -26,11 +23,8 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
 
     func test_map_shouldDeliverInvalidPDF() throws {
 
-        let bundle = Bundle.module
-        let getValidURL = bundle.url(forResource: "invalid", withExtension: "pdf")
-        let url = try XCTUnwrap(getValidURL)
-        let data = try Data(contentsOf: url)
-        
+        let data = try getPDFData(valid: false)
+
         XCTAssertNoDiff(map(data), .failure(.invalid(statusCode: 200, data: data)))
     }
 
@@ -87,10 +81,7 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() throws {
         
-        let bundle = Bundle.module
-        let getValidURL = bundle.url(forResource: "valid", withExtension: "pdf")
-        let url = try XCTUnwrap(getValidURL)
-        let validData = try Data(contentsOf: url)
+        let validData = try getPDFData(valid: true)
         
         let pdfDocument = try XCTUnwrap(PDFDocument(data: validData))
 
@@ -121,7 +112,18 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> MappingResult {
+        
         ResponseMapper.mapGetConsentsResponse(data, httpURLResponse)
+    }
+    
+    private func getPDFData(valid: Bool) throws -> Data {
+        
+        let bundle = Bundle.module
+        let getValidURL = bundle.url(forResource: valid ? "valid" : "invalid", withExtension: "pdf")
+        let url = try XCTUnwrap(getValidURL)
+        let data = try Data(contentsOf: url)
+
+        return data
     }
 }
 
