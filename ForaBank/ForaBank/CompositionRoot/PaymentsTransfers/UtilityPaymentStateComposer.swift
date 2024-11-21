@@ -11,27 +11,23 @@ import ProductSelectComponent
 
 final class UtilityPaymentStateComposer {
     
-    private let flag: Flag
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
     private let spinnerActions: SpinnerActions?
     
     init(
-        flag: Flag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         spinnerActions: SpinnerActions?
     ) {
-        self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
         self.spinnerActions = spinnerActions
     }
     
-    typealias Flag = UtilitiesPaymentsFlag
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     typealias SpinnerActions = RootViewModel.RootActions.Spinner
 }
@@ -66,8 +62,7 @@ extension UtilityPaymentStateComposer {
     ) -> AnywayTransactionViewModelComposer {
         
         return .init(
-            flag: flag.optionOrStub,
-            model: model, 
+            model: model,
             httpClient: httpClient,
             log: log,
             scheduler: .main
@@ -86,7 +81,6 @@ extension UtilityPaymentStateComposer {
         typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
         
         let nanoServicesComposer = NanoServicesComposer(
-            flag: flag.optionOrStub,
             httpClient: httpClient,
             log: log
         )

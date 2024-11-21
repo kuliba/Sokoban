@@ -136,20 +136,17 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
-            mainScheduler: .immediate,
-            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
+            schedulers: .test(
+                main: .immediate,
+                background: backgroundScheduler.eraseToAnyScheduler()
+            ).0
         ).make(
             dismiss: {},
-            qrResolverFeatureFlag: .init(.active),
-            fastPaymentsSettingsFlag: .init(.active(.live)),
-            utilitiesPaymentsFlag: .init(.active(.live)),
-            historyFilterFlag: .init(true),
-            changeSVCardLimitsFlag: .init(.active),
-            getProductListByTypeV6Flag: .init(.active),
-            marketplaceFlag: .init(.inactive),
-            paymentsTransfersFlag: .init(.active),
-            updateInfoStatusFlag: .init(.active), 
-            savingsAccountFlag: .init(.active)
+            collateralLoanLandingFlag: .active,
+            paymentsTransfersFlag: .active,
+            savingsAccountFlag: .active
         )
         
         return (sut, httpClient, sessionAgent, backgroundScheduler)
@@ -221,8 +218,9 @@ private extension RootViewModel {
     ) throws -> CategoryPickerSectionDomain.ContentDomain.Content {
         
         let v1 = try personal(file: file, line: line)
+        let binder = try XCTUnwrap(v1.content.categoryPicker.sectionBinder)
         
-        return v1.content.categoryPicker.content
+        return binder.content
     }
     
     func personal(

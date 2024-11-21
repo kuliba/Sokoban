@@ -36,10 +36,11 @@ where ItemLabel: View,
     public var body: some View {
         
         if state.isLoadingFailed {
-            Text("Failed to load categories")
-                .foregroundColor(.red)
-                .frame(maxHeight: .infinity)
+            
+            failureView(config: config.failure)
+            
         } else {
+            
             VStack(spacing: config.spacing) {
                 
                 headerTitle()
@@ -50,6 +51,7 @@ where ItemLabel: View,
                     ForEach(state.suffix, content: itemView)
                         .animation(.easeInOut, value: state)
                 }
+                .padding(.horizontal, config.title.leadingPadding)
             }
         }
     }
@@ -73,12 +75,26 @@ private extension LoadablePickerState {
 
 private extension CategoryPickerSectionContentView {
     
+    func failureView(
+        config: LabelConfig
+    ) -> some View {
+        
+        VStack(spacing: config.spacing) {
+            
+            config.imageConfig.render()
+                .clipShape(Circle())
+            
+            config.textConfig.render()
+        }
+    }
+    
     func headerTitle() -> some View {
         
         ZStack(alignment: .leading) {
             
             titlePlaceholder(config: config.titlePlaceholder)
                 .opacity(state.isLoading ? 1 : 0)
+                .padding(.leading, config.title.leadingPadding)
             
             config.title.render()
                 .opacity(state.isLoading ? 0 : 1)
@@ -143,6 +159,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
             categoryPickerSectionContentView(.placeholders(count: 5))
             categoryPickerSectionContentView(.preview)
             categoryPickerSectionContentView(.placeholders(count: 0))
+                .previewDisplayName("Failure")
         }
     }
     
@@ -154,7 +171,18 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
             state: .init(prefix: [], suffix: items),
             event: { print($0) },
             config: .preview,
-            itemLabel: { Text(String(describing: $0)) }
+            itemLabel: { item in
+                
+                HStack(spacing: 16) {
+                    
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(.gray.opacity(0.2))
+                        .frame(.init(width: 40, height: 40))
+                    
+                    Text(String(describing: item).prefix(25).capitalized)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
         )
     }
 }

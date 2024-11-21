@@ -66,13 +66,17 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     func test_flow_shouldSetScanQRNavigationOnContentScanQRSelect() {
         
-        let (sut, _) = makeSUT()
+        let qrScanner = makeQRScanner()
+        let (sut, _) = makeSUT(qrScanner: qrScanner)
         let binder = sut.compose(with: makeRootViewModel())
         XCTAssertNil(binder.flow.state.navigation)
         
         binder.content.emit(.scanQR)
         
-        XCTAssertNoDiff(binder.flow.state.navigation, .scanQR)
+        XCTAssertNoDiff(
+            binder.flow.state.navigation.map(equatable),
+            .qrScanner(.init(qrScanner))
+        )
     }
     
     func test_content_shouldReceiveOnFlowNavigationDismiss() {
@@ -89,13 +93,15 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = RootViewBinderComposer<RootViewModel, DismissAll>
+    private typealias Domain = PayHubUI.RootViewDomain<RootViewModel, DismissAll, QRScanner>
+    private typealias SUT = Domain.BinderComposer
     private typealias DismissAllSubject = PassthroughSubject<DismissAll, Never>
     
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
         dismiss: @escaping () -> Void = {},
         reset: @escaping () -> Void = {},
+        qrScanner: QRScanner? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -111,7 +117,7 @@ final class RootViewBinderComposerTests: XCTestCase {
                 
                 switch select {
                 case .scanQR:
-                    completion(.scanQR)
+                    completion(.scanQR(qrScanner ?? self.makeQRScanner()))
                 }
             },
             schedulers: .immediate,
@@ -169,4 +175,26 @@ final class RootViewBinderComposerTests: XCTestCase {
     }
     
     private struct DismissAll: Equatable {}
+    
+    private final class QRScanner {}
+    
+    private func makeQRScanner() -> QRScanner {
+        
+        return .init()
+    }
+    
+    private func equatable(
+        _ navigation: Domain.Navigation
+    ) -> EquatableNavigation {
+        
+        switch navigation {
+        case let .scanQR(qrScanner):
+            return .qrScanner(.init(qrScanner))
+        }
+    }
+    
+    private enum EquatableNavigation: Equatable {
+        
+        case qrScanner(ObjectIdentifier)
+    }
 }

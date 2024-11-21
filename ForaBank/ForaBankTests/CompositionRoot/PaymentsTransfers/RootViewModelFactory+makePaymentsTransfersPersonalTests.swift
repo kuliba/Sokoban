@@ -24,7 +24,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         let (sut, _,_, spy) = makeSUT()
         
-        sut.content.operationPicker.content.event(.load)
+        sut.content.operationPicker.operationBinder?.content.event(.load)
         
         XCTAssertEqual(spy.callCount, 1)
         XCTAssertNotNil(sut)
@@ -34,14 +34,14 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         let sut = makeSUT().sut
         
-        let prefix = sut.content.operationPicker.content.state.elements.prefix(2)
+        let prefix = sut.content.operationPicker.operationBinder?.content.state.elements.prefix(2)
         
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
     
-    func test_shouldSetCategoryPickerContentStateToLoading() {
+    func test_shouldSetCategoryPickerContentStateToLoading() throws {
         
-        let state = makeSUT().sut.content.categoryPicker.content.state
+        let state = try XCTUnwrap(makeSUT().sut.content.categoryPicker.sectionBinder?.content.state)
         
         XCTAssertTrue(state.isLoading)
     }
@@ -52,7 +52,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
-    private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
+    private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -71,8 +71,9 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            mainScheduler: .immediate,
-            backgroundScheduler: .immediate
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
+            schedulers: .immediate
         )
         let sut = factory.makePaymentsTransfersPersonal(
             nanoServices: .init(

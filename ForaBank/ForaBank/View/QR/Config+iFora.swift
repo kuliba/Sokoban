@@ -7,6 +7,7 @@
 
 import PaymentComponents
 import SberQR
+import ManageSubscriptionsUI
 
 extension SberQR.Config {
     
@@ -241,4 +242,15 @@ extension Date {
         
         return today
     }
+}
+
+extension ManageSubscriptionsUI.ProductViewConfig {
+    
+    static let iFora: Self = .init(
+        titleFont: .textBodyMR14180(),
+        titleColor: .textPlaceholder,
+        nameFont: .textH4M16240(),
+        nameColor: .mainColorsBlack,
+        descriptionFont: .textBodyMR14180()
+    )
 }

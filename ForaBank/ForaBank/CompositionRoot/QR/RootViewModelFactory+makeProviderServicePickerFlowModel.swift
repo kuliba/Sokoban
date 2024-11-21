@@ -12,13 +12,10 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeProviderServicePickerFlowModel(
-        pageSize: Int = 50,
-        flag: StubbedFeatureFlag.Option
+        pageSize: Int = 50
     ) -> (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel {
         
-        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-            flag: flag
-        )
+        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
         
         return {
             

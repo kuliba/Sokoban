@@ -311,40 +311,50 @@ private extension RootView {
         )
     }
     
+    @ViewBuilder
+    func makeCategoryPickerSectionView(
+        categoryPicker: PayHubUI.CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
     func makeCategoryPickerSectionView(
         binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: {
-                
-                CategoryPickerSectionFlowView(
-                    state: $0,
-                    event: $1,
-                    factory: .init(
-                        makeAlert: makeCategoryPickerSectionAlert(binder: binder),
-                        makeContentView: {
+        ComposedCategoryPickerSectionView(
+            binder: binder,
+            factory: .init(
+                makeAlert: makeCategoryPickerSectionAlert(binder: binder),
+                makeContentView: {
+                    
+                    ComposedCategoryPickerSectionContentView(
+                        content: binder.content,
+                        makeContentView: { state, event in
                             
-                            RxWrapperView(
-                                model: binder.content,
-                                makeContentView: { state, event in
-                                    
-                                    CategoryPickerSectionContentView(
-                                        state: state,
-                                        event: event,
-                                        config: .iFora,
-                                        itemLabel: itemLabel
-                                    )
-                                }
+                            CategoryPickerSectionContentView(
+                                state: state,
+                                event: event,
+                                config: .iFora,
+                                itemLabel: itemLabel
                             )
-                        },
-                        makeDestinationView: makeCategoryPickerSectionDestinationView,
-                        makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+                        }
                     )
-                )
-            }
+                },
+                makeDestinationView: makeCategoryPickerSectionDestinationView,
+                makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+            )
         )
+        .padding(.top, 20)
     }
     
     func makeCategoryPickerSectionAlert(
@@ -396,7 +406,12 @@ private extension RootView {
     func makeCategoryPickerSectionFullScreenCoverView(
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
-        rootViewFactory.components.makeQRView(cover.qr.qrModel)
+        
+        NavigationView {
+            
+            rootViewFactory.components.makeQRView(cover.qr.qrScanner)
+        }
+        .navigationViewStyle(.stack)
     }
     
     func paymentProviderPicker(
@@ -656,6 +671,22 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
+    func makeOperationPickerView(
+        operationPicker: PayHubUI.OperationPicker
+    ) -> some View {
+        
+        if let binder = operationPicker.operationBinder {
+            
+            makeOperationPickerView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected operationPicker type \(String(describing: operationPicker))")
+                            .foregroundColor(.red)
+        }
+    }
+    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -686,6 +717,22 @@ private extension RootView {
             
         case let .templates(templates):
             Text("TBD: destination " + String(describing: templates))
+        }
+    }
+    
+    @ViewBuilder
+    func makePaymentsTransfersToolbarView(
+        toolbar: PayHubUI.PaymentsTransfersPersonalToolbar
+    ) -> some View {
+        
+        if let binder = toolbar.toolbarBinder {
+            
+            makePaymentsTransfersToolbarView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected toolbar type \(String(describing: toolbar))")
+                .foregroundColor(.red)
         }
     }
     
@@ -728,47 +775,36 @@ private extension RootView {
         )
     }
     
+    @ViewBuilder
+    private func makePaymentsTransfersTransfersView(
+        transfersPicker: PayHubUI.TransfersPicker
+    ) -> some View {
+        
+        if let binder = transfersPicker.transfersBinder {
+            
+            makePaymentsTransfersTransfersView(transfers: binder)
+            
+        } else {
+            
+            Text("Unexpected transfersPicker type \(String(describing: transfersPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
     private func makePaymentsTransfersTransfersView(
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        RxWrapperView(model: transfers.flow) {
-            
-            PaymentsTransfersPersonalTransfersFlowView(
-                state: $0,
-                event: $1,
-                contentView: {
-                    
-                    RxWrapperView(model: transfers.content) { state, event in
-                        
-                        VStack {
-                            
-                            PTSectionTransfersButtonsView(
-                                title: PaymentsTransfersSectionType.transfers.name,
-                                buttons: state.elements.compactMap { element in
-                                    
-                                    switch element {
-                                    case let .buttonType(buttonType):
-                                        return .init(type: buttonType) {
-                                            
-                                            event(.select(.buttonType(buttonType)))
-                                        }
-                                        
-                                    default:
-                                        return nil
-                                    }
-                                }
-                            )
-                        }
-                    }
-                },
-                viewFactory: .init(
-                    makeContactsView: rootViewFactory.components.makeContactsView,
-                    makePaymentsMeToMeView: rootViewFactory.components.makePaymentsMeToMeView,
-                    makePaymentsView: rootViewFactory.components.makePaymentsView
+        ComposedPaymentsTransfersTransfersView(
+            flow: transfers.flow,
+            contentView: {
+                
+                ComposedPaymentsTransfersTransfersContentView(
+                    content: transfers.content
                 )
-            )
-        }
+            },
+            factory: rootViewFactory.personalTransfersFlowViewFactory
+        )
     }
     
     private func itemLabel(
@@ -805,6 +841,20 @@ private extension RootView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+}
+
+// MARK: - View Factories
+
+private extension RootViewFactory {
+    
+    var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
+        
+        return .init(
+            makeContactsView: components.makeContactsView,
+            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
+            makePaymentsView: components.makePaymentsView
+        )
     }
 }
 

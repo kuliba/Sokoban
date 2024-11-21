@@ -15,10 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    private lazy var factory: RootFactory = ModelRootFactory.shared
+    private lazy var rootComposer: RootComposer = ModelRootComposer.shared
+    private lazy var rootViewComposer: RootViewComposer = ModelRootComposer.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private lazy var binder = factory.makeBinder(
+    private lazy var binder = rootComposer.makeBinder(
         featureFlags: featureFlags,
         dismiss: { [weak self] in
             
@@ -27,16 +28,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     )
     
-    private lazy var rootViewFactory = factory.makeRootViewFactory(
+    private lazy var rootViewFactory = rootViewComposer.makeRootViewFactory(
         featureFlags: featureFlags
     )
+    
+    convenience init(
+        rootComposer: RootComposer,
+        rootViewComposer: RootViewComposer,
+        featureFlags: FeatureFlags
+    ) {
+        self.init()
+        self.rootComposer = rootComposer
+        self.rootViewComposer = rootViewComposer
+        self.featureFlags = featureFlags
+    }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        window?.windowScene = windowScene
+        window = .init(windowScene: windowScene)
         
         configureWindow()
         

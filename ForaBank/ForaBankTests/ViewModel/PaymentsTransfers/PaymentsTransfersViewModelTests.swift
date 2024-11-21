@@ -999,7 +999,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .default,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -1246,7 +1246,7 @@ extension PaymentsTransfersViewModel {
         guard case let .qrScanner(node) = route.modal?.fullScreenSheet?.type
         else { return nil }
         
-        return node.model.qrModel
+        return node.model.qrScanner as? QRViewModel
     }
     
     func tapQRButtonAndWait(

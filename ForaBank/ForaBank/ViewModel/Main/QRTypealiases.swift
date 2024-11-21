@@ -15,19 +15,7 @@ typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, Mappi
 typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
 typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel
 
-typealias QRModel = QRModelWrapper<QRModelResult, QRViewModel>
-typealias MakeQRScannerModel = () -> QRModel
-
-extension QRViewModel: QRScanner {
-    
-    var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> {
-        
-        action
-            .compactMap { $0 as? QRViewModelAction.Result }
-            .map(\.result)
-            .eraseToAnyPublisher()
-    }
-}
+typealias QRScannerModel = QRModelWrapper<QRModelResult>
 
 typealias SegmentedOperatorProvider = OperatorProvider<SegmentedOperatorData, SegmentedProvider>
 
@@ -39,3 +27,5 @@ typealias QRMappedResult = PayHub.QRMappedResult<SegmentedOperatorData, Segmente
 
 typealias MixedQRResult = PayHub.MixedQRResult<SegmentedOperatorData, SegmentedProvider, QRCode, QRMapping>
 typealias MultipleQRResult = PayHub.MultipleQRResult<SegmentedOperatorData, SegmentedProvider, QRCode, QRMapping>
+typealias SinglePayload = PayHub.SinglePayload<SegmentedOperator<OperatorGroupData.OperatorData, String>, QRCode, QRMapping>
+typealias ProviderPayload = PayHub.ProviderPayload<SegmentedOperator<UtilityPaymentProvider, String>, QRCode, QRMapping>
