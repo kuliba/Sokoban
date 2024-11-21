@@ -31,7 +31,7 @@ extension RootViewModel {
                 }
             }
             
-        case let .v1(switcher):
+        case let .v1(switcher as PaymentsTransfersSwitcher):
             switch switcher.state {
             case .none:
                 break
@@ -47,7 +47,7 @@ extension RootViewModel {
                     LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
                     return
                 }
-
+                
                 let picker = payments.content.categoryPicker.content
                 
                 let categoryPicker = picker.state.elements.first {
@@ -68,16 +68,19 @@ extension RootViewModel {
                     payments.content.categoryPicker.flow.event(.select(.category(categoryPicker.element)))
                 }
             }
+            
+        default:
+            break
         }
     }
     
     private func legacyPayment(by name: String) -> PTSectionPaymentsView.ViewModel.PaymentsType? {
         
-        return name == "HOUSING_AND_COMMUNAL_SERVICE" ? .service : nil
+        return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .service : nil
     }
     
     private func payment(by name: String) -> RemoteServices.ResponseMapper.ServiceCategory.CategoryType? {
         
-        return name == "HOUSING_AND_COMMUNAL_SERVICE" ? .housingAndCommunalService : nil
+        return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .housingAndCommunalService : nil
     }
 }

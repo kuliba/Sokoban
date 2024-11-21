@@ -16,7 +16,7 @@ extension MainSectionFastOperationView {
         
         override var type: MainSectionType { .fastOperations }
         @Published var items: [ButtonIconTextView.ViewModel]
-        private let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .templates]
+        private let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .zku, .templates]
 
         internal init(items: [ButtonIconTextView.ViewModel], isCollapsed: Bool) {
             
@@ -38,26 +38,59 @@ extension MainSectionFastOperationView {
             
             displayButtonsTypes.map { type in
                 
-                let icon = type.icon
-                let title = type.title
-                let action: () -> Void = { [weak self] in
+                createButtonViewModel(for: type) { [weak self] in
                     self?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: type))
                 }
+            }
+        }
+        
+        private func createButtonViewModel(for type: FastOperations, action: @escaping () -> Void) -> ButtonIconTextView.ViewModel {
             
-                return ButtonIconTextView.ViewModel(icon: .init(image: icon, background: .circle), title: .init(text: title), orientation: .vertical, action: action)
+            switch type {
+            case .zku:
+                return ButtonIconTextView.ViewModel(
+                    icon: .init(
+                        image: type.icon,
+                        style: .original,
+                        background: .circle,
+                        badge: .init(
+                            text: .init(
+                                title: "0%",
+                                font: .textBodySR12160(),
+                                fontWeight: .bold
+                            ),
+                            backgroundColor: .mainColorsRed,
+                            textColor: .white)
+                    ),
+                    title: .init(text: type.title),
+                    orientation: .vertical,
+                    action: action
+                )
+                
+            default:
+                return ButtonIconTextView.ViewModel(
+                    icon: .init(
+                        image: type.icon,
+                        background: .circle
+                    ),
+                    title: .init(text: type.title),
+                    orientation: .vertical,
+                    action: action
+                )
             }
         }
         
         enum FastOperations {
             
-            case byQr, byPhone, templates
+            case byQr, byPhone, templates, zku
             
             var title: String {
                 
                 switch self {
-                case .byQr: return "Оплата по QR"
-                case .byPhone: return "Перевод по телефону"
-                case .templates: return "Шаблоны"
+                case .byQr: return FastOperationsTitles.qr
+                case .byPhone: return FastOperationsTitles.byPhone
+                case .templates: return FastOperationsTitles.templates
+                case .zku: return FastOperationsTitles.zku
                 }
             }
             
@@ -67,12 +100,21 @@ extension MainSectionFastOperationView {
                 case .byQr: return .ic24BarcodeScanner2
                 case .byPhone: return .ic24Smartphone
                 case .templates: return .ic24Star
+                case .zku: return .ic24Bulb
                 }
             }
         }
     }
 }
 
+enum FastOperationsTitles {
+    
+    static let qr = "Оплата по QR"
+    static let byPhone = "Перевод по телефону"
+    static let templates = "Шаблоны"
+    static let zku = "Оплата ЖКУ"
+    
+}
 
 //MARK: - View
 
@@ -82,7 +124,11 @@ struct MainSectionFastOperationView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(
+            title: viewModel.title,
+            canCollapse: false,
+            isCollapsed: .constant(false)
+        ) {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 

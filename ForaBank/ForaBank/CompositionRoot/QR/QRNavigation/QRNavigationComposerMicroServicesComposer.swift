@@ -19,6 +19,7 @@ final class QRNavigationComposerMicroServicesComposer {
     private let getSberQRData: GetSberQRData
     private let makeSegmented: MakeSegmented
     private let makeServicePicker: MicroServices.MakeServicePicker
+    private let scanner: any QRScannerViewModel
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
@@ -31,6 +32,7 @@ final class QRNavigationComposerMicroServicesComposer {
         makeSegmented: @escaping MakeSegmented,
         // static RootViewModelFactory.makeProviderServicePickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
         makeServicePicker: @escaping MicroServices.MakeServicePicker,
+        scanner: any QRScannerViewModel,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.httpClient = httpClient
@@ -40,6 +42,7 @@ final class QRNavigationComposerMicroServicesComposer {
         self.getSberQRData = getSberQRData
         self.makeSegmented = makeSegmented
         self.makeServicePicker = makeServicePicker
+        self.scanner = scanner
         self.scheduler = scheduler
     }
     
@@ -187,7 +190,10 @@ private extension QRNavigationComposerMicroServicesComposer {
             let make = RootViewModelFactory(
                 model: model,
                 httpClient: httpClient,
-                logger: logger
+                logger: logger,
+                resolveQR: self.qrResolve,
+                scanner: scanner,
+                schedulers: .init()
             ).makeSberQRConfirmPaymentViewModel()
             
             do {
@@ -205,5 +211,17 @@ extension QRNavigation.ErrorMessage {
     static var techError: Self {
         
         return .init(title: "Ошибка", message: "Возникла техническая ошибка")
+    }
+}
+
+private extension QRNavigationComposerMicroServicesComposer {
+    
+    func qrResolve(
+        string: String
+    ) -> QRViewModel.ScanResult {
+        
+        let resolver = QRResolver(isSberQR: model.isSberQR)
+        
+        return resolver.resolve(string: string)
     }
 }

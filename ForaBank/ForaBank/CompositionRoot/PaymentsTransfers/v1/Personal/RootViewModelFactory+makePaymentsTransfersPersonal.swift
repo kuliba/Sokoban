@@ -15,7 +15,7 @@ extension RootViewModelFactory {
     
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        makeQRModel: @escaping () -> QRModel
+        makeQRModel: @escaping () -> QRScannerModel
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
@@ -35,7 +35,7 @@ extension RootViewModelFactory {
                 makeProfile: { $0(ProfileModelStub()) },
                 makeQR: { $0(QRModelStub()) }
             ),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let toolbar = toolbarComposer.compose()
         
@@ -70,7 +70,7 @@ extension RootViewModelFactory {
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         
         return .init(content: content, flow: flow, bind: bind)

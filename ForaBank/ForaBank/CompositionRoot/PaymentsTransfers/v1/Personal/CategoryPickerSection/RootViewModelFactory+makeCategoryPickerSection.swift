@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
             completion: @escaping ([PaymentServiceOperator]) -> Void
         ) {
-            backgroundScheduler.schedule {
+            schedulers.background.schedule {
                 
                 self.model.loadOperators(payload, completion)
             }
@@ -35,7 +35,7 @@ extension RootViewModelFactory {
             category: ServiceCategory,
             completion: @escaping (Result<[PaymentServiceOperator], Error>) -> Void
         ) {
-            backgroundScheduler.schedule {
+            schedulers.background.schedule {
                 
                 self.model.loadOperators(.init(
                     afterOperatorID: nil,
@@ -53,16 +53,8 @@ extension RootViewModelFactory {
             return .init(
                 model: model,
                 service: .mobileConnection,
-                scheduler: mainScheduler
+                scheduler: schedulers.main
             )
-        }
-        
-        func makeQR() -> QRModel {
-            
-            makeMakeQRScannerModel(
-                qrResolverFeatureFlag: .init(.active),
-                utilitiesPaymentsFlag: .init(.active(.live))
-            )()
         }
         
         let makeStandard = makeStandard(
@@ -70,7 +62,7 @@ extension RootViewModelFactory {
             loadOperators: loadOperators,
             loadOperatorsForCategory: loadOperatorsForCategory,
             pageSize: pageSize,
-            mainScheduler: mainScheduler
+            mainScheduler: schedulers.main
         )
         
         func makeTax() -> ClosePaymentsViewModelWrapper {
@@ -78,7 +70,7 @@ extension RootViewModelFactory {
             return .init(
                 model: model,
                 category: .taxes,
-                scheduler: mainScheduler
+                scheduler: schedulers.main
             )
         }
         
@@ -91,13 +83,13 @@ extension RootViewModelFactory {
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeQR: makeQR,
+                makeQR: makeMakeQRScannerModel,
                 makeQRNavigation: getQRNavigation,
                 makeStandard: makeStandard,
                 makeTax: makeTax,
                 makeTransport: makeTransport
             ),
-            scheduler: mainScheduler
+            scheduler: schedulers.main
         )
         let microServices = selectedCategoryComposer.compose()
         
@@ -106,8 +98,8 @@ extension RootViewModelFactory {
             reload: nanoServices.reloadCategories,
             microServices: microServices,
             placeholderCount: placeholderCount,
-            scheduler: mainScheduler,
-            interactiveScheduler: backgroundScheduler
+            scheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
         
         return categoryPickerComposer.compose(
@@ -166,8 +158,7 @@ extension RootViewModelFactory {
         ) -> SegmentedPaymentProviderPickerFlowModel {
             
             let make = makeSegmentedPaymentProviderPickerFlowModel(
-                pageSize: pageSize,
-                flag: .live
+                pageSize: pageSize
             )
             
             return make(multi, qrCode, qrMapping)
@@ -177,9 +168,7 @@ extension RootViewModelFactory {
             payload: PaymentProviderServicePickerPayload,
             completion: @escaping (AnywayServicePickerFlowModel) -> Void
         ) {
-            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-                flag: .live
-            )
+            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
             
             completion(servicePickerComposer.compose(payload: payload))
         }
@@ -197,7 +186,8 @@ extension RootViewModelFactory {
                 getSberQRData: getSberQRData,
                 makeSegmented: makeSegmented,
                 makeServicePicker: makeServicePicker,
-                scheduler: mainScheduler
+                scanner: scanner,
+                scheduler: schedulers.main
             )
             let microServices = microServicesComposer.compose()
             let composer = QRNavigationComposer(microServices: microServices)

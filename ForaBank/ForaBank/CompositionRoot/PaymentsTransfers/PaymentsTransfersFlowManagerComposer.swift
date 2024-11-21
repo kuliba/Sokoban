@@ -23,27 +23,22 @@ import UIKit
 
 final class PaymentsTransfersFlowManagerComposer {
     
-    private let flag: Flag
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        flag: Flag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
         self.scheduler = scheduler
     }
-    
-    typealias Flag = UtilitiesPaymentsFlag
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
@@ -55,7 +50,6 @@ extension PaymentsTransfersFlowManagerComposer {
     ) -> FlowManager {
         
         let utilityComposer = UtilityPaymentStateComposer(
-            flag: flag,
             model: model,
             httpClient: httpClient,
             log: log,
@@ -96,10 +90,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         static let stub: Self = .init(fraudDelay: 12)
     }
     
-    var settings: Settings {
-        
-        flag.isStub ? .stub : .live
-    }
+    var settings: Settings { .live }
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -130,10 +121,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         microServices: PrepaymentFlowEffectHandler.MicroServices
     ) -> PaymentsTransfersFlowEffectHandlerMicroServices.InitiatePayment {
         
-        switch flag.optionOrStub {
-        case .live: return initiatePaymentLive(microServices)
-        case .stub: return initiatePaymentStub(microServices)
-        }
+        return initiatePaymentLive(microServices)
     }
     
     private func initiatePaymentLive(
@@ -174,24 +162,10 @@ private extension PaymentsTransfersFlowManagerComposer {
         }
     }
 
-    private func initiatePaymentStub(
-        _ microServices: PrepaymentFlowEffectHandler.MicroServices
-    ) -> PaymentsTransfersFlowEffectHandlerMicroServices.InitiatePayment {
-        
-        return { payload, completion in
-            
-            DispatchQueue.global().delay(for: .seconds(2)) {
-                
-                completion(.failure(.connectivityError))
-            }
-        }
-    }
-        
     private func composeUtilityPaymentMicroServices(
     ) -> PrepaymentFlowEffectHandler.MicroServices {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
-            flag: flag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: log,
@@ -203,7 +177,6 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             composer: composer,
-            flag: flag.rawValue,
             nanoServices: nanoComposer.compose(),
             makeLegacyPaymentsServicesViewModel: makeLegacyViewModel
         )
@@ -261,11 +234,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         switch event {
         case let .latestPayment(latestPaymentData):
-            if flag.isActive {
-                return .v1
-            } else {
-                return .legacy(.latestPayment(latestPaymentData))
-            }
+            return .v1
         }
     }
     
@@ -320,7 +289,6 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> Void {
         
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
-            flag: flag.optionOrStub,
             model: model,
             pageSize: settings.pageSize
         )

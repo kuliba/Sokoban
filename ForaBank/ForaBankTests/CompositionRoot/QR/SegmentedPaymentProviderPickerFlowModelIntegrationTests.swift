@@ -81,10 +81,10 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            mainScheduler: .immediate
-        ).makeSegmentedPaymentProviderPickerFlowModel(
-            flag: flag
-        )
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
+            schedulers: .immediate
+        ).makeSegmentedPaymentProviderPickerFlowModel()
         let mix = mix ?? .init(.provider(makeSegmentedProvider()), .provider(makeSegmentedProvider()))
         let sut = make(mix, qrCode ?? anyQR(), qrMapping)
         

@@ -9,25 +9,35 @@ import Foundation
 @testable import ForaBank
 
 extension TransferGeneralData.PayeeExternal {
-    static let stub = TransferGeneralData.PayeeExternal(
-        inn: "7733126977",
-        kpp: "773301001",
-        accountId: nil,
-        accountNumber: "40702810238170103538",
-        bankBIC: "044525225",
-        cardId: nil,
-        cardNumber: nil,
-        compilerStatus: nil,
-        date: nil,
-        name: "Эстейт Сервис",
-        tax: nil
-    )
+
+    static func stub(
+        inn: String = "7733126977",
+        kpp: String = "773301001",
+        accountNumber: String = "40702810238170103538",
+        bankBIC: String = "044525225",
+        name: String = "ForaService"
+    ) -> TransferGeneralData.PayeeExternal {
+        
+            return .init(
+                inn: inn,
+                kpp: kpp,
+                accountId: nil,
+                accountNumber: accountNumber,
+                bankBIC: bankBIC,
+                cardId: nil,
+                cardNumber: nil,
+                compilerStatus: nil,
+                date: nil,
+                name: name,
+                tax: nil
+            )
+        }
 }
 
 extension TransferGeneralData {
     
     static func generalStub(
-        payeeExternal: TransferGeneralData.PayeeExternal? = .stub,
+        payeeExternal: TransferGeneralData.PayeeExternal? = .stub(),
         amount: Decimal? = 0,
         phoneNumber: String? = "11111",
         cardId: Int = 1
