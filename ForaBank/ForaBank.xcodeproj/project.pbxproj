@@ -3069,8 +3069,6 @@
 		A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */; };
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
-		A7598A642CE7671C001980B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7598A632CE7671C001980B1 /* Assets.xcassets */; };
-		A7598A672CE7671C001980B1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7598A662CE7671C001980B1 /* Preview Assets.xcassets */; };
 		A7598A6D2CE7673F001980B1 /* CollateralLoanLandingShowcaseDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7598A442CE766DC001980B1 /* CollateralLoanLandingShowcaseDataAdapter.swift */; };
 		A7598A6E2CE76744001980B1 /* CollateralLoanLandingComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7598A462CE766DC001980B1 /* CollateralLoanLandingComposer.swift */; };
 		A7598A6F2CE76747001980B1 /* ContentViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7598A472CE766DC001980B1 /* ContentViewModelComposer.swift */; };
@@ -6682,10 +6680,6 @@
 		A7598A4E2CE766DC001980B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7598A4F2CE766DC001980B1 /* CollateralLoanLandingPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingPreviewApp.swift; sourceTree = "<group>"; };
 		A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollateralLoanLandingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A7598A5F2CE7671B001980B1 /* CollateralLoanLandingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingPreviewApp.swift; sourceTree = "<group>"; };
-		A7598A612CE7671B001980B1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A7598A632CE7671C001980B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A7598A662CE7671C001980B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A7875EF52CCFB3F200D43E20 /* CollateralLoanLandingSaveConsentsBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingSaveConsentsBackend.xctestplan; sourceTree = "<group>"; };
 		A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift"; sourceTree = "<group>"; };
 		A78AC1D52CEB990700154B88 /* CollateralLoanLandingShowCaseUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingShowCaseUI.xctestplan; sourceTree = "<group>"; };
@@ -16946,25 +16940,6 @@
 			path = CollateralLoanLandingPreview;
 			sourceTree = "<group>";
 		};
-		A7598A5E2CE7671B001980B1 /* CollateralLoanLandingPreview */ = {
-			isa = PBXGroup;
-			children = (
-				A7598A5F2CE7671B001980B1 /* CollateralLoanLandingPreviewApp.swift */,
-				A7598A612CE7671B001980B1 /* ContentView.swift */,
-				A7598A632CE7671C001980B1 /* Assets.xcassets */,
-				A7598A652CE7671C001980B1 /* Preview Content */,
-			);
-			path = CollateralLoanLandingPreview;
-			sourceTree = "<group>";
-		};
-		A7598A652CE7671C001980B1 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				A7598A662CE7671C001980B1 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		C10423932A72786C00D0AC63 /* ManagingSubscription */ = {
 			isa = PBXGroup;
 			children = (
@@ -18085,7 +18060,6 @@
 				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
 				A515682D2821B927000D4455 /* ForaPushServiceExtension */,
 				2AE5972529F9182B0083F138 /* PreviewApps */,
-				A7598A5E2CE7671B001980B1 /* CollateralLoanLandingPreview */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
 				838C09102C8B52F100E894AC /* Recovered References */,
@@ -20161,9 +20135,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7598A672CE7671C001980B1 /* Preview Assets.xcassets in Resources */,
 				A7598A732CE76755001980B1 /* Assets.xcassets in Resources */,
-				A7598A642CE7671C001980B1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
