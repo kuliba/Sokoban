@@ -671,6 +671,22 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
+    func makeOperationPickerView(
+        operationPicker: PayHubUI.OperationPicker
+    ) -> some View {
+        
+        if let binder = operationPicker.operationBinder {
+            
+            makeOperationPickerView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected operationPicker type \(String(describing: operationPicker))")
+                            .foregroundColor(.red)
+        }
+    }
+    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {

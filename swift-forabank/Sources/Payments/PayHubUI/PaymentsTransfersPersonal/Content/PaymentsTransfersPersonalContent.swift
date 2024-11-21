@@ -7,17 +7,17 @@
 
 import Foundation
 
-public final class PaymentsTransfersPersonalContent<OperationPicker, Toolbar, Transfers>: ObservableObject {
+public final class PaymentsTransfersPersonalContent<Toolbar, Transfers>: ObservableObject {
     
     public let categoryPicker: any CategoryPicker
-    public let operationPicker: OperationPicker
+    public let operationPicker: any OperationPicker
     public let toolbar: Toolbar
     public let transfers: Transfers
     private let _reload: () -> Void
     
     public init(
         categoryPicker: any CategoryPicker,
-        operationPicker: OperationPicker,
+        operationPicker: any OperationPicker,
         toolbar: Toolbar,
         transfers: Transfers,
         reload: @escaping () -> Void

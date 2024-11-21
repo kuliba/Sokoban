@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>: View
+public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View,
@@ -50,8 +50,8 @@ where CategoryPickerView: View,
 
 public extension PaymentsTransfersPersonalContentView {
     
-    typealias Content = PaymentsTransfersPersonalContent<OperationPicker, Toolbar, Transfers>
-    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>
+    typealias Content = PaymentsTransfersPersonalContent<Toolbar, Transfers>
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>
     typealias Config = PaymentsTransfersPersonalViewConfig
 }
 
@@ -68,7 +68,7 @@ public extension PaymentsTransfersPersonalContentView {
                     .padding()
                     .background(Color.orange.opacity(0.1))
             },
-            makeOperationPickerView: { (payHub: PreviewPayHub) in
+            makeOperationPickerView: { _ in
                 
                 Text("Operation Picker")
                     .frame(maxWidth: .infinity)
@@ -101,15 +101,14 @@ public extension PaymentsTransfersPersonalContentView {
 }
 
 private extension PaymentsTransfersPersonalContent
-where OperationPicker == PreviewPayHub,
-      Toolbar == PreviewToolbar,
+where Toolbar == PreviewToolbar,
       Transfers == PreviewTransfers {
     
     static var preview: PaymentsTransfersPersonalContent {
         
         return .init(
             categoryPicker: PreviewCategoryPicker(),
-            operationPicker: .init(),
+            operationPicker: PreviewOperationPicker(),
             toolbar: .init(),
             transfers: .init(),
             reload: {}
@@ -119,7 +118,7 @@ where OperationPicker == PreviewPayHub,
 
 private final class PreviewCategoryPicker: CategoryPicker {}
 
-private final class PreviewPayHub {}
+private final class PreviewOperationPicker: OperationPicker {}
 
 private final class PreviewToolbar {}
 

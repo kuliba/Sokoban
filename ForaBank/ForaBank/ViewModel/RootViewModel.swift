@@ -695,6 +695,14 @@ private extension CategoryPickerSectionDomain.Binder {
     }
 }
 
+private extension PayHubUI.OperationPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        operationBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
 private extension OperationPickerBinder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
