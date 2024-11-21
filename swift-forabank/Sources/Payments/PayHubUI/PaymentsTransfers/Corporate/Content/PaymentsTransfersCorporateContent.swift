@@ -7,8 +7,6 @@
 
 import Foundation
 
-public protocol CorporateBannerPicker {}
-
 public final class PaymentsTransfersCorporateContent: ObservableObject {
     
     public let bannerPicker: any CorporateBannerPicker

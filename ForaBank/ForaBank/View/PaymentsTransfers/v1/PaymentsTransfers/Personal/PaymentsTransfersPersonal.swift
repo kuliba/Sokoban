@@ -12,13 +12,18 @@ typealias PaymentsTransfersPersonal = PaymentsTransfersPersonalDomain.Binder
 
 typealias PaymentsTransfersPersonalDomain = PayHubUI.PaymentsTransfersPersonalDomain<PaymentsTransfersPersonalSelect, PaymentsTransfersPersonalNavigation>
 
-enum PaymentsTransfersPersonalSelect {
+enum PaymentsTransfersPersonalSelect: Equatable {
     
-    case byPhoneTransfer
-    case scanQR
-    case templates
-    case userProfile
-    case utilityPayment // service payment
+    case outside(Outside)
+    
+    enum Outside: Equatable {
+        
+        case byPhoneTransfer
+        case scanQR
+        case templates
+        case userProfile
+        case utilityPayment // service payment
+    }
 }
 
 enum PaymentsTransfersPersonalNavigation {

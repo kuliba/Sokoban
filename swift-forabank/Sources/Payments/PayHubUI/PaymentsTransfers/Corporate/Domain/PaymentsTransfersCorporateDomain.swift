@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersPersonalDomain.swift
+//  PaymentsTransfersCorporateDomain.swift
 //
 //
 //  Created by Igor Malyarov on 28.10.2024.
@@ -9,9 +9,9 @@ import PayHub
 import RxViewModel
 
 /// A namespace.
-public enum PaymentsTransfersPersonalDomain<Select, Navigation> {}
+public enum PaymentsTransfersCorporateDomain<Select, Navigation> {}
 
-public extension PaymentsTransfersPersonalDomain {
+public extension PaymentsTransfersCorporateDomain {
     
     // MARK: - Binder
     
@@ -24,7 +24,7 @@ public extension PaymentsTransfersPersonalDomain {
     
     // MARK: - Content
     
-    typealias Content = PaymentsTransfersPersonalContent
+    typealias Content = PaymentsTransfersCorporateContent
     
     // MARK: - Flow
     

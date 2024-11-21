@@ -73,8 +73,7 @@ extension RootViewModelFactory {
         )
     }
     
-    private func witnesses(
-    ) -> ContentWitnesses<Domain.Content, PaymentsTransfersPersonalSelect> {
+    private func witnesses() -> Domain.Witnesses {
         
         return .init(
             emitting: { $0.eventPublisher },
@@ -85,7 +84,7 @@ extension RootViewModelFactory {
 
 // MARK: - Content
 
-extension PaymentsTransfersPersonalDomain.Content {
+extension Domain.Content {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
