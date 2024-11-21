@@ -8,4 +8,19 @@
 import PayHub
 import PayHubUI
 
-typealias PaymentsTransfersPersonal = PayHub.Binder<PaymentsTransfersPersonalContent, PaymentsTransfersPersonalFlow>
+typealias PaymentsTransfersPersonal = PaymentsTransfersPersonalDomain.Binder
+
+typealias PaymentsTransfersPersonalDomain = PayHubUI.PaymentsTransfersPersonalDomain<PaymentsTransfersPersonalSelect, PaymentsTransfersPersonalNavigation>
+
+enum PaymentsTransfersPersonalSelect {
+    
+    case byPhoneTransfer
+    case scanQR
+    case templates
+    case userProfile
+    case utilityPayment // service payment
+}
+
+enum PaymentsTransfersPersonalNavigation {
+    
+}

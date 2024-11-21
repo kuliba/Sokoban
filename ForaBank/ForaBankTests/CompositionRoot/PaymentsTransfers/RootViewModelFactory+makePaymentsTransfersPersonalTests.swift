@@ -66,7 +66,6 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let loadCategoriesSpy = LoadCategoriesSpy()
         let reloadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
-        let makeQRModelSpy = MakeQRModelSpy()
         let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
@@ -81,8 +80,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
                 reloadCategories: reloadCategoriesSpy.process(completion:),
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in }
-            ),
-            makeQRModel: makeQRModelSpy.call
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
