@@ -2385,6 +2385,10 @@ extension ProductProfileViewModel {
                 
             case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+            
+            case .cardOrder:
+                //TODO: send action to landing
+                break
             }
         case let .listVerticalRoundImageAction(action):
             switch action {

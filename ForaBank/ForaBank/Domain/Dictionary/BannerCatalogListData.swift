@@ -88,6 +88,9 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
                 
             case .payment:
                 self.action = action
+                
+            case .cardOrder:
+                self.action = action
             }
         } else {
             
@@ -118,6 +121,7 @@ enum BannerActionType: String, Codable, Equatable {
     case landing = "LANDING"
     case savingLanding = "SAVING_LANDING"
     case payment = "HOUSING_AND_COMMUNAL_SERVICE"
+    case cardOrder
 }
 
 class BannerAction: Codable, Equatable, Hashable {

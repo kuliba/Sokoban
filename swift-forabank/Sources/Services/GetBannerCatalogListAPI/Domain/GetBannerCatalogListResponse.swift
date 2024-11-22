@@ -75,5 +75,6 @@ public struct GetBannerCatalogListResponse: Equatable {
         case migTransfer(String)
         case openDeposit(String)
         case payment(String)
+        case cardOrder
     }
 }
