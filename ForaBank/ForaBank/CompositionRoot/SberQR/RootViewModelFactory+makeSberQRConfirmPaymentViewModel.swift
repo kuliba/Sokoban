@@ -11,6 +11,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeSberQRConfirmPaymentViewModel() -> MakeSberQRConfirmPaymentViewModel {
         
         let model = self.model

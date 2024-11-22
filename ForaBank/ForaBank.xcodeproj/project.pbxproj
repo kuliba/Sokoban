@@ -582,6 +582,15 @@
 		2A2ECBC62AE5362300F3C946 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */; };
 		2A2EE9042CF0760E0019FC31 /* OperationPickerDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9032CF0760E0019FC31 /* OperationPickerDomain.swift */; };
 		2A2EE9062CF07F190019FC31 /* composeLoadablePickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9052CF07F190019FC31 /* composeLoadablePickerModel.swift */; };
+		2A2EE9082CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9072CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift */; };
+		2A2EE90A2CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9092CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift */; };
+		2A2EE90C2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE90B2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift */; };
+		2A2EE9112CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */; };
+		2A2EE9132CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9122CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift */; };
+		2A2EE9152CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */; };
+		2A2EE9172CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */; };
+		2A2EE9192CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */; };
+		2A2EE91B2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */; };
 		2A2F882A2BC942220097119C /* AnywayPaymentPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2F88292BC942220097119C /* AnywayPaymentPreviewApp.swift */; };
 		2A2F882C2BC942220097119C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2F882B2BC942220097119C /* ContentView.swift */; };
 		2A2F88312BC942230097119C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A2F88302BC942230097119C /* Preview Assets.xcassets */; };
@@ -4237,6 +4246,15 @@
 		2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStore.swift; sourceTree = "<group>"; };
 		2A2EE9032CF0760E0019FC31 /* OperationPickerDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerDomain.swift; sourceTree = "<group>"; };
 		2A2EE9052CF07F190019FC31 /* composeLoadablePickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = composeLoadablePickerModel.swift; sourceTree = "<group>"; };
+		2A2EE9072CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMobilePayment.swift"; sourceTree = "<group>"; };
+		2A2EE9092CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTaxPayment.swift"; sourceTree = "<group>"; };
+		2A2EE90B2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTransportPayment.swift"; sourceTree = "<group>"; };
+		2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadOperators.swift"; sourceTree = "<group>"; };
+		2A2EE9122CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+createSberQRPayment.swift"; sourceTree = "<group>"; };
+		2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getSberQRData.swift"; sourceTree = "<group>"; };
+		2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift"; sourceTree = "<group>"; };
+		2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeAnywayServicePickerFlowModel.swift"; sourceTree = "<group>"; };
+		2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getQRNavigation.swift"; sourceTree = "<group>"; };
 		2A2F88272BC942220097119C /* AnywayPaymentPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnywayPaymentPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A2F88292BC942220097119C /* AnywayPaymentPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentPreviewApp.swift; sourceTree = "<group>"; };
 		2A2F882B2BC942220097119C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -9391,6 +9409,23 @@
 			path = ResponseMapper;
 			sourceTree = "<group>";
 		};
+		2A2EE90D2CF0AC950019FC31 /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				2A2EE9072CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift */,
+				2A2EE9092CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift */,
+				2A2EE90B2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift */,
+				2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */,
+				2A3624B82C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift */,
+				2A2EE9122CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift */,
+				2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */,
+				2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */,
+				2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */,
+				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
+			);
+			path = Payments;
+			sourceTree = "<group>";
+		};
 		2A2F88282BC942220097119C /* AnywayPaymentPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -11126,6 +11161,8 @@
 			isa = PBXGroup;
 			children = (
 				2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */,
+				2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */,
+				2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */,
 				2A6826D02C9D340600B8057F /* StandardSelectedCategoryDestinationNanoServicesComposer.swift */,
 				2A6A6A352CAADF0B006D6044 /* SelectedCategoryNavigationMicroServicesComposer.swift */,
 				2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */,
@@ -11256,12 +11293,11 @@
 		2A7183B82C5E283A008B222B /* QR */ = {
 			isa = PBXGroup;
 			children = (
+				2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */,
+				2A1A8E572B271802008B896D /* RootViewModelFactory+makeQRViewModelFactory.swift */,
 				2ACFD6662C5CDDF2003F08AE /* QRScanResultMapperComposer.swift */,
 				2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */,
 				2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */,
-				2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */,
-				2A3624B82C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift */,
-				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2A3345902CB13FAA00EBF33E /* QRNavigation */,
 			);
 			path = QR;
@@ -12586,10 +12622,8 @@
 		2AC2ADBC2B2243780049EE9B /* SberQR */ = {
 			isa = PBXGroup;
 			children = (
-				2A1A8E572B271802008B896D /* RootViewModelFactory+makeQRViewModelFactory.swift */,
 				2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */,
 				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
-				2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */,
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
@@ -13371,6 +13405,7 @@
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
+				2A2EE90D2CF0AC950019FC31 /* Payments */,
 				2AF511E92BF3312300F97610 /* PaymentsTransfers */,
 				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2A3624A42C5F7BD000174C50 /* Components */,
@@ -21599,6 +21634,7 @@
 				774AC9AC2979964C00A6A6AE /* PaymentsMessageViewComponent.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
 				2A118E212AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift in Sources */,
+				2A2EE9082CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift in Sources */,
 				0BA251F126C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift in Sources */,
 				8362FAFF29DEDCB70094457E /* PaymentsServicesViewModel.swift in Sources */,
 				C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */,
@@ -21826,6 +21862,7 @@
 				6862B55427B688CC006E833F /* AuthPinCodeViewModel.swift in Sources */,
 				50C66A4228893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift in Sources */,
 				2A2ECBC62AE5362300F3C946 /* InMemoryStore.swift in Sources */,
+				2A2EE9192CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift in Sources */,
 				C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */,
 				50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */,
 				839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */,
@@ -22176,6 +22213,7 @@
 				2AECBC4C2BEBAD68000B0C0E /* UtilityPrepaymentFlowEffectHandler.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
+				2A2EE9152CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift in Sources */,
 				777460F12922C29D00D3FF46 /* ContactsListSectionView.swift in Sources */,
 				50164F202841009C004239A1 /* ToggleView.swift in Sources */,
 				2ABBD6C92CDD61E20078E977 /* RootViewBinderView.swift in Sources */,
@@ -22793,6 +22831,7 @@
 				774A8B622865FDAF00B81140 /* PaymentsProductViewComponent.swift in Sources */,
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				833D3E412C2EF036006626F2 /* ControlPanelButtonDetails.swift in Sources */,
+				2A2EE9112CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift in Sources */,
 				2A884E7B2C65062200493D0A /* UtilityPrepaymentBinder.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
@@ -22918,6 +22957,7 @@
 				C113225A28CFAC0C00F90072 /* ContactsView.swift in Sources */,
 				506989262846604A00C3DEEE /* OpenAccountView.swift in Sources */,
 				2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */,
+				2A2EE9172CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
 				ED684CEE27638E6700AA7A33 /* DocDepositCollectionViewCell.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
@@ -23036,6 +23076,7 @@
 				834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */,
 				2AECBC3E2BEBAB4C000B0C0E /* UtilityPaymentFlowEffect.swift in Sources */,
 				2AA54A732C57ADD000542C49 /* PaymentProviderServicePickerConfig.swift in Sources */,
+				2A2EE90A2CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift in Sources */,
 				2A35DDAD2C023E0800EFF0EB /* ProductData+productSelectProduct.swift in Sources */,
 				6819084428BCAAE3003E81A3 /* SbpPayView.swift in Sources */,
 				5036B0F628E20C570052FACE /* PaymentsMeToMeViewModel.swift in Sources */,
@@ -23043,6 +23084,7 @@
 				2A5B23212BEE329200270D50 /* SberOperatorFailureFlowView.swift in Sources */,
 				7758400927B13F8700251969 /* ValidatorProtocol.swift in Sources */,
 				2ACFD6542C5CC72F003F08AE /* QRModelWrapperEffect.swift in Sources */,
+				2A2EE9132CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */,
 				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
@@ -23219,6 +23261,7 @@
 				2A3624542C5E69F900174C50 /* SegmentedPaymentProviderPickerEvent.swift in Sources */,
 				C113225628CFA84300F90072 /* ContactsViewModel.swift in Sources */,
 				C1F7999F29CD18BF0048346B /* Model+ReturnAbroad.swift in Sources */,
+				2A2EE90C2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift in Sources */,
 				77A76A7C27FAFDCB00A271B3 /* AtmMetroStationData.swift in Sources */,
 				8393319D2C8F193000D15379 /* BannerPickerSectionDestination.swift in Sources */,
 				0B931B2226DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift in Sources */,
@@ -23246,6 +23289,7 @@
 				77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */,
 				831EB3D42CCE382400896BD4 /* StickerViewFactory.swift in Sources */,
 				777460E0291E509900D3FF46 /* ContactsSectionViewModel.swift in Sources */,
+				2A2EE91B2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				2A4300802C5217F6002FF8C7 /* ServicePaymentFlowEffect.swift in Sources */,
 				2A89A5182CCD84D30070131F /* RootViewModelFactorySettings.swift in Sources */,

@@ -10,6 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeAnywayServicePickerFlowModelComposer(
         pageSize: Int = 50
     ) -> AnywayServicePickerFlowModelComposer {

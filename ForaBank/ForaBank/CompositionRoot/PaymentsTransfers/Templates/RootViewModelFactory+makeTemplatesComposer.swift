@@ -10,6 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeTemplatesComposer(
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> TemplatesListFlowModelComposer {
