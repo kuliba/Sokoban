@@ -216,6 +216,27 @@ extension AuthLoginViewModel {
     }
     
     // MARK: - Publishers
+    var clientInformAlertPublisher: AnyPublisher<ClientInformAlerts?, Never> {
+        $clientInformAlerts
+            .dropFirst()
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
+    }
+    
+    var informAlertPublisher: AnyPublisher<ClientInformAlerts.InformAlert, Never> {
+        $clientInformAlerts
+            .compactMap { $0?.informAlert }
+            .flatMap { alerts in
+                Publishers.Sequence(sequence: alerts)
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    var updateAlertPublisher: AnyPublisher<ClientInformAlerts.UpdateAlert, Never> {
+        $clientInformAlerts
+            .compactMap { $0?.updateAlert }
+            .eraseToAnyPublisher()
+    }
     
     var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
         
@@ -419,6 +440,79 @@ extension ClientInformData {
         authorized: ["authorized"],
         notAuthorized: "notAuthorized"
     )
+}
+
+// MARK: - ClientInform Alerts
+extension ClientInformAlerts {
+    
+    static let notEmptyInformAlert: Self = .init(
+        informAlert: [
+            .init(title: "TITLE", text: "TEXT")
+        ]
+    )
+    
+    static let notEmptyInformTwoAlert: Self = .init(
+        informAlert: [
+            .init(title: "TITLE", text: "TEXT"),
+            .init(title: "TITLE", text: "TEXT")
+        ]
+    )
+    
+    static let requiredUpdateAlert: Self = .init(
+        updateAlert: .init(
+            title: "TITLE",
+            text: "TEXT",
+            link: "LINK",
+            version: "VERSION",
+            actionType: .required
+        )
+    )
+    
+    static let optionalUpdateAlert: Self = .init(
+        updateAlert: .init( 
+            title: "TITLE",
+            text: "TEXT",
+            link: "LINK",
+            version: "VERSION",
+            actionType: .optional
+        )
+    )
+        
+    static let informAlertAndRequeredUpdateAlert: Self = .init(informAlert: [.init(title: "TITLE", text: "TEXT")],
+                                                               updateAlert: .init(
+                                                                title: "TITLE",
+                                                                text: "TEXT",
+                                                                link: "LINK",
+                                                                version: "VERSION",
+                                                                actionType: .required
+                                                               ))
+    
+    static let emptyInformAndNilUpdateAlert: Self = .init(informAlert: [])
+    
+}
+
+extension ClientInformAlerts.InformAlert: Equatable {
+    
+    public static func == (lhs: ClientInformAlerts.InformAlert, rhs: ClientInformAlerts.InformAlert) -> Bool {
+            
+        return lhs.title == rhs.title
+    }
+}
+
+extension ClientInformAlerts.UpdateAlert: Equatable {
+    
+    public static func == (lhs: ClientInformAlerts.UpdateAlert, rhs: ClientInformAlerts.UpdateAlert) -> Bool {
+            
+        return lhs.title == rhs.title
+    }
+}
+
+extension ClientInformAlerts: Equatable {
+    
+    public static func == (lhs: ClientInformAlerts, rhs: ClientInformAlerts) -> Bool {
+            
+        return lhs.id == rhs.id
+    }
 }
 
 extension AuthLoginViewModel.Link {

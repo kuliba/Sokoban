@@ -22,7 +22,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var cardScanner: CardScannerViewModel?
     @Published private(set) var alert: Alert.ViewModel?
     @Published var buttons: [ButtonAuthView.ViewModel]
-    @Published private var clientInformAlerts: ClientInformAlerts?
+    @Published private(set) var clientInformAlerts: ClientInformAlerts?
 
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
@@ -253,6 +253,7 @@ private extension AuthLoginViewModel {
             .receive(on: scheduler)
             .map(Optional.some)
             .assign(to: &$clientInformAlerts)
+        
         eventPublishers.checkClientResponse
             .receive(on: scheduler)
             .sink { [weak self] payload in
