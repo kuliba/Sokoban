@@ -354,8 +354,7 @@ extension RootViewModelFactory {
             nanoServices: .init(
                 loadCategories: loadCategories,
                 reloadCategories: reloadCategories,
-                loadAllLatest: makeLoadLatestOperations(.all),
-                loadLatestForCategory: { getLatestPayments([$0.name], $1) }
+                loadAllLatest: makeLoadLatestOperations(.all)
             )
         )
         

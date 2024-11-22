@@ -19,7 +19,6 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
         
-        let pageSize = settings.pageSize
         let placeholderCount = settings.categoryPickerPlaceholderCount
         
         let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
