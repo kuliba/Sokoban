@@ -57,19 +57,6 @@ extension RootViewModelFactory {
             suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
         )
         
-        func makeSegmented(
-            multi: MultiElementArray<SegmentedOperatorProvider>,
-            qrCode: QRCode,
-            qrMapping: QRMapping
-        ) -> SegmentedPaymentProviderPickerFlowModel {
-            
-            let make = makeSegmentedPaymentProviderPickerFlowModel(
-                pageSize: pageSize
-            )
-            
-            return make(multi, qrCode, qrMapping)
-        }
-        
         func makeServicePicker(
             payload: PaymentProviderServicePickerPayload,
             completion: @escaping (AnywayServicePickerFlowModel) -> Void
@@ -90,7 +77,7 @@ extension RootViewModelFactory {
                 model: model,
                 createSberQRPayment: createSberQRPayment,
                 getSberQRData: getSberQRData,
-                makeSegmented: makeSegmented,
+                makeSegmented: makeSegmentedPaymentProviderPickerFlowModel,
                 makeServicePicker: makeServicePicker,
                 scanner: scanner,
                 scheduler: schedulers.main
