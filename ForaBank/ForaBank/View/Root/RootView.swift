@@ -253,6 +253,14 @@ private extension RootView {
                         ),
                         config: .iFora
                     )
+                },
+                makeFullScreenCoverView: { _ in
+                
+                    Text("TBD: FullScreenCoverView")
+                },
+                makeDestinationView: { _ in
+                
+                    Text("TBD: DestinationView")
                 }
             )
         )
@@ -306,6 +314,14 @@ private extension RootView {
                         ),
                         config: .iFora
                     )
+                },
+                makeFullScreenCoverView: { _ in
+                
+                    Text("TBD: FullScreenCoverView")
+                },
+                makeDestinationView: { _ in
+                
+                    Text("TBD: DestinationView")
                 }
             )
         )
@@ -688,7 +704,7 @@ private extension RootView {
     }
     
     func makeOperationPickerView(
-        binder: OperationPickerBinder
+        binder: OperationPickerDomain.Binder
     ) -> some View {
         
         ComposedOperationPickerFlowView(
@@ -702,7 +718,7 @@ private extension RootView {
     
     @ViewBuilder
     func makeOperationPickerDestinationView(
-        destination: OperationPickerNavigation
+        destination: OperationPickerDomain.Navigation
     ) -> some View {
         
         switch destination {
@@ -737,7 +753,7 @@ private extension RootView {
     }
     
     func makePaymentsTransfersToolbarView(
-        binder: PaymentsTransfersPersonalToolbarBinder
+        binder: PaymentsTransfersPersonalToolbarDomain.Binder
     ) -> some View {
         
         ComposedPaymentsTransfersPersonalToolbarView(

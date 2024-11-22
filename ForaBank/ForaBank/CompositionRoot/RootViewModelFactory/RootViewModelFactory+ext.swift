@@ -356,8 +356,7 @@ extension RootViewModelFactory {
                 reloadCategories: reloadCategories,
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
-            ),
-            makeQRModel: makeMakeQRScannerModel
+            )
         )
         
         if paymentsTransfersFlag.isActive {
@@ -406,7 +405,10 @@ extension RootViewModelFactory {
             
             loadBannersList {
                 
-                paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+                guard let paymentsTransfersBannerPicker = paymentsTransfersCorporate.content.bannerPicker.bannerBinder
+                else { return }
+                
+                paymentsTransfersBannerPicker.content.event(.loaded($0))
                 mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }

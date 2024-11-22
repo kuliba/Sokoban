@@ -39,8 +39,11 @@ where ContentView: View,
 
 public extension OperationPickerFlowView {
     
-    typealias State = OperationPickerFlowState<Exchange, LatestFlow, Status, Templates>
-    typealias Event = OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Domain = OperationPickerDomain<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias FlowDomain = Domain.FlowDomain
+    
+    typealias State = FlowDomain.State
+    typealias Event = FlowDomain.Event
     typealias Factory = OperationPickerFlowViewFactory<ContentView, DestinationView, Exchange, LatestFlow, Status, Templates>
 }
 

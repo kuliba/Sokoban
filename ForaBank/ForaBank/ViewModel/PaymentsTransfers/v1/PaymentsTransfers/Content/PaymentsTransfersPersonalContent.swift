@@ -7,8 +7,6 @@
 
 import PayHubUI
 
-typealias PaymentsTransfersPersonalContent = PayHubUI.PaymentsTransfersPersonalContent
-
 // MARK: - CategoryPicker
 
 extension CategoryPickerSectionDomain.Binder: PayHubUI.CategoryPicker {}
@@ -23,13 +21,25 @@ extension PayHubUI.CategoryPicker {
 
 // MARK: - OperationPicker
 
-extension OperationPickerBinder: PayHubUI.OperationPicker {}
+extension OperationPickerDomain.Binder: PayHubUI.OperationPicker {}
 
 extension PayHubUI.OperationPicker {
     
-    var operationBinder: OperationPickerBinder? {
+    var operationBinder: OperationPickerDomain.Binder? {
         
-        return self as? OperationPickerBinder
+        return self as? OperationPickerDomain.Binder
+    }
+}
+
+// MARK: - PaymentsTransfersPersonalToolbar
+
+extension PaymentsTransfersPersonalToolbarDomain.Binder: PayHubUI.PaymentsTransfersPersonalToolbar {}
+
+extension PayHubUI.PaymentsTransfersPersonalToolbar {
+    
+    var toolbarBinder: PaymentsTransfersPersonalToolbarDomain.Binder? {
+        
+        return self as? PaymentsTransfersPersonalToolbarDomain.Binder
     }
 }
 
@@ -42,17 +52,5 @@ extension PayHubUI.TransfersPicker {
     var transfersBinder: PaymentsTransfersPersonalTransfersDomain.Binder? {
         
         return self as? PaymentsTransfersPersonalTransfersDomain.Binder
-    }
-}
-
-// MARK: - PaymentsTransfersPersonalToolbar
-
-extension PaymentsTransfersPersonalToolbarBinder: PayHubUI.PaymentsTransfersPersonalToolbar {}
-
-extension PayHubUI.PaymentsTransfersPersonalToolbar {
-    
-    var toolbarBinder: PaymentsTransfersPersonalToolbarBinder? {
-        
-        return self as? PaymentsTransfersPersonalToolbarBinder
     }
 }

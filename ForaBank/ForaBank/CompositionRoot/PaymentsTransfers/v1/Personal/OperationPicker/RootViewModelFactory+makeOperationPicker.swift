@@ -8,24 +8,48 @@
 import Foundation
 import PayHubUI
 
+private typealias Domain = OperationPickerDomain
+
+private extension PaymentsTransfersPersonalNanoServices {
+    
+    func load(
+        completion: @escaping ([OperationPickerDomain.Select]?) -> Void
+    ) {
+        loadAllLatest {
+            
+            completion(((try? $0.get()) ?? []).map { .latest($0) })
+        }
+    }
+}
+
 extension RootViewModelFactory {
     
     func makeOperationPicker(
         nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> OperationPickerBinder {
-
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
-            load: { completion in
-                
-                nanoServices.loadAllLatest {
-                    
-                    completion(((try? $0.get()) ?? []).map { .latest($0) })
-                }
-            },
+    ) -> OperationPickerDomain.Binder {
+        
+        let operationPickerContent = makeOperationPickerContent(
+            load: nanoServices.load(completion:)
+        )
+        
+        return compose(
+            getNavigation: getNavigation,
+            content: operationPickerContent,
+            witnesses: witnesses()
+        )
+    }
+    
+    private func makeOperationPickerContent(
+        load: @escaping Load<[Domain.Select]>
+    ) -> Domain.Content {
+        
+        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, Domain.Select>(
+            load: load,
             scheduler: schedulers.main
         )
         let operationPickerPlaceholderCount = settings.operationPickerPlaceholderCount
-        let operationPickerContent = operationPickerContentComposer.compose(
+        
+        return operationPickerContentComposer.compose(
             prefix: [
                 .element(.init(.templates)),
                 .element(.init(.exchange))
@@ -33,21 +57,42 @@ extension RootViewModelFactory {
             suffix: [],
             placeholderCount: operationPickerPlaceholderCount
         )
-        let operationPickerFlowComposer = OperationPickerFlowComposer(
-            model: model,
-            scheduler: schedulers.main
-        )
-        let operationPickerFlow = operationPickerFlowComposer.compose()
+    }
+    
+    private func getNavigation(
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
+    ) {
+        switch select {
+        case .exchange:
+            let composer = CurrencyWalletViewModelComposer(model: model)
+            let exchange = composer.compose(dismiss: { notify(.dismiss) })
+            
+            if let exchange {
+                completion(.exchange(exchange))
+            } else {
+                completion(.status(.exchangeFailure))
+            }
+            
+        case let .latest(latest):
+            completion(.latest(.init(latest: latest)))
+            
+        case .templates:
+            completion(.templates(.init()))
+        }
+    }
+    
+    private func witnesses() -> Domain.Composer.Witnesses {
         
         return .init(
-            content: operationPickerContent,
-            flow: operationPickerFlow,
-            bind: { content, flow in
+            emitting: {
                 
-                content.$state
+                $0.$state
                     .compactMap(\.selected)
-                    .sink { flow.event(.select($0)) }
-            }
+                    .eraseToAnyPublisher()
+            },
+            receiving: { content in { content.event(.select(nil)) }}
         )
     }
 }
