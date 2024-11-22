@@ -62,7 +62,7 @@ extension RootViewModel {
                     
                     switchTab(.payments)
                     
-                    picker.flow.event(.select(.category(element.element)))
+                    picker.flow.event(.select(element.element))
                 }
             }
             

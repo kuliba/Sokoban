@@ -44,18 +44,26 @@ extension RootViewModelFactory {
         )
         let microServices = selectedCategoryComposer.compose()
         
-        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
+        let categoryPickerContent = composeLoadablePickerModel(
             load: nanoServices.loadCategories,
             reload: nanoServices.reloadCategories,
-            microServices: microServices,
-            placeholderCount: placeholderCount,
-            scheduler: schedulers.main,
-            interactiveScheduler: schedulers.interactive
+            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
+,
+            placeholderCount: placeholderCount
         )
         
-        return categoryPickerComposer.compose(
-            prefix: [],
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
+        return compose(
+            getNavigation: microServices.getNavigation,
+            content: categoryPickerContent,
+            witnesses: witnesses()
+        )
+    }
+    
+    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
+        
+        return .init(
+            emitting: { $0.$state.compactMap(\.selected) },
+            receiving: { content in { content.event(.select(nil)) }}
         )
     }
     

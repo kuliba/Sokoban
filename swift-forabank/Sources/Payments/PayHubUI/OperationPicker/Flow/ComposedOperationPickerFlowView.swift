@@ -59,7 +59,7 @@ private extension ComposedOperationPickerFlowView {
         _ content: OperationPickerContent<Latest>
     ) -> some View {
         
-        OperationPickerContentWrapperView(
+        RxWrapperView(
             model: content,
             makeContentView: { state, event in
                 
