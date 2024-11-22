@@ -46,7 +46,7 @@ extension RootViewModelFactory {
         
         let transfers = makeTransfers(
             buttonTypes: TransfersDomain.ButtonType.allCases,
-            makeQRModel: makeMakeQRScannerModel
+            makeQRModel: makeQRScannerModel
         )
         
         // MARK: - PaymentsTransfers
