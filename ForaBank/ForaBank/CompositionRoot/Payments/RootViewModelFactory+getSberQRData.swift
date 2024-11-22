@@ -16,8 +16,7 @@ extension RootViewModelFactory {
     ) {
         let getSberQRData = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetSberQRRequest,
-            mapResponse: SberQR.ResponseMapper.mapGetSberQRDataResponse,
-            mapError: { $0 }
+            mapResponse: SberQR.ResponseMapper.mapGetSberQRDataResponse
         )
         
         getSberQRData(url) {

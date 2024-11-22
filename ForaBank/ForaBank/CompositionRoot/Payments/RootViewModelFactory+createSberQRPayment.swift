@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     func createSberQRPayment(
         payload: (URL, SberQRConfirmPaymentState),
         completion: @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void
-    ){
+    ) {
         let createPayment = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateSberQRPaymentRequest,
             mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
