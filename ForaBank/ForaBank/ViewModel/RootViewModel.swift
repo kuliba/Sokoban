@@ -11,6 +11,7 @@ import Foundation
 import LandingUIComponent
 import MarketShowcase
 import PayHub
+import PayHubUI
 import RemoteServices
 import SwiftUI
 import ClientInformList
@@ -673,11 +674,27 @@ extension PaymentsTransfersPersonal {
     }
 }
 
+private extension PayHubUI.CategoryPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        sectionBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
 private extension CategoryPickerSectionDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension PayHubUI.OperationPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        operationBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
     }
 }
 
@@ -694,7 +711,15 @@ private extension PickerFlowState {
     var hasDestination: Bool { navigation != nil }
 }
 
-private extension PaymentsTransfersPersonalToolbarBinder {
+private extension PayHubUI.PaymentsTransfersPersonalToolbar {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        toolbarBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersPersonalToolbarDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
@@ -702,7 +727,7 @@ private extension PaymentsTransfersPersonalToolbarBinder {
     }
 }
 
-private extension PaymentsTransfersToolbarFlowState {
+private extension PaymentsTransfersPersonalToolbarDomain.FlowDomain.State {
     
     var hasDestination: Bool { navigation != nil }
 }
