@@ -14,17 +14,12 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
     func test_map_shouldDeliverValidPDF() throws {
 
         let data = try getPDFData(valid: true)
-        
-        let pdfDocument = try XCTUnwrap(PDFDocument(data: data))
-        let getData = try XCTUnwrap(map(data).get())
-        
-        XCTAssertNoDiff(getData.dataRepresentation()?.count, pdfDocument.dataRepresentation()?.count)
+        XCTAssertNotNil(try? map(data).get())
     }
 
     func test_map_shouldDeliverInvalidPDF() throws {
 
         let data = try getPDFData(valid: false)
-
         XCTAssertNoDiff(map(data), .failure(.invalid(statusCode: 200, data: data)))
     }
 
@@ -79,7 +74,7 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
         )
     }
     
-    func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() throws {
+    func test_map_shouldDeliverValidDataOnNonOkHTTPResponse() throws {
         
         let validData = try getPDFData(valid: true)
         

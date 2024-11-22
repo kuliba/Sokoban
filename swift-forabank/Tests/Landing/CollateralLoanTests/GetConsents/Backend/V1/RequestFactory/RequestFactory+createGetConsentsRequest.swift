@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetConsentsRequest.swift
+//  RequestFactory+createGetConsentsRequestTests.swift
 //
 //
 //  Created by Valentin Ozerov on 18.11.2024.
@@ -30,8 +30,8 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         let url = anyURL()
         let applicationId = Int.random(in: (0...Int.max))
         let docIds = [String](repeating: anyMessage(), count: 3)
-        let payload = Payload.stub(applicationId: applicationId, docIds: docIds)
-        
+        let payload = Payload(applicationId: applicationId, docIds: docIds)
+
         let request = try RequestFactory.createGetConsentsRequest(
             url: url,
             payload: payload
@@ -40,48 +40,15 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         let urlComponents = try XCTUnwrap(URLComponents(url: requestUrl, resolvingAgainstBaseURL: false))
         let queryItems = try XCTUnwrap(urlComponents.queryItems)
 
+        let data = try JSONSerialization.data(withJSONObject: docIds as [String])
+        let mapFiles = String(data: data, encoding: String.Encoding.utf8)
+
         XCTAssertNoDiff(String(applicationId), queryItems.first { $0.name == "applicationId" }?.value)
-        XCTAssertNoDiff(
-            try payload.mapFiles,
-            queryItems.first { $0.name == "docIds" }?.value
-        )
+        XCTAssertNoDiff(mapFiles, queryItems.first { $0.name == "docIds" }?.value)
     }
 }
 
 extension RequestFactory_createGetConsentsRequestTests {
     
     typealias Payload = RequestFactory.GetConsentsPayload
-}
-
-// MARK: - Helpers
-
-private extension RequestFactory.GetConsentsPayload {
-    
-    static func stub(
-        applicationId: Int = .random(in: (0...Int.max)),
-        docIds: [String] = [anyMessage()]
-    ) -> Self {
-        Self(applicationId: applicationId, docIds: docIds)
-    }
-    
-    var mapFiles: String {
-
-        get throws {
-            
-            let data = try JSONSerialization.data(withJSONObject: docIds as [String])
-            
-            guard
-                let output = String(data: data, encoding: String.Encoding.utf8)
-            else {
-                throw TranscodeError.dataToStringConversionFailure
-            }
-            
-            return output
-        }
-    }
-    
-    enum TranscodeError: Error {
-        
-        case dataToStringConversionFailure
-    }
 }
