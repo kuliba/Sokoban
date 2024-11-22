@@ -18,7 +18,7 @@ final class RequestFactory_createGetOpenAccountFormRequestTests: XCTestCase {
         
         XCTAssertNoDiff(request.url?.absoluteString, url.absoluteString)
     }
-
+    
     func test_createRequest_shouldSetHTTPMethodToGET() throws {
         
         let request = try createRequest()

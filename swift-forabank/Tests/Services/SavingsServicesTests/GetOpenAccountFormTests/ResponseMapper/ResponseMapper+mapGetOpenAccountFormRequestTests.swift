@@ -24,14 +24,14 @@ final class ResponseMapper_mapGetOpenAccountFormRequestTests: XCTestCase {
             map(.feeNil),
             .success(.init(list: [], serial: "36")))
     }
-
+    
     func test_map_shouldDeliverEmptyProductsOnCurrencyNilData() {
         
         XCTAssertNoDiff(
             map(.currencyNil),
             .success(.init(list: [], serial: "36")))
     }
-
+    
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
         XCTAssertNoDiff(
@@ -148,7 +148,6 @@ private extension Data {
     static let valid: Data = String.valid.json
     static let feeNil: Data = String.feeNil.json
     static let currencyNil: Data = String.currencyNil.json
-
 }
 
 private extension String {
@@ -281,7 +280,7 @@ private extension String {
   }
 }
 """
-
+    
     static let currencyNil = """
 {
   "statusCode": 0,

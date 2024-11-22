@@ -40,6 +40,7 @@ private extension ResponseMapper.GetOpenAccountFormResponse {
 private extension ResponseMapper.GetOpenAccountFormData {
     
     init?(_ data: ResponseMapper._Data._Product) {
+        
         guard let conditionsLink = data.conditionsLink,
               let currency = data.currency,
               let description = data.description,
@@ -51,6 +52,7 @@ private extension ResponseMapper.GetOpenAccountFormData {
               let tariffLink = data.tariffLink,
               let title = data.title
         else { return nil }
+        
         self.init(
             conditionsLink: conditionsLink,
             currency: .init(currency),
@@ -68,6 +70,7 @@ private extension ResponseMapper.GetOpenAccountFormData {
 private extension ResponseMapper.GetOpenAccountFormData.Currency {
     
     init(_ data: ResponseMapper._Data._Currency) {
+        
         self.init(code: data.code ?? 0, symbol: data.symbol ?? "")
     }
 }
@@ -75,6 +78,7 @@ private extension ResponseMapper.GetOpenAccountFormData.Currency {
 private extension ResponseMapper.GetOpenAccountFormData.Fee {
     
     init(_ data: ResponseMapper._Data._Fee) {
+        
         self.init(openAndMaintenance: data.openAndMaintenance ?? 0, subscription: .init(data.subscription ?? .init(period: nil, value: nil)))
     }
 }
@@ -82,10 +86,10 @@ private extension ResponseMapper.GetOpenAccountFormData.Fee {
 private extension ResponseMapper.GetOpenAccountFormData.Subscription {
     
     init(_ data: ResponseMapper._Data._Subscription) {
+        
         self.init(period: data.period ?? "", value: data.value ?? 0)
     }
 }
-
 
 private extension ResponseMapper {
     
@@ -95,6 +99,7 @@ private extension ResponseMapper {
         let products: [_Product]?
         
         struct _Product: Decodable {
+            
             let hint: String?
             let id: Int?
             let title: String?
@@ -108,16 +113,19 @@ private extension ResponseMapper {
         }
         
         struct _Currency: Decodable {
+            
             let code: Int?
             let symbol: String?
         }
         
         struct _Fee: Decodable {
+            
             let openAndMaintenance: Int?
             let subscription: _Subscription?
         }
         
         struct _Subscription: Decodable {
+            
             let period: String?
             let value: Int?
         }
