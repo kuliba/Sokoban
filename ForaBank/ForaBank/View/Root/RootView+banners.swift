@@ -5,16 +5,33 @@
 //  Created by Andryusina Nataly on 12.09.2024.
 //
 
+import Banners
+import Combine
+import PayHub
+import PayHubUI
 import SwiftUI
 import UIPrimitives
-import PayHub
-import Combine
-import Banners
 
 extension RootView {
     
     typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
-
+    
+    @ViewBuilder
+    func makeBannerSectionView(
+        bannerPicker: PayHubUI.CorporateBannerPicker
+    ) -> some View {
+        
+        if let binder = bannerPicker.bannerBinder {
+            
+            makeBannerSectionView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected bannerPicker type \(String(describing: bannerPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
     func makeBannerSectionView(
         binder: BannerPickerSectionBinder
     ) -> some View {
@@ -26,7 +43,7 @@ extension RootView {
             makeDestinationView: { Text(String(describing: $0)) }
         )
     }
-
+    
     @ViewBuilder
     private func itemView(
         item: BannerPickerSectionState.Item
