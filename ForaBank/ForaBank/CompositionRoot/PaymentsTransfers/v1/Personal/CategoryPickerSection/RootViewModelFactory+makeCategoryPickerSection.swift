@@ -57,29 +57,6 @@ extension RootViewModelFactory {
             suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
         )
         
-        func createSberQRPayment(
-            payload: (URL, SberQRConfirmPaymentState),
-            completion: @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void
-        ){
-            let composer = LoggingRemoteNanoServiceComposer(
-                httpClient: httpClient,
-                logger: logger
-            )
-            let createSberQRPaymentService = composer.compose(
-                createRequest: RequestFactory.createCreateSberQRPaymentRequest,
-                mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
-            )
-            
-            guard let payload = payload.1.makePayload(with: payload.0)
-            else { return completion(.failure(.techError)) }
-            
-            createSberQRPaymentService(payload) {
-                
-                completion($0.mapError { _ in .techError })
-                _ = createSberQRPaymentService
-            }
-        }
-        
         func getSberQRData(
             url: URL,
             completion: @escaping (Result<GetSberQRDataResponse, any Error>) -> Void
