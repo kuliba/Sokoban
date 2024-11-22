@@ -704,7 +704,7 @@ private extension RootView {
     }
     
     func makeOperationPickerView(
-        binder: OperationPickerBinder
+        binder: OperationPickerDomain.Binder
     ) -> some View {
         
         ComposedOperationPickerFlowView(
@@ -718,7 +718,7 @@ private extension RootView {
     
     @ViewBuilder
     func makeOperationPickerDestinationView(
-        destination: OperationPickerNavigation
+        destination: OperationPickerDomain.Navigation
     ) -> some View {
         
         switch destination {
