@@ -218,8 +218,9 @@ private extension RootViewModel {
     ) throws -> CategoryPickerSectionDomain.ContentDomain.Content {
         
         let v1 = try personal(file: file, line: line)
+        let binder = try XCTUnwrap(v1.content.categoryPicker.sectionBinder)
         
-        return v1.content.categoryPicker.content
+        return binder.content
     }
     
     func personal(
