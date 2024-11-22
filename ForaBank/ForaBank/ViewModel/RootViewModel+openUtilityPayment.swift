@@ -15,7 +15,6 @@ extension RootViewModel {
         category: String,
         switchTab: (RootViewModel.TabType) -> Void
     ) {
-        
         switch tabsViewModel.paymentsModel {
             
         case let .legacy(legacy):
@@ -41,31 +40,29 @@ extension RootViewModel {
                 
             case let .personal(payments):
                 
-                guard let payment = payment(by: category) 
+                guard let payment = payment(by: category),
+                      let picker = payments.content.categoryPicker.sectionBinder
                 else {
                     
                     LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
                     return
                 }
                 
-                let picker = payments.content.categoryPicker.content
-                
-                let categoryPicker = picker.state.elements.first {
+                let element = picker.content.state.elements.first {
                     
                     $0.element.type == payment
                 }
                 
-                guard let categoryPicker else {
+                guard let element else {
                     
-                    LoggerAgent.shared.log(category: .payments, message: "Element by \(category) not found")
-                    return
+                    return LoggerAgent.shared.log(category: .payments, message: "Element for \(category) not found.")
                 }
                 
                 withAnimation {
                     
                     switchTab(.payments)
                     
-                    payments.content.categoryPicker.flow.event(.select(.category(categoryPicker.element)))
+                    picker.flow.event(.select(.category(element.element)))
                 }
             }
             

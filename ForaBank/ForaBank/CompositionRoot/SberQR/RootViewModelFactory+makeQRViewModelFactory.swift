@@ -24,7 +24,7 @@ extension RootViewModelFactory {
                     return nil
                     
                 case .inactive:
-                    return self?.makeMakeQRScannerModel()
+                    return self?.makeQRScannerModel()
                 }
             }
         )

@@ -8,4 +8,9 @@
 import PayHub
 import PayHubUI
 
-typealias PaymentsTransfersCorporate = PayHub.Binder<PaymentsTransfersCorporateContent, PaymentsTransfersCorporateFlow>
+typealias PaymentsTransfersCorporate = PaymentsTransfersCorporateDomain.Binder
+
+typealias PaymentsTransfersCorporateDomain = PayHubUI.PaymentsTransfersCorporateDomain<PaymentsTransfersCorporateSelect, PaymentsTransfersCorporateNavigation>
+
+enum PaymentsTransfersCorporateSelect {}
+enum PaymentsTransfersCorporateNavigation {}
