@@ -10,6 +10,18 @@ import PayHubUI
 
 private typealias Domain = OperationPickerDomain
 
+private extension PaymentsTransfersPersonalNanoServices {
+    
+    func load(
+        completion: @escaping ([OperationPickerDomain.Select]?) -> Void
+    ) {
+        loadAllLatest {
+            
+            completion(((try? $0.get()) ?? []).map { .latest($0) })
+        }
+    }
+}
+
 extension RootViewModelFactory {
     
     func makeOperationPicker(
@@ -17,27 +29,13 @@ extension RootViewModelFactory {
     ) -> OperationPickerDomain.Binder {
         
         let operationPickerContent = makeOperationPickerContent(
-            load: { completion in
-                
-                nanoServices.loadAllLatest {
-                    
-                    completion(((try? $0.get()) ?? []).map { .latest($0) })
-                }
-            }
+            load: nanoServices.load(completion:)
         )
         
         return compose(
             getNavigation: getNavigation,
             content: operationPickerContent,
-            witnesses: .init(
-                emitting: {
-                    
-                    $0.$state
-                        .compactMap(\.selected)
-                        .eraseToAnyPublisher()
-                },
-                receiving: { content in { content.event(.select(nil)) }}
-            )
+            witnesses: witnesses()
         )
     }
     
@@ -83,5 +81,18 @@ extension RootViewModelFactory {
         case .templates:
             completion(.templates(.init()))
         }
+    }
+    
+    private func witnesses() -> Domain.Composer.Witnesses {
+        
+        return .init(
+            emitting: {
+                
+                $0.$state
+                    .compactMap(\.selected)
+                    .eraseToAnyPublisher()
+            },
+            receiving: { content in { content.event(.select(nil)) }}
+        )
     }
 }
