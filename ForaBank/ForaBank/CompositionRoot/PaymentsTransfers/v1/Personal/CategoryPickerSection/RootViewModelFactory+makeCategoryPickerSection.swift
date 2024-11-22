@@ -22,14 +22,6 @@ extension RootViewModelFactory {
         let pageSize = settings.pageSize
         let placeholderCount = settings.categoryPickerPlaceholderCount
         
-        let makeStandard = makeStandard(
-            loadLatestForCategory: nanoServices.loadLatestForCategory,
-            loadOperators: loadOperators,
-            loadOperatorsForCategory: loadOperatorsForCategory,
-            pageSize: pageSize,
-            mainScheduler: schedulers.main
-        )
-        
         let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
             model: model,
             nanoServices: .init(
@@ -47,8 +39,7 @@ extension RootViewModelFactory {
         let categoryPickerContent = composeLoadablePickerModel(
             load: nanoServices.loadCategories,
             reload: nanoServices.reloadCategories,
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
-,
+            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
             placeholderCount: placeholderCount
         )
         
@@ -65,41 +56,5 @@ extension RootViewModelFactory {
             emitting: { $0.$state.compactMap(\.selected) },
             receiving: { content in { content.event(.select(nil)) }}
         )
-    }
-    
-    typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices.MakeStandard
-    /*private*/ typealias LoadLatestForCategory = (ServiceCategory, @escaping (Result<[Latest], Error>) -> Void) -> Void
-    /*private*/ typealias LoadOperators = (UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload, @escaping ([PaymentServiceOperator]) -> Void) -> Void
-    /*private*/ typealias LoadOperatorsForCategory = (ServiceCategory, @escaping (Result<[PaymentServiceOperator], Error>) -> Void) -> Void
-    
-    /*private*/ func makeStandard(
-        loadLatestForCategory: @escaping LoadLatestForCategory,
-        loadOperators: @escaping LoadOperators,
-        loadOperatorsForCategory: @escaping LoadOperatorsForCategory,
-        pageSize: Int,
-        mainScheduler: AnySchedulerOf<DispatchQueue>
-    ) -> MakeStandard {
-        
-        return { category, completion in
-            
-            let microServicesComposer = UtilityPrepaymentMicroServicesComposer(
-                pageSize: pageSize,
-                nanoServices: .init(loadOperators: loadOperators)
-            )
-            let standardNanoServicesComposer = StandardSelectedCategoryDestinationNanoServicesComposer(
-                loadLatest: loadLatestForCategory,
-                loadOperators: loadOperatorsForCategory,
-                makeMicroServices: microServicesComposer.compose,
-                model: self.model,
-                scheduler: mainScheduler
-            )
-            let standardNanoServices = standardNanoServicesComposer.compose(category: category)
-            let composer = StandardSelectedCategoryDestinationMicroServiceComposer(
-                nanoServices: standardNanoServices
-            )
-            let standardMicroService = composer.compose()
-            
-            standardMicroService.makeDestination(category, completion)
-        }
     }
 }
