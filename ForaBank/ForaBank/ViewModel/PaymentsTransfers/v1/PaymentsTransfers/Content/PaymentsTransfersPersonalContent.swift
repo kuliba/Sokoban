@@ -33,13 +33,13 @@ extension PayHubUI.OperationPicker {
 
 // MARK: - PaymentsTransfersPersonalToolbar
 
-extension PaymentsTransfersPersonalToolbarBinder: PayHubUI.PaymentsTransfersPersonalToolbar {}
+extension PaymentsTransfersPersonalToolbarDomain.Binder: PayHubUI.PaymentsTransfersPersonalToolbar {}
 
 extension PayHubUI.PaymentsTransfersPersonalToolbar {
     
-    var toolbarBinder: PaymentsTransfersPersonalToolbarBinder? {
+    var toolbarBinder: PaymentsTransfersPersonalToolbarDomain.Binder? {
         
-        return self as? PaymentsTransfersPersonalToolbarBinder
+        return self as? PaymentsTransfersPersonalToolbarDomain.Binder
     }
 }
 
