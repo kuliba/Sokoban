@@ -57,15 +57,6 @@ extension RootViewModelFactory {
             suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
         )
         
-        func makeServicePicker(
-            payload: PaymentProviderServicePickerPayload,
-            completion: @escaping (AnywayServicePickerFlowModel) -> Void
-        ) {
-            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
-            
-            completion(servicePickerComposer.compose(payload: payload))
-        }
-        
         func getQRNavigation(
             qrResult: QRModelResult,
             notify: @escaping QRNavigationComposer.Notify,
@@ -78,7 +69,7 @@ extension RootViewModelFactory {
                 createSberQRPayment: createSberQRPayment,
                 getSberQRData: getSberQRData,
                 makeSegmented: makeSegmentedPaymentProviderPickerFlowModel,
-                makeServicePicker: makeServicePicker,
+                makeServicePicker: makeAnywayServicePickerFlowModel,
                 scanner: scanner,
                 scheduler: schedulers.main
             )
