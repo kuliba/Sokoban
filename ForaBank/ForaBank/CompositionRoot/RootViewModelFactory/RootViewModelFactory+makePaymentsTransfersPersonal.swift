@@ -143,7 +143,7 @@ extension PayHubUI.OperationPicker {
     }
 }
 
-extension OperationPickerBinder {
+extension OperationPickerDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         

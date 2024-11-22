@@ -12,42 +12,69 @@ extension RootViewModelFactory {
     
     func makeOperationPicker(
         nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> OperationPickerBinder {
+    ) -> OperationPickerDomain.Binder {
 
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
+        let operationPickerContent = makeOperationPickerContent(
             load: { completion in
                 
                 nanoServices.loadAllLatest {
                     
                     completion(((try? $0.get()) ?? []).map { .latest($0) })
                 }
+            }
+        )
+        
+        return compose(
+            getNavigation: { element, notify, completion in
+                
+                switch element {
+                case .exchange:
+                    let composer = CurrencyWalletViewModelComposer(model: self.model)
+                    let exchange = composer.compose(dismiss: { notify(.dismiss) })
+                    
+                    if let exchange {
+                        completion(.exchange(exchange))
+                    } else {
+                        completion(.status(.exchangeFailure))
+                    }
+                    
+                case let .latest(latest):
+                    completion(.latest(.init(latest: latest)))
+                    
+                case .templates:
+                    completion(.templates(.init()))
+                }
             },
+            content: operationPickerContent,
+            witnesses: .init(
+                emitting: {
+                    
+                    $0.$state
+                        .compactMap(\.selected)
+                        .eraseToAnyPublisher()
+                },
+                receiving: { content in { content.event(.select(nil)) }}
+            )
+        )
+    }
+    
+    private func makeOperationPickerContent(
+        load: @escaping Load<[OperationPickerDomain.Select]>
+    ) -> OperationPickerDomain.Content {
+        
+        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerDomain.Select>(
+            load: load,
             scheduler: schedulers.main
         )
         let operationPickerPlaceholderCount = settings.operationPickerPlaceholderCount
-        let operationPickerContent = operationPickerContentComposer.compose(
+        
+        return operationPickerContentComposer.compose(
             prefix: [
                 .element(.init(.templates)),
                 .element(.init(.exchange))
             ],
             suffix: [],
             placeholderCount: operationPickerPlaceholderCount
-        )
-        let operationPickerFlowComposer = OperationPickerFlowComposer(
-            model: model,
-            scheduler: schedulers.main
-        )
-        let operationPickerFlow = operationPickerFlowComposer.compose()
-        
-        return .init(
-            content: operationPickerContent,
-            flow: operationPickerFlow,
-            bind: { content, flow in
-                
-                content.$state
-                    .compactMap(\.selected)
-                    .sink { flow.event(.select($0)) }
-            }
         )
     }
 }
