@@ -56,31 +56,6 @@ extension RootViewModelFactory {
             prefix: [],
             suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
         )
-        
-        func getQRNavigation(
-            qrResult: QRModelResult,
-            notify: @escaping QRNavigationComposer.Notify,
-            completion: @escaping (QRNavigation) -> Void
-        ) {
-            let microServicesComposer = QRNavigationComposerMicroServicesComposer(
-                httpClient: httpClient, 
-                logger: logger,
-                model: model,
-                createSberQRPayment: createSberQRPayment,
-                getSberQRData: getSberQRData,
-                makeSegmented: makeSegmentedPaymentProviderPickerFlowModel,
-                makeServicePicker: makeAnywayServicePickerFlowModel,
-                scanner: scanner,
-                scheduler: schedulers.main
-            )
-            let microServices = microServicesComposer.compose()
-            let composer = QRNavigationComposer(microServices: microServices)
-            
-            composer.getNavigation(
-                payload: .qrResult(qrResult),
-                notify: notify,
-                completion: completion)
-        }
     }
     
     typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices.MakeStandard
