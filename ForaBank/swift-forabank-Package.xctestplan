@@ -599,6 +599,13 @@
         "identifier" : "CollateralLoanLandingDraftBackendTests",
         "name" : "CollateralLoanLandingDraftBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SavingsServicesTests",
+        "name" : "SavingsServicesTests"
+      }
     }
   ],
   "version" : 1

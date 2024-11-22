@@ -253,6 +253,14 @@ private extension RootView {
                         ),
                         config: .iFora
                     )
+                },
+                makeFullScreenCoverView: { _ in
+                
+                    Text("TBD: FullScreenCoverView")
+                },
+                makeDestinationView: { _ in
+                
+                    Text("TBD: DestinationView")
                 }
             )
         )
@@ -306,9 +314,33 @@ private extension RootView {
                         ),
                         config: .iFora
                     )
+                },
+                makeFullScreenCoverView: { _ in
+                
+                    Text("TBD: FullScreenCoverView")
+                },
+                makeDestinationView: { _ in
+                
+                    Text("TBD: DestinationView")
                 }
             )
         )
+    }
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionView(
+        categoryPicker: PayHubUI.CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
     }
     
     func makeCategoryPickerSectionView(
@@ -655,6 +687,22 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
+    func makeOperationPickerView(
+        operationPicker: PayHubUI.OperationPicker
+    ) -> some View {
+        
+        if let binder = operationPicker.operationBinder {
+            
+            makeOperationPickerView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected operationPicker type \(String(describing: operationPicker))")
+                            .foregroundColor(.red)
+        }
+    }
+    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -688,8 +736,24 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
     func makePaymentsTransfersToolbarView(
-        binder: PaymentsTransfersPersonalToolbarBinder
+        toolbar: PayHubUI.PaymentsTransfersPersonalToolbar
+    ) -> some View {
+        
+        if let binder = toolbar.toolbarBinder {
+            
+            makePaymentsTransfersToolbarView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected toolbar type \(String(describing: toolbar))")
+                .foregroundColor(.red)
+        }
+    }
+    
+    func makePaymentsTransfersToolbarView(
+        binder: PaymentsTransfersPersonalToolbarDomain.Binder
     ) -> some View {
         
         ComposedPaymentsTransfersPersonalToolbarView(
@@ -725,6 +789,22 @@ private extension RootView {
                 }
             )
         )
+    }
+    
+    @ViewBuilder
+    private func makePaymentsTransfersTransfersView(
+        transfersPicker: PayHubUI.TransfersPicker
+    ) -> some View {
+        
+        if let binder = transfersPicker.transfersBinder {
+            
+            makePaymentsTransfersTransfersView(transfers: binder)
+            
+        } else {
+            
+            Text("Unexpected transfersPicker type \(String(describing: transfersPicker))")
+                .foregroundColor(.red)
+        }
     }
     
     private func makePaymentsTransfersTransfersView(
