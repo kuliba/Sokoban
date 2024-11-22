@@ -11322,6 +11322,7 @@
 				2A945B3F2CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
+				2A2EE90D2CF0AC950019FC31 /* Payments */,
 			);
 			path = RootViewModelFactory;
 			sourceTree = "<group>";
@@ -13402,7 +13403,6 @@
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
-				2A2EE90D2CF0AC950019FC31 /* Payments */,
 				2AF511E92BF3312300F97610 /* PaymentsTransfers */,
 				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2A3624A42C5F7BD000174C50 /* Components */,
