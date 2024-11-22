@@ -48,15 +48,6 @@ extension RootViewModelFactory {
             }
         }
         
-        func makeMobile() -> ClosePaymentsViewModelWrapper {
-            
-            return .init(
-                model: model,
-                service: .mobileConnection,
-                scheduler: schedulers.main
-            )
-        }
-        
         let makeStandard = makeStandard(
             loadLatestForCategory: nanoServices.loadLatestForCategory,
             loadOperators: loadOperators,
@@ -65,29 +56,15 @@ extension RootViewModelFactory {
             mainScheduler: schedulers.main
         )
         
-        func makeTax() -> ClosePaymentsViewModelWrapper {
-            
-            return .init(
-                model: model,
-                category: .taxes,
-                scheduler: schedulers.main
-            )
-        }
-        
-        func makeTransport() -> TransportPaymentsViewModel? {
-            
-            model.makeTransportPaymentsViewModel(type: .transport)
-        }
-        
         let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
             model: model,
             nanoServices: .init(
-                makeMobile: makeMobile,
+                makeMobile: makeMobilePayment,
                 makeQR: makeQRScannerModel,
                 makeQRNavigation: getQRNavigation,
                 makeStandard: makeStandard,
-                makeTax: makeTax,
-                makeTransport: makeTransport
+                makeTax: makeTaxPayment,
+                makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
