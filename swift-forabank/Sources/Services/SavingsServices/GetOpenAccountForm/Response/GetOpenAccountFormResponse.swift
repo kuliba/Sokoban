@@ -1,6 +1,6 @@
 //
 //  GetOpenAccountFormResponse.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 22.11.2024.
 //
@@ -28,7 +28,18 @@ extension ResponseMapper {
         public let tariffLink: String
         public let title: String
         
-        public init(conditionsLink: String, currency: Currency, description: String, design: String, fee: Fee, hint: String, productId: Int, income: String, tariffLink: String, title: String) {
+        public init(
+            conditionsLink: String,
+            currency: Currency,
+            description: String,
+            design: String,
+            fee: Fee,
+            hint: String,
+            productId: Int,
+            income: String,
+            tariffLink: String,
+            title: String
+        ) {
             self.conditionsLink = conditionsLink
             self.currency = currency
             self.description = description
@@ -42,6 +53,7 @@ extension ResponseMapper {
         }
         
         public struct Currency: Equatable {
+            
             public let code: Int
             public let symbol: String
             
@@ -52,6 +64,7 @@ extension ResponseMapper {
         }
         
         public struct Fee: Equatable {
+            
             public let openAndMaintenance: Int
             public let subscription: Subscription
             
@@ -62,6 +75,7 @@ extension ResponseMapper {
         }
         
         public struct Subscription: Equatable {
+            
             public let period: String
             public let value: Int
             
