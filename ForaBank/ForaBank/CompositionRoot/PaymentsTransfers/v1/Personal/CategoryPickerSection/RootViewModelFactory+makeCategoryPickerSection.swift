@@ -83,7 +83,7 @@ extension RootViewModelFactory {
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeQR: makeMakeQRScannerModel,
+                makeQR: makeQRScannerModel,
                 makeQRNavigation: getQRNavigation,
                 makeStandard: makeStandard,
                 makeTax: makeTax,
