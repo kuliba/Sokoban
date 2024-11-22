@@ -28,34 +28,20 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> OperationPickerDomain.Binder {
         
-        let operationPickerContent = makeOperationPickerContent(
-            load: nanoServices.load(completion:)
-        )
-        
-        return compose(
-            getNavigation: getNavigation,
-            content: operationPickerContent,
-            witnesses: witnesses()
-        )
-    }
-    
-    private func makeOperationPickerContent(
-        load: @escaping Load<[Domain.Select]>
-    ) -> Domain.Content {
-        
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, Domain.Select>(
-            load: load,
-            scheduler: schedulers.main
-        )
-        let operationPickerPlaceholderCount = settings.operationPickerPlaceholderCount
-        
-        return operationPickerContentComposer.compose(
+        let content = composeLoadablePickerModel(
+            load: nanoServices.load(completion:),
             prefix: [
                 .element(.init(.templates)),
                 .element(.init(.exchange))
             ],
             suffix: [],
-            placeholderCount: operationPickerPlaceholderCount
+            placeholderCount: settings.operationPickerPlaceholderCount
+        )
+        
+        return compose(
+            getNavigation: getNavigation,
+            content: content,
+            witnesses: witnesses()
         )
     }
     
