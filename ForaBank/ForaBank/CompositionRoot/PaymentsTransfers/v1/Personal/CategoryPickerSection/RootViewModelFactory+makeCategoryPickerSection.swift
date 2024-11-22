@@ -14,6 +14,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeCategoryPickerSection(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {

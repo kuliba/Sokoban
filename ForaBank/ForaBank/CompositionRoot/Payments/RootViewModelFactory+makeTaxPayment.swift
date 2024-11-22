@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeTaxPayment() -> ClosePaymentsViewModelWrapper {
         
         return .init(

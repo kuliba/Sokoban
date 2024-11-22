@@ -9,6 +9,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeAnywayServicePickerFlowModel(
         payload: PaymentProviderServicePickerPayload,
         completion: @escaping (AnywayServicePickerFlowModel) -> Void

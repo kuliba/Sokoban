@@ -24,6 +24,7 @@ private extension PaymentsTransfersPersonalNanoServices {
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeOperationPicker(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> OperationPickerDomain.Binder {

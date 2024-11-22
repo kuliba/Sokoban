@@ -10,6 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeSegmentedPaymentProviderPickerFlowModel(
         multi: MultiElementArray<SegmentedOperatorProvider>,
         qrCode: QRCode,

@@ -19,6 +19,7 @@ extension RootViewModelFactory {
     ///   - makeContent: A closure to create the content dynamically.
     ///   - witnesses: Supporting witnesses required by the `BinderComposer`.
     /// - Returns: A configured `Binder` for the provided parameters.
+    @inlinable
     func compose<Content, Select, Navigation>(
         initialState: BinderComposer<Content, Select, Navigation>.Domain.FlowDomain.State = .init(),
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
@@ -45,6 +46,7 @@ extension RootViewModelFactory {
     ///   - content: Static content to be used by the binder.
     ///   - witnesses: Supporting witnesses required by the `BinderComposer`.
     /// - Returns: A configured `Binder` for the provided parameters.
+    @inlinable
     func compose<Content, Select, Navigation>(
         initialState: BinderComposer<Content, Select, Navigation>.Domain.FlowDomain.State = .init(),
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,

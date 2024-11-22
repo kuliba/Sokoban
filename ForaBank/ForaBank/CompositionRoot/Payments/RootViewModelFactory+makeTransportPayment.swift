@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeTransportPayment() -> TransportPaymentsViewModel? {
         
         model.makeTransportPaymentsViewModel(type: .transport)

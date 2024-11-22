@@ -15,6 +15,7 @@ private typealias Domain = PaymentsTransfersPersonalDomain
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonal {

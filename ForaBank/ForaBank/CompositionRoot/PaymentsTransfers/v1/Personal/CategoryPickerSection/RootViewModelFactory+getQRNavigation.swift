@@ -9,6 +9,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func getQRNavigation(
         qrResult: QRModelResult,
         notify: @escaping QRNavigationComposer.Notify,

@@ -11,6 +11,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeProviderServicePickerFlowModel(
         pageSize: Int = 50
     ) -> (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel {

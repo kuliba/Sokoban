@@ -10,6 +10,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
+    @inlinable
     func getSberQRData(
         url: URL,
         completion: @escaping (Result<GetSberQRDataResponse, any Error>) -> Void

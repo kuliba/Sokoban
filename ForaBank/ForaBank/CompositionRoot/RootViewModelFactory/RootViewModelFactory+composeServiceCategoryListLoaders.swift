@@ -11,6 +11,7 @@ extension RootViewModelFactory {
     
     typealias ServiceCategoryLoad = Load<[ServiceCategory]>
     
+    @inlinable
     func composeServiceCategoryListLoaders(
     ) -> (load: ServiceCategoryLoad, reload: ServiceCategoryLoad) {
         

@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func loadOperators(
         payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
         completion: @escaping ([PaymentServiceOperator]) -> Void
@@ -17,6 +18,7 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
     func loadOperatorsForCategory(
         category: ServiceCategory,
         completion: @escaping (Result<[PaymentServiceOperator], Error>) -> Void

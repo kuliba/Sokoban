@@ -10,6 +10,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
+    @inlinable
     func createSberQRPayment(
         payload: (URL, SberQRConfirmPaymentState),
         completion: @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void
