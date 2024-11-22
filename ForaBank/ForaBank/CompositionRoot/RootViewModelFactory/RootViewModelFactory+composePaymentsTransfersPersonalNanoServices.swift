@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+composeServiceCategoryListLoaders.swift
+//  RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 21.10.2024.
@@ -9,11 +9,30 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
+    func composePaymentsTransfersPersonalNanoServices(
+    ) -> PaymentsTransfersPersonalNanoServices {
+        
+        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
+
+        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
+        
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: loadCategories,
+            getLatestPayments: getLatestPayments
+        )
+        
+        return .init(
+            loadCategories: loadCategories,
+            reloadCategories: reloadCategories,
+            loadAllLatest: makeLoadLatestOperations(.all)
+        )
+    }
+    
     typealias ServiceCategoryLoad = Load<[ServiceCategory]>
     
     /// Decorate with loading operators for category.
-    @inlinable
-    func composeDecoratedServiceCategoryListLoaders(
+    private func composeDecoratedServiceCategoryListLoaders(
     ) -> (load: ServiceCategoryLoad, reload: ServiceCategoryLoad) {
         
         let operatorsService = servicePaymentOperatorService

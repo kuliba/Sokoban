@@ -320,28 +320,17 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
-
-        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
-        
-        let makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: loadCategories,
-            getLatestPayments: getLatestPayments
-        )
+        let paymentsTransfersPersonalNanoServices = composePaymentsTransfersPersonalNanoServices()
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            nanoServices: .init(
-                loadCategories: loadCategories,
-                reloadCategories: reloadCategories,
-                loadAllLatest: makeLoadLatestOperations(.all)
-            )
+            nanoServices: paymentsTransfersPersonalNanoServices
         )
         
         if paymentsTransfersFlag.isActive {
             
             performOrWaitForActive {
                 
-                reloadCategories { [weak paymentsTransfersPersonal] categories in
+                paymentsTransfersPersonalNanoServices.reloadCategories { [weak paymentsTransfersPersonal] categories in
                     
                     // notify categoryPicker
                     let categoryPicker = paymentsTransfersPersonal?.content.categoryPicker.sectionBinder
