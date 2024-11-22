@@ -9,6 +9,7 @@ import Combine
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeQRScannerModel() -> QRScannerModel {
         
         // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component

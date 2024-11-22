@@ -9,6 +9,7 @@ import Combine
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeGetRootNavigation(
         makeQRScanner: @escaping () -> QRScannerDomain.Binder
     ) -> RootViewDomain.GetNavigation {

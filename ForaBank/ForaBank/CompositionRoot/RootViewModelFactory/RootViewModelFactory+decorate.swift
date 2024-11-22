@@ -9,6 +9,7 @@ extension RootViewModelFactory {
     
     typealias ServiceCategoryBatchService = ([ServiceCategory], @escaping ([ServiceCategory]) -> Void) -> Void
     
+    @inlinable
     func decorate(
         decoratee: @escaping Load<[ServiceCategory]>,
         with decoration: @escaping ServiceCategoryBatchService

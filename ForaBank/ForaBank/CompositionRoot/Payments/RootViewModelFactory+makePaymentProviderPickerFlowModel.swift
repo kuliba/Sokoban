@@ -11,6 +11,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeSegmentedPaymentProviderPickerFlowModel(
         pageSize: Int = 50
     ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {

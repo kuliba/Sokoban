@@ -37,7 +37,6 @@ extension RootViewModelFactory {
                         case .qr:      return .qr
                         }
                     }
-                    .eraseToAnyPublisher()
                 },
                 receiving: { content in { content.event(.select(nil)) }}
             )
