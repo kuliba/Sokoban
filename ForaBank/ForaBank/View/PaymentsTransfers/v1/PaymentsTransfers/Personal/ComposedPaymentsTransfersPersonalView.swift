@@ -10,8 +10,10 @@ import PayHubUI
 import RxViewModel
 import SwiftUI
 
-struct ComposedPaymentsTransfersPersonalView<ContentView>: View
-where ContentView: View {
+struct ComposedPaymentsTransfersPersonalView<ContentView, DestinationView, FullScreenCoverView>: View
+where ContentView: View,
+      DestinationView: View,
+      FullScreenCoverView: View {
     
     let personal: Personal
     let factory: Factory
@@ -35,5 +37,5 @@ where ContentView: View {
 extension ComposedPaymentsTransfersPersonalView {
     
     typealias Personal = PaymentsTransfersPersonal
-    typealias Factory = PaymentsTransfersPersonalFlowViewFactory<ContentView>
+    typealias Factory = PaymentsTransfersPersonalFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
 }
