@@ -23,11 +23,13 @@ private extension ResponseMapper.GetSavingLandingResponse {
     
     init(_ data: ResponseMapper._Data) throws {
         
-        guard let serial = data.serial, let product = data.product
-        else { throw ResponseFailure() }
+        guard let serial = data.serial, let products = data.products
+        else {
+            throw ResponseFailure()
+        }
         
         self.init(
-            list: [.init(product)],
+            list: products.map { .init($0) },
             serial: serial
         )
     }
@@ -39,7 +41,7 @@ private extension ResponseMapper.GetSavingLandingData {
     
     init(_ data: ResponseMapper._Data._Product) {
         
-        let marketing = data.marketing ?? .init(labelTag: nil, imageLink: nil, params: nil)
+        let marketing = data.marketing ?? .init(labelTag: nil, image: nil, params: nil)
         
         self.init(
             theme: data.theme.valueOrEmpty,
@@ -56,7 +58,7 @@ private extension ResponseMapper.GetSavingLandingData.Marketing {
     init(_ data: ResponseMapper._Data._Product._Marketing) {
         
         let params = data.params ?? []
-        self.init(labelTag: data.labelTag.valueOrEmpty, imageLink: data.imageLink.valueOrEmpty, params: params.map{$0})
+        self.init(labelTag: data.labelTag.valueOrEmpty, imageLink: data.image.valueOrEmpty, params: params.map{$0})
     }
 }
 
@@ -90,7 +92,7 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let serial: String?
-        let product: _Product?
+        let products: [_Product]?
         
         struct _Product: Decodable {
             
@@ -104,7 +106,7 @@ private extension ResponseMapper {
             struct _Marketing: Decodable {
                 
                 let labelTag: String?
-                let imageLink: String?
+                let image: String?
                 let params: [String]?
             }
             
