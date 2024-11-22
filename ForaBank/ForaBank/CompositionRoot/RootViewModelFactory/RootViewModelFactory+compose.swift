@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
         
         let composer = BinderComposer(
-            delay: delay,
+            delay: settings.delay,
             getNavigation: getNavigation,
             makeContent: { content },
             schedulers: schedulers,
@@ -27,14 +27,5 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(initialState: initialState)
-    }
-}
-
-extension RootViewModelFactory {
-    
-#warning("move to settings")
-    private var delay: ContentFlowBindingFactory.Delay {
-        
-        return .milliseconds(100)
     }
 }
