@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeMakeQRScannerModel.swift
+//  RootViewModelFactory+makeQRScannerModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 11.12.2023.
@@ -9,7 +9,7 @@ import Combine
 
 extension RootViewModelFactory {
     
-    func makeMakeQRScannerModel() -> QRScannerModel {
+    func makeQRScannerModel() -> QRScannerModel {
         
         // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
         

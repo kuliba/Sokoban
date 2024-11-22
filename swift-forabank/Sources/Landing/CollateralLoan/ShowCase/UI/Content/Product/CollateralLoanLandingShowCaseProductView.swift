@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseProductView: View {
+public struct CollateralLoanLandingShowCaseProductView: View {
     
     let headerView: HeaderView
     let termsView: TermsView
@@ -16,7 +16,7 @@ struct CollateralLoanLandingShowCaseProductView: View {
     let footerView: FooterView
     let theme: Theme
     
-    var body: some View {
+    public var body: some View {
 
         VStack {
             
