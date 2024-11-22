@@ -320,35 +320,14 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        // threading
-        let operatorsService = schedulers.background.scheduled(servicePaymentOperatorService)
-        
-        let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
-        
-        let decoratedServiceCategoryListReload = decorate(
-            decoratee: serviceCategoryListReload,
-            with: { categories, completion in
-                
-                let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
-                
-                operatorsService(payloads) { failed in
-                    
-                    completion(failed.map(\.category))
-                    _ = operatorsService
-                }
-            }
-        )
-        
+        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
+
         let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
         
         let makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: serviceCategoryListLoad,
+            getAllLoadedCategories: loadCategories,
             getLatestPayments: getLatestPayments
         )
-        
-        // threading
-        let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
-        let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             nanoServices: .init(
