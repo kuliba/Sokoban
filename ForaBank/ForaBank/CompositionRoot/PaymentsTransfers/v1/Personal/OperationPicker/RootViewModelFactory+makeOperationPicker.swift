@@ -8,12 +8,14 @@
 import Foundation
 import PayHubUI
 
+private typealias Domain = OperationPickerDomain
+
 extension RootViewModelFactory {
     
     func makeOperationPicker(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> OperationPickerDomain.Binder {
-
+        
         let operationPickerContent = makeOperationPickerContent(
             load: { completion in
                 
@@ -25,26 +27,7 @@ extension RootViewModelFactory {
         )
         
         return compose(
-            getNavigation: { element, notify, completion in
-                
-                switch element {
-                case .exchange:
-                    let composer = CurrencyWalletViewModelComposer(model: self.model)
-                    let exchange = composer.compose(dismiss: { notify(.dismiss) })
-                    
-                    if let exchange {
-                        completion(.exchange(exchange))
-                    } else {
-                        completion(.status(.exchangeFailure))
-                    }
-                    
-                case let .latest(latest):
-                    completion(.latest(.init(latest: latest)))
-                    
-                case .templates:
-                    completion(.templates(.init()))
-                }
-            },
+            getNavigation: getNavigation,
             content: operationPickerContent,
             witnesses: .init(
                 emitting: {
@@ -59,10 +42,10 @@ extension RootViewModelFactory {
     }
     
     private func makeOperationPickerContent(
-        load: @escaping Load<[OperationPickerDomain.Select]>
-    ) -> OperationPickerDomain.Content {
+        load: @escaping Load<[Domain.Select]>
+    ) -> Domain.Content {
         
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerDomain.Select>(
+        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, Domain.Select>(
             load: load,
             scheduler: schedulers.main
         )
@@ -76,5 +59,29 @@ extension RootViewModelFactory {
             suffix: [],
             placeholderCount: operationPickerPlaceholderCount
         )
+    }
+    
+    private func getNavigation(
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
+    ) {
+        switch select {
+        case .exchange:
+            let composer = CurrencyWalletViewModelComposer(model: model)
+            let exchange = composer.compose(dismiss: { notify(.dismiss) })
+            
+            if let exchange {
+                completion(.exchange(exchange))
+            } else {
+                completion(.status(.exchangeFailure))
+            }
+            
+        case let .latest(latest):
+            completion(.latest(.init(latest: latest)))
+            
+        case .templates:
+            completion(.templates(.init()))
+        }
     }
 }

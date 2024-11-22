@@ -25,6 +25,7 @@ public extension OperationPickerDomain {
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     typealias Select = OperationPickerElement<Latest>
     typealias Navigation = OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>
