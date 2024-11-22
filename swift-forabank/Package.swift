@@ -71,6 +71,7 @@ let package = Package(
         .getProductListByTypeV6Service,
         .getProductListByTypeV7Service,
         .getClientInformDataServices,
+        .savingsServices,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -235,6 +236,8 @@ let package = Package(
         .getProductListByTypeV7ServiceTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
+        .savingsServices,
+        .savingsServicesTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -971,7 +974,13 @@ private extension Product {
             .getClientInformDataServices
         ]
     )
-
+    
+    static let savingsServices = library(
+        name: .savingsServices,
+        targets: [
+            .savingsServices
+        ]
+    )
     
     // MARK: - Tools
     
@@ -2222,6 +2231,25 @@ private extension Target {
         ]
     )
     
+    static let savingsServices = target(
+        name: .savingsServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.savingsServices)"
+    )
+
+    static let savingsServicesTests = testTarget(
+        name: .savingsServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .savingsServices
+        ],
+        path: "Tests/Services/\(String.savingsServicesTests)"
+    )
+
     // MARK: - UI
     
     static let activateSlider = target(
@@ -3473,6 +3501,10 @@ private extension Target.Dependency {
         name: .getClientInformDataServices
     )
     
+    static let savingsServices = byName(
+        name: .savingsServices
+    )
+
     // MARK: - Tools
     
     static let foraTools = byName(
@@ -3804,6 +3836,10 @@ private extension String {
 
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
+    
+    static let savingsServices = "SavingsServices"
+    static let savingsServicesTests = "SavingsServicesTests"
+
     
     // MARK: - Tools
     

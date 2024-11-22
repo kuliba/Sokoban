@@ -7,17 +7,20 @@
 
 import PayHub
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
-struct ComposedPaymentsTransfersCorporateView<ContentView>: View
-where ContentView: View {
-    
+struct ComposedPaymentsTransfersCorporateView<ContentView, DestinationView, FullScreenCoverView>: View
+where ContentView: View,
+      DestinationView: View,
+      FullScreenCoverView: View {
+
     let corporate: Corporate
     let factory: Factory
     
     var body: some View {
         
-        PaymentsTransfersCorporateFlowWrapperView(
+        RxWrapperView(
             model: corporate.flow,
             makeContentView: {
                 
@@ -34,5 +37,5 @@ where ContentView: View {
 extension ComposedPaymentsTransfersCorporateView {
     
     typealias Corporate = PaymentsTransfersCorporate
-    typealias Factory = PaymentsTransfersCorporateFlowViewFactory<ContentView>
+    typealias Factory = PaymentsTransfersCorporateFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
 }
