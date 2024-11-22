@@ -753,7 +753,7 @@ private extension RootView {
     }
     
     func makePaymentsTransfersToolbarView(
-        binder: PaymentsTransfersPersonalToolbarBinder
+        binder: PaymentsTransfersPersonalToolbarDomain.Binder
     ) -> some View {
         
         ComposedPaymentsTransfersPersonalToolbarView(

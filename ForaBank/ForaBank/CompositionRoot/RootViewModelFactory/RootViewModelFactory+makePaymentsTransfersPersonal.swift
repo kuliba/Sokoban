@@ -31,14 +31,7 @@ extension RootViewModelFactory {
         
         // MARK: - Toolbar
         
-        let toolbarComposer = PaymentsTransfersPersonalToolbarBinderComposer(
-            microServices: .init(
-                makeProfile: { $0(ProfileModelStub()) },
-                makeQR: { $0(QRModelStub()) }
-            ),
-            scheduler: schedulers.main
-        )
-        let toolbar = toolbarComposer.compose()
+        let toolbar = makePaymentsTransfersPersonalToolbar()
         
         // MARK: - Transfers
         
@@ -180,7 +173,7 @@ extension PayHubUI.PaymentsTransfersPersonalToolbar {
     }
 }
 
-extension PaymentsTransfersPersonalToolbarBinder {
+extension PaymentsTransfersPersonalToolbarDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
