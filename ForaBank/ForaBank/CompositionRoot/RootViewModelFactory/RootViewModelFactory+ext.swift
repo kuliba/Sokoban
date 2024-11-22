@@ -320,50 +320,17 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        // threading
-        let operatorsService = schedulers.background.scheduled(servicePaymentOperatorService)
-        
-        let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
-        
-        let decoratedServiceCategoryListReload = decorate(
-            decoratee: serviceCategoryListReload,
-            with: { categories, completion in
-                
-                let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
-                
-                operatorsService(payloads) { failed in
-                    
-                    completion(failed.map(\.category))
-                    _ = operatorsService
-                }
-            }
-        )
-        
-        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
-        
-        let makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: serviceCategoryListLoad,
-            getLatestPayments: getLatestPayments
-        )
-        
-        // threading
-        let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
-        let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
+        let paymentsTransfersPersonalNanoServices = composePaymentsTransfersPersonalNanoServices()
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            nanoServices: .init(
-                loadCategories: loadCategories,
-                reloadCategories: reloadCategories,
-                loadAllLatest: makeLoadLatestOperations(.all),
-                loadLatestForCategory: { getLatestPayments([$0.name], $1) }
-            )
+            nanoServices: paymentsTransfersPersonalNanoServices
         )
         
         if paymentsTransfersFlag.isActive {
             
             performOrWaitForActive {
                 
-                reloadCategories { [weak paymentsTransfersPersonal] categories in
+                paymentsTransfersPersonalNanoServices.reloadCategories { [weak paymentsTransfersPersonal] categories in
                     
                     // notify categoryPicker
                     let categoryPicker = paymentsTransfersPersonal?.content.categoryPicker.sectionBinder

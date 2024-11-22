@@ -103,10 +103,10 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         httpClient.complete(with: success())
         awaitActorThreadHop()
-        backgroundScheduler.advance()
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
