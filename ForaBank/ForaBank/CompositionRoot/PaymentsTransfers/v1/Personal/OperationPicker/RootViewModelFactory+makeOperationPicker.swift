@@ -72,12 +72,7 @@ extension RootViewModelFactory {
     private func witnesses() -> Domain.Composer.Witnesses {
         
         return .init(
-            emitting: {
-                
-                $0.$state
-                    .compactMap(\.selected)
-                    .eraseToAnyPublisher()
-            },
+            emitting: { $0.$state.compactMap(\.selected) },
             receiving: { content in { content.event(.select(nil)) }}
         )
     }
