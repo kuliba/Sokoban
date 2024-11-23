@@ -74,16 +74,16 @@ private extension RootWrapperView {
     ) -> some View {
         
         switch destination {
-            //        case let .templates(node):
-            //            viewFactory.components.makeTemplatesListFlowView(node)
-        case .templates:
-            templatesView()
+        case let .templates(node):
+            templatesView(node)
         }
     }
     
     private func templatesView(
+        _ templates: RootViewNavigation.TemplatesNode
     ) -> some View {
-        Text("TBD: Templates")
+
+        viewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
     
@@ -135,14 +135,16 @@ extension RootViewNavigation {
         case .scanQR:
             return nil
             
-        case .templates:
-            return .templates
+        case let .templates(node):
+            return .templates(node)
         }
     }
     
     enum Destination {
         
-        case templates
+        case templates(TemplatesNode)
+        
+        typealias TemplatesNode = RootViewNavigation.TemplatesNode
     }
     
     var fullScreenCover: FullScreenCover? {
@@ -167,14 +169,14 @@ extension RootViewNavigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case let .templates:
-            return .templates
+        case let .templates(templates):
+            return .templates(.init(templates.model))
         }
     }
     
     enum ID: Hashable {
         
-        case templates//(ObjectIdentifier)
+        case templates(ObjectIdentifier)
     }
 }
 

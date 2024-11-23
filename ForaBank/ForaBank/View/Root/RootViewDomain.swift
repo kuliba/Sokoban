@@ -18,5 +18,8 @@ enum RootViewSelect: Equatable {
 enum RootViewNavigation {
     
     case scanQR(Node<QRScannerDomain.Binder>)
-    case templates
+    case templates(TemplatesNode)
+    
+    typealias Templates = PaymentsTransfersFactory.Templates
+    typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
 }
