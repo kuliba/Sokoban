@@ -26,29 +26,19 @@ struct RootViewBinderView: View {
                         rootViewFactory: rootViewFactory
                     )
                 },
-                makeQRScannerView: { binder in
-                    
-                    let components = rootViewFactory.components
-                    
-                    return QRWrapperView(
-                        binder: binder,
-                        makeQRView: { components.makeQRView(binder.content.qrScanner) },
-                        makePaymentsView: components.makePaymentsView
-                    )
-                }
+                viewFactory: rootViewFactory
             )
             .navigationBarHidden(true)
         }
     }
 }
+
 struct RootWrapperView: View {
     
     @ObservedObject var flow: RootViewDomain.Flow
     
     let rootView: () -> RootView
-    let makeQRScannerView: MakeQRView
-    
-    typealias MakeQRView = (QRScannerDomain.Binder) -> QRWrapperView
+    let viewFactory: RootViewFactory
     
     var body: some View {
         
@@ -84,10 +74,17 @@ private extension RootWrapperView {
     ) -> some View {
         
         switch destination {
-        case let .templates:
-            Text("TBD: Templates")
-                .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
+            //        case let .templates(node):
+            //            viewFactory.components.makeTemplatesListFlowView(node)
+        case .templates:
+            templatesView()
         }
+    }
+    
+    private func templatesView(
+    ) -> some View {
+        Text("TBD: Templates")
+            .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
     
     @ViewBuilder
@@ -97,15 +94,36 @@ private extension RootWrapperView {
         
         switch fullScreenCover {
         case let .scanQR(qrScanner):
-            NavigationView {
-                
-                makeQRScannerView(qrScanner)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarHidden(true)
-            }
-            .navigationViewStyle(.stack)
-            .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
+            qrScannerView(qrScanner)
         }
+    }
+    
+    private func qrScannerView(
+        _ qrScanner: QRScannerDomain.Binder
+    ) -> some View {
+        
+        NavigationView {
+            
+            viewFactory.makeQRScannerView(qrScanner)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarHidden(true)
+        }
+        .navigationViewStyle(.stack)
+        .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
+    }
+}
+
+extension RootViewFactory {
+    
+    func makeQRScannerView(
+        _ binder: QRScannerDomain.Binder
+    ) -> some View {
+        
+        return QRWrapperView(
+            binder: binder,
+            makeQRView: { components.makeQRView(binder.content.qrScanner) },
+            makePaymentsView: components.makePaymentsView
+        )
     }
 }
 
