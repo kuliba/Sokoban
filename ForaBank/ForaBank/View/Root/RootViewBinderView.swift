@@ -15,29 +15,32 @@ struct RootViewBinderView: View {
     
     var body: some View {
         
-        RootWrapperView(
-            flow: binder.flow,
-            rootView: {
-                
-                RootView(
-                    viewModel: binder.content,
-                    rootViewFactory: rootViewFactory
-                )
-            },
-            makeQRScannerView: { binder in
-                
-                let components = rootViewFactory.components
-                
-                return QRWrapperView(
-                    binder: binder,
-                    makeQRView: { components.makeQRView(binder.content.qrScanner) },
-                    makePaymentsView: components.makePaymentsView
-                )
-            }
-        )
+        NavigationView {
+            
+            RootWrapperView(
+                flow: binder.flow,
+                rootView: {
+                    
+                    RootView(
+                        viewModel: binder.content,
+                        rootViewFactory: rootViewFactory
+                    )
+                },
+                makeQRScannerView: { binder in
+                    
+                    let components = rootViewFactory.components
+                    
+                    return QRWrapperView(
+                        binder: binder,
+                        makeQRView: { components.makeQRView(binder.content.qrScanner) },
+                        makePaymentsView: components.makePaymentsView
+                    )
+                }
+            )
+            .navigationBarHidden(true)
+        }
     }
 }
-
 struct RootWrapperView: View {
     
     @ObservedObject var flow: RootViewDomain.Flow
@@ -63,12 +66,29 @@ struct RootWrapperView: View {
                         dismiss: { event(.dismiss) },
                         content: fullScreenCoverContent
                     )
+                    .navigationDestination(
+                        destination: state.navigation?.destination,
+                        dismiss: { event(.dismiss) },
+                        content: destinationContent
+                    )
             }
         }
     }
 }
 
 private extension RootWrapperView {
+    
+    @ViewBuilder
+    func destinationContent(
+        destination: RootViewDomain.Navigation.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .templates:
+            Text("TBD: Templates")
+                .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
+        }
+    }
     
     @ViewBuilder
     func fullScreenCoverContent(
@@ -91,6 +111,22 @@ private extension RootWrapperView {
 
 extension RootViewDomain.Navigation {
     
+    var destination: Destination? {
+        
+        switch self {
+        case .scanQR:
+            return nil
+            
+        case .templates:
+            return .templates
+        }
+    }
+    
+    enum Destination {
+        
+        case templates
+    }
+    
     var fullScreenCover: FullScreenCover? {
         
         switch self {
@@ -105,6 +141,22 @@ extension RootViewDomain.Navigation {
     enum FullScreenCover {
         
         case scanQR(QRScannerDomain.Binder)
+    }
+}
+
+extension RootViewDomain.Navigation.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .templates:
+            return .templates
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case templates//(ObjectIdentifier)
     }
 }
 

@@ -11,6 +11,27 @@ import Foundation
 extension RootViewModelFactory {
     
     @inlinable
+    func makeMakeTemplates(
+        _ paymentsTransfersFlag: PaymentsTransfersFlag
+    ) -> PaymentsTransfersFactory.MakeTemplates {
+        
+        switch paymentsTransfersFlag.rawValue {
+        case .active:
+            return { _ in nil }
+            
+        case .inactive:
+            let templatesComposer = makeTemplatesComposer(
+                paymentsTransfersFlag: paymentsTransfersFlag
+            )
+            
+            return templatesComposer.compose
+        }
+    }
+}
+
+extension RootViewModelFactory {
+    
+    @inlinable
     func makeTemplatesComposer(
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> TemplatesListFlowModelComposer {
