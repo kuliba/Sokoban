@@ -63,10 +63,12 @@ public extension RootViewDomain {
     enum Select: Equatable {
         
         case scanQR
+        case templates
     }
     
     enum Navigation {
         
         case scanQR(QRScanner)
+        case templates
     }
 }

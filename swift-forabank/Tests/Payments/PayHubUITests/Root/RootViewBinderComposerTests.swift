@@ -118,6 +118,9 @@ final class RootViewBinderComposerTests: XCTestCase {
                 switch select {
                 case .scanQR:
                     completion(.scanQR(qrScanner ?? self.makeQRScanner()))
+                    
+                case .templates:
+                    completion(.templates)
                 }
             },
             schedulers: .immediate,
@@ -190,11 +193,15 @@ final class RootViewBinderComposerTests: XCTestCase {
         switch navigation {
         case let .scanQR(qrScanner):
             return .qrScanner(.init(qrScanner))
+            
+        case .templates:
+            return .templates
         }
     }
     
     private enum EquatableNavigation: Equatable {
         
         case qrScanner(ObjectIdentifier)
+        case templates
     }
 }

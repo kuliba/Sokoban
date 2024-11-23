@@ -25,6 +25,9 @@ extension RootViewModelFactory {
                     model: qrScanner,
                     cancellable: cancellable
                 )))
+                
+            case .templates:
+                completion(.templates)
             }
         }
     }

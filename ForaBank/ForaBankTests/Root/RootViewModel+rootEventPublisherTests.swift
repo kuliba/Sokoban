@@ -57,4 +57,15 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         XCTAssertNoDiff(spy.values, [.scanQR])
     }
+    
+    // MARK: - templates
+    
+    func test_init_shouldEmitTemplatesOnMainViewFastOperationSectionTemplatesButtonAction() throws {
+        
+        let (sut, spy) = makeSUT()
+        
+        try tapMainViewFastSectionTemplatesButton(sut)
+        
+        XCTAssertNoDiff(spy.values, [.templates])
+    }
 }

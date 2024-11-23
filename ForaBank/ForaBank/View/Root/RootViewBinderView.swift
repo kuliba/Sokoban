@@ -96,6 +96,9 @@ extension RootViewDomain.Navigation {
         switch self {
         case let .scanQR(node):
             return .scanQR(node.model)
+            
+        case .templates:
+            return nil
         }
     }
     
