@@ -15,17 +15,7 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> TemplatesListFlowModelComposer {
         
-        let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
-            model: model,
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        let anywayFlowComposer = AnywayFlowComposer(
-            makeAnywayTransactionViewModel: anywayTransactionViewModelComposer.compose(transaction:),
-            model: model,
-            scheduler: schedulers.main
-        )
+        let anywayFlowComposer = makeAnywayFlowComposer()
         let initiatePayment = NanoServices.initiateAnywayPayment(
             httpClient: httpClient,
             log: logger.log,

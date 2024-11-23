@@ -15,17 +15,7 @@ extension RootViewModelFactory {
         pageSize: Int = 50
     ) -> AnywayServicePickerFlowModelComposer {
         
-        let transactionModelComposer = AnywayTransactionViewModelComposer(
-            model: model,
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        let anywayComposer = AnywayFlowComposer(
-            makeAnywayTransactionViewModel: transactionModelComposer.compose(transaction:),
-            model: model,
-            scheduler: schedulers.main
-        )
+        let anywayFlowComposer = makeAnywayFlowComposer()
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
             model: model,
             pageSize: pageSize
@@ -48,7 +38,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            makeAnywayFlowModel: anywayComposer.compose(transaction:),
+            makeAnywayFlowModel: anywayFlowComposer.compose(transaction:),
             microServices: pickerMicroServicesComposer.compose(),
             model: model,
             scheduler: schedulers.main
