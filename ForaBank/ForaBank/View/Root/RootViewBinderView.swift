@@ -70,7 +70,7 @@ private extension RootWrapperView {
     
     @ViewBuilder
     func destinationContent(
-        destination: RootViewDomain.Navigation.Destination
+        destination: RootViewNavigation.Destination
     ) -> some View {
         
         switch destination {
@@ -89,7 +89,7 @@ private extension RootWrapperView {
     
     @ViewBuilder
     func fullScreenCoverContent(
-        fullScreenCover: RootViewDomain.Navigation.FullScreenCover
+        fullScreenCover: RootViewNavigation.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -127,7 +127,7 @@ extension RootViewFactory {
     }
 }
 
-extension RootViewDomain.Navigation {
+extension RootViewNavigation {
     
     var destination: Destination? {
         
@@ -162,7 +162,7 @@ extension RootViewDomain.Navigation {
     }
 }
 
-extension RootViewDomain.Navigation.Destination: Identifiable {
+extension RootViewNavigation.Destination: Identifiable {
     
     var id: ID {
         
@@ -178,7 +178,7 @@ extension RootViewDomain.Navigation.Destination: Identifiable {
     }
 }
 
-extension RootViewDomain.Navigation.FullScreenCover: Identifiable {
+extension RootViewNavigation.FullScreenCover: Identifiable {
     
     var id: ID {
         

@@ -1533,7 +1533,6 @@
 		2ABBD6C52CDD35650078E977 /* MixedPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */; };
 		2ABBD6C72CDD61BD0078E977 /* RootViewDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */; };
 		2ABBD6C92CDD61E20078E977 /* RootViewBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6C82CDD61E20078E977 /* RootViewBinderView.swift */; };
-		2ABBD6CB2CDDC5EF0078E977 /* RootViewBinderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6CA2CDDC5EF0078E977 /* RootViewBinderComposer.swift */; };
 		2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */; };
 		2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */; };
 		2ABBFD1F2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */; };
@@ -5198,7 +5197,6 @@
 		2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedPickerView.swift; sourceTree = "<group>"; };
 		2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewDomain.swift; sourceTree = "<group>"; };
 		2ABBD6C82CDD61E20078E977 /* RootViewBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewBinderView.swift; sourceTree = "<group>"; };
-		2ABBD6CA2CDDC5EF0078E977 /* RootViewBinderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewBinderComposer.swift; sourceTree = "<group>"; };
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
 		2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesViewModel.swift; sourceTree = "<group>"; };
 		2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFactory.swift; sourceTree = "<group>"; };
@@ -13407,7 +13405,6 @@
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
 				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
-				2ABBD6CA2CDDC5EF0078E977 /* RootViewBinderComposer.swift */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */,
 				2A94AAF52C8F78E5003B4FB1 /* Services */,
@@ -22649,7 +22646,6 @@
 				50EFA47B29476EC100FE1938 /* TextFieldViewComponent.swift in Sources */,
 				8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
-				2ABBD6CB2CDDC5EF0078E977 /* RootViewBinderComposer.swift in Sources */,
 				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */,
 				50833F6428742585006E8530 /* CurrencyWalletView.swift in Sources */,

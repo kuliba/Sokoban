@@ -9,14 +9,14 @@ import Combine
 import PayHub
 
 /// A namespace.
-public enum RootViewDomain<RootViewModel, DismissAll, QRScanner> {}
+public enum RootViewDomain<RootViewModel, DismissAll, Select, Navigation> {}
 
 public extension RootViewDomain {
     
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = RootViewBinderComposer<Content, DismissAll, QRScanner>
+    typealias BinderComposer = RootViewBinderComposer<Content, DismissAll, Select, Navigation>
     typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
     
     struct Witnesses {
@@ -59,16 +59,4 @@ public extension RootViewDomain {
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
-    
-    enum Select: Equatable {
-        
-        case scanQR
-        case templates
-    }
-    
-    enum Navigation {
-        
-        case scanQR(QRScanner)
-        case templates
-    }
 }

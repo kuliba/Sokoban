@@ -7,4 +7,16 @@
 
 import PayHubUI
 
-typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelAction.DismissAll, Node<QRScannerDomain.Binder>>
+typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelAction.DismissAll, RootViewSelect, RootViewNavigation>
+
+enum RootViewSelect: Equatable {
+    
+    case scanQR
+    case templates
+}
+
+enum RootViewNavigation {
+    
+    case scanQR(Node<QRScannerDomain.Binder>)
+    case templates
+}

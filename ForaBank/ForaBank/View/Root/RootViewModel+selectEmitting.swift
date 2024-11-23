@@ -7,7 +7,7 @@
 
 import Combine
 
-typealias RootEvent = ForaBank.RootViewDomain.Select
+typealias RootEvent = RootViewSelect
 
 extension RootViewModel {
         

@@ -13,10 +13,9 @@ class RootViewModel_Tests: XCTestCase {
     
     // MARK: - Helpers
     
-    typealias Domain = ForaBank.RootViewDomain
-    typealias Witnesses = ContentWitnesses<RootViewModel, Domain.Select>
     typealias SUT = RootViewModel
-    typealias Spy = ValueSpy<Domain.Select>
+    typealias Spy = ValueSpy<RootViewSelect>
+    typealias Witnesses = ContentWitnesses<RootViewModel, RootViewSelect>
     
     func makeSUT(
         file: StaticString = #file,
