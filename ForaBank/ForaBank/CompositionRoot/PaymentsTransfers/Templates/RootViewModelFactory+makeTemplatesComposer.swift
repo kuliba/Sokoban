@@ -15,15 +15,13 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> TemplatesListFlowModelComposer {
         
-        let anywayFlowComposer = makeAnywayFlowComposer()
         let composer = TemplatesListFlowEffectHandlerMicroServicesComposer(
-            initiatePayment: initiatePaymentFromTemplate(using: anywayFlowComposer),
+            initiatePayment: initiatePaymentFromTemplate(template:completion:),
             makeLegacyPayment: makeLegacyTemplatePayment,
             paymentsTransfersFlag: paymentsTransfersFlag
         )
         
         return .init(
-            makeAnywayFlowModel: anywayFlowComposer.compose,
             model: model,
             microServices: composer.compose(),
             scheduler: schedulers.main

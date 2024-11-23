@@ -11,24 +11,20 @@ import Foundation
 
 final class TemplatesListFlowModelComposer {
     
-    private let makeAnywayFlowModel: MakeAnywayFlowModel
     private let model: Model
     private let microServices: MicroServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        makeAnywayFlowModel: @escaping MakeAnywayFlowModel,
         model: Model,
         microServices: MicroServices,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.makeAnywayFlowModel = makeAnywayFlowModel
         self.model = model
         self.microServices = microServices
         self.scheduler = scheduler
     }
     
-    typealias MakeAnywayFlowModel = (AnywayTransactionState.Transaction) -> AnywayFlowModel
     typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentsViewModel, AnywayFlowModel>
 }
 

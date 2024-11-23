@@ -9,20 +9,19 @@ extension RootViewModelFactory {
     
     @inlinable
     func initiatePaymentFromTemplate(
-        using anywayFlowComposer: AnywayFlowComposer
-    ) -> (PaymentTemplateData, @escaping (Result<AnywayFlowModel, ServiceFailureAlert.ServiceFailure>) -> Void) -> Void {
+        template: PaymentTemplateData,
+        completion: @escaping (Result<AnywayFlowModel, ServiceFailureAlert.ServiceFailure>) -> Void
+    ) {
+        let anywayFlowComposer = makeAnywayFlowComposer()
         
-        return { [weak self] template, completion in
+        initiatePaymentFromTemplate(template) {
             
-            self?.initiatePaymentFromTemplate(template) {
+            switch $0 {
+            case let .failure(serviceFailure):
+                completion(.failure(serviceFailure))
                 
-                switch $0 {
-                case let .failure(serviceFailure):
-                    completion(.failure(serviceFailure))
-                    
-                case let .success(transaction):
-                    completion(.success(anywayFlowComposer.compose(transaction: transaction)))
-                }
+            case let .success(transaction):
+                completion(.success(anywayFlowComposer.compose(transaction: transaction)))
             }
         }
     }
