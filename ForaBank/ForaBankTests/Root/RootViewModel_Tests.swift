@@ -172,7 +172,7 @@ private extension MainViewModel {
         
         let buttons = try fastSection(file: file, line: line).items
         
-        return try XCTUnwrap(buttons.first, "Expected to have QR Button as first", file: file, line: line)
+        return try XCTUnwrap(buttons.first(where: { $0.title.text == "Оплата по QR" }), "Expected to have QR Button, but got nil instead.", file: file, line: line)
     }
     
     func tapFastSectionQRButton(
