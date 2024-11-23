@@ -16,53 +16,8 @@ extension RootViewModelFactory {
     ) -> TemplatesListFlowModelComposer {
         
         let anywayFlowComposer = makeAnywayFlowComposer()
-        let initiatePayment = NanoServices.initiateAnywayPayment(
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        let composer = InitiateAnywayPaymentMicroServiceComposer(
-            getOutlineProduct: { _ in self.model.outlineProduct() },
-            processPayload: { payload, completion in
-                
-                initiatePayment(payload.outline.payload.puref) {
-                    
-                    switch $0 {
-                    case let .failure(serviceFailure):
-                        switch serviceFailure {
-                        case .connectivityError:
-                            completion(.failure(.connectivityError))
-                            
-                        case let .serverError(message):
-                            completion(.failure(.serverError(message)))
-                        }
-                        
-                    case let .success(response):
-                        completion(.success(response))
-                    }
-                }
-            }
-        )
-        let initiatePaymentMicroService = composer.compose()
-        let initiatePaymentFromTemplate = { template, completion in
-            
-            initiatePaymentMicroService.initiatePayment(.template(template), completion)
-        }
-        
         let microServicesComposer = TemplatesListFlowEffectHandlerMicroServicesComposer<PaymentsViewModel, AnywayFlowModel>(
-            initiatePayment: { template, completion in
-                
-                initiatePaymentFromTemplate(template) {
-                    
-                    switch $0 {
-                    case let .failure(serviceFailure):
-                        completion(.failure(serviceFailure))
-                        
-                    case let .success(transaction):
-                        completion(.success(anywayFlowComposer.compose(transaction: transaction)))
-                    }
-                }
-            },
+            initiatePayment: initiatePaymentFromTemplate(using: anywayFlowComposer),
             makeLegacyPayment: { payload in
                 
                 let (template, close) = payload
