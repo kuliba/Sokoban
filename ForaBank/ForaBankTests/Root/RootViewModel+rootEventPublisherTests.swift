@@ -11,6 +11,8 @@ import XCTest
 
 final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
+    // MARK: - init
+    
     func test_init_shouldNotEmit() {
         
         let (sut, spy) = makeSUT()
@@ -18,6 +20,8 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         XCTAssertNoDiff(spy.values, [])
         XCTAssertNotNil(sut)
     }
+
+    // MARK: - scan QR
     
     func test_init_shouldEmitScanQROnMainViewSectionsEmitScanQR() throws {
         
