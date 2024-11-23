@@ -12,6 +12,8 @@ class AcceptanceTests: XCTestCase {
     
     struct TestApp {
         
+        // TODO: - improve tests using SceneDelegate
+        
         private let window = UIWindow()
         
         private let rootComposer: ModelRootComposer
