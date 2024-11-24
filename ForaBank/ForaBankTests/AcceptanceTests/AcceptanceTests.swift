@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import PayHubUI
 import XCTest
 
 class AcceptanceTests: XCTestCase {
@@ -31,7 +32,7 @@ class AcceptanceTests: XCTestCase {
         private let window = UIWindow()
         
         private let rootComposer: ModelRootComposer
-        private let binder: RootViewDomain.Binder
+        private let binder: ForaBank.RootViewDomain.Binder
         private let rootViewFactory: RootViewFactory
         
         private func root() throws -> RootViewHostingViewController {
@@ -42,11 +43,14 @@ class AcceptanceTests: XCTestCase {
         init(
             featureFlags: FeatureFlags = .active,
             dismiss: @escaping () -> Void = {},
-            scanner: any QRScannerViewModel = QRScannerViewModelSpy()
+            resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
+            scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
+            schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
+                resolveQR: resolveQR,
                 scanner: scanner,
-                schedulers: .immediate
+                schedulers: schedulers
             )
             self.binder = rootComposer.makeBinder(
                 featureFlags: featureFlags,
