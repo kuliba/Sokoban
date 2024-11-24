@@ -26,15 +26,24 @@ extension QRScannerDomain {
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
-    typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    enum Select {
+    typealias NotifyEvent = FlowDomain.NotifyEvent
+    typealias Notify = (NotifyEvent) -> Void
     
+    enum Outside: Equatable {
+        
+        case chat, main, payments
+    }
+    
+    enum Select: Equatable {
+    
+        case outside(Outside)
         case qrResult(QRModelResult)
     }
     
     enum Navigation {
         
+        case outside(Outside)
         case payments(Node<ClosePaymentsViewModelWrapper>)
     }
 }

@@ -18,8 +18,9 @@ extension RootViewModelFactory {
     }
 }
 
-private extension RootViewModelFactory {
+extension RootViewModelFactory {
     
+    @inlinable
     func getQRNavigation(
         select: QRScannerDomain.Select,
         notify: @escaping QRScannerDomain.Notify,
@@ -28,6 +29,9 @@ private extension RootViewModelFactory {
         // TODO: - replace using QRBinderGetNavigationComposer
         
         switch select {
+        case let .outside(outside):
+            completion(.outside(outside))
+            
         case let .qrResult(qrResult):
             switch qrResult {
             case let .c2bSubscribeURL(url):

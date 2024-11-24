@@ -48,9 +48,12 @@ private extension QRWrapperView {
 
 extension QRScannerDomain.Navigation {
     
-    var destination: Destination {
+    var destination: Destination? {
         
         switch self {
+        case .outside:
+            return nil
+            
         case let .payments(node):
             return .payments(node.model)
         }
