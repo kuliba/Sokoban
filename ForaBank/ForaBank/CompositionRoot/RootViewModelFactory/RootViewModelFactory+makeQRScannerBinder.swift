@@ -33,16 +33,25 @@ extension RootViewModelFactory {
             completion(.outside(outside))
             
         case let .qrResult(qrResult):
-            switch qrResult {
-            case let .c2bSubscribeURL(url):
-                completion(payments(payload: .source(.c2bSubscribe(url))))
-                
-            case let .c2bURL(url):
-                completion(payments(payload: .source(.c2b(url))))
-                
-            default:
-                break
-            }
+            getQRNavigation(qrResult, notify, completion)
+        }
+    }
+    
+    @inlinable
+    func getQRNavigation(
+        _ qrResult: QRModelResult,
+        _ notify: @escaping QRScannerDomain.Notify,
+        _ completion: @escaping (QRScannerDomain.Navigation) -> Void
+    ) {
+        switch qrResult {
+        case let .c2bSubscribeURL(url):
+            completion(payments(payload: .source(.c2bSubscribe(url))))
+            
+        case let .c2bURL(url):
+            completion(payments(payload: .source(.c2b(url))))
+            
+        default:
+            break
         }
         
         func payments(
