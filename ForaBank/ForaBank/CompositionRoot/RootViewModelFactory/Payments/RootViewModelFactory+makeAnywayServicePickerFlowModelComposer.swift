@@ -12,13 +12,12 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeAnywayServicePickerFlowModelComposer(
-        pageSize: Int = 50
     ) -> AnywayServicePickerFlowModelComposer {
         
         let anywayFlowComposer = makeAnywayFlowComposer()
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
             model: model,
-            pageSize: pageSize
+            pageSize: settings.pageSize
         )
         let transactionComposer = AnywayTransactionComposer(
             model: model,
@@ -32,7 +31,7 @@ extension RootViewModelFactory {
             loadOperators: loadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
-            composer: transactionComposer, 
+            composer: transactionComposer,
             model: model,
             nanoServices: pickerNanoServicesComposer.compose()
         )
