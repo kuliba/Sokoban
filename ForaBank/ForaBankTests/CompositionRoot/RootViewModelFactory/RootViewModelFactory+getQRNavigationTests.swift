@@ -104,6 +104,13 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         expect(with: .qrResult(.failure(anyQRCode())), toDeliver: .failure)
     }
     
+    // MARK: - qrResult: missingINN
+    
+    func test_missingINN_shouldDeliverQRFailure() {
+        
+        expect(with: .qrResult(.mapped(.missingINN(anyQRCode()))), toDeliver: .failure)
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>

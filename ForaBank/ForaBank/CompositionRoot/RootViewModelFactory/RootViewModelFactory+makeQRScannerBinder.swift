@@ -53,6 +53,9 @@ extension RootViewModelFactory {
         case let .failure(qrCode):
             completion(.failure(makeQRFailure(qrCode: qrCode)))
             
+        case let .mapped(mapped):
+            getQRNavigation(mapped, notify, completion)
+            
         default:
             break
         }
@@ -65,6 +68,21 @@ extension RootViewModelFactory {
                 payload: payload,
                 notify: { notify($0.notifyEvent) }
             ))
+        }
+    }
+    
+    @inlinable
+    func getQRNavigation(
+        _ mapped: QRMappedResult,
+        _ notify: @escaping QRScannerDomain.Notify,
+        _ completion: @escaping (QRScannerDomain.Navigation) -> Void
+    ) {
+        switch mapped {
+        case let .missingINN(qrCode):
+            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            
+        default:
+            break
         }
     }
 }
