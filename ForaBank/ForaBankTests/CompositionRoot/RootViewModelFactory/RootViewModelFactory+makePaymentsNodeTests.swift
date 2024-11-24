@@ -10,13 +10,15 @@ import XCTest
 
 final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTests {
     
+    // MARK: - close
+    
     func test_notify_shouldCallOnClose_category() {
         
         let (node, spy) = makeSUT(payload: .category(.fast))
         
         node.close()
         
-        XCTAssertGreaterThan(spy.callCount, 0)
+        XCTAssertNoDiff(spy.payloads, [.close])
     }
     
     func test_notify_shouldCallOnClose_service() {
@@ -25,7 +27,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
         
         node.close()
         
-        XCTAssertGreaterThan(spy.callCount, 0)
+        XCTAssertNoDiff(spy.payloads, [.close])
     }
     
     func test_notify_shouldCallOnClose_source() {
@@ -34,8 +36,10 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
         
         node.close()
         
-        XCTAssertGreaterThan(spy.callCount, 0)
+        XCTAssertNoDiff(spy.payloads, [.close])
     }
+    
+    // MARK: - scanQR
     
     func test_notify_shouldCallOnScanQR_category() {
         
@@ -43,7 +47,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
         
         node.scanQR()
         
-        XCTAssertGreaterThan(spy.callCount, 0)
+        XCTAssertNoDiff(spy.payloads, [.scanQR])
     }
     
     func test_notify_shouldCallOnScanQR_service() {
@@ -52,7 +56,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
         
         node.scanQR()
         
-        XCTAssertGreaterThan(spy.callCount, 0)
+        XCTAssertNoDiff(spy.payloads, [.scanQR])
     }
     
     func test_notify_shouldCallOnScanQR_source() {
@@ -61,13 +65,13 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
         
         node.scanQR()
         
-        XCTAssertGreaterThan(spy.callCount, 0)
+        XCTAssertNoDiff(spy.payloads, [.scanQR])
     }
     
     // MARK: - Helpers
     
     private typealias Node = ForaBank.Node<PaymentsViewModel>
-    private typealias CloseSpy = CallSpy<Void, Void>
+    private typealias CloseSpy = CallSpy<SUT.PaymentsViewModelEvent, Void>
     
     private func makeSUT(
         payload: PaymentsViewModel.Payload,
@@ -79,7 +83,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
     ) {
         let spy = CloseSpy(stubs: [()])
         let sut = super.makeSUT().sut
-        let node = sut.makePaymentsNode(payload: payload, notifyClose: spy.call)
+        let node = sut.makePaymentsNode(payload: payload, notify: spy.call)
         
         return (node, spy)
     }

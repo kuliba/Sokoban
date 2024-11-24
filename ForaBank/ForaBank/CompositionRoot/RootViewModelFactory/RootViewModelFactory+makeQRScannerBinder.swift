@@ -35,30 +35,25 @@ extension RootViewModelFactory {
         case let .qrResult(qrResult):
             switch qrResult {
             case let .c2bSubscribeURL(url):
-                completion(.payments(makePaymentsNode(
-                    payload: .source(.c2bSubscribe(url)),
-                    notifyClose: { notify(.dismiss) }
-                )))
+                completion(payments(payload: .source(.c2bSubscribe(url))))
                 
             case let .c2bURL(url):
-                completion(.payments(makePaymentsNode(
-                    payload: .source(.c2b(url)),
-                    notifyClose: { notify(.dismiss) }
-                )))
+                completion(payments(payload: .source(.c2b(url))))
                 
             default:
                 break
             }
         }
-    }
-    
-    // QRNavigationComposer.swift:201
-    private func bind(
-        _ wrapper: ClosePaymentsViewModelWrapper,
-        with notify: @escaping QRScannerDomain.Notify
-    ) -> AnyCancellable {
         
-        wrapper.$isClosed.sink { _ in notify(.dismiss) }
+        func payments(
+            payload: PaymentsViewModel.Payload
+        ) -> QRScannerDomain.Navigation {
+            
+            return .payments(makePaymentsNode(
+                payload: payload,
+                notify: { notify($0.notifyEvent) }
+            ))
+        }
     }
 }
 
@@ -95,5 +90,16 @@ private extension QRModelWrapperState {
         guard case let .qrResult(qrResult) = self else { return nil }
         
         return qrResult
+    }
+}
+
+private extension RootViewModelFactory.PaymentsViewModelEvent {
+    
+    var notifyEvent: QRScannerDomain.NotifyEvent {
+        
+        switch self {
+        case .close:  return .dismiss
+        case .scanQR: return .dismiss
+        }
     }
 }
