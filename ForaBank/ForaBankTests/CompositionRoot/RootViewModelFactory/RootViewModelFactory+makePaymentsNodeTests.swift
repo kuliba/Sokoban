@@ -12,79 +12,75 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
     
     func test_notify_shouldCallOnClose_category() {
         
-        let sut = makeSUT().sut
-        var notifyCloseCount = 0
-        let node = sut.makePaymentsNode(payload: .category(.fast)) {
-            notifyCloseCount += 1
-        }
+        let (node, spy) = makeSUT(payload: .category(.fast))
         
         node.close()
         
-        XCTAssertGreaterThan(notifyCloseCount, 0)
+        XCTAssertGreaterThan(spy.callCount, 0)
     }
     
     func test_notify_shouldCallOnClose_service() {
         
-        let sut = makeSUT().sut
-        var notifyCloseCount = 0
-        let node = sut.makePaymentsNode(payload: .service(.abroad)) {
-            notifyCloseCount += 1
-        }
+        let (node, spy) = makeSUT(payload: .service(.abroad))
         
         node.close()
         
-        XCTAssertGreaterThan(notifyCloseCount, 0)
+        XCTAssertGreaterThan(spy.callCount, 0)
     }
     
     func test_notify_shouldCallOnClose_source() {
         
-        let sut = makeSUT().sut
-        var notifyCloseCount = 0
-        let node = sut.makePaymentsNode(payload: .source(.avtodor)) {
-            notifyCloseCount += 1
-        }
+        let (node, spy) = makeSUT(payload: .source(.avtodor))
         
         node.close()
         
-        XCTAssertGreaterThan(notifyCloseCount, 0)
+        XCTAssertGreaterThan(spy.callCount, 0)
     }
     
     func test_notify_shouldCallOnScanQR_category() {
         
-        let sut = makeSUT().sut
-        var notifyCloseCount = 0
-        let node = sut.makePaymentsNode(payload: .category(.fast)) {
-            notifyCloseCount += 1
-        }
+        let (node, spy) = makeSUT(payload: .category(.fast))
         
         node.scanQR()
         
-        XCTAssertGreaterThan(notifyCloseCount, 0)
+        XCTAssertGreaterThan(spy.callCount, 0)
     }
     
     func test_notify_shouldCallOnScanQR_service() {
         
-        let sut = makeSUT().sut
-        var notifyCloseCount = 0
-        let node = sut.makePaymentsNode(payload: .service(.abroad)) {
-            notifyCloseCount += 1
-        }
+        let (node, spy) = makeSUT(payload: .service(.abroad))
         
         node.scanQR()
         
-        XCTAssertGreaterThan(notifyCloseCount, 0)
+        XCTAssertGreaterThan(spy.callCount, 0)
     }
     
     func test_notify_shouldCallOnScanQR_source() {
         
-        let sut = makeSUT().sut
-        var notifyCloseCount = 0
-        let node = sut.makePaymentsNode(payload: .source(.avtodor)) {
-            notifyCloseCount += 1
-        }
+        let (node, spy) = makeSUT(payload: .source(.avtodor))
         
         node.scanQR()
         
-        XCTAssertGreaterThan(notifyCloseCount, 0)
+        XCTAssertGreaterThan(spy.callCount, 0)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias Node = ForaBank.Node<PaymentsViewModel>
+    private typealias CloseSpy = CallSpy<Void, Void>
+    
+    private func makeSUT(
+        payload: PaymentsViewModel.Payload,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        node: Node,
+        spy: CloseSpy
+    ) {
+        let spy = CloseSpy(stubs: [()])
+        let sut = super.makeSUT().sut
+        let node = sut.makePaymentsNode(payload: payload, notifyClose: spy.call)
+        
+        return (node, spy)
     }
 }
