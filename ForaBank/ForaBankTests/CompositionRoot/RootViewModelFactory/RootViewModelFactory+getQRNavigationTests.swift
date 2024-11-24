@@ -27,6 +27,74 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         expect(with: .outside(.payments), toDeliver: .outside(.payments))
     }
     
+    // MARK: - qrResult
+    
+    func test_c2bSubscribe_shouldDeliverPayments() {
+        
+        expect(with: .qrResult(.c2bSubscribeURL(anyURL())), toDeliver: .payments)
+    }
+    
+    func test_c2bSubscribe_shouldNotifyWithDismissOnClose() {
+        
+        expect(with: .c2bSubscribeURL(anyURL()), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .payments(payments):
+                payments.close()
+                
+            default:
+                XCTFail("Expected Payments, but got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_c2bSubscribe_shouldNotifyWithDismissOnScanQR() {
+        
+        expect(with: .c2bSubscribeURL(anyURL()), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .payments(payments):
+                payments.scanQR()
+                
+            default:
+                XCTFail("Expected Payments, but got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_c2b_shouldDeliverPayments() {
+        
+        expect(with: .qrResult(.c2bURL(anyURL())), toDeliver: .payments)
+    }
+    
+    func test_c2b_shouldNotifyWithDismissOnClose() {
+        
+        expect(with: .c2bURL(anyURL()), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .payments(payments):
+                payments.close()
+                
+            default:
+                XCTFail("Expected Payments, but got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_c2b_shouldNotifyWithDismissOnScanQR() {
+        
+        expect(with: .c2bURL(anyURL()), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .payments(payments):
+                payments.scanQR()
+                
+            default:
+                XCTFail("Expected Payments, but got \($0) instead.")
+            }
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>
@@ -53,7 +121,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     private func expect(
         _ sut: SUT? = nil,
         with select: QRScannerDomain.Select,
-        toDeliver expectedNavigation: QRScannerDomain.Navigation,
+        toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -64,7 +132,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         
         sut.getQRNavigation(select: select, notify: { _ in }) { [self] in
             
-            XCTAssertNoDiff(equatable($0), equatable(expectedNavigation), "Expected \(expectedNavigation), got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff(equatable($0), expectedNavigation, "Expected \(expectedNavigation), got \($0) instead.", file: file, line: line)
             exp.fulfill()
         }
         
@@ -81,22 +149,31 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case let .outside(outside):
             return .outside(outside)
             
-        case let .payments(node):
-            return .payments(.init(node.model))
+        case .payments:
+            return .payments
         }
     }
     
     private enum EquatableNavigation: Equatable {
         
         case outside(QRScannerDomain.Outside)
-        case payments(ObjectIdentifier)
+        case payments
+    }
+    
+    private func makePayments(
+        payload: PaymentsViewModel.Payload = .category(.fast),
+        model: Model = .mockWithEmptyExcept(),
+        closeAction: @escaping () -> Void = {}
+    ) -> PaymentsViewModel {
+        
+        return .init(payload: payload, model: model, closeAction: closeAction)
     }
     
     private func expect(
         _ sut: SUT? = nil,
-        with select: QRScannerDomain.Select,
+        with qrResult: QRModelResult,
         notifiesWith expectedNotifyEvent: QRScannerDomain.NotifyEvent,
-        on action: () -> Void = {},
+        on action: @escaping (QRScannerDomain.Navigation) -> Void,
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
         line: UInt = #line
@@ -105,15 +182,16 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         let exp = expectation(description: "wait for completion")
         
         sut.getQRNavigation(
-            select: select,
+            select: .qrResult(qrResult),
             notify: {
                 
                 XCTAssertNoDiff($0, expectedNotifyEvent, "Expected \(expectedNotifyEvent), got \($0) instead.", file: file, line: line)
             },
-            completion: { _ in exp.fulfill() }
+            completion: {
+                
+                action($0)
+                exp.fulfill() }
         )
-        
-        action()
         
         wait(for: [exp], timeout: timeout)
     }
