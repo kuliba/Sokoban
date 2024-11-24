@@ -11,15 +11,13 @@ import SwiftUI
 struct QRWrapperView: View {
     
     let binder: QRScannerDomain.Binder
-    let makeQRView: () -> QRScanner_View
-    let makePaymentsView: (PaymentsViewModel) -> PaymentsView
-    let makeQRFailureView: (QRFailedViewModelWrapper) -> QRFailedViewModelWrapperView
+    let factory: QRWrapperViewFactory
     
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            makeQRView()
+            factory.makeQRView(binder.content.qrScanner)
                 .navigationDestination(
                     destination: state.navigation?.destination,
                     dismiss: { event(.dismiss) },
@@ -28,6 +26,14 @@ struct QRWrapperView: View {
                 .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
         }
     }
+}
+
+struct QRWrapperViewFactory {
+    
+    let makeQRView: MakeQRView
+    let makeQRFailedWrapperView: MakeQRFailedWrapperView
+    let makePaymentsView: MakePaymentsView
+    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
 }
 
 private extension QRWrapperView {
@@ -41,12 +47,15 @@ private extension QRWrapperView {
         
         switch destination {
         case let .failure(qrFailedViewModel):
-            makeQRFailureView(qrFailedViewModel)
+            factory.makeQRFailedWrapperView(qrFailedViewModel)
                 .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
             
         case let .payments(payments):
-            makePaymentsView(payments)
+            factory.makePaymentsView(payments)
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
+            
+        case let .providerPicker(picker):
+            factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
         }
     }
 }
@@ -64,6 +73,9 @@ extension QRScannerDomain.Navigation {
             
         case let .payments(node):
             return .payments(node.model)
+            
+        case let .providerPicker(node):
+            return .providerPicker(node.model)
         }
     }
     
@@ -71,6 +83,7 @@ extension QRScannerDomain.Navigation {
         
         case failure(QRFailedViewModelWrapper)
         case payments(PaymentsViewModel)
+        case providerPicker(SegmentedPaymentProviderPickerFlowModel)
     }
 }
 
@@ -84,6 +97,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
             
         case let .payments(payments):
             return .payments(.init(payments))
+            
+        case let .providerPicker(picker):
+            return .providerPicker(.init(picker))
         }
     }
     
@@ -91,5 +107,6 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         
         case failure(ObjectIdentifier)
         case payments(ObjectIdentifier)
+        case providerPicker(ObjectIdentifier)
     }
 }

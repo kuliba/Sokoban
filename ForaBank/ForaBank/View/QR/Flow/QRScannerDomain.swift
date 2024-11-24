@@ -46,5 +46,6 @@ extension QRScannerDomain {
         case failure(QRFailedViewModelWrapper)
         case outside(Outside)
         case payments(Node<PaymentsViewModel>)
+        case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
     }
 }

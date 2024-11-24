@@ -90,6 +90,10 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectQRFailurePresented(rootView)
     }
     
+    // TODO: - add tests for missingINN - need to control qrMapping and avail operators
+    
+    // TODO: - add tests for providerPicker (mixed) - need to control qrMapping and avail operators
+    
     // MARK: - Helpers
     
     private func openQRWithFlowEvent(

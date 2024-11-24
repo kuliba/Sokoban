@@ -111,6 +111,83 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         expect(with: .qrResult(.mapped(.missingINN(anyQRCode()))), toDeliver: .failure)
     }
     
+    // MARK: - qrResult: mixed
+    
+    func test_mixed_shouldDeliverProviderPicker() {
+        
+        expect(with: .qrResult(.mapped(.mixed(makeMixed()))), toDeliver: .providerPicker)
+    }
+    
+    func test_mixed_shouldNotifyWithDismissOnDismiss() {
+        
+        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .providerPicker(node):
+                node.model.event(.dismiss)
+                
+            default:
+                XCTFail("Expected providerPicker, got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_mixed_shouldNotifyWithChatOnGoToAddCompany() {
+        
+        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.chat))) {
+            
+            switch $0 {
+            case let .providerPicker(node):
+                node.model.event(.goTo(.addCompany))
+                
+            default:
+                XCTFail("Expected providerPicker, got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_mixed_shouldNotifyWithMainOnGoToMain() {
+        
+        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.main))) {
+            
+            switch $0 {
+            case let .providerPicker(node):
+                node.model.event(.goTo(.main))
+                
+            default:
+                XCTFail("Expected providerPicker, got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_mixed_shouldNotifyWithPaymentsOnGoToPayments() {
+        
+        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.payments))) {
+            
+            switch $0 {
+            case let .providerPicker(node):
+                node.model.event(.goTo(.payments))
+                
+            default:
+                XCTFail("Expected providerPicker, got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_mixed_shouldNotifyWithDismissOnGoToScanQR() {
+        
+        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .providerPicker(node):
+                node.model.event(.goTo(.scanQR))
+                
+            default:
+                XCTFail("Expected providerPicker, got \($0) instead.")
+            }
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>
@@ -170,6 +247,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
             
         case .payments:
             return .payments
+            
+        case .providerPicker:
+            return .providerPicker
         }
     }
     
@@ -178,6 +258,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case failure
         case outside(QRScannerDomain.Outside)
         case payments
+        case providerPicker
     }
     
     private func makePayments(

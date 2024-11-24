@@ -81,8 +81,25 @@ extension RootViewModelFactory {
         case let .missingINN(qrCode):
             completion(.failure(makeQRFailure(qrCode: qrCode)))
             
+        case let .mixed(mixed):
+            completion(providerPicker(mixed))
+            
         default:
             break
+        }
+        
+        func providerPicker(
+            _ mixed: QRMappedResult.Mixed
+        ) -> QRScannerDomain.Navigation {
+            
+            let node = makeProviderPickerNode(
+                multi: mixed.operators,
+                qrCode: mixed.qrCode,
+                qrMapping: mixed.qrMapping,
+                notify: { notify(.init($0)) }
+            )
+
+            return .providerPicker(node)
         }
     }
 }
@@ -130,6 +147,36 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
         switch self {
         case .close:  return .dismiss
         case .scanQR: return .dismiss
+        }
+    }
+}
+
+import PayHub
+
+private extension QRScannerDomain.NotifyEvent {
+    
+    typealias PickerFlowEvent = PayHub.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    
+    init(_ event: PickerFlowEvent) {
+        
+        switch event {
+        case .dismiss:
+            self = .dismiss
+            
+        case let .select(select):
+            switch select {
+            case .addCompany:
+                self = .select(.outside(.chat))
+                
+            case .main:
+                self = .select(.outside(.main))
+                
+            case .payments:
+                self = .select(.outside(.payments))
+                
+            case .scanQR:
+                self = .dismiss
+            }
         }
     }
 }

@@ -732,6 +732,7 @@
 		2A3B4F5F2CF31B0D00076F05 /* RootViewModelFactory+makePaymentsNodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4F5E2CF31B0D00076F05 /* RootViewModelFactory+makePaymentsNodeTests.swift */; };
 		2A3B4F612CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */; };
 		2A3B4F632CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4F622CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift */; };
+		2A3B4F652CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4F642CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift */; };
 		2A3BD5FD2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD5FC2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift */; };
 		2A3BD6002B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD5FF2B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift */; };
 		2A3BD6052B6CDD34009B16F7 /* NanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD6042B6CDD34009B16F7 /* NanoServices.swift */; };
@@ -4389,6 +4390,7 @@
 		2A3B4F5E2CF31B0D00076F05 /* RootViewModelFactory+makePaymentsNodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsNodeTests.swift"; sourceTree = "<group>"; };
 		2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsNode.swift"; sourceTree = "<group>"; };
 		2A3B4F622CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRFailure.swift"; sourceTree = "<group>"; };
+		2A3B4F642CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProviderPickerNode.swift"; sourceTree = "<group>"; };
 		2A3BD5FC2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createFastPaymentContractFindListRequest.swift"; sourceTree = "<group>"; };
 		2A3BD5FF2B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createFastPaymentContractFindListRequestTests.swift"; sourceTree = "<group>"; };
 		2A3BD6042B6CDD34009B16F7 /* NanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NanoServices.swift; sourceTree = "<group>"; };
@@ -9432,6 +9434,7 @@
 				2A2EE9122CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift */,
 				2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */,
 				2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */,
+				2A3B4F642CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift */,
 				2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */,
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2A2EE91C2CF0CF550019FC31 /* RootViewModelFactory+makeStandard.swift */,
@@ -22616,6 +22619,7 @@
 				2A5B23112BEE03CE00270D50 /* View+ext.swift in Sources */,
 				2A6724142ADB313A00FAD522 /* KeyTagKeyChainStore.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
+				2A3B4F652CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift in Sources */,
 				2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */,
 				77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
