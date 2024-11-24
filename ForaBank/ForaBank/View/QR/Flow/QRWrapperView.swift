@@ -13,6 +13,7 @@ struct QRWrapperView: View {
     let binder: QRScannerDomain.Binder
     let makeQRView: () -> QRScanner_View
     let makePaymentsView: (PaymentsViewModel) -> PaymentsView
+    let makeQRFailureView: (QRFailedViewModelWrapper) -> QRFailedViewModelWrapperView
     
     var body: some View {
         
@@ -39,6 +40,10 @@ private extension QRWrapperView {
     ) -> some View {
         
         switch destination {
+        case let .failure(qrFailedViewModel):
+            makeQRFailureView(qrFailedViewModel)
+                .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
+            
         case let .payments(payments):
             makePaymentsView(payments)
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
@@ -51,6 +56,9 @@ extension QRScannerDomain.Navigation {
     var destination: Destination? {
         
         switch self {
+        case let .failure(qrFailedViewModel):
+            return .failure(qrFailedViewModel)
+            
         case .outside:
             return nil
             
@@ -61,6 +69,7 @@ extension QRScannerDomain.Navigation {
     
     enum Destination {
         
+        case failure(QRFailedViewModelWrapper)
         case payments(PaymentsViewModel)
     }
 }
@@ -70,6 +79,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .failure(failure):
+            return .failure(.init(failure))
+            
         case let .payments(payments):
             return .payments(.init(payments))
         }
@@ -77,6 +89,7 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case failure(ObjectIdentifier)
         case payments(ObjectIdentifier)
     }
 }

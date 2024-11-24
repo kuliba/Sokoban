@@ -50,6 +50,13 @@ extension RootViewModelFactory {
         case let .c2bURL(url):
             completion(payments(payload: .source(.c2b(url))))
             
+        case let .failure(qrCode):
+            completion(.failure(.init(
+                model: model,
+                qrCode: qrCode,
+                scheduler: schedulers.main
+            )))
+            
         default:
             break
         }

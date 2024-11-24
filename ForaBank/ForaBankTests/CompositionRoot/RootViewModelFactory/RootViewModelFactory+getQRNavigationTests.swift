@@ -27,7 +27,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         expect(with: .outside(.payments), toDeliver: .outside(.payments))
     }
     
-    // MARK: - qrResult
+    // MARK: - qrResult: c2bSubscribe
     
     func test_c2bSubscribe_shouldDeliverPayments() {
         
@@ -62,6 +62,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         }
     }
     
+    // MARK: - qrResult: c2b
+    
     func test_c2b_shouldDeliverPayments() {
         
         expect(with: .qrResult(.c2bURL(anyURL())), toDeliver: .payments)
@@ -93,6 +95,13 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
                 XCTFail("Expected Payments, but got \($0) instead.")
             }
         }
+    }
+    
+    // MARK: - qrResult: failure
+    
+    func test_failure_shouldDeliverQRFailure() {
+        
+        expect(with: .qrResult(.failure(anyQRCode())), toDeliver: .failure)
     }
     
     // MARK: - Helpers
@@ -146,6 +155,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     ) -> EquatableNavigation {
         
         switch navigation {
+        case .failure:
+            return .failure
+            
         case let .outside(outside):
             return .outside(outside)
             
@@ -156,6 +168,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     private enum EquatableNavigation: Equatable {
         
+        case failure
         case outside(QRScannerDomain.Outside)
         case payments
     }
@@ -195,4 +208,12 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         
         wait(for: [exp], timeout: timeout)
     }
+}
+
+func anyQRCode(
+    original: String = anyMessage(),
+    rawData: [String : String] = [anyMessage(): anyMessage()]
+) -> QRCode {
+    
+    return .init(original: original, rawData: rawData)
 }
