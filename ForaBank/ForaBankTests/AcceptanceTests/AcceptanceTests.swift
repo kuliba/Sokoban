@@ -10,6 +10,20 @@ import XCTest
 
 class AcceptanceTests: XCTestCase {
     
+    func activePaymentsTransfersFlag() -> FeatureFlags {
+        
+        return .activeExcept(
+            paymentsTransfersFlag: .active
+        )
+    }
+    
+    func inactivePaymentsTransfersFlag() -> FeatureFlags {
+        
+        return .activeExcept(
+            paymentsTransfersFlag: .inactive
+        )
+    }
+    
     struct TestApp {
         
         // TODO: - improve tests using SceneDelegate

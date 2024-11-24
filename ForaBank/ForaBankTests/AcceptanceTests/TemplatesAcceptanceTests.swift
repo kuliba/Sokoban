@@ -14,9 +14,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentMainViewTemplatesOnMainViewTemplatesButtonTapOnInactiveFlag() throws {
         
-        let app = TestApp(featureFlags: .activeExcept(
-            paymentsTransfersFlag: .inactive
-        ))
+        let app = TestApp(featureFlags: inactivePaymentsTransfersFlag())
         let rootView = try app.launch()
         
         tapMainViewTemplatesButton(rootView)
@@ -27,9 +25,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentRootViewTemplatesOnMainViewTemplatesButtonTapOnActiveFlag() throws {
         
-        let app = TestApp(featureFlags: .activeExcept(
-            paymentsTransfersFlag: .active
-        ))
+        let app = TestApp(featureFlags: activePaymentsTransfersFlag())
         let rootView = try app.launch()
         
         tapMainViewTemplatesButton(rootView)
