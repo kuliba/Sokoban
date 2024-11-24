@@ -12,7 +12,7 @@ import XCTest
 final class TemplatesAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
-    func test_shouldPresentTemplatesOnMainViewTemplatesButtonTapOnInactiveFlag() throws {
+    func test_shouldPresentMainViewTemplatesOnMainViewTemplatesButtonTapOnInactiveFlag() throws {
         
         let app = TestApp(featureFlags: .activeExcept(
             paymentsTransfersFlag: .inactive
@@ -25,7 +25,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     }
     
     @available(iOS 16.0, *)
-    func test_shouldPresentTemplatesOnMainViewTemplatesButtonTapOnActiveFlag() throws {
+    func test_shouldPresentRootViewTemplatesOnMainViewTemplatesButtonTapOnActiveFlag() throws {
         
         let app = TestApp(featureFlags: .activeExcept(
             paymentsTransfersFlag: .active
@@ -34,7 +34,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
         
         tapMainViewTemplatesButton(rootView)
         
-        expectTemplatesPresented(rootView)
+        expectTemplatesPresentedOnRootView(rootView)
     }
     
 #warning("add similar tests for Payments tab")
@@ -63,7 +63,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     }
     
     @available(iOS 16.0, *)
-    func expectTemplatesPresented(
+    func expectTemplatesPresentedOnRootView(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
