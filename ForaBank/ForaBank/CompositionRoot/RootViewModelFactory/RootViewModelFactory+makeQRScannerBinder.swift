@@ -35,27 +35,15 @@ extension RootViewModelFactory {
         case let .qrResult(qrResult):
             switch qrResult {
             case let .c2bSubscribeURL(url):
-                let payments = ClosePaymentsViewModelWrapper(
-                    model: model,
-                    source: .c2bSubscribe(url),
-                    scheduler: schedulers.main
-                )
-                
-                completion(.payments(.init(
-                    model: payments,
-                    cancellable: bind(payments, with: notify)
+                completion(.payments(makePaymentsNode(
+                    payload: .source(.c2bSubscribe(url)),
+                    notifyClose: { notify(.dismiss) }
                 )))
                 
             case let .c2bURL(url):
-                let payments = ClosePaymentsViewModelWrapper(
-                    model: model,
-                    source: .c2b(url),
-                    scheduler: schedulers.main
-                )
-                
-                completion(.payments(.init(
-                    model: payments,
-                    cancellable: bind(payments, with: notify)
+                completion(.payments(makePaymentsNode(
+                    payload: .source(.c2b(url)),
+                    notifyClose: { notify(.dismiss) }
                 )))
                 
             default:
