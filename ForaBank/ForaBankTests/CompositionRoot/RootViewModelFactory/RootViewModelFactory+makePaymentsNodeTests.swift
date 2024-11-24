@@ -10,7 +10,7 @@ import XCTest
 
 final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTests {
     
-    func test_notify_shouldCallOnCloseAction_category() {
+    func test_notify_shouldCallOnClose_category() {
         
         let sut = makeSUT().sut
         var notifyCloseCount = 0
@@ -18,12 +18,12 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
             notifyCloseCount += 1
         }
         
-        node.model.closeAction()
+        node.close()
         
         XCTAssertGreaterThan(notifyCloseCount, 0)
     }
     
-    func test_notify_shouldCallOnCloseAction_service() {
+    func test_notify_shouldCallOnClose_service() {
         
         let sut = makeSUT().sut
         var notifyCloseCount = 0
@@ -31,12 +31,12 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
             notifyCloseCount += 1
         }
         
-        node.model.closeAction()
+        node.close()
         
         XCTAssertGreaterThan(notifyCloseCount, 0)
     }
     
-    func test_notify_shouldCallOnCloseAction_source() {
+    func test_notify_shouldCallOnClose_source() {
         
         let sut = makeSUT().sut
         var notifyCloseCount = 0
@@ -44,7 +44,46 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
             notifyCloseCount += 1
         }
         
-        node.model.closeAction()
+        node.close()
+        
+        XCTAssertGreaterThan(notifyCloseCount, 0)
+    }
+    
+    func test_notify_shouldCallOnScanQR_category() {
+        
+        let sut = makeSUT().sut
+        var notifyCloseCount = 0
+        let node = sut.makePaymentsNode(payload: .category(.fast)) {
+            notifyCloseCount += 1
+        }
+        
+        node.scanQR()
+        
+        XCTAssertGreaterThan(notifyCloseCount, 0)
+    }
+    
+    func test_notify_shouldCallOnScanQR_service() {
+        
+        let sut = makeSUT().sut
+        var notifyCloseCount = 0
+        let node = sut.makePaymentsNode(payload: .service(.abroad)) {
+            notifyCloseCount += 1
+        }
+        
+        node.scanQR()
+        
+        XCTAssertGreaterThan(notifyCloseCount, 0)
+    }
+    
+    func test_notify_shouldCallOnScanQR_source() {
+        
+        let sut = makeSUT().sut
+        var notifyCloseCount = 0
+        let node = sut.makePaymentsNode(payload: .source(.avtodor)) {
+            notifyCloseCount += 1
+        }
+        
+        node.scanQR()
         
         XCTAssertGreaterThan(notifyCloseCount, 0)
     }

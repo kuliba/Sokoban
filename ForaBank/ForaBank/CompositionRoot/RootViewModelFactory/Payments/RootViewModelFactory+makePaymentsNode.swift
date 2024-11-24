@@ -18,9 +18,13 @@ extension RootViewModelFactory {
             closeAction: notifyClose
         )
         
+        let scanQR = payments.action
+            .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
+            .sink { _ in notifyClose () }
+        
         return .init(
             model: payments,
-            cancellables: []
+            cancellables: [scanQR]
         )
     }
 }
