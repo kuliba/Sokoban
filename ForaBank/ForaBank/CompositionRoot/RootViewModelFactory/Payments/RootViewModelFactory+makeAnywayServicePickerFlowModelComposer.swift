@@ -45,3 +45,14 @@ extension RootViewModelFactory {
         )
     }
 }
+
+extension UtilityPaymentOperatorLoaderComposer {
+    
+    func loadOperators(
+        completion: @escaping ([UtilityPaymentOperator]) -> Void
+    ) {
+        let load = compose()
+        
+        load(.init()) { completion($0); _ = load }
+    }
+}

@@ -17,10 +17,14 @@ extension RootViewModelFactory {
         qrMapping: QRMapping
     ) -> SegmentedPaymentProviderPickerFlowModel {
         
-        let make = makeSegmentedPaymentProviderPickerFlowModel(
-            pageSize: settings.pageSize
+        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
+        
+        let pickerFlowComposer = SegmentedPaymentProviderPickerFlowModelComposer(
+            makeServicePickerFlowModel: servicePickerComposer.compose,
+            model: model,
+            scheduler: schedulers.main
         )
         
-        return make(multi, qrCode, qrMapping)
+        return pickerFlowComposer.compose(with: multi, qrCode: qrCode, qrMapping: qrMapping)
     }
 }

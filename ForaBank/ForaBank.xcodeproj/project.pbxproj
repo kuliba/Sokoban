@@ -689,7 +689,6 @@
 		2A3624A92C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */; };
 		2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */; };
 		2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */; };
-		2A3624B12C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */; };
 		2A3624B32C5FC0F800174C50 /* SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B22C5FC0F800174C50 /* SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift */; };
 		2A3624B52C5FD5A400174C50 /* ComposedSegmentedPaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B42C5FD5A400174C50 /* ComposedSegmentedPaymentProviderPickerFlowView.swift */; };
 		2A3624B92C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B82C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift */; };
@@ -4357,7 +4356,6 @@
 		2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayServicePickerFlowModelComposer.swift; sourceTree = "<group>"; };
 		2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncPickerEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModelComposer.swift; sourceTree = "<group>"; };
-		2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentProviderPickerFlowModel.swift"; sourceTree = "<group>"; };
 		2A3624B22C5FC0F800174C50 /* SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift; sourceTree = "<group>"; };
 		2A3624B42C5FD5A400174C50 /* ComposedSegmentedPaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedSegmentedPaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A3624B82C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProviderServicePickerFlowModel.swift"; sourceTree = "<group>"; };
@@ -9430,7 +9428,6 @@
 				2A2EE9072CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift */,
 				2A2EE9092CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift */,
 				2A2EE90B2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift */,
-				2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */,
 				2A3624B82C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift */,
 				2A2EE9122CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift */,
 				2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */,
@@ -21940,7 +21937,6 @@
 				2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */,
 				838C09242C8B59C400E894AC /* NanoServices+makeGetBannersList.swift in Sources */,
 				2AE2662F2C195A850054C274 /* TransactionDetailButton.swift in Sources */,
-				2A3624B12C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
