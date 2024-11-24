@@ -18,7 +18,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
             notifyCloseCount += 1
         }
         
-        node.model.paymentsViewModel.closeAction()
+        node.model.closeAction()
         
         XCTAssertGreaterThan(notifyCloseCount, 0)
     }
@@ -31,7 +31,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
             notifyCloseCount += 1
         }
         
-        node.model.paymentsViewModel.closeAction()
+        node.model.closeAction()
         
         XCTAssertGreaterThan(notifyCloseCount, 0)
     }
@@ -44,7 +44,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
             notifyCloseCount += 1
         }
         
-        node.model.paymentsViewModel.closeAction()
+        node.model.closeAction()
         
         XCTAssertGreaterThan(notifyCloseCount, 0)
     }

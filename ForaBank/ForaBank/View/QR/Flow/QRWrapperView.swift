@@ -40,7 +40,7 @@ private extension QRWrapperView {
         
         switch destination {
         case let .payments(payments):
-            makePaymentsView(payments.paymentsViewModel)
+            makePaymentsView(payments)
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
         }
     }
@@ -61,7 +61,7 @@ extension QRScannerDomain.Navigation {
     
     enum Destination {
         
-        case payments(ClosePaymentsViewModelWrapper)
+        case payments(PaymentsViewModel)
     }
 }
 

@@ -8,19 +8,46 @@
 extension RootViewModelFactory {
     
     func makePaymentsNode(
-        payload: ClosePaymentsViewModelWrapper.Payload,
+        payload: PaymentsViewModel.Payload,
         notifyClose: @escaping () -> Void
-    ) -> Node<ClosePaymentsViewModelWrapper> {
+    ) -> Node<PaymentsViewModel> {
         
-        let wrapper = ClosePaymentsViewModelWrapper(
+        let payments = PaymentsViewModel(
             payload: payload,
             model: model,
-            scheduler: schedulers.main
+            closeAction: notifyClose
         )
         
         return .init(
-            model: wrapper,
-            cancellable: wrapper.$isClosed.sink { _ in notifyClose() }
+            model: payments,
+            cancellables: []
         )
+    }
+}
+
+extension PaymentsViewModel {
+    
+    enum Payload {
+        
+        case category(Payments.Category)
+        case service(Payments.Service)
+        case source(Payments.Operation.Source)
+    }
+    
+    convenience init(
+        payload: Payload,
+        model: Model,
+        closeAction: @escaping () -> Void
+    ) {
+        switch payload {
+        case let .category(category):
+            self.init(category: category, model: model, closeAction: closeAction)
+            
+        case let .service(service):
+            self.init(model, service: service, closeAction: closeAction)
+            
+        case let .source(source):
+            self.init(source: source, model: model, closeAction: closeAction)
+        }
     }
 }
