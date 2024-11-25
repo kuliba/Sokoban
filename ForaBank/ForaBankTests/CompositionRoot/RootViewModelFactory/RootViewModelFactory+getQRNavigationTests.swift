@@ -115,12 +115,12 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldDeliverProviderPicker() {
         
-        expect(with: .qrResult(.mapped(.mixed(makeMixed()))), toDeliver: .providerPicker)
+        expect(with: .qrResult(.mapped(.mixed(makeMixedQRResult()))), toDeliver: .providerPicker)
     }
     
     func test_mixed_shouldNotifyWithDismissOnDismiss() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .dismiss) {
+        expect(with: .mapped(.mixed(makeMixedQRResult())), notifiesWith: .dismiss) {
             
             switch $0 {
             case let .providerPicker(node):
@@ -134,7 +134,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithChatOnGoToAddCompany() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.chat))) {
+        expect(with: .mapped(.mixed(makeMixedQRResult())), notifiesWith: .select(.outside(.chat))) {
             
             switch $0 {
             case let .providerPicker(node):
@@ -148,7 +148,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithMainOnGoToMain() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.main))) {
+        expect(with: .mapped(.mixed(makeMixedQRResult())), notifiesWith: .select(.outside(.main))) {
             
             switch $0 {
             case let .providerPicker(node):
@@ -162,7 +162,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithPaymentsOnGoToPayments() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.payments))) {
+        expect(with: .mapped(.mixed(makeMixedQRResult())), notifiesWith: .select(.outside(.payments))) {
             
             switch $0 {
             case let .providerPicker(node):
@@ -176,7 +176,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithDismissOnGoToScanQR() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .dismiss) {
+        expect(with: .mapped(.mixed(makeMixedQRResult())), notifiesWith: .dismiss) {
             
             switch $0 {
             case let .providerPicker(node):

@@ -9,7 +9,7 @@
 import PayHubUI
 import XCTest
 
-class AcceptanceTests: XCTestCase {
+class AcceptanceTests: QRNavigationTests {
     
     func activePaymentsTransfersFlag() -> FeatureFlags {
         

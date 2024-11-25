@@ -56,6 +56,7 @@ private extension QRWrapperView {
             
         case let .providerPicker(picker):
             factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
+                .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
         }
     }
 }
