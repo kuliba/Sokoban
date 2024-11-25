@@ -13,6 +13,24 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSberQRConfirmPaymentViewModel(
+        url: URL,
+        pay: @escaping (SberQRConfirmPaymentState) -> Void,
+        completion: @escaping (SberQRConfirmPaymentViewModel?) -> Void
+    ) {
+        getSberQRData(url: url) { [weak self] result in
+            
+            guard let self else { return }
+            
+            guard case let .success(response) = result,
+                  let model = try? makeSberQRConfirmPaymentViewModel(response: response, pay: pay)
+            else { return completion(nil) }
+            
+            completion(model)
+        }
+    }
+    
+    @inlinable
+    func makeSberQRConfirmPaymentViewModel(
         response: GetSberQRDataResponse,
         pay: @escaping (SberQRConfirmPaymentState) -> Void
     ) throws -> SberQRConfirmPaymentViewModel {
