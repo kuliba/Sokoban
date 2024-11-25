@@ -9,14 +9,14 @@ import Foundation
 
 struct ClientInformAlerts {
     
-    let id = UUID()
+    let id: UUID
 
-    var informAlert: [InformAlert] = []
+    var informAlerts: [InformAlert] = []
     var updateAlert: UpdateAlert?
     
     var alert: Alert? {
         
-        informAlert.first?.alert ?? updateAlert?.alert
+        informAlerts.first?.alert ?? updateAlert?.alert
     }
     
     struct UpdateAlert: Identifiable {
