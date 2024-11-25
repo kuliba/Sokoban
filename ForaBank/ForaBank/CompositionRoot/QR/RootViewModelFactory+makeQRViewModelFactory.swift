@@ -10,6 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeQRViewModelFactory(
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> QRViewModelFactory {

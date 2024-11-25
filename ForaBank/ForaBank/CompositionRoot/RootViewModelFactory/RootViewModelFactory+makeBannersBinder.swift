@@ -12,6 +12,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeLoadBanners() -> LoadBanners {
         
         let localBannerListLoader = ServiceItemsLoader.default

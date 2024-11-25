@@ -11,22 +11,16 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
-        let qrScannerBinderComposer = QRScannerDomain.BinderComposer(
-            delay: .milliseconds(100),
-            getNavigation: getQRNavigation,
-            makeContent: makeQRScannerModel,
-            schedulers: schedulers,
-            witnesses: .default
-        )
-        
-        return qrScannerBinderComposer.compose()
+        return compose(getNavigation: getQRNavigation, makeContent: makeQRScannerModel, witnesses: .default)
     }
 }
 
-private extension RootViewModelFactory {
+extension RootViewModelFactory {
     
+    @inlinable
     func getQRNavigation(
         select: QRScannerDomain.Select,
         notify: @escaping QRScannerDomain.Notify,
@@ -35,45 +29,78 @@ private extension RootViewModelFactory {
         // TODO: - replace using QRBinderGetNavigationComposer
         
         switch select {
+        case let .outside(outside):
+            completion(.outside(outside))
+            
         case let .qrResult(qrResult):
-            switch qrResult {
-            case let .c2bSubscribeURL(url):
-                let payments = ClosePaymentsViewModelWrapper(
-                    model: model,
-                    source: .c2bSubscribe(url),
-                    scheduler: schedulers.main
-                )
-                
-                completion(.payments(.init(
-                    model: payments,
-                    cancellable: bind(payments, with: notify)
-                )))
-                
-            case let .c2bURL(url):
-                let payments = ClosePaymentsViewModelWrapper(
-                    model: model,
-                    source: .c2b(url),
-                    scheduler: schedulers.main
-                )
-                
-                completion(.payments(.init(
-                    model: payments,
-                    cancellable: bind(payments, with: notify)
-                )))
-                
-            default:
-                break
-            }
+            getQRNavigation(qrResult, notify, completion)
         }
     }
     
-    // QRNavigationComposer.swift:201
-    private func bind(
-        _ wrapper: ClosePaymentsViewModelWrapper,
-        with notify: @escaping QRScannerDomain.Notify
-    ) -> AnyCancellable {
+    @inlinable
+    func getQRNavigation(
+        _ qrResult: QRModelResult,
+        _ notify: @escaping QRScannerDomain.Notify,
+        _ completion: @escaping (QRScannerDomain.Navigation) -> Void
+    ) {
+        switch qrResult {
+        case let .c2bSubscribeURL(url):
+            completion(payments(payload: .source(.c2bSubscribe(url))))
+            
+        case let .c2bURL(url):
+            completion(payments(payload: .source(.c2b(url))))
+            
+        case let .failure(qrCode):
+            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            
+        case let .mapped(mapped):
+            getQRNavigation(mapped, notify, completion)
+            
+        default:
+            break
+        }
         
-        wrapper.$isClosed.sink { _ in notify(.dismiss) }
+        func payments(
+            payload: PaymentsViewModel.Payload
+        ) -> QRScannerDomain.Navigation {
+            
+            return .payments(makePaymentsNode(
+                payload: payload,
+                notify: { notify($0.notifyEvent) }
+            ))
+        }
+    }
+    
+    @inlinable
+    func getQRNavigation(
+        _ mapped: QRMappedResult,
+        _ notify: @escaping QRScannerDomain.Notify,
+        _ completion: @escaping (QRScannerDomain.Navigation) -> Void
+    ) {
+        switch mapped {
+        case let .missingINN(qrCode):
+            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            
+        case let .mixed(mixed):
+            completion(providerPicker(mixed))
+            
+        default:
+            break
+        }
+        
+        func providerPicker(
+            _ mixed: QRMappedResult.Mixed
+        ) -> QRScannerDomain.Navigation {
+            
+            let node = makeProviderPickerNode(
+                multi: mixed.operators,
+                qrCode: mixed.qrCode,
+                qrMapping: mixed.qrMapping,
+                notify: { notify(.init($0)) }
+            )
+
+            return .providerPicker(node)
+        }
     }
 }
 
@@ -110,5 +137,46 @@ private extension QRModelWrapperState {
         guard case let .qrResult(qrResult) = self else { return nil }
         
         return qrResult
+    }
+}
+
+private extension RootViewModelFactory.PaymentsViewModelEvent {
+    
+    var notifyEvent: QRScannerDomain.NotifyEvent {
+        
+        switch self {
+        case .close:  return .dismiss
+        case .scanQR: return .dismiss
+        }
+    }
+}
+
+import PayHub
+
+private extension QRScannerDomain.NotifyEvent {
+    
+    typealias PickerFlowEvent = PayHub.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    
+    init(_ event: PickerFlowEvent) {
+        
+        switch event {
+        case .dismiss:
+            self = .dismiss
+            
+        case let .select(select):
+            switch select {
+            case .addCompany:
+                self = .select(.outside(.chat))
+                
+            case .main:
+                self = .select(.outside(.main))
+                
+            case .payments:
+                self = .select(.outside(.payments))
+                
+            case .scanQR:
+                self = .dismiss
+            }
+        }
     }
 }

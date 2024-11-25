@@ -2,18 +2,20 @@
 //  RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 04.08.2024.
+//  Created by Igor Malyarov on 22.11.2024.
 //
 
-import CombineSchedulers
 import ForaTools
 import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeSegmentedPaymentProviderPickerFlowModel(
-        pageSize: Int = 50
-    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {
+        multi: MultiElementArray<SegmentedOperatorProvider>,
+        qrCode: QRCode,
+        qrMapping: QRMapping
+    ) -> SegmentedPaymentProviderPickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
         
@@ -23,17 +25,6 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        return pickerFlowComposer.compose
-    }
-}
-
-extension UtilityPaymentOperatorLoaderComposer {
-    
-    func loadOperators(
-        completion: @escaping ([UtilityPaymentOperator]) -> Void
-    ) {
-        let load = compose()
-        
-        load(.init()) { completion($0); _ = load }
+        return pickerFlowComposer.compose(with: multi, qrCode: qrCode, qrMapping: qrMapping)
     }
 }

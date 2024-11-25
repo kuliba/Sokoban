@@ -71,6 +71,7 @@ extension ProductsSwapView {
                             ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
                             ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
+                
                 guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
                     return nil
                 }
