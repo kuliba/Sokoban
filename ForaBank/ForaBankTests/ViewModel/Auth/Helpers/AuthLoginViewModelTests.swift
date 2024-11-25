@@ -222,21 +222,6 @@ extension AuthLoginViewModel {
             .eraseToAnyPublisher()
     }
     
-    var informAlertPublisher: AnyPublisher<ClientInformAlerts.InformAlert, Never> {
-        $clientInformAlerts
-            .compactMap { $0?.informAlerts }
-            .flatMap { alerts in
-                Publishers.Sequence(sequence: alerts)
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var updateAlertPublisher: AnyPublisher<ClientInformAlerts.UpdateAlert, Never> {
-        $clientInformAlerts
-            .compactMap { $0?.updateAlert }
-            .eraseToAnyPublisher()
-    }
-    
     var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
         
         $alert
@@ -439,30 +424,6 @@ extension ClientInformData {
         authorized: ["authorized"],
         notAuthorized: "notAuthorized"
     )
-}
-
-extension ClientInformAlerts.InformAlert: Equatable {
-    
-    public static func == (lhs: ClientInformAlerts.InformAlert, rhs: ClientInformAlerts.InformAlert) -> Bool {
-            
-        return lhs.title == rhs.title
-    }
-}
-
-extension ClientInformAlerts.UpdateAlert: Equatable {
-    
-    public static func == (lhs: ClientInformAlerts.UpdateAlert, rhs: ClientInformAlerts.UpdateAlert) -> Bool {
-            
-        return lhs.title == rhs.title
-    }
-}
-
-extension ClientInformAlerts: Equatable {
-    
-    public static func == (lhs: ClientInformAlerts, rhs: ClientInformAlerts) -> Bool {
-            
-        return lhs.id == rhs.id
-    }
 }
 
 extension AuthLoginViewModel.Link {
