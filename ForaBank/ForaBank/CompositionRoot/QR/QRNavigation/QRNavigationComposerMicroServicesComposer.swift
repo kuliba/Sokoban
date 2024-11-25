@@ -199,7 +199,7 @@ private extension QRNavigationComposerMicroServicesComposer {
                 scanner: scanner,
                 schedulers: .init()
             )
-            let make = factory.makeSberQRConfirmPaymentViewModel()
+            let make = factory.makeSberQRConfirmPaymentViewModel
             
             do {
                 let sberQR = try make($0.get(), payload.pay)

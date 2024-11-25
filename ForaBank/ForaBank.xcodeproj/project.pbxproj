@@ -4116,7 +4116,7 @@
 		2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRestrictedTests.swift; sourceTree = "<group>"; };
 		2A1980FA2CC102A0005DEA3E /* Scheduler+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scheduler+ext.swift"; sourceTree = "<group>"; };
 		2A1A8E512B26FCBE008B896D /* QRViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModelFactory.swift; sourceTree = "<group>"; };
-		2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift"; sourceTree = "<group>"; };
+		2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift"; path = "../../SberQR/RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift"; sourceTree = "<group>"; };
 		2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMakeQRScannerModel.swift"; sourceTree = "<group>"; };
 		2A1A8E572B271802008B896D /* RootViewModelFactory+makeQRViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRViewModelFactory.swift"; sourceTree = "<group>"; };
 		2A1B7A042C69C557009E038F /* NanoServices+initiateAnywayPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+initiateAnywayPaymentTests.swift"; sourceTree = "<group>"; };
@@ -9442,6 +9442,7 @@
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2A2EE91C2CF0CF550019FC31 /* RootViewModelFactory+makeStandard.swift */,
 				2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */,
+				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2A3B4F622CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift */,
 			);
 			path = Payments;
@@ -12651,7 +12652,6 @@
 			isa = PBXGroup;
 			children = (
 				2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */,
-				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
