@@ -7,7 +7,7 @@
 
 import Combine
 
-typealias RootEvent = ForaBank.RootViewDomain.Select
+typealias RootEvent = RootViewSelect
 
 extension RootViewModel {
         
@@ -45,6 +45,16 @@ private extension RootViewModel {
 
 extension RootEvent: Action {}
 
+private extension Action {
+    
+    var rootEvent: RootEvent? { self as? RootEvent }
+    
+    var fastButtonTapped: MainSectionViewModelAction.FastPayment.ButtonTapped? {
+        
+        self as? MainSectionViewModelAction.FastPayment.ButtonTapped
+    }
+}
+
 private extension MainViewModel {
 
     var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
@@ -53,10 +63,11 @@ private extension MainViewModel {
     }
 
     private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-     
+        
         sections
-            .map(\.action)
-            .map { $0.compactMap { $0 as? RootEvent }.eraseToAnyPublisher() }
+            .map {
+                $0.action.compactMap(\.rootEvent).eraseToAnyPublisher()
+            }
     }
 
     private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
@@ -72,7 +83,7 @@ private extension MainSectionFastOperationView.ViewModel {
     var rootEventPublisher: AnyPublisher<RootEvent, Never> {
         
         action
-            .compactMap { $0 as? MainSectionViewModelAction.FastPayment.ButtonTapped }
+            .compactMap(\.fastButtonTapped)
             .map(\.operationType)
             .compactMap(\.rootEvent)
             .eraseToAnyPublisher()
@@ -84,8 +95,10 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
     var rootEvent: RootEvent? {
         
         switch self {
-        case .byQr: return .scanQR
-        default:    return nil
+        case .byQr:      return .scanQR
+        case .templates: return .templates
+        case .byPhone:   return nil
+        case .zku:       return nil
         }
     }
 }

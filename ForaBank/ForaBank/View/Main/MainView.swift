@@ -101,6 +101,7 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
+        .accessibilityIdentifier(ElementIDs.mainView(.content).rawValue)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
@@ -190,6 +191,7 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .templates(node):
             viewFactory.components.makeTemplatesListFlowView(node)
+                .accessibilityIdentifier(ElementIDs.mainView(.templates).rawValue)
             
         case let .currencyWallet(viewModel):
             viewFactory.components.makeCurrencyWalletView(viewModel)

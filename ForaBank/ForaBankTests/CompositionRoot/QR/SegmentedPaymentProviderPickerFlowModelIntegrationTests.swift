@@ -67,6 +67,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
         mix: MultiElementArray<SegmentedOperatorProvider>? = nil,
         qrCode: QRCode? = nil,
         qrMapping: QRMapping = .init(parameters: [], operators: []),
+        mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         flag: StubbedFeatureFlag.Option = .stub,
         file: StaticString = #file,
         line: UInt = #line
@@ -77,16 +78,21 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
     ) {
         let model: Model = .mockWithEmptyExcept()
         let httpClient = HTTPClientSpy()
-        let make = RootViewModelFactory(
+        let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
+            mapScanResult: mapScanResult,
             resolveQR: { _ in .unknown },
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
-        ).makeSegmentedPaymentProviderPickerFlowModel()
+        )
         let mix = mix ?? .init(.provider(makeSegmentedProvider()), .provider(makeSegmentedProvider()))
-        let sut = make(mix, qrCode ?? anyQR(), qrMapping)
+        let sut = factory.makeSegmentedPaymentProviderPickerFlowModel(
+            multi: mix, qrCode: 
+                qrCode ?? anyQR(),
+            qrMapping: qrMapping
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

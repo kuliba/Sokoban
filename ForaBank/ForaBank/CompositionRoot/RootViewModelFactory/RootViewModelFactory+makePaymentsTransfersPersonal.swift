@@ -15,6 +15,7 @@ private typealias Domain = PaymentsTransfersPersonalDomain
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonal {
@@ -143,7 +144,7 @@ extension PayHubUI.OperationPicker {
     }
 }
 
-extension OperationPickerBinder {
+extension OperationPickerDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
