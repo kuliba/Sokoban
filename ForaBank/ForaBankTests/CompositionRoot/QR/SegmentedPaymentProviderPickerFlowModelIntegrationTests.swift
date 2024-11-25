@@ -67,6 +67,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
         mix: MultiElementArray<SegmentedOperatorProvider>? = nil,
         qrCode: QRCode? = nil,
         qrMapping: QRMapping = .init(parameters: [], operators: []),
+        mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         flag: StubbedFeatureFlag.Option = .stub,
         file: StaticString = #file,
         line: UInt = #line
@@ -81,6 +82,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
+            mapScanResult: mapScanResult,
             resolveQR: { _ in .unknown },
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate

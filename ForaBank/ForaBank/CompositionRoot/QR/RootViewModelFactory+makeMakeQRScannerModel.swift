@@ -29,14 +29,9 @@ extension RootViewModelFactory {
         result: QRViewModel.ScanResult,
         completion: @escaping (QRModelResult) -> Void
     ) {
-        // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
-        
-        let composer = QRScanResultMapperComposer(model: model)
-        let mapper = composer.compose()
-        
-        schedulers.interactive.schedule { [mapper] in
+        schedulers.interactive.schedule { [weak self] in
             
-            mapper.mapScanResult(result, completion)
+            self?.mapScanResult(result, completion)
         }
     }
     

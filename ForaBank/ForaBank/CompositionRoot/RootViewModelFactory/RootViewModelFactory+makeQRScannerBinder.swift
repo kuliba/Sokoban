@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import PayHub
 import PayHubUI
 
 extension RootViewModelFactory {
@@ -98,7 +99,7 @@ extension RootViewModelFactory {
                 qrMapping: mixed.qrMapping,
                 notify: { notify(.init($0)) }
             )
-
+            
             return .providerPicker(node)
         }
     }
@@ -150,8 +151,6 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
         }
     }
 }
-
-import PayHub
 
 private extension QRScannerDomain.NotifyEvent {
     

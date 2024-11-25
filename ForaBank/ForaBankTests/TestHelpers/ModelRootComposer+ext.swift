@@ -13,6 +13,7 @@ extension ModelRootComposer {
     convenience init(
         httpClient: any HTTPClient = HTTPClientSpy(),
         logger: any LoggerAgentProtocol = LoggerSpy(),
+        mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         model: Model = .mockWithEmptyExcept(),
         resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
         scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
@@ -24,6 +25,7 @@ extension ModelRootComposer {
                 model: model,
                 httpClient: httpClient,
                 logger: logger,
+                mapScanResult: mapScanResult,
                 resolveQR: resolveQR,
                 scanner: scanner,
                 settings: settings,
