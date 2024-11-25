@@ -40,6 +40,7 @@ extension QRScannerDomain {
     
         case outside(Outside)
         case qrResult(QRModelResult)
+        case sberQR(CreateSberQRPaymentResponse?)
     }
     
     enum Navigation {

@@ -11,6 +11,33 @@ import SberQR
 
 extension RootViewModelFactory {
     
+    func decoratedSberQRPay(
+        _ url: URL,
+        _ completion: @escaping (CreateSberQRPaymentResponse?) -> Void
+    ) -> (SberQRConfirmPaymentState) -> Void {
+        
+        let service = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createCreateSberQRPaymentRequest,
+            mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
+        )
+        
+        return { state in
+            
+            guard let payload = state.makePayload(with: url) else {
+                return completion(nil)
+            }
+            
+            service(payload) {
+                
+                completion(try? $0.get())
+                _ = service
+            }
+        }
+    }
+}
+
+extension RootViewModelFactory {
+    
     @inlinable
     func makeSberQRConfirmPaymentViewModel(
         url: URL,

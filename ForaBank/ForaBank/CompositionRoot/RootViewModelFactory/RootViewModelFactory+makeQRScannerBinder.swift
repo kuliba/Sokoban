@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import PayHub
 import PayHubUI
+import SberQR
 
 extension RootViewModelFactory {
     
@@ -33,6 +34,12 @@ extension RootViewModelFactory {
             
         case let .qrResult(qrResult):
             getQRNavigation(qrResult, notify, completion)
+            
+        case .sberQR(nil):
+            completion(.sberQR(nil))
+            
+        case let .sberQR(response):
+            #warning("FIXME")
         }
     }
     
@@ -56,7 +63,7 @@ extension RootViewModelFactory {
             getQRNavigation(mapped, notify, completion)
             
         case let .sberQR(url):
-            makeSberQRConfirmPaymentViewModel(url: url, pay: { _ in }) {
+            makeSberQRConfirmPaymentViewModel(url: url, pay: pay(url)) {
                 
                 completion(.sberQR($0))
             }
@@ -73,6 +80,13 @@ extension RootViewModelFactory {
                 payload: payload,
                 notify: { notify($0.notifyEvent) }
             ))
+        }
+        
+        func pay(
+            _ url: URL
+        ) -> (SberQRConfirmPaymentState) -> Void {
+           
+            decoratedSberQRPay(url) { notify(.select(.sberQR($0))) }
         }
     }
     
