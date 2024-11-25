@@ -131,7 +131,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
-
+        
         expectProviderPickerPresented(rootView)
     }
     
@@ -146,7 +146,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
-
+        
         expectOperatorSearchPresented(rootView)
     }
     
@@ -164,7 +164,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         expectPaymentPresented(rootView)
     }
-
+    
     @available(iOS 16.0, *)
     func test_shouldPresentProviderServicePickerOnQRScanProvider() throws {
         
@@ -179,7 +179,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         expectProviderServicePickerPresented(rootView)
     }
-
+    
     @available(iOS 16.0, *)
     func test_shouldPresentOperatorViewOnQRScanSingle() throws {
         
@@ -194,7 +194,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         expectOperatorViewPresented(rootView)
     }
-
+    
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulSourceQRScan() throws {
         
@@ -240,6 +240,33 @@ final class QRAcceptanceTests: AcceptanceTests {
         scanSuccessfully(rootView, scanner)
         
         expectQRFailurePresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentSberQROnQRScanSberQR() throws {
+        
+        let httpClient = HTTPClientSpy()
+        let model: Model = .mockWithEmptyExcept()
+        model.addSberProduct()
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            httpClient: httpClient,
+            model: model,
+            scanResult: .sberQR(anyURL()),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        wait(timeout: 0.1)
+        
+        XCTAssertNoDiff(
+            httpClient.requests.map(\.url?.lastPathComponent),
+            ["getBannerCatalogList", "getSberQRData"]
+        )
+        try httpClient.complete(with: getSberQRDataSuccessResponse(), at: 1)
+        
+        expectSberQRPresented(rootView)
     }
     
     // MARK: - Helpers
@@ -318,6 +345,11 @@ final class QRAcceptanceTests: AcceptanceTests {
         ) {
             scanner.complete(with: .failure(.unableCreateVideoInput))
         }
+    }
+    
+    private func getSberQRDataSuccessResponse() throws -> Data {
+        
+        try getJSON(from: "getSberQRData_fix_sum")
     }
     
     @available(iOS 16.0, *)
@@ -410,6 +442,21 @@ final class QRAcceptanceTests: AcceptanceTests {
         }
     }
     
+    @available(iOS 16.0, *)
+    private func expectSberQRPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .sberQRConfirm), "Expected Root View FullScreenCover Destination with SberQRConfirm.", file: file, line: line)
+        }
+    }
+    
     private func expectRootViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
@@ -473,7 +520,7 @@ private extension RootViewBinderView {
         try rootViewQRScannerDestination()
             .find(viewWithAccessibilityIdentifier: id.rawValue)
     }
-        
+    
     func mainViewQRScannerFullScreenCover(
     ) throws -> InspectableView<ViewType.ClassifiedView> {
         

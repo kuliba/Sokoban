@@ -485,8 +485,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         return .init(payload: payload, model: model, closeAction: closeAction)
     }
     
-    private func getSberQRDataSuccessResponse(
-    ) throws -> Data {
+    private func getSberQRDataSuccessResponse() throws -> Data {
         
         try getJSON(from: "getSberQRData_fix_sum")
     }

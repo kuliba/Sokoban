@@ -17,6 +17,7 @@ enum ElementIDs {
     case qrFailure
     case qrScanner
     case rootView(RootView)
+    case sberQRConfirm
     
     enum FullScreenCover: String {
         
@@ -92,6 +93,9 @@ extension ElementIDs {
             
         case let .rootView(rootView):
             return rootView.rawValue
+            
+        case .sberQRConfirm:
+            return "sberQRConfirm"
         }
     }
 }

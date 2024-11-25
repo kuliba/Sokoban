@@ -78,6 +78,7 @@ private extension QRWrapperView {
             
         case let .sberQR(sberQRConfirm):
             factory.makeSberQRConfirmPaymentView(sberQRConfirm)
+                .accessibilityIdentifier(ElementIDs.sberQRConfirm.rawValue)
         }
     }
 }
