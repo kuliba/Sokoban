@@ -25,51 +25,22 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
-    func test_createRequest_shouldCreateValidGetParameters() throws {
+    func test_createRequest_shouldCreateValidURL() throws {
 
         let docIDs = [String](repeating: anyMessage(), count: 3)
         let applicationID = Int.random(in: (0...Int.max))
-        
+        let url = anyURL()
+
+        let request = try makeRequest(with: docIDs, applicationID, url)
         let queryItems = try getQueryItems(with: docIDs, applicationID)
         let mapFiles = try getMapFiles(with: docIDs)
-        
+
+        XCTAssertNoDiff(request.url?.pathComponents.first, url.absoluteString )
         XCTAssertNoDiff(queryItems.first { $0.name == "applicationId" }?.value, String(applicationID))
         XCTAssertNoDiff(queryItems.first { $0.name == "docIds" }?.value, mapFiles)
     }
     
-    func test_createRequest_shouldCreateValidURL() throws {
-    
-        let url = anyURL()
-        let docIDs = [String](repeating: anyMessage(), count: 3)
-        let applicationID = Int.random(in: (0...Int.max))
-        
-        let requestURLString = try getRequestURLString(with: docIDs, applicationID, url)
-        let madeURLString = try makeURLString(with: docIDs, applicationID, url)
-        
-        XCTAssertNoDiff(requestURLString, madeURLString)
-    }
-    
     // MARK: Helpers
-    
-    private func makeURLString(
-        with docIDs: [String],
-        _ applicationID: Int,
-        _ url: URL = anyURL()
-    ) throws -> String {
-
-        let mapFiles = try XCTUnwrap(getMapFiles(with: docIDs))
-        return "\(url.absoluteString)?docIds=\(mapFiles)&applicationId=\(applicationID)"
-    }
-    
-    private func getRequestURLString(
-        with docIDs: [String],
-        _ applicationID: Int,
-        _ url: URL = anyURL()
-    ) throws -> String {
-        
-        let request = try makeRequest(with: docIDs, applicationID, url)
-        return try XCTUnwrap(request.url?.absoluteString.removingPercentEncoding)
-    }
     
     private func makeRequest(
         with docIDs: [String],
