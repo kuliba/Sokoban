@@ -698,17 +698,12 @@ private extension PayHubUI.OperationPicker {
     }
 }
 
-private extension OperationPickerBinder {
+private extension OperationPickerDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
-}
-
-private extension PickerFlowState {
-    
-    var hasDestination: Bool { navigation != nil }
 }
 
 private extension PayHubUI.PaymentsTransfersPersonalToolbar {
