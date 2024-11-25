@@ -121,8 +121,12 @@ extension RootViewFactory {
         
         return QRWrapperView(
             binder: binder,
-            makeQRView: { components.makeQRView(binder.content.qrScanner) },
-            makePaymentsView: components.makePaymentsView
+            factory: .init(
+                makeQRView: components.makeQRView,
+                makeQRFailedWrapperView: components.makeQRFailedWrapperView,
+                makePaymentsView: components.makePaymentsView,
+                makeComposedSegmentedPaymentProviderPickerFlowView: components.makeComposedSegmentedPaymentProviderPickerFlowView
+            )
         )
     }
 }

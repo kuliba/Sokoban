@@ -75,3 +75,30 @@ final class ClosePaymentsViewModelWrapper: ObservableObject {
             .assign(to: &$isClosed)
     }
 }
+
+extension ClosePaymentsViewModelWrapper {
+    
+    enum Payload {
+        
+        case category(Payments.Category)
+        case service(Payments.Service)
+        case source(Payments.Operation.Source)
+    }
+    
+    convenience init(
+        payload: Payload,
+        model: Model,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        switch payload {
+        case let .category(category):
+            self.init(model: model, category: category, scheduler: scheduler)
+            
+        case let .service(service):
+            self.init(model: model, service: service, scheduler: scheduler)
+            
+        case let .source(source):
+            self.init(model: model, source: source, scheduler: scheduler)
+        }
+    }
+}

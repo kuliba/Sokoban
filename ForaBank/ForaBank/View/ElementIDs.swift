@@ -10,6 +10,7 @@ enum ElementIDs {
     case fullScreenCover(FullScreenCover)
     case mainView(MainView)
     case payments
+    case qrFailure
     case qrScanner
     case rootView(RootView)
     
@@ -66,6 +67,9 @@ extension ElementIDs {
             
         case .payments:
             return "payments"
+            
+        case .qrFailure:
+            return "qrFailure"
             
         case .qrScanner:
             return "qrScanner"
