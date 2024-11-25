@@ -50,12 +50,22 @@ private extension QRWrapperView {
             factory.makeQRFailedWrapperView(qrFailedViewModel)
                 .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
             
+        case let .operatorSearch(search):
+            QRSearchOperatorView(
+                viewModel: search,
+                viewFactory: .init(
+                    makePaymentsView: factory.makePaymentsView
+                )
+            )
+            .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
+            
         case let .payments(payments):
             factory.makePaymentsView(payments)
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
             
         case let .providerPicker(picker):
             factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
+                .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
         }
     }
 }
@@ -67,6 +77,9 @@ extension QRScannerDomain.Navigation {
         switch self {
         case let .failure(qrFailedViewModel):
             return .failure(qrFailedViewModel)
+            
+        case let .operatorSearch(operatorSearch):
+            return .operatorSearch(operatorSearch)
             
         case .outside:
             return nil
@@ -82,6 +95,7 @@ extension QRScannerDomain.Navigation {
     enum Destination {
         
         case failure(QRFailedViewModelWrapper)
+        case operatorSearch(QRSearchOperatorViewModel)
         case payments(PaymentsViewModel)
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
     }
@@ -95,6 +109,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case let .failure(failure):
             return .failure(.init(failure))
             
+        case let .operatorSearch(search):
+            return .operatorSearch(.init(search))
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
@@ -106,6 +123,7 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
     enum ID: Hashable {
         
         case failure(ObjectIdentifier)
+        case operatorSearch(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
     }

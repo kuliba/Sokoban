@@ -9,7 +9,9 @@ enum ElementIDs {
     
     case fullScreenCover(FullScreenCover)
     case mainView(MainView)
+    case operatorSearch
     case payments
+    case providerPicker
     case qrFailure
     case qrScanner
     case rootView(RootView)
@@ -65,8 +67,14 @@ extension ElementIDs {
         case let .mainView(mainView):
             return mainView.rawValue
             
+        case .operatorSearch:
+            return "operatorSearch"
+            
         case .payments:
             return "payments"
+            
+        case .providerPicker:
+            return "providerPicker"
             
         case .qrFailure:
             return "qrFailure"

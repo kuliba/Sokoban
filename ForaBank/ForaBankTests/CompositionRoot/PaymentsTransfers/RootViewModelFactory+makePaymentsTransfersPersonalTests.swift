@@ -55,6 +55,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
+        mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -70,6 +71,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
+            mapScanResult: mapScanResult,
             resolveQR: { _ in .unknown },
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate

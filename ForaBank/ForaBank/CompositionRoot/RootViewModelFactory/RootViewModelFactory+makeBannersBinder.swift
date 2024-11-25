@@ -60,7 +60,8 @@ extension BannersBinder {
     static let preview: BannersBinder = RootViewModelFactory(
         model: .emptyMock,
         httpClient: Model.emptyMock.authenticatedHTTPClient(),
-        logger: LoggerAgent(), 
+        logger: LoggerAgent(),
+        mapScanResult: { _, completion in completion(.unknown) },
         resolveQR: { _ in .unknown },
         scanner: QRScannerView.ViewModel(),
         schedulers: .init()

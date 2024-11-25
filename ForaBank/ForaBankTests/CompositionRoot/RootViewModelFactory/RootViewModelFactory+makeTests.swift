@@ -119,6 +119,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     private func makeSUT(
         sessionState: SessionState = .inactive,
+        mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -136,6 +137,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
+            mapScanResult: mapScanResult,
             resolveQR: { _ in .unknown },
             scanner: QRScannerViewModelSpy(),
             schedulers: .test(

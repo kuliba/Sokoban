@@ -115,13 +115,16 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldDeliverProviderPicker() {
         
-        expect(with: .qrResult(.mapped(.mixed(makeMixed()))), toDeliver: .providerPicker)
+        expect(with: .qrResult(.mapped(.mixed(makeMixedQRResult()))), toDeliver: .providerPicker)
     }
     
     func test_mixed_shouldNotifyWithDismissOnDismiss() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .dismiss) {
-            
+        expect(
+            with: .mapped(.mixed(makeMixedQRResult())),
+            notifiesWith: .dismiss,
+            expectedFulfillmentCount: 1
+        ) {
             switch $0 {
             case let .providerPicker(node):
                 node.model.event(.dismiss)
@@ -134,8 +137,11 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithChatOnGoToAddCompany() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.chat))) {
-            
+        expect(
+            with: .mapped(.mixed(makeMixedQRResult())),
+            notifiesWith: .select(.outside(.chat)),
+            expectedFulfillmentCount: 3
+        ) {
             switch $0 {
             case let .providerPicker(node):
                 node.model.event(.goTo(.addCompany))
@@ -148,8 +154,11 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithMainOnGoToMain() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.main))) {
-            
+        expect(
+            with: .mapped(.mixed(makeMixedQRResult())),
+            notifiesWith: .select(.outside(.main)),
+            expectedFulfillmentCount: 3
+        ) {
             switch $0 {
             case let .providerPicker(node):
                 node.model.event(.goTo(.main))
@@ -162,8 +171,11 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithPaymentsOnGoToPayments() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .select(.outside(.payments))) {
-            
+        expect(
+            with: .mapped(.mixed(makeMixedQRResult())),
+            notifiesWith: .select(.outside(.payments)),
+            expectedFulfillmentCount: 3
+        ) {
             switch $0 {
             case let .providerPicker(node):
                 node.model.event(.goTo(.payments))
@@ -176,8 +188,11 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_mixed_shouldNotifyWithDismissOnGoToScanQR() {
         
-        expect(with: .mapped(.mixed(makeMixed())), notifiesWith: .dismiss) {
-            
+        expect(
+            with: .mapped(.mixed(makeMixedQRResult())),
+            notifiesWith: .dismiss,
+            expectedFulfillmentCount: 3
+        ) {
             switch $0 {
             case let .providerPicker(node):
                 node.model.event(.goTo(.scanQR))
@@ -188,28 +203,72 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         }
     }
     
+    // MARK: - qrResult: multiple
+    
+    func test_multiple_shouldDeliverProviderPicker() {
+        
+        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+    }
+    
+    func test_multiple_shouldNotifyWithChatOnOperatorSearchAddCompany() {
+        
+        expect(
+            with: .mapped(.multiple(makeMultipleQRResult())),
+            notifiesWith: .select(.outside(.chat))
+        ) {
+            switch $0 {
+            case let .operatorSearch(operatorSearch):
+                try? operatorSearch.tapAddCompanyButton()
+                
+            default:
+                XCTFail("Expected OperatorSearch, but got \($0) instead.")
+            }
+        }
+        
+        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+    }
+    
+    func test_multiple_shouldNotifyWithDismissOnOperatorSearchClose() {
+        
+        expect(
+            with: .mapped(.multiple(makeMultipleQRResult())),
+            notifiesWith: .dismiss
+        ) {
+            switch $0 {
+            case let .operatorSearch(operatorSearch):
+                try? operatorSearch.tapBackButton()
+                
+            default:
+                XCTFail("Expected OperatorSearch, but got \($0) instead.")
+            }
+        }
+        
+        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+    }
+    
+    // TODO: - finish this
+    //    func test_multiple_shouldNotifyWith_???_sOnOperatorSearchPayWithDetail() {
+    //
+    //        expect(
+    //            with: .mapped(.multiple(makeMultipleQRResult())),
+    //            notifiesWith: .dismiss
+    //        ) {
+    //            switch $0 {
+    //            case let .operatorSearch(operatorSearch):
+    //                try? operatorSearch.tapPayWithDetailsButton()
+    //
+    //            default:
+    //                XCTFail("Expected OperatorSearch, but got \($0) instead.")
+    //            }
+    //        }
+    //
+    //        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+    //    }
+    
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>
     private typealias NavigationSpy = Spy<Void, QRScannerDomain.Navigation, Never>
-    
-    private func _makeSUT(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> (
-        sut: SUT,
-        notifySpy: NotifySpy,
-        navigationSpy: NavigationSpy
-    ) {
-        let notifySpy = NotifySpy()
-        let navigationSpy = NavigationSpy()
-        let sut = super.makeSUT().sut
-        
-        trackForMemoryLeaks(notifySpy, file: file, line: line)
-        trackForMemoryLeaks(navigationSpy, file: file, line: line)
-        
-        return (sut, notifySpy, navigationSpy)
-    }
     
     private func expect(
         _ sut: SUT? = nil,
@@ -242,6 +301,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case .failure:
             return .failure
             
+        case .operatorSearch:
+            return .operatorSearch
+            
         case let .outside(outside):
             return .outside(outside)
             
@@ -259,6 +321,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case outside(QRScannerDomain.Outside)
         case payments
         case providerPicker
+        case operatorSearch
     }
     
     private func makePayments(
@@ -274,6 +337,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         _ sut: SUT? = nil,
         with qrResult: QRModelResult,
         notifiesWith expectedNotifyEvent: QRScannerDomain.NotifyEvent,
+        expectedFulfillmentCount: Int = 2,
         on action: @escaping (QRScannerDomain.Navigation) -> Void,
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -281,17 +345,20 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     ) {
         let sut = sut ?? super.makeSUT().sut
         let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = expectedFulfillmentCount
         
         sut.getQRNavigation(
             select: .qrResult(qrResult),
             notify: {
                 
                 XCTAssertNoDiff($0, expectedNotifyEvent, "Expected \(expectedNotifyEvent), got \($0) instead.", file: file, line: line)
+                exp.fulfill()
             },
             completion: {
                 
                 action($0)
-                exp.fulfill() }
+                exp.fulfill()
+            }
         )
         
         wait(for: [exp], timeout: timeout)
@@ -304,4 +371,63 @@ func anyQRCode(
 ) -> QRCode {
     
     return .init(original: original, rawData: rawData)
+}
+
+// MARK: - DSL
+
+extension QRSearchOperatorViewModel {
+    
+    func tapAddCompanyButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let addCompanyButton = try XCTUnwrap(addCompanyButton, "Expected to have back addCompanyButton, but got nil instead.", file: file, line: line)
+        addCompanyButton.action()
+    }
+    
+    private var addCompanyButton: ButtonSimpleView.ViewModel? {
+        
+        noCompanyInListViewModel.buttons
+            .first { $0.title == "Добавить организацию" }
+    }
+    
+    func tapBackButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let backButton = try XCTUnwrap(backButton, "Expected to have back button in left (leading) navBar items, but got nil instead.", file: file, line: line)
+        backButton.action()
+    }
+    
+    private var backButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
+        
+        return navigationBar.leftItems
+            .compactMap(\.asBackButton)
+            .first
+    }
+    
+    func tapPayWithDetailsButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let payWithDetailsButton = try XCTUnwrap(payWithDetailsButton, "Expected to have back payWithDetailsButton, but got nil instead.", file: file, line: line)
+        payWithDetailsButton.action()
+    }
+    
+    private var payWithDetailsButton: ButtonSimpleView.ViewModel? {
+        
+        noCompanyInListViewModel.buttons
+            .first { $0.title == "Оплатить по реквизитам" }
+    }
+}
+
+private extension NavigationBarView.ViewModel.ItemViewModel {
+    
+    var asBackButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
+        
+        self as? NavigationBarView.ViewModel.BackButtonItemViewModel
+    }
 }

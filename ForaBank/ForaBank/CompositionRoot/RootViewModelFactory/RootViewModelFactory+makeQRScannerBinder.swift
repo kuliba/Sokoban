@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import PayHub
 import PayHubUI
 
 extension RootViewModelFactory {
@@ -84,8 +85,36 @@ extension RootViewModelFactory {
         case let .mixed(mixed):
             completion(providerPicker(mixed))
             
+        case let .multiple(multiple):
+            completion(operatorSearch(multiple))
+            
         default:
             break
+        }
+        
+        func operatorSearch(
+            _ multiple: MultipleQRResult
+        ) -> QRScannerDomain.Navigation {
+            
+            let operatorSearch = makeOperatorSearch(
+                multiple: multiple,
+                notify: {
+                    
+                    switch $0 {
+                    case .addCompany:
+                        notify(.select(.outside(.chat)))
+                        
+                    case .detailPayment:
+#warning("FIXME")
+                        break // notify(.select(???))
+                        
+                    case .dismiss:
+                        notify(.dismiss)
+                    }
+                }
+            )
+            
+            return .operatorSearch(operatorSearch)
         }
         
         func providerPicker(
@@ -98,7 +127,7 @@ extension RootViewModelFactory {
                 qrMapping: mixed.qrMapping,
                 notify: { notify(.init($0)) }
             )
-
+            
             return .providerPicker(node)
         }
     }
@@ -150,8 +179,6 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
         }
     }
 }
-
-import PayHub
 
 private extension QRScannerDomain.NotifyEvent {
     
