@@ -347,6 +347,22 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         }
     }
     
+    // TODO: - sberQR
+    
+    // MARK: - url
+    
+    func test_url_shouldDeliverQRFailure() {
+        
+        expect(.qrResult(.url(anyURL())), toDeliver: .failure)
+    }
+    
+    // MARK: - unknown
+    
+    func test_unknown_shouldDeliverQRFailure() {
+        
+        expect(.qrResult(.unknown), toDeliver: .failure)
+    }
+        
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>

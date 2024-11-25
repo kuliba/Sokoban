@@ -210,6 +210,38 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectPaymentPresented(rootView)
     }
     
+    // TODO: - sberQR
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentQRFailureOnQRScanURL() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .url(anyURL()),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectQRFailurePresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentQRFailureOnQRScanUnlnown() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .unknown,
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectQRFailurePresented(rootView)
+    }
+    
     // MARK: - Helpers
     
     private func openQRWithFlowEvent(

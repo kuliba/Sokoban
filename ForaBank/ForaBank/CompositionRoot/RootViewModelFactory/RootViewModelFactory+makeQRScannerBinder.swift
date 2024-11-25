@@ -27,8 +27,6 @@ extension RootViewModelFactory {
         notify: @escaping QRScannerDomain.Notify,
         completion: @escaping (QRScannerDomain.Navigation) -> Void
     ) {
-        // TODO: - replace using QRBinderGetNavigationComposer
-        
         switch select {
         case let .outside(outside):
             completion(.outside(outside))
@@ -57,6 +55,11 @@ extension RootViewModelFactory {
         case let .mapped(mapped):
             getQRNavigation(mapped, notify, completion)
             
+        // TODO: case let .sberQR(url):
+            
+        case .url, .unknown:
+            completion(.failure(makeQRFailure(qrCode: nil)))
+
         default:
             break
         }
