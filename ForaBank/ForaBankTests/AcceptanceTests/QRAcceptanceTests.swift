@@ -228,7 +228,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     @available(iOS 16.0, *)
-    func test_shouldPresentQRFailureOnQRScanUnlnown() throws {
+    func test_shouldPresentQRFailureOnQRScanUnknown() throws {
         
         let scanner = QRScannerViewModelSpy()
         let app = TestApp(
