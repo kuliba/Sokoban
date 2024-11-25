@@ -21,25 +21,25 @@ extension PayHubUI.CategoryPicker {
 
 // MARK: - OperationPicker
 
-extension OperationPickerBinder: PayHubUI.OperationPicker {}
+extension OperationPickerDomain.Binder: PayHubUI.OperationPicker {}
 
 extension PayHubUI.OperationPicker {
     
-    var operationBinder: OperationPickerBinder? {
+    var operationBinder: OperationPickerDomain.Binder? {
         
-        return self as? OperationPickerBinder
+        return self as? OperationPickerDomain.Binder
     }
 }
 
 // MARK: - PaymentsTransfersPersonalToolbar
 
-extension PaymentsTransfersPersonalToolbarBinder: PayHubUI.PaymentsTransfersPersonalToolbar {}
+extension PaymentsTransfersPersonalToolbarDomain.Binder: PayHubUI.PaymentsTransfersPersonalToolbar {}
 
 extension PayHubUI.PaymentsTransfersPersonalToolbar {
     
-    var toolbarBinder: PaymentsTransfersPersonalToolbarBinder? {
+    var toolbarBinder: PaymentsTransfersPersonalToolbarDomain.Binder? {
         
-        return self as? PaymentsTransfersPersonalToolbarBinder
+        return self as? PaymentsTransfersPersonalToolbarDomain.Binder
     }
 }
 

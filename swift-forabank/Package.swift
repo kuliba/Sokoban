@@ -2230,6 +2230,7 @@ private extension Target {
     static let savingsServices = target(
         name: .savingsServices,
         dependencies: [
+            .foraTools,
             .remoteServices
         ],
         path: "Sources/Services/\(String.savingsServices)"
@@ -2241,7 +2242,8 @@ private extension Target {
             // external packages
             .customDump,
             // internal modules
-            .savingsServices
+            .foraTools,
+            .savingsServices,
         ],
         path: "Tests/Services/\(String.savingsServicesTests)"
     )

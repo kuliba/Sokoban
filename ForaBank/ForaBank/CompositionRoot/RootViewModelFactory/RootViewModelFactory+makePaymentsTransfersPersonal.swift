@@ -15,6 +15,7 @@ private typealias Domain = PaymentsTransfersPersonalDomain
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonal {
@@ -31,14 +32,7 @@ extension RootViewModelFactory {
         
         // MARK: - Toolbar
         
-        let toolbarComposer = PaymentsTransfersPersonalToolbarBinderComposer(
-            microServices: .init(
-                makeProfile: { $0(ProfileModelStub()) },
-                makeQR: { $0(QRModelStub()) }
-            ),
-            scheduler: schedulers.main
-        )
-        let toolbar = toolbarComposer.compose()
+        let toolbar = makePaymentsTransfersPersonalToolbar()
         
         // MARK: - Transfers
         
@@ -46,7 +40,7 @@ extension RootViewModelFactory {
         
         let transfers = makeTransfers(
             buttonTypes: TransfersDomain.ButtonType.allCases,
-            makeQRModel: makeMakeQRScannerModel
+            makeQRModel: makeQRScannerModel
         )
         
         // MARK: - PaymentsTransfers
@@ -150,7 +144,7 @@ extension PayHubUI.OperationPicker {
     }
 }
 
-extension OperationPickerBinder {
+extension OperationPickerDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -180,7 +174,7 @@ extension PayHubUI.PaymentsTransfersPersonalToolbar {
     }
 }
 
-extension PaymentsTransfersPersonalToolbarBinder {
+extension PaymentsTransfersPersonalToolbarDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
