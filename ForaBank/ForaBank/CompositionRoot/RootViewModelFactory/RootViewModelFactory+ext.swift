@@ -276,9 +276,7 @@ extension RootViewModelFactory {
             model: model,
             scheduler: schedulers.main
         )
-        
-        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel()
-        
+                
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel()
         
         let getLanding = nanoServiceComposer.compose(
@@ -305,7 +303,7 @@ extension RootViewModelFactory {
                 c2bSubscription: model.subscriptions.value
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
-            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
+            makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder
         )
@@ -413,7 +411,7 @@ extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: resetCVVPINActivation,
-            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
+            makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,

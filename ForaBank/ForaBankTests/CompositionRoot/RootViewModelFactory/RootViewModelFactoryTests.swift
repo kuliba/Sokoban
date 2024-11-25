@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-class RootViewModelFactoryTests: XCTestCase {
+class RootViewModelFactoryTests: QRNavigationTests {
     
     typealias SUT = RootViewModelFactory
     
