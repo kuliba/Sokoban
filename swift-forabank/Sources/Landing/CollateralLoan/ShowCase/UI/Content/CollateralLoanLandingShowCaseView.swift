@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseView<SpinnerView, ContentView>: View
-where SpinnerView: View,
-      ContentView: View {
+struct CollateralLoanLandingShowCaseView {
     
     @ObservedObject private(set) var content: Content
     
@@ -17,7 +15,7 @@ where SpinnerView: View,
     
     private let factory: Factory
     
-    public init(
+    init(
         content: Content,
         factory: Factory
     ) {
@@ -25,19 +23,13 @@ where SpinnerView: View,
         self.factory = factory
     }
     
-    public var body: some View {
+    var body: some View {
         
-        switch content.viewState {
+        ScrollView(showsIndicators: false) {
             
-        case .content:
-            ScrollView(showsIndicators: false) {
-
-                ForEach(content.data.products, id: \.landingId) {
-                    factory.makeView(with: $0)
-                }
+            ForEach(content.data.products, id: \.landingId) {
+                factory.makeView(with: $0)
             }
-        case .spinner:
-            factory.makeSpinnerView()
         }
     }
 }
@@ -45,5 +37,5 @@ where SpinnerView: View,
 extension CollateralLoanLandingShowCaseView {
     
     typealias Content = CollateralLoanLandingShowCaseContent
-    typealias Factory = CollateralLoanLandingShowCaseViewFactory<SpinnerView, ContentView>
+    typealias Factory = CollateralLoanLandingShowCaseViewFactory
 }

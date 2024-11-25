@@ -11,6 +11,8 @@ import XCTest
 
 final class QRAcceptanceTests: AcceptanceTests {
     
+    // TODO: - scan QR can be initiated from the main view, payments view, or toolbar
+    
     func test_openQRWithFlowEvent_shouldOpenRootViewQRScannerFullScreenCover() throws {
         
         let app = TestApp()
@@ -24,9 +26,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     func test_tapMainViewQRButton_shouldOpenRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
         
-        let app = TestApp(featureFlags: .activeExcept(
-            paymentsTransfersFlag: .active
-        ))
+        let app = TestApp(featureFlags: activePaymentsTransfersFlag())
         let rootView = try app.launch()
         
         tapMainViewQRButton(rootView)
@@ -35,11 +35,9 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectNoMainViewQRScannerFullScreenCover(rootView)
     }
     
-    func test_tapMainViewQRButton_shouldOpenMainViewQRScannerFullScreenCover() throws {
+    func test_tapMainViewQRButton_shouldOpenMainViewQRScannerFullScreenCoverOnInactiveFlag() throws {
         
-        let app = TestApp(featureFlags: .activeExcept(
-            paymentsTransfersFlag: .inactive
-        ))
+        let app = TestApp(featureFlags: inactivePaymentsTransfersFlag())
         let rootView = try app.launch()
         
         tapMainViewQRButton(rootView)
@@ -50,9 +48,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     func test_closeQRScanner_shouldCloseRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
         
-        let app = TestApp(featureFlags: .activeExcept(
-            paymentsTransfersFlag: .active
-        ))
+        let app = TestApp(featureFlags: activePaymentsTransfersFlag())
         let rootView = try app.launch()
         tapMainViewQRButton(rootView)
         expectRootViewQRScannerFullScreenCover(rootView)
@@ -62,6 +58,41 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectNoRootViewQRScannerFullScreenCover(rootView)
         expectNoMainViewQRScannerFullScreenCover(rootView)
     }
+    
+    // When a user successfully scans the c2bSubscribe QR code, a payment for the c2bSubscribe is presented
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnSuccessfulC2BSubscribeQRScan() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            resolveQR: { _ in .c2bSubscribeURL(anyURL()) },
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectC2BSubscribePaymentPresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentQRFailureOnQRScanFailure() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            resolveQR: { _ in .qrCode(anyQRCode()) },
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectQRFailurePresented(rootView)
+    }
+    
+    // TODO: - add tests for missingINN - need to control qrMapping and avail operators
+    
+    // TODO: - add tests for providerPicker (mixed) - need to control qrMapping and avail operators
     
     // MARK: - Helpers
     
@@ -107,7 +138,71 @@ final class QRAcceptanceTests: AcceptanceTests {
         }
     }
     
-    func expectRootViewQRScannerFullScreenCover(
+    private func scanSuccessfully(
+        _ rootView: RootViewBinderView,
+        _ scanner: QRScannerViewModelSpy,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        tapMainViewQRButton(rootView, file: file, line: line)
+        
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            scanner.complete(with: .success(anyMessage()))
+        }
+    }
+    
+    private func scanWithFailure(
+        _ rootView: RootViewBinderView,
+        _ scanner: QRScannerViewModelSpy,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        tapMainViewQRButton(rootView, file: file, line: line)
+        
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            scanner.complete(with: .failure(.unableCreateVideoInput))
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectC2BSubscribePaymentPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerPaymentsDestination(), "Expected Root View FullScreenCover Destination with Payment.", file: file, line: line)
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectQRFailurePresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerFailureDestination(), "Expected Root View FullScreenCover Destination with QR Failure.", file: file, line: line)
+        }
+    }
+    
+    private func expectRootViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
@@ -115,7 +210,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         XCTAssertNoThrow(try rootView.rootViewQRScannerFullScreenCover(), "Expected Root View FullScreenCover with QRScanner.", file: file, line: line)
     }
     
-    func expectNoRootViewQRScannerFullScreenCover(
+    private func expectNoRootViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
@@ -123,7 +218,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         XCTAssertThrowsError(try rootView.rootViewQRScannerFullScreenCover(), "Expected No Root View FullScreenCover with QRScanner, but there is one.", file: file, line: line)
     }
     
-    func expectMainViewQRScannerFullScreenCover(
+    private func expectMainViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
@@ -131,7 +226,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         XCTAssertNoThrow(try rootView.mainViewQRScannerFullScreenCover(), "Expected Main View FullScreenCover with QRScanner.", file: file, line: line)
     }
     
-    func expectNoMainViewQRScannerFullScreenCover(
+    private func expectNoMainViewQRScannerFullScreenCover(
         _ rootView: RootViewBinderView,
         file: StaticString = #file,
         line: UInt = #line
@@ -151,6 +246,26 @@ private extension RootViewBinderView {
             .find(RootView.self)
             .fullScreenCover()
             .find(viewWithAccessibilityIdentifier: ElementIDs.rootView(.qrFullScreenCover).rawValue)
+    }
+    
+    @available(iOS 16.0, *)
+    func rootViewQRScannerPaymentsDestination(
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        
+        try rootViewQRScannerFullScreenCover()
+            .find(viewWithAccessibilityIdentifier: ElementIDs.qrScanner.rawValue)
+            .background().navigationLink() // we are using custom `View.navigationDestination(_:item:content:)
+            .find(viewWithAccessibilityIdentifier: ElementIDs.payments.rawValue)
+    }
+    
+    @available(iOS 16.0, *)
+    func rootViewQRScannerFailureDestination(
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        
+        try rootViewQRScannerFullScreenCover()
+            .find(viewWithAccessibilityIdentifier: ElementIDs.qrScanner.rawValue)
+            .background().navigationLink() // we are using custom `View.navigationDestination(_:item:content:)
+            .find(viewWithAccessibilityIdentifier: ElementIDs.qrFailure.rawValue)
     }
     
     func mainViewQRScannerFullScreenCover(

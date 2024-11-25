@@ -7,4 +7,16 @@
 
 import PayHubUI
 
-typealias PaymentsTransfersCorporateContent = PayHubUI.PaymentsTransfersCorporateContent<BannerPickerSectionBinder>
+typealias PaymentsTransfersCorporateContent = PayHubUI.PaymentsTransfersCorporateContent
+
+// MARK: - BannerPicker
+
+extension BannerPickerSectionBinder: PayHubUI.CorporateBannerPicker {}
+
+extension PayHubUI.CorporateBannerPicker {
+    
+    var bannerBinder: BannerPickerSectionBinder? {
+        
+        return self as? BannerPickerSectionBinder
+    }
+}

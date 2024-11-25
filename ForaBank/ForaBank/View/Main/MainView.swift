@@ -100,6 +100,7 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
+        .accessibilityIdentifier(ElementIDs.mainView(.content).rawValue)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
@@ -189,6 +190,7 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .templates(node):
             viewFactory.components.makeTemplatesListFlowView(node)
+                .accessibilityIdentifier(ElementIDs.mainView(.templates).rawValue)
             
         case let .currencyWallet(viewModel):
             viewFactory.components.makeCurrencyWalletView(viewModel)
@@ -314,8 +316,12 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            viewFactory.components.makeQRView(node.model.qrModel)
-                .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
+            NavigationView {
+                
+                viewFactory.components.makeQRView(node.model.qrScanner)
+                    .accessibilityIdentifier(ElementIDs.mainView(.qrScanner).rawValue)
+            }
+            .navigationViewStyle(.stack)
             
         case let .success(viewModel):
             viewFactory.components.makePaymentsSuccessView(viewModel)

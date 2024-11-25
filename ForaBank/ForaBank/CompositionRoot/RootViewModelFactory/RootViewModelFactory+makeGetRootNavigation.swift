@@ -9,24 +9,38 @@ import Combine
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeGetRootNavigation(
-        makeQRScanner: @escaping () -> QRScannerModel
+        makeQRScanner: @escaping () -> QRScannerDomain.Binder
     ) -> RootViewDomain.GetNavigation {
         
-        return { [bind] select, notify, completion in
+        return { [weak self] select, notify, completion in
+            
+            guard let self else { return }
             
             switch select {
             case .scanQR:
                 let qrScanner = makeQRScanner()
-                let cancellable = bind(qrScanner, notify)
+                let cancellable = bind(qrScanner.content, using: notify)
+                
                 completion(.scanQR(.init(
                     model: qrScanner,
                     cancellable: cancellable
                 )))
+                
+            case .templates:
+                let templates = makeMakeTemplates(closeAction: {
+                    notify(.dismiss)
+                })
+                let cancellables = bind(templates, with: notify)
+                completion(.templates(.init(
+                    model: templates,
+                    cancellables: cancellables
+                )))
             }
         }
     }
-        
+    
     private func bind(
         _ scanQR: QRScannerModel,
         using notify: @escaping RootViewDomain.Notify
@@ -35,7 +49,7 @@ extension RootViewModelFactory {
         // PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer.swift:308
         return scanQR.$state
             .compactMap { $0 }
-            // .debounce(for: 0.1, scheduler: scheduler)
+        // .debounce(for: 0.1, scheduler: scheduler)
             .sink {
                 
                 switch $0 {
@@ -47,9 +61,19 @@ extension RootViewModelFactory {
                     break
                     
                 case let .qrResult(qrResult):
-                   // notify(.select(.qr(.result(qrResult))))
+                    // notify(.select(.qr(.result(qrResult))))
                     break
                 }
             }
+    }
+    
+    private func bind(
+        _ templates: RootViewModelFactory.Templates,
+        with notify: @escaping RootViewDomain.Notify
+    ) -> Set<AnyCancellable> {
+        
+        // handleTemplatesOutsideFlowState
+        // MainViewModel.handleTemplatesFlowState(_:)
+        []
     }
 }

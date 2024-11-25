@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "D030BD62-97D9-452A-BC38-ED94AA08F8CB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SavingsServicesTests",
+        "name" : "SavingsServicesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

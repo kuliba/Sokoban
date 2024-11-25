@@ -17,7 +17,17 @@ final class RootViewModelFactory {
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
     
+    let resolveQR: ResolveQR
+    let scanner: any QRScannerViewModel
+    
     let settings: RootViewModelFactorySettings
+    
+    // active flags
+    let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active
+    let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
+    let historyFilterFlag: HistoryFilterFlag = true
+    let marketplaceFlag: MarketplaceFlag = .active
+    let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
     
     let schedulers: Schedulers
     
@@ -31,15 +41,19 @@ final class RootViewModelFactory {
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
+        resolveQR: @escaping ResolveQR,
+        scanner: any QRScannerViewModel,
         settings: RootViewModelFactorySettings = .iFora,
         schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
         self.logger = logger
+        self.resolveQR = resolveQR
+        self.scanner = scanner
         self.settings = settings
         self.schedulers = schedulers
-        
+
         // reusable components & factories
         
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
@@ -67,4 +81,6 @@ final class RootViewModelFactory {
         
         self.nanoServiceComposer = nanoServiceComposer
     }
+    
+    typealias ResolveQR = (String) -> QRViewModel.ScanResult
 }

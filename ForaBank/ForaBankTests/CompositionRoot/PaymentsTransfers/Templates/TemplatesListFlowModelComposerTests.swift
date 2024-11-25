@@ -12,7 +12,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     func test_compose_shouldSetTemplatesDismissAction() throws {
         
-        let (sut, _,_) = makeSUT()
+        let (sut, _) = makeSUT()
         let exp = expectation(description: "wait for dismiss action")
         let flowModel = sut.compose { exp.fulfill() }
         
@@ -23,7 +23,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     func test_compose_shouldSetTemplatesNavBarBackAction() throws {
         
-        let (sut, _,_) = makeSUT()
+        let (sut, _) = makeSUT()
         let exp = expectation(description: "wait for dismiss action")
         let flowModel = sut.compose { exp.fulfill() }
         
@@ -34,7 +34,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     func test_compose_shouldDeliverLegacyOnLegacy() {
         
-        let (sut, spy, _) = makeSUT()
+        let (sut, spy) = makeSUT()
         let flowModel = sut.compose {}
         
         flowModel.select(makeTemplate())
@@ -46,7 +46,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     func test_compose_shouldCallCollaboratorWithTemplate() {
         
         let template = makeTemplate()
-        let (sut, spy, _) = makeSUT()
+        let (sut, spy) = makeSUT()
         let flowModel = sut.compose {}
         
         flowModel.select(template)
@@ -56,7 +56,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     func test_compose_shouldDeliverConnectivityFailureOnConnectivityError() {
         
-        let (sut, spy, _) = makeSUT()
+        let (sut, spy) = makeSUT()
         let flowModel = sut.compose {}
         
         flowModel.select(makeTemplate())
@@ -68,7 +68,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     func test_compose_shouldDeliverServerFailureOnServerError() {
         
         let message = anyMessage()
-        let (sut, spy, _) = makeSUT()
+        let (sut, spy) = makeSUT()
         let flowModel = sut.compose {}
         
         flowModel.select(makeTemplate())
@@ -79,18 +79,17 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     func test_compose_shouldDeliverV1OnSuccess() {
         
-        let (sut, spy, composer) = makeSUT()
+        let (sut, spy) = makeSUT()
         let flowModel = sut.compose {}
         
         flowModel.select(makeTemplate())
-        spy.complete(with: .success(.v1(composer.compose(transaction: makeTransaction()))))
+        spy.complete(with: .success(.v1(makeAnywayFlowModel(with: makeTransaction()))))
         
         assertV1Destination(flowModel)
     }
     
     // MARK: - Helpers
     
-    private typealias Flag = UtilitiesPaymentsFlag
     private typealias SUT = TemplatesListFlowModelComposer
     private typealias FlowModel = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
     private typealias Transaction = AnywayTransactionState.Transaction
@@ -102,26 +101,12 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: MakePaymentSpy,
-        composer: AnywayFlowComposer
+        spy: MakePaymentSpy
     ) {
         let httpClient = HTTPClientSpy()
-        let model: Model = .emptyMock
+        let model: Model = .mockWithEmptyExcept()
         let spy = MakePaymentSpy()
-        let transactionComposer = AnywayTransactionViewModelComposer(
-            flag: .stub,
-            model: model,
-            httpClient: httpClient,
-            log: { _,_,_,_,_ in },
-            scheduler: .immediate
-        )
-        let composer = AnywayFlowComposer(
-            makeAnywayTransactionViewModel: transactionComposer.compose(transaction:),
-            model: model,
-            scheduler: .immediate
-        )
         let sut = SUT(
-            makeAnywayFlowModel: composer.compose(transaction:),
             model: model,
             microServices: .init(makePayment: spy.process),
             scheduler: .immediate
@@ -129,10 +114,8 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
-        trackForMemoryLeaks(composer, file: file, line: line)
-        trackForMemoryLeaks(transactionComposer, file: file, line: line)
         
-        return (sut, spy, composer)
+        return (sut, spy)
     }
     
     private func makeTemplate(
@@ -180,6 +163,27 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
             ),
             isValid: true
         )
+    }
+    
+    private func makeAnywayFlowModel(
+        with transaction: Transaction,
+        model: Model = .mockWithEmptyExcept(),
+        httpClient: HTTPClient = HTTPClientSpy()
+    ) -> AnywayFlowModel {
+        
+        let transactionComposer = AnywayTransactionViewModelComposer(
+            model: model,
+            httpClient: httpClient,
+            log: { _,_,_,_,_ in },
+            scheduler: .immediate
+        )
+        let composer = AnywayFlowComposer(
+            makeAnywayTransactionViewModel: transactionComposer.compose(transaction:),
+            model: model,
+            scheduler: .immediate
+        )
+
+        return composer.compose(transaction: transaction)
     }
     
     private func assertLegacyDestination(

@@ -692,13 +692,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     private func makeQRModel(
         mapScanResult: @escaping (QRViewModel.ScanResult, @escaping (QRModelResult) -> Void) -> Void = { _,_ in },
-        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }) },
+        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }, scanner: QRScannerViewModelSpy()) },
         scheduler: AnySchedulerOfDispatchQueue = .immediate
     ) -> QRScannerModel {
         
         return .init(
             mapScanResult: mapScanResult,
-            makeQRModel: makeQRModel,
+            makeQRScanner: makeQRModel,
             scheduler: scheduler
         )
     }
@@ -752,32 +752,37 @@ private extension Node where Model == ClosePaymentsViewModelWrapper {
     }
 }
 
-private extension Node where Model == PaymentsViewModel {
-    
-    func scanQR() {
-        
-        model.scanQR()
-    }
+extension Node where Model == PaymentsViewModel {
     
     func contactAbroad(
         source: Payments.Operation.Source
     ) {
         model.contactAbroad(source: source)
     }
-}
-
-private extension PaymentsViewModel {
+    
+    func close() {
+        
+        model.closeAction()
+    }
     
     func scanQR() {
         
-        let action = PaymentsViewModelAction.ScanQrCode()
-        self.action.send(action)
+        model.scanQR()
     }
+}
+
+private extension PaymentsViewModel {
     
     func contactAbroad(
         source: Payments.Operation.Source
     ) {
         let action = PaymentsViewModelAction.ContactAbroad(source: source)
+        self.action.send(action)
+    }
+    
+    func scanQR() {
+        
+        let action = PaymentsViewModelAction.ScanQrCode()
         self.action.send(action)
     }
 }

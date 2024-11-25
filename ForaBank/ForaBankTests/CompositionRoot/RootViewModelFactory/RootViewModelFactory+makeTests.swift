@@ -103,10 +103,10 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         httpClient.complete(with: success())
         awaitActorThreadHop()
-        backgroundScheduler.advance()
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
@@ -136,22 +136,16 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .test(
                 main: .immediate,
                 background: backgroundScheduler.eraseToAnyScheduler()
             ).0
         ).make(
             dismiss: {},
-            qrResolverFeatureFlag: .active,
-            fastPaymentsSettingsFlag: .live,
-            utilitiesPaymentsFlag: .live,
-            historyFilterFlag: .init(true),
-            changeSVCardLimitsFlag: .active,
             collateralLoanLandingFlag: .active,
-            getProductListByTypeV6Flag: .active,
-            marketplaceFlag: .inactive,
             paymentsTransfersFlag: .active,
-            updateInfoStatusFlag: .active,
             savingsAccountFlag: .active
         )
         
@@ -224,8 +218,9 @@ private extension RootViewModel {
     ) throws -> CategoryPickerSectionDomain.ContentDomain.Content {
         
         let v1 = try personal(file: file, line: line)
+        let binder = try XCTUnwrap(v1.content.categoryPicker.sectionBinder)
         
-        return v1.content.categoryPicker.content
+        return binder.content
     }
     
     func personal(

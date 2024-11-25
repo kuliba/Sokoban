@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 14.11.2024.
 //
 
-public extension CollateralLoanLandingGetJsonAbroadViewFactory {
+extension CollateralLoanLandingGetJsonAbroadViewFactory {
     
     func makeHeaderView(with product: GetJsonAbroadData.Product)
         -> CollateralLoanLandingGetJsonAbroadHeaderView {
