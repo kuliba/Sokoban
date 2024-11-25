@@ -512,13 +512,13 @@ extension RootViewModelFactory {
                     
                 case let .success(response):
                     
-                    var alerts = ClientInformAlerts(informAlert: [], updateAlert: nil)
+                    var alerts = ClientInformAlerts(id: .init(), informAlerts: [], updateAlert: nil)
                     
                     response.list.forEach {
                         
                         if $0.update == nil && $0.authBlocking == false {
                             
-                            alerts.informAlert.append(
+                            alerts.informAlerts.append(
                                 .init(
                                     title: $0.title,
                                     text: $0.text

@@ -32,7 +32,7 @@ extension ClientInformAlerts {
 
     mutating func next() {
             
-        if informAlert.isEmpty {
+        if informAlerts.isEmpty {
 
             if let updateAlert {
                 
@@ -46,8 +46,8 @@ extension ClientInformAlerts {
                 )
             }
         } else {
-            informAlert = .init(
-                informAlert.dropFirst()
+            informAlerts = .init(
+                informAlerts.dropFirst()
             )
         }
     }
