@@ -265,6 +265,41 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     //        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
     //    }
     
+    // MARK: - qrResult: none
+    
+    func test_none_shouldDeliverPayments() {
+        
+        expect(with: .qrResult(.mapped(.none(makeQR()))), toDeliver: .payments)
+    }
+    
+    func test_none_shouldNotifyWithDismissOnClose() {
+        
+        expect(with: .mapped(.none(makeQR())), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .payments(payments):
+                payments.close()
+                
+            default:
+                XCTFail("Expected Payments, but got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_none_shouldNotifyWithDismissOnScanQR() {
+        
+        expect(with: .mapped(.none(makeQR())), notifiesWith: .dismiss) {
+            
+            switch $0 {
+            case let .payments(payments):
+                payments.scanQR()
+                
+            default:
+                XCTFail("Expected Payments, but got \($0) instead.")
+            }
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>

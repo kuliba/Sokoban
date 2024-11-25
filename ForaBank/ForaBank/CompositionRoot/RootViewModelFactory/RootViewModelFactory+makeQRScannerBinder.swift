@@ -88,6 +88,9 @@ extension RootViewModelFactory {
         case let .multiple(multiple):
             completion(operatorSearch(multiple))
             
+        case let .none(qrCode):
+            completion(payments(payload: .source(.requisites(qrCode: qrCode))))
+            
         default:
             break
         }
@@ -115,6 +118,16 @@ extension RootViewModelFactory {
             )
             
             return .operatorSearch(operatorSearch)
+        }
+         
+        func payments(
+            payload: PaymentsViewModel.Payload
+        ) -> QRScannerDomain.Navigation {
+            
+            return .payments(makePaymentsNode(
+                payload: payload,
+                notify: { notify($0.notifyEvent) }
+            ))
         }
         
         func providerPicker(

@@ -72,7 +72,22 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         scanSuccessfully(rootView, scanner)
         
-        expectC2BSubscribePaymentPresented(rootView)
+        expectPaymentPresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnSuccessfulC2BQRScan() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .c2bURL(anyURL()),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectPaymentPresented(rootView)
     }
     
     @available(iOS 16.0, *)
@@ -135,6 +150,21 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectOperatorSearchPresented(rootView)
     }
     
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnQRScanNoneMapped() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .mapped(.none(makeQR())),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectPaymentPresented(rootView)
+    }
+
     // MARK: - Helpers
     
     private func openQRWithFlowEvent(
@@ -214,7 +244,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     @available(iOS 16.0, *)
-    private func expectC2BSubscribePaymentPresented(
+    private func expectPaymentPresented(
         _ rootView: RootViewBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
