@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SberQR
 import SwiftUI
 
 struct QRWrapperView: View {
@@ -36,6 +37,7 @@ struct QRWrapperViewFactory {
     let makeQRFailedWrapperView: MakeQRFailedWrapperView
     let makeQRSearchOperatorView: MakeQRSearchOperatorView
     let makeQRView: MakeQRView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
 }
 
 private extension QRWrapperView {
@@ -71,6 +73,9 @@ private extension QRWrapperView {
         case let .providerServicePicker(picker):
             factory.makeAnywayServicePickerFlowView(picker)
                 .accessibilityIdentifier(ElementIDs.providerServicePicker.rawValue)
+            
+        case let .sberQR(sberQRConfirm):
+            factory.makeSberQRConfirmPaymentView(sberQRConfirm)
         }
     }
 }
@@ -100,6 +105,9 @@ extension QRScannerDomain.Navigation {
             
         case let .providerServicePicker(picker):
             return .providerServicePicker(picker)
+            
+        case let .sberQR(sberQRConfirm):
+            return .sberQR(sberQRConfirm)
         }
     }
     
@@ -111,6 +119,7 @@ extension QRScannerDomain.Navigation {
         case payments(PaymentsViewModel)
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
         case providerServicePicker(AnywayServicePickerFlowModel)
+        case sberQR(SberQRConfirmPaymentViewModel)
     }
 }
 
@@ -136,6 +145,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
             
         case let .providerServicePicker(picker):
             return .providerServicePicker(.init(picker))
+            
+        case let .sberQR(sberQRConfirm):
+            return .sberQR(.init(sberQRConfirm))
         }
     }
     
@@ -147,5 +159,6 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
         case providerServicePicker(ObjectIdentifier)
+        case sberQR(ObjectIdentifier)
     }
 }

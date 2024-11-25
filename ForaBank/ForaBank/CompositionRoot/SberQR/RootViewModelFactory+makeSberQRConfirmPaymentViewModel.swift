@@ -63,20 +63,26 @@ extension RootViewModelFactory {
         
         return { [weak model] in
             
-            guard let model else { return [] }
-            
-            return model.paymentEligibleProducts()
-                .mapToSberQRProducts(
-                    response: response,
-                    formatBalance: {
-                        
-                        model.formattedBalance(of: $0) ?? ""
-                    },
-                    getImage: {
-                        
-                        model.images.value[$0]?.image
-                    }
-                )
+            return model?.sberQRProducts(response) ?? []
         }
     }
 }
+
+extension Model {
+    
+    func sberQRProducts(
+        _ response: GetSberQRDataResponse
+    ) -> [ProductSelect.Product] {
+        
+        paymentEligibleProducts()
+            .mapToSberQRProducts(
+                response: response,
+                formatBalance: { [weak self] in
+                    
+                    self?.formattedBalance(of: $0) ?? ""
+                },
+                getImage: { self.images.value[$0]?.image }
+            )
+    }
+}
+

@@ -55,13 +55,19 @@ extension RootViewModelFactory {
         case let .mapped(mapped):
             getQRNavigation(mapped, notify, completion)
             
-        // TODO: case let .sberQR(url):
+        case let .sberQR(url):
+            makeSberQRConfirmPaymentViewModel(url: url, pay: { _ in }) { model in
+                
+                // completion(model.map { .sberQR($0)} ?? .failure(<#T##QRFailedViewModelWrapper#>))
+                if let model {
+                    completion(.sberQR(model))
+                } else {
+                    // completion(.alert())
+                }
+            }
             
         case .url, .unknown:
             completion(.failure(makeQRFailure(qrCode: nil)))
-
-        default:
-            break
         }
         
         func payments(

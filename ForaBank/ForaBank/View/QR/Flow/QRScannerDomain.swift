@@ -7,6 +7,7 @@
 
 import PayHub
 import PayHubUI
+import SberQR
 
 /// A namespace.
 enum QRScannerDomain {}
@@ -50,5 +51,6 @@ extension QRScannerDomain {
         case payments(Node<PaymentsViewModel>)
         case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(AnywayServicePickerFlowModel)
+        case sberQR(SberQRConfirmPaymentViewModel)
     }
 }

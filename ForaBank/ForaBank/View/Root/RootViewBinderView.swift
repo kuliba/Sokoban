@@ -127,7 +127,8 @@ extension RootViewFactory {
                 makePaymentsView: components.makePaymentsView,
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
-                makeQRView: components.makeQRView
+                makeQRView: components.makeQRView,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
             )
         )
     }

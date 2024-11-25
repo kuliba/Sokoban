@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests {
@@ -347,7 +348,27 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         }
     }
     
-    // TODO: - sberQR
+    // MARK: - sberQR
+    
+    func test_sberQR_shouldDeliverSberQRConfirmOnSuccess() throws {
+        
+        let response = try getSberQRDataSuccessResponse()
+        let model: Model = .mockWithEmptyExcept()
+        model.addSberProduct()
+        let (sut, httpClient, _) = makeSUT(model: model)
+        
+        expect(
+            sut: sut,
+            .qrResult(.sberQR(anyURL())), 
+            toDeliver: .sberQR
+        ) {
+            XCTAssertNoDiff(
+                httpClient.requests.map(\.url?.lastPathComponent),
+                ["getSberQRData"]
+            )
+            httpClient.complete(with: response)
+        }
+    }
     
     // MARK: - url
     
@@ -377,7 +398,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? super.makeSUT().sut
+        let sut = sut ?? makeSUT().sut
         let exp = expectation(description: "wait for completion")
         
         sut.getQRNavigation(select: select, notify: { _ in }) { [self] in
@@ -416,6 +437,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
             
         case .providerServicePicker:
             return .providerServicePicker
+            
+        case .sberQR:
+            return .sberQR
         }
     }
     
@@ -428,6 +452,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case payments
         case providerPicker
         case providerServicePicker
+        case sberQR
     }
     
     private func makePayments(
@@ -437,6 +462,12 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     ) -> PaymentsViewModel {
         
         return .init(payload: payload, model: model, closeAction: closeAction)
+    }
+    
+    private func getSberQRDataSuccessResponse(
+    ) throws -> Data {
+        
+        try getJSON(from: "getSberQRData_fix_sum")
     }
     
     private func expect(
@@ -449,7 +480,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? super.makeSUT().sut
+        let sut = sut ?? makeSUT().sut
         let exp = expectation(description: "wait for completion")
         exp.expectedFulfillmentCount = expectedFulfillmentCount
         
@@ -535,5 +566,18 @@ private extension NavigationBarView.ViewModel.ItemViewModel {
     var asBackButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
         
         self as? NavigationBarView.ViewModel.BackButtonItemViewModel
+    }
+}
+
+extension Model {
+    
+    func addSberProduct(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let count = products.value.count
+        products.value.append(element: .cardActiveMainDebitOnlyRub, toValueOfKey: .card)
+        
+        XCTAssertEqual(products.value.count, count + 1, "Expected to add sberQRProducts, but failed.", file: file, line: line)
     }
 }
