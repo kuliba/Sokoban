@@ -6,16 +6,33 @@
 //
 
 @testable import ForaBank
+import PayHubUI
 import XCTest
 
-class AcceptanceTests: XCTestCase {
+class AcceptanceTests: QRNavigationTests {
+    
+    func activePaymentsTransfersFlag() -> FeatureFlags {
+        
+        return .activeExcept(
+            paymentsTransfersFlag: .active
+        )
+    }
+    
+    func inactivePaymentsTransfersFlag() -> FeatureFlags {
+        
+        return .activeExcept(
+            paymentsTransfersFlag: .inactive
+        )
+    }
     
     struct TestApp {
+        
+        // TODO: - improve tests using SceneDelegate
         
         private let window = UIWindow()
         
         private let rootComposer: ModelRootComposer
-        private let binder: RootViewDomain.Binder
+        private let binder: ForaBank.RootViewDomain.Binder
         private let rootViewFactory: RootViewFactory
         
         private func root() throws -> RootViewHostingViewController {
@@ -26,11 +43,14 @@ class AcceptanceTests: XCTestCase {
         init(
             featureFlags: FeatureFlags = .active,
             dismiss: @escaping () -> Void = {},
-            scanner: any QRScannerViewModel = QRScannerViewModelSpy()
+            scanResult: QRModelResult = .unknown,
+            scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
+            schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
+                mapScanResult: { _, completion in completion(scanResult) },
                 scanner: scanner,
-                schedulers: .immediate
+                schedulers: schedulers
             )
             self.binder = rootComposer.makeBinder(
                 featureFlags: featureFlags,

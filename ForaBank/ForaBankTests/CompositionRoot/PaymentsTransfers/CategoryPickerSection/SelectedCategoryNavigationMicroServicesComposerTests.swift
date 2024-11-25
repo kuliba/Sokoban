@@ -51,78 +51,6 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         }
     }
     
-    func test_getNavigation_shouldDeliverQRWithNotifyOnCancel() {
-        
-        var notifyEvents = [SUT.FlowDomain.NotifyEvent]()
-        
-        getNavigation(flow: .qr, notify: { notifyEvents.append($0) }) {
-            
-            switch $0 {
-            case let .paymentFlow(.qr(qr)):
-                qr.model.event(.cancel)
-                
-                XCTAssertEqual(notifyEvents.count, 1)
-                switch notifyEvents.first {
-                case .dismiss:
-                    break
-                    
-                default:
-                    XCTFail("Expected dismiss event, got \(String(describing: notifyEvents.first)) instead.")
-                }
-                
-            default:
-                XCTFail("Expected QR, got \($0) instead.")
-            }
-        }
-    }
-    
-    func test_getNavigation_shouldCallMakeQRNavigationWithPayloadOnQRResult() {
-        
-        let qrResult: QRModelResult = .c2bURL(anyURL())
-        let (sut, makeQRNavigation) = makeSUT()
-        
-        getNavigation(sut, flow: .qr) {
-            
-            switch $0 {
-            case let .paymentFlow(.qr(qr)):
-                qr.model.event(.qrResult(qrResult))
-                XCTAssertNoDiff(makeQRNavigation.payloads.map(\.0), [qrResult])
-                
-            default:
-                XCTFail("Expected QR, got \($0) instead.")
-            }
-        }
-    }
-    
-    func test_getNavigation_shouldDeliverQRNavigationOnQRResult() {
-        
-        var notifyEvents = [SUT.FlowDomain.NotifyEvent]()
-        let complete = makePaymentComplete()
-        let (sut, makeQRNavigation) = makeSUT()
-        
-        getNavigation(sut, flow: .qr, notify: { notifyEvents.append($0) }) {
-            
-            switch $0 {
-            case let .paymentFlow(.qr(qr)):
-                qr.model.event(.qrResult(.c2bURL(anyURL())))
-                makeQRNavigation.complete(with: .paymentComplete(.success(complete)))
-                
-                XCTAssertEqual(notifyEvents.count, 1)
-                
-                switch notifyEvents.first {
-                case let .select(.qrSelect(.qrNavigation(.paymentComplete(.success(receivedComplete))))):
-                    XCTAssert(receivedComplete === complete)
-                    
-                default:
-                    XCTFail("Expected complete, got \(String(describing: notifyEvents.first)) instead.")
-                }
-                
-            default:
-                XCTFail("Expected QR, got \($0) instead.")
-            }
-        }
-    }
-    
     private func makePaymentComplete(
         model: Model = .mockWithEmptyExcept(),
         sections: [PaymentsSectionViewModel] = []
@@ -209,52 +137,6 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         }
     }
     
-    // MARK: - qrSelect: contactAbroad
-    
-    func test_getNavigation_qrSelect_contactAbroad_shouldDeliverPayments() {
-        
-        getNavigation(with: .qrSelect(.contactAbroad(.avtodor))) {
-            
-            switch $0 {
-            case .qrNavigation(.payments):
-                break
-                
-            default:
-                XCTFail("Expected payments, got \($0) instead.")
-            }
-        }
-    }
-    
-    // MARK: - qrSelect: detailPayment
-    
-    func test_getNavigation_qrSelect_detailPayment_shouldDeliverPayments_nil() {
-        
-        getNavigation(with: .qrSelect(.detailPayment(nil))) {
-            
-            switch $0 {
-            case .qrNavigation(.payments):
-                break
-                
-            default:
-                XCTFail("Expected payments, got \($0) instead.")
-            }
-        }
-    }
-    
-    func test_getNavigation_qrSelect_detailPayment_shouldDeliverPayments() {
-        
-        getNavigation(with: .qrSelect(.detailPayment(.some(.init(original: "", rawData: [:]))))) {
-            
-            switch $0 {
-            case .qrNavigation(.payments):
-                break
-                
-            default:
-                XCTFail("Expected payments, got \($0) instead.")
-            }
-        }
-    }
-    
     // MARK: - Helpers
     
     private typealias SUT = SelectedCategoryNavigationMicroServicesComposer
@@ -307,7 +189,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     ) {
         getNavigation(
             sut,
-            with: .category(makeServiceCategory(flow: flow)),
+            with: makeServiceCategory(flow: flow),
             notify: notify,
             completion: completion,
             file: file, line: line

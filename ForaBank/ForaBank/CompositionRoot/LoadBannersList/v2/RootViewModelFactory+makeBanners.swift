@@ -31,6 +31,7 @@ extension RootViewModelFactory {
     typealias LoadServiceBannersCompletion = ([BannerPickerSectionItem<BannerCatalogListData>]) -> Void
     typealias LoadServiceBanners = (@escaping LoadServiceCategoriesCompletion) -> Void
     
+    @inlinable
     func makeBannersForMainView(
         bannerPickerPlaceholderCount: Int,
         nanoServices: BannersNanoServices

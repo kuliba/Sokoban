@@ -80,6 +80,13 @@ class QRNavigationTests: XCTestCase {
         return (makeMixedOperators(), makeQR(), makeQRMapping())
     }
     
+    func makeMixedQRResult() -> MixedQRResult {
+        
+        let (mixed, qrCode, qrMapping) = makeMixed()
+        
+        return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
+    }
+
     func makeMixedOperators(
         _ first: SegmentedOperatorProvider? = nil,
         _ second: SegmentedOperatorProvider? = nil,
@@ -111,6 +118,11 @@ class QRNavigationTests: XCTestCase {
     ) -> MultiElementArray<SegmentedOperatorData> {
         
         return .init(first ?? makeSegmentedOperatorData(), second ?? makeSegmentedOperatorData(), tail)
+    }
+    
+    func makeMultipleQRResult() -> MultipleQRResult {
+        
+        return .init(operators: makeMultipleOperators(), qrCode: anyQRCode(), qrMapping: makeQRMapping())
     }
     
     func makeOperatorGroupDataOperatorData(
