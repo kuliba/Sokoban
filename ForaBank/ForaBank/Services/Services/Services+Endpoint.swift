@@ -85,7 +85,7 @@ extension Services {
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
-            case getConsents
+            case getConsentsCollateralLoanLanding = "getConsents"
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
@@ -474,7 +474,7 @@ extension Services.Endpoint {
     static let getConsents: Self = .init(
         pathPrefix: .rest,
         version: .v1,
-        serviceName: .getConsents
+        serviceName: .getConsentsCollateralLoanLanding
     )
     
     static let getAllLatestPaymentsV3: Self = .init(

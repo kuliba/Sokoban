@@ -13,12 +13,12 @@ public extension RequestFactory {
 
     struct GetConsentsPayload: Encodable, Equatable {
         
-        public let applicationId: Int
-        public let docIds: [String]
+        public let applicationID: Int
+        public let docIDs: [String]
         
-        public init(applicationId: Int, docIds: [String]) {
-            self.applicationId = applicationId
-            self.docIds = docIds
+        public init(applicationID: Int, docIDs: [String]) {
+            self.applicationID = applicationID
+            self.docIDs = docIDs
         }
     }
     
@@ -39,26 +39,23 @@ extension RequestFactory.GetConsentsPayload {
         get throws {
 
             [
-                "applicationId": String(applicationId),
-                "docIds": try mapFiles
+                "applicationId": String(applicationID),
+                "docIds": try mapFiles()
             ]
         }
     }
     
-    private var mapFiles: String {
-
-        get throws {
-            
-            let data = try JSONSerialization.data(withJSONObject: docIds as [String])
-            
-            guard
-                let output = String(data: data, encoding: String.Encoding.utf8)
-            else {
-                throw TranscodeError.dataToStringConversionFailure
-            }
-            
-            return output
+    private func mapFiles() throws -> String {
+        
+        let data = try JSONSerialization.data(withJSONObject: docIDs as [String])
+        
+        guard
+            let output = String(data: data, encoding: String.Encoding.utf8)
+        else {
+            throw TranscodeError.dataToStringConversionFailure
         }
+        
+        return output
     }
     
     enum TranscodeError: Error {

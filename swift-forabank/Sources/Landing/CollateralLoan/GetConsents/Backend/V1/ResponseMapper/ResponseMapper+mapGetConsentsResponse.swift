@@ -20,10 +20,7 @@ public extension ResponseMapper {
             return .success(pdfDocument)
         }
         
-        return map(
-            data, httpURLResponse,
-            mapOrThrow: map
-        )
+        return map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
