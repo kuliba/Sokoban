@@ -43,12 +43,12 @@ class AcceptanceTests: XCTestCase {
         init(
             featureFlags: FeatureFlags = .active,
             dismiss: @escaping () -> Void = {},
-            resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
+            scanResult: QRModelResult = .unknown,
             scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
             schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
-                resolveQR: resolveQR,
+                mapScanResult: { _, completion in completion(scanResult) },
                 scanner: scanner,
                 schedulers: schedulers
             )

@@ -65,7 +65,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         let scanner = QRScannerViewModelSpy()
         let app = TestApp(
-            resolveQR: { _ in .c2bSubscribeURL(anyURL()) },
+            scanResult: .c2bSubscribeURL(anyURL()),
             scanner: scanner
         )
         let rootView = try app.launch()
@@ -80,7 +80,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         let scanner = QRScannerViewModelSpy()
         let app = TestApp(
-            resolveQR: { _ in .qrCode(anyQRCode()) },
+            scanResult: .failure(anyQRCode()),
             scanner: scanner
         )
         let rootView = try app.launch()
