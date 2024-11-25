@@ -56,14 +56,9 @@ extension RootViewModelFactory {
             getQRNavigation(mapped, notify, completion)
             
         case let .sberQR(url):
-            makeSberQRConfirmPaymentViewModel(url: url, pay: { _ in }) { model in
+            makeSberQRConfirmPaymentViewModel(url: url, pay: { _ in }) {
                 
-                // completion(model.map { .sberQR($0)} ?? .failure(<#T##QRFailedViewModelWrapper#>))
-                if let model {
-                    completion(.sberQR(model))
-                } else {
-                    // completion(.alert())
-                }
+                completion(.sberQR($0))
             }
             
         case .url, .unknown:
@@ -147,7 +142,7 @@ extension RootViewModelFactory {
             
             return .operatorView(viewModel)
         }
-         
+        
         func payments(
             payload: PaymentsViewModel.Payload
         ) -> QRScannerDomain.Navigation {

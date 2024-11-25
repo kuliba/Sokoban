@@ -51,6 +51,6 @@ extension QRScannerDomain {
         case payments(Node<PaymentsViewModel>)
         case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(AnywayServicePickerFlowModel)
-        case sberQR(SberQRConfirmPaymentViewModel)
+        case sberQR(SberQRConfirmPaymentViewModel?)
     }
 }

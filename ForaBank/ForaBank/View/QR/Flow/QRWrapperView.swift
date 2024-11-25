@@ -42,6 +42,8 @@ struct QRWrapperViewFactory {
 
 private extension QRWrapperView {
     
+    #warning("add alert for sberQR failure case")
+    
     typealias Destination = QRScannerDomain.Navigation.Destination
     
     @ViewBuilder
@@ -106,7 +108,10 @@ extension QRScannerDomain.Navigation {
         case let .providerServicePicker(picker):
             return .providerServicePicker(picker)
             
-        case let .sberQR(sberQRConfirm):
+        case .sberQR(nil):
+            return nil
+            
+        case let .sberQR(.some(sberQRConfirm)):
             return .sberQR(sberQRConfirm)
         }
     }

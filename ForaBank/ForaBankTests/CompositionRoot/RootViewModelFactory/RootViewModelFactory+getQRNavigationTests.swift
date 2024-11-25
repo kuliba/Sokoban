@@ -350,6 +350,23 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     // MARK: - sberQR
     
+    func test_sberQR_shouldDeliverAlertOnSberQRConfirmFailure() throws {
+        
+        let (sut, httpClient, _) = makeSUT()
+        
+        expect(
+            sut: sut,
+            .qrResult(.sberQR(anyURL())),
+            toDeliver: .sberQRFailure
+        ) {
+            XCTAssertNoDiff(
+                httpClient.requests.map(\.url?.lastPathComponent),
+                ["getSberQRData"]
+            )
+            httpClient.complete(with: anyError())
+        }
+    }
+    
     func test_sberQR_shouldDeliverSberQRConfirmOnSuccess() throws {
         
         let response = try getSberQRDataSuccessResponse()
@@ -359,7 +376,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         
         expect(
             sut: sut,
-            .qrResult(.sberQR(anyURL())), 
+            .qrResult(.sberQR(anyURL())),
             toDeliver: .sberQR
         ) {
             XCTAssertNoDiff(
@@ -438,7 +455,10 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case .providerServicePicker:
             return .providerServicePicker
             
-        case .sberQR:
+        case .sberQR(nil):
+            return .sberQRFailure
+            
+        case .sberQR(.some(_)):
             return .sberQR
         }
     }
@@ -453,6 +473,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case providerPicker
         case providerServicePicker
         case sberQR
+        case sberQRFailure
     }
     
     private func makePayments(
