@@ -8,11 +8,12 @@
 @testable import ForaBank
 import XCTest
 
-class RootViewModelFactoryTests: XCTestCase {
+class RootViewModelFactoryTests: QRNavigationTests {
     
     typealias SUT = RootViewModelFactory
     
     func makeSUT(
+        mapScanResult: @escaping SUT.MapScanResult = { _, completion in completion(.unknown) },
         model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
@@ -27,6 +28,7 @@ class RootViewModelFactoryTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: logger,
+            mapScanResult: mapScanResult,
             resolveQR: { _ in .unknown },
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
