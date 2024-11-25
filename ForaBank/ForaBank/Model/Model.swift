@@ -80,7 +80,7 @@ class Model {
     // MARK: Client Inform Alerts and Notifications
     let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
-    let clientNotAuthorizedAlerts: CurrentValueSubject<ClientInformAlerts, Never>
+    let clientNotAuthorizedAlerts: CurrentValueSubject<ClientInformAlerts?, Never>
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
@@ -256,7 +256,7 @@ class Model {
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
         self.сlientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
-        self.clientNotAuthorizedAlerts = .init(.init())
+        self.clientNotAuthorizedAlerts = .init(nil)
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
