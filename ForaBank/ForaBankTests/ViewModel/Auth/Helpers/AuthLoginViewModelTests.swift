@@ -426,6 +426,14 @@ extension ClientInformData {
     )
 }
 
+extension ClientInformAlerts: Equatable {
+    
+    public static func == (lhs: ClientInformAlerts, rhs: ClientInformAlerts) -> Bool {
+            
+        return lhs.id == rhs.id
+    }
+}
+
 extension AuthLoginViewModel.Link {
     
     var authProductsViewModel: AuthProductsViewModel? {
