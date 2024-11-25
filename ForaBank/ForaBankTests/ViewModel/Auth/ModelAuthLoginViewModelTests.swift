@@ -44,12 +44,12 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNil(sut.cardScanner)
     }
 
-//    func test_init_shouldSetAlertToNil() {
-//
-//        let (sut, _, _) = makeSUT()
-//
-//        XCTAssertNil(sut.alert)
-//    }
+    func test_init_shouldSetAlertToNil() {
+
+        let (sut, _, _) = makeSUT()
+
+        XCTAssertNil(sut.alert)
+    }
 
     func test_init_shouldSetButtonsToEmpty() {
 

@@ -45,12 +45,12 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNil(sut.cardScanner)
     }
     
-//    func test_init_shouldSetAlertToNil() {
-//        
-//        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
-//        
-//        XCTAssertNil(sut.alert)
-//    }
+    func test_init_shouldSetAlertToNil() {
+        
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
+        
+        XCTAssertNil(sut.alert)
+    }
     
     func test_init_shouldSetButtonsToEmpty() {
         
@@ -151,49 +151,49 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNotNil(sut)
     }
     
-//    func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
-//        
-//        let message = "failure message"
-//        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
-//        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-//        
-//        checkClientResponse.send(.failure(message: message))
-//        XCTAssertNoDiff(alertSpy.values, [nil])
-//        
-//        scheduler.advance()
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message)
-//        ])
-//        XCTAssertNotNil(sut)
-//    }
+    func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
+        
+        let message = "failure message"
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        checkClientResponse.send(.failure(message: message))
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        scheduler.advance()
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        XCTAssertNotNil(sut)
+    }
     
-//    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
-//        
-//        let message = "failure message"
-//        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
-//        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-//        
-//        checkClientResponse.send(.failure(message: message))
-//        XCTAssertNoDiff(alertSpy.values, [nil])
-//        
-//        scheduler.advance()
-//
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message)
-//        ])
-//        
-//        sut.tapAlertPrimaryButton()
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message),
-//            nil
-//        ])
-//        XCTAssertNotNil(sut)
-//    }
+    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
+        
+        let message = "failure message"
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        checkClientResponse.send(.failure(message: message))
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        scheduler.advance()
+
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        
+        sut.tapAlertPrimaryButton()
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message),
+            nil
+        ])
+        XCTAssertNotNil(sut)
+    }
     
     // MARK: - Events: AuthLoginViewModelAction.Register
     

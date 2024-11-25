@@ -45,12 +45,12 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNil(sut.cardScanner)
     }
     
-//    func test_init_shouldSetAlertToNil() {
-//        
-//        let (sut, _, _, _, _, _, _, _) = makeSUT()
-//        
-//        XCTAssertNil(sut.alert)
-//    }
+    func test_init_shouldSetAlertToNil() {
+        
+        let (sut, _, _, _, _, _, _, _) = makeSUT()
+        
+        XCTAssertNil(sut.alert)
+    }
     
     func test_init_shouldSetButtonsToEmpty() {
         
@@ -152,49 +152,49 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNotNil(sut)
     }
     
-//    func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
-//        
-//        let message = "failure message"
-//        let (sut, _, checkClientResponse, _, _, _, _, _) = makeSUT()
-//        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-//        
-//        checkClientResponse.send(.failure(message: message))
-//        XCTAssertNoDiff(alertSpy.values, [nil])
-//        
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message)
-//        ])
-//        XCTAssertNotNil(sut)
-//    }
+    func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
+        
+        let message = "failure message"
+        let (sut, _, checkClientResponse, _, _, _, _, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        checkClientResponse.send(.failure(message: message))
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        XCTAssertNotNil(sut)
+    }
     
-//    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
-//        
-//        let message = "failure message"
-//        let (sut, _, checkClientResponse, _, _, _, _, _) = makeSUT()
-//        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-//        
-//        checkClientResponse.send(.failure(message: message))
-//        XCTAssertNoDiff(alertSpy.values, [nil])
-//        
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message)
-//        ])
-//        
-//        sut.tapAlertPrimaryButton()
-//        
-//        XCTAssertNoDiff(alertSpy.values, [
-//            nil,
-//            .alert(message: message),
-//            nil
-//        ])
-//        XCTAssertNotNil(sut)
-//    }
+    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
+        
+        let message = "failure message"
+        let (sut, _, checkClientResponse, _, _, _, _, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        checkClientResponse.send(.failure(message: message))
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        
+        sut.tapAlertPrimaryButton()
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message),
+            nil
+        ])
+        XCTAssertNotNil(sut)
+    }
     
     // MARK: - Events: AuthLoginViewModelAction.Register
     
@@ -519,7 +519,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         line: UInt = #line
     ) -> (
         sut: AuthLoginViewModel,
-        clientInformMessage: ClientInformMessage,
+        clientInformMessage: CheckClientInformAlerts,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -527,7 +527,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformAlerts = ClientInformMessage()
+        let clientInformAlerts = CheckClientInformAlerts()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
