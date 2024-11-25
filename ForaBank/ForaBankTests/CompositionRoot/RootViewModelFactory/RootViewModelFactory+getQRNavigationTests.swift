@@ -188,6 +188,13 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         }
     }
     
+    // MARK: - qrResult: multiple
+    
+    func test_multiple_shouldDeliverProviderPicker() {
+        
+        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+    }
+
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>
@@ -242,6 +249,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case .failure:
             return .failure
             
+        case .operatorSearch:
+            return .operatorSearch
+            
         case let .outside(outside):
             return .outside(outside)
             
@@ -259,6 +269,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case outside(QRScannerDomain.Outside)
         case payments
         case providerPicker
+        case operatorSearch
     }
     
     private func makePayments(

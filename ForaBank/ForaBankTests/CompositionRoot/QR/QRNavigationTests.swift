@@ -120,6 +120,11 @@ class QRNavigationTests: XCTestCase {
         return .init(first ?? makeSegmentedOperatorData(), second ?? makeSegmentedOperatorData(), tail)
     }
     
+    func makeMultipleQRResult() -> MultipleQRResult {
+        
+        return .init(operators: makeMultipleOperators(), qrCode: anyQRCode(), qrMapping: makeQRMapping())
+    }
+    
     func makeOperatorGroupDataOperatorData(
         city: String? = nil,
         code: String = anyMessage(),

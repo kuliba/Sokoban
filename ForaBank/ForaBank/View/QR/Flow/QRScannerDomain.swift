@@ -44,6 +44,7 @@ extension QRScannerDomain {
     enum Navigation {
         
         case failure(QRFailedViewModelWrapper)
+        case operatorSearch(QRSearchOperatorViewModel)
         case outside(Outside)
         case payments(Node<PaymentsViewModel>)
         case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)

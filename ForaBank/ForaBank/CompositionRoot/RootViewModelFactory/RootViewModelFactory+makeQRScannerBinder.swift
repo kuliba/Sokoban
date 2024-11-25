@@ -85,8 +85,23 @@ extension RootViewModelFactory {
         case let .mixed(mixed):
             completion(providerPicker(mixed))
             
+        case let .multiple(multiple):
+            completion(operatorSearch(multiple))
+            
         default:
             break
+        }
+        
+        func operatorSearch(
+            _ multiple: MultipleQRResult
+        ) -> QRScannerDomain.Navigation {
+            
+            let operatorSearch = makeOperatorSearch(
+                multiple: multiple,
+                notify: { _ in }
+            )
+            
+            return .operatorSearch(operatorSearch)
         }
         
         func providerPicker(

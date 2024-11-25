@@ -920,6 +920,7 @@
 		2A58FABF2AD7355700BD1967 /* SessionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FABE2AD7355700BD1967 /* SessionID.swift */; };
 		2A58FAC12AD735DA00BD1967 /* makeSessionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */; };
 		2A5A19E329A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */; };
+		2A5A20E12CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5A20E02CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift */; };
 		2A5AEF272B7A075900E935B6 /* OTPInputConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF262B7A075900E935B6 /* OTPInputConfig+iFora.swift */; };
 		2A5AEF292B7A191B00E935B6 /* ButtonConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */; };
 		2A5AEF2C2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF2B2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift */; };
@@ -4603,6 +4604,7 @@
 		2A58FABE2AD7355700BD1967 /* SessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionID.swift; sourceTree = "<group>"; };
 		2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = makeSessionID.swift; sourceTree = "<group>"; };
 		2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupViewModelTests.swift; sourceTree = "<group>"; };
+		2A5A20E02CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOperatorSearchNode.swift"; sourceTree = "<group>"; };
 		2A5AEF262B7A075900E935B6 /* OTPInputConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTPInputConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ButtonConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A5AEF2B2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -9434,6 +9436,7 @@
 				2A2EE9122CF0B2830019FC31 /* RootViewModelFactory+createSberQRPayment.swift */,
 				2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */,
 				2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */,
+				2A5A20E02CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift */,
 				2A3B4F642CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift */,
 				2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */,
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
@@ -23399,6 +23402,7 @@
 				2A85775C2CC61951003BE84E /* RootViewModelFactory+decorate.swift in Sources */,
 				774A8B762865FED800B81140 /* AlertViewComponent.swift in Sources */,
 				07461C2FE00F0D91E9BF4B5F /* Image+Icons.swift in Sources */,
+				2A5A20E12CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift in Sources */,
 				833D3E382C2EDE31006626F2 /* ControlPanelReducer.swift in Sources */,
 				A58F263827E12F4200A73778 /* C2BDetailsViewModel.swift in Sources */,
 				2AFD59DB2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift in Sources */,
