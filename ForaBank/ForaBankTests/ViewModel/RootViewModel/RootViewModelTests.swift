@@ -911,6 +911,7 @@ extension BannersBinder {
         model: .emptyMock,
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
+        mapScanResult: { _, completion in completion(.unknown) },
         resolveQR: { _ in .unknown },
         scanner: QRScannerViewModelSpy(),
         schedulers: .immediate
