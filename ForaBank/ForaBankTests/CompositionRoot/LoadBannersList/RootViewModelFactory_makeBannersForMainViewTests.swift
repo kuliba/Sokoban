@@ -61,6 +61,8 @@ final class RootViewModelFactory_makeBannersForMainViewTests: XCTestCase {
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         ).makeBannersForMainView(
             bannerPickerPlaceholderCount: bannerPickerPlaceholderCount,

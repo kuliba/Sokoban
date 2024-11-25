@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 15.11.2024.
 //
 
-public extension CollateralLoanLandingGetJsonAbroadViewFactory {
+extension CollateralLoanLandingGetJsonAbroadViewFactory {
     
     func makeConditionsView(with product: GetJsonAbroadData.Product)
         -> CollateralLoanLandingGetJsonAbroadConditionsView {

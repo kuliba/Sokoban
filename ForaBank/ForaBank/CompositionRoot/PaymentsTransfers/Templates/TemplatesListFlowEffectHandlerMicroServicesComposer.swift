@@ -13,18 +13,15 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposer<Legacy, V1> {
     private let initiatePayment: InitiatePayment
     private let makeLegacyPayment: MakeLegacyPayment
     private let paymentsTransfersFlag: PaymentsTransfersFlag
-    private let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     
     init(
         initiatePayment: @escaping InitiatePayment,
         makeLegacyPayment: @escaping MakeLegacyPayment,
-        paymentsTransfersFlag: PaymentsTransfersFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
+        paymentsTransfersFlag: PaymentsTransfersFlag
     ) {
         self.initiatePayment = initiatePayment
         self.makeLegacyPayment = makeLegacyPayment
         self.paymentsTransfersFlag = paymentsTransfersFlag
-        self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
     }
     
     typealias InitiatePaymentCompletion = (Result<V1, ServiceFailureAlert.ServiceFailure>) -> Void
@@ -74,14 +71,11 @@ private extension TemplatesListFlowEffectHandlerMicroServicesComposer {
         for templateType: PaymentTemplateData.Kind
     ) -> Output {
         
-        switch (paymentsTransfersFlag.rawValue, utilitiesPaymentsFlag.rawValue) {
-        case (.active, _):
+        switch paymentsTransfersFlag.rawValue {
+        case .active:
             return .v1
             
-        case (.inactive, .inactive):
-            return .legacy
-            
-        case (.inactive, .active):
+        case .inactive:
             switch templateType {
             case .housingAndCommunalService:
                 return .v1

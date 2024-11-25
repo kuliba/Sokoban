@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-class RootViewModelFactoryTests: XCTestCase {
+class RootViewModelFactoryTests: QRNavigationTests {
     
     typealias SUT = RootViewModelFactory
     
@@ -27,6 +27,8 @@ class RootViewModelFactoryTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: logger,
+            resolveQR: { _ in .unknown },
+            scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
         

@@ -6,13 +6,17 @@
 //
 
 import Banners
+import Combine
 import CombineSchedulers
 import Foundation
 import PayHub
 import PayHubUI
 
+private typealias Domain = PaymentsTransfersCorporateDomain
+
 extension RootViewModelFactory {
     
+    @inlinable
     func makePaymentsTransfersCorporate(
         bannerPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersCorporateNanoServices
@@ -37,24 +41,74 @@ extension RootViewModelFactory {
         
         // MARK: - PaymentsTransfers
         
-        let content = PaymentsTransfersCorporateContent(
+        let content = Domain.Content(
             bannerPicker: bannerPicker,
             reload: {
+                
                 bannerPicker.content.event(.load)
             }
         )
         
-        let reducer = PayHub.PaymentsTransfersCorporateFlowReducer()
-        let effectHandler = PayHub.PaymentsTransfersCorporateFlowEffectHandler(
-            microServices: .init()
+        return compose(
+            getNavigation: { select, notify, completion in
+                
+                
+            },
+            content: content,
+            witnesses: witnesses()
         )
-        let flow = PaymentsTransfersCorporateFlow(
-            initialState: .init(),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: schedulers.main
-        )
+    }
+    
+    private func witnesses() -> Domain.Witnesses {
         
-        return .init(content: content, flow: flow, bind: { _,_ in [] })
+        return .init(
+            emitting: { $0.eventPublisher },
+            receiving: { $0.receiving }
+        )
+    }
+}
+
+// MARK: - Content
+
+extension Domain.Content {
+    
+    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+        
+        bannerPicker.eventPublisher
+    }
+    
+    func receiving() {
+        
+        bannerPicker.receiving()
+    }
+}
+
+// MARK: - BannerPicker
+
+extension PayHubUI.CorporateBannerPicker {
+    
+    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+        
+        bannerBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
+    }
+    
+    func receiving() {
+        
+        bannerBinder?.receiving()
+    }
+}
+
+extension BannerPickerSectionBinder {
+    
+    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+        
+        flow.$state
+            .compactMap { _ in return nil }
+            .eraseToAnyPublisher()
+    }
+    
+    func receiving() {
+        
+        content.event(.select(nil))
     }
 }
