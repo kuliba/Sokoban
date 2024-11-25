@@ -752,32 +752,37 @@ private extension Node where Model == ClosePaymentsViewModelWrapper {
     }
 }
 
-private extension Node where Model == PaymentsViewModel {
-    
-    func scanQR() {
-        
-        model.scanQR()
-    }
+extension Node where Model == PaymentsViewModel {
     
     func contactAbroad(
         source: Payments.Operation.Source
     ) {
         model.contactAbroad(source: source)
     }
-}
-
-private extension PaymentsViewModel {
+    
+    func close() {
+        
+        model.closeAction()
+    }
     
     func scanQR() {
         
-        let action = PaymentsViewModelAction.ScanQrCode()
-        self.action.send(action)
+        model.scanQR()
     }
+}
+
+private extension PaymentsViewModel {
     
     func contactAbroad(
         source: Payments.Operation.Source
     ) {
         let action = PaymentsViewModelAction.ContactAbroad(source: source)
+        self.action.send(action)
+    }
+    
+    func scanQR() {
+        
+        let action = PaymentsViewModelAction.ScanQrCode()
         self.action.send(action)
     }
 }
