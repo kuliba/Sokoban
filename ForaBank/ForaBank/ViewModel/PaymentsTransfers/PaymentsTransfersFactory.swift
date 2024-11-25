@@ -51,7 +51,7 @@ extension PaymentsTransfersFactory {
     typealias DismissAction = () -> Void
     typealias TemplatesNode = Node<Templates>
     typealias Templates = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
-    typealias MakeTemplates = (@escaping DismissAction) -> Templates
+    typealias MakeTemplates = (@escaping DismissAction) -> Templates?
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
     typealias MakeAlertViewModel = (@escaping DismissAction) -> Alert.ViewModel?

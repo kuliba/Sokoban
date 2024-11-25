@@ -15,6 +15,7 @@ extension RootViewModelFactory {
     typealias OnSubscriptionDelete = (SubscriptionViewModel.Token, String) -> Void
     typealias OnSubscriptionDetail = (SubscriptionViewModel.Token) -> Void
     
+    @inlinable
     func makeSubscriptionsViewModel(
         getProducts: @escaping GetSubscriptionProducts,
         c2bSubscription: C2BSubscription?

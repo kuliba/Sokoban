@@ -14,6 +14,7 @@ extension RootViewModelFactory {
     typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
     typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
+    @inlinable
     static func makeLoadLatestOperations(
         getAllLoadedCategories: @escaping (@escaping LoadServiceCategoriesCompletion) -> Void,
         getLatestPayments: @escaping ([ServiceCategory], @escaping LoadLatestOperationsCompletion) -> Void

@@ -12,6 +12,7 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeTransfers(
         buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
         makeQRModel: @escaping () -> QRScannerModel

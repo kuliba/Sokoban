@@ -9,20 +9,33 @@ import Combine
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeGetRootNavigation(
         makeQRScanner: @escaping () -> QRScannerDomain.Binder
     ) -> RootViewDomain.GetNavigation {
         
-        return { [bind] select, notify, completion in
+        return { [weak self] select, notify, completion in
+            
+            guard let self else { return }
             
             switch select {
             case .scanQR:
                 let qrScanner = makeQRScanner()
-                let cancellable = bind(qrScanner.content, notify)
+                let cancellable = bind(qrScanner.content, using: notify)
                 
                 completion(.scanQR(.init(
                     model: qrScanner,
                     cancellable: cancellable
+                )))
+                
+            case .templates:
+                let templates = makeMakeTemplates(closeAction: {
+                    notify(.dismiss)
+                })
+                let cancellables = bind(templates, with: notify)
+                completion(.templates(.init(
+                    model: templates,
+                    cancellables: cancellables
                 )))
             }
         }
@@ -52,5 +65,15 @@ extension RootViewModelFactory {
                     break
                 }
             }
+    }
+    
+    private func bind(
+        _ templates: RootViewModelFactory.Templates,
+        with notify: @escaping RootViewDomain.Notify
+    ) -> Set<AnyCancellable> {
+        
+        // handleTemplatesOutsideFlowState
+        // MainViewModel.handleTemplatesFlowState(_:)
+        []
     }
 }
