@@ -75,3 +75,17 @@ public extension ContentWitnesses {
         )
     }
 }
+
+public extension ContentWitnesses {
+    
+    init<P: Publisher>(
+        emitting: @escaping (Content) -> P,
+        receiving: @escaping Receiving
+    ) where P.Output == Select, P.Failure == Never {
+        
+        self.init(
+            emitting: { emitting($0).eraseToAnyPublisher() },
+            receiving: receiving
+        )
+    }
+}

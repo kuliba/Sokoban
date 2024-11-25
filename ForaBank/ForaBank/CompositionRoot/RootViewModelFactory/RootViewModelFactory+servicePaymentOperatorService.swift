@@ -13,6 +13,7 @@ extension RootViewModelFactory {
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
     typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
     
+    @inlinable
     func servicePaymentOperatorService(
         payloads: [GetOperatorsListByParamPayload],
         completion: @escaping ([GetOperatorsListByParamPayload]) -> Void

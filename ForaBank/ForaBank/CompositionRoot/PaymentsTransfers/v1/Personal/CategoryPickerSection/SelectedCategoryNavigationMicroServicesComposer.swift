@@ -47,22 +47,6 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     func getNavigation(
-        payload: Select,
-        notify: @escaping Notify,
-        completion: @escaping (SelectedCategoryNavigation) -> Void
-    ) {
-        switch payload {
-        case let .category(category):
-            getNavigation(category: category, notify, completion)
-            
-        case let .qrSelect(qrSelect):
-            getNavigation(qrSelect: qrSelect, notify, completion)
-        }
-    }
-    
-    // MARK: - PickerSelect
-    
-    func getNavigation(
         category: ServiceCategory,
         _ notify: @escaping Notify,
         _ completion: @escaping (SelectedCategoryNavigation) -> Void
@@ -73,20 +57,9 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             
         case .qr:
             let qr = nanoServices.makeQR()
-            let cancellable = qr.$state
-                .compactMap { $0 }
-                .flatMap {
-                    
-                    self.notifyPublisher(
-                        result: $0,
-                        notify: { notify(.select(.qrSelect($0))) }
-                    )
-                }
-                .sink(receiveValue: notify)
-            
             completion(.paymentFlow(.qr(.init(
                 model: qr,
-                cancellable: cancellable
+                cancellables: []//cancellable
             ))))
             
         case .standard:
@@ -123,7 +96,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
                 
                 self.nanoServices.makeQRNavigation(qrResult, notify) {
                     
-                    completion(.select(.qrSelect(.qrNavigation($0))))
+                 _ in // completion(.select(.qrSelect(.qrNavigation($0))))
                 }
             }
             .eraseToAnyPublisher()
@@ -191,7 +164,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             
         case .scanQR:
 #warning("completion is not called")
-            notify(.select(.qrSelect(.scanQR)))
+            // notify(.select(.qrSelect(.scanQR)))
         }
     }
     
