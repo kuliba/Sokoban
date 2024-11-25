@@ -12,6 +12,7 @@ extension RootViewModelFactory {
     
     typealias SerialLoaderComposer<T, Model> = SerialComponents.SerialLoaderComposer<String, T, Model> where Model: Codable
     
+    @inlinable
     func composeLoaders<T, Model>(
         remoteLoad: @escaping SerialLoaderComposer<T, Model>.RemoteLoad,
         fromModel: @escaping (Model) -> T,

@@ -183,18 +183,23 @@ private extension QRNavigationComposerMicroServicesComposer {
         payload: MicroServices.MakeSberQRPayload,
         completion: @escaping MicroServices.MakeSberQRCompletion
     ) {
+        let composer = QRScanResultMapperComposer(model: model)
+        let mapper = composer.compose()
+        
         getSberQRData(payload.url) { [weak self] in
             
             guard let self else { return }
             
-            let make = RootViewModelFactory(
+            let factory = RootViewModelFactory(
                 model: model,
                 httpClient: httpClient,
                 logger: logger,
+                mapScanResult: mapper.mapScanResult,
                 resolveQR: self.qrResolve,
                 scanner: scanner,
                 schedulers: .init()
-            ).makeSberQRConfirmPaymentViewModel()
+            )
+            let make = factory.makeSberQRConfirmPaymentViewModel()
             
             do {
                 let sberQR = try make($0.get(), payload.pay)
