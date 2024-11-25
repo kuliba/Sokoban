@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func infoNetworkLog(
         message: String,
         file: StaticString = #fileID,

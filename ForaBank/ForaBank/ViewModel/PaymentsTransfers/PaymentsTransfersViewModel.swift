@@ -193,6 +193,7 @@ extension PaymentsTransfersViewModel {
             
             self?.event(.dismiss(.destination))
         }
+        guard let templates else { return }
         let cancellable = bind(templates)
         var route = route
         route.destination = .templates(.init(
