@@ -426,14 +426,14 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert1 = model.makeClientInformAlert(
-            [model.makeInformAlertItem()],
-            model.makeUpdateAlertItem()
+        let alert1 = sut.makeClientInformAlert(
+            [sut.makeInformAlertItem()],
+            sut.makeUpdateAlertItem()
         )
         
-        let alert2 = model.makeClientInformAlert(
-            [model.makeInformAlertItem()],
-            model.makeUpdateAlertItem()
+        let alert2 = sut.makeClientInformAlert(
+            [sut.makeInformAlertItem()],
+            sut.makeUpdateAlertItem()
         )
             
         XCTAssertNoDiff(spy.values, [])
@@ -452,7 +452,7 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let emptyArrayAlert = model.makeClientInformAlert([], model.makeUpdateAlertItem())
+        let emptyArrayAlert = sut.makeClientInformAlert([], sut.makeUpdateAlertItem())
             
         XCTAssertNoDiff(spy.values, [])
         
@@ -465,7 +465,7 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let emptyArrayNilUpdateAlert = model.makeClientInformAlert([], nil)
+        let emptyArrayNilUpdateAlert = sut.makeClientInformAlert([], nil)
             
         XCTAssertNoDiff(spy.values, [])
         
@@ -479,7 +479,7 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let oneElementArrayAndNilUpdateAlert = model.makeClientInformAlert([model.makeInformAlertItem()], nil)
+        let oneElementArrayAndNilUpdateAlert = sut.makeClientInformAlert([sut.makeInformAlertItem()], nil)
             
         XCTAssertNoDiff(spy.values, [])
         
@@ -492,12 +492,12 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let twoElementArrayAndNilUpdateAlert = model.makeClientInformAlert([model.makeInformAlertItem(), model.makeInformAlertItem()], nil)
-            
+        let twoElementArrayAndNilUpdateAlert = sut.makeClientInformAlert([sut.makeInformAlertItem(), sut.makeInformAlertItem()], nil)
+        
         XCTAssertNoDiff(spy.values, [])
         
         model.sendClientInformNotAuthorized(twoElementArrayAndNilUpdateAlert)
-
+        
         XCTAssertNoDiff(spy.values, [twoElementArrayAndNilUpdateAlert])
     }
     
@@ -505,13 +505,13 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let oneElementArrayAlert = model.makeClientInformAlert([model.makeInformAlertItem()],
-                                                               model.makeUpdateAlertItem())
+        let oneElementArrayAlert = sut.makeClientInformAlert([sut.makeInformAlertItem()],
+                                                             sut.makeUpdateAlertItem())
             
         XCTAssertNoDiff(spy.values, [])
         
         model.sendClientInformNotAuthorized(oneElementArrayAlert)
-
+        
         XCTAssertNoDiff(spy.values, [oneElementArrayAlert])
     }
     
@@ -519,13 +519,13 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let twoElementArrayAlert = model.makeClientInformAlert([model.makeInformAlertItem(), model.makeInformAlertItem()],
-                                                               model.makeUpdateAlertItem())
-            
+        let twoElementArrayAlert = sut.makeClientInformAlert([sut.makeInformAlertItem(), sut.makeInformAlertItem()],
+                                                             sut.makeUpdateAlertItem())
+        
         XCTAssertNoDiff(spy.values, [])
         
         model.sendClientInformNotAuthorized(twoElementArrayAlert)
-
+        
         XCTAssertNoDiff(spy.values, [twoElementArrayAlert])
     }
 
@@ -985,7 +985,7 @@ private extension Model {
 
 
 // MARK: - ClientInform Alerts
-private extension Model {
+private extension AuthLoginViewModel {
     
     func makeInformAlertItem(
         informTitle: String = anyMessage(),

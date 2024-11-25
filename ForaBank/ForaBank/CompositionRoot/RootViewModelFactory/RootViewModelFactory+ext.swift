@@ -511,7 +511,7 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .success(response):
-                    
+                    // informAlert сначала внутриности, потом тип
                     var alerts = ClientInformAlerts(id: .init(), informAlerts: [], updateAlert: nil)
                     
                     response.list.forEach {
