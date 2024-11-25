@@ -98,7 +98,20 @@ extension RootViewModelFactory {
             
             let operatorSearch = makeOperatorSearch(
                 multiple: multiple,
-                notify: { _ in }
+                notify: {
+                    
+                    switch $0 {
+                    case .addCompany:
+                        notify(.select(.outside(.chat)))
+                        
+                    case .detailPayment:
+#warning("FIXME")
+                        break // notify(.select(???))
+                        
+                    case .dismiss:
+                        notify(.dismiss)
+                    }
+                }
             )
             
             return .operatorSearch(operatorSearch)
