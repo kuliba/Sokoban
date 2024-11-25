@@ -165,6 +165,21 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectPaymentPresented(rootView)
     }
 
+    @available(iOS 16.0, *)
+    func test_shouldPresentProviderServicePickerOnQRScanProvider() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .mapped(.provider(makePaymentProviderServicePickerPayload())),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectProviderServicePickerPresented(rootView)
+    }
+
     // MARK: - Helpers
     
     private func openQRWithFlowEvent(
@@ -300,6 +315,21 @@ final class QRAcceptanceTests: AcceptanceTests {
             file: file, line: line
         ) {
             XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .operatorSearch), "Expected Root View FullScreenCover Destination with QR Failure.", file: file, line: line)
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectProviderServicePickerPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .providerServicePicker), "Expected Root View FullScreenCover Destination with ProviderServicePicker.", file: file, line: line)
         }
     }
     

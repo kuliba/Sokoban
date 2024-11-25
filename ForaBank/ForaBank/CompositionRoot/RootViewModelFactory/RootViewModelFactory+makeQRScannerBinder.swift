@@ -91,6 +91,9 @@ extension RootViewModelFactory {
         case let .none(qrCode):
             completion(payments(payload: .source(.requisites(qrCode: qrCode))))
             
+        case let .provider(payload):
+            completion(providerServicePicker(payload))
+            
         default:
             break
         }
@@ -142,6 +145,15 @@ extension RootViewModelFactory {
             )
             
             return .providerPicker(node)
+        }
+        
+        func providerServicePicker(
+            _ payload: ProviderPayload
+        ) -> QRScannerDomain.Navigation {
+            
+            let picker = makeAnywayServicePickerFlowModel(payload: payload)
+            
+            return .providerServicePicker(picker)
         }
     }
 }

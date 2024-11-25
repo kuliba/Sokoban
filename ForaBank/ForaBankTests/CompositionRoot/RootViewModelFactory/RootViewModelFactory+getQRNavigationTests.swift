@@ -111,7 +111,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         expect(with: .qrResult(.mapped(.missingINN(anyQRCode()))), toDeliver: .failure)
     }
     
-    // MARK: - qrResult: mixed
+    // MARK: - qrResult: mapped: mixed
     
     func test_mixed_shouldDeliverProviderPicker() {
         
@@ -203,7 +203,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         }
     }
     
-    // MARK: - qrResult: multiple
+    // MARK: - qrResult: mapped: multiple
     
     func test_multiple_shouldDeliverProviderPicker() {
         
@@ -265,7 +265,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     //        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
     //    }
     
-    // MARK: - qrResult: none
+    // MARK: - qrResult: mapped: none
     
     func test_none_shouldDeliverPayments() {
         
@@ -298,6 +298,13 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
                 XCTFail("Expected Payments, but got \($0) instead.")
             }
         }
+    }
+    
+    // MARK: - mapped: provider
+    
+    func test_provider_shouldDeliverServicePicker() {
+        
+        expect(with: .qrResult(.mapped(.provider(makeProviderPayload()))), toDeliver: .providerServicePicker)
     }
     
     // MARK: - Helpers
@@ -347,16 +354,20 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
             
         case .providerPicker:
             return .providerPicker
+            
+        case .providerServicePicker:
+            return .providerServicePicker
         }
     }
     
     private enum EquatableNavigation: Equatable {
         
         case failure
+        case operatorSearch
         case outside(QRScannerDomain.Outside)
         case payments
         case providerPicker
-        case operatorSearch
+        case providerServicePicker
     }
     
     private func makePayments(
@@ -366,6 +377,15 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     ) -> PaymentsViewModel {
         
         return .init(payload: payload, model: model, closeAction: closeAction)
+    }
+    
+    private func makeProviderPayload(
+        provider: SegmentedOperator<UtilityPaymentProvider, String>? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> ProviderPayload {
+        
+        return .init(provider: provider ?? makeSegmentedProvider(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
     }
     
     private func expect(

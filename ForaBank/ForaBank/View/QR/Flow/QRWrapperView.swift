@@ -30,10 +30,12 @@ struct QRWrapperView: View {
 
 struct QRWrapperViewFactory {
     
-    let makeQRView: MakeQRView
-    let makeQRFailedWrapperView: MakeQRFailedWrapperView
-    let makePaymentsView: MakePaymentsView
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
     let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makePaymentsView: MakePaymentsView
+    let makeQRFailedWrapperView: MakeQRFailedWrapperView
+    let makeQRSearchOperatorView: MakeQRSearchOperatorView
+    let makeQRView: MakeQRView
 }
 
 private extension QRWrapperView {
@@ -51,13 +53,8 @@ private extension QRWrapperView {
                 .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
             
         case let .operatorSearch(search):
-            QRSearchOperatorView(
-                viewModel: search,
-                viewFactory: .init(
-                    makePaymentsView: factory.makePaymentsView
-                )
-            )
-            .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
+            factory.makeQRSearchOperatorView(search)
+                .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
             
         case let .payments(payments):
             factory.makePaymentsView(payments)
@@ -66,6 +63,10 @@ private extension QRWrapperView {
         case let .providerPicker(picker):
             factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
                 .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
+            
+        case let .providerServicePicker(picker):
+            factory.makeAnywayServicePickerFlowView(picker)
+                .accessibilityIdentifier(ElementIDs.providerServicePicker.rawValue)
         }
     }
 }
@@ -89,6 +90,9 @@ extension QRScannerDomain.Navigation {
             
         case let .providerPicker(node):
             return .providerPicker(node.model)
+            
+        case let .providerServicePicker(picker):
+            return .providerServicePicker(picker)
         }
     }
     
@@ -98,6 +102,7 @@ extension QRScannerDomain.Navigation {
         case operatorSearch(QRSearchOperatorViewModel)
         case payments(PaymentsViewModel)
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
+        case providerServicePicker(AnywayServicePickerFlowModel)
     }
 }
 
@@ -117,6 +122,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
             
         case let .providerPicker(picker):
             return .providerPicker(.init(picker))
+            
+        case let .providerServicePicker(picker):
+            return .providerServicePicker(.init(picker))
         }
     }
     
@@ -126,5 +134,6 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case operatorSearch(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
+        case providerServicePicker(ObjectIdentifier)
     }
 }

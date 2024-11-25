@@ -12,6 +12,7 @@ enum ElementIDs {
     case operatorSearch
     case payments
     case providerPicker
+    case providerServicePicker
     case qrFailure
     case qrScanner
     case rootView(RootView)
@@ -75,6 +76,9 @@ extension ElementIDs {
             
         case .providerPicker:
             return "providerPicker"
+            
+        case .providerServicePicker:
+            return "providerServicePicker"
             
         case .qrFailure:
             return "qrFailure"

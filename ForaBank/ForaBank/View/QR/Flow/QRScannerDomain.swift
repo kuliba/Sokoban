@@ -48,5 +48,6 @@ extension QRScannerDomain {
         case outside(Outside)
         case payments(Node<PaymentsViewModel>)
         case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
+        case providerServicePicker(AnywayServicePickerFlowModel)
     }
 }
