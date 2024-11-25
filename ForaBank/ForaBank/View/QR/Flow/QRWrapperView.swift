@@ -56,6 +56,10 @@ private extension QRWrapperView {
             factory.makeQRSearchOperatorView(search)
                 .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
             
+        case let .operatorView(viewModel):
+            InternetTVDetailsView(viewModel: viewModel)
+                .accessibilityIdentifier(ElementIDs.operatorView.rawValue)
+            
         case let .payments(payments):
             factory.makePaymentsView(payments)
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
@@ -82,6 +86,9 @@ extension QRScannerDomain.Navigation {
         case let .operatorSearch(operatorSearch):
             return .operatorSearch(operatorSearch)
             
+        case let .operatorView(operatorView):
+            return .operatorView(operatorView)
+            
         case .outside:
             return nil
             
@@ -100,6 +107,7 @@ extension QRScannerDomain.Navigation {
         
         case failure(QRFailedViewModelWrapper)
         case operatorSearch(QRSearchOperatorViewModel)
+        case operatorView(InternetTVDetailsViewModel)
         case payments(PaymentsViewModel)
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
         case providerServicePicker(AnywayServicePickerFlowModel)
@@ -117,6 +125,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case let .operatorSearch(search):
             return .operatorSearch(.init(search))
             
+        case .operatorView:
+            return .operatorView
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
@@ -132,6 +143,7 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         
         case failure(ObjectIdentifier)
         case operatorSearch(ObjectIdentifier)
+        case operatorView
         case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
         case providerServicePicker(ObjectIdentifier)

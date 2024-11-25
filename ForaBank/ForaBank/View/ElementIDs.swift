@@ -10,6 +10,7 @@ enum ElementIDs {
     case fullScreenCover(FullScreenCover)
     case mainView(MainView)
     case operatorSearch
+    case operatorView
     case payments
     case providerPicker
     case providerServicePicker
@@ -70,6 +71,9 @@ extension ElementIDs {
             
         case .operatorSearch:
             return "operatorSearch"
+            
+        case .operatorView:
+            return "operatorView"
             
         case .payments:
             return "payments"

@@ -307,6 +307,13 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         expect(with: .qrResult(.mapped(.provider(makeProviderPayload()))), toDeliver: .providerServicePicker)
     }
     
+    // MARK: - mapped: single
+    
+    func test_single_shouldDeliverServicePicker() {
+        
+        expect(with: .qrResult(.mapped(.single(makeSinglePayload()))), toDeliver: .operatorView)
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifySpy = CallSpy<QRScannerDomain.NotifyEvent, Void>
@@ -346,6 +353,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case .operatorSearch:
             return .operatorSearch
             
+        case .operatorView:
+            return .operatorView
+            
         case let .outside(outside):
             return .outside(outside)
             
@@ -364,6 +374,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         
         case failure
         case operatorSearch
+        case operatorView
         case outside(QRScannerDomain.Outside)
         case payments
         case providerPicker
@@ -377,15 +388,6 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     ) -> PaymentsViewModel {
         
         return .init(payload: payload, model: model, closeAction: closeAction)
-    }
-    
-    private func makeProviderPayload(
-        provider: SegmentedOperator<UtilityPaymentProvider, String>? = nil,
-        qrCode: QRCode? = nil,
-        qrMapping: QRMapping? = nil
-    ) -> ProviderPayload {
-        
-        return .init(provider: provider ?? makeSegmentedProvider(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
     }
     
     private func expect(

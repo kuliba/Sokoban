@@ -94,6 +94,9 @@ extension RootViewModelFactory {
         case let .provider(payload):
             completion(providerServicePicker(payload))
             
+        case let .single(single):
+            completion(operatorView(single))
+            
         default:
             break
         }
@@ -121,6 +124,19 @@ extension RootViewModelFactory {
             )
             
             return .operatorSearch(operatorSearch)
+        }
+        
+        func operatorView(
+            _ single: SinglePayload
+        ) -> QRScannerDomain.Navigation {
+            
+            let viewModel = InternetTVDetailsViewModel(
+                model: model,
+                qrCode: single.qrCode,
+                mapping: single.qrMapping
+            )
+            
+            return .operatorView(viewModel)
         }
          
         func payments(

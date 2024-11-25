@@ -170,7 +170,7 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         let scanner = QRScannerViewModelSpy()
         let app = TestApp(
-            scanResult: .mapped(.provider(makePaymentProviderServicePickerPayload())),
+            scanResult: .mapped(.provider(makeProviderPayload())),
             scanner: scanner
         )
         let rootView = try app.launch()
@@ -178,6 +178,21 @@ final class QRAcceptanceTests: AcceptanceTests {
         scanSuccessfully(rootView, scanner)
         
         expectProviderServicePickerPresented(rootView)
+    }
+
+    @available(iOS 16.0, *)
+    func test_shouldPresentOperatorViewOnQRScanSingle() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .mapped(.single(makeSinglePayload())),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectOperatorViewPresented(rootView)
     }
 
     // MARK: - Helpers
@@ -330,6 +345,21 @@ final class QRAcceptanceTests: AcceptanceTests {
             file: file, line: line
         ) {
             XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .providerServicePicker), "Expected Root View FullScreenCover Destination with ProviderServicePicker.", file: file, line: line)
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectOperatorViewPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .operatorView), "Expected Root View FullScreenCover Destination with OperatorView.", file: file, line: line)
         }
     }
     
