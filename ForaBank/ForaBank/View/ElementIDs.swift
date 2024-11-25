@@ -9,6 +9,8 @@ enum ElementIDs {
     
     case fullScreenCover(FullScreenCover)
     case mainView(MainView)
+    case payments
+    case qrScanner
     case rootView(RootView)
     
     enum FullScreenCover: String {
@@ -18,13 +20,36 @@ enum ElementIDs {
     
     enum MainView: String {
         
+        case content
         case fullScreenCoverAnchor
         case qrScanner
+        case templates
     }
     
-    enum RootView: String {
+    enum RootView {
         
         case qrFullScreenCover
+        case mainView
+        case destination(Destination)
+        
+        var rawValue: String {
+            
+            switch self {
+            case .qrFullScreenCover:
+                return "qrFullScreenCover"
+                
+            case .mainView:
+                return "mainView"
+                
+            case let .destination(destination):
+                return destination.rawValue
+            }
+        }
+        
+        enum Destination: String {
+            
+            case templates
+        }
     }
 }
 
@@ -38,6 +63,12 @@ extension ElementIDs {
             
         case let .mainView(mainView):
             return mainView.rawValue
+            
+        case .payments:
+            return "payments"
+            
+        case .qrScanner:
+            return "qrScanner"
             
         case let .rootView(rootView):
             return rootView.rawValue

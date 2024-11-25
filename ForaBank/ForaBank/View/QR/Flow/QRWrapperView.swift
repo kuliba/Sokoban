@@ -24,12 +24,13 @@ struct QRWrapperView: View {
                     dismiss: { event(.dismiss) },
                     content: destinationContent
                 )
+                .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
         }
     }
 }
 
 private extension QRWrapperView {
- 
+    
     typealias Destination = QRScannerDomain.Navigation.Destination
     
     @ViewBuilder
@@ -40,6 +41,7 @@ private extension QRWrapperView {
         switch destination {
         case let .payments(payments):
             makePaymentsView(payments.paymentsViewModel)
+                .accessibilityIdentifier(ElementIDs.payments.rawValue)
         }
     }
 }

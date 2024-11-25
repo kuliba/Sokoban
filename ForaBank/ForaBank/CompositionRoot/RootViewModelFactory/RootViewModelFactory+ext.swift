@@ -224,11 +224,6 @@ extension RootViewModelFactory {
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
-        let templatesComposer = makeTemplatesComposer(
-            paymentsTransfersFlag: paymentsTransfersFlag
-        )
-        let makeTemplates = templatesComposer.compose
-        
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             model: model,
             httpClient: httpClient,
@@ -295,7 +290,7 @@ extension RootViewModelFactory {
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            makeTemplates: makeTemplates,
+            makeTemplates: makeMakeTemplates(paymentsTransfersFlag),
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -405,7 +400,7 @@ extension RootViewModelFactory {
         let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplates: makeTemplates,
+            makeTemplates: makeMakeTemplates(paymentsTransfersFlag),
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,

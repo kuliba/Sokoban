@@ -246,6 +246,7 @@ extension MainViewModel {
             
             self?.action.send(MainViewModelAction.Close.Link())
         }
+        guard let templates else { return }
         let cancellable = bind(templates)
         var route = route
         route.destination = .templates(.init(
