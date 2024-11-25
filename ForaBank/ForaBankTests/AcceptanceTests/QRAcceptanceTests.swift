@@ -63,11 +63,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulC2BSubscribeQRScan() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .c2bSubscribeURL(anyURL()),
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .c2bSubscribeURL(anyURL()))
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -78,11 +74,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulC2BQRScan() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .c2bURL(anyURL()),
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .c2bURL(anyURL()))
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -93,11 +85,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanFailure() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .failure(anyQRCode()),
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .failure(anyQRCode()))
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -108,10 +96,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnMissingINN() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.missingINN(anyQRCode())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.missingINN(anyQRCode()))
         )
         let rootView = try app.launch()
         
@@ -123,10 +109,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentProviderPickerOnMixed() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.mixed(makeMixedQRResult())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(scanResult: .mapped(.mixed(makeMixedQRResult()))
         )
         let rootView = try app.launch()
         
@@ -138,10 +121,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentOperatorSearchOnMultiple() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.multiple(makeMultipleQRResult())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.multiple(makeMultipleQRResult()))
         )
         let rootView = try app.launch()
         
@@ -153,10 +134,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnQRScanNoneMapped() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.none(makeQR())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.none(makeQR()))
         )
         let rootView = try app.launch()
         
@@ -168,10 +147,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentProviderServicePickerOnQRScanProvider() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.provider(makeProviderPayload())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.provider(makeProviderPayload()))
         )
         let rootView = try app.launch()
         
@@ -183,10 +160,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentOperatorViewOnQRScanSingle() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.single(makeSinglePayload())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.single(makeSinglePayload()))
         )
         let rootView = try app.launch()
         
@@ -198,10 +173,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulSourceQRScan() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.source(.avtodor)),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.source(.avtodor))
         )
         let rootView = try app.launch()
         
@@ -215,11 +188,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanURL() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .url(anyURL()),
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .url(anyURL()))
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -230,11 +199,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanUnknown() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .unknown,
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .unknown)
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -245,16 +210,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentSberQROnQRScanSberQR() throws {
         
-        let httpClient = HTTPClientSpy()
-        let model: Model = .mockWithEmptyExcept()
-        model.addSberProduct()
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            httpClient: httpClient,
-            model: model,
-            scanResult: .sberQR(anyURL()),
-            scanner: scanner
+        let (app, httpClient, model, scanner) = makeSUT(
+            scanResult: .sberQR(anyURL())
         )
+        model.addSberProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -270,6 +229,29 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     // MARK: - Helpers
+    
+    private func makeSUT(
+        scanResult: QRModelResult = .unknown,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        app: TestApp,
+        httpClient: HTTPClientSpy,
+        model: Model,
+        scanner: QRScannerViewModelSpy
+    ) {
+        let httpClient = HTTPClientSpy()
+        let model: Model = .mockWithEmptyExcept()
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            httpClient: httpClient,
+            model: model,
+            scanResult: scanResult,
+            scanner: scanner
+        )
+        
+        return (app, httpClient, model, scanner)
+    }
     
     private func openQRWithFlowEvent(
         _ app: TestApp,
