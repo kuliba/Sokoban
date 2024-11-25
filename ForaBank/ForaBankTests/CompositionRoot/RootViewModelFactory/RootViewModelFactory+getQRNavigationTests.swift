@@ -14,29 +14,29 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_outside_shouldDeliverChatOnChat() {
         
-        expect(with: .outside(.chat), toDeliver: .outside(.chat))
+        expect(.outside(.chat), toDeliver: .outside(.chat))
     }
     
     func test_outside_shouldDeliverMainOnMain() {
         
-        expect(with: .outside(.main), toDeliver: .outside(.main))
+        expect(.outside(.main), toDeliver: .outside(.main))
     }
     
     func test_outside_shouldDeliverPaymentsOnPayments() {
         
-        expect(with: .outside(.payments), toDeliver: .outside(.payments))
+        expect(.outside(.payments), toDeliver: .outside(.payments))
     }
     
     // MARK: - qrResult: c2bSubscribe
     
     func test_c2bSubscribe_shouldDeliverPayments() {
         
-        expect(with: .qrResult(.c2bSubscribeURL(anyURL())), toDeliver: .payments)
+        expect(.qrResult(.c2bSubscribeURL(anyURL())), toDeliver: .payments)
     }
     
     func test_c2bSubscribe_shouldNotifyWithDismissOnClose() {
         
-        expect(with: .c2bSubscribeURL(anyURL()), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .c2bSubscribeURL(anyURL())) {
             
             switch $0 {
             case let .payments(payments):
@@ -50,7 +50,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_c2bSubscribe_shouldNotifyWithDismissOnScanQR() {
         
-        expect(with: .c2bSubscribeURL(anyURL()), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .c2bSubscribeURL(anyURL())) {
             
             switch $0 {
             case let .payments(payments):
@@ -66,12 +66,12 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_c2b_shouldDeliverPayments() {
         
-        expect(with: .qrResult(.c2bURL(anyURL())), toDeliver: .payments)
+        expect(.qrResult(.c2bURL(anyURL())), toDeliver: .payments)
     }
     
     func test_c2b_shouldNotifyWithDismissOnClose() {
         
-        expect(with: .c2bURL(anyURL()), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .c2bURL(anyURL())) {
             
             switch $0 {
             case let .payments(payments):
@@ -85,7 +85,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_c2b_shouldNotifyWithDismissOnScanQR() {
         
-        expect(with: .c2bURL(anyURL()), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .c2bURL(anyURL())) {
             
             switch $0 {
             case let .payments(payments):
@@ -101,28 +101,28 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_failure_shouldDeliverQRFailure() {
         
-        expect(with: .qrResult(.failure(anyQRCode())), toDeliver: .failure)
+        expect(.qrResult(.failure(anyQRCode())), toDeliver: .failure)
     }
     
     // MARK: - qrResult: missingINN
     
     func test_missingINN_shouldDeliverQRFailure() {
         
-        expect(with: .qrResult(.mapped(.missingINN(anyQRCode()))), toDeliver: .failure)
+        expect(.qrResult(.mapped(.missingINN(anyQRCode()))), toDeliver: .failure)
     }
     
     // MARK: - qrResult: mapped: mixed
     
     func test_mixed_shouldDeliverProviderPicker() {
         
-        expect(with: .qrResult(.mapped(.mixed(makeMixedQRResult()))), toDeliver: .providerPicker)
+        expect(.qrResult(.mapped(.mixed(makeMixedQRResult()))), toDeliver: .providerPicker)
     }
     
     func test_mixed_shouldNotifyWithDismissOnDismiss() {
         
         expect(
-            with: .mapped(.mixed(makeMixedQRResult())),
-            notifiesWith: .dismiss,
+            .dismiss,
+            for: .mapped(.mixed(makeMixedQRResult())),
             expectedFulfillmentCount: 1
         ) {
             switch $0 {
@@ -138,8 +138,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     func test_mixed_shouldNotifyWithChatOnGoToAddCompany() {
         
         expect(
-            with: .mapped(.mixed(makeMixedQRResult())),
-            notifiesWith: .select(.outside(.chat)),
+            .select(.outside(.chat)),
+            for: .mapped(.mixed(makeMixedQRResult())),
             expectedFulfillmentCount: 3
         ) {
             switch $0 {
@@ -155,8 +155,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     func test_mixed_shouldNotifyWithMainOnGoToMain() {
         
         expect(
-            with: .mapped(.mixed(makeMixedQRResult())),
-            notifiesWith: .select(.outside(.main)),
+            .select(.outside(.main)),
+            for: .mapped(.mixed(makeMixedQRResult())),
             expectedFulfillmentCount: 3
         ) {
             switch $0 {
@@ -172,8 +172,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     func test_mixed_shouldNotifyWithPaymentsOnGoToPayments() {
         
         expect(
-            with: .mapped(.mixed(makeMixedQRResult())),
-            notifiesWith: .select(.outside(.payments)),
+            .select(.outside(.payments)),
+            for: .mapped(.mixed(makeMixedQRResult())),
             expectedFulfillmentCount: 3
         ) {
             switch $0 {
@@ -189,8 +189,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     func test_mixed_shouldNotifyWithDismissOnGoToScanQR() {
         
         expect(
-            with: .mapped(.mixed(makeMixedQRResult())),
-            notifiesWith: .dismiss,
+            .dismiss,
+            for: .mapped(.mixed(makeMixedQRResult())),
             expectedFulfillmentCount: 3
         ) {
             switch $0 {
@@ -207,14 +207,14 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_multiple_shouldDeliverProviderPicker() {
         
-        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+        expect(.qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
     }
     
     func test_multiple_shouldNotifyWithChatOnOperatorSearchAddCompany() {
         
         expect(
-            with: .mapped(.multiple(makeMultipleQRResult())),
-            notifiesWith: .select(.outside(.chat))
+            .select(.outside(.chat)),
+            for: .mapped(.multiple(makeMultipleQRResult()))
         ) {
             switch $0 {
             case let .operatorSearch(operatorSearch):
@@ -225,15 +225,13 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
             }
         }
         
-        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+        expect(.qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
     }
     
     func test_multiple_shouldNotifyWithDismissOnOperatorSearchClose() {
         
-        expect(
-            with: .mapped(.multiple(makeMultipleQRResult())),
-            notifiesWith: .dismiss
-        ) {
+        expect(.dismiss, for: .mapped(.multiple(makeMultipleQRResult()))) {
+            
             switch $0 {
             case let .operatorSearch(operatorSearch):
                 try? operatorSearch.tapBackButton()
@@ -243,7 +241,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
             }
         }
         
-        expect(with: .qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
+        expect(.qrResult(.mapped(.multiple(makeMultipleQRResult()))), toDeliver: .operatorSearch)
     }
     
     // TODO: - finish this
@@ -269,12 +267,12 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_none_shouldDeliverPayments() {
         
-        expect(with: .qrResult(.mapped(.none(makeQR()))), toDeliver: .payments)
+        expect(.qrResult(.mapped(.none(makeQR()))), toDeliver: .payments)
     }
     
     func test_none_shouldNotifyWithDismissOnClose() {
         
-        expect(with: .mapped(.none(makeQR())), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .mapped(.none(makeQR()))) {
             
             switch $0 {
             case let .payments(payments):
@@ -288,7 +286,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_none_shouldNotifyWithDismissOnScanQR() {
         
-        expect(with: .mapped(.none(makeQR())), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .mapped(.none(makeQR()))) {
             
             switch $0 {
             case let .payments(payments):
@@ -304,26 +302,26 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_provider_shouldDeliverServicePicker() {
         
-        expect(with: .qrResult(.mapped(.provider(makeProviderPayload()))), toDeliver: .providerServicePicker)
+        expect(.qrResult(.mapped(.provider(makeProviderPayload()))), toDeliver: .providerServicePicker)
     }
     
     // MARK: - mapped: single
     
     func test_single_shouldDeliverServicePicker() {
         
-        expect(with: .qrResult(.mapped(.single(makeSinglePayload()))), toDeliver: .operatorView)
+        expect(.qrResult(.mapped(.single(makeSinglePayload()))), toDeliver: .operatorView)
     }
     
     // MARK: - mapped: source
     
     func test_source_shouldDeliverServicePicker() {
         
-        expect(with: .qrResult(.mapped(.source(.avtodor))), toDeliver: .payments)
+        expect(.qrResult(.mapped(.source(.avtodor))), toDeliver: .payments)
     }
     
     func test_source_shouldNotifyWithDismissOnClose() {
         
-        expect(with: .mapped(.source(.avtodor)), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .mapped(.source(.avtodor))) {
             
             switch $0 {
             case let .payments(payments):
@@ -337,7 +335,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     
     func test_source_shouldNotifyWithDismissOnScanQR() {
         
-        expect(with: .mapped(.source(.avtodor)), notifiesWith: .dismiss) {
+        expect(.dismiss, for: .mapped(.source(.avtodor))) {
             
             switch $0 {
             case let .payments(payments):
@@ -355,8 +353,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     private typealias NavigationSpy = Spy<Void, QRScannerDomain.Navigation, Never>
     
     private func expect(
-        _ sut: SUT? = nil,
-        with select: QRScannerDomain.Select,
+        sut: SUT? = nil,
+        _ select: QRScannerDomain.Select,
         toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
@@ -426,9 +424,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
     }
     
     private func expect(
-        _ sut: SUT? = nil,
-        with qrResult: QRModelResult,
-        notifiesWith expectedNotifyEvent: QRScannerDomain.NotifyEvent,
+        sut: SUT? = nil,
+        _ expectedNotifyEvent: QRScannerDomain.NotifyEvent,
+        for qrResult: QRModelResult,
         expectedFulfillmentCount: Int = 2,
         on action: @escaping (QRScannerDomain.Navigation) -> Void,
         timeout: TimeInterval = 1.0,
