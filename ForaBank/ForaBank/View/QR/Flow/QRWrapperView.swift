@@ -78,8 +78,8 @@ extension QRScannerDomain.Navigation {
         case let .failure(qrFailedViewModel):
             return .failure(qrFailedViewModel)
             
-        case let .operatorSearch(node):
-            return .operatorSearch(node.model)
+        case let .operatorSearch(operatorSearch):
+            return .operatorSearch(operatorSearch)
             
         case .outside:
             return nil
