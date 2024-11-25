@@ -168,16 +168,7 @@ extension ProductData.Filter {
                 return nil
             }
 
-            if productCard.loanBaseParam != nil {
-                
-                // credit card
-                return productCard.status == .active && productCard.statusPc == .active
-                
-            } else {
-               
-                // regular card
-                return productCard.status == .active && productCard.statusPc == .active
-            }
+            return (productCard.status == .active || productCard.status == .issuedToClient) && productCard.statusPc == .active
         }
     }
     
@@ -244,7 +235,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return !cardType.isCorporateCard 
+            return !cardType.isCorporateCard
         }
     }
     
