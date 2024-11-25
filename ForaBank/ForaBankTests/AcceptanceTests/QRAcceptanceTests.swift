@@ -195,6 +195,21 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectOperatorViewPresented(rootView)
     }
 
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnSuccessfulSourceQRScan() throws {
+        
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            scanResult: .mapped(.source(.avtodor)),
+            scanner: scanner
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectPaymentPresented(rootView)
+    }
+    
     // MARK: - Helpers
     
     private func openQRWithFlowEvent(

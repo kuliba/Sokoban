@@ -97,8 +97,8 @@ extension RootViewModelFactory {
         case let .single(single):
             completion(operatorView(single))
             
-        default:
-            break
+        case let .source(source):
+            completion(payments(payload: .source(source)))
         }
         
         func operatorSearch(
