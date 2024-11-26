@@ -82,7 +82,7 @@ extension RootViewFactoryComposer {
         .init(
             makeAnywayFlowView: makeAnywayFlowView,
             makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
-            makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
+            makeSegmentedPaymentProviderPickerView: makeComposedSegmentedPaymentProviderPickerFlowView,
             makeContactsView: makeContactsView,
             makeControlPanelWrapperView: makeControlPanelWrapperView,
             makeCurrencyWalletView: makeCurrencyWalletView,

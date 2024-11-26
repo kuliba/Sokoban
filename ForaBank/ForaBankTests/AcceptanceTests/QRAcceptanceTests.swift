@@ -266,7 +266,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func tapMainViewQRButton(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -278,7 +278,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func tapRootViewFullScreenCoverCloseQRButton(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -296,7 +296,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func scanSuccessfully(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         _ scanner: QRScannerViewModelSpy,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
@@ -313,7 +313,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func scanWithFailure(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         _ scanner: QRScannerViewModelSpy,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
@@ -336,7 +336,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectPaymentPresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -351,7 +351,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectQRFailurePresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -366,7 +366,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectProviderPickerPresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -381,7 +381,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectOperatorSearchPresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -396,7 +396,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectProviderServicePickerPresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -411,7 +411,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectOperatorViewPresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -426,7 +426,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     private func expectSberQRPresented(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -440,7 +440,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func expectRootViewQRScannerFullScreenCover(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -448,7 +448,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func expectNoRootViewQRScannerFullScreenCover(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -456,7 +456,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func expectMainViewQRScannerFullScreenCover(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -464,7 +464,7 @@ final class QRAcceptanceTests: AcceptanceTests {
     }
     
     private func expectNoMainViewQRScannerFullScreenCover(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -474,7 +474,7 @@ final class QRAcceptanceTests: AcceptanceTests {
 
 extension InspectableFullScreenCoverWithItem: ItemPopupPresenter { }
 
-private extension RootViewBinderView {
+private extension RootBinderView {
     
     func rootViewQRScannerFullScreenCover(
     ) throws -> InspectableView<ViewType.ClassifiedView> {

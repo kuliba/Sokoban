@@ -8,7 +8,7 @@
 import RxViewModel
 import SwiftUI
 
-struct RootViewBinderView: View {
+struct RootBinderView: View {
     
     let binder: RootViewDomain.Binder
     let rootViewFactory: RootViewFactory
@@ -68,6 +68,8 @@ struct RootWrapperView: View {
 
 private extension RootWrapperView {
     
+    // MARK: - Destination
+    
     @ViewBuilder
     func destinationContent(
         destination: RootViewNavigation.Destination
@@ -86,6 +88,8 @@ private extension RootWrapperView {
         viewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
+    
+    // MARK: - FullScreenCover
     
     @ViewBuilder
     func fullScreenCoverContent(
@@ -123,12 +127,13 @@ extension RootViewFactory {
             binder: binder,
             factory: .init(
                 makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
-                makeComposedSegmentedPaymentProviderPickerFlowView: components.makeComposedSegmentedPaymentProviderPickerFlowView,
+                makeOperatorView: InternetTVDetailsView.init,
                 makePaymentsView: components.makePaymentsView,
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
                 makeQRView: components.makeQRView,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView
             )
         )
     }

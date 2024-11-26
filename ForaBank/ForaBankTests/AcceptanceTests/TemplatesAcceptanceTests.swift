@@ -38,7 +38,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     // MARK: - Helpers
     
     func tapMainViewTemplatesButton(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line
@@ -51,7 +51,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     func expectTemplatesPresentedOnMainView(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -60,7 +60,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     
     @available(iOS 16.0, *)
     func expectTemplatesPresentedOnRootView(
-        _ rootView: RootViewBinderView,
+        _ rootView: RootBinderView,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -68,7 +68,7 @@ final class TemplatesAcceptanceTests: AcceptanceTests {
     }
 }
 
-private extension RootViewBinderView {
+private extension RootBinderView {
     
     func tapMainViewTemplatesButton() throws {
         

@@ -32,12 +32,15 @@ struct QRWrapperView: View {
 struct QRWrapperViewFactory {
     
     let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
-    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makeOperatorView: MakeOperatorView
     let makePaymentsView: MakePaymentsView
     let makeQRFailedWrapperView: MakeQRFailedWrapperView
     let makeQRSearchOperatorView: MakeQRSearchOperatorView
     let makeQRView: MakeQRView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
+    
+    typealias MakeOperatorView = (InternetTVDetailsViewModel) -> InternetTVDetailsView
 }
 
 private extension QRWrapperView {
@@ -61,7 +64,7 @@ private extension QRWrapperView {
                 .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
             
         case let .operatorView(viewModel):
-            InternetTVDetailsView(viewModel: viewModel)
+            factory.makeOperatorView(viewModel)
                 .accessibilityIdentifier(ElementIDs.operatorView.rawValue)
             
         case let .payments(payments):
@@ -69,7 +72,7 @@ private extension QRWrapperView {
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
             
         case let .providerPicker(picker):
-            factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
+            factory.makeSegmentedPaymentProviderPickerView(picker)
                 .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
             
         case let .providerServicePicker(picker):
