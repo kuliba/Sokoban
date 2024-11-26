@@ -385,45 +385,6 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNoDiff(spy.values, [])
     }
     
-    func test_swiftUIAlert_forClientInformAlerts_mixedResponse() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert1 = sut.makeClientInformAlert(
-            [sut.makeInformAlertItem()],
-            sut.makeUpdateAlertItem()
-        )
-        
-        let alert2 = sut.makeClientInformAlert(
-            [sut.makeInformAlertItem()],
-            sut.makeUpdateAlertItem()
-        )
-            
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(nil)
-        model.sendClientInformNotAuthorized(alert1)
-        model.sendClientInformNotAuthorized(nil)
-        model.sendClientInformNotAuthorized(nil)
-        model.sendClientInformNotAuthorized(alert2)
-        model.sendClientInformNotAuthorized(nil)
-
-        XCTAssertNoDiff(spy.values, [alert1, alert2])
-    }
-
-    func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let emptyArrayAlert = sut.makeClientInformAlert([], sut.makeUpdateAlertItem())
-            
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(emptyArrayAlert)
-
-        XCTAssertNoDiff(spy.values, [emptyArrayAlert])
-    }
-    
     func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndNilUpdateAlert() {
         
         let (sut, model, _) = makeSUT()
@@ -436,9 +397,8 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
         XCTAssertNoDiff(spy.values, [emptyArrayNilUpdateAlert])
     }
-    
-    
-    func test_swiftUIAlert_forClientInformAlerts_withOneInformElementsArrayAndNilUpdateAlert() {
+
+    func test_swiftUIAlert_forClientInformAlerts_withOneInformElementArrayAndNilUpdateAlert() {
         
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.clientInformAlertPublisher)
@@ -463,7 +423,20 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         XCTAssertNoDiff(spy.values, [twoElementArrayAndNilUpdateAlert])
     }
-    
+
+    func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndUpdateAlert() {
+        
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let emptyArrayAlert = sut.makeClientInformAlert([], sut.makeUpdateAlertItem())
+            
+        XCTAssertNoDiff(spy.values, [])
+        
+        model.sendClientInformNotAuthorized(emptyArrayAlert)
+
+        XCTAssertNoDiff(spy.values, [emptyArrayAlert])
+    }
+
     func test_swiftUIAlert_forClientInformAlerts_withOneInformElementsArrayAndUpdateAlert() {
         
         let (sut, model, _) = makeSUT()
@@ -490,6 +463,32 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         model.sendClientInformNotAuthorized(twoElementArrayAlert)
         
         XCTAssertNoDiff(spy.values, [twoElementArrayAlert])
+    }
+
+    func test_swiftUIAlert_forClientInformAlerts_mixedResponse() {
+        
+        let (sut, model, _) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert1 = sut.makeClientInformAlert(
+            [sut.makeInformAlertItem()],
+            sut.makeUpdateAlertItem()
+        )
+        
+        let alert2 = sut.makeClientInformAlert(
+            [sut.makeInformAlertItem()],
+            sut.makeUpdateAlertItem()
+        )
+            
+        XCTAssertNoDiff(spy.values, [])
+        
+        model.sendClientInformNotAuthorized(nil)
+        model.sendClientInformNotAuthorized(alert1)
+        model.sendClientInformNotAuthorized(nil)
+        model.sendClientInformNotAuthorized(nil)
+        model.sendClientInformNotAuthorized(alert2)
+        model.sendClientInformNotAuthorized(nil)
+
+        XCTAssertNoDiff(spy.values, [alert1, alert2])
     }
 
     // MARK: - Events: AuthLoginViewModelAction.Register
