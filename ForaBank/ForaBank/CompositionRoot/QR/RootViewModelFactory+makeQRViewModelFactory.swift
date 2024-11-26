@@ -17,7 +17,7 @@ extension RootViewModelFactory {
         
         return .init(
             makePaymentsSuccessViewModel: makePaymentsSuccessViewModel(),
-            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(),
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             makeQRScannerModel: { [weak self] in
                 
                 switch paymentsTransfersFlag.rawValue {

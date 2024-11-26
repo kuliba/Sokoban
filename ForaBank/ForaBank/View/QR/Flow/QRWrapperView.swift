@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SberQR
 import SwiftUI
 
 struct QRWrapperView: View {
@@ -30,13 +31,18 @@ struct QRWrapperView: View {
 
 struct QRWrapperViewFactory {
     
-    let makeQRView: MakeQRView
-    let makeQRFailedWrapperView: MakeQRFailedWrapperView
-    let makePaymentsView: MakePaymentsView
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
     let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makePaymentsView: MakePaymentsView
+    let makeQRFailedWrapperView: MakeQRFailedWrapperView
+    let makeQRSearchOperatorView: MakeQRSearchOperatorView
+    let makeQRView: MakeQRView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
 }
 
 private extension QRWrapperView {
+    
+    #warning("add alert for sberQR failure case")
     
     typealias Destination = QRScannerDomain.Navigation.Destination
     
@@ -51,13 +57,12 @@ private extension QRWrapperView {
                 .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
             
         case let .operatorSearch(search):
-            QRSearchOperatorView(
-                viewModel: search,
-                viewFactory: .init(
-                    makePaymentsView: factory.makePaymentsView
-                )
-            )
-            .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
+            factory.makeQRSearchOperatorView(search)
+                .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
+            
+        case let .operatorView(viewModel):
+            InternetTVDetailsView(viewModel: viewModel)
+                .accessibilityIdentifier(ElementIDs.operatorView.rawValue)
             
         case let .payments(payments):
             factory.makePaymentsView(payments)
@@ -66,6 +71,14 @@ private extension QRWrapperView {
         case let .providerPicker(picker):
             factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
                 .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
+            
+        case let .providerServicePicker(picker):
+            factory.makeAnywayServicePickerFlowView(picker)
+                .accessibilityIdentifier(ElementIDs.providerServicePicker.rawValue)
+            
+        case let .sberQR(sberQRConfirm):
+            factory.makeSberQRConfirmPaymentView(sberQRConfirm)
+                .accessibilityIdentifier(ElementIDs.sberQRConfirm.rawValue)
         }
     }
 }
@@ -81,6 +94,9 @@ extension QRScannerDomain.Navigation {
         case let .operatorSearch(operatorSearch):
             return .operatorSearch(operatorSearch)
             
+        case let .operatorView(operatorView):
+            return .operatorView(operatorView)
+            
         case .outside:
             return nil
             
@@ -89,6 +105,15 @@ extension QRScannerDomain.Navigation {
             
         case let .providerPicker(node):
             return .providerPicker(node.model)
+            
+        case let .providerServicePicker(picker):
+            return .providerServicePicker(picker)
+            
+        case .sberQR(nil):
+            return nil
+            
+        case let .sberQR(.some(sberQRConfirm)):
+            return .sberQR(sberQRConfirm)
         }
     }
     
@@ -96,8 +121,11 @@ extension QRScannerDomain.Navigation {
         
         case failure(QRFailedViewModelWrapper)
         case operatorSearch(QRSearchOperatorViewModel)
+        case operatorView(InternetTVDetailsViewModel)
         case payments(PaymentsViewModel)
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
+        case providerServicePicker(AnywayServicePickerFlowModel)
+        case sberQR(SberQRConfirmPaymentViewModel)
     }
 }
 
@@ -112,11 +140,20 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case let .operatorSearch(search):
             return .operatorSearch(.init(search))
             
+        case .operatorView:
+            return .operatorView
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
         case let .providerPicker(picker):
             return .providerPicker(.init(picker))
+            
+        case let .providerServicePicker(picker):
+            return .providerServicePicker(.init(picker))
+            
+        case let .sberQR(sberQRConfirm):
+            return .sberQR(.init(sberQRConfirm))
         }
     }
     
@@ -124,7 +161,10 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         
         case failure(ObjectIdentifier)
         case operatorSearch(ObjectIdentifier)
+        case operatorView
         case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
+        case providerServicePicker(ObjectIdentifier)
+        case sberQR(ObjectIdentifier)
     }
 }

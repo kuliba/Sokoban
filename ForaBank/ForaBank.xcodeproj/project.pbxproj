@@ -1563,6 +1563,7 @@
 		2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */; };
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
 		2ABFB9092B557F1A00D6A0BA /* FastPaymentsSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB9082B557F1A00D6A0BA /* FastPaymentsSettings */; };
+		2AC04E592CF4F7E000AF331D /* getSberQRData_fix_sum.json in Resources */ = {isa = PBXBuildFile; fileRef = 2AC04E582CF4F7E000AF331D /* getSberQRData_fix_sum.json */; };
 		2AC067DE2BECD4AF004CBC0B /* UtilityPrepaymentCompletionEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0782BECBCCA00802C95 /* UtilityPrepaymentCompletionEvent.swift */; };
 		2AC067E02BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */; };
 		2AC067E62BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */; };
@@ -4116,7 +4117,7 @@
 		2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRestrictedTests.swift; sourceTree = "<group>"; };
 		2A1980FA2CC102A0005DEA3E /* Scheduler+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scheduler+ext.swift"; sourceTree = "<group>"; };
 		2A1A8E512B26FCBE008B896D /* QRViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModelFactory.swift; sourceTree = "<group>"; };
-		2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift"; sourceTree = "<group>"; };
+		2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift"; path = "../../SberQR/RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift"; sourceTree = "<group>"; };
 		2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMakeQRScannerModel.swift"; sourceTree = "<group>"; };
 		2A1A8E572B271802008B896D /* RootViewModelFactory+makeQRViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRViewModelFactory.swift"; sourceTree = "<group>"; };
 		2A1B7A042C69C557009E038F /* NanoServices+initiateAnywayPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+initiateAnywayPaymentTests.swift"; sourceTree = "<group>"; };
@@ -5228,6 +5229,7 @@
 		2ABD9DA22BDBF83F003830EE /* PaymentsEffectHandler+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsEffectHandler+preview.swift"; sourceTree = "<group>"; };
 		2ABD9DA42BDBF883003830EE /* PaymentEvent.Initiated.InitiateResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentEvent.Initiated.InitiateResponse+preview.swift"; sourceTree = "<group>"; };
 		2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
+		2AC04E582CF4F7E000AF331D /* getSberQRData_fix_sum.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getSberQRData_fix_sum.json; path = "../../../../swift-forabank/Tests/SberQRTests/BackendDomain/Responses/getSberQRData_fix_sum.json"; sourceTree = "<group>"; };
 		2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowManagerComposer.swift; sourceTree = "<group>"; };
 		2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFactoryComposer.swift; sourceTree = "<group>"; };
 		2AC0C63C2C25A8E300DFF4AF /* BottomAmountConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BottomAmountConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -9442,6 +9444,7 @@
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2A2EE91C2CF0CF550019FC31 /* RootViewModelFactory+makeStandard.swift */,
 				2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */,
+				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2A3B4F622CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift */,
 			);
 			path = Payments;
@@ -11364,6 +11367,7 @@
 				2A72ACB92CC67FD500B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift */,
 				2AF59F392C93F8ED003556B1 /* RootViewModelFactory+servicePaymentOperatorServiceTests.swift */,
 				2A3B4F5C2CF3103400076F05 /* RootViewModelFactory+getQRNavigationTests.swift */,
+				2AC04E582CF4F7E000AF331D /* getSberQRData_fix_sum.json */,
 				2A3B4F5E2CF31B0D00076F05 /* RootViewModelFactory+makePaymentsNodeTests.swift */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 			);
@@ -12651,7 +12655,6 @@
 			isa = PBXGroup;
 			children = (
 				2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */,
-				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
@@ -20557,6 +20560,7 @@
 				5A5ABFAD27AAF7DD00D548AA /* GetLatestMobilePayments.json in Resources */,
 				684192F02799C1D500B4E184 /* CreateIsOneTimeConsentMe2MePullResponseGeneric.json in Resources */,
 				684192E22799A15300B4E184 /* GetOwnerPhoneNumberResponseGeneric.json in Resources */,
+				2AC04E592CF4F7E000AF331D /* getSberQRData_fix_sum.json in Resources */,
 				0B11A77A291C3A8A00C9BDD0 /* QRMappingJSON.json in Resources */,
 				68E76535279702C6005860FE /* VerifyCodeResponseGeneric.json in Resources */,
 				5A5ABFA627AAF7DD00D548AA /* GetPaymentCountriesMin.json in Resources */,

@@ -63,26 +63,29 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulC2BSubscribeQRScan() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .c2bSubscribeURL(anyURL()),
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .c2bSubscribeURL(anyURL()))
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
         
-        expectC2BSubscribePaymentPresented(rootView)
+        expectPaymentPresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnSuccessfulC2BQRScan() throws {
+        
+        let (app, _,_, scanner) = makeSUT(scanResult: .c2bURL(anyURL()))
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectPaymentPresented(rootView)
     }
     
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanFailure() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .failure(anyQRCode()),
-            scanner: scanner
-        )
+        let (app, _,_, scanner) = makeSUT(scanResult: .failure(anyQRCode()))
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -93,10 +96,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnMissingINN() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.missingINN(anyQRCode())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.missingINN(anyQRCode()))
         )
         let rootView = try app.launch()
         
@@ -108,34 +109,149 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentProviderPickerOnMixed() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.mixed(makeMixedQRResult())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(scanResult: .mapped(.mixed(makeMixedQRResult()))
         )
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
-
+        
         expectProviderPickerPresented(rootView)
     }
     
     @available(iOS 16.0, *)
     func test_shouldPresentOperatorSearchOnMultiple() throws {
         
-        let scanner = QRScannerViewModelSpy()
-        let app = TestApp(
-            scanResult: .mapped(.multiple(makeMultipleQRResult())),
-            scanner: scanner
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.multiple(makeMultipleQRResult()))
         )
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
-
+        
         expectOperatorSearchPresented(rootView)
     }
     
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnQRScanNoneMapped() throws {
+        
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.none(makeQR()))
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectPaymentPresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentProviderServicePickerOnQRScanProvider() throws {
+        
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.provider(makeProviderPayload()))
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectProviderServicePickerPresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentOperatorViewOnQRScanSingle() throws {
+        
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.single(makeSinglePayload()))
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectOperatorViewPresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentPaymentOnSuccessfulSourceQRScan() throws {
+        
+        let (app, _,_, scanner) = makeSUT(
+            scanResult: .mapped(.source(.avtodor))
+        )
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectPaymentPresented(rootView)
+    }
+    
+    // TODO: - sberQR
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentQRFailureOnQRScanURL() throws {
+        
+        let (app, _,_, scanner) = makeSUT(scanResult: .url(anyURL()))
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectQRFailurePresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentQRFailureOnQRScanUnknown() throws {
+        
+        let (app, _,_, scanner) = makeSUT(scanResult: .unknown)
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        
+        expectQRFailurePresented(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentSberQROnQRScanSberQR() throws {
+        
+        let (app, httpClient, model, scanner) = makeSUT(
+            scanResult: .sberQR(anyURL())
+        )
+        model.addSberProduct()
+        let rootView = try app.launch()
+        
+        scanSuccessfully(rootView, scanner)
+        wait(timeout: 0.1)
+        
+        XCTAssertNoDiff(
+            httpClient.requests.map(\.url?.lastPathComponent),
+            ["getBannerCatalogList", "getSberQRData"]
+        )
+        try httpClient.complete(with: getSberQRDataSuccessResponse(), at: 1)
+        
+        expectSberQRPresented(rootView)
+    }
+    
     // MARK: - Helpers
+    
+    private func makeSUT(
+        scanResult: QRModelResult = .unknown,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        app: TestApp,
+        httpClient: HTTPClientSpy,
+        model: Model,
+        scanner: QRScannerViewModelSpy
+    ) {
+        let httpClient = HTTPClientSpy()
+        let model: Model = .mockWithEmptyExcept()
+        let scanner = QRScannerViewModelSpy()
+        let app = TestApp(
+            httpClient: httpClient,
+            model: model,
+            scanResult: scanResult,
+            scanner: scanner
+        )
+        
+        return (app, httpClient, model, scanner)
+    }
     
     private func openQRWithFlowEvent(
         _ app: TestApp,
@@ -213,8 +329,13 @@ final class QRAcceptanceTests: AcceptanceTests {
         }
     }
     
+    private func getSberQRDataSuccessResponse() throws -> Data {
+        
+        try getJSON(from: "getSberQRData_fix_sum")
+    }
+    
     @available(iOS 16.0, *)
-    private func expectC2BSubscribePaymentPresented(
+    private func expectPaymentPresented(
         _ rootView: RootViewBinderView,
         timeout: TimeInterval = 1,
         file: StaticString = #file,
@@ -270,6 +391,51 @@ final class QRAcceptanceTests: AcceptanceTests {
             file: file, line: line
         ) {
             XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .operatorSearch), "Expected Root View FullScreenCover Destination with QR Failure.", file: file, line: line)
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectProviderServicePickerPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .providerServicePicker), "Expected Root View FullScreenCover Destination with ProviderServicePicker.", file: file, line: line)
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectOperatorViewPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .operatorView), "Expected Root View FullScreenCover Destination with OperatorView.", file: file, line: line)
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    private func expectSberQRPresented(
+        _ rootView: RootViewBinderView,
+        timeout: TimeInterval = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        wait(
+            timeout: timeout,
+            file: file, line: line
+        ) {
+            XCTAssertNoThrow(try rootView.rootViewQRScannerDestination(for: .sberQRConfirm), "Expected Root View FullScreenCover Destination with SberQRConfirm.", file: file, line: line)
         }
     }
     
@@ -336,7 +502,7 @@ private extension RootViewBinderView {
         try rootViewQRScannerDestination()
             .find(viewWithAccessibilityIdentifier: id.rawValue)
     }
-        
+    
     func mainViewQRScannerFullScreenCover(
     ) throws -> InspectableView<ViewType.ClassifiedView> {
         

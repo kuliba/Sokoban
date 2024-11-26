@@ -11,11 +11,19 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeAnywayServicePickerFlowModel(
+        payload: PaymentProviderServicePickerPayload
+    ) -> AnywayServicePickerFlowModel {
+        
+        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
+        
+        return servicePickerComposer.compose(payload: payload)
+    }
+    
+    @inlinable
+    func makeAnywayServicePickerFlowModel(
         payload: PaymentProviderServicePickerPayload,
         completion: @escaping (AnywayServicePickerFlowModel) -> Void
     ) {
-        let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
-        
-        completion(servicePickerComposer.compose(payload: payload))
+        completion(makeAnywayServicePickerFlowModel(payload: payload))
     }
 }
