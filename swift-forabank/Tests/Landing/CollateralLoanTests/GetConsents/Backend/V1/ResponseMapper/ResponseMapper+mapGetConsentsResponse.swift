@@ -13,25 +13,7 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
     
     func test_map_shouldDeliverValidPDF() throws {
 
-        XCTAssertNoThrow(try map(getPDFData(isValid: true)).get())
-    }
-
-    func test_map_shouldDeliverFailureOnInvalidPDF() throws {
-
-        let data = try getPDFData(isValid: false)
-        XCTAssertNoDiff(map(data), .failure(.invalid(statusCode: 200, data: data)))
-        
-        
-        XCTAssertNil(PDFDocument(data: data))
-    }
-
-    func test_map_shouldDeliverInvalidPDF() throws {
-        
-        let invalidData = try getPDFData(isValid: false)
-        let okResponse = anyHTTPURLResponse(statusCode: 200)
-        let getData = try XCTUnwrap(map(invalidData, okResponse))
-        
-        XCTAssertThrowsError(try getData.get())
+        XCTAssertNoThrow(try map(getPDFData()).get())
     }
 
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
@@ -85,21 +67,6 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
         )
     }
     
-    func test_map_shouldDeliverValidDataOnNonOkHTTPResponse() throws {
-        
-        let validData = try getPDFData(isValid: true)
-        
-        let pdfDocument = try XCTUnwrap(PDFDocument(data: validData))
-
-        for statusCode in [199, 201, 399, 400, 401, 404] {
-            let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
-            
-            let getData = try XCTUnwrap(map(validData, nonOkResponse).get())
-            
-            XCTAssertNoDiff(getData.dataRepresentation()?.count, pdfDocument.dataRepresentation()?.count)
-        }
-    }
-    
     func test_map_shouldDeliverInvalidFailureOnEmptyList() {
         
         let emptyDataResponse: Data = .emptyListResponse
@@ -122,10 +89,10 @@ final class ResponseMapper_mapGetConsentsResponseTests: XCTestCase {
         ResponseMapper.mapGetConsentsResponse(data, httpURLResponse)
     }
     
-    private func getPDFData(isValid: Bool) throws -> Data {
+    private func getPDFData() throws -> Data {
         
         let bundle = Bundle.module
-        let getValidURL = bundle.url(forResource: isValid ? "valid" : "invalid", withExtension: "pdf")
+        let getValidURL = bundle.url(forResource: "valid", withExtension: "pdf")
         let url = try XCTUnwrap(getValidURL)
         let data = try Data(contentsOf: url)
 

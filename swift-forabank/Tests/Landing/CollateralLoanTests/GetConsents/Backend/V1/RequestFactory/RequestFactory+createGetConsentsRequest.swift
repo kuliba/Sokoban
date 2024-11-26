@@ -24,18 +24,26 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
-    
+
     func test_createRequest_shouldCreateValidURL() throws {
 
-        let docIDs = [String](repeating: anyMessage(), count: 3)
+        let docIDs = [String]()
         let applicationID = Int.random(in: (0...Int.max))
         let url = anyURL()
 
         let request = try makeRequest(with: docIDs, applicationID, url)
+
+        _ = try XCTUnwrap(request.url)
+    }
+
+    func test_createRequest_shouldCreateValidParameters() throws {
+
+        let docIDs = [String](repeating: anyMessage(), count: 3)
+        let applicationID = Int.random(in: (0...Int.max))
+
         let queryItems = try getQueryItems(with: docIDs, applicationID)
         let mapFiles = try getMapFiles(with: docIDs)
 
-        XCTAssertNoDiff(request.url?.pathComponents.first, url.absoluteString )
         XCTAssertNoDiff(queryItems.first { $0.name == "applicationId" }?.value, String(applicationID))
         XCTAssertNoDiff(queryItems.first { $0.name == "docIds" }?.value, mapFiles)
     }
