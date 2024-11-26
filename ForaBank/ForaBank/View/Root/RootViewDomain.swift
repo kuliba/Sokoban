@@ -12,7 +12,13 @@ typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelA
 enum RootViewSelect: Equatable {
     
     case scanQR
+    case tab(Tab)
     case templates
+    
+    enum Tab: Equatable {
+        
+        case main, payments
+    }
 }
 
 enum RootViewNavigation {

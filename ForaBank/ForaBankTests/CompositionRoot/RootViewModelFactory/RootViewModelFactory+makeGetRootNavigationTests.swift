@@ -48,6 +48,78 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         expect(.templates, toDeliver: .templates)
     }
     
+    func test_templates_shouldNotifyWithDismissOnDismissAction() {
+        
+        let sut = makeSUT().sut
+        let notifySpy = NotifySpy(stubs: [()])
+        let getNavigation = sut.makeGetRootNavigation()
+        let exp = expectation(description: "wait for completion")
+        
+        getNavigation(.templates, notifySpy.call) {
+            
+            switch $0 {
+            case let .templates(node):
+                node.model.state.content.dismissAction()
+                
+            default:
+                XCTFail("Expected Templates, got \($0) instead.")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(notifySpy.payloads, [.dismiss])
+    }
+    
+    func test_templates_shouldNotifyWithMainTabOnMainTabStatus() {
+        
+        let sut = makeSUT().sut
+        let notifySpy = NotifySpy(stubs: [()])
+        let getNavigation = sut.makeGetRootNavigation()
+        let exp = expectation(description: "wait for completion")
+        
+        getNavigation(.templates, notifySpy.call) {
+            
+            switch $0 {
+            case let .templates(node):
+                node.model.event(.flow(.init(status: .tab(.main))))
+                
+            default:
+                XCTFail("Expected Templates, got \($0) instead.")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(notifySpy.payloads, [.select(.tab(.main))])
+    }
+    
+    func test_templates_shouldNotifyWithPaymentsTabOnPaymentsTabStatus() {
+        
+        let sut = makeSUT().sut
+        let notifySpy = NotifySpy(stubs: [()])
+        let getNavigation = sut.makeGetRootNavigation()
+        let exp = expectation(description: "wait for completion")
+        
+        getNavigation(.templates, notifySpy.call) {
+            
+            switch $0 {
+            case let .templates(node):
+                node.model.event(.flow(.init(status: .tab(.payments))))
+                
+            default:
+                XCTFail("Expected Templates, got \($0) instead.")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(notifySpy.payloads, [.select(.tab(.payments))])
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifyEvent = RootViewDomain.FlowDomain.NotifyEvent

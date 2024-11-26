@@ -26,6 +26,9 @@ extension RootViewModelFactory {
                     cancellable: cancellable
                 )))
                 
+            case let .tab(tab):
+                break
+                
             case .templates:
                 let templates = makeMakeTemplates(
                     closeAction: { notify(.dismiss) }
@@ -74,5 +77,32 @@ extension RootViewModelFactory {
         // handleTemplatesOutsideFlowState
         // MainViewModel.handleTemplatesFlowState(_:)
         []
+        
+        let outside = templates.$state.sink {
+            
+            $0.notifyEvent.map(notify)
+        }
+        
+        return [outside]
+    }
+}
+
+private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
+    
+    var notifyEvent: RootViewDomain.FlowDomain.NotifyEvent? {
+        
+        switch outside {
+        case .none:
+            return nil
+            
+        case let .productID(productID):
+            return nil
+            
+        case let .tab(tab):
+            switch tab {
+            case .main:     return .select(.tab(.main))
+            case .payments: return .select(.tab(.payments))
+            }
+        }
     }
 }
