@@ -13,7 +13,7 @@ import XCTest
 
 class AuthLoginViewModelTests: XCTestCase {
     
-    typealias CheckClientInformAlerts = PassthroughSubject<ClientInformAlerts, Never>
+    typealias ClientInformAlertsSubject = PassthroughSubject<ClientInformAlerts, Never>
     typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
     typealias CatalogProducts = PassthroughSubject<([CatalogProductData]), Never>
     typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>
@@ -217,6 +217,7 @@ extension AuthLoginViewModel {
     
     // MARK: - Publishers
     var clientInformAlertPublisher: AnyPublisher<ClientInformAlerts, Never> {
+        
         $clientInformAlerts
             .compactMap { $0 }
             .eraseToAnyPublisher()

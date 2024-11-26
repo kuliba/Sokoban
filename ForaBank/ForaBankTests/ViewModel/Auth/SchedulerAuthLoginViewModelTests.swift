@@ -521,7 +521,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
     ) -> (
         sut: AuthLoginViewModel,
         scheduler: TestSchedulerOfDispatchQueue,
-        clientInformMessage: CheckClientInformAlerts,
+        clientInformMessage: ClientInformAlertsSubject,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -529,7 +529,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformMessage = CheckClientInformAlerts()
+        let clientInformMessage = ClientInformAlertsSubject()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()

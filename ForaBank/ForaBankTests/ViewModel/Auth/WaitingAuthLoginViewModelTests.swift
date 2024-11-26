@@ -519,7 +519,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         line: UInt = #line
     ) -> (
         sut: AuthLoginViewModel,
-        clientInformMessage: CheckClientInformAlerts,
+        clientInformMessage: ClientInformAlertsSubject,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -527,7 +527,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformAlerts = CheckClientInformAlerts()
+        let clientInformAlerts = ClientInformAlertsSubject()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
