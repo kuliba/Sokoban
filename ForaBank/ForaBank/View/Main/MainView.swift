@@ -403,7 +403,7 @@ private extension MainView {
         _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        viewFactory.components.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
+        viewFactory.components.makeSegmentedPaymentProviderPickerView(flowModel)
             .navigationBarWithBack(
                 title: PaymentsTransfersSectionType.payments.name,
                 dismiss: viewModel.dismissPaymentProviderPicker,

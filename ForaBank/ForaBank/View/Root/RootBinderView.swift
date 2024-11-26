@@ -68,6 +68,8 @@ struct RootWrapperView: View {
 
 private extension RootWrapperView {
     
+    // MARK: - Destination
+    
     @ViewBuilder
     func destinationContent(
         destination: RootViewNavigation.Destination
@@ -86,6 +88,8 @@ private extension RootWrapperView {
         viewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
+    
+    // MARK: - FullScreenCover
     
     @ViewBuilder
     func fullScreenCoverContent(
@@ -123,7 +127,7 @@ extension RootViewFactory {
             binder: binder,
             factory: .init(
                 makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
-                makeComposedSegmentedPaymentProviderPickerFlowView: components.makeComposedSegmentedPaymentProviderPickerFlowView,
+                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView,
                 makePaymentsView: components.makePaymentsView,
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
