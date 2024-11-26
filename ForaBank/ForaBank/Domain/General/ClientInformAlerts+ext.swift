@@ -41,8 +41,8 @@ extension ClientInformAlerts {
 
             if let updateAlert {
                 
-//                 Restore with different ID
                 self.updateAlert = .init(
+                    id: .init(), // Restore with different ID
                     title: updateAlert.title,
                     text: updateAlert.text,
                     link: updateAlert.link,
@@ -60,6 +60,7 @@ extension ClientInformAlerts {
     mutating func showAgain(requiredAlert: UpdateAlert) {
        
         updateAlert = .init(
+            id: .init(), // Restore with different ID
             title: requiredAlert.title,
             text: requiredAlert.text,
             link: requiredAlert.link,

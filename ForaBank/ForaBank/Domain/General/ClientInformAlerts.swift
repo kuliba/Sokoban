@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ClientInformAlerts {
+struct ClientInformAlerts: Equatable {
     
     let id: UUID
 
@@ -19,9 +19,9 @@ struct ClientInformAlerts {
         informAlerts.first?.alert ?? updateAlert?.alert
     }
     
-    struct UpdateAlert: Identifiable {
+    struct UpdateAlert: Equatable, Identifiable {
         
-        let id = UUID()
+        let id: UUID
         let title: String
         let text: String
         let link: String?
@@ -33,9 +33,9 @@ struct ClientInformAlerts {
         }
     }
     
-    struct InformAlert: Identifiable {
+    struct InformAlert: Equatable, Identifiable {
         
-        let id = UUID()
+        let id: UUID
         let title: String
         let text: String
         

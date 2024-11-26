@@ -480,6 +480,7 @@ extension RootViewModelFactory {
                             
                             alerts.informAlerts.append(
                                 .init(
+                                    id: .init(),
                                     title: $0.title,
                                     text: $0.text
                                 )
@@ -503,6 +504,7 @@ extension RootViewModelFactory {
                         }
                         
                         alerts.updateAlert = .init(
+                            id: .init(), 
                             title: alert.title,
                             text: alert.text,
                             link: alert.update?.link,

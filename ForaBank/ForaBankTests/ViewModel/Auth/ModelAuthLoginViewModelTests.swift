@@ -992,7 +992,7 @@ private extension AuthLoginViewModel {
         informText: String = anyMessage()
     ) -> ClientInformAlerts.InformAlert {
         
-        .init(title: informTitle, text: informText)
+        .init(id: .init(), title: informTitle, text: informText)
     }
 
     func makeUpdateAlertItem(
@@ -1003,6 +1003,7 @@ private extension AuthLoginViewModel {
     )  -> ClientInformAlerts.UpdateAlert {
         
         .init(
+            id: .init(), 
             title: updateTitle,
             text: updateText,
             link: updateLink,
