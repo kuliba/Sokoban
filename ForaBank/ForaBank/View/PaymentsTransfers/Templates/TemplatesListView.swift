@@ -20,22 +20,30 @@ struct TemplatesListViewFactory {
 struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
+    
     let viewFactory: TemplatesListViewFactory
+    
+    @State private var height: CGFloat = .zero
     
     private let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
     
     var body: some View {
         
-        mainVStack()
-            .ignoresSafeArea(.container, edges: .bottom)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar(content: toolbar)
-            .modal(
-                modal: viewModel.route.modal,
-                dismiss: { viewModel.route.modal = nil },
-                bottomSheetContent: bottomSheetContent
-            )
+        GeometryReader { geo in
+            
+            mainVStack()
+                .ignoresSafeArea(.container, edges: .bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .toolbar(content: toolbar)
+                .modal(
+                    modal: viewModel.route.modal,
+                    dismiss: { viewModel.route.modal = nil },
+                    bottomSheetContent: bottomSheetContent
+                )
+                .onAppear { height = geo.size.height }
+                .onChange(of: geo.size.height) { height = $0 }
+        }
     }
 }
  
@@ -259,7 +267,7 @@ private extension TemplatesListView {
             
         case let .productList(productListViewModel):
             
-            ProductListView(viewModel: productListViewModel)
+            ProductListView(viewModel: productListViewModel, parentHeight: height)
         }
     }
 }
@@ -321,7 +329,13 @@ extension TemplatesListView {
     struct ProductListView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.ProductListViewModel
-        @Environment(\.mainViewSize) var mainViewSize
+        
+        let parentHeight: CGFloat
+        
+        private var height: CGFloat {
+            
+            max(0, min(viewModel.containerHeight, parentHeight - 70))
+        }
         
         var body: some View {
             
@@ -349,7 +363,7 @@ extension TemplatesListView {
                         }
                     }
                 }
-                .frame(height: max(0, min(viewModel.containerHeight, mainViewSize.height - 70)))
+                .frame(height: height)
             } //VStack section
             .padding(.bottom, 16)
         }
@@ -591,7 +605,7 @@ struct TemplatesListView_Previews: PreviewProvider {
         Group {
             
             TemplatesListView
-                .ProductListView(viewModel: .init(sections: [.sample2]))
+                .ProductListView(viewModel: .init(sections: [.sample2]), parentHeight: 500)
                 .previewDisplayName("Product List View")
             
             TemplatesListView
