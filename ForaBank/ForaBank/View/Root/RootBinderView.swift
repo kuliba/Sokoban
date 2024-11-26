@@ -127,12 +127,13 @@ extension RootViewFactory {
             binder: binder,
             factory: .init(
                 makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
-                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView,
+                makeOperatorView: InternetTVDetailsView.init,
                 makePaymentsView: components.makePaymentsView,
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
                 makeQRView: components.makeQRView,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView
             )
         )
     }
