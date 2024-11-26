@@ -27,11 +27,7 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
 
     func test_createRequest_shouldCreateValidURL() throws {
 
-        let docIDs = [String]()
-        let applicationID = Int.random(in: (0...Int.max))
-        let url = anyURL()
-
-        let request = try makeRequest(with: docIDs, applicationID, url)
+        let request = try makeRequest(with: .init(), .random(in: 0..<Int.max))
 
         _ = try XCTUnwrap(request.url)
     }
