@@ -42,7 +42,7 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     
     func test_templates_shouldNotifyWithMainTabOnMainTabStatus() {
         
-        expect(.templates, toNotifyWith: [.select(.tab(.main))]) {
+        expect(.templates, toNotifyWith: [.select(.outside(.tab(.main)))]) {
             
             $0.templates?.event(.flow(.init(status: .tab(.main))))
         }
@@ -50,8 +50,10 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     
     func test_templates_shouldNotifyWithPaymentsTabOnPaymentsTabStatus() {
         
-        expect(.templates, toNotifyWith: [.select(.tab(.payments))]) {
-            
+        expect(
+            .templates,
+            toNotifyWith: [.select(.outside(.tab(.payments)))]
+        ) {
             $0.templates?.event(.flow(.init(status: .tab(.payments))))
         }
     }
@@ -60,8 +62,10 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         
         let productID = makeProductID()
         
-        expect(.templates, toNotifyWith: [.select(.productProfile(productID))]) {
-            
+        expect(
+            .templates,
+            toNotifyWith: [.select(.outside(.productProfile(productID)))]
+        ) {
             $0.templates?.event(.select(.productID(productID)))
         }
     }
@@ -81,13 +85,20 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .scanQR:    return .scanQR
-        case .templates: return .templates
+        case let .outside(outside):
+            return .outside(outside)
+            
+        case .scanQR:
+            return .scanQR
+            
+        case .templates:
+            return .templates
         }
     }
     
-    private enum EquatableNavigation {
+    private enum EquatableNavigation: Equatable {
         
+        case outside(RootViewOutside)
         case scanQR
         case templates
     }

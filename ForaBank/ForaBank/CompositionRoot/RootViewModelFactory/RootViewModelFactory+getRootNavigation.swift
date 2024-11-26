@@ -16,8 +16,8 @@ extension RootViewModelFactory {
         completion: @escaping (RootViewNavigation) -> Void
     ) {
         switch select {
-        case let .productProfile(productID):
-            break
+        case let .outside(outside):
+            completion(.outside(outside))
             
         case .scanQR:
             let qrScanner = makeQRScannerBinder()
@@ -27,9 +27,6 @@ extension RootViewModelFactory {
                 model: qrScanner,
                 cancellable: cancellable
             )))
-            
-        case let .tab(tab):
-            break
             
         case .templates:
             let templates = makeMakeTemplates(
@@ -101,15 +98,15 @@ private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel
             return nil
             
         case let .productID(productID):
-            return .select(.productProfile(productID))
+            return .select(.outside(.productProfile(productID)))
             
         case let .tab(tab):
             switch tab {
             case .main:
-                return .select(.tab(.main))
+                return .select(.outside(.tab(.main)))
                 
             case .payments:
-                return .select(.tab(.payments))
+                return .select(.outside(.tab(.payments)))
             }
         }
     }

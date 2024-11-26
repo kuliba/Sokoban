@@ -17,10 +17,16 @@ extension RootViewDomain {
 
 enum RootViewSelect: Equatable {
     
-    case productProfile(ProductData.ID)
+    case outside(RootViewOutside)
     case scanQR
-    case tab(Tab)
     case templates
+}
+
+
+enum RootViewOutside: Equatable {
+    
+    case productProfile(ProductData.ID)
+    case tab(Tab)
     
     enum Tab: Equatable {
         
@@ -30,6 +36,7 @@ enum RootViewSelect: Equatable {
 
 enum RootViewNavigation {
     
+    case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
     case templates(TemplatesNode)
     
