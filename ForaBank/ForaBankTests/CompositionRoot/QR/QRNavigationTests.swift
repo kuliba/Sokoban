@@ -80,13 +80,13 @@ class QRNavigationTests: XCTestCase {
         return (makeMixedOperators(), makeQR(), makeQRMapping())
     }
     
-    func makeMixed() -> MixedQRResult {
+    func makeMixedQRResult() -> MixedQRResult {
         
         let (mixed, qrCode, qrMapping) = makeMixed()
         
         return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
     }
-
+    
     func makeMixedOperators(
         _ first: SegmentedOperatorProvider? = nil,
         _ second: SegmentedOperatorProvider? = nil,
@@ -118,6 +118,11 @@ class QRNavigationTests: XCTestCase {
     ) -> MultiElementArray<SegmentedOperatorData> {
         
         return .init(first ?? makeSegmentedOperatorData(), second ?? makeSegmentedOperatorData(), tail)
+    }
+    
+    func makeMultipleQRResult() -> MultipleQRResult {
+        
+        return .init(operators: makeMultipleOperators(), qrCode: anyQRCode(), qrMapping: makeQRMapping())
     }
     
     func makeOperatorGroupDataOperatorData(
@@ -177,6 +182,24 @@ class QRNavigationTests: XCTestCase {
     ) -> QRMapping {
         
         return .init(parameters: parameters, operators: operators)
+    }
+    
+    func makeProviderPayload(
+        provider: SegmentedOperator<UtilityPaymentProvider, String>? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> ProviderPayload {
+        
+        return .init(provider: provider ?? makeSegmentedProvider(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
+    }
+    
+    func makeSinglePayload(
+        operator: SegmentedOperator<OperatorGroupData.OperatorData, String>? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> SinglePayload {
+        
+        return .init(operator: `operator` ?? makeSegmentedOperatorData(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
     }
     
     func makeSberQRConfirmPaymentState(

@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SberQR
 import SwiftUI
 
 struct QRWrapperView: View {
@@ -30,13 +31,21 @@ struct QRWrapperView: View {
 
 struct QRWrapperViewFactory {
     
-    let makeQRView: MakeQRView
-    let makeQRFailedWrapperView: MakeQRFailedWrapperView
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+    let makeOperatorView: MakeOperatorView
     let makePaymentsView: MakePaymentsView
-    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makeQRFailedWrapperView: MakeQRFailedWrapperView
+    let makeQRSearchOperatorView: MakeQRSearchOperatorView
+    let makeQRView: MakeQRView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+    let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
+    
+    typealias MakeOperatorView = (InternetTVDetailsViewModel) -> InternetTVDetailsView
 }
 
 private extension QRWrapperView {
+    
+    #warning("add alert for sberQR failure case")
     
     typealias Destination = QRScannerDomain.Navigation.Destination
     
@@ -50,12 +59,29 @@ private extension QRWrapperView {
             factory.makeQRFailedWrapperView(qrFailedViewModel)
                 .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
             
+        case let .operatorSearch(search):
+            factory.makeQRSearchOperatorView(search)
+                .accessibilityIdentifier(ElementIDs.operatorSearch.rawValue)
+            
+        case let .operatorView(viewModel):
+            factory.makeOperatorView(viewModel)
+                .accessibilityIdentifier(ElementIDs.operatorView.rawValue)
+            
         case let .payments(payments):
             factory.makePaymentsView(payments)
                 .accessibilityIdentifier(ElementIDs.payments.rawValue)
             
         case let .providerPicker(picker):
-            factory.makeComposedSegmentedPaymentProviderPickerFlowView(picker)
+            factory.makeSegmentedPaymentProviderPickerView(picker)
+                .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
+            
+        case let .providerServicePicker(picker):
+            factory.makeAnywayServicePickerFlowView(picker)
+                .accessibilityIdentifier(ElementIDs.providerServicePicker.rawValue)
+            
+        case let .sberQR(sberQRConfirm):
+            factory.makeSberQRConfirmPaymentView(sberQRConfirm)
+                .accessibilityIdentifier(ElementIDs.sberQRConfirm.rawValue)
         }
     }
 }
@@ -68,6 +94,12 @@ extension QRScannerDomain.Navigation {
         case let .failure(qrFailedViewModel):
             return .failure(qrFailedViewModel)
             
+        case let .operatorSearch(operatorSearch):
+            return .operatorSearch(operatorSearch)
+            
+        case let .operatorView(operatorView):
+            return .operatorView(operatorView)
+            
         case .outside:
             return nil
             
@@ -76,14 +108,27 @@ extension QRScannerDomain.Navigation {
             
         case let .providerPicker(node):
             return .providerPicker(node.model)
+            
+        case let .providerServicePicker(picker):
+            return .providerServicePicker(picker)
+            
+        case .sberQR(nil):
+            return nil
+            
+        case let .sberQR(.some(sberQRConfirm)):
+            return .sberQR(sberQRConfirm)
         }
     }
     
     enum Destination {
         
         case failure(QRFailedViewModelWrapper)
+        case operatorSearch(QRSearchOperatorViewModel)
+        case operatorView(InternetTVDetailsViewModel)
         case payments(PaymentsViewModel)
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
+        case providerServicePicker(AnywayServicePickerFlowModel)
+        case sberQR(SberQRConfirmPaymentViewModel)
     }
 }
 
@@ -95,18 +140,34 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case let .failure(failure):
             return .failure(.init(failure))
             
+        case let .operatorSearch(search):
+            return .operatorSearch(.init(search))
+            
+        case .operatorView:
+            return .operatorView
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
         case let .providerPicker(picker):
             return .providerPicker(.init(picker))
+            
+        case let .providerServicePicker(picker):
+            return .providerServicePicker(.init(picker))
+            
+        case let .sberQR(sberQRConfirm):
+            return .sberQR(.init(sberQRConfirm))
         }
     }
     
     enum ID: Hashable {
         
         case failure(ObjectIdentifier)
+        case operatorSearch(ObjectIdentifier)
+        case operatorView
         case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
+        case providerServicePicker(ObjectIdentifier)
+        case sberQR(ObjectIdentifier)
     }
 }

@@ -18,12 +18,24 @@ extension RootViewModelFactory {
         let mapper = composer.compose()
         
         return .init(
-            mapScanResult: mapper.mapScanResult(_:_:),
+            mapScanResult: mapScanResult(result:completion:),
             makeQRScanner: makeQRScanner,
             scheduler: schedulers.main
         )
     }
     
+    @inlinable
+    func mapScanResult(
+        result: QRViewModel.ScanResult,
+        completion: @escaping (QRModelResult) -> Void
+    ) {
+        schedulers.interactive.schedule { [weak self] in
+            
+            self?.mapScanResult(result, completion)
+        }
+    }
+    
+    @inlinable
     func makeQRScanner(
         closeAction: @escaping () -> Void
     ) -> QRScanner {

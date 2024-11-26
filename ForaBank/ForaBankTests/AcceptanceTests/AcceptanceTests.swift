@@ -9,7 +9,7 @@
 import PayHubUI
 import XCTest
 
-class AcceptanceTests: XCTestCase {
+class AcceptanceTests: QRNavigationTests {
     
     func activePaymentsTransfersFlag() -> FeatureFlags {
         
@@ -42,13 +42,17 @@ class AcceptanceTests: XCTestCase {
         
         init(
             featureFlags: FeatureFlags = .active,
+            httpClient: any HTTPClient = HTTPClientSpy(),
             dismiss: @escaping () -> Void = {},
-            resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
+            model: Model = .mockWithEmptyExcept(),
+            scanResult: QRModelResult = .unknown,
             scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
             schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
-                resolveQR: resolveQR,
+                httpClient: httpClient,
+                mapScanResult: { _, completion in completion(scanResult) },
+                model: model,
                 scanner: scanner,
                 schedulers: schedulers
             )
@@ -61,7 +65,7 @@ class AcceptanceTests: XCTestCase {
             )
         }
         
-        func launch() throws -> RootViewBinderView {
+        func launch() throws -> RootBinderView {
             
             let rootViewController = RootViewHostingViewController(
                 with: binder,

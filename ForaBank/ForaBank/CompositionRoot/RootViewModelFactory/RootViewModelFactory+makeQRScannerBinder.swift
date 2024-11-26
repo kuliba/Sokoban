@@ -7,7 +7,9 @@
 
 import Combine
 import Foundation
+import PayHub
 import PayHubUI
+import SberQR
 
 extension RootViewModelFactory {
     
@@ -26,14 +28,18 @@ extension RootViewModelFactory {
         notify: @escaping QRScannerDomain.Notify,
         completion: @escaping (QRScannerDomain.Navigation) -> Void
     ) {
-        // TODO: - replace using QRBinderGetNavigationComposer
-        
         switch select {
         case let .outside(outside):
             completion(.outside(outside))
             
         case let .qrResult(qrResult):
             getQRNavigation(qrResult, notify, completion)
+            
+        case .sberQR(nil):
+            completion(.sberQR(nil))
+            
+        case let .sberQR(response):
+            #warning("FIXME")
         }
     }
     
@@ -56,8 +62,14 @@ extension RootViewModelFactory {
         case let .mapped(mapped):
             getQRNavigation(mapped, notify, completion)
             
-        default:
-            break
+        case let .sberQR(url):
+            makeSberQRConfirmPaymentViewModel(url: url, pay: pay(url)) {
+                
+                completion(.sberQR($0))
+            }
+            
+        case .url, .unknown:
+            completion(.failure(makeQRFailure(qrCode: nil)))
         }
         
         func payments(
@@ -68,6 +80,13 @@ extension RootViewModelFactory {
                 payload: payload,
                 notify: { notify($0.notifyEvent) }
             ))
+        }
+        
+        func pay(
+            _ url: URL
+        ) -> (SberQRConfirmPaymentState) -> Void {
+           
+            decoratedSberQRPay(url) { notify(.select(.sberQR($0))) }
         }
     }
     
@@ -84,8 +103,68 @@ extension RootViewModelFactory {
         case let .mixed(mixed):
             completion(providerPicker(mixed))
             
-        default:
-            break
+        case let .multiple(multiple):
+            completion(operatorSearch(multiple))
+            
+        case let .none(qrCode):
+            completion(payments(payload: .source(.requisites(qrCode: qrCode))))
+            
+        case let .provider(payload):
+            completion(providerServicePicker(payload))
+            
+        case let .single(single):
+            completion(operatorView(single))
+            
+        case let .source(source):
+            completion(payments(payload: .source(source)))
+        }
+        
+        func operatorSearch(
+            _ multiple: MultipleQRResult
+        ) -> QRScannerDomain.Navigation {
+            
+            let operatorSearch = makeOperatorSearch(
+                multiple: multiple,
+                notify: {
+                    
+                    switch $0 {
+                    case .addCompany:
+                        notify(.select(.outside(.chat)))
+                        
+                    case .detailPayment:
+#warning("FIXME")
+                        break // notify(.select(???))
+                        
+                    case .dismiss:
+                        notify(.dismiss)
+                    }
+                }
+            )
+            
+            return .operatorSearch(operatorSearch)
+        }
+        
+        func operatorView(
+            _ single: SinglePayload
+        ) -> QRScannerDomain.Navigation {
+            
+            let viewModel = InternetTVDetailsViewModel(
+                model: model,
+                qrCode: single.qrCode,
+                mapping: single.qrMapping
+            )
+            
+            return .operatorView(viewModel)
+        }
+        
+        func payments(
+            payload: PaymentsViewModel.Payload
+        ) -> QRScannerDomain.Navigation {
+            
+            return .payments(makePaymentsNode(
+                payload: payload,
+                notify: { notify($0.notifyEvent) }
+            ))
         }
         
         func providerPicker(
@@ -98,8 +177,17 @@ extension RootViewModelFactory {
                 qrMapping: mixed.qrMapping,
                 notify: { notify(.init($0)) }
             )
-
+            
             return .providerPicker(node)
+        }
+        
+        func providerServicePicker(
+            _ payload: ProviderPayload
+        ) -> QRScannerDomain.Navigation {
+            
+            let picker = makeAnywayServicePickerFlowModel(payload: payload)
+            
+            return .providerServicePicker(picker)
         }
     }
 }
@@ -150,8 +238,6 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
         }
     }
 }
-
-import PayHub
 
 private extension QRScannerDomain.NotifyEvent {
     

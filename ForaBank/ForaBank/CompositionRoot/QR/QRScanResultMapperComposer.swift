@@ -50,14 +50,9 @@ private extension QRScanResultMapperComposer {
         _ qrMapping: QRMapping,
         _ completion: @escaping (LoadResult) -> Void
     ) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            
-            guard let self else { return }
-            
-            let operators = nanoServices.loadOperators(qrCode, qrMapping)
-            let providers = nanoServices.loadProviders(qrCode, qrMapping)
-            
-            completion(.init(operators: operators, providers: providers))
-        }
+        let operators = nanoServices.loadOperators(qrCode, qrMapping)
+        let providers = nanoServices.loadProviders(qrCode, qrMapping)
+        
+        completion(.init(operators: operators, providers: providers))
     }
 }
