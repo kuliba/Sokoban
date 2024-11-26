@@ -13,6 +13,11 @@ enum ClientInformActionType: String {
     
     case required
     case optional
+    
+    init(updateType: String) {
+        
+        self = ClientInformActionType(rawValue: updateType) ?? .required
+    }
 }
 
 enum AlertType: Identifiable {
