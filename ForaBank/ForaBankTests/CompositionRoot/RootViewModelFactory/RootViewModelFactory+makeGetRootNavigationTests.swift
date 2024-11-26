@@ -19,26 +19,10 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     
     func test_scanQR_shouldNotifyWithDismissOnCancel() {
         
-        let sut = makeSUT().sut
-        let notifySpy = NotifySpy(stubs: [()])
-        let getNavigation = sut.makeGetRootNavigation()
-        let exp = expectation(description: "wait for completion")
-        
-        getNavigation(.scanQR, notifySpy.call) {
+        expect(.scanQR, toNotifyWith: [.dismiss]) {
             
-            switch $0 {
-            case let .scanQR(node):
-                node.model.content.event(.cancel)
-                
-            default:
-                XCTFail("Expected QRScanner, got \($0) instead.")
-            }
-            exp.fulfill()
+            $0.scanQR?.event(.cancel)
         }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertNoDiff(notifySpy.payloads, [.dismiss])
     }
     
     // MARK: - templates
@@ -50,74 +34,26 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     
     func test_templates_shouldNotifyWithDismissOnDismissAction() {
         
-        let sut = makeSUT().sut
-        let notifySpy = NotifySpy(stubs: [()])
-        let getNavigation = sut.makeGetRootNavigation()
-        let exp = expectation(description: "wait for completion")
-        
-        getNavigation(.templates, notifySpy.call) {
+        expect(.templates, toNotifyWith: [.dismiss]) {
             
-            switch $0 {
-            case let .templates(node):
-                node.model.state.content.dismissAction()
-                
-            default:
-                XCTFail("Expected Templates, got \($0) instead.")
-            }
-            exp.fulfill()
+            $0.templates?.state.content.dismissAction()
         }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertNoDiff(notifySpy.payloads, [.dismiss])
     }
     
     func test_templates_shouldNotifyWithMainTabOnMainTabStatus() {
         
-        let sut = makeSUT().sut
-        let notifySpy = NotifySpy(stubs: [()])
-        let getNavigation = sut.makeGetRootNavigation()
-        let exp = expectation(description: "wait for completion")
-        
-        getNavigation(.templates, notifySpy.call) {
+        expect(.templates, toNotifyWith: [.select(.tab(.main))]) {
             
-            switch $0 {
-            case let .templates(node):
-                node.model.event(.flow(.init(status: .tab(.main))))
-                
-            default:
-                XCTFail("Expected Templates, got \($0) instead.")
-            }
-            exp.fulfill()
+            $0.templates?.event(.flow(.init(status: .tab(.main))))
         }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertNoDiff(notifySpy.payloads, [.select(.tab(.main))])
     }
     
     func test_templates_shouldNotifyWithPaymentsTabOnPaymentsTabStatus() {
         
-        let sut = makeSUT().sut
-        let notifySpy = NotifySpy(stubs: [()])
-        let getNavigation = sut.makeGetRootNavigation()
-        let exp = expectation(description: "wait for completion")
-        
-        getNavigation(.templates, notifySpy.call) {
+        expect(.templates, toNotifyWith: [.select(.tab(.payments))]) {
             
-            switch $0 {
-            case let .templates(node):
-                node.model.event(.flow(.init(status: .tab(.payments))))
-                
-            default:
-                XCTFail("Expected Templates, got \($0) instead.")
-            }
-            exp.fulfill()
+            $0.templates?.event(.flow(.init(status: .tab(.payments))))
         }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertNoDiff(notifySpy.payloads, [.select(.tab(.payments))])
     }
     
     // MARK: - Helpers
@@ -159,25 +95,44 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         
         wait(for: [exp], timeout: 1.0)
     }
+    
+    private func expect(
+        _ select: RootViewSelect,
+        toNotifyWith expectedNotifyEvents: [NotifyEvent],
+        on assert: @escaping (RootViewNavigation) -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = makeSUT().sut
+        let notifySpy = NotifySpy(stubs: [()])
+        let getNavigation = sut.makeGetRootNavigation()
+        let exp = expectation(description: "wait for completion")
+        
+        getNavigation(select, notifySpy.call) {
+            
+            assert($0)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(notifySpy.payloads, expectedNotifyEvents, "Expected \(expectedNotifyEvents), but got \(notifySpy.payloads) instead.", file: file, line: line)
+    }
 }
 
 // MARK: - DSL
 
 extension RootViewNavigation {
     
-    func scanner(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) throws -> QRScanner {
+    var scanQR: QRScannerModel? {
         
-        switch self {
-        case let .scanQR(node):
-            let qrScanner = node.model.content.qrScanner
-            return try XCTUnwrap(qrScanner as? QRViewModel, "Expected QRScanner as QRViewModel.", file: file, line: line)
-            
-        default:
-            XCTFail("Expected QRScanner, but got \(self) instead.", file: file, line: line)
-            throw NSError(domain: "Expected QRScanner, but got \(self) instead.", code: -1)
-        }
+        guard case let .scanQR(node) = self else { return nil }
+        return node.model.content
+    }
+    
+    var templates: TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>? {
+        
+        guard case let .templates(node) = self else { return nil }
+        return node.model
     }
 }
