@@ -485,51 +485,31 @@ extension RootViewModelFactory {
                                 )
                             )
                         }
-                        
-                        if $0.authBlocking == true {
-                            
-                            alerts.updateAlert = .init(
-                                title: $0.title,
-                                text: $0.text,
-                                link: $0.update?.link,
-                                version: $0.update?.version,
-                                actionType: .required
-                            )
-                        }
-                        
-                        if $0.update?.type == "required" {
-                            
-                            alerts.updateAlert = .init(
-                                title: $0.title,
-                                text: $0.text,
-                                link: $0.update?.link,
-                                version: $0.update?.version,
-                                actionType: .required
-                            )
-                        }
-                        
-                        if $0.update?.type == "optional" {
-                            
-                            alerts.updateAlert = .init(
-                                title: $0.title,
-                                text: $0.text,
-                                link: $0.update?.link,
-                                version: $0.update?.version,
-                                actionType: .optional
-                            )
-                        }
-                        
-                        if $0.update?.type == "not_required" {
-                            
-                            alerts.updateAlert = .init(
-                                title: $0.title,
-                                text: $0.text,
-                                link: $0.update?.link,
-                                version: $0.update?.version,
-                                actionType: .optional
-                            )
-                        }
                     }
+                    
+                    
+                    if let alert = response.list.first(where: {
+                        $0.authBlocking == true || $0.update != nil
+                    }) {
+                        
+                        let actionType: ClientInformActionType
+                        
+                        if alert.authBlocking == true {
+                            actionType = .required
+                        } else {
+                            
+                            guard let typeString = alert.update?.type else { return }
+                            actionType = ClientInformActionType(updateType: typeString)
+                        }
+                        
+                        alerts.updateAlert = .init(
+                            title: alert.title,
+                            text: alert.text,
+                            link: alert.update?.link,
+                            version: alert.update?.version,
+                            actionType: actionType
+                        )}
+                    
                     
                     completion(alerts)
                 }
