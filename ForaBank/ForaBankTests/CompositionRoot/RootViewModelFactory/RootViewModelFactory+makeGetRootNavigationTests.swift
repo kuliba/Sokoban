@@ -99,11 +99,12 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         line: UInt = #line
     ) {
         let sut = makeSUT().sut
-        let getNavigation = sut.makeGetRootNavigation()
         let exp = expectation(description: "wait for completion")
         
-        getNavigation(select, { _ in }) {
-            
+        sut.getRootNavigation(
+            select: select,
+            notify: { _ in }
+        ) {
             XCTAssertNoDiff(self.equatable($0), expectedNavigation, "Expected \(expectedNavigation), got \($0) instead.", file: file, line: line)
             exp.fulfill()
         }
@@ -120,11 +121,12 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     ) {
         let sut = makeSUT().sut
         let notifySpy = NotifySpy(stubs: [()])
-        let getNavigation = sut.makeGetRootNavigation()
         let exp = expectation(description: "wait for completion")
         
-        getNavigation(select, notifySpy.call) {
-            
+        sut.getRootNavigation(
+            select: select,
+            notify: notifySpy.call
+        ) {
             assert($0)
             exp.fulfill()
         }

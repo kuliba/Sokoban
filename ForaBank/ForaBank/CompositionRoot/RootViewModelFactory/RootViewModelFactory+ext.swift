@@ -427,7 +427,6 @@ extension RootViewModelFactory {
         
         bindings.formUnion(marketBinder.bind())
         
-        let getRootNavigation = makeGetRootNavigation()
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active
         )

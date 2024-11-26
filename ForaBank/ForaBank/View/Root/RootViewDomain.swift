@@ -9,6 +9,12 @@ import PayHubUI
 
 typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelAction.DismissAll, RootViewSelect, RootViewNavigation>
 
+extension RootViewDomain {
+    
+    typealias Select = RootViewSelect
+    typealias Navigation = RootViewNavigation
+}
+
 enum RootViewSelect: Equatable {
     
     case productProfile(ProductData.ID)
