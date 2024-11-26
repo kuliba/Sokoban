@@ -608,6 +608,13 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingGetConsentsBackendTests",
+        "name" : "CollateralLoanLandingGetConsentsBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "SavingsServicesTests",
         "name" : "SavingsServicesTests"
       }
