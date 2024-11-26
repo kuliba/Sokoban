@@ -10,17 +10,18 @@ import Combine
 extension RootViewModelFactory {
     
     @inlinable
-    func makeGetRootNavigation(
-        makeQRScanner: @escaping () -> QRScannerDomain.Binder
-    ) -> RootViewDomain.GetNavigation {
+    func makeGetRootNavigation() -> RootViewDomain.GetNavigation {
         
         return { [weak self] select, notify, completion in
             
             guard let self else { return }
             
             switch select {
+            case let .productProfile(productID):
+                break
+                
             case .scanQR:
-                let qrScanner = makeQRScanner()
+                let qrScanner = makeQRScannerBinder()
                 let cancellable = bind(qrScanner.content, using: notify)
                 
                 completion(.scanQR(.init(
@@ -28,11 +29,15 @@ extension RootViewModelFactory {
                     cancellable: cancellable
                 )))
                 
+            case let .tab(tab):
+                break
+                
             case .templates:
-                let templates = makeMakeTemplates(closeAction: {
-                    notify(.dismiss)
-                })
+                let templates = makeMakeTemplates(
+                    closeAction: { notify(.dismiss) }
+                )
                 let cancellables = bind(templates, with: notify)
+                
                 completion(.templates(.init(
                     model: templates,
                     cancellables: cancellables
@@ -49,6 +54,7 @@ extension RootViewModelFactory {
         // PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer.swift:308
         return scanQR.$state
             .compactMap { $0 }
+            .delay(for: 0.1, scheduler: schedulers.main)
         // .debounce(for: 0.1, scheduler: scheduler)
             .sink {
                 
@@ -60,8 +66,7 @@ extension RootViewModelFactory {
                     // no need in inflight case - flow would flip it state isLoading to true on any select
                     break
                     
-                case let .qrResult(qrResult):
-                    // notify(.select(.qr(.result(qrResult))))
+                default:
                     break
                 }
             }
@@ -74,6 +79,40 @@ extension RootViewModelFactory {
         
         // handleTemplatesOutsideFlowState
         // MainViewModel.handleTemplatesFlowState(_:)
-        []
+        
+        // let share = ...
+        // let isLoading = templates.$state.flip() // see extension
+        
+        let outside = templates.$state.sink {
+            
+            $0.notifyEvent.map(notify)
+        }
+        
+        return [outside]
+    }
+}
+
+// MARK: - Adapters
+
+private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
+    
+    var notifyEvent: RootViewDomain.FlowDomain.NotifyEvent? {
+        
+        switch outside {
+        case .none:
+            return nil
+            
+        case let .productID(productID):
+            return .select(.productProfile(productID))
+            
+        case let .tab(tab):
+            switch tab {
+            case .main:
+                return .select(.tab(.main))
+                
+            case .payments:
+                return .select(.tab(.payments))
+            }
+        }
     }
 }
