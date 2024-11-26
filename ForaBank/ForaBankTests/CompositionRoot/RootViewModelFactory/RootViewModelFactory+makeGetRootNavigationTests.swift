@@ -56,10 +56,25 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         }
     }
     
+    func test_templates_shouldNotifyWithProductIDOnProductIDStatus() {
+        
+        let productID = makeProductID()
+        
+        expect(.templates, toNotifyWith: [.select(.productProfile(productID))]) {
+            
+            $0.templates?.event(.select(.productID(productID)))
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifyEvent = RootViewDomain.FlowDomain.NotifyEvent
     private typealias NotifySpy = CallSpy<NotifyEvent, Void>
+    
+    private func makeProductID() -> ProductData.ID {
+        
+        return .random(in: 0..<Int.max)
+    }
     
     private func equatable(
         _ navigation: RootViewNavigation

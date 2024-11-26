@@ -17,6 +17,9 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             switch select {
+            case let .productProfile(productID):
+                break
+                
             case .scanQR:
                 let qrScanner = makeQRScannerBinder()
                 let cancellable = bind(qrScanner.content, using: notify)
@@ -76,7 +79,9 @@ extension RootViewModelFactory {
         
         // handleTemplatesOutsideFlowState
         // MainViewModel.handleTemplatesFlowState(_:)
-        []
+        
+        // let share = ...
+        // let isLoading = templates.$state.flip() // see extension
         
         let outside = templates.$state.sink {
             
@@ -87,6 +92,8 @@ extension RootViewModelFactory {
     }
 }
 
+// MARK: - Adapters
+
 private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
     
     var notifyEvent: RootViewDomain.FlowDomain.NotifyEvent? {
@@ -96,12 +103,15 @@ private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel
             return nil
             
         case let .productID(productID):
-            return nil
+            return .select(.productProfile(productID))
             
         case let .tab(tab):
             switch tab {
-            case .main:     return .select(.tab(.main))
-            case .payments: return .select(.tab(.payments))
+            case .main:
+                return .select(.tab(.main))
+                
+            case .payments:
+                return .select(.tab(.payments))
             }
         }
     }
