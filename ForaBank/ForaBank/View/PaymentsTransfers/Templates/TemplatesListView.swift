@@ -349,12 +349,9 @@ extension TemplatesListView {
                         }
                     }
                 }
-                .frame(height: mainViewSize.height - 70 > viewModel.containerHeight
-                                ? viewModel.containerHeight
-                                : mainViewSize.height - 70)
+                .frame(height: max(0, min(viewModel.containerHeight, mainViewSize.height - 70)))
             } //VStack section
             .padding(.bottom, 16)
-    
         }
     }
     
