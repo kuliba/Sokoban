@@ -17,6 +17,30 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         expect(.scanQR, toDeliver: .scanQR)
     }
     
+    func test_scanQR_shouldNotifyWithDismissOnCancel() {
+        
+        let sut = makeSUT().sut
+        let notifySpy = NotifySpy(stubs: [()])
+        let getNavigation = sut.makeGetRootNavigation()
+        let exp = expectation(description: "wait for completion")
+        
+        getNavigation(.scanQR, notifySpy.call) {
+            
+            switch $0 {
+            case let .scanQR(node):
+                node.model.content.event(.cancel)
+                
+            default:
+                XCTFail("Expected QRScanner, got \($0) instead.")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(notifySpy.payloads, [.dismiss])
+    }
+    
     // MARK: - templates
     
     func test_templates_shouldDeliverTemplates() {
@@ -62,5 +86,26 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         }
         
         wait(for: [exp], timeout: 1.0)
+    }
+}
+
+// MARK: - DSL
+
+extension RootViewNavigation {
+    
+    func scanner(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> QRScanner {
+        
+        switch self {
+        case let .scanQR(node):
+            let qrScanner = node.model.content.qrScanner
+            return try XCTUnwrap(qrScanner as? QRViewModel, "Expected QRScanner as QRViewModel.", file: file, line: line)
+            
+        default:
+            XCTFail("Expected QRScanner, but got \(self) instead.", file: file, line: line)
+            throw NSError(domain: "Expected QRScanner, but got \(self) instead.", code: -1)
+        }
     }
 }

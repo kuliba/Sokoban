@@ -31,6 +31,7 @@ extension RootViewModelFactory {
                     closeAction: { notify(.dismiss) }
                 )
                 let cancellables = bind(templates, with: notify)
+                
                 completion(.templates(.init(
                     model: templates,
                     cancellables: cancellables
@@ -47,6 +48,7 @@ extension RootViewModelFactory {
         // PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer.swift:308
         return scanQR.$state
             .compactMap { $0 }
+            .delay(for: 0.1, scheduler: schedulers.main)
         // .debounce(for: 0.1, scheduler: scheduler)
             .sink {
                 
@@ -58,8 +60,7 @@ extension RootViewModelFactory {
                     // no need in inflight case - flow would flip it state isLoading to true on any select
                     break
                     
-                case let .qrResult(qrResult):
-                    // notify(.select(.qr(.result(qrResult))))
+                default:
                     break
                 }
             }
