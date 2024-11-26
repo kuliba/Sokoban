@@ -65,7 +65,7 @@ class AcceptanceTests: QRNavigationTests {
             )
         }
         
-        func launch() throws -> RootViewBinderView {
+        func launch() throws -> RootBinderView {
             
             let rootViewController = RootViewHostingViewController(
                 with: binder,

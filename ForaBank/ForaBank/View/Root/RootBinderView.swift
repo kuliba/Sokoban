@@ -8,7 +8,7 @@
 import RxViewModel
 import SwiftUI
 
-struct RootViewBinderView: View {
+struct RootBinderView: View {
     
     let binder: RootViewDomain.Binder
     let rootViewFactory: RootViewFactory
