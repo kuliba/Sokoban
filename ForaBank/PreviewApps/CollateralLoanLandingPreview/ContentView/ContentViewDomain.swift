@@ -7,7 +7,7 @@
 
 import Foundation
 import PayHubUI
-import CollateralLoanLandingShowCaseUI
+import CollateralLoanLandingGetShowcaseUI
 
 typealias ContentViewDomain = PayHubUI.FlowDomain<ContentViewSelect, ContentViewNavigation>
 
@@ -22,4 +22,4 @@ enum ContentViewNavigation {
 }
 
 typealias CollaterlLoanPicker = LoadablePickerModel<UUID, CollateralLoadProduct>
-typealias CollateralLoadProduct = CollateralLoanLandingShowCaseData.Product
+typealias CollateralLoadProduct = CollateralLoanLandingGetShowcaseData.Product

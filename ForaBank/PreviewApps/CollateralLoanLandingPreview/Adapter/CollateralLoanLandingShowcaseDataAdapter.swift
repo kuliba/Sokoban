@@ -6,8 +6,8 @@
 //
 
 import RemoteServices
-import CollateralLoanLandingShowCaseBackend
-import CollateralLoanLandingShowCaseUI
+import CollateralLoanLandingGetShowcaseBackend
+import CollateralLoanLandingGetShowcaseUI
 
 extension RemoteServices.ResponseMapper.CollateralLoanLandingShowCaseModel {
     
