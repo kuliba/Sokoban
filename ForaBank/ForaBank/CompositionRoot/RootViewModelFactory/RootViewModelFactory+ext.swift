@@ -276,7 +276,7 @@ extension RootViewModelFactory {
             model: model,
             scheduler: schedulers.main
         )
-                
+        
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel()
         
         let getLanding = nanoServiceComposer.compose(
@@ -427,9 +427,6 @@ extension RootViewModelFactory {
         
         bindings.formUnion(marketBinder.bind())
         
-        let getRootNavigation = makeGetRootNavigation(
-            makeQRScanner: makeQRScannerBinder
-        )
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active
         )
@@ -438,11 +435,55 @@ extension RootViewModelFactory {
             bindings: bindings,
             dismiss: dismiss,
             getNavigation: getRootNavigation,
+            bindOutside: { $1.bindOutside(to: $0, on: self.schedulers.main) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+private extension RootViewDomain.Flow {
+    
+    func bindOutside(
+        to content: RootViewDomain.Content,
+        on scheduler: AnySchedulerOfDispatchQueue
+    ) -> Set<AnyCancellable> {
+        
+        let outside = $state.compactMap(\.outside)
+            .debounce(for: .milliseconds(500), scheduler: scheduler)
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                guard let self else { return }
+                
+                switch $0 {
+                case let .productProfile(productID):
+                    content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                    
+                case let .tab(tab):
+                    switch tab {
+                    case .main:
+                        content.selected = .main
+
+                    case .payments:
+                        content.selected = .payments
+                    }
+                }
+            }
+        
+        return [outside]
+    }
+}
+
+private extension FlowState<RootViewNavigation> {
+    
+    var outside: RootViewOutside? {
+        
+        guard case let .outside(outside) = navigation else { return nil }
+        
+        return outside
     }
 }
 

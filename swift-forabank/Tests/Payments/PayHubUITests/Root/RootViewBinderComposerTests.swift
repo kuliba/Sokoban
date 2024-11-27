@@ -54,6 +54,20 @@ final class RootViewBinderComposerTests: XCTestCase {
         XCTAssertNotNil(binder)
     }
     
+    func test_compose_shouldCallBindOutside() {
+        
+        var bindOutsideCallCount = 0
+        let (sut, _) = makeSUT(bindOutside: { _,_ in
+            bindOutsideCallCount += 1
+            return []
+        })
+        XCTAssertEqual(bindOutsideCallCount, 0)
+        
+        _ = sut.compose(with: makeRootViewModel())
+        
+        XCTAssertEqual(bindOutsideCallCount, 1)
+    }
+    
     func test_compose_shouldSetContent() {
         
         let content = makeRootViewModel()
@@ -97,6 +111,7 @@ final class RootViewBinderComposerTests: XCTestCase {
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
         dismiss: @escaping () -> Void = {},
+        bindOutside: @escaping (Domain.Content, Domain.Flow) -> Set<AnyCancellable> = { _,_ in [] },
         reset: @escaping () -> Void = {},
         navigation: Navigation? = nil,
         file: StaticString = #file,
@@ -114,6 +129,7 @@ final class RootViewBinderComposerTests: XCTestCase {
                 
                 completion(navigation ?? self.makeNavigation())
             },
+            bindOutside: bindOutside,
             schedulers: .immediate,
             witnesses: .init(
                 content: .init(

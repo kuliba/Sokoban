@@ -84,7 +84,7 @@ private extension RootWrapperView {
     private func templatesView(
         _ templates: RootViewNavigation.TemplatesNode
     ) -> some View {
-
+        
         viewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
@@ -144,6 +144,9 @@ extension RootViewNavigation {
     var destination: Destination? {
         
         switch self {
+        case .outside:
+            return nil
+            
         case .scanQR:
             return nil
             
@@ -162,6 +165,9 @@ extension RootViewNavigation {
     var fullScreenCover: FullScreenCover? {
         
         switch self {
+        case .outside:
+            return nil
+            
         case let .scanQR(node):
             return .scanQR(node.model)
             
