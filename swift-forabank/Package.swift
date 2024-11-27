@@ -1330,8 +1330,7 @@ private extension Target {
         dependencies: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         ],
-        path: "Tests/Landing/CollateralLoanTests/CreateDraftCollateralLoanApplication/Backend/V1"
-//        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
     
     static let collateralLoanLandingGetJsonAbroadUI = target(

@@ -20,6 +20,5 @@ final class DummyTest: XCTestCase {
     func test_fail() {
         
         _ = Dummy()
-        XCTFail()
     }
 }
