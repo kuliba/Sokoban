@@ -125,8 +125,8 @@ extension AuthLoginViewModel {
         if let url = createAppStoreURL() { openURL(url) }
     }
     
-    func swiftUIAlert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
-        
+    func swiftUIAlert(forAlertType alertType: AlertType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
+
         switch alertType {
             
         case .clientInformAlerts:
@@ -141,6 +141,7 @@ extension AuthLoginViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Ok"), action: {
+                        
                         self.clientInformAlerts?.next()
                     })
                     )
@@ -151,7 +152,8 @@ extension AuthLoginViewModel {
                                  message: Text(alert.text),
                                  primaryButton: .default(Text("Позже"), action: { }),
                                  secondaryButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in }
+
+                        openURL()
                         self.clientInformAlerts?.next()
                     })
                     )
@@ -161,14 +163,14 @@ extension AuthLoginViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in }
+                        
+                        openURL()
                         self.clientInformAlerts?.next()
                     })
                     )
                 }
                 
             case .none : return .init(title: Text("Ошибка"))
-                
             }
             
         case .alertViewModel:

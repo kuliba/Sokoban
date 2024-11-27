@@ -62,7 +62,10 @@ struct AuthPinCodeView: View {
 extension AuthPinCodeView {
     func alert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
         
-            return viewModel.swiftUIAlert(forAlertType: alertType)
+        return viewModel.swiftUIAlert(forAlertType: alertType) {
+            
+            viewModel.clientInformAlertButtonTapped { url in openURL(url) }
+        }
     }
 }
 
