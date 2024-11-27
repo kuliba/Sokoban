@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PaymentComponents
 
 extension SavingsAccountConfig {
     
@@ -78,3 +79,63 @@ extension Color {
     
     static let gray30: Self = .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3)
 }
+
+extension OrderSavingsAccountState {
+    
+    static let preview: Self = .init(
+        currency: .init(code: 810, symbol: "Rub"),
+        designMd5hash: "1",
+        fee: .init(openAndMaintenance: 11, subscription: .init(period: "month", value: 10)),
+        header: .init(title: "Накопительный Счет", subtitle: "Накопительный в рублях"),
+        hint: "Вы можете сразу пополнить счет",
+        income: "6,05%",
+        links: .init(conditions: "link1", tariff: "link2"))
+}
+
+extension ToggleConfig {
+    
+    static let preview: Self = .init(colors: .init(on: .green, off: .black))
+}
+
+extension OrderSavingsAccountConfig {
+    
+    static let preview: Self = .init(
+        amount: .init(
+            amount: .init(textFont: .system(size: 24), textColor: .white),
+            backgroundColor: .black.opacity(0.8),
+            button: .init(
+                active: .init(backgroundColor: .red, text: .init(textFont: .system(size: 14), textColor: .white)),
+                inactive: .init(backgroundColor: .red, text: .init(textFont: .system(size: 14), textColor: .white)), buttonHeight: 38),
+            dividerColor: .gray30,
+            title: .init(textFont: .system(size: 14), textColor: .white)),
+        background: .gray30,
+        backImage: .init(systemName: "chevron.backward"),
+        cornerRadius: 12,
+        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .caption, textColor: .black)),
+        income: .init(
+            image: .init(systemName: "percent"),
+            imageSize: .init(width: 24, height: 24),
+            title: .init(text: "Доход",
+                         config: .init(textFont: .body, textColor: .gray)),
+            subtitle: .init(textFont: .headline, textColor: .black)),
+        openButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Открыть накопительный счет", title: .init(textFont: .body, textColor: .white)),
+        order: .init(
+            card: .init(width: 112, height: 72),
+            header: .init(title: .init(textFont: .body, textColor: .black), subtitle: .init(textFont: .subheadline, textColor: .gray)),
+            image: .init(systemName: "arrow.forward"),
+            imageSize: .init(width: 16, height: 16),
+            options: .init(headlines: .init(
+                open: "Открытие",
+                service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
+        ),
+        padding: 16,
+        topUp: .init(
+            description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .system(size: 12), textColor: .gray)),
+            image: .init(systemName: "message"),
+            subtitle: .init(text: "Пополнить сейчас", config: .init(textFont: .system(size: 16), textColor: .black)),
+            title: .init(text: "Хотите пополнить счет?", config: .init(textFont: .system(size: 14), textColor: .gray)),
+            toggle: .preview
+        )
+    )
+}
+
