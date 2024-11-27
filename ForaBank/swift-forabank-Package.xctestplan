@@ -575,13 +575,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingDraftBackendTests",
-        "name" : "CollateralLoanLandingDraftBackendTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "CollateralLoanLandingGetConsentsBackendTests",
         "name" : "CollateralLoanLandingGetConsentsBackendTests"
       }
@@ -605,6 +598,13 @@
         "containerPath" : "container:",
         "identifier" : "CollateralLoanLandingGetShowcaseUITests",
         "name" : "CollateralLoanLandingGetShowcaseUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
       }
     }
   ],
