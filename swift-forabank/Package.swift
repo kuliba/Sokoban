@@ -2598,7 +2598,7 @@ private extension Target {
             // internal packages
             .sharedConfigs,
             .uiPrimitives,
-            .rxViewModel,
+            .paymentComponents
         ],
         path: "Sources/UI/\(String.savingsAccount)"
     )
