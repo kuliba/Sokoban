@@ -152,7 +152,7 @@ extension AuthLoginViewModel {
                                  primaryButton: .default(Text("Позже"), action: { }),
                                  secondaryButton: .default(Text("Обновить"), action: {
                         self.clientInformAlertButtonTapped() { _ in }
-                        self.clientInformAlerts?.showAgain(requiredAlert: alert)
+                        self.clientInformAlerts?.next()
                     })
                     )
                     
@@ -162,7 +162,7 @@ extension AuthLoginViewModel {
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Обновить"), action: {
                         self.clientInformAlertButtonTapped() { _ in }
-                        self.clientInformAlerts?.showAgain(requiredAlert: alert)
+                        self.clientInformAlerts?.next()
                     })
                     )
                 }

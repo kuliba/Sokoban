@@ -56,16 +56,4 @@ extension ClientInformAlerts {
             )
         }
     }
-
-    mutating func showAgain(requiredAlert: UpdateAlert) {
-       
-        updateAlert = .init(
-            id: .init(), // Restore with different ID
-            title: requiredAlert.title,
-            text: requiredAlert.text,
-            link: requiredAlert.link,
-            version: requiredAlert.version,
-            actionType: requiredAlert.actionType
-        )
-    }
 }
