@@ -80,7 +80,7 @@ extension Color {
     static let gray30: Self = .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3)
 }
 
-extension OrderSavingsAccountState {
+extension OrderSavingsAccount {
     
     static let preview: Self = .init(
         currency: .init(code: 810, symbol: "Rub"),
@@ -90,6 +90,11 @@ extension OrderSavingsAccountState {
         hint: "Вы можете сразу пополнить счет",
         income: "6,05%",
         links: .init(conditions: "link1", tariff: "link2"))
+}
+
+extension OrderSavingsAccountState {
+    
+    static let preview: Self = .init(data: .preview)
 }
 
 extension ToggleConfig {
@@ -120,7 +125,8 @@ extension OrderSavingsAccountConfig {
             imageSize: .init(width: 24, height: 24),
             title: .init(text: "Доход",
                          config: .init(textFont: .body, textColor: .gray)),
-            subtitle: .init(textFont: .headline, textColor: .black)),
+            subtitle: .init(textFont: .headline, textColor: .black)), 
+        linkableTexts: .init(checkBoxSize: .init(width: 24, height: 24), condition: "Я соглашаюсь с <u>Условиями</u> и ", tariff: "<u>Тарифами</u>"),
         openButton: .init(
             background: .init(active: .red, inactive: .gray),
             cornerRadius: 12,

@@ -18,8 +18,7 @@ where OTPView: View,
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let otpView: OTPView
-    let productPicker: ProductPicker
+    let viewFactory: ViewFactory<OTPView, ProductPicker>
     
     private let coordinateSpace: String
     
@@ -32,17 +31,15 @@ where OTPView: View,
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
-        coordinateSpace: String = "orderScroll",
-        otpView: OTPView,
-        productPicker: ProductPicker
+        viewFactory: ViewFactory<OTPView, ProductPicker>,
+        coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
         self.coordinateSpace = coordinateSpace
-        self.otpView = otpView
-        self.productPicker = productPicker
+        self.viewFactory = viewFactory
     }
     
     var body: some View {
@@ -76,10 +73,10 @@ where OTPView: View,
             }, label: {
                 isChecking ? config.images.checkOn : config.images.checkOff
             })
-            .frame(.init(width: 24, height: 24))
+            .frame(config.linkableTexts.checkBoxSize)
             
-            LinkableTextView(taggedText: "Я соглашаюсь с <u>Условиями</u> и ", urlString: state.links.conditions, tag: ("<u>", "</u>"), handleURL: {_ in })
-            LinkableTextView(taggedText: "<u>Tарифами</u>", urlString: state.links.tariff, tag: ("<u>", "</u>"), handleURL: {_ in })
+            LinkableTextView(taggedText: config.linkableTexts.condition, urlString: state.data.links.conditions, tag: config.linkableTexts.tag, handleURL: {_ in })
+            LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: state.data.links.tariff, tag: config.linkableTexts.tag, handleURL: {_ in })
             
             Spacer()
         }
@@ -110,7 +107,7 @@ where OTPView: View,
                     print("Сумма пополнения \(amount.value)")
                 }
             },
-            currencySymbol: state.currency.symbol,
+            currencySymbol: state.data.currency.symbol,
             config: config.amount,
             infoView: {
                 HStack {
@@ -142,10 +139,10 @@ where OTPView: View,
         
         VStack(spacing: 0) {
             
-            state.header.title.text(withConfig: config.order.header.title)
+            state.data.header.title.text(withConfig: config.order.header.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            state.header.subtitle.text(withConfig: config.order.header.subtitle)
+            state.data.header.subtitle.text(withConfig: config.order.header.subtitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -171,8 +168,8 @@ where OTPView: View,
         
         VStack(alignment: .leading) {
             
-            orderOption(title: config.order.options.headlines.open, subtitle: "\(state.fee.openAndMaintenance)")
-            orderOption(title: config.order.options.headlines.service, subtitle: "\(state.fee.subscription.value)" + "\(state.fee.subscription.period)")
+            orderOption(title: config.order.options.headlines.open, subtitle: "\(state.data.fee.openAndMaintenance)")
+            orderOption(title: config.order.options.headlines.service, subtitle: "\(state.data.fee.subscription.value)" + "\(state.data.fee.subscription.period)")
         }
     }
     
@@ -184,7 +181,7 @@ where OTPView: View,
             
             HStack(alignment:.top, spacing: config.padding) {
                 
-                factory.makeIconView(state.designMd5hash)
+                factory.makeIconView(state.data.designMd5hash)
                     .aspectRatio(contentMode: .fit)
                     .frame(config.order.card)
                 
@@ -200,7 +197,7 @@ where OTPView: View,
             
             config.income.title.text.text(withConfig: config.income.title.config)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            state.income.text(withConfig: config.income.subtitle)
+            state.data.income.text(withConfig: config.income.subtitle)
         }
     }
     
@@ -244,12 +241,12 @@ where OTPView: View,
     }
     
     private func products() -> some View {
-        productPicker
+        viewFactory.makeProductPickerView()
             .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
     }
     
     private func otp() -> some View {
-        otpView
+        viewFactory.makeOTPView()
             .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
     }
     
@@ -318,8 +315,10 @@ where OTPView == Text,
             },
             config: .preview,
             factory: .default,
-            otpView: Text("Otp"),
-            productPicker: Text("Products"))
+            viewFactory: .init(
+                makeOTPView: { Text("Otp") }, 
+                makeProductPickerView: { Text("Products") })
+            )
     }
 }
 
