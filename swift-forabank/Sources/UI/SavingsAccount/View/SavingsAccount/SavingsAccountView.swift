@@ -36,28 +36,22 @@ struct SavingsAccountView: View {
     
     var body: some View {
         
-        // MARK: - remove `if #available` after update platforms in package
-        
-        if #available(iOS 15.0, *) {
-            VStack(alignment: .leading, spacing: config.spacing) {
-                ScrollView(showsIndicators: false) {
-                    landing()
-                }
-                .onPreferenceChange(ViewOffsetKey.self) { value in
-                    isShowHeader = value > config.offsetForDisplayHeader
-                }
-                .coordinateSpace(name: coordinateSpace)
+        VStack(alignment: .leading, spacing: config.spacing) {
+            ScrollView(showsIndicators: false) {
+                landing()
             }
-            .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-            .toolbar(content: toolbarContent)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                continueButton()
+            .onPreferenceChange(ViewOffsetKey.self) { value in
+                isShowHeader = value > config.offsetForDisplayHeader
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
-        } else {
-            Text("Only ios 15.0")
+            .coordinateSpace(name: coordinateSpace)
         }
+        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+        .toolbar(content: toolbarContent)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            continueButton()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
     }
     
     @ToolbarContentBuilder
