@@ -8,16 +8,22 @@
 import PaymentComponents
 import SwiftUI
 import SharedConfigs
+import LinkableText
 
-struct OrderSavingsAccountView: View {
+struct OrderSavingsAccountView<OTPView, ProductPicker>: View
+where OTPView: View,
+      ProductPicker: View {
     
     let state: OrderSavingsAccountState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
+    let otpView: OTPView
+    let productPicker: ProductPicker
     
     private let coordinateSpace: String
     
+    @State private(set) var isChecking = true
     @State private(set) var isShowHeader = false
     @State private(set) var isShowingProducts = false
     
@@ -26,13 +32,17 @@ struct OrderSavingsAccountView: View {
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
-        coordinateSpace: String = "orderScroll"
+        coordinateSpace: String = "orderScroll",
+        otpView: OTPView,
+        productPicker: ProductPicker
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
         self.coordinateSpace = coordinateSpace
+        self.otpView = otpView
+        self.productPicker = productPicker
     }
     
     var body: some View {
@@ -49,6 +59,8 @@ struct OrderSavingsAccountView: View {
                     if isShowingProducts {
                         products()
                     }
+                    otp()
+                    condition()
                 }
                 .padding(.horizontal, config.padding)
             }
@@ -59,6 +71,23 @@ struct OrderSavingsAccountView: View {
             .navigationBarBackButtonHidden()
         } else {
             Text("Only ios 15.0")
+        }
+    }
+    
+    private func condition() -> some View {
+        
+        HStack(spacing: 0) {
+            
+            Button(action: { isChecking.toggle()
+            }, label: {
+                isChecking ? config.images.checkOn : config.images.checkOff
+            })
+            .frame(.init(width: 24, height: 24))
+            
+            LinkableTextView(taggedText: "Я соглашаюсь с <u>Условиями</u> и ", urlString: state.links.conditions, tag: ("<u>", "</u>"), handleURL: {_ in })
+            LinkableTextView(taggedText: "<u>Tарифами</u>", urlString: state.links.tariff, tag: ("<u>", "</u>"), handleURL: {_ in })
+            
+            Spacer()
         }
     }
     
@@ -99,17 +128,19 @@ struct OrderSavingsAccountView: View {
             })
     }
     
+    @ViewBuilder
     private func openButton() -> some View {
         
         Button(action: { event(.continue) }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: config.openButton.cornerRadius)
-                    .foregroundColor(config.openButton.background)
+                    .foregroundColor(isChecking ? config.openButton.background.active : config.openButton.background.inactive)
                 config.openButton.label.text(withConfig: config.openButton.title)
             }
         })
         .padding(.horizontal)
         .frame(height: config.openButton.height)
+        .disabled(!isChecking)
         .frame(maxWidth: .infinity)
     }
     
@@ -219,11 +250,13 @@ struct OrderSavingsAccountView: View {
     }
     
     private func products() -> some View {
-        VStack {
-            // TODO: add products
-            Text("Products")
-        }
-        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+        productPicker
+            .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+    }
+    
+    private func otp() -> some View {
+        otpView
+            .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
     }
     
     @ToolbarContentBuilder
@@ -238,7 +271,7 @@ struct OrderSavingsAccountView: View {
     }
     
     private func backButton() -> some View {
-        Button(action: { event(.dismiss) }) { config.backImage }
+        Button(action: { event(.dismiss) }) { config.images.back }
     }
     
     private func header() -> some View {
@@ -273,9 +306,12 @@ extension OrderSavingsAccountView {
     typealias Factory = ImageViewFactory
 }
 
-#Preview {
+extension OrderSavingsAccountView
+where OTPView == Text,
+      ProductPicker == Text {
     
-    NavigationView {
+    static var preview: Self {
+        
         OrderSavingsAccountView(
             state: .preview,
             event: {
@@ -287,6 +323,16 @@ extension OrderSavingsAccountView {
                 }
             },
             config: .preview,
-            factory: .default)
+            factory: .default,
+            otpView: Text("Otp"),
+            productPicker: Text("Products"))
     }
 }
+
+#Preview {
+    
+    NavigationView {
+        OrderSavingsAccountView.preview
+    }
+}
+

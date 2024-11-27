@@ -109,16 +109,24 @@ extension OrderSavingsAccountConfig {
             dividerColor: .gray30,
             title: .init(textFont: .system(size: 14), textColor: .white)),
         background: .gray30,
-        backImage: .init(systemName: "chevron.backward"),
         cornerRadius: 12,
         header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .caption, textColor: .black)),
+        images: .init(
+            back: .init(systemName: "chevron.backward"),
+            checkOff: .init(systemName: "square"),
+            checkOn: .init(systemName: "checkmark.square")),
         income: .init(
             image: .init(systemName: "percent"),
             imageSize: .init(width: 24, height: 24),
             title: .init(text: "Доход",
                          config: .init(textFont: .body, textColor: .gray)),
             subtitle: .init(textFont: .headline, textColor: .black)),
-        openButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Открыть накопительный счет", title: .init(textFont: .body, textColor: .white)),
+        openButton: .init(
+            background: .init(active: .red, inactive: .gray),
+            cornerRadius: 12,
+            height: 56,
+            label: "Открыть накопительный счет",
+            title: .init(textFont: .body, textColor: .white)),
         order: .init(
             card: .init(width: 112, height: 72),
             header: .init(title: .init(textFont: .body, textColor: .black), subtitle: .init(textFont: .subheadline, textColor: .gray)),
