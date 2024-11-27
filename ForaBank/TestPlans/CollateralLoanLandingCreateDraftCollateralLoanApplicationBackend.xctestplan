@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "C1075A8D-CC48-4EC2-89B8-0125B04C562D",
+      "id" : "00BDB35D-4FB8-4948-9798-3C6DEBB316B1",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingDraftBackendTests",
-        "name" : "CollateralLoanLandingDraftBackendTests"
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
       }
     }
   ],

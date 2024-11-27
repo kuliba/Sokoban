@@ -1,8 +1,13 @@
 //
-//  File.swift
-//  
+//  Dummy.swift
+//
 //
 //  Created by Valentin Ozerov on 13.11.2024.
 //
 
 import Foundation
+
+public struct Dummy {
+    
+    public init() {}
+}

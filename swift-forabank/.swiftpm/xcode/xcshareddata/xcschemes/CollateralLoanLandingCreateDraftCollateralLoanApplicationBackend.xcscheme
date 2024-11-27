@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingDraftBackend"
-               BuildableName = "CollateralLoanLandingDraftBackend"
-               BlueprintName = "CollateralLoanLandingDraftBackend"
+               BlueprintIdentifier = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
+               BuildableName = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
+               BlueprintName = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -25,10 +25,15 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:../ForaBank/TestPlans/CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -50,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CollateralLoanLandingDraftBackend"
-            BuildableName = "CollateralLoanLandingDraftBackend"
-            BlueprintName = "CollateralLoanLandingDraftBackend"
+            BlueprintIdentifier = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
+            BuildableName = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
+            BlueprintName = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
