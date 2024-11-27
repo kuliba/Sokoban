@@ -15,4 +15,10 @@ final class DummyTest: XCTest {
         
         XCTAssertTrue(true)
     }
+    
+    func test_fail() {
+        
+        fatalError()
+        XCTFail()
+    }
 }
