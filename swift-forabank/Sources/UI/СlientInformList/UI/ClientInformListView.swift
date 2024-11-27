@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 15, *)
 public struct ClientInformListView: View {
 
     @State private var isShowNavBar = false
@@ -175,7 +174,6 @@ public struct ClientInformListView: View {
     }
 }
 
-@available(iOS 15, *)
 public extension ClientInformListView {
     
     typealias Config = ClientInformListConfig
@@ -183,7 +181,6 @@ public extension ClientInformListView {
 }
 
 // MARK: - Preview
-@available(iOS 15, *)
 struct PlainClientInformView_Previews: PreviewProvider {
     
     static var previews: some View {

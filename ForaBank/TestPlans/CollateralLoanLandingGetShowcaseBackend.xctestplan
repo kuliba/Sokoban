@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "DB3D0C37-A20C-46BF-AFDC-74B61FF5CD68",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetShowcaseBackendTests",
+        "name" : "CollateralLoanLandingGetShowcaseBackendTests"
+      }
+    }
+  ],
+  "version" : 1
+}
