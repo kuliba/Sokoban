@@ -10,6 +10,25 @@ import XCTest
 
 final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTests {
     
+    // MARK: - outside
+    
+    func test_outside_productProfile_shouldDeliverOutsideProductProfile() {
+        
+        let productID = makeProductID()
+        
+        expect(.outside(.productProfile(productID)), toDeliver: .outside(.productProfile(productID)))
+    }
+    
+    func test_outside_tab_main_shouldDeliverOutsideTabMain() {
+        
+        expect(.outside(.tab(.main)), toDeliver: .outside(.tab(.main)))
+    }
+    
+    func test_outside_tab_payments_shouldDeliverOutsideTabPayments() {
+        
+        expect(.outside(.tab(.payments)), toDeliver: .outside(.tab(.payments)))
+    }
+    
     // MARK: - scanQR
     
     func test_scanQR_shouldDeliverQRScanner() {
