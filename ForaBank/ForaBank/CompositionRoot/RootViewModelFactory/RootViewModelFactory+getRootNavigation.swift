@@ -28,6 +28,9 @@ extension RootViewModelFactory {
                 cancellable: cancellable
             )))
             
+        case .standardPayment:
+            completion(.standardPayment)
+            
         case .templates:
             let templates = makeTemplates { notify(.dismiss) }
             let cancellables = bind(templates, with: notify)

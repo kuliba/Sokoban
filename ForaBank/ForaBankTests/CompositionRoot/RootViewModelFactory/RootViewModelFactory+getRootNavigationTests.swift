@@ -44,6 +44,13 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         }
     }
     
+    // MARK: - standardPayment
+    
+    func test_standardPayment_shouldDeliverTemplates() {
+        
+        expect(.standardPayment, toDeliver: .standardPayment)
+    }
+    
     // MARK: - templates
     
     func test_templates_shouldDeliverTemplates() {
@@ -110,6 +117,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case .scanQR:
             return .scanQR
             
+        case .standardPayment:
+            return .standardPayment
+            
         case .templates:
             return .templates
         }
@@ -119,6 +129,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         case outside(RootViewOutside)
         case scanQR
+        case standardPayment
         case templates
     }
     

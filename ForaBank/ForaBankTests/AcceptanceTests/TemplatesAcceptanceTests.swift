@@ -93,9 +93,6 @@ private extension RootBinderView {
     func rootViewTemplatesDestination(
     ) throws -> InspectableView<ViewType.ClassifiedView> {
         
-        try inspect()
-            .find(RootView.self)
-            .background().navigationLink() // we are using custom `View.navigationDestination(_:item:content:)
-            .find(viewWithAccessibilityIdentifier: ElementIDs.rootView(.destination(.templates)).rawValue)
+        try rootViewDestination(for: .templates)
     }
 }

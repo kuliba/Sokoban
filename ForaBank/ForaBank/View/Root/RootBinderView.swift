@@ -76,9 +76,19 @@ private extension RootWrapperView {
     ) -> some View {
         
         switch destination {
+        case .standardPayment:
+            standardPaymentView()
+            
         case let .templates(node):
             templatesView(node)
         }
+    }
+    
+    private func standardPaymentView(
+    ) -> some View {
+        
+        Text("TBD: standardPaymentView")
+            .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
     }
     
     private func templatesView(
@@ -150,6 +160,9 @@ extension RootViewNavigation {
         case .scanQR:
             return nil
             
+        case .standardPayment:
+            return .standardPayment
+            
         case let .templates(node):
             return .templates(node)
         }
@@ -157,6 +170,7 @@ extension RootViewNavigation {
     
     enum Destination {
         
+        case standardPayment
         case templates(TemplatesNode)
         
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -170,6 +184,9 @@ extension RootViewNavigation {
             
         case let .scanQR(node):
             return .scanQR(node.model)
+            
+        case .standardPayment:
+            return nil
             
         case .templates:
             return nil
@@ -187,6 +204,9 @@ extension RootViewNavigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case .standardPayment:
+            return .standardPayment
+            
         case let .templates(templates):
             return .templates(.init(templates.model))
         }
@@ -194,6 +214,7 @@ extension RootViewNavigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case standardPayment
         case templates(ObjectIdentifier)
     }
 }

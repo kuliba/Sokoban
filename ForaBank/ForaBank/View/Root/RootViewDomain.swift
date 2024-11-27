@@ -11,6 +11,7 @@ typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelA
 
 extension RootViewDomain {
     
+    typealias Outside = RootViewOutside
     typealias Select = RootViewSelect
     typealias Navigation = RootViewNavigation
 }
@@ -19,9 +20,9 @@ enum RootViewSelect: Equatable {
     
     case outside(RootViewOutside)
     case scanQR
+    case standardPayment
     case templates
 }
-
 
 enum RootViewOutside: Equatable {
     
@@ -38,6 +39,7 @@ enum RootViewNavigation {
     
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
+    case standardPayment
     case templates(TemplatesNode)
     
     typealias Templates = PaymentsTransfersFactory.Templates
