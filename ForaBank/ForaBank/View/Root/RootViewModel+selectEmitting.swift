@@ -105,7 +105,7 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
         case .byQr:      return .scanQR
         case .templates: return .templates
         case .byPhone:   return nil
-        case .zku:       return nil
+        case .utility:       return nil
         }
     }
 }
