@@ -8,15 +8,17 @@
 import SwiftUI
 import SharedConfigs
 import PaymentComponents
+import LinkableText
 
 public struct OrderSavingsAccountConfig {
 
     let amount: AmountConfig
     let background: Color
-    let backImage: Image
     let cornerRadius: CGFloat
     let header: TextWithConfig
+    let images: Images
     let income: Income
+    let linkableTexts: LinkableTexts
     let openButton: OpenButton
     let order: Order
     let padding: CGFloat
@@ -25,10 +27,11 @@ public struct OrderSavingsAccountConfig {
     public init(
         amount: AmountConfig,
         background: Color,
-        backImage: Image,
         cornerRadius: CGFloat,
         header: TextWithConfig,
+        images: Images,
         income: Income,
+        linkableTexts: LinkableTexts,
         openButton: OpenButton,
         order: Order,
         padding: CGFloat,
@@ -36,26 +39,78 @@ public struct OrderSavingsAccountConfig {
     ) {
         self.amount = amount
         self.background = background
-        self.backImage = backImage
         self.cornerRadius = cornerRadius
         self.header = header
+        self.images = images
         self.income = income
+        self.linkableTexts = linkableTexts
         self.openButton = openButton
         self.order = order
         self.padding = padding
         self.topUp = topUp
     }
     
+    public struct LinkableTexts {
+       
+        let checkBoxSize: CGSize
+        let condition: String
+        let tag: LinkableText.Tag
+        let tariff: String
+        
+        public init(
+            checkBoxSize: CGSize,
+            condition: String,
+            tag: LinkableText.Tag = ("<u>", "</u>"),
+            tariff: String
+        ) {
+            self.checkBoxSize = checkBoxSize
+            self.condition = condition
+            self.tag = tag
+            self.tariff = tariff
+        }
+    }
+    
+    public struct Images {
+        
+        let back: Image
+        let checkOff: Image
+        let checkOn: Image
+        
+        public init(
+            back: Image,
+            checkOff: Image,
+            checkOn: Image
+        ) {
+            self.back = back
+            self.checkOff = checkOff
+            self.checkOn = checkOn
+        }
+    }
+    
     public struct OpenButton {
         
-        let background: Color
+        let background: Colors
         let cornerRadius: CGFloat
         let height: CGFloat
         let label: String
         let title: TextConfig
         
+        public struct Colors {
+            
+            let active: Color
+            let inactive: Color
+            
+            public init(
+                active: Color,
+                inactive: Color
+            ) {
+                self.active = active
+                self.inactive = inactive
+            }
+        }
+        
         public init(
-            background: Color,
+            background: Colors,
             cornerRadius: CGFloat,
             height: CGFloat,
             label: String,

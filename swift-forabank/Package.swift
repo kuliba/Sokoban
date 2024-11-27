@@ -2595,9 +2595,10 @@ private extension Target {
         name: .savingsAccount,
         dependencies: [
             // internal packages
+            .linkableText,
+            .paymentComponents,
             .sharedConfigs,
-            .uiPrimitives,
-            .paymentComponents
+            .uiPrimitives, 
         ],
         path: "Sources/UI/\(String.savingsAccount)"
     )
