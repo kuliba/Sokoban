@@ -80,7 +80,7 @@ class AuthLoginViewModel: ObservableObject {
     var alertType: AlertType? {
         switch (alert, clientInformAlerts?.alert) {
         
-        case (let .some(alert), .none): 
+        case (let .some(alert), _):
             return .alertViewModel(alert)
             
         case (_, let .some(alert)): 
