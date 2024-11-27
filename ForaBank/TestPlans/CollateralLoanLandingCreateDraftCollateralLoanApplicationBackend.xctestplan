@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "092F2363-3B02-4C28-81E1-AC326108082C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
+      }
+    }
+  ],
+  "version" : 1
+}
