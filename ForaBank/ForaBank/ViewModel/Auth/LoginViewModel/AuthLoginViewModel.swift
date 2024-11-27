@@ -106,7 +106,7 @@ extension AuthLoginViewModel {
     private func updateVersion() -> String? {
         
         guard let updateVersion = clientInformAlerts?.updateAlert?.version,
-              Bundle.main.appVersionLong < updateVersion else { return nil }
+              updateVersion.compare(Bundle.main.appVersionShort, options: .numeric) == .orderedDescending else { return nil }
         
         return updateVersion
     }
