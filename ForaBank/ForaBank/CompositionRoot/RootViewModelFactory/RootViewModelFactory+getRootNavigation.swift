@@ -29,9 +29,7 @@ extension RootViewModelFactory {
             )))
             
         case .templates:
-            let templates = makeMakeTemplates(
-                closeAction: { notify(.dismiss) }
-            )
+            let templates = makeTemplates { notify(.dismiss) }
             let cancellables = bind(templates, with: notify)
             
             completion(.templates(.init(
