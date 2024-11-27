@@ -1383,7 +1383,7 @@
 		2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D82C8183B900A17677 /* QRModelStub.swift */; };
 		2A9D79E42C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79E32C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift */; };
 		2A9E054B2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E054A2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift */; };
-		2A9F82D92CF5950D00EB0EAC /* RootViewModelFactory+makeGetRootNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+makeGetRootNavigationTests.swift */; };
+		2A9F82D92CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2585D2CEA434B0038642C /* XCTestCase+wait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2585C2CEA434B0038642C /* XCTestCase+wait.swift */; };
 		2AA2585F2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2585E2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift */; };
@@ -5058,7 +5058,7 @@
 		2A9D79D82C8183B900A17677 /* QRModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelStub.swift; sourceTree = "<group>"; };
 		2A9D79E32C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductsData+hasCorporateCardsOnly.swift"; sourceTree = "<group>"; };
 		2A9E054A2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeNavigationStateManager.swift"; sourceTree = "<group>"; };
-		2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+makeGetRootNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeGetRootNavigationTests.swift"; sourceTree = "<group>"; };
+		2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getRootNavigationTests.swift"; sourceTree = "<group>"; };
 		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
 		2AA2585C2CEA434B0038642C /* XCTestCase+wait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+wait.swift"; sourceTree = "<group>"; };
 		2AA2585E2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewDomainContentWitnessesTests.swift; sourceTree = "<group>"; };
@@ -11378,7 +11378,7 @@
 				2A3B4F5C2CF3103400076F05 /* RootViewModelFactory+getQRNavigationTests.swift */,
 				2AC04E582CF4F7E000AF331D /* getSberQRData_fix_sum.json */,
 				2A3B4F5E2CF31B0D00076F05 /* RootViewModelFactory+makePaymentsNodeTests.swift */,
-				2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+makeGetRootNavigationTests.swift */,
+				2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 			);
 			path = RootViewModelFactory;
@@ -23488,7 +23488,7 @@
 				2A79A5292C8A03DB00224469 /* RequestFactory+createGetPaymentTemplateListRequestV3Tests.swift in Sources */,
 				2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */,
 				8376C1242C08950200B482FC /* Model+makeSectionsTests.swift in Sources */,
-				2A9F82D92CF5950D00EB0EAC /* RootViewModelFactory+makeGetRootNavigationTests.swift in Sources */,
+				2A9F82D92CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift in Sources */,
 				2A1EEB3A2C802F1A006F96BE /* RootViewModelFactory+makeTests.swift in Sources */,
 				83E2F6162A41A4A0000B64CF /* InfoProductViewModelTests.swift in Sources */,
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,

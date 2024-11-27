@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeGetRootNavigationTests.swift
+//  RootViewModelFactory+getRootNavigationTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 26.11.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTests {
     
     // MARK: - scanQR
     
