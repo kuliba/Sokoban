@@ -9,9 +9,32 @@ import SwiftUI
 
 public struct OrderSavingsAccountState: Equatable {
     
-    let data: OrderSavingsAccount
+    let status: Status
     
-    public init(data: OrderSavingsAccount) {
-        self.data = data
+    public init(status: Status) {
+        self.status = status
+    }
+}
+
+public extension OrderSavingsAccountState {
+    
+    enum Status: Equatable {
+        
+        case inflight
+        case result(OrderSavingsAccount)
+    }
+}
+
+extension OrderSavingsAccountState {
+    
+    var data: OrderSavingsAccount? {
+        
+        switch status {
+        case .inflight:
+            return nil
+            
+        case let .result(result):
+            return result
+        }
     }
 }

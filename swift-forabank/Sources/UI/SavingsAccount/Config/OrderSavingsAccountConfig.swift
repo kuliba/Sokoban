@@ -11,7 +11,7 @@ import PaymentComponents
 import LinkableText
 
 public struct OrderSavingsAccountConfig {
-
+    
     let amount: AmountConfig
     let background: Color
     let cornerRadius: CGFloat
@@ -22,6 +22,7 @@ public struct OrderSavingsAccountConfig {
     let openButton: OpenButton
     let order: Order
     let padding: CGFloat
+    let shimmering: Color
     let topUp: TopUp
     
     public init(
@@ -35,6 +36,7 @@ public struct OrderSavingsAccountConfig {
         openButton: OpenButton,
         order: Order,
         padding: CGFloat,
+        shimmering: Color,
         topUp: TopUp
     ) {
         self.amount = amount
@@ -47,11 +49,12 @@ public struct OrderSavingsAccountConfig {
         self.openButton = openButton
         self.order = order
         self.padding = padding
+        self.shimmering = shimmering
         self.topUp = topUp
     }
     
     public struct LinkableTexts {
-       
+        
         let checkBoxSize: CGSize
         let condition: String
         let tag: LinkableText.Tag
@@ -160,7 +163,7 @@ public struct OrderSavingsAccountConfig {
             self.toggle = toggle
         }
     }
-        
+    
     public struct Income {
         
         let image: Image
