@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeGetRootNavigationTests.swift
+//  RootViewModelFactory+getRootNavigationTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 26.11.2024.
@@ -8,7 +8,26 @@
 @testable import ForaBank
 import XCTest
 
-final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTests {
+    
+    // MARK: - outside
+    
+    func test_outside_productProfile_shouldDeliverOutsideProductProfile() {
+        
+        let productID = makeProductID()
+        
+        expect(.outside(.productProfile(productID)), toDeliver: .outside(.productProfile(productID)))
+    }
+    
+    func test_outside_tab_main_shouldDeliverOutsideTabMain() {
+        
+        expect(.outside(.tab(.main)), toDeliver: .outside(.tab(.main)))
+    }
+    
+    func test_outside_tab_payments_shouldDeliverOutsideTabPayments() {
+        
+        expect(.outside(.tab(.payments)), toDeliver: .outside(.tab(.payments)))
+    }
     
     // MARK: - scanQR
     
@@ -42,7 +61,7 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     
     func test_templates_shouldNotifyWithMainTabOnMainTabStatus() {
         
-        expect(.templates, toNotifyWith: [.select(.tab(.main))]) {
+        expect(.templates, toNotifyWith: [.select(.outside(.tab(.main)))]) {
             
             $0.templates?.event(.flow(.init(status: .tab(.main))))
         }
@@ -50,8 +69,10 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     
     func test_templates_shouldNotifyWithPaymentsTabOnPaymentsTabStatus() {
         
-        expect(.templates, toNotifyWith: [.select(.tab(.payments))]) {
-            
+        expect(
+            .templates,
+            toNotifyWith: [.select(.outside(.tab(.payments)))]
+        ) {
             $0.templates?.event(.flow(.init(status: .tab(.payments))))
         }
     }
@@ -60,8 +81,10 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         
         let productID = makeProductID()
         
-        expect(.templates, toNotifyWith: [.select(.productProfile(productID))]) {
-            
+        expect(
+            .templates,
+            toNotifyWith: [.select(.outside(.productProfile(productID)))]
+        ) {
             $0.templates?.event(.select(.productID(productID)))
         }
     }
@@ -81,13 +104,20 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .scanQR:    return .scanQR
-        case .templates: return .templates
+        case let .outside(outside):
+            return .outside(outside)
+            
+        case .scanQR:
+            return .scanQR
+            
+        case .templates:
+            return .templates
         }
     }
     
-    private enum EquatableNavigation {
+    private enum EquatableNavigation: Equatable {
         
+        case outside(RootViewOutside)
         case scanQR
         case templates
     }
@@ -99,11 +129,12 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
         line: UInt = #line
     ) {
         let sut = makeSUT().sut
-        let getNavigation = sut.makeGetRootNavigation()
         let exp = expectation(description: "wait for completion")
         
-        getNavigation(select, { _ in }) {
-            
+        sut.getRootNavigation(
+            select: select,
+            notify: { _ in }
+        ) {
             XCTAssertNoDiff(self.equatable($0), expectedNavigation, "Expected \(expectedNavigation), got \($0) instead.", file: file, line: line)
             exp.fulfill()
         }
@@ -120,11 +151,12 @@ final class RootViewModelFactory_makeGetRootNavigationTests: RootViewModelFactor
     ) {
         let sut = makeSUT().sut
         let notifySpy = NotifySpy(stubs: [()])
-        let getNavigation = sut.makeGetRootNavigation()
         let exp = expectation(description: "wait for completion")
         
-        getNavigation(select, notifySpy.call) {
-            
+        sut.getRootNavigation(
+            select: select,
+            notify: notifySpy.call
+        ) {
             assert($0)
             exp.fulfill()
         }

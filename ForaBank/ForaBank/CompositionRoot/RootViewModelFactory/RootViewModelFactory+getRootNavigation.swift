@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeGetRootNavigation.swift
+//  RootViewModelFactory+getRootNavigation.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 18.11.2024.
@@ -10,39 +10,34 @@ import Combine
 extension RootViewModelFactory {
     
     @inlinable
-    func makeGetRootNavigation() -> RootViewDomain.GetNavigation {
-        
-        return { [weak self] select, notify, completion in
+    func getRootNavigation(
+        select: RootViewSelect,
+        notify: @escaping RootViewDomain.Notify,
+        completion: @escaping (RootViewNavigation) -> Void
+    ) {
+        switch select {
+        case let .outside(outside):
+            completion(.outside(outside))
             
-            guard let self else { return }
+        case .scanQR:
+            let qrScanner = makeQRScannerBinder()
+            let cancellable = bind(qrScanner.content, using: notify)
             
-            switch select {
-            case let .productProfile(productID):
-                break
-                
-            case .scanQR:
-                let qrScanner = makeQRScannerBinder()
-                let cancellable = bind(qrScanner.content, using: notify)
-                
-                completion(.scanQR(.init(
-                    model: qrScanner,
-                    cancellable: cancellable
-                )))
-                
-            case let .tab(tab):
-                break
-                
-            case .templates:
-                let templates = makeMakeTemplates(
-                    closeAction: { notify(.dismiss) }
-                )
-                let cancellables = bind(templates, with: notify)
-                
-                completion(.templates(.init(
-                    model: templates,
-                    cancellables: cancellables
-                )))
-            }
+            completion(.scanQR(.init(
+                model: qrScanner,
+                cancellable: cancellable
+            )))
+            
+        case .templates:
+            let templates = makeMakeTemplates(
+                closeAction: { notify(.dismiss) }
+            )
+            let cancellables = bind(templates, with: notify)
+            
+            completion(.templates(.init(
+                model: templates,
+                cancellables: cancellables
+            )))
         }
     }
     
@@ -103,15 +98,15 @@ private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel
             return nil
             
         case let .productID(productID):
-            return .select(.productProfile(productID))
+            return .select(.outside(.productProfile(productID)))
             
         case let .tab(tab):
             switch tab {
             case .main:
-                return .select(.tab(.main))
+                return .select(.outside(.tab(.main)))
                 
             case .payments:
-                return .select(.tab(.payments))
+                return .select(.outside(.tab(.payments)))
             }
         }
     }
