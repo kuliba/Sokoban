@@ -163,7 +163,6 @@ private enum AutofocusedViewModifiers {
         }
     }
 
-    @available(iOS 15, *)
     struct Modern: ViewModifier {
         
         @FocusState private var isFocused: Bool

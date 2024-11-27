@@ -8,7 +8,7 @@
 import AnywayPaymentBackend
 import CalendarUI
 import CodableLanding
-import CollateralLoanLandingShowCaseBackend
+import CollateralLoanLandingGetShowcaseBackend
 import Combine
 import Fetcher
 import ForaTools
@@ -309,8 +309,8 @@ extension RootViewModelFactory {
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
+            createRequest: RequestFactory.createGetShowcaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
         
         let paymentsTransfersPersonalNanoServices = composePaymentsTransfersPersonalNanoServices()
