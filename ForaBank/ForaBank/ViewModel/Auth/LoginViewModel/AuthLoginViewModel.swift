@@ -174,12 +174,8 @@ extension AuthLoginViewModel {
         case .alertViewModel:
             
             switch self.alert {
-                
-            case let .some(alert):
-                
-                return .init(title: Text(alert.title),
-                             message: Text(alert.message ?? ""),
-                             dismissButton: .cancel())
+            
+            case let .some(alert): return Alert(with: alert)
                 
             case .none: return .init(title: Text("Ошибка"))
             }
