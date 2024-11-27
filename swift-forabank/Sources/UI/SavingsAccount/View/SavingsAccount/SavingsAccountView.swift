@@ -1,12 +1,4 @@
-//
-//  SavingsAccountView.swift
-//
-//
-//  Created by Andryusina Nataly on 18.11.2024.
-//
 
-import SwiftUI
-import SharedConfigs
 
 struct SavingsAccountView: View {
     
