@@ -1322,17 +1322,15 @@ private extension Target {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         dependencies: [],
-        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend"
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
     
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = testTarget(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
         dependencies: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
-            .customDump,
-            .foraTools
         ],
-        path: "Tests/Landing/CollateralLoanTests/CreateDraftCollateralLoanApplication/Backend"
+        path: "Tests/Landing/CollateralLoanTests/CreateDraftCollateralLoanApplication/Backend/V1"
 //        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend"
     )
     

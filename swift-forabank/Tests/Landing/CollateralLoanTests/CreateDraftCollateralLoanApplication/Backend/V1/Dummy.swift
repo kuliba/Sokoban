@@ -7,9 +7,10 @@
 
 // TODO: Will be delete after tests creation
 
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend
 import XCTest
 
-final class DummyTest: XCTest {
+final class DummyTest: XCTestCase {
     
     func test_test() {
         
@@ -18,7 +19,7 @@ final class DummyTest: XCTest {
     
     func test_fail() {
         
-        fatalError()
+        _ = Dummy()
         XCTFail()
     }
 }
