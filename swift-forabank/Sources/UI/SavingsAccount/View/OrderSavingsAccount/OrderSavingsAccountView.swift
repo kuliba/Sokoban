@@ -47,31 +47,25 @@ where OTPView: View,
     
     var body: some View {
         
-        // MARK: - remove `if #available` after update platforms in package
-        
-        if #available(iOS 15.0, *) {
-            ScrollView(showsIndicators: false) {
-                
-                VStack(spacing: config.padding) {
-                    order()
-                    income()
-                    topUp()
-                    if isShowingProducts {
-                        products()
-                    }
-                    otp()
-                    condition()
+        ScrollView(showsIndicators: false) {
+            
+            VStack(spacing: config.padding) {
+                order()
+                income()
+                topUp()
+                if isShowingProducts {
+                    products()
                 }
-                .padding(.horizontal, config.padding)
+                otp()
+                condition()
             }
-            .coordinateSpace(name: coordinateSpace)
-            .toolbar(content: toolbarContent)
-            .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
-        } else {
-            Text("Only ios 15.0")
+            .padding(.horizontal, config.padding)
         }
+        .coordinateSpace(name: coordinateSpace)
+        .toolbar(content: toolbarContent)
+        .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
     }
     
     private func condition() -> some View {
