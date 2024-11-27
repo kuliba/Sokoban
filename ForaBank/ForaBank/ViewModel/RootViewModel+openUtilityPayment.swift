@@ -38,32 +38,14 @@ extension RootViewModel {
             case .corporate:
                 break
                 
-            case let .personal(payments):
+            case .personal:
                 
-                guard let payment = payment(by: category),
-                      let picker = payments.content.categoryPicker.sectionBinder
-                else {
+                guard let payment = payment(by: category) else {
                     
                     LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
                     return
                 }
-                
-                let element = picker.content.state.elements.first {
-                    
-                    $0.element.type == payment
-                }
-                
-                guard let element else {
-                    
-                    return LoggerAgent.shared.log(category: .payments, message: "Element for \(category) not found.")
-                }
-                
-                withAnimation {
-                    
-                    switchTab(.payments)
-                    
-                    picker.flow.event(.select(element.element))
-                }
+                action.send(RootEvent.standardPayment)
             }
             
         default:

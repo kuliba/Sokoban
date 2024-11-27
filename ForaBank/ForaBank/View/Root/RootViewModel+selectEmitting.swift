@@ -21,7 +21,14 @@ private extension RootViewModel {
     
     var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        mainViewRootEventPublishers + paymentsTransfersRootEventPublishers
+        [rootRootEventPublisher] 
+        + mainViewRootEventPublishers
+        + paymentsTransfersRootEventPublishers
+    }
+    
+    private var rootRootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        action.compactMap(\.rootEvent).eraseToAnyPublisher()
     }
     
     private var mainViewRootEventPublishers: [AnyPublisher<RootEvent, Never>] {

@@ -87,20 +87,20 @@ extension MainSectionFastOperationView {
             var title: String {
                 
                 switch self {
-                case .byQr: return FastOperationsTitles.qr
-                case .byPhone: return FastOperationsTitles.byPhone
+                case .byQr:      return FastOperationsTitles.qr
+                case .byPhone:   return FastOperationsTitles.byPhone
                 case .templates: return FastOperationsTitles.templates
-                case .zku: return FastOperationsTitles.zku
+                case .zku:       return FastOperationsTitles.utilityPayment
                 }
             }
             
             var icon: Image {
                 
                 switch self {
-                case .byQr: return .ic24BarcodeScanner2
-                case .byPhone: return .ic24Smartphone
+                case .byQr:      return .ic24BarcodeScanner2
+                case .byPhone:   return .ic24Smartphone
                 case .templates: return .ic24Star
-                case .zku: return .ic24Bulb
+                case .zku:       return .ic24Bulb
                 }
             }
         }
@@ -112,8 +112,7 @@ enum FastOperationsTitles {
     static let qr = "Оплата по QR"
     static let byPhone = "Перевод по телефону"
     static let templates = "Шаблоны"
-    static let zku = "Оплата ЖКУ"
-    
+    static let utilityPayment = "Оплата ЖКУ"    
 }
 
 //MARK: - View
