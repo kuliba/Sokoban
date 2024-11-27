@@ -522,10 +522,10 @@ extension RootViewModelFactory {
         
         createGetNotAuthorizedZoneClientInformData {
             
-            if let info = $0 {
+            if let alerts = $0 {
                 
-                self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                self.model.clientNotAuthorizedAlerts.value = info
+                self.logger.log(level: .info, category: .network, message: "notifications \(alerts)", file: #file, line: #line)
+                self.model.clientInformAlertManager.update(alerts: alerts)
             } else {
                 
                 self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)

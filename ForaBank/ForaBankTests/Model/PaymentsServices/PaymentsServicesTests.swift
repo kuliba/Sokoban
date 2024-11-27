@@ -571,7 +571,7 @@ extension Model {
         ]
         let localAgent = LocalAgentStub(stub: localAgentDataStub)
         
-        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: localAgent, keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock(), cameraAgent: CameraAgentMock(), imageGalleryAgent: ImageGalleryAgentMock(), networkMonitorAgent: NetworkMonitorAgentMock())
+        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: localAgent, keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock(), cameraAgent: CameraAgentMock(), imageGalleryAgent: ImageGalleryAgentMock(), networkMonitorAgent: NetworkMonitorAgentMock(), clientInformAlertManager: any AlertManager<ClientInformAlerts>)
         
         return model
     }()

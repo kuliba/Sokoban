@@ -37,7 +37,7 @@ private extension Model {
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformAlerts: clientNotAuthorizedAlerts
+            clientInformAlerts: clientInformAlertManager.alertPublisher
                 .compactMap { $0 }
                 .eraseToAnyPublisher(),
             

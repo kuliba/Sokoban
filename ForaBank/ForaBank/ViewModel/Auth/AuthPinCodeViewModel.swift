@@ -122,28 +122,9 @@ class AuthPinCodeViewModel: ObservableObject {
 
     func bind() {
         
-        model.sessionState
-            .combineLatest(model.clientNotAuthorizedAlerts, self.viewDidAppear)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessionState, clientInformAlerts, viewDidAppear in
-                
-                guard let self else { return }
-                
-                switch sessionState {
-                case .active:
-                    
-                    withAnimation {
-                        self.spinner = nil
-                    }
-                    
-                    self.clientInformAlerts = clientInformAlerts
-                
-                default:
-                    withAnimation {
-                        self.spinner = .init()
-                    }
-                }
-            }.store(in: &bindings)
+        model.clientInformAlertManager.alertPublisher
+            .sink { self.clientInformAlerts = $0 }.store(in: &bindings)
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -394,6 +375,8 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
+                            self?.model.clientInformAlertManager.dismiss()
+                            
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
                         }))
@@ -521,6 +504,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.pinCode.isAnimated = true
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Check.Request")
+                        model.clientInformAlertManager.dismiss()
                         model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pincodeValue.value, attempt: attempt))
                         
                     case .create:
@@ -747,11 +731,7 @@ extension AuthPinCodeViewModel {
             
             switch self.alert {
                 
-            case let .some(alert):
-                
-                return .init(title: Text(alert.title),
-                             message: Text(alert.message ?? ""),
-                             dismissButton: .cancel())
+            case let .some(alert): return Alert(with: alert)
                 
             case .none: return .init(title: Text("Ошибка"))
             }

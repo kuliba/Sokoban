@@ -967,7 +967,8 @@ private extension Model {
         _ data: ClientInformAlerts?,
         timeout: TimeInterval = 0.05
     ) {
-        clientNotAuthorizedAlerts.send(data)
+        guard let alerts = data else { return }
+        clientInformAlertManager.update(alerts: alerts)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -1030,7 +1031,7 @@ struct NextAlertTests {
     var informAlerts: [ClientInformAlerts.InformAlert] = []
     var updateAlert: ClientInformAlerts.UpdateAlert?
 
-    mutating func next() {
+    mutating func next() { // Use real next from ClientInformAlerts
         
         if informAlerts.isEmpty {
             
