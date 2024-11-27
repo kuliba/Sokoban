@@ -42,13 +42,17 @@ class AcceptanceTests: QRNavigationTests {
         
         init(
             featureFlags: FeatureFlags = .active,
+            httpClient: any HTTPClient = HTTPClientSpy(),
             dismiss: @escaping () -> Void = {},
+            model: Model = .mockWithEmptyExcept(),
             scanResult: QRModelResult = .unknown,
             scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
             schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
+                httpClient: httpClient,
                 mapScanResult: { _, completion in completion(scanResult) },
+                model: model,
                 scanner: scanner,
                 schedulers: schedulers
             )
@@ -61,7 +65,7 @@ class AcceptanceTests: QRNavigationTests {
             )
         }
         
-        func launch() throws -> RootViewBinderView {
+        func launch() throws -> RootBinderView {
             
             let rootViewController = RootViewHostingViewController(
                 with: binder,

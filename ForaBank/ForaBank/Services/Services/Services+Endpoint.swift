@@ -17,23 +17,27 @@ extension Services {
         
         enum PathPrefix {
             
-            case processing(Processing)
-            case dict
             case binding
+            case dict
+            case getShowcaseCollateralLoanLanding
+            case processing(Processing)
             case rest
             case transfer
             
             var path: String {
                 
                 switch self {
-                case let .processing(processing):
-                    return "processing/\(processing.rawValue)"
-                    
-                case .dict:
-                    return "dict"
-                    
                 case .binding:
                     return "rest/binding"
+
+                case .dict:
+                    return "dict"
+
+                case .getShowcaseCollateralLoanLanding:
+                    return "rest/v1/pages/collateral"
+                    
+                case let .processing(processing):
+                    return "processing/\(processing.rawValue)"
                     
                 case .rest:
                     return "rest"
@@ -85,6 +89,8 @@ extension Services {
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
+            case getConsentsCollateralLoanLanding = "getConsents"
+            case getShowcaseCollateralLoanLanding = "getShowcase"
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
@@ -470,6 +476,12 @@ extension Services.Endpoint {
         serviceName: .getAllLatestPayments
     )
     
+    static let getConsents: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getConsentsCollateralLoanLanding
+    )
+    
     static let getAllLatestPaymentsV3: Self = .init(
         pathPrefix: .rest,
         version: .v3,
@@ -486,5 +498,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .saveConsents
+    )
+    
+    static let getShowcaseCollateralLoanLanding: Self = .init(
+        pathPrefix: .getShowcaseCollateralLoanLanding,
+        version: nil,
+        serviceName: .getShowcaseCollateralLoanLanding
     )
 }
