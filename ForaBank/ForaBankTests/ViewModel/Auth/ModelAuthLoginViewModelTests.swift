@@ -491,6 +491,42 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
 
         XCTAssertNoDiff(spy.values, [oneElementInformArrayAndUpdateAlert, twoElementInformArrayAndUpdateAlert])
     }
+    
+    func test_next_withNilUpdateAlert() {
+            
+        var nextManager = NextAlertTests()
+        
+        nextManager.updateAlert = nil
+        
+        nextManager.next()
+        
+        XCTAssertNil(nextManager.updateAlert)
+    }
+    
+    func test_next_withEmptyInformAlerts_andUpdateAlert() {
+            
+        var nextManager = NextAlertTests()
+        
+        nextManager.updateAlert = makeUpdateAlertItem()
+        
+        nextManager.next()
+        
+        XCTAssertNotNil(nextManager.updateAlert)
+    }
+    
+    func test_next_withNonEmptyInformAlerts() {
+        
+        var nextManager = NextAlertTests()
+        
+        let firstAlert = makeInformAlertItem()
+        let secondAlert = makeInformAlertItem()
+        
+        nextManager.informAlerts = [firstAlert, secondAlert]
+        
+        nextManager.next()
+        
+        XCTAssertEqual(nextManager.informAlerts, [secondAlert])
+    }
 
     // MARK: - Events: AuthLoginViewModelAction.Register
 
@@ -986,6 +1022,34 @@ private extension ModelAuthLoginViewModelTests {
             informAlerts: informAlerts,
             updateAlert: updateAlert
         )
+    }
+}
+
+struct NextAlertTests {
+
+    var informAlerts: [ClientInformAlerts.InformAlert] = []
+    var updateAlert: ClientInformAlerts.UpdateAlert?
+
+    mutating func next() {
+        
+        if informAlerts.isEmpty {
+            
+            if let updateAlert {
+            
+                self.updateAlert = .init(
+                    id: .init(), // Restore with different ID
+                    title: updateAlert.title,
+                    text: updateAlert.text,
+                    link: updateAlert.link,
+                    version: updateAlert.version,
+                    actionType: updateAlert.actionType
+                )
+            }
+        } else {
+            informAlerts = .init(
+                informAlerts.dropFirst()
+            )
+        }
     }
 }
 
