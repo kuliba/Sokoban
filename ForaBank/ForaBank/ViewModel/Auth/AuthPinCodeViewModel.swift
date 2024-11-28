@@ -107,7 +107,7 @@ class AuthPinCodeViewModel: ObservableObject {
         bind()
     }
     
-    var alertType: AlertType? {
+    var currentAlertModel: AlertModelType? {
         switch (alert, clientInformAlerts?.alert) {
         
         case (let .some(alert), _):
@@ -681,9 +681,9 @@ extension AuthPinCodeViewModel {
         if let url = createAppStoreURL() { openURL(url) }
     }
     
-    func swiftUIAlert(forAlertType alertType: AlertType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
+    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
 
-        switch alertType {
+        switch alertModelType {
             
         case .clientInformAlerts:
             

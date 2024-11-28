@@ -80,7 +80,7 @@ class AuthLoginViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    var alertType: AlertType? {
+    var currentAlertModel: AlertModelType? {
         switch (alert, clientInformAlerts?.alert) {
         
         case (let .some(alert), _):
@@ -127,7 +127,7 @@ extension AuthLoginViewModel {
         if let url = createAppStoreURL() { openURL(url) }
     }
     
-    func swiftUIAlert(forAlertType alertType: AlertType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
+    func swiftUIAlert(forAlertType alertType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
 
         switch alertType {
             

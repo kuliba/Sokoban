@@ -9,4 +9,4 @@ import UIPrimitives
 
 typealias ClientInformAlerts = UIPrimitives.ClientInformAlerts
 typealias ClientInformActionType = UIPrimitives.ClientInformActionType
-typealias AlertType = UIPrimitives.AlertType
+typealias AlertModelType = UIPrimitives.AlertModelType

@@ -52,7 +52,7 @@ struct AuthPinCodeView: View {
         }
         .background(Color.white)
         .navigationBarHidden(true)
-        .alert(item: viewModel.alertType, content: alert(forAlertType:))
+        .alert(item: viewModel.currentAlertModel, content: alert(forAlertModelType:))
         .onAppear {
             viewModel.action.send(AuthPinCodeViewModelAction.Appear())
         }
@@ -60,9 +60,9 @@ struct AuthPinCodeView: View {
 }
 
 extension AuthPinCodeView {
-    func alert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
+    func alert(forAlertModelType alertModelType: AlertModelType) -> SwiftUI.Alert {
         
-        return viewModel.swiftUIAlert(forAlertType: alertType) {
+        return viewModel.swiftUIAlert(forAlertModelType: alertModelType) {
             
             viewModel.clientInformAlertButtonTapped { url in openURL(url) }
         }

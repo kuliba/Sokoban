@@ -23,7 +23,7 @@ struct AuthLoginView: View {
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: viewModel.card)
         }
-        .alert(item: viewModel.alertType, content: alert(forAlertType:))
+        .alert(item: viewModel.currentAlertModel, content: alert(forAlertModelType:))
         .present(item: $viewModel.cardScanner, style: .fullScreen) {
             
             CardScannerView(viewModel: $0)
@@ -33,9 +33,9 @@ struct AuthLoginView: View {
 }
 
 extension AuthLoginView {
-    func alert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
+    func alert(forAlertModelType alertModelType: AlertModelType) -> SwiftUI.Alert {
         
-        return viewModel.swiftUIAlert(forAlertType: alertType) {
+        return viewModel.swiftUIAlert(forAlertType: alertModelType) {
             
             viewModel.clientInformAlertButtonTapped { url in openURL(url) }
         }
