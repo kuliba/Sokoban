@@ -76,9 +76,20 @@ private extension RootWrapperView {
     ) -> some View {
         
         switch destination {
+        case let .standardPayment(picker):
+            standardPaymentView(picker)
+            
         case let .templates(node):
             templatesView(node)
         }
+    }
+    
+    private func standardPaymentView(
+        _ picker: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        viewFactory.makePaymentProviderPickerView(picker)
+            .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
     }
     
     private func templatesView(
@@ -144,11 +155,18 @@ extension RootViewNavigation {
     var destination: Destination? {
         
         switch self {
+            // TODO: make alert
+        case .failure:
+            return nil
+            
         case .outside:
             return nil
             
         case .scanQR:
             return nil
+            
+        case let .standardPayment(node):
+            return .standardPayment(node.model)
             
         case let .templates(node):
             return .templates(node)
@@ -157,6 +175,7 @@ extension RootViewNavigation {
     
     enum Destination {
         
+        case standardPayment(PaymentProviderPicker.Binder)
         case templates(TemplatesNode)
         
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -165,11 +184,17 @@ extension RootViewNavigation {
     var fullScreenCover: FullScreenCover? {
         
         switch self {
+        case .failure:
+            return nil
+            
         case .outside:
             return nil
             
         case let .scanQR(node):
             return .scanQR(node.model)
+            
+        case .standardPayment:
+            return nil
             
         case .templates:
             return nil
@@ -187,6 +212,9 @@ extension RootViewNavigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .standardPayment(picker):
+            return .standardPayment(.init(picker))
+            
         case let .templates(templates):
             return .templates(.init(templates.model))
         }
@@ -194,6 +222,7 @@ extension RootViewNavigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
     }
 }

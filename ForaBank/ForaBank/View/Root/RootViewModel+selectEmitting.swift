@@ -21,7 +21,14 @@ private extension RootViewModel {
     
     var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        mainViewRootEventPublishers + paymentsTransfersRootEventPublishers
+        [rootRootEventPublisher] 
+        + mainViewRootEventPublishers
+        + paymentsTransfersRootEventPublishers
+    }
+    
+    private var rootRootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        action.compactMap(\.rootEvent).eraseToAnyPublisher()
     }
     
     private var mainViewRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
@@ -98,7 +105,7 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
         case .byQr:      return .scanQR
         case .templates: return .templates
         case .byPhone:   return nil
-        case .zku:       return nil
+        case .utility:       return nil
         }
     }
 }

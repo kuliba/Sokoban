@@ -54,6 +54,7 @@ enum ElementIDs {
         
         enum Destination: String {
             
+            case standardPayment
             case templates
         }
     }
