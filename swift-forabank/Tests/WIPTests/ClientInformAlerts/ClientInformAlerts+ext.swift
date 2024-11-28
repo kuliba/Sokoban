@@ -50,9 +50,7 @@ extension ClientInformAlerts {
                 )
             }
         } else {
-            informAlerts = .init(
-                informAlerts.dropFirst()
-            )
+            informAlerts = .init(informAlerts.dropFirst())
         }
     }
 }
