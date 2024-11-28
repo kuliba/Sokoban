@@ -86,7 +86,7 @@ extension OrderSavingsAccount {
     static let preview: Self = .init(
         currency: .init(code: 810, symbol: "Rub"),
         designMd5hash: "1",
-        fee: .init(openAndMaintenance: 11, subscription: .init(period: "month", value: 10)),
+        fee: .init(open: 100, subscription: .init(period: "month", value: 0)),
         header: .init(title: "Накопительный Счет", subtitle: "Накопительный в рублях"),
         hint: "Вы можете сразу пополнить счет",
         income: "6,05%",
@@ -149,7 +149,9 @@ extension OrderSavingsAccountConfig {
         topUp: .init(
             amount: .init(
                 amount: .init(text: "Сумма пополнения", config: .init(textFont: .system(size: 14), textColor: .gray)),
-                fee: .init(text: "Комиссия", config: .init(textFont: .system(size: 14), textColor: .gray))),
+                fee: .init(text: "Комиссия", config: .init(textFont: .system(size: 14), textColor: .gray)),
+                value: .init(textFont: .system(size: 14), textColor: .black)
+            ),
             description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .system(size: 12), textColor: .gray)),
             image: .init(systemName: "message"),
             subtitle: .init(text: "Пополнить сейчас", config: .init(textFont: .system(size: 16), textColor: .black)),

@@ -5,24 +5,24 @@
 //  Created by Andryusina Nataly on 25.11.2024.
 //
 
-import PaymentComponents
-import SwiftUI
-import SharedConfigs
 import LinkableText
+import PaymentComponents
+import SharedConfigs
+import SwiftUI
 
-struct OrderSavingsAccountView<OTPView, ProductPicker>: View
-where OTPView: View,
+struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
+where AmountInfo: View,
+      OTPView: View,
       ProductPicker: View {
     
     let state: OrderSavingsAccountState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let viewFactory: ViewFactory<OTPView, ProductPicker>
+    let viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>
     
     private let coordinateSpace: String
     
-    // TODO: need move to State
     @State private(set) var isShowHeader = false
     @State private(set) var isShowingProducts = false
     
@@ -31,7 +31,7 @@ where OTPView: View,
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
-        viewFactory: ViewFactory<OTPView, ProductPicker>,
+        viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
@@ -63,7 +63,7 @@ where OTPView: View,
                 designMd5hash: data?.designMd5hash ?? "",
                 header: (data?.header.title ?? "", data?.header.subtitle ?? ""),
                 orderOption: (
-                    state.openAndMaintenance,
+                    state.openValue,
                     state.orderServiceOption
                 ),
                 needShimmering: data == nil
@@ -116,16 +116,13 @@ where OTPView: View,
     @ViewBuilder
     private func footer() -> some View {
         if isShowingProducts, !state.isShowingOTP {
-            amount(state.currencyCode)
+            amount()
         } else {
             openButton()
         }
     }
     
-    @ViewBuilder
-    private func amount(
-        _ currencySymbol: String
-    ) -> some View {
+    private func amount() -> some View {
         
         AmountView(
             amount: state.amountView,
@@ -138,19 +135,12 @@ where OTPView: View,
                     event(.amount(.pay))
                 }
             },
-            currencySymbol: currencySymbol,
+            currencySymbol: state.currencyCode,
             config: config.amount,
-            infoView: {
-                HStack {
-                    "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
-                    
-                    Image(systemName: "info.circle")
-                        .foregroundColor(.gray)
-                }
-            })
+            infoView: viewFactory.makeAmountInfoView
+        )
     }
     
-    @ViewBuilder
     private func openButton() -> some View {
         
         Button(
@@ -297,19 +287,20 @@ where OTPView: View,
     
     private func topUpInfo() -> some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: config.padding / 2 ) {
             
             HStack {
                 config.topUp.amount.amount.text.text(withConfig: config.topUp.amount.amount.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                state.amountToString().text(withConfig: .init(textFont: .system(size: 14), textColor: .black))
+                state.amountToString().text(withConfig: config.topUp.amount.value)
             }
             HStack {
                 config.topUp.amount.fee.text.text(withConfig: config.topUp.amount.fee.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                "0 ₽".text(withConfig: .init(textFont: .system(size: 14), textColor: .black))
+                "0 ₽".text(withConfig: config.topUp.amount.value)
             }
         }
+        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
     }
     
     private func incomeInfo(
@@ -381,7 +372,7 @@ where OTPView: View,
                     .shimmering()
             }
             else {
-                config.income.image
+                config.topUp.image
                     .frame(config.income.imageSize)
                     .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             }
@@ -485,14 +476,25 @@ private extension OrderSavingsAccountState {
         
         guard let data else { return "" }
         
-        return "\(data.fee.subscription.value)" + "\(data.fee.subscription.period)"
+        return (data.fee.subscription.value == 0 || data.fee.subscription.period == "free")
+        ? "Бесплатно"
+        : "\(data.fee.subscription.value) \(currencyCode) " + period
     }
     
-    var openAndMaintenance: String {
+    var period: String {
+        
+        switch data?.fee.subscription.period {
+        case "month": return "в месяц"
+        case "year": return "в год"
+        default: return ""
+        }
+    }
+    
+    var openValue: String {
         
         guard let data else { return "" }
         
-        return "\(data.fee.openAndMaintenance)"
+        return data.fee.open == 0 ? "Бесплатно" : "\(data.fee.open) \(currencyCode)"
     }
 }
 
@@ -506,7 +508,8 @@ private extension String {
 }
 
 extension OrderSavingsAccountView
-where OTPView == Text,
+where AmountInfo == Text,
+      OTPView == Text,
       ProductPicker == Text {
     
     static var placeholder: Self {
@@ -537,6 +540,7 @@ where OTPView == Text,
             config: .preview,
             factory: .default,
             viewFactory: .init(
+                makeAmountInfoView: { Text("") },
                 makeOTPView: { Text("Otp") },
                 makeProductPickerView: { Text("Products") })
         )
@@ -621,7 +625,17 @@ struct OrderSavingsAccountWrapperView: View {
                     event: $1,
                     config: config,
                     factory: imageViewFactory,
-                    viewFactory: .init(makeOTPView: { Text("Otp") }, makeProductPickerView: { Text("Products") })
+                    viewFactory: .init(
+                        makeAmountInfoView: {
+                            HStack {
+                                "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
+                                
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(.gray)
+                            }
+                        },
+                        makeOTPView: { Text("Otp") },
+                        makeProductPickerView: { Text("Products") })
                 )
             }
         )

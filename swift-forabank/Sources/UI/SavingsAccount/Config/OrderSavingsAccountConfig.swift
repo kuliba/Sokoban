@@ -168,13 +168,16 @@ public struct OrderSavingsAccountConfig {
             
             let amount: TextWithConfig
             let fee: TextWithConfig
+            let value: TextConfig
             
             public init(
                 amount: TextWithConfig,
-                fee: TextWithConfig
+                fee: TextWithConfig,
+                value: TextConfig
             ) {
                 self.amount = amount
                 self.fee = fee
+                self.value = value
             }
         }
         

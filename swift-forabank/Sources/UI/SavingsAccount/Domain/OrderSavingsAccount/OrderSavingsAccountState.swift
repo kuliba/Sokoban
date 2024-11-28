@@ -12,8 +12,8 @@ public struct OrderSavingsAccountState: Equatable {
     
     let status: Status
     var amountValue: Decimal
-    var isShowingOTP: Bool = false
     var consent: Bool = true
+    var isShowingOTP: Bool = false
 
     public init(status: Status, amountValue: Decimal = 0) {
         self.status = status
@@ -33,7 +33,6 @@ public extension OrderSavingsAccountState {
 extension OrderSavingsAccountState {
     
     var data: OrderSavingsAccount? {
-        
         switch status {
         case .inflight:
             return nil

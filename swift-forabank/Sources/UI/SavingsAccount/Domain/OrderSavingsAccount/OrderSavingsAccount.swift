@@ -40,11 +40,11 @@ public struct OrderSavingsAccount: Equatable {
     
     public struct Fee: Equatable {
         
-        let openAndMaintenance: Int
+        let open: Int
         let subscription: Subscription
         
-        public init(openAndMaintenance: Int, subscription: Subscription) {
-            self.openAndMaintenance = openAndMaintenance
+        public init(open: Int, subscription: Subscription) {
+            self.open = open
             self.subscription = subscription
         }
     }
