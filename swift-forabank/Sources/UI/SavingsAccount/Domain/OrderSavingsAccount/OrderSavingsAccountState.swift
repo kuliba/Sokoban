@@ -10,12 +10,19 @@ import AmountComponent
 
 public struct OrderSavingsAccountState: Equatable {
     
+    let formatter: NumberFormatter
     let status: Status
     var amountValue: Decimal
     var consent: Bool = true
     var isShowingOTP: Bool = false
+    
 
-    public init(status: Status, amountValue: Decimal = 0) {
+    public init(
+        formatter: NumberFormatter,
+        status: Status,
+        amountValue: Decimal = 0
+    ) {
+        self.formatter = formatter
         self.status = status
         self.amountValue = amountValue
     }
@@ -47,14 +54,8 @@ extension OrderSavingsAccountState {
     }
     
     func amountToString() -> String {
-        
-        let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 0
-        formatter.currencyCode = currencyCode
-        formatter.numberStyle = .currency
-        
-        return formatter.string(for: amountValue) ?? ""
+                
+        return (formatter.string(for: amountValue) ?? "") + " " + currencyCode
     }
     
     var currencyCode: String {

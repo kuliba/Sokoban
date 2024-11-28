@@ -84,7 +84,7 @@ extension Color {
 extension OrderSavingsAccount {
     
     static let preview: Self = .init(
-        currency: .init(code: 810, symbol: "Rub"),
+        currency: .init(code: 810, symbol: "₽"),
         designMd5hash: "1",
         fee: .init(open: 100, subscription: .init(period: "month", value: 0)),
         header: .init(title: "Накопительный Счет", subtitle: "Накопительный в рублях"),
@@ -93,10 +93,22 @@ extension OrderSavingsAccount {
         links: .init(conditions: "link1", tariff: "link2"))
 }
 
+extension NumberFormatter {
+    
+    static func preview() -> NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        
+        return formatter
+    }
+}
+
 extension OrderSavingsAccountState {
     
-    static let preview: Self = .init(status: .result(.preview))
-    static let placeholder: Self = .init(status: .inflight)
+    static let preview: Self = .init(formatter: .preview(), status: .result(.preview))
+    static let placeholder: Self = .init(formatter: .preview(), status: .inflight)
 }
 
 extension ToggleConfig {

@@ -297,7 +297,7 @@ where AmountInfo: View,
             HStack {
                 config.topUp.amount.fee.text.text(withConfig: config.topUp.amount.fee.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                "0 ₽".text(withConfig: config.topUp.amount.value)
+                "0 \(state.currencyCode)".text(withConfig: config.topUp.amount.value)
             }
         }
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
