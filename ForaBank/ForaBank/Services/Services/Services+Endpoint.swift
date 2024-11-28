@@ -73,16 +73,15 @@ extension Services {
             case changeClientConsentMe2MePull
             case changePIN
             case changeSVCardLimit
-            case saveConsents
             case createAnywayTransfer
             case createCommissionProductTransfer
+            case createDraftCollateralLoanApplication
             case createFastPaymentContract
             case createSberQRPayment
             case createStickerPayment
             case fastPaymentContractFindList
             case formSessionKey
             case getAllLatestPayments
-            case getInfoForRepeatPayment
             case getBankDefault
             case getBannerCatalogList
             case getC2BSub
@@ -90,20 +89,21 @@ extension Services {
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getConsentsCollateralLoanLanding = "getConsents"
-            case getShowcaseCollateralLoanLanding = "getShowcase"
+            case getInfoForRepeatPayment
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
             case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
+            case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
-            case getProcessingSessionCode
-            case getScenarioQRData
             case getSberQRData
+            case getScenarioQRData
             case getServiceCategoryList
+            case getShowcaseCollateralLoanLanding = "getShowcase"
             case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
@@ -111,14 +111,15 @@ extension Services {
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
-            case modifyC2BSubCard
             case modifyC2BSubAcc
+            case modifyC2BSubCard
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
+            case saveConsents
             case showCVV
-            case updateFastPaymentContract
             case unblockCard
+            case updateFastPaymentContract
             case userVisibilityProductsSettings
         }
     }
@@ -504,5 +505,11 @@ extension Services.Endpoint {
         pathPrefix: .getShowcaseCollateralLoanLanding,
         version: nil,
         serviceName: .getShowcaseCollateralLoanLanding
+    )
+    
+    static let createDraftCollateralLoanApplication: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .createDraftCollateralLoanApplication
     )
 }

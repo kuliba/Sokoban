@@ -78,9 +78,10 @@ extension SavingsAccountState.Questions {
 extension Color {
     
     static let gray30: Self = .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3)
+    static let background: Self = Color(red: 0.76, green: 0.76, blue: 0.76)
 }
 
-extension OrderSavingsAccountState {
+extension OrderSavingsAccount {
     
     static let preview: Self = .init(
         currency: .init(code: 810, symbol: "Rub"),
@@ -90,6 +91,12 @@ extension OrderSavingsAccountState {
         hint: "Вы можете сразу пополнить счет",
         income: "6,05%",
         links: .init(conditions: "link1", tariff: "link2"))
+}
+
+extension OrderSavingsAccountState {
+    
+    static let preview: Self = .init(status: .result(.preview))
+    static let placeholder: Self = .init(status: .inflight)
 }
 
 extension ToggleConfig {
@@ -109,16 +116,25 @@ extension OrderSavingsAccountConfig {
             dividerColor: .gray30,
             title: .init(textFont: .system(size: 14), textColor: .white)),
         background: .gray30,
-        backImage: .init(systemName: "chevron.backward"),
         cornerRadius: 12,
-        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .caption, textColor: .black)),
+        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .system(size: 18), textColor: .black)),
+        images: .init(
+            back: .init(systemName: "chevron.backward"),
+            checkOff: .init(systemName: "square"),
+            checkOn: .init(systemName: "checkmark.square")),
         income: .init(
             image: .init(systemName: "percent"),
             imageSize: .init(width: 24, height: 24),
             title: .init(text: "Доход",
                          config: .init(textFont: .body, textColor: .gray)),
-            subtitle: .init(textFont: .headline, textColor: .black)),
-        openButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Открыть накопительный счет", title: .init(textFont: .body, textColor: .white)),
+            subtitle: .init(textFont: .headline, textColor: .black)), 
+        linkableTexts: .init(checkBoxSize: .init(width: 24, height: 24), condition: "Я соглашаюсь с <u>Условиями</u> и ", tariff: "<u>Тарифами</u>"),
+        openButton: .init(
+            background: .init(active: .red, inactive: .gray),
+            cornerRadius: 12,
+            height: 56,
+            label: "Открыть накопительный счет",
+            title: .init(textFont: .body, textColor: .white)),
         order: .init(
             card: .init(width: 112, height: 72),
             header: .init(title: .init(textFont: .body, textColor: .black), subtitle: .init(textFont: .subheadline, textColor: .gray)),
@@ -129,6 +145,7 @@ extension OrderSavingsAccountConfig {
                 service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
         ),
         padding: 16,
+        shimmering: .background,
         topUp: .init(
             description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .system(size: 12), textColor: .gray)),
             image: .init(systemName: "message"),
