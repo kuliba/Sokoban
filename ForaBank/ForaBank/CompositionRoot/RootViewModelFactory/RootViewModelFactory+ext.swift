@@ -14,6 +14,7 @@ import Fetcher
 import ForaTools
 import Foundation
 import GenericRemoteService
+import GetClientInformDataServices
 import LandingMapping
 import LandingUIComponent
 import ManageSubscriptionsUI
@@ -27,7 +28,6 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
-import GetClientInformDataServices
 
 extension RootViewModelFactory {
     
