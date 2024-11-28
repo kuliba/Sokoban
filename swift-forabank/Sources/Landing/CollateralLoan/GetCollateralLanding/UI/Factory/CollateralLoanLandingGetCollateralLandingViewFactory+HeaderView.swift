@@ -1,14 +1,14 @@
 //
-//  CollateralLoanLandingGetJsonAbroadViewFactory.swift
+//  CollateralLoanLandingGetCollateralLandingViewFactory.swift
 //
 //
 //  Created by Valentin Ozerov on 14.11.2024.
 //
 
-extension CollateralLoanLandingGetJsonAbroadViewFactory {
+extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
-    func makeHeaderView(with product: GetJsonAbroadData.Product)
-        -> CollateralLoanLandingGetJsonAbroadHeaderView {
+    func makeHeaderView(with product: GetCollateralLandingData.Product)
+        -> CollateralLoanLandingGetCollateralLandingHeaderView {
 
             .init(
                 labelTag: product.marketing.labelTag,

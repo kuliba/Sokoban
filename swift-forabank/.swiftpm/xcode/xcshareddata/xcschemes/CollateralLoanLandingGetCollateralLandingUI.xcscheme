@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingGetJsonAbroadUI"
-               BuildableName = "CollateralLoanLandingGetJsonAbroadUI"
-               BlueprintName = "CollateralLoanLandingGetJsonAbroadUI"
+               BlueprintIdentifier = "CollateralLoanLandingGetCollateralLandingUI"
+               BuildableName = "CollateralLoanLandingGetCollateralLandingUI"
+               BlueprintName = "CollateralLoanLandingGetCollateralLandingUI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -25,12 +25,12 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/CollateralLoanLandingGetJsonAbroadUI.xctestplan"
+            reference = "container:../ForaBank/TestPlans/CollateralLoanLandingGetCollateralLandingUI.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -55,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CollateralLoanLandingGetJsonAbroadUI"
-            BuildableName = "CollateralLoanLandingGetJsonAbroadUI"
-            BlueprintName = "CollateralLoanLandingGetJsonAbroadUI"
+            BlueprintIdentifier = "CollateralLoanLandingGetCollateralLandingUI"
+            BuildableName = "CollateralLoanLandingGetCollateralLandingUI"
+            BlueprintName = "CollateralLoanLandingGetCollateralLandingUI"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

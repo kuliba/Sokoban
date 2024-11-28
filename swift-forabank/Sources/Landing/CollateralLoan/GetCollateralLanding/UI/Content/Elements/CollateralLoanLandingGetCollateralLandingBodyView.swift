@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadBodyView.swift
+//  CollateralLoanLandingGetCollateralLandingBodyView.swift
 //
 //
 //  Created by Valentin Ozerov on 14.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetJsonAbroadBodyView: View {
+struct CollateralLoanLandingGetCollateralLandingBodyView: View {
     
     let backgroundImage: String
     let headerView: HeaderView
@@ -29,10 +29,10 @@ struct CollateralLoanLandingGetJsonAbroadBodyView: View {
         .ignoresSafeArea()
     }
     
-    typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
+    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
 }
 
-private extension CollateralLoanLandingGetJsonAbroadBodyView {
+private extension CollateralLoanLandingGetCollateralLandingBodyView {
     
     var backgroundImageView: some View {
         
@@ -68,10 +68,10 @@ private extension CollateralLoanLandingGetJsonAbroadBodyView {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadBodyView {
+extension CollateralLoanLandingGetCollateralLandingBodyView {
     
-    typealias HeaderView = CollateralLoanLandingGetJsonAbroadHeaderView
-    typealias ConditionsView = CollateralLoanLandingGetJsonAbroadConditionsView
-    typealias CalculatorView = CollateralLoanLandingGetJsonAbroadCalculatorView
-    typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
+    typealias HeaderView = CollateralLoanLandingGetCollateralLandingHeaderView
+    typealias ConditionsView = CollateralLoanLandingGetCollateralLandingConditionsView
+    typealias CalculatorView = CollateralLoanLandingGetCollateralLandingCalculatorView
+    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
 }

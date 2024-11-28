@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadView.swift
+//  CollateralLoanLandingGetCollateralLandingView.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetJsonAbroadView: View {
+struct CollateralLoanLandingGetCollateralLandingView: View {
     
     private let content: Content
     private let factory: Factory
@@ -26,13 +26,13 @@ struct CollateralLoanLandingGetJsonAbroadView: View {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadView {
+extension CollateralLoanLandingGetCollateralLandingView {
     
-    typealias Content = CollateralLoanLandingGetJsonAbroadContent
-    typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
+    typealias Content = CollateralLoanLandingGetCollateralLandingContent
+    typealias Factory = CollateralLoanLandingGetCollateralLandingViewFactory
 }
 
-extension GetJsonAbroadData {
+extension GetCollateralLandingData {
     
     static let cardStub = Self(
         product: .init(
@@ -262,7 +262,7 @@ extension GetJsonAbroadData {
     )
 }
 
-extension GetJsonAbroadData {
+extension GetCollateralLandingData {
     
     static let realEstateStub = Self(
         product: .init(

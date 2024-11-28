@@ -1,11 +1,11 @@
 //
-//  GetJsonAbroadData.swift
+//  GetCollateralLandingData.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
 //
 
-public struct GetJsonAbroadData {
+public struct GetCollateralLandingData {
     
     public let product: Product
     
@@ -219,9 +219,9 @@ public struct GetJsonAbroadData {
     }
 }
 
-extension GetJsonAbroadData.Product.Theme {
+extension GetCollateralLandingData.Product.Theme {
     
-    public func map() -> CollateralLoanLandingGetJsonAbroadTheme {
+    public func map() -> CollateralLoanLandingGetCollateralLandingTheme {
 
         switch self {
 

@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadViewConfig+Calculator.swift
+//  CollateralLoanLandingGetCollateralLandingViewConfig+Calculator.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig {
+extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
     public struct Calculator {
         
@@ -249,7 +249,7 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig.Calculator {
+extension CollateralLoanLandingGetCollateralLandingViewConfig.Calculator {
  
     static let `default` = Self(
         root: .init(
