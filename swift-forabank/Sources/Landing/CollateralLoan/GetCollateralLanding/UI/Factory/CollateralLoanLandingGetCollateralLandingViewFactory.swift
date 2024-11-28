@@ -1,18 +1,18 @@
 //
-//  CollateralLoanLandingGetJsonAbroadViewFactory.swift
+//  CollateralLoanLandingGetCollateralLandingViewFactory.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
 //
 
-struct CollateralLoanLandingGetJsonAbroadViewFactory {
+struct CollateralLoanLandingGetCollateralLandingViewFactory {
 
-    let config: CollateralLoanLandingGetJsonAbroadViewConfig = .default
+    let config: CollateralLoanLandingGetCollateralLandingViewConfig = .default
 }
 
-extension CollateralLoanLandingGetJsonAbroadViewFactory {
+extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
-    func makeView(_ product: GetJsonAbroadData.Product) -> CollateralLoanLandingGetJsonAbroadBodyView {
+    func makeView(_ product: GetCollateralLandingData.Product) -> CollateralLoanLandingGetCollateralLandingBodyView {
 
         let headerView = makeHeaderView(with: product)
         let conditionsView = makeConditionsView(with: product)

@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadViewConfig+Header.swift
+//  CollateralLoanLandingGetCollateralLandingViewConfig+Header.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig {
+extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
     public struct Header {
         
@@ -74,7 +74,7 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig.Header {
+extension CollateralLoanLandingGetCollateralLandingViewConfig.Header {
     
     static let `default` = Self(
         height: 642,

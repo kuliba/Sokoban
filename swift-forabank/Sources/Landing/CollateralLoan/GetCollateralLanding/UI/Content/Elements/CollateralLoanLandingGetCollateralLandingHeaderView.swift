@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadHeaderView.swift
+//  CollateralLoanLandingGetCollateralLandingHeaderView.swift
 //
 //
 //  Created by Valentin Ozerov on 14.11.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIPrimitives
 
-public struct CollateralLoanLandingGetJsonAbroadHeaderView: View {
+public struct CollateralLoanLandingGetCollateralLandingHeaderView: View {
     
     let labelTag: String
     let params: [String]
@@ -72,8 +72,8 @@ public struct CollateralLoanLandingGetJsonAbroadHeaderView: View {
     }
 }
 
-public extension CollateralLoanLandingGetJsonAbroadHeaderView {
+public extension CollateralLoanLandingGetCollateralLandingHeaderView {
     
-    typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
-    typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
+    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
+    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
 }

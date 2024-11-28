@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadViewConfig+Conditions.swift
+//  CollateralLoanLandingGetCollateralLandingViewConfig+Conditions.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig {
+extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
     public struct Conditions {
         
@@ -102,7 +102,7 @@ extension CollateralLoanLandingGetJsonAbroadViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig.Conditions {
+extension CollateralLoanLandingGetCollateralLandingViewConfig.Conditions {
     
     static let `default` = Self(
         header: .init(

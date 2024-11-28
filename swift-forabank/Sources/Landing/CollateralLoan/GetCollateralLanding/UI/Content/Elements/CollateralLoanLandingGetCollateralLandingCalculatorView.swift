@@ -1,6 +1,6 @@
 //
-//  CollateralLoanLandingGetJsonAbroadCalculatorView.swift
-//  
+//  CollateralLoanLandingGetCollateralLandingCalculatorView.swift
+//
 //
 //  Created by Valentin Ozerov on 19.11.2024.
 //
@@ -9,7 +9,7 @@ import Foundation
 
 import SwiftUI
 
-struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
+struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
     
     // TODO: Replace on real data
     @State private var toggleIsOn = false
@@ -325,36 +325,36 @@ struct CollateralLoanLandingGetJsonAbroadCalculatorView: View {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadCalculatorView {
+extension CollateralLoanLandingGetCollateralLandingCalculatorView {
     
-    typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
-    typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
+    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
+    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
 }
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetJsonAbroadView_Previews: PreviewProvider {
+struct CollateralLoanLandingGetCollateralLandingView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CollateralLoanLandingGetJsonAbroadView(
+        CollateralLoanLandingGetCollateralLandingView(
             content: content,
             factory: factory
         )
     }
     
-    static let cardData = GetJsonAbroadData.cardStub
-    static let realEstateData = GetJsonAbroadData.realEstateStub
+    static let cardData = GetCollateralLandingData.cardStub
+    static let realEstateData = GetCollateralLandingData.realEstateStub
     static let content = Content(data: cardData)
     static let factory = Factory()
     
-    typealias Content = CollateralLoanLandingGetJsonAbroadContent
-    typealias Factory = CollateralLoanLandingGetJsonAbroadViewFactory
+    typealias Content = CollateralLoanLandingGetCollateralLandingContent
+    typealias Factory = CollateralLoanLandingGetCollateralLandingViewFactory
 }
 
 private struct CalculatorToggleStyle: ToggleStyle {
     
-    let viewConfig: CollateralLoanLandingGetJsonAbroadViewConfig.Calculator
+    let viewConfig: CollateralLoanLandingGetCollateralLandingViewConfig.Calculator
     
     func makeBody(configuration: Configuration) -> some View {
     

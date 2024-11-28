@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetJsonAbroadViewConfig.swift
+//  CollateralLoanLandingGetCollateralLandingViewConfig.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetJsonAbroadViewConfig {
+public struct CollateralLoanLandingGetCollateralLandingViewConfig {
     
     public let fonts: Fonts
     public let backgroundImageHeight: CGFloat
@@ -92,7 +92,7 @@ public struct CollateralLoanLandingGetJsonAbroadViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadViewConfig {
+extension CollateralLoanLandingGetCollateralLandingViewConfig {
 
     static let `default` = Self(
         fonts: .init(body: FontConfig(Font.system(size: 14))),

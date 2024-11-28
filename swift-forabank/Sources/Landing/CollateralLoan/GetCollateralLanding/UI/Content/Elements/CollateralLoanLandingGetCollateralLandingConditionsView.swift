@@ -1,13 +1,13 @@
 //
-//  CollateralLoanLandingGetJsonAbroadConditionsView.swift
-//  
+//  CollateralLoanLandingGetCollateralLandingConditionsView.swift
+//
 //
 //  Created by Valentin Ozerov on 15.11.2024.
 //
 
 import SwiftUI
 
-struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
+struct CollateralLoanLandingGetCollateralLandingConditionsView: View {
     
     private let config: Config
     private let theme: Theme
@@ -110,9 +110,9 @@ struct CollateralLoanLandingGetJsonAbroadConditionsView: View {
     }
 }
 
-extension CollateralLoanLandingGetJsonAbroadConditionsView {
+extension CollateralLoanLandingGetCollateralLandingConditionsView {
     
-    typealias Config = CollateralLoanLandingGetJsonAbroadViewConfig
-    typealias Theme = CollateralLoanLandingGetJsonAbroadTheme
-    typealias Condition = GetJsonAbroadData.Product.Condition
+    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
+    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+    typealias Condition = GetCollateralLandingData.Product.Condition
 }
