@@ -107,8 +107,8 @@ extension NumberFormatter {
 
 extension OrderSavingsAccountState {
     
-    static let preview: Self = .init(formatter: .preview(), status: .result(.preview))
-    static let placeholder: Self = .init(formatter: .preview(), status: .inflight)
+    static let preview: Self = .init(status: .result(.preview))
+    static let placeholder: Self = .init(status: .inflight)
 }
 
 extension ToggleConfig {

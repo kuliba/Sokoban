@@ -15,6 +15,7 @@ where AmountInfo: View,
       OTPView: View,
       ProductPicker: View {
     
+    let amountToString: AmountToString
     let state: OrderSavingsAccountState
     let event: (Event) -> Void
     let config: Config
@@ -27,6 +28,7 @@ where AmountInfo: View,
     @State private(set) var isShowingProducts = false
     
     init(
+        amountToString: @escaping AmountToString,
         state: OrderSavingsAccountState,
         event: @escaping (Event) -> Void,
         config: Config,
@@ -34,6 +36,7 @@ where AmountInfo: View,
         viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>,
         coordinateSpace: String = "orderScroll"
     ) {
+        self.amountToString = amountToString
         self.state = state
         self.event = event
         self.config = config
@@ -292,7 +295,7 @@ where AmountInfo: View,
             HStack {
                 config.topUp.amount.amount.text.text(withConfig: config.topUp.amount.amount.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                state.amountToString().text(withConfig: config.topUp.amount.value)
+                amountToString(state.amountValue, state.currencyCode).text(withConfig: config.topUp.amount.value)
             }
             HStack {
                 config.topUp.amount.fee.text.text(withConfig: config.topUp.amount.fee.config)
@@ -468,6 +471,7 @@ extension OrderSavingsAccountView {
     typealias Event = OrderSavingsAccountEvent
     typealias Config = OrderSavingsAccountConfig
     typealias Factory = ImageViewFactory
+    typealias AmountToString = (Decimal, String) -> String
 }
 
 private extension OrderSavingsAccountState {
@@ -515,6 +519,8 @@ where AmountInfo == Text,
     static var placeholder: Self {
         
         OrderSavingsAccountView(
+            amountToString: 
+                { "\($0) \($1)" },
             state: .placeholder,
             event: {
                 switch $0 {
@@ -621,6 +627,10 @@ struct OrderSavingsAccountWrapperView: View {
             model: viewModel,
             makeContentView: {
                 OrderSavingsAccountView(
+                    amountToString: {
+                        let formatter = NumberFormatter.preview()
+                        return (formatter.string(for: $0) ?? "") + " " + $1
+                    },
                     state: $0,
                     event: $1,
                     config: config,
