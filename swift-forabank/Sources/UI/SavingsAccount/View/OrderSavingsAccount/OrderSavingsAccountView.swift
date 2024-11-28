@@ -5,37 +5,38 @@
 //  Created by Andryusina Nataly on 25.11.2024.
 //
 
-import PaymentComponents
-import SwiftUI
-import SharedConfigs
 import LinkableText
+import PaymentComponents
+import SharedConfigs
+import SwiftUI
 
-struct OrderSavingsAccountView<OTPView, ProductPicker>: View
-where OTPView: View,
+struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
+where AmountInfo: View,
+      OTPView: View,
       ProductPicker: View {
     
+    let amountToString: AmountToString
     let state: OrderSavingsAccountState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let viewFactory: ViewFactory<OTPView, ProductPicker>
+    let viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>
     
     private let coordinateSpace: String
     
-    // TODO: need move to State
-    @State private(set) var isChecking = true
     @State private(set) var isShowHeader = false
-    @State private(set) var isShowingOTP = false
     @State private(set) var isShowingProducts = false
     
     init(
+        amountToString: @escaping AmountToString,
         state: OrderSavingsAccountState,
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
-        viewFactory: ViewFactory<OTPView, ProductPicker>,
+        viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>,
         coordinateSpace: String = "orderScroll"
     ) {
+        self.amountToString = amountToString
         self.state = state
         self.event = event
         self.config = config
@@ -65,7 +66,7 @@ where OTPView: View,
                 designMd5hash: data?.designMd5hash ?? "",
                 header: (data?.header.title ?? "", data?.header.subtitle ?? ""),
                 orderOption: (
-                    state.openAndMaintenance,
+                    state.openValue,
                     state.orderServiceOption
                 ),
                 needShimmering: data == nil
@@ -75,7 +76,10 @@ where OTPView: View,
             if isShowingProducts {
                 products()
             }
-            if isShowingOTP {
+            if state.amountValue > 0, state.isShowingOTP {
+                topUpInfo()
+            }
+            if state.isShowingOTP {
                 otp()
             }
             condition(data?.links)
@@ -90,10 +94,12 @@ where OTPView: View,
         HStack(spacing: 0) {
             
             if links != nil {
-                Button(action: { isChecking.toggle()
-                }, label: {
-                    isChecking ? config.images.checkOn : config.images.checkOff
-                })
+                Button(
+                    action: { event(.consent) },
+                    label: {
+                        state.consent ? config.images.checkOn : config.images.checkOff
+                    })
+                .disabled(state.isShowingOTP)
                 .frame(config.linkableTexts.checkBoxSize)
             }
             
@@ -112,57 +118,60 @@ where OTPView: View,
     
     @ViewBuilder
     private func footer() -> some View {
-        if isShowingProducts {
-            amount(state.data?.currency.symbol ?? "")
+        if isShowingProducts, !state.isShowingOTP {
+            amount()
         } else {
             openButton()
         }
     }
     
-    @ViewBuilder
-    private func amount(
-        _ currencySymbol: String
-    ) -> some View {
-        // TODO: move to state, add config
-        var amount = Amount(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: true))
+    private func amount() -> some View {
         
         AmountView(
-            amount: amount,
+            amount: state.amountView,
             event: {
                 switch $0 {
                 case let .edit(newValue):
-                    amount = Amount(title: "", value: newValue, button: .init(title: "Продолжить", isEnabled: true))
+                    event(.amount(.edit(newValue)))
                     
                 case .pay:
-                    print("Сумма пополнения \(amount.value)")
+                    event(.amount(.pay))
                 }
             },
-            currencySymbol: currencySymbol,
+            currencySymbol: state.currencyCode,
             config: config.amount,
-            infoView: {
-                HStack {
-                    "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
-                    
-                    Image(systemName: "info.circle")
-                        .foregroundColor(.gray)
-                }
-            })
+            infoView: viewFactory.makeAmountInfoView
+        )
     }
     
-    @ViewBuilder
     private func openButton() -> some View {
         
-        Button(action: { event(.continue) }, label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: config.openButton.cornerRadius)
-                    .foregroundColor((isChecking && state.data != nil) ? config.openButton.background.active : config.openButton.background.inactive)
-                config.openButton.label.text(withConfig: config.openButton.title)
-            }
-        })
+        Button(
+            action: { event(.continue) },
+            label: {
+                ZStack {
+                    RoundedRectangle(cornerRadius: config.openButton.cornerRadius)
+                        .foregroundColor(openButtonForegroundColor)
+                    openButtonText
+                }
+            })
         .padding(.horizontal)
         .frame(height: config.openButton.height)
-        .disabled(!(isChecking && state.data != nil))
+        .disabled(!(state.consent && state.data != nil))
         .frame(maxWidth: .infinity)
+    }
+    
+    var openButtonForegroundColor: Color {
+        
+        (state.consent && state.data != nil) ? config.openButton.background.active : config.openButton.background.inactive
+    }
+    
+    var openButtonText: some View {
+        if state.isShowingOTP {
+            config.openButton.labels.confirm.text(withConfig: config.openButton.title)
+        } else {
+            config.openButton.labels.open.text(withConfig: config.openButton.title)
+        }
     }
     
     private func orderHeader(
@@ -279,6 +288,24 @@ where OTPView: View,
         }
     }
     
+    private func topUpInfo() -> some View {
+        
+        VStack(alignment: .leading, spacing: config.padding / 2 ) {
+            
+            HStack {
+                config.topUp.amount.amount.text.text(withConfig: config.topUp.amount.amount.config)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                amountToString(state.amountValue, state.currencyCode).text(withConfig: config.topUp.amount.value)
+            }
+            HStack {
+                config.topUp.amount.fee.text.text(withConfig: config.topUp.amount.fee.config)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                "0 \(state.currencyCode)".text(withConfig: config.topUp.amount.value)
+            }
+        }
+        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+    }
+    
     private func incomeInfo(
         income: String,
         needShimmering: Bool = false
@@ -331,7 +358,7 @@ where OTPView: View,
             }
             Toggle("", isOn: $isShowingProducts)
                 .toggleStyle(TopUpToggleStyle(config: config.topUp.toggle))
-            
+                .disabled(state.isShowingOTP)
         }
     }
     
@@ -348,7 +375,7 @@ where OTPView: View,
                     .shimmering()
             }
             else {
-                config.income.image
+                config.topUp.image
                     .frame(config.income.imageSize)
                     .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             }
@@ -444,6 +471,7 @@ extension OrderSavingsAccountView {
     typealias Event = OrderSavingsAccountEvent
     typealias Config = OrderSavingsAccountConfig
     typealias Factory = ImageViewFactory
+    typealias AmountToString = (Decimal, String) -> String
 }
 
 private extension OrderSavingsAccountState {
@@ -452,14 +480,25 @@ private extension OrderSavingsAccountState {
         
         guard let data else { return "" }
         
-        return "\(data.fee.subscription.value)" + "\(data.fee.subscription.period)"
+        return (data.fee.subscription.value == 0 || data.fee.subscription.period == "free")
+        ? "Бесплатно"
+        : "\(data.fee.subscription.value) \(currencyCode) " + period
     }
     
-    var openAndMaintenance: String {
+    var period: String {
+        
+        switch data?.fee.subscription.period {
+        case "month": return "в месяц"
+        case "year": return "в год"
+        default: return ""
+        }
+    }
+    
+    var openValue: String {
         
         guard let data else { return "" }
         
-        return "\(data.fee.openAndMaintenance)"
+        return data.fee.open == 0 ? "Бесплатно" : "\(data.fee.open) \(currencyCode)"
     }
 }
 
@@ -473,44 +512,41 @@ private extension String {
 }
 
 extension OrderSavingsAccountView
-where OTPView == Text,
+where AmountInfo == Text,
+      OTPView == Text,
       ProductPicker == Text {
-    
-    static var preview: Self {
-        
-        OrderSavingsAccountView(
-            state: .preview,
-            event: {
-                switch $0 {
-                case .continue:
-                    print("Открыть накопительный счет")
-                case .dismiss:
-                    print("Назад")
-                }
-            },
-            config: .preview,
-            factory: .default,
-            viewFactory: .init(
-                makeOTPView: { Text("Otp") },
-                makeProductPickerView: { Text("Products") })
-        )
-    }
     
     static var placeholder: Self {
         
         OrderSavingsAccountView(
+            amountToString: 
+                { "\($0) \($1)" },
             state: .placeholder,
             event: {
                 switch $0 {
                 case .continue:
                     print("Открыть накопительный счет")
+                    
                 case .dismiss:
                     print("Назад")
+                    
+                case let .amount(amountEvent):
+                    switch amountEvent {
+                    case let .edit(newValue):
+                        print("newValue \(newValue)")
+                        
+                    case .pay:
+                        print("pay")
+                    }
+                case .consent:
+                    print("consent")
+                    
                 }
             },
             config: .preview,
             factory: .default,
             viewFactory: .init(
+                makeAmountInfoView: { Text("") },
                 makeOTPView: { Text("Otp") },
                 makeProductPickerView: { Text("Products") })
         )
@@ -522,14 +558,104 @@ struct LandingUIView_Previews: PreviewProvider {
     static var previews: some View {
         
         NavigationView {
-            OrderSavingsAccountView.preview
-        }
-        .previewDisplayName("With data")
-        
-        NavigationView {
             OrderSavingsAccountView.placeholder
         }
         .previewDisplayName("Placeholder")
+        
+        NavigationView {
+            OrderSavingsAccountWrapperView.init(
+                viewModel: .init(
+                    initialState: .preview,
+                    reduce: { state, event in
+                        
+                        var state = state
+                        switch event {
+                        case .dismiss:
+                            print("dismiss")
+                            
+                        case .continue:
+                            state.isShowingOTP = true
+                            
+                        case let .amount(amountEvent):
+                            switch amountEvent {
+                                
+                            case let .edit(newValue):
+                                state.amountValue = newValue
+                                
+                            case .pay:
+                                state.isShowingOTP = true
+                            }
+                            
+                        case .consent:
+                            state.consent.toggle()
+                        }
+                        
+                        return (state, .none)
+                    },
+                    handleEffect: {_,_ in }),
+                config: .preview,
+                imageViewFactory: .default)
+        }
+        .previewDisplayName("Value")
     }
 }
 
+// TODO: move to main target
+
+import RxViewModel
+
+struct OrderSavingsAccountWrapperView: View {
+    
+    @ObservedObject private var viewModel: ViewModel
+    
+    private let config: Config
+    private let imageViewFactory: ImageViewFactory
+    
+    init(
+        viewModel: ViewModel,
+        config: Config,
+        imageViewFactory: ImageViewFactory
+    ) {
+        self.viewModel = viewModel
+        self.config = config
+        self.imageViewFactory = imageViewFactory
+    }
+    
+    public var body: some View {
+        
+        RxWrapperView(
+            model: viewModel,
+            makeContentView: {
+                OrderSavingsAccountView(
+                    amountToString: {
+                        let formatter = NumberFormatter.preview()
+                        return (formatter.string(for: $0) ?? "") + " " + $1
+                    },
+                    state: $0,
+                    event: $1,
+                    config: config,
+                    factory: imageViewFactory,
+                    viewFactory: .init(
+                        makeAmountInfoView: {
+                            HStack {
+                                "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
+                                
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(.gray)
+                            }
+                        },
+                        makeOTPView: { Text("Otp") },
+                        makeProductPickerView: { Text("Products") })
+                )
+            }
+        )
+    }
+}
+
+extension OrderSavingsAccountWrapperView {
+    
+    typealias ViewModel = OrderSavingsAccountViewModel
+    typealias Config = OrderSavingsAccountConfig
+}
+
+typealias OrderSavingsAccountViewModel = RxViewModel<OrderSavingsAccountState, OrderSavingsAccountEvent, OrderSavingsAccountEffect>
