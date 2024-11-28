@@ -1331,6 +1331,7 @@ private extension Target {
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
         dependencies: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
+            .customDump
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
