@@ -162,6 +162,9 @@ extension AuthLoginViewModel {
                     
                 case let .required(alert):
                     
+                    let dismissText = alert.actionType == .authBlocking ?
+                    Text("Ok") : Text("Обновить")
+                    
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Обновить"), action: {

@@ -496,11 +496,12 @@ extension RootViewModelFactory {
                         let actionType: ClientInformActionType
                         
                         if alert.authBlocking == true {
-                            actionType = .required
+                            actionType = .authBlocking
                         } else {
                             
-                            guard let typeString = alert.update?.type else { return }
-                            actionType = ClientInformActionType(updateType: typeString)
+                            guard let typeString = alert.update?.type,
+                                  let action = ClientInformActionType(updateType: typeString) else { return }
+                            actionType = action
                         }
                         
                         alerts.updateAlert = .init(
