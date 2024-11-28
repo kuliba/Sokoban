@@ -17,19 +17,26 @@ struct RootBinderView: View {
         
         NavigationView {
             
-            RootWrapperView(
-                flow: binder.flow,
-                rootView: {
-                    
-                    RootView(
-                        viewModel: binder.content,
-                        rootViewFactory: rootViewFactory
-                    )
-                },
-                viewFactory: rootViewFactory
-            )
-            .navigationBarHidden(true)
+            rootViewFactory.makeRootWrapperView(binder: binder)
+                .navigationBarHidden(true)
         }
+    }
+}
+
+extension RootViewFactory {
+    
+    func makeRootWrapperView(
+        binder: RootViewDomain.Binder
+    ) -> RootWrapperView {
+        
+        return .init(
+            flow: binder.flow,
+            rootView: {
+                
+                .init(viewModel: binder.content, rootViewFactory: self)
+            },
+            viewFactory: self
+        )
     }
 }
 
