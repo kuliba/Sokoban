@@ -1266,6 +1266,7 @@
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
 		2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8142602A0B9237005CF83F /* SearchBarComponent */; };
 		2A8221532CE5EF3600887367 /* QRFailedViewModelWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8221522CE5EF3600887367 /* QRFailedViewModelWrapperView.swift */; };
+		2A83A6D12CF8A42000A49355 /* RootWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */; };
 		2A840BFE2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840BFD2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift */; };
 		2A840C012C373C1500BA6887 /* TemplatesFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */; };
 		2A840C032C373C2A00BA6887 /* TemplatesFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */; };
@@ -4953,6 +4954,7 @@
 		2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+publicKeyTransferServiceTests.swift"; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
 		2A8221522CE5EF3600887367 /* QRFailedViewModelWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailedViewModelWrapperView.swift; sourceTree = "<group>"; };
+		2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootWrapperView.swift; sourceTree = "<group>"; };
 		2A840BFD2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
 		2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowState.swift; sourceTree = "<group>"; };
 		2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowEvent.swift; sourceTree = "<group>"; };
@@ -11793,6 +11795,17 @@
 			path = SearchBar;
 			sourceTree = "<group>";
 		};
+		2A83A6D22CF8A45300A49355 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2ABBD6C82CDD61E20078E977 /* RootBinderView.swift */,
+				2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */,
+				770DCE9227BBF93B004099C1 /* RootView.swift */,
+				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		2A840BFF2C373C0300BA6887 /* TemplatesFlowDomain */ = {
 			isa = PBXGroup;
 			children = (
@@ -14716,9 +14729,7 @@
 				2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */,
 				2AA258622CEB36D60038642C /* RootViewDomain.ContentWitnesses+ext.swift */,
 				2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */,
-				2ABBD6C82CDD61E20078E977 /* RootBinderView.swift */,
-				770DCE9227BBF93B004099C1 /* RootView.swift */,
-				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
+				2A83A6D22CF8A45300A49355 /* View */,
 				2A6371242BF25EF5007E494A /* IconDomain.swift */,
 				2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */,
 				8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */,
@@ -22731,6 +22742,7 @@
 				2A3624712C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift in Sources */,
 				2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */,
 				834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */,
+				2A83A6D12CF8A42000A49355 /* RootWrapperView.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
 				834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */,

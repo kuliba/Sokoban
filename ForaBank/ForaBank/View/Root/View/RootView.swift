@@ -6,18 +6,18 @@
 //
 
 import ActivateSlider
-import InfoComponent
 import FooterComponent
-import PaymentSticker
+import InfoComponent
+import LandingUIComponent
+import LoadableResourceComponent
+import MarketShowcase
 import PayHubUI
+import PaymentSticker
 import RxViewModel
 import SberQR
 import SwiftUI
-import MarketShowcase
 import UIPrimitives
 import UtilityServicePrepaymentUI
-import LandingUIComponent
-import LoadableResourceComponent
 
 struct RootView: View {
     
