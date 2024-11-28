@@ -25,6 +25,7 @@ let package = Package(
         .landingUIComponent,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingGetConsentsBackend,
+        .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingUI,
         .collateralLoanLandingGetShowcaseBackend,
         .collateralLoanLandingGetShowcaseUI,
@@ -147,6 +148,8 @@ let package = Package(
         .collateralLoanLandingGetConsentsBackendTests,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
+        .collateralLoanLandingGetCollateralLandingBackend,
+        .collateralLoanLandingGetCollateralLandingBackendTests,
         .collateralLoanLandingGetCollateralLandingUI,
         .collateralLoanLandingGetCollateralLandingUITests,
         .collateralLoanLandingSaveConsentsBackend,
@@ -448,7 +451,14 @@ private extension Product {
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend
         ]
     )
-    
+
+    static let collateralLoanLandingGetCollateralLandingBackend = library(
+        name: .collateralLoanLandingGetCollateralLandingBackend,
+        targets: [
+            .collateralLoanLandingGetCollateralLandingBackend
+        ]
+    )
+
     static let collateralLoanLandingGetCollateralLandingUI = library(
         name: .collateralLoanLandingGetCollateralLandingUI,
         targets: [
@@ -1335,7 +1345,24 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
+
+    static let collateralLoanLandingGetCollateralLandingBackend = target(
+        name: .collateralLoanLandingGetCollateralLandingBackend,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/Backend/V1"
+    )
     
+    static let collateralLoanLandingGetCollateralLandingBackendTests = testTarget(
+        name: .collateralLoanLandingGetCollateralLandingBackendTests,
+        dependencies: [
+            .collateralLoanLandingGetCollateralLandingBackend,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)/Backend/V1"
+    )
+
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
@@ -3179,7 +3206,11 @@ private extension Target.Dependency {
     static let collateralLoanLandingGetCollateralLandingUI = byName(
         name: .collateralLoanLandingGetCollateralLandingUI
     )
-    
+
+    static let collateralLoanLandingGetCollateralLandingBackend = byName(
+        name: .collateralLoanLandingGetCollateralLandingBackend
+    )
+
     static let collateralLoanLandingSaveConsentsBackend = byName(
         name: .collateralLoanLandingSaveConsentsBackend
     )
@@ -3618,6 +3649,9 @@ private extension String {
     static let collateralLoanTests = "CollateralLoanTests"
 
     static let GetCollateralLanding = "GetCollateralLanding"
+    static let collateralLoanLandingGetCollateralLandingBackend = "CollateralLoanLandingGetCollateralLandingBackend"
+    static let collateralLoanLandingGetCollateralLandingBackendTests = "CollateralLoanLandingGetCollateralLandingBackendTests"
+
     static let collateralLoanLandingGetCollateralLandingUI = "CollateralLoanLandingGetCollateralLandingUI"
     static let collateralLoanLandingGetCollateralLandingUITests = "CollateralLoanLandingGetCollateralLandingUITests"
 

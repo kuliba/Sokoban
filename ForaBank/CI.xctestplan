@@ -618,6 +618,13 @@
         "identifier" : "CollateralLoanLandingGetCollateralLandingUITests",
         "name" : "CollateralLoanLandingGetCollateralLandingUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingGetCollateralLandingBackendTests",
+        "name" : "CollateralLoanLandingGetCollateralLandingBackendTests"
+      }
     }
   ],
   "version" : 1
