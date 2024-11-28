@@ -2657,6 +2657,7 @@ private extension Target {
     static let uiPrimitivesTests = testTarget(
         name: .uiPrimitivesTests,
         dependencies: [
+            .customDump,
             .foraTools,
             .sharedConfigs,
             .uiPrimitives,
