@@ -57,6 +57,18 @@ final class ClientInformAlerts_nextTexts: XCTestCase {
         XCTAssertTrue(alerts.informAlerts.isEmpty)
     }
     
+    // MARK: - UpdateAlert
+
+    func test_shouldNotChangeNilUpdateAlert() {
+        
+        var alerts = makeSUT(updateAlert: nil)
+        XCTAssertNil(alerts.updateAlert)
+        
+        alerts.next()
+        
+        XCTAssertNil(alerts.updateAlert)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ClientInformAlerts
