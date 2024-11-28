@@ -1723,6 +1723,7 @@
 		2ADB21CE2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */; };
 		2ADB21D02CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21CF2CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift */; };
 		2ADB21D22CF8670800B37234 /* StandardPaymentAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21D12CF8670800B37234 /* StandardPaymentAcceptanceTests.swift */; };
+		2ADB21D72CF8706D00B37234 /* PaymentProviderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21D62CF8706D00B37234 /* PaymentProviderListView.swift */; };
 		2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */; };
 		2ADBDB942BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */; };
 		2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */; };
@@ -5389,6 +5390,7 @@
 		2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadCategory.swift"; sourceTree = "<group>"; };
 		2ADB21CF2CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeUtilityPayment.swift"; sourceTree = "<group>"; };
 		2ADB21D12CF8670800B37234 /* StandardPaymentAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardPaymentAcceptanceTests.swift; sourceTree = "<group>"; };
+		2ADB21D62CF8706D00B37234 /* PaymentProviderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderListView.swift; sourceTree = "<group>"; };
 		2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowFactory.swift; sourceTree = "<group>"; };
 		2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerLayoutView.swift; sourceTree = "<group>"; };
 		2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePicker.swift; sourceTree = "<group>"; };
@@ -13134,6 +13136,14 @@
 			path = FeatureFlags;
 			sourceTree = "<group>";
 		};
+		2ADB21D32CF86B2700B37234 /* PaymentProviderPicker */ = {
+			isa = PBXGroup;
+			children = (
+				2ADB21D62CF8706D00B37234 /* PaymentProviderListView.swift */,
+			);
+			path = PaymentProviderPicker;
+			sourceTree = "<group>";
+		};
 		2ADBDB922BD799D100114E87 /* OperatorPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -14706,6 +14716,7 @@
 				8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */,
 				2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */,
 				770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */,
+				2ADB21D32CF86B2700B37234 /* PaymentProviderPicker */,
 				833286CF2C91BF4700B6FA3F /* RootView+banners.swift */,
 				83CE21742CDDED460008375D /* ViewComponents.swift */,
 				2A2B91E52C7CBA17008F5186 /* EXTRACT_TO_DESIGN_SYSTEM */,
@@ -21792,6 +21803,7 @@
 				8333238A2BB404F7007C135F /* MD5Hash.swift in Sources */,
 				0BC4ADC02860A92100921AE2 /* OperatorsView+Legacy.swift in Sources */,
 				0B283FBB26FBC9C800B5E925 /* Coordinator.swift in Sources */,
+				2ADB21D72CF8706D00B37234 /* PaymentProviderListView.swift in Sources */,
 				C1750D4A290F800800122D2B /* ServerCommands+Settings.swift in Sources */,
 				77138CE929C0C95B005EDE8F /* PaymentsSuccessIconViewComponent.swift in Sources */,
 				83DBC7B22C37DCCD00DEF441 /* Services+makeUserVisibilityProductsSettingsServices.swift in Sources */,

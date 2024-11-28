@@ -464,92 +464,17 @@ private extension RootView {
                 makeOperationPickerView: { _ in EmptyView() },
                 makeProviderList: {
                     
-                    paymentProviderListView(providerList: $0, binder: binder)
+                    PaymentProviderListView(
+                        providerList: $0,
+                        binder: binder,
+                        makeIconView: rootViewFactory.makeIconView
+                    )
                 },
                 makeSearchView: { _ in EmptyView() }
             )
         )
     }
     
-    func paymentProviderListView(
-        providerList: PaymentProviderPicker.ProviderList,
-        binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        RxWrapperView(
-            model: providerList,
-            makeContentView: { state, event in
-                
-                PrepaymentPickerSuccessView(
-                    state: state,
-                    event: event,
-                    factory: .init(
-                        makeFooterView: {
-                            
-                            FooterView(
-                                state: $0 ? .failure(.iFora) : .footer(.iFora),
-                                event: binder.flow.handleFooterEvent(_:),
-                                config: .iFora
-                            )
-                        },
-                        makeLastPaymentView: {
-                            
-                            makeLatestPaymentView(latest: $0, event: binder.flow.selectLatest(_:))
-                        },
-                        makeOperatorView: {
-                            
-                            makeOperatorView(provider: $0, event: binder.flow.selectProvider(_:))
-                        },
-                        makeSearchView: {
-                            
-                            paymentProviderPickerSearchView(binder.content.search)
-                        }
-                    )
-                )
-            }
-        )
-    }
-    
-    func makeLatestPaymentView(
-        latest: Latest,
-        event: @escaping (Latest) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(latest) },
-            label: {
-                
-                LastPaymentLabel(
-                    amount: latest.amount.map { "\($0) ₽" } ?? "",
-                    title: latest.name,
-                    config: .iFora,
-                    iconView: makeIconView(md5Hash: latest.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
-    }
-    
-    func makeOperatorView(
-        provider: PaymentProviderPicker.Provider,
-        event: @escaping (PaymentProviderPicker.Provider) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(provider) },
-            label: {
-                
-                OperatorLabel(
-                    title: provider.name,
-                    subtitle: provider.inn,
-                    config: .iFora,
-                    iconView: makeIconView(md5Hash: provider.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
-    }
-        
     @ViewBuilder
     func transportPaymentsView(
         _ transport: TransportPaymentsViewModel
@@ -636,32 +561,6 @@ private extension RootView {
 //            icon: viewFactory.iconView(provider.origin.icon),
 //            style: .normal
 //        )
-    }
-    
-    func makeIconView(
-        md5Hash: String?
-    ) -> some View {
-        
-        rootViewFactory.makeIconView(md5Hash.map { .md5Hash(.init($0)) })
-    }
-    
-    @ViewBuilder
-    func paymentProviderPickerSearchView(
-        _ search: PaymentProviderPicker.Search?
-    ) -> some View {
-        
-        search.map { search in
-            
-            DefaultCancellableSearchBarView(
-                viewModel: search,
-                textFieldConfig: .black16,
-                cancel: {
-                    
-                    UIApplication.shared.endEditing()
-                    search.setText(to: nil)
-                }
-            )
-        }
     }
     
     @ViewBuilder
