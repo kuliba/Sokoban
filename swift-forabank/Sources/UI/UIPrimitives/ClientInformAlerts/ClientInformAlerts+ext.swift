@@ -12,6 +12,7 @@ public enum ClientInformActionType: String {
     
     case required
     case optional
+    case authBlocking
     
     public init?(updateType: String) {
         
