@@ -69,6 +69,22 @@ final class ClientInformAlerts_nextTexts: XCTestCase {
         XCTAssertNil(alerts.updateAlert)
     }
     
+    func test_shouldChangeIDForUpdateAlert() {
+        
+        let alert = makeUpdateAlert()
+        var alerts = makeSUT(updateAlert: alert)
+        XCTAssertNotNil(alerts.updateAlert)
+        
+        alerts.next()
+        
+        XCTAssertNotEqual(alerts.updateAlert?.id, alert.id)
+        XCTAssertNoDiff(alerts.updateAlert?.title, alert.title)
+        XCTAssertNoDiff(alerts.updateAlert?.text, alert.text)
+        XCTAssertNoDiff(alerts.updateAlert?.link, alert.link)
+        XCTAssertNoDiff(alerts.updateAlert?.version, alert.version)
+        XCTAssertNoDiff(alerts.updateAlert?.actionType, alert.actionType)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ClientInformAlerts
