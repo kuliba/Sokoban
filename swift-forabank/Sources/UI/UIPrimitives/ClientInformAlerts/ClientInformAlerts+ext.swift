@@ -13,9 +13,10 @@ public enum ClientInformActionType: String {
     case required
     case optional
     
-    public init(updateType: String) {
+    public init?(updateType: String) {
         
-        self = ClientInformActionType(rawValue: updateType) ?? .required
+        guard let type = ClientInformActionType(rawValue: updateType) else { return nil }
+        self = type
     }
 }
 
