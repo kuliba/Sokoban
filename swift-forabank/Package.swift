@@ -1321,7 +1321,9 @@ private extension Target {
     
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
-        dependencies: [],
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
     

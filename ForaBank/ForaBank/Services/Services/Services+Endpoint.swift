@@ -91,6 +91,7 @@ extension Services {
             case getClientConsentMe2MePull
             case getConsentsCollateralLoanLanding = "getConsents"
             case getShowcaseCollateralLoanLanding = "getShowcase"
+            case createDraftCollateralLoanApplication
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
@@ -504,5 +505,11 @@ extension Services.Endpoint {
         pathPrefix: .getShowcaseCollateralLoanLanding,
         version: nil,
         serviceName: .getShowcaseCollateralLoanLanding
+    )
+    
+    static let createDraftCollateralLoanApplication: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .createDraftCollateralLoanApplication
     )
 }
