@@ -6,13 +6,18 @@
 //
 
 import SwiftUI
+import AmountComponent
 
 public struct OrderSavingsAccountState: Equatable {
     
     let status: Status
-    
-    public init(status: Status) {
+    var amountValue: Decimal
+    var isShowingOTP: Bool = false
+    var consent: Bool = true
+
+    public init(status: Status, amountValue: Decimal = 0) {
         self.status = status
+        self.amountValue = amountValue
     }
 }
 
@@ -36,5 +41,24 @@ extension OrderSavingsAccountState {
         case let .result(result):
             return result
         }
+    }
+    
+    var amountView: Amount {
+        Amount(title: "", value: amountValue, button: .init(title: "Продолжить", isEnabled: (amountValue > 0 && !isShowingOTP && consent)))
+    }
+    
+    func amountToString() -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        formatter.currencyCode = currencyCode
+        formatter.numberStyle = .currency
+        
+        return formatter.string(for: amountValue) ?? ""
+    }
+    
+    var currencyCode: String {
+        data?.currency.symbol ?? ""
     }
 }

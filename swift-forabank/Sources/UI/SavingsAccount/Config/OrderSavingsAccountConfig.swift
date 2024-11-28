@@ -95,8 +95,22 @@ public struct OrderSavingsAccountConfig {
         let background: Colors
         let cornerRadius: CGFloat
         let height: CGFloat
-        let label: String
+        let labels: Labels
         let title: TextConfig
+
+        public struct Labels {
+            
+            let open: String
+            let confirm: String
+            
+            public init(
+                open: String,
+                confirm: String
+            ) {
+                self.open = open
+                self.confirm = confirm
+            }
+        }
         
         public struct Colors {
             
@@ -116,13 +130,13 @@ public struct OrderSavingsAccountConfig {
             background: Colors,
             cornerRadius: CGFloat,
             height: CGFloat,
-            label: String,
+            labels: Labels,
             title: TextConfig
         ) {
             self.background = background
             self.cornerRadius = cornerRadius
             self.height = height
-            self.label = label
+            self.labels = labels
             self.title = title
         }
     }
@@ -143,19 +157,36 @@ public struct OrderSavingsAccountConfig {
     
     public struct TopUp {
         
+        let amount: AmountInfo
         let description: TextWithConfig
         let image: Image
         let subtitle: TextWithConfig
         let title: TextWithConfig
         let toggle: ToggleConfig
         
+        public struct AmountInfo {
+            
+            let amount: TextWithConfig
+            let fee: TextWithConfig
+            
+            public init(
+                amount: TextWithConfig,
+                fee: TextWithConfig
+            ) {
+                self.amount = amount
+                self.fee = fee
+            }
+        }
+        
         public init(
+            amount: AmountInfo,
             description: TextWithConfig,
             image: Image,
             subtitle: TextWithConfig,
             title: TextWithConfig,
             toggle: ToggleConfig
         ) {
+            self.amount = amount
             self.description = description
             self.image = image
             self.subtitle = subtitle
