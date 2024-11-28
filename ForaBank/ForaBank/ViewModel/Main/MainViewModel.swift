@@ -925,7 +925,8 @@ private extension MainViewModel {
                 
             case .byQr:
                 openScanner()
-            case .zku:
+                
+            case .utility:
                 self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             }
         }

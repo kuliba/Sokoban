@@ -89,6 +89,25 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         }
     }
     
+    // MARK: - utilityPayment
+    
+    func test_utilityPayment_shouldDeliverFailureOnMissingCategory() {
+        
+        expect(.utilityPayment, toDeliver: .failure(.missingCategoryOfType(.housingAndCommunalService)))
+    }
+    
+    func test_utilityPayment_shouldDeliverFailureOnFailure() throws {
+        
+        let (sut, httpClient, _) = try makeSUT(
+            model: .withServiceCategoryAndOperator()
+        )
+        
+        expect(sut: sut, .utilityPayment, toDeliver: .standardPayment) {
+            
+            completeGetAllLatestPayments(httpClient)
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifyEvent = RootViewDomain.FlowDomain.NotifyEvent
@@ -99,16 +118,33 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         return .random(in: 0..<Int.max)
     }
     
+    private func completeGetAllLatestPayments(
+        _ httpClient: HTTPClientSpy,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(httpClient.requests.map(\.url?.lastPathComponent), [
+            "getAllLatestPayments"
+        ], file: file, line: line)
+        httpClient.complete(with: anyError(), at: 0)
+    }
+    
     private func equatable(
         _ navigation: RootViewNavigation
     ) -> EquatableNavigation {
         
         switch navigation {
+        case let .failure(failure):
+            return .failure(failure)
+            
         case let .outside(outside):
             return .outside(outside)
             
         case .scanQR:
             return .scanQR
+            
+        case .standardPayment:
+            return .standardPayment
             
         case .templates:
             return .templates
@@ -117,18 +153,22 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     
     private enum EquatableNavigation: Equatable {
         
+        case failure(RootViewNavigation.Failure)
         case outside(RootViewOutside)
         case scanQR
+        case standardPayment
         case templates
     }
     
     private func expect(
+        sut: SUT? = nil,
         _ select: RootViewSelect,
         toDeliver expectedNavigation: EquatableNavigation,
+        on action: () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = makeSUT().sut
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
@@ -139,17 +179,20 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             exp.fulfill()
         }
         
+        action()
+        
         wait(for: [exp], timeout: 1.0)
     }
     
     private func expect(
+        sut: SUT? = nil,
         _ select: RootViewSelect,
         toNotifyWith expectedNotifyEvents: [NotifyEvent],
         on assert: @escaping (RootViewNavigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = makeSUT().sut
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         let notifySpy = NotifySpy(stubs: [()])
         let exp = expectation(description: "wait for completion")
         
@@ -181,5 +224,79 @@ extension RootViewNavigation {
         
         guard case let .templates(node) = self else { return nil }
         return node.model
+    }
+}
+
+extension Model {
+    
+    static func withServiceCategoryAndOperator(
+        ofType categoryType: CodableServiceCategory.CategoryType = .housingAndCommunalService,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Model {
+        
+        let categories = [makeCodableServiceCategory(type: categoryType)]
+        let operators = [makeCodableServicePaymentOperator(type: categoryType)]
+        
+        let encoder = JSONEncoder()
+        
+        let categoriesData = try encoder.encode(categories)
+        let operatorsData = try encoder.encode(operators)
+        
+        let localAgent = LocalAgentStub(stub: [
+            "\(type(of: categories).self)" : categoriesData,
+            "\(type(of: operators).self)" : operatorsData
+        ])
+        
+        XCTAssertNotNil(localAgent.load(type: [CodableServiceCategory].self)?.first(where: { $0.type == categoryType }), file: file, line: line)
+        XCTAssertNotNil(localAgent.load(type: [CodableServicePaymentOperator].self)?.first(where: { $0.type == categoryTypeName(of: categoryType) }), file: file, line: line)
+        
+        return .mockWithEmptyExcept(localAgent: localAgent)
+    }
+    
+    private static func makeCodableServicePaymentOperator(
+        id: String = anyMessage(),
+        inn: String = anyMessage(),
+        md5Hash: String? = nil,
+        name: String = anyMessage(),
+        type: CodableServiceCategory.CategoryType = .housingAndCommunalService,
+        sortedOrder: Int = .random(in: 0..<1_000)
+    ) -> CodableServicePaymentOperator {
+        
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: categoryTypeName(of: type), sortedOrder: sortedOrder)
+    }
+    
+    private static func categoryTypeName(
+        of type: CodableServiceCategory.CategoryType
+    ) -> String {
+        
+        switch type {
+        case .housingAndCommunalService:
+            return "housingAndCommunalService"
+            
+        default:
+            return unimplemented()
+        }
+    }
+    
+    private static func makeCodableServiceCategory(
+        latestPaymentsCategory: CodableServiceCategory.LatestPaymentsCategory? = nil,
+        md5Hash: String = anyMessage(),
+        name: String = anyMessage(),
+        ord: Int = .random(in: 0..<1_000),
+        paymentFlow: CodableServiceCategory.PaymentFlow = .standard,
+        hasSearch: Bool = false,
+        type: CodableServiceCategory.CategoryType = .housingAndCommunalService
+    ) -> CodableServiceCategory {
+        
+        return .init(
+            latestPaymentsCategory: latestPaymentsCategory,
+            md5Hash: md5Hash,
+            name: name,
+            ord: ord,
+            paymentFlow: paymentFlow,
+            hasSearch: hasSearch,
+            type: type
+        )
     }
 }
