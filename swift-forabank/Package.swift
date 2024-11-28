@@ -1321,7 +1321,9 @@ private extension Target {
     
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
-        dependencies: [],
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
     
@@ -1329,6 +1331,7 @@ private extension Target {
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
         dependencies: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
+            .customDump
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
