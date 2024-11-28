@@ -90,21 +90,20 @@ extension Services {
             case getClientConsentMe2MePull
             case getConsentsCollateralLoanLanding = "getConsents"
             case getInfoForRepeatPayment
-            case getShowcaseCollateralLoanLanding = "getShowcase"
-            case saveConsents
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
             case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
+            case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
-            case getProcessingSessionCode
-            case getScenarioQRData
             case getSberQRData
+            case getScenarioQRData
             case getServiceCategoryList
+            case getShowcaseCollateralLoanLanding = "getShowcase"
             case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
@@ -112,14 +111,15 @@ extension Services {
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
-            case modifyC2BSubCard
             case modifyC2BSubAcc
+            case modifyC2BSubCard
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
+            case saveConsents
             case showCVV
-            case updateFastPaymentContract
             case unblockCard
+            case updateFastPaymentContract
             case userVisibilityProductsSettings
         }
     }
