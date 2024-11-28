@@ -872,6 +872,7 @@ private extension RootViewModelFactory {
             let loginViewModel = ComposedLoginViewModel(
                 authLoginViewModel: .init(
                     self.model,
+                    shouldUpdateVersion: shouldUpdateVersion,
                     rootActions: $0,
                     onRegister: onRegister
                 )
@@ -886,6 +887,13 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             marketShowcaseBinder: marketShowcaseBinder
         )
+        
+        func shouldUpdateVersion(updateAlert: ClientInformAlerts.UpdateAlert) ->  Bool {
+            
+            guard let version: String = updateAlert.version else { return false }
+            
+            return version.compareVersion(to: Bundle.main.appVersionShort) == .orderedDescending
+        }
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory, 

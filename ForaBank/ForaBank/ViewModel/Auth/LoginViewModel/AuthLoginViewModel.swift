@@ -29,6 +29,7 @@ class AuthLoginViewModel: ObservableObject {
     private let factory: AuthLoginViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
+    private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
 
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
@@ -58,7 +59,8 @@ class AuthLoginViewModel: ObservableObject {
         factory: AuthLoginViewModelFactory,
         onRegister: @escaping () -> Void,
         buttons: [ButtonAuthView.ViewModel] = [],
-        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
+        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain(),
+        shouldUpdateVersion: @escaping (ClientInformAlerts.UpdateAlert) -> Bool
     ) {
         self.header = .init()
         self.buttons = buttons
@@ -66,6 +68,7 @@ class AuthLoginViewModel: ObservableObject {
         self.eventHandlers = eventHandlers
         self.factory = factory
         self.onRegister = onRegister
+        self.shouldUpdateVersion = shouldUpdateVersion
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
@@ -103,17 +106,16 @@ class AuthLoginViewModel: ObservableObject {
 
 extension AuthLoginViewModel {
     
-    private func updateVersion() -> String? {
+    private func updateVersion() -> Bool {
         
-        guard let updateVersion = clientInformAlerts?.updateAlert?.version,
-              updateVersion.compare(Bundle.main.appVersionShort, options: .numeric) == .orderedDescending else { return nil }
+        guard let updateAlert = clientInformAlerts?.updateAlert else { return false }
         
-        return updateVersion
+        return shouldUpdateVersion(updateAlert)
     }
     
     private func createAppStoreURL() -> URL? {
         
-        guard updateVersion() != nil else { return nil }
+        guard updateVersion() == true else { return nil }
         
         return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
     }
