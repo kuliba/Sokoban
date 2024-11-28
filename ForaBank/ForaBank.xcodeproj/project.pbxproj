@@ -1724,6 +1724,8 @@
 		2ADB21D02CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21CF2CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift */; };
 		2ADB21D22CF8670800B37234 /* StandardPaymentAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21D12CF8670800B37234 /* StandardPaymentAcceptanceTests.swift */; };
 		2ADB21D72CF8706D00B37234 /* PaymentProviderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21D62CF8706D00B37234 /* PaymentProviderListView.swift */; };
+		2ADB21D92CF8766400B37234 /* PaymentProviderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21D82CF8766400B37234 /* PaymentProviderPickerView.swift */; };
+		2ADB21DD2CF8908D00B37234 /* PaymentProviderPickerDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB21DC2CF8908D00B37234 /* PaymentProviderPickerDestinationView.swift */; };
 		2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */; };
 		2ADBDB942BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */; };
 		2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */; };
@@ -5391,6 +5393,8 @@
 		2ADB21CF2CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeUtilityPayment.swift"; sourceTree = "<group>"; };
 		2ADB21D12CF8670800B37234 /* StandardPaymentAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardPaymentAcceptanceTests.swift; sourceTree = "<group>"; };
 		2ADB21D62CF8706D00B37234 /* PaymentProviderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderListView.swift; sourceTree = "<group>"; };
+		2ADB21D82CF8766400B37234 /* PaymentProviderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerView.swift; sourceTree = "<group>"; };
+		2ADB21DC2CF8908D00B37234 /* PaymentProviderPickerDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerDestinationView.swift; sourceTree = "<group>"; };
 		2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowFactory.swift; sourceTree = "<group>"; };
 		2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerLayoutView.swift; sourceTree = "<group>"; };
 		2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePicker.swift; sourceTree = "<group>"; };
@@ -13139,7 +13143,9 @@
 		2ADB21D32CF86B2700B37234 /* PaymentProviderPicker */ = {
 			isa = PBXGroup;
 			children = (
+				2ADB21D82CF8766400B37234 /* PaymentProviderPickerView.swift */,
 				2ADB21D62CF8706D00B37234 /* PaymentProviderListView.swift */,
+				2ADB21DC2CF8908D00B37234 /* PaymentProviderPickerDestinationView.swift */,
 			);
 			path = PaymentProviderPicker;
 			sourceTree = "<group>";
@@ -22561,6 +22567,7 @@
 				C115BEF82C231ED100DDD0CB /* HistoryFilterFlag.swift in Sources */,
 				2AACA45D2CA168DD007BD0C6 /* BatchService.swift in Sources */,
 				6880D32726A5CC69008FBCB4 /* AES.swift in Sources */,
+				2ADB21D92CF8766400B37234 /* PaymentProviderPickerView.swift in Sources */,
 				774A82CD27BAF5B600E5A5E9 /* KeychainValueType.swift in Sources */,
 				A7ECFEC32CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift in Sources */,
 				2A0EF2F02C1DAEBC003F094D /* View+paddedRoundedBackground.swift in Sources */,
@@ -23152,6 +23159,7 @@
 				2AA54A732C57ADD000542C49 /* PaymentProviderServicePickerConfig.swift in Sources */,
 				2A2EE90A2CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift in Sources */,
 				2A35DDAD2C023E0800EFF0EB /* ProductData+productSelectProduct.swift in Sources */,
+				2ADB21DD2CF8908D00B37234 /* PaymentProviderPickerDestinationView.swift in Sources */,
 				6819084428BCAAE3003E81A3 /* SbpPayView.swift in Sources */,
 				5036B0F628E20C570052FACE /* PaymentsMeToMeViewModel.swift in Sources */,
 				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,

@@ -434,47 +434,13 @@ private extension RootView {
         _ binder: PaymentProviderPicker.Binder
     ) -> some View {
         
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: { state, event in
-                
-                PaymentProviderPickerFlowView(
-                    state: state,
-                    event: event,
-                    contentView: {
-                        
-                        paymentProviderPickerContentView(binder)
-                    },
-                    destinationView: {
-                        
-                        paymentProviderPickerDestinationView($0)
-                    }
-                )
-            }
+        PaymentProviderPickerView(
+            binder: binder,
+            components: rootViewFactory.components,
+            makeIconView: rootViewFactory.makeIconView
         )
     }
-    
-    func paymentProviderPickerContentView(
-        _ binder: PaymentProviderPicker.Binder
-    ) -> some View {
         
-        PaymentProviderPickerContentView(
-            content: binder.content,
-            factory: .init(
-                makeOperationPickerView: { _ in EmptyView() },
-                makeProviderList: {
-                    
-                    PaymentProviderListView(
-                        providerList: $0,
-                        binder: binder,
-                        makeIconView: rootViewFactory.makeIconView
-                    )
-                },
-                makeSearchView: { _ in EmptyView() }
-            )
-        )
-    }
-    
     @ViewBuilder
     func transportPaymentsView(
         _ transport: TransportPaymentsViewModel
@@ -561,29 +527,6 @@ private extension RootView {
 //            icon: viewFactory.iconView(provider.origin.icon),
 //            style: .normal
 //        )
-    }
-    
-    @ViewBuilder
-    func paymentProviderPickerDestinationView(
-        _ destination: PaymentProviderPicker.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .backendFailure(backendFailure):
-            Text("TBD: destination view \(String(describing: backendFailure))")
-            
-        case let .detailPayment(wrapper):
-            rootViewFactory.components.makePaymentsView(wrapper.paymentsViewModel)
-            
-        case let .payment(payment):
-            Text("TBD: destination view \(String(describing: payment))")
-            
-        case let .servicePicker(servicePicker):
-            Text("TBD: destination view \(String(describing: servicePicker))")
-            
-        case let .servicesFailure(servicesFailure):
-            Text("TBD: destination view \(String(describing: servicesFailure))")
-        }
     }
     
     @ViewBuilder
