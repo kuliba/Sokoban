@@ -88,7 +88,7 @@ private extension RootWrapperView {
         _ picker: PaymentProviderPicker.Binder
     ) -> some View {
         
-        Text("TBD: standardPaymentView")
+        viewFactory.makePaymentProviderPickerView(picker)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
     }
     
