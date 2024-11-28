@@ -73,16 +73,15 @@ extension Services {
             case changeClientConsentMe2MePull
             case changePIN
             case changeSVCardLimit
-            case saveConsents
             case createAnywayTransfer
             case createCommissionProductTransfer
+            case createDraftCollateralLoanApplication
             case createFastPaymentContract
             case createSberQRPayment
             case createStickerPayment
             case fastPaymentContractFindList
             case formSessionKey
             case getAllLatestPayments
-            case getInfoForRepeatPayment
             case getBankDefault
             case getBannerCatalogList
             case getC2BSub
@@ -90,8 +89,9 @@ extension Services {
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getConsentsCollateralLoanLanding = "getConsents"
+            case getInfoForRepeatPayment
             case getShowcaseCollateralLoanLanding = "getShowcase"
-            case createDraftCollateralLoanApplication
+            case saveConsents
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
