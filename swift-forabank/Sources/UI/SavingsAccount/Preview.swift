@@ -78,6 +78,7 @@ extension SavingsAccountState.Questions {
 extension Color {
     
     static let gray30: Self = .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3)
+    static let background: Self = Color(red: 0.76, green: 0.76, blue: 0.76)
 }
 
 extension OrderSavingsAccount {
@@ -94,7 +95,8 @@ extension OrderSavingsAccount {
 
 extension OrderSavingsAccountState {
     
-    static let preview: Self = .init(data: .preview)
+    static let preview: Self = .init(status: .result(.preview))
+    static let placeholder: Self = .init(status: .inflight)
 }
 
 extension ToggleConfig {
@@ -115,7 +117,7 @@ extension OrderSavingsAccountConfig {
             title: .init(textFont: .system(size: 14), textColor: .white)),
         background: .gray30,
         cornerRadius: 12,
-        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .caption, textColor: .black)),
+        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .system(size: 18), textColor: .black)),
         images: .init(
             back: .init(systemName: "chevron.backward"),
             checkOff: .init(systemName: "square"),
@@ -143,6 +145,7 @@ extension OrderSavingsAccountConfig {
                 service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
         ),
         padding: 16,
+        shimmering: .background,
         topUp: .init(
             description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .system(size: 12), textColor: .gray)),
             image: .init(systemName: "message"),

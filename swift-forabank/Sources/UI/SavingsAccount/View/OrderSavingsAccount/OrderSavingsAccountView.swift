@@ -22,8 +22,10 @@ where OTPView: View,
     
     private let coordinateSpace: String
     
+    // TODO: need move to State
     @State private(set) var isChecking = true
     @State private(set) var isShowHeader = false
+    @State private(set) var isShowingOTP = false
     @State private(set) var isShowingProducts = false
     
     init(
@@ -45,18 +47,7 @@ where OTPView: View,
     var body: some View {
         
         ScrollView(showsIndicators: false) {
-            
-            VStack(spacing: config.padding) {
-                order()
-                income()
-                topUp()
-                if isShowingProducts {
-                    products()
-                }
-                otp()
-                condition()
-            }
-            .padding(.horizontal, config.padding)
+            orderSavingsAccount(state.data)
         }
         .coordinateSpace(name: coordinateSpace)
         .toolbar(content: toolbarContent)
@@ -65,34 +56,73 @@ where OTPView: View,
         .navigationBarBackButtonHidden()
     }
     
-    private func condition() -> some View {
+    private func orderSavingsAccount(
+        _ data: OrderSavingsAccount?
+    ) -> some View {
+        
+        VStack(spacing: config.padding) {
+            order(
+                designMd5hash: data?.designMd5hash ?? "",
+                header: (data?.header.title ?? "", data?.header.subtitle ?? ""),
+                orderOption: (
+                    state.openAndMaintenance,
+                    state.orderServiceOption
+                ),
+                needShimmering: data == nil
+            )
+            income(income: data?.income ?? "", data == nil)
+            topUp(data == nil)
+            if isShowingProducts {
+                products()
+            }
+            if isShowingOTP {
+                otp()
+            }
+            condition(data?.links)
+        }
+        .padding(.all, config.padding)
+    }
+    
+    private func condition(
+        _ links: OrderSavingsAccount.Links?
+    ) -> some View {
         
         HStack(spacing: 0) {
             
-            Button(action: { isChecking.toggle()
-            }, label: {
-                isChecking ? config.images.checkOn : config.images.checkOff
-            })
-            .frame(config.linkableTexts.checkBoxSize)
+            if links != nil {
+                Button(action: { isChecking.toggle()
+                }, label: {
+                    isChecking ? config.images.checkOn : config.images.checkOff
+                })
+                .frame(config.linkableTexts.checkBoxSize)
+            }
             
-            LinkableTextView(taggedText: config.linkableTexts.condition, urlString: state.data.links.conditions, tag: config.linkableTexts.tag, handleURL: {_ in })
-            LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: state.data.links.tariff, tag: config.linkableTexts.tag, handleURL: {_ in })
-            
+            if let links {
+                
+                LinkableTextView(taggedText: config.linkableTexts.condition, urlString: links.conditions, tag: config.linkableTexts.tag, handleURL: {_ in })
+                    .minimumScaleFactor(0.9)
+                LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: links.tariff, tag: config.linkableTexts.tag, handleURL: {_ in })
+                    .minimumScaleFactor(0.9)
+            }
             Spacer()
         }
+        .frame(height: 24)
+        .modifier(ShimmeringModifier(links == nil, config.shimmering))
     }
     
     @ViewBuilder
     private func footer() -> some View {
         if isShowingProducts {
-            amount()
+            amount(state.data?.currency.symbol ?? "")
         } else {
             openButton()
         }
     }
     
     @ViewBuilder
-    private func amount() -> some View {
+    private func amount(
+        _ currencySymbol: String
+    ) -> some View {
         // TODO: move to state, add config
         var amount = Amount(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: true))
         
@@ -107,7 +137,7 @@ where OTPView: View,
                     print("Сумма пополнения \(amount.value)")
                 }
             },
-            currencySymbol: state.data.currency.symbol,
+            currencySymbol: currencySymbol,
             config: config.amount,
             infoView: {
                 HStack {
@@ -125,116 +155,209 @@ where OTPView: View,
         Button(action: { event(.continue) }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: config.openButton.cornerRadius)
-                    .foregroundColor(isChecking ? config.openButton.background.active : config.openButton.background.inactive)
+                    .foregroundColor((isChecking && state.data != nil) ? config.openButton.background.active : config.openButton.background.inactive)
                 config.openButton.label.text(withConfig: config.openButton.title)
             }
         })
         .padding(.horizontal)
         .frame(height: config.openButton.height)
-        .disabled(!isChecking)
+        .disabled(!(isChecking && state.data != nil))
         .frame(maxWidth: .infinity)
     }
     
-    private func orderHeader() -> some View {
+    private func orderHeader(
+        title: String,
+        subtitle: String,
+        needShimmering: Bool = false
+    ) -> some View {
         
         VStack(spacing: 0) {
             
-            state.data.header.title.text(withConfig: config.order.header.title)
+            title.text(withConfig: config.order.header.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(height: 24)
+                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             
-            state.data.header.subtitle.text(withConfig: config.order.header.subtitle)
+            subtitle.text(withConfig: config.order.header.subtitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(height: 16)
+                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
         }
     }
     
     private func orderOption(
         title: String,
-        subtitle: String
+        subtitle: String,
+        _ needShimmering: Bool
     ) -> some View {
         
         VStack(alignment: .leading, spacing: 0) {
             
             title.text(withConfig: config.order.options.config.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+            
             HStack {
-                config.order.image
-                    .frame(config.order.imageSize)
+                if needShimmering {
+                    Circle()
+                        .fill(config.shimmering)
+                        .frame(config.order.imageSize)
+                        .shimmering()
+                } else {
+                    config.order.image
+                        .frame(config.order.imageSize)
+                }
                 subtitle.text(withConfig: config.order.options.config.subtitle)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             }
         }
     }
     
-    private func orderOptions() -> some View {
+    private func orderOptions(
+        open: String,
+        service: String,
+        needShimmering: Bool = false
+    ) -> some View {
         
         VStack(alignment: .leading) {
             
-            orderOption(title: config.order.options.headlines.open, subtitle: "\(state.data.fee.openAndMaintenance)")
-            orderOption(title: config.order.options.headlines.service, subtitle: "\(state.data.fee.subscription.value)" + "\(state.data.fee.subscription.period)")
+            orderOption(
+                title: config.order.options.headlines.open.string(needShimmering),
+                subtitle: open,
+                needShimmering
+            )
+            
+            orderOption(title: config.order.options.headlines.service.string(needShimmering),
+                        subtitle: service,
+                        needShimmering
+            )
         }
     }
     
-    private func order() -> some View {
+    private func order(
+        designMd5hash: String,
+        header: (title: String, subtitle: String),
+        orderOption: (open: String, service: String),
+        needShimmering: Bool = false
+    ) -> some View {
         
         VStack {
             
-            orderHeader()
+            orderHeader(title: header.title, subtitle: header.subtitle, needShimmering: needShimmering)
             
             HStack(alignment:.top, spacing: config.padding) {
                 
-                factory.makeIconView(state.data.designMd5hash)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(config.order.card)
+                product(designMd5hash: designMd5hash, needShimmering)
                 
-                orderOptions()
+                orderOptions(
+                    open: orderOption.open,
+                    service: orderOption.service,
+                    needShimmering: needShimmering
+                )
             }
         }
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
     }
     
-    private func incomeInfo() -> some View {
+    @ViewBuilder
+    private func product(
+        designMd5hash: String,
+        _  needShimmering: Bool
+    ) -> some View {
+        
+        if needShimmering {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(config.shimmering)
+                .frame(config.order.card)
+                .shimmering()
+        }
+        else {
+            factory.makeIconView(designMd5hash)
+                .aspectRatio(contentMode: .fit)
+                .frame(config.order.card)
+        }
+    }
+    
+    private func incomeInfo(
+        income: String,
+        needShimmering: Bool = false
+    ) -> some View {
         
         VStack(alignment: .leading) {
             
-            config.income.title.text.text(withConfig: config.income.title.config)
+            config.income.title.text.string(needShimmering).text(withConfig: config.income.title.config)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            state.data.income.text(withConfig: config.income.subtitle)
+                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+            income.text(withConfig: config.income.subtitle)
+                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
         }
     }
     
-    private func income() -> some View {
+    private func income(
+        income: String,
+        _ needShimmering: Bool = false
+    ) -> some View {
         
         HStack(spacing: config.padding) {
-            config.income.image
-                .frame(config.income.imageSize)
-            incomeInfo()
+            if needShimmering {
+                Circle()
+                    .fill(config.shimmering)
+                    .frame(config.income.imageSize)
+                    .shimmering()
+            } else {
+                config.income.image
+                    .frame(config.income.imageSize)
+            }
+            incomeInfo(income: income, needShimmering: needShimmering)
         }
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
     }
     
-    private func infoWithToggle() -> some View {
+    private func infoWithToggle(
+        _ needShimmering: Bool = false
+    ) -> some View {
         
         HStack(spacing: config.padding) {
             VStack {
-                config.topUp.title.text.text(withConfig: config.topUp.title.config)
+                config.topUp.title.text.string(needShimmering).text(withConfig: config.topUp.title.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                config.topUp.subtitle.text.text(withConfig: config.topUp.subtitle.config)
+                    .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+                
+                config.topUp.subtitle.text.string(needShimmering).text(withConfig: config.topUp.subtitle.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+                
             }
             Toggle("", isOn: $isShowingProducts)
                 .toggleStyle(TopUpToggleStyle(config: config.topUp.toggle))
+            
         }
     }
     
-    private func topUp() -> some View {
+    private func topUp(
+        _ needShimmering: Bool = false
+    ) -> some View {
         
         HStack(alignment: .top, spacing: config.padding) {
             
-            config.income.image
-                .frame(config.income.imageSize)
+            if needShimmering {
+                Circle()
+                    .fill(config.shimmering)
+                    .frame(config.income.imageSize)
+                    .shimmering()
+            }
+            else {
+                config.income.image
+                    .frame(config.income.imageSize)
+                    .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+            }
             VStack(alignment: .leading) {
-                infoWithToggle()
-                config.topUp.description.text.text(withConfig: config.topUp.description.config)
+                infoWithToggle(needShimmering)
+                    .disabled(needShimmering)
+                config.topUp.description.text.string(needShimmering).text(withConfig: config.topUp.description.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             }
         }
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
@@ -290,11 +413,63 @@ private struct ViewWithBackgroundCornerRadiusAndPaddingModifier: ViewModifier {
     }
 }
 
+struct ShimmeringModifier: ViewModifier {
+    
+    let needShimmering: Bool
+    let color: Color
+    
+    init(
+        _ needShimmering: Bool = false,
+        _ color: Color
+    ) {
+        self.needShimmering = needShimmering
+        self.color = color
+    }
+    
+    func body(content: Content) -> some View {
+        if needShimmering {
+            content
+                .background(color)
+                .cornerRadius(90)
+                .shimmering()
+        }
+        else {
+            content
+        }
+    }
+}
+
 extension OrderSavingsAccountView {
     
     typealias Event = OrderSavingsAccountEvent
     typealias Config = OrderSavingsAccountConfig
     typealias Factory = ImageViewFactory
+}
+
+private extension OrderSavingsAccountState {
+    
+    var orderServiceOption: String {
+        
+        guard let data else { return "" }
+        
+        return "\(data.fee.subscription.value)" + "\(data.fee.subscription.period)"
+    }
+    
+    var openAndMaintenance: String {
+        
+        guard let data else { return "" }
+        
+        return "\(data.fee.openAndMaintenance)"
+    }
+}
+
+private extension String {
+    
+    func string(
+        _ needShimmering: Bool
+    ) -> String {
+        needShimmering ? "" : self
+    }
 }
 
 extension OrderSavingsAccountView
@@ -316,16 +491,45 @@ where OTPView == Text,
             config: .preview,
             factory: .default,
             viewFactory: .init(
-                makeOTPView: { Text("Otp") }, 
+                makeOTPView: { Text("Otp") },
                 makeProductPickerView: { Text("Products") })
-            )
+        )
+    }
+    
+    static var placeholder: Self {
+        
+        OrderSavingsAccountView(
+            state: .placeholder,
+            event: {
+                switch $0 {
+                case .continue:
+                    print("Открыть накопительный счет")
+                case .dismiss:
+                    print("Назад")
+                }
+            },
+            config: .preview,
+            factory: .default,
+            viewFactory: .init(
+                makeOTPView: { Text("Otp") },
+                makeProductPickerView: { Text("Products") })
+        )
     }
 }
 
-#Preview {
+struct LandingUIView_Previews: PreviewProvider {
     
-    NavigationView {
-        OrderSavingsAccountView.preview
+    static var previews: some View {
+        
+        NavigationView {
+            OrderSavingsAccountView.preview
+        }
+        .previewDisplayName("With data")
+        
+        NavigationView {
+            OrderSavingsAccountView.placeholder
+        }
+        .previewDisplayName("Placeholder")
     }
 }
 
