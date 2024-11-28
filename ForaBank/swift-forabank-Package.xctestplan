@@ -606,6 +606,13 @@
         "identifier" : "CollateralLoanLandingGetCollateralLandingUITests",
         "name" : "CollateralLoanLandingGetCollateralLandingUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetCollateralLandingBackendTests",
+        "name" : "CollateralLoanLandingGetCollateralLandingBackendTests"
+      }
     }
   ],
   "version" : 1
