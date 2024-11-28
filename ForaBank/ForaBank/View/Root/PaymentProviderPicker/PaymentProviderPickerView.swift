@@ -30,8 +30,6 @@ struct PaymentProviderPickerView: View {
             }
         )
     }
-    
-    typealias MakePaymentProviderListView = (PaymentProviderPicker.ProviderList) -> PaymentProviderListView
 }
 
 private extension PaymentProviderPickerView {

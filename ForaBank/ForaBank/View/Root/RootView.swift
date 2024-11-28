@@ -403,7 +403,7 @@ private extension RootView {
                     Text("TBD: \(String(describing: failedPaymentProviderPicker))")
                     
                 case let .success(binder):
-                    paymentProviderPicker(binder)
+                    rootViewFactory.makePaymentProviderPickerView(binder)
                 }
                 
             case let .taxAndStateServices(wrapper):
@@ -428,17 +428,6 @@ private extension RootView {
             rootViewFactory.components.makeQRView(cover.qr.qrScanner)
         }
         .navigationViewStyle(.stack)
-    }
-    
-    func paymentProviderPicker(
-        _ binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        PaymentProviderPickerView(
-            binder: binder,
-            components: rootViewFactory.components,
-            makeIconView: rootViewFactory.makeIconView
-        )
     }
         
     @ViewBuilder
