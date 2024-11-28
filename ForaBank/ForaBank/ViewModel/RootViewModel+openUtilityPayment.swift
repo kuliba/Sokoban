@@ -45,7 +45,7 @@ extension RootViewModel {
                     LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
                     return
                 }
-                action.send(RootEvent.standardPayment)
+                action.send(RootEvent.utilityPayment)
             }
             
         default:

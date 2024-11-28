@@ -20,7 +20,7 @@ enum RootViewSelect: Equatable {
     
     case outside(RootViewOutside)
     case scanQR
-    case standardPayment
+    case utilityPayment
     case templates
 }
 
@@ -37,10 +37,17 @@ enum RootViewOutside: Equatable {
 
 enum RootViewNavigation {
     
+    case failure(Failure)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
-    case standardPayment
+    case standardPayment(Node<PaymentProviderPicker.Binder>)
     case templates(TemplatesNode)
+    
+    enum Failure: Equatable {
+        
+        case makeStandardPaymentFailure
+        case missingCategoryOfType(ServiceCategory.CategoryType)
+    }
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode

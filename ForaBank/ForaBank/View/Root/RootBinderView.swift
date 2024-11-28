@@ -154,6 +154,10 @@ extension RootViewNavigation {
     var destination: Destination? {
         
         switch self {
+            // TODO: make alert
+        case .failure:
+            return nil
+            
         case .outside:
             return nil
             
@@ -179,6 +183,9 @@ extension RootViewNavigation {
     var fullScreenCover: FullScreenCover? {
         
         switch self {
+        case .failure:
+            return nil
+            
         case .outside:
             return nil
             
