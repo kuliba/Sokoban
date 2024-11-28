@@ -8,24 +8,45 @@
 import Foundation
 import SwiftUI
 
-#warning("move to UIPrimitives")
 extension Alert {
     
-    struct ViewModel: Identifiable {
+    public struct ViewModel: Identifiable {
         
-        let id = UUID()
-        let title: String
-        let message: String? 
-        let primary: ButtonViewModel
-        var secondary: ButtonViewModel? = nil
+        public let id = UUID()
+        public let title: String
+        public let message: String?
+        public let primary: ButtonViewModel
+        public var secondary: ButtonViewModel? = nil
 
-        struct ButtonViewModel {
+        public init(
+            title: String, 
+            message: String?,
+            primary: ButtonViewModel,
+            secondary: ButtonViewModel? = nil
+        ) {
+            self.title = title
+            self.message = message
+            self.primary = primary
+            self.secondary = secondary
+        }
+        
+        public struct ButtonViewModel {
             
-            let type: Kind
-            let title: String
-            let action: () -> Void
+            public let type: Kind
+            public let title: String
+            public let action: () -> Void
             
-            enum Kind {
+            public init(
+                type: Kind, 
+                title: String,
+                action: @escaping () -> Void
+            ) {
+                self.type = type
+                self.title = title
+                self.action = action
+            }
+            
+            public enum Kind {
                 
                 case `default`
                 case distructive
@@ -35,7 +56,7 @@ extension Alert {
         }
     }
     
-    init(with viewModel: ViewModel) {
+    public init(with viewModel: ViewModel) {
         
         let title = Text(viewModel.title)
         let message = Text(viewModel.message ?? "")
@@ -54,7 +75,7 @@ extension Alert {
     }
 }
 
-extension Alert {
+public extension Alert {
     
     static func button(with viewModel: Alert.ViewModel.ButtonViewModel) -> Alert.Button {
         

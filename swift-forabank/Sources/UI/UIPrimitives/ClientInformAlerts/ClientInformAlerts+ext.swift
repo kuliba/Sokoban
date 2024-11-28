@@ -8,20 +8,20 @@
 import Foundation
 import SwiftUI
 
-enum ClientInformActionType: String {
+public enum ClientInformActionType: String {
     
     case required
     case optional
     
-    init(updateType: String) {
+    public init(updateType: String) {
         
         self = ClientInformActionType(rawValue: updateType) ?? .required
     }
 }
 
-enum AlertType: Identifiable {
+public enum AlertType: Identifiable {
     
-    var id: UUID {
+    public var id: UUID {
         switch self {
         case .clientInformAlerts(let alert): return alert.id
         case .alertViewModel(let alert): return alert.id
@@ -34,7 +34,7 @@ enum AlertType: Identifiable {
 
 extension ClientInformAlerts {
 
-    mutating func next() {
+    public mutating func next() {
             
         if informAlerts.isEmpty {
 

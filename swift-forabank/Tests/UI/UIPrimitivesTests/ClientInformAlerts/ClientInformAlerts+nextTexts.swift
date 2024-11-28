@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.11.2024.
 //
 
+import UIPrimitives
 import XCTest
 
 final class ClientInformAlerts_nextTexts: XCTestCase {
