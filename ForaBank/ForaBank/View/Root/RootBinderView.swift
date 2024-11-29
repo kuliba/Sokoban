@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 08.11.2024.
 //
 
-import RxViewModel
 import SwiftUI
 
 struct RootBinderView: View {
@@ -17,199 +16,25 @@ struct RootBinderView: View {
         
         NavigationView {
             
-            RootWrapperView(
-                flow: binder.flow,
-                rootView: {
-                    
-                    RootView(
-                        viewModel: binder.content,
-                        rootViewFactory: rootViewFactory
-                    )
-                },
-                viewFactory: rootViewFactory
-            )
-            .navigationBarHidden(true)
-        }
-    }
-}
-
-struct RootWrapperView: View {
-    
-    @ObservedObject var flow: RootViewDomain.Flow
-    
-    let rootView: () -> RootView
-    let viewFactory: RootViewFactory
-    
-    var body: some View {
-        
-        ZStack {
-            
-            SpinnerView(viewModel: .init())
-                .opacity(flow.state.isLoading ? 1 : 0)
-                .zIndex(1.0)
-            
-            RxWrapperView(model: flow) { state, event in
-                
-                rootView()
-                    .fullScreenCoverInspectable(
-                        item: { state.navigation?.fullScreenCover },
-                        dismiss: { event(.dismiss) },
-                        content: fullScreenCoverContent
-                    )
-                    .navigationDestination(
-                        destination: state.navigation?.destination,
-                        dismiss: { event(.dismiss) },
-                        content: destinationContent
-                    )
-            }
-        }
-    }
-}
-
-private extension RootWrapperView {
-    
-    // MARK: - Destination
-    
-    @ViewBuilder
-    func destinationContent(
-        destination: RootViewNavigation.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .templates(node):
-            templatesView(node)
-        }
-    }
-    
-    private func templatesView(
-        _ templates: RootViewNavigation.TemplatesNode
-    ) -> some View {
-        
-        viewFactory.components.makeTemplatesListFlowView(templates)
-            .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
-    }
-    
-    // MARK: - FullScreenCover
-    
-    @ViewBuilder
-    func fullScreenCoverContent(
-        fullScreenCover: RootViewNavigation.FullScreenCover
-    ) -> some View {
-        
-        switch fullScreenCover {
-        case let .scanQR(qrScanner):
-            qrScannerView(qrScanner)
-        }
-    }
-    
-    private func qrScannerView(
-        _ qrScanner: QRScannerDomain.Binder
-    ) -> some View {
-        
-        NavigationView {
-            
-            viewFactory.makeQRScannerView(qrScanner)
-                .navigationBarTitleDisplayMode(.inline)
+            rootViewFactory.makeRootWrapperView(binder: binder)
                 .navigationBarHidden(true)
         }
-        .navigationViewStyle(.stack)
-        .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
     }
 }
 
 extension RootViewFactory {
     
-    func makeQRScannerView(
-        _ binder: QRScannerDomain.Binder
-    ) -> some View {
+    func makeRootWrapperView(
+        binder: RootViewDomain.Binder
+    ) -> RootWrapperView {
         
-        return QRWrapperView(
-            binder: binder,
-            factory: .init(
-                makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
-                makeOperatorView: InternetTVDetailsView.init,
-                makePaymentsView: components.makePaymentsView,
-                makeQRFailedWrapperView: components.makeQRFailedWrapperView,
-                makeQRSearchOperatorView: components.makeQRSearchOperatorView,
-                makeQRView: components.makeQRView,
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView
-            )
+        return .init(
+            flow: binder.flow,
+            rootView: {
+                
+                .init(viewModel: binder.content, rootViewFactory: self)
+            },
+            viewFactory: self
         )
-    }
-}
-
-extension RootViewNavigation {
-    
-    var destination: Destination? {
-        
-        switch self {
-        case .outside:
-            return nil
-            
-        case .scanQR:
-            return nil
-            
-        case let .templates(node):
-            return .templates(node)
-        }
-    }
-    
-    enum Destination {
-        
-        case templates(TemplatesNode)
-        
-        typealias TemplatesNode = RootViewNavigation.TemplatesNode
-    }
-    
-    var fullScreenCover: FullScreenCover? {
-        
-        switch self {
-        case .outside:
-            return nil
-            
-        case let .scanQR(node):
-            return .scanQR(node.model)
-            
-        case .templates:
-            return nil
-        }
-    }
-    
-    enum FullScreenCover {
-        
-        case scanQR(QRScannerDomain.Binder)
-    }
-}
-
-extension RootViewNavigation.Destination: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case let .templates(templates):
-            return .templates(.init(templates.model))
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case templates(ObjectIdentifier)
-    }
-}
-
-extension RootViewNavigation.FullScreenCover: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case let .scanQR(qrRScanner):
-            return .scanQR(.init(qrRScanner))
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case scanQR(ObjectIdentifier)
     }
 }

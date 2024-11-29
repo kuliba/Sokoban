@@ -65,16 +65,18 @@ extension ResponseMapper {
         
         public struct Fee: Equatable {
             
-            public let openAndMaintenance: Int
-            public let subscription: Subscription
+            public let open: Int
+            public let maintenance: Maintenance
             
-            public init(openAndMaintenance: Int, subscription: Subscription) {
-                self.openAndMaintenance = openAndMaintenance
-                self.subscription = subscription
-            }
-        }
+            public init(
+                open: Int,
+                maintenance: Maintenance
+            ) {
+                self.open = open
+                self.maintenance = maintenance
+            }        }
         
-        public struct Subscription: Equatable {
+        public struct Maintenance: Equatable {
             
             public let period: String
             public let value: Int

@@ -84,13 +84,25 @@ extension Color {
 extension OrderSavingsAccount {
     
     static let preview: Self = .init(
-        currency: .init(code: 810, symbol: "Rub"),
+        currency: .init(code: 810, symbol: "₽"),
         designMd5hash: "1",
-        fee: .init(openAndMaintenance: 11, subscription: .init(period: "month", value: 10)),
+        fee: .init(open: 100, subscription: .init(period: "month", value: 0)),
         header: .init(title: "Накопительный Счет", subtitle: "Накопительный в рублях"),
         hint: "Вы можете сразу пополнить счет",
         income: "6,05%",
         links: .init(conditions: "link1", tariff: "link2"))
+}
+
+extension NumberFormatter {
+    
+    static func preview() -> NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        
+        return formatter
+    }
 }
 
 extension OrderSavingsAccountState {
@@ -112,7 +124,7 @@ extension OrderSavingsAccountConfig {
             backgroundColor: .black.opacity(0.8),
             button: .init(
                 active: .init(backgroundColor: .red, text: .init(textFont: .system(size: 14), textColor: .white)),
-                inactive: .init(backgroundColor: .red, text: .init(textFont: .system(size: 14), textColor: .white)), buttonHeight: 38),
+                inactive: .init(backgroundColor: .gray, text: .init(textFont: .system(size: 14), textColor: .white)), buttonHeight: 38),
             dividerColor: .gray30,
             title: .init(textFont: .system(size: 14), textColor: .white)),
         background: .gray30,
@@ -133,7 +145,7 @@ extension OrderSavingsAccountConfig {
             background: .init(active: .red, inactive: .gray),
             cornerRadius: 12,
             height: 56,
-            label: "Открыть накопительный счет",
+            labels: .init(open: "Открыть накопительный счет", confirm: "Подтвердить и открыть"),
             title: .init(textFont: .body, textColor: .white)),
         order: .init(
             card: .init(width: 112, height: 72),
@@ -147,6 +159,11 @@ extension OrderSavingsAccountConfig {
         padding: 16,
         shimmering: .background,
         topUp: .init(
+            amount: .init(
+                amount: .init(text: "Сумма пополнения", config: .init(textFont: .system(size: 14), textColor: .gray)),
+                fee: .init(text: "Комиссия", config: .init(textFont: .system(size: 14), textColor: .gray)),
+                value: .init(textFont: .system(size: 14), textColor: .black)
+            ),
             description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .system(size: 12), textColor: .gray)),
             image: .init(systemName: "message"),
             subtitle: .init(text: "Пополнить сейчас", config: .init(textFont: .system(size: 16), textColor: .black)),

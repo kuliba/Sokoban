@@ -102,6 +102,13 @@ class RootViewModel_Tests: XCTestCase {
         try sut.tapMainViewFastSectionTemplatesButton()
     }
     
+    func tapMainViewFastSectionStandardPaymentButton(
+        _ sut: SUT
+    ) throws {
+        
+        try sut.tapMainViewFastSectionStandardPaymentButton()
+    }
+    
     func tapLegacyPaymentsSectionQRButton(
         _ sut: SUT
     ) throws {
@@ -130,6 +137,14 @@ private extension RootViewModel {
     ) throws {
         
         try mainViewModel.tapFastSectionButton(type: .qr, file: file, line: line)
+    }
+    
+    func tapMainViewFastSectionStandardPaymentButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try mainViewModel.tapFastSectionButton(type: .utility, file: file, line: line)
     }
     
     func tapMainViewFastSectionTemplatesButton(
@@ -189,6 +204,7 @@ private extension MainViewModel {
         case qr = "Оплата по QR"
         case templates = "Шаблоны"
         case byPhone = "Перевод по телефону"
+        case utility = "Оплата ЖКУ"
     }
     
     func fastSectionButton(

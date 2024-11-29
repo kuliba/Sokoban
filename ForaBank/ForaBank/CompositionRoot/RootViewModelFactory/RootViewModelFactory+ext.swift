@@ -53,9 +53,7 @@ extension RootViewModelFactory {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         }
         
-        if marketplaceFlag.isActive {
-            model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
-        }
+        model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         
         if collateralLoanLandingFlag.isActive {
             model.featureFlags.productsOpenLoanURL = nil
