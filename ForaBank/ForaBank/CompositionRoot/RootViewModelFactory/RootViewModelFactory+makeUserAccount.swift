@@ -13,23 +13,15 @@ extension RootViewModelFactory {
         close: @escaping () -> Void
     ) -> UserAccountViewModel? {
         
-        guard let clientInfo = model.clientInfo.value 
+        guard let clientInfo = model.clientInfo.value
         else { return nil }
-
+        
         model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
         
         let fastPaymentsFactory = makeFastPaymentsFactory()
-
-        let navigationStateManager = makeNavigationStateManager(
-            modelEffectHandler: .init(model: model),
-            otpServices: .init(httpClient, logger),
-            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
-            fastPaymentsFactory: fastPaymentsFactory,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
-            duration: 60
+        
+        let navigationStateManager = makeUserAccountNavigationStateManager(
+            fastPaymentsFactory: fastPaymentsFactory
         )
         
         return .init(

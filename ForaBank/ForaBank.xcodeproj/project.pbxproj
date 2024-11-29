@@ -1043,6 +1043,7 @@
 		2A730E372CEDCF5700BF626C /* QRScannerViewModelSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A730E362CEDCF5700BF626C /* QRScannerViewModelSpy.swift */; };
 		2A7325EA2A30466800C35022 /* PaymentsTypesTransportCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */; };
 		2A7325EC2A304A6E00C35022 /* Model+PaymentsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */; };
+		2A73BD152CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */; };
 		2A73C2142A027D3100C68A32 /* createC2BPaymentAcc_5_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2132A027D3100C68A32 /* createC2BPaymentAcc_5_2.json */; };
 		2A73C2162A029D9E00C68A32 /* getScenarioQRData_1_1_1_tweaked.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2152A029D9E00C68A32 /* getScenarioQRData_1_1_1_tweaked.json */; };
 		2A73C21A2A029E8600C68A32 /* createC2BPaymentAcc_5_1_tweaked.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2192A029E8600C68A32 /* createC2BPaymentAcc_5_1_tweaked.json */; };
@@ -4550,6 +4551,7 @@
 		2A7323A92BB193070031958E /* AnywayPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AnywayPayment.xctestplan; sourceTree = "<group>"; };
 		2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTypesTransportCaseTests.swift; sourceTree = "<group>"; };
 		2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportTests.swift"; sourceTree = "<group>"; };
+		2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeUserAccountNavigationStateManager.swift"; sourceTree = "<group>"; };
 		2A73C2132A027D3100C68A32 /* createC2BPaymentAcc_5_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = createC2BPaymentAcc_5_2.json; sourceTree = "<group>"; };
 		2A73C2152A029D9E00C68A32 /* getScenarioQRData_1_1_1_tweaked.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_1_1_tweaked.json; sourceTree = "<group>"; };
 		2A73C2192A029E8600C68A32 /* createC2BPaymentAcc_5_1_tweaked.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = createC2BPaymentAcc_5_1_tweaked.json; sourceTree = "<group>"; };
@@ -10472,6 +10474,7 @@
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
 				2ADB21CF2CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift */,
 				2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */,
+				2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */,
 				2AA09D642CFA25050062415C /* RootViewModelFactory+makeFastPaymentsFactory.swift */,
 				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
 				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
@@ -20837,6 +20840,7 @@
 				2A58FAAD2AD71DD600BD1967 /* RequestFactory+makeChangePINRequest.swift in Sources */,
 				0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */,
 				EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */,
+				2A73BD152CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */,
 				0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */,
