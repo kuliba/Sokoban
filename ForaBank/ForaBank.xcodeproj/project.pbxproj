@@ -1510,6 +1510,7 @@
 		2AD7674F2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */; };
 		2AD767512CF99B8600BFDA70 /* RootViewFactory+makeAnywayFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767502CF99B8600BFDA70 /* RootViewFactory+makeAnywayFlowView.swift */; };
 		2AD767532CF99D8F00BFDA70 /* RootViewFactory+makeOperationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767522CF99D8F00BFDA70 /* RootViewFactory+makeOperationPickerView.swift */; };
+		2AD767552CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */; };
 		2AD767572CF9A19D00BFDA70 /* RootViewFactory+makeCategoryPickerSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767562CF9A19D00BFDA70 /* RootViewFactory+makeCategoryPickerSectionView.swift */; };
 		2AD7EBDD2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */; };
 		2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */; };
@@ -4996,6 +4997,7 @@
 		2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeOperationPickerDestinationView.swift"; sourceTree = "<group>"; };
 		2AD767502CF99B8600BFDA70 /* RootViewFactory+makeAnywayFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeAnywayFlowView.swift"; sourceTree = "<group>"; };
 		2AD767522CF99D8F00BFDA70 /* RootViewFactory+makeOperationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeOperationPickerView.swift"; sourceTree = "<group>"; };
+		2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersPersonalView.swift"; sourceTree = "<group>"; };
 		2AD767562CF9A19D00BFDA70 /* RootViewFactory+makeCategoryPickerSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeCategoryPickerSectionView.swift"; sourceTree = "<group>"; };
 		2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerViewFactory+makeDetailButton.swift"; sourceTree = "<group>"; };
 		2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersPersonalViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -11956,6 +11958,7 @@
 			isa = PBXGroup;
 			children = (
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
+				2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */,
 				2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */,
 				2AD767502CF99B8600BFDA70 /* RootViewFactory+makeAnywayFlowView.swift */,
 				2AD767522CF99D8F00BFDA70 /* RootViewFactory+makeOperationPickerView.swift */,
@@ -20106,6 +20109,7 @@
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,
 				833EC1122BBEA56F0050ABE9 /* ProductAlertsViewModel.swift in Sources */,
 				2AA3A0F52BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift in Sources */,
+				2AD767552CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift in Sources */,
 				ED5F2885273BE78F006A10BF /* AccountStatementController.swift in Sources */,
 				2ADFE59F2B0D0B950020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequest.swift in Sources */,
 				8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */,

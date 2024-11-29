@@ -229,7 +229,7 @@ private extension RootView {
             ComposedProfileSwitcherView(
                 model: switcher,
                 corporateView: paymentsTransfersCorporateView,
-                personalView: paymentsTransfersPersonalView,
+                personalView: rootViewFactory.makePaymentsTransfersPersonalView,
                 undefinedView: { SpinnerView(viewModel: .init()) }
             )
         }
@@ -293,38 +293,6 @@ private extension RootView {
                 .foregroundColor(.white)
                 .font(.title3.bold())
         }
-    }
-    
-    func paymentsTransfersPersonalView(
-        _ personal: PaymentsTransfersPersonal
-    ) -> some View {
-        
-        ComposedPaymentsTransfersPersonalView(
-            personal: personal,
-            factory: .init(
-                makeContentView: {
-                    
-                    PaymentsTransfersPersonalContentView(
-                        content: personal.content,
-                        factory: .init(
-                            makeCategoryPickerView: rootViewFactory.makeCategoryPickerSectionView,
-                            makeOperationPickerView: rootViewFactory.makeOperationPickerView,
-                            makeToolbarView: rootViewFactory.makePaymentsTransfersToolbarView,
-                            makeTransfersView: rootViewFactory.makePaymentsTransfersTransfersView
-                        ),
-                        config: .iFora
-                    )
-                },
-                makeFullScreenCoverView: { _ in
-                
-                    Text("TBD: FullScreenCoverView")
-                },
-                makeDestinationView: { _ in
-                
-                    Text("TBD: DestinationView")
-                }
-            )
-        )
     }
 }
 
