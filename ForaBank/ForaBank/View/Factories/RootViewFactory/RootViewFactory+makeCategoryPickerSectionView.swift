@@ -28,7 +28,7 @@ extension RootViewFactory {
         }
     }
     
-    func makeCategoryPickerSectionView(
+    private func makeCategoryPickerSectionView(
         binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
@@ -58,7 +58,7 @@ extension RootViewFactory {
         .padding(.top, 20)
     }
     
-    func makeCategoryPickerSectionAlert(
+    private func makeCategoryPickerSectionAlert(
         binder: CategoryPickerSectionDomain.Binder
     ) -> (SelectedCategoryFailure) -> Alert {
         
@@ -91,7 +91,7 @@ extension RootViewFactory {
     }
     
     @ViewBuilder
-    func makeCategoryPickerSectionDestinationView(
+    private func makeCategoryPickerSectionDestinationView(
         destination: CategoryPickerSectionNavigation.Destination
     ) -> some View {
         
@@ -123,7 +123,7 @@ extension RootViewFactory {
     }
     
     @ViewBuilder
-    func makeCategoryPickerSectionFullScreenCoverView(
+    private func makeCategoryPickerSectionFullScreenCoverView(
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
         
@@ -132,89 +132,5 @@ extension RootViewFactory {
             components.makeQRView(cover.qr.qrScanner)
         }
         .navigationViewStyle(.stack)
-    }
-    
-    @ViewBuilder
-    func transportPaymentsView(
-        _ transport: TransportPaymentsViewModel
-    ) -> some View {
-        
-        components.makeTransportPaymentsView(transport)
-            .navigationBarTitle("", displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBar(
-                with: .with(
-                    title: "Транспорт",
-                    navLeadingAction: {},//viewModel.dismiss,
-                    navTrailingAction: {}//viewModel.openScanner
-                )
-            )
-    }
-    
-    @ViewBuilder
-    func qrDestinationView(
-        _ qrDestination: QRNavigation.Destination
-    ) -> some View {
-        
-        switch qrDestination {
-        case let .qrFailedViewModel(qrFailedViewModel):
-            components.makeQRFailedView(qrFailedViewModel)
-            
-        case let .internetTV(viewModel):
-            InternetTVDetailsView(viewModel: viewModel)
-                .navigationBarTitle("", displayMode: .inline)
-                .edgesIgnoringSafeArea(.all)
-            
-        case let .operatorSearch(viewModel):
-            components.makeQRSearchOperatorView(viewModel)
-                .navigationBarTitle("", displayMode: .inline)
-                .navigationBarBackButtonHidden(true)
-            
-        case let .payments(wrapper):
-            components.makePaymentsView(wrapper.paymentsViewModel)
-            
-        case let .paymentComplete(paymentComplete):
-            components.makePaymentsSuccessView(paymentComplete)
-            
-        case let .providerPicker(providerPicker):
-            paymentProviderPicker(providerPicker)
-            
-        case let .sberQR(sberQR):
-            makeSberQRConfirmPaymentView(sberQR)
-            
-        case let .servicePicker(servicePicker):
-            servicePickerView(servicePicker)
-        }
-    }
-    
-    func paymentProviderPicker(
-        _ flowModel: SegmentedPaymentProviderPickerFlowModel
-    ) -> some View {
-        
-        components.makeSegmentedPaymentProviderPickerView(flowModel)
-        //    .navigationBarWithBack(
-        //        title: PaymentsTransfersSectionType.payments.name,
-        //        dismiss: viewModel.dismissPaymentProviderPicker,
-        //        rightItem: .barcodeScanner(
-        //            action: viewModel.dismissPaymentProviderPicker
-        //        )
-        //    )
-    }
-    
-    @ViewBuilder
-    func servicePickerView(
-        _ flowModel: AnywayServicePickerFlowModel
-    ) -> some View {
-        
-        let provider = flowModel.state.content.state.payload.provider
-        
-        components.makeAnywayServicePickerFlowView(flowModel)
-//        .navigationBarWithAsyncIcon(
-//            title: provider.origin.title,
-//            subtitle: provider.origin.inn,
-//            dismiss: viewModel.dismissProviderServicePicker,
-//            icon: viewFactory.iconView(provider.origin.icon),
-//            style: .normal
-//        )
     }
 }
