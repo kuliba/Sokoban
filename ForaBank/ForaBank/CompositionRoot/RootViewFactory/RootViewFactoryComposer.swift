@@ -188,12 +188,12 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountView(
-        viewModel: UserAccountViewModel,
-        config: UserAccountConfig
+        viewModel: UserAccountViewModel
     ) -> UserAccountView {
-        .init(
+        
+        return .init(
             viewModel: viewModel,
-            config: config,
+            config: .iFora,
             viewFactory: makeUserAccountViewFactory()
         )
     }

@@ -166,7 +166,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
+            viewFactory.makeUserAccountView(userAccountViewModel)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
@@ -563,19 +563,26 @@ extension MainViewFactory {
         
         return .init(
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeIconView: IconDomain.preview, 
+            makeIconView: IconDomain.preview,
             makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
-                .init(
+                return .init(
                     viewModel: $0,
                     map: PublishingInfo.preview(info:),
                     config: .iFora
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: .preview) },
+            makeUserAccountView: {
+                
+                return .init(
+                    viewModel: $0,
+                    config: .preview,
+                    viewFactory: .preview
+                )
+            },
             components: .preview
         )
     }

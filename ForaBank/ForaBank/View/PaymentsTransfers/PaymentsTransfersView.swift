@@ -181,7 +181,7 @@ extension PaymentsTransfersView {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
+            viewFactory.makeUserAccountView(userAccountViewModel)
             
         case let .exampleDetail(title):
             ExampleDetailMock(title: title)
