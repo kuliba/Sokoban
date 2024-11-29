@@ -1693,6 +1693,11 @@
 		2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */; };
 		2AD5F0CA2CA54CE100AA5619 /* ClosePaymentsViewModelWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5F0C92CA54CE100AA5619 /* ClosePaymentsViewModelWrapperTests.swift */; };
 		2AD5F0CC2CA5595000AA5619 /* ClosePaymentsViewModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5F0CB2CA5595000AA5619 /* ClosePaymentsViewModelWrapper.swift */; };
+		2AD767442CF986DE00BFDA70 /* ComposedOperationPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767432CF986DE00BFDA70 /* ComposedOperationPickerFlowView.swift */; };
+		2AD767462CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */; };
+		2AD767482CF9877E00BFDA70 /* OperationPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */; };
+		2AD7674A2CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */; };
+		2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */; };
 		2AD7EBDD2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */; };
 		2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */; };
 		2AD8242F2C86E0F00007B8DF /* SelectedCategoryDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8242D2C86E0DB0007B8DF /* SelectedCategoryDestination.swift */; };
@@ -5366,6 +5371,11 @@
 		2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapperTests.swift; sourceTree = "<group>"; };
 		2AD5F0C92CA54CE100AA5619 /* ClosePaymentsViewModelWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePaymentsViewModelWrapperTests.swift; sourceTree = "<group>"; };
 		2AD5F0CB2CA5595000AA5619 /* ClosePaymentsViewModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePaymentsViewModelWrapper.swift; sourceTree = "<group>"; };
+		2AD767432CF986DE00BFDA70 /* ComposedOperationPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedOperationPickerFlowView.swift; sourceTree = "<group>"; };
+		2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedOperationPickerFlowViewFactory.swift; sourceTree = "<group>"; };
+		2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowView.swift; sourceTree = "<group>"; };
+		2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowViewFactory.swift; sourceTree = "<group>"; };
+		2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationPickerContentViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerViewFactory+makeDetailButton.swift"; sourceTree = "<group>"; };
 		2AD8242D2C86E0DB0007B8DF /* SelectedCategoryDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryDestination.swift; sourceTree = "<group>"; };
 		2AD824302C86E82D0007B8DF /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
@@ -9023,6 +9033,7 @@
 				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift */,
 				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
+				2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -11385,6 +11396,7 @@
 				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
 				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
 				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
+				2A72ACC92CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
 				2A2EE90D2CF0AC950019FC31 /* Payments */,
@@ -11423,8 +11435,11 @@
 		2A72ACC82CC6E20100B8BF5B /* OperationPicker */ = {
 			isa = PBXGroup;
 			children = (
-				2A72ACC92CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift */,
 				2A2EE9032CF0760E0019FC31 /* OperationPickerDomain.swift */,
+				2AD767432CF986DE00BFDA70 /* ComposedOperationPickerFlowView.swift */,
+				2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */,
+				2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */,
+				2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */,
 			);
 			path = OperationPicker;
 			sourceTree = "<group>";
@@ -21563,6 +21578,7 @@
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
 				2A7CA21B2C92149600B900E9 /* RootViewModelFactory+Load.swift in Sources */,
+				2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				8343FE2A2BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift in Sources */,
 				2A3417842B7CAC54002FAAFC /* BankDefaultStore.swift in Sources */,
@@ -21963,6 +21979,7 @@
 				2A33941B2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift in Sources */,
 				83FBDA892CD167CB006D00D2 /* SerialCachingRemoteBatchServiceComposer.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
+				2AD767442CF986DE00BFDA70 /* ComposedOperationPickerFlowView.swift in Sources */,
 				C13D8F6D2C9B223D00A79263 /* FilterModelReducer.swift in Sources */,
 				2AFD59E92B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift in Sources */,
 				2A6DC7B22C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift in Sources */,
@@ -22322,6 +22339,7 @@
 				EDCE659527C4FFDE006C2C3E /* Model+PaymentsTaxesFNS.swift in Sources */,
 				68A07C4B281B190800797A54 /* OpenDepositListViewModel.swift in Sources */,
 				77D527CE29A392D000270A73 /* PaymentsGroupViewModel.swift in Sources */,
+				2AD767462CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift in Sources */,
 				774A8B672865FDAF00B81140 /* PaymentsSelectSimpleViewComponent.swift in Sources */,
 				83E2F6132A40D246000B64CF /* InfoProductViewModel+Extensions.swift in Sources */,
 				A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */,
@@ -22817,6 +22835,7 @@
 				2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */,
 				2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */,
 				77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */,
+				2AD7674A2CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift in Sources */,
 				ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */,
 				50239E9B2941253F00AA480B /* CheckBoxViewComponent.swift in Sources */,
 				8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
@@ -23197,6 +23216,7 @@
 				5A5ABF8C27AAF55800D548AA /* PaymentCountryData.swift in Sources */,
 				2AA3A9462BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift in Sources */,
 				834CFDFB2A49CDD000DF301D /* InfoProductSheet.swift in Sources */,
+				2AD767482CF9877E00BFDA70 /* OperationPickerFlowView.swift in Sources */,
 				0B8C1C51273B2E1C00BA5CAC /* QRErrorCoordinator.swift in Sources */,
 				2A3417862B7CAD66002FAAFC /* KeyChainStore+Bool.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,

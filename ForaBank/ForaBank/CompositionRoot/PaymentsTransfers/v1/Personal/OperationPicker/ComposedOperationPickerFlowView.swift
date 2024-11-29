@@ -6,25 +6,17 @@
 //
 
 import RxViewModel
+import PayHubUI
 import SwiftUI
 
-public struct ComposedOperationPickerFlowView<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>: View
+struct ComposedOperationPickerFlowView<DestinationView, ItemLabel>: View
 where DestinationView: View,
-      ItemLabel: View,
-      Latest: Equatable {
+      ItemLabel: View {
     
-    private let binder: Binder
-    private let factory: Factory
+    let binder: Binder
+    let factory: Factory
     
-    public init(
-        binder: Binder,
-        factory: Factory
-    ) {
-        self.binder = binder
-        self.factory = factory
-    }
-    
-    public var body: some View {
+    var body: some View {
         
         RxWrapperView(
             model: binder.flow,
@@ -46,17 +38,17 @@ where DestinationView: View,
     }
 }
 
-public extension ComposedOperationPickerFlowView {
+extension ComposedOperationPickerFlowView {
     
-    typealias Domain = OperationPickerDomain<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Domain = OperationPickerDomain
     typealias Binder = Domain.Binder
-    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel>
 }
 
 private extension ComposedOperationPickerFlowView {
     
     func makeContentView(
-        _ content: OperationPickerContent<Latest>
+        _ content: OperationPickerContent
     ) -> some View {
         
         RxWrapperView(
@@ -66,7 +58,7 @@ private extension ComposedOperationPickerFlowView {
                 OperationPickerContentView(
                     state: state,
                     event: event,
-                    config: .preview,
+                    config: .primary,
                     itemLabel: factory.makeItemLabel
                 )
             }

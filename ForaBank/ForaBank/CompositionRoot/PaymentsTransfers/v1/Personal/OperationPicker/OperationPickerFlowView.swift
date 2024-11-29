@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 26.08.2024.
 //
 
-import PayHub
 import SwiftUI
 
-public struct OperationPickerFlowView<ContentView, DestinationView, Exchange, Latest, LatestFlow, Status, Templates>: View
+struct OperationPickerFlowView<ContentView, DestinationView>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -16,7 +15,7 @@ where ContentView: View,
     let event: (Event) -> Void
     let factory: Factory
     
-    public init(
+    init(
         state: State,
         event: @escaping (Event) -> Void,
         factory: Factory
@@ -26,7 +25,7 @@ where ContentView: View,
         self.factory = factory
     }
     
-    public var body: some View {
+    var body: some View {
         
         factory.makeContent()
             .navigationDestination(
@@ -37,29 +36,40 @@ where ContentView: View,
     }
 }
 
-public extension OperationPickerFlowView {
+extension OperationPickerFlowView {
     
-    typealias Domain = OperationPickerDomain<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Domain = OperationPickerDomain
     typealias FlowDomain = Domain.FlowDomain
     
     typealias State = FlowDomain.State
     typealias Event = FlowDomain.Event
-    typealias Factory = OperationPickerFlowViewFactory<ContentView, DestinationView, Exchange, LatestFlow, Status, Templates>
+    typealias Factory = OperationPickerFlowViewFactory<ContentView, DestinationView>
 }
 
 extension OperationPickerNavigation: Identifiable {
     
-    public var id: ID {
+    var id: ID {
+        
         switch self {
-        case .exchange:  return .exchange
-        case .latest:    return .latest
-        case .status:    return .status
-        case .templates: return .templates
+        case let .exchange(exchange):
+            return .exchange(.init(exchange))
+            
+        case let .latest(latest):
+            return .latest(.init(latest))
+            
+        case let .status(status):
+            return .status(status)
+            
+        case let .templates(templates):
+            return .templates(.init(templates))
         }
     }
     
-    public enum ID: Hashable {
+    enum ID: Hashable {
         
-        case exchange, latest, status, templates
+        case exchange(ObjectIdentifier)
+        case latest(ObjectIdentifier)
+        case status(OperationPickerFlowStatus)
+        case templates(ObjectIdentifier)
     }
 }
