@@ -1,5 +1,5 @@
 //
-//  OperationPickerContentViewConfig+iFora.swift
+//  OperationPickerContentViewConfig+primary.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 29.11.2024.
