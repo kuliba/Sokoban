@@ -308,7 +308,7 @@ private extension RootView {
                         content: personal.content,
                         factory: .init(
                             makeCategoryPickerView: makeCategoryPickerSectionView,
-                            makeOperationPickerView: makeOperationPickerView,
+                            makeOperationPickerView: rootViewFactory.makeOperationPickerView,
                             makeToolbarView: makePaymentsTransfersToolbarView,
                             makeTransfersView: makePaymentsTransfersTransfersView
                         ),
@@ -519,35 +519,6 @@ private extension RootView {
     }
     
     @ViewBuilder
-    func makeOperationPickerView(
-        operationPicker: PayHubUI.OperationPicker
-    ) -> some View {
-        
-        if let binder = operationPicker.operationBinder {
-            
-            makeOperationPickerView(binder: binder)
-            
-        } else {
-            
-            Text("Unexpected operationPicker type \(String(describing: operationPicker))")
-                            .foregroundColor(.red)
-        }
-    }
-    
-    func makeOperationPickerView(
-        binder: OperationPickerDomain.Binder
-    ) -> some View {
-        
-        ComposedOperationPickerFlowView(
-            binder: binder,
-            factory: .init(
-                makeDestinationView: rootViewFactory.makeOperationPickerDestinationView,
-                makeItemLabel: itemLabel
-            )
-        )
-    }
-    
-    @ViewBuilder
     func makePaymentsTransfersToolbarView(
         toolbar: PayHubUI.PaymentsTransfersPersonalToolbar
     ) -> some View {
@@ -643,23 +614,6 @@ private extension RootView {
             config: .iFora,
             categoryIcon: categoryIcon,
             placeholderView: { PlaceholderView(opacity: 0.5) }
-        )
-    }
-    
-    private func itemLabel(
-        item: OperationPickerState.Item
-    ) -> some View {
-        
-        OperationPickerStateItemLabel(
-            item: item,
-            config: .iFora,
-            placeholderView:  {
-                
-                LatestPlaceholder(
-                    opacity: 1,
-                    config: OperationPickerStateItemLabelConfig.iFora.latestPlaceholder
-                )
-            }
         )
     }
     
