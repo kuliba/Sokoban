@@ -804,7 +804,7 @@ private extension RootViewModelFactory {
 
 // MARK: - Adapters
 
-private extension UserAccountModelEffectHandler {
+/*private*/ extension UserAccountModelEffectHandler {
     
     convenience init(model: Model) {
         

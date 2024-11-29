@@ -1215,6 +1215,7 @@
 		2AA09D5D2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D5C2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift */; };
 		2AA09D5F2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D5E2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift */; };
 		2AA09D612CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */; };
+		2AA09D632CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2585D2CEA434B0038642C /* XCTestCase+wait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2585C2CEA434B0038642C /* XCTestCase+wait.swift */; };
 		2AA2585F2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2585E2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift */; };
@@ -4713,6 +4714,7 @@
 		2AA09D5C2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersToolbarView.swift"; sourceTree = "<group>"; };
 		2AA09D5E2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersTransfersView.swift"; sourceTree = "<group>"; };
 		2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersCorporateView.swift"; sourceTree = "<group>"; };
+		2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeUserAccount.swift"; sourceTree = "<group>"; };
 		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
 		2AA2585C2CEA434B0038642C /* XCTestCase+wait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+wait.swift"; sourceTree = "<group>"; };
 		2AA2585E2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewDomainContentWitnessesTests.swift; sourceTree = "<group>"; };
@@ -10467,6 +10469,7 @@
 				2A6826CA2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */,
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
 				2ADB21CF2CF8392700B37234 /* RootViewModelFactory+makeUtilityPayment.swift */,
+				2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */,
 				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
 				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
@@ -19944,6 +19947,7 @@
 				ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */,
 				2A840C032C373C2A00BA6887 /* TemplatesFlowEvent.swift in Sources */,
 				0CF3D71528368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift in Sources */,
+				2AA09D632CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift in Sources */,
 				774A8B4C2865FD3600B81140 /* MyProductsSectionItemView.swift in Sources */,
 				EDDFE3D5275EC34300F57C71 /* DepositSuccessViewController.swift in Sources */,
 				2A2B91E82C7CBA42008F5186 /* PlaceholderView.swift in Sources */,
