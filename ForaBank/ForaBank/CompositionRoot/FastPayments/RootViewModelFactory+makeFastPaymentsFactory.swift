@@ -14,6 +14,7 @@ import UIPrimitives
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeNewFastPaymentsViewModel() -> FastPaymentsSettingsViewModel {
         
         let getProducts = model.getFastPaymentsSettingsProducts

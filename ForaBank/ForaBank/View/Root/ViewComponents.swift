@@ -11,7 +11,7 @@ import SwiftUI
 
 typealias MakeProductsCategoryView = (Bool, String) -> ProductsCategoryView
 typealias MakeAnywayServicePickerFlowView = (AnywayServicePickerFlowModel) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>>
-typealias MakeComposedSegmentedPaymentProviderPickerFlowView = (SegmentedPaymentProviderPickerFlowModel) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>>
+typealias MakeSegmentedPaymentProviderPickerView = (SegmentedPaymentProviderPickerFlowModel) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>>
 typealias MakeContactsBanksSectionView = (ContactsBanksSectionViewModel) -> ContactsBanksSectionView
 typealias MakeContactsView = (ContactsViewModel) -> ContactsView
 typealias MakeControlPanelWrapperView = (ControlPanelViewModel) -> ControlPanelWrapperView
@@ -47,7 +47,7 @@ struct ViewComponents {
     
     let makeAnywayFlowView: MakeAnywayFlowView
     let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
-    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
     let makeContactsView: MakeContactsView
     let makeControlPanelWrapperView: MakeControlPanelWrapperView
     let makeCurrencyWalletView: MakeCurrencyWalletView
@@ -72,7 +72,7 @@ extension ViewComponents {
     static let preview: Self = .init(
         makeAnywayFlowView: { _ in fatalError() },
         makeAnywayServicePickerFlowView: { _ in fatalError() },
-        makeComposedSegmentedPaymentProviderPickerFlowView: { _ in fatalError() },
+        makeSegmentedPaymentProviderPickerView: { _ in fatalError() },
         makeContactsView: makeContactsView,
         makeControlPanelWrapperView: makeControlPanelWrapperView,
         makeCurrencyWalletView: makeCurrencyWalletView,

@@ -8,7 +8,7 @@
 import AnywayPaymentBackend
 import CalendarUI
 import CodableLanding
-import CollateralLoanLandingShowCaseBackend
+import CollateralLoanLandingGetShowcaseBackend
 import Combine
 import Fetcher
 import ForaTools
@@ -224,11 +224,6 @@ extension RootViewModelFactory {
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
-        let templatesComposer = makeTemplatesComposer(
-            paymentsTransfersFlag: paymentsTransfersFlag
-        )
-        let makeTemplates = templatesComposer.compose
-        
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             model: model,
             httpClient: httpClient,
@@ -282,8 +277,6 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel()
-        
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel()
         
         let getLanding = nanoServiceComposer.compose(
@@ -299,7 +292,7 @@ extension RootViewModelFactory {
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            makeTemplates: makeTemplates,
+            makeTemplates: makeMakeTemplates(paymentsTransfersFlag),
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -314,61 +307,28 @@ extension RootViewModelFactory {
                 c2bSubscription: model.subscriptions.value
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
-            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
+            makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOrderCardViewModel: makeOrderCardViewModel
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
+            createRequest: RequestFactory.createGetShowcaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
         
-        // threading
-        let operatorsService = schedulers.background.scheduled(servicePaymentOperatorService)
-        
-        let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
-        
-        let decoratedServiceCategoryListReload = decorate(
-            decoratee: serviceCategoryListReload,
-            with: { categories, completion in
-                
-                let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
-                
-                operatorsService(payloads) { failed in
-                    
-                    completion(failed.map(\.category))
-                    _ = operatorsService
-                }
-            }
-        )
-        
-        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
-        
-        let makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: serviceCategoryListLoad,
-            getLatestPayments: getLatestPayments
-        )
-        
-        // threading
-        let loadCategories = schedulers.background.scheduled(serviceCategoryListLoad)
-        let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
+        let paymentsTransfersPersonalNanoServices = composePaymentsTransfersPersonalNanoServices()
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            nanoServices: .init(
-                loadCategories: loadCategories,
-                reloadCategories: reloadCategories,
-                loadAllLatest: makeLoadLatestOperations(.all),
-                loadLatestForCategory: { getLatestPayments([$0.name], $1) }
-            )
+            nanoServices: paymentsTransfersPersonalNanoServices
         )
         
         if paymentsTransfersFlag.isActive {
             
             performOrWaitForActive {
                 
-                reloadCategories { [weak paymentsTransfersPersonal] categories in
+                paymentsTransfersPersonalNanoServices.reloadCategories { [weak paymentsTransfersPersonal] categories in
                     
                     // notify categoryPicker
                     let categoryPicker = paymentsTransfersPersonal?.content.categoryPicker.sectionBinder
@@ -443,7 +403,7 @@ extension RootViewModelFactory {
         let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplates: makeTemplates,
+            makeTemplates: makeMakeTemplates(paymentsTransfersFlag),
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
@@ -456,7 +416,7 @@ extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: resetCVVPINActivation,
-            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
+            makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
@@ -472,9 +432,6 @@ extension RootViewModelFactory {
         
         bindings.formUnion(marketBinder.bind())
         
-        let getRootNavigation = makeGetRootNavigation(
-            makeQRScanner: makeQRScannerBinder
-        )
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active
         )
@@ -483,11 +440,55 @@ extension RootViewModelFactory {
             bindings: bindings,
             dismiss: dismiss,
             getNavigation: getRootNavigation,
+            bindOutside: { $1.bindOutside(to: $0, on: self.schedulers.main) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+private extension RootViewDomain.Flow {
+    
+    func bindOutside(
+        to content: RootViewDomain.Content,
+        on scheduler: AnySchedulerOfDispatchQueue
+    ) -> Set<AnyCancellable> {
+        
+        let outside = $state.compactMap(\.outside)
+            .debounce(for: .milliseconds(500), scheduler: scheduler)
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                guard let self else { return }
+                
+                switch $0 {
+                case let .productProfile(productID):
+                    content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                    
+                case let .tab(tab):
+                    switch tab {
+                    case .main:
+                        content.selected = .main
+
+                    case .payments:
+                        content.selected = .payments
+                    }
+                }
+            }
+        
+        return [outside]
+    }
+}
+
+private extension FlowState<RootViewNavigation> {
+    
+    var outside: RootViewOutside? {
+        
+        guard case let .outside(outside) = navigation else { return nil }
+        
+        return outside
     }
 }
 

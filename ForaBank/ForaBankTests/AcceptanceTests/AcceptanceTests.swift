@@ -6,16 +6,34 @@
 //
 
 @testable import ForaBank
+import PayHubUI
+import ViewInspector
 import XCTest
 
-class AcceptanceTests: XCTestCase {
+class AcceptanceTests: QRNavigationTests {
+    
+    func activePaymentsTransfersFlag() -> FeatureFlags {
+        
+        return .activeExcept(
+            paymentsTransfersFlag: .active
+        )
+    }
+    
+    func inactivePaymentsTransfersFlag() -> FeatureFlags {
+        
+        return .activeExcept(
+            paymentsTransfersFlag: .inactive
+        )
+    }
     
     struct TestApp {
+        
+        // TODO: - improve tests using SceneDelegate
         
         private let window = UIWindow()
         
         private let rootComposer: ModelRootComposer
-        private let binder: RootViewDomain.Binder
+        private let binder: ForaBank.RootViewDomain.Binder
         private let rootViewFactory: RootViewFactory
         
         private func root() throws -> RootViewHostingViewController {
@@ -25,12 +43,19 @@ class AcceptanceTests: XCTestCase {
         
         init(
             featureFlags: FeatureFlags = .active,
+            httpClient: any HTTPClient = HTTPClientSpy(),
             dismiss: @escaping () -> Void = {},
-            scanner: any QRScannerViewModel = QRScannerViewModelSpy()
+            model: Model = .mockWithEmptyExcept(),
+            scanResult: QRModelResult = .unknown,
+            scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
+            schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
+                httpClient: httpClient,
+                mapScanResult: { _, completion in completion(scanResult) },
+                model: model,
                 scanner: scanner,
-                schedulers: .immediate
+                schedulers: schedulers
             )
             self.binder = rootComposer.makeBinder(
                 featureFlags: featureFlags,
@@ -41,7 +66,7 @@ class AcceptanceTests: XCTestCase {
             )
         }
         
-        func launch() throws -> RootViewBinderView {
+        func launch() throws -> RootBinderView {
             
             let rootViewController = RootViewHostingViewController(
                 with: binder,
@@ -68,5 +93,19 @@ class AcceptanceTests: XCTestCase {
                 XCTFail("Expected Scan QR", file: file, line: line)
             }
         }
+    }
+}
+
+extension RootBinderView {
+    
+    @available(iOS 16.0, *)
+    func rootViewDestination(
+        for id: ElementIDs.RootView.Destination
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        
+        try inspect()
+            .find(RootView.self)
+            .background().navigationLink() // we are using custom `View.navigationDestination(_:item:content:)
+            .find(viewWithAccessibilityIdentifier: id.rawValue)
     }
 }

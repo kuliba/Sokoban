@@ -193,6 +193,7 @@ extension PaymentsTransfersViewModel {
             
             self?.event(.dismiss(.destination))
         }
+        guard let templates else { return }
         let cancellable = bind(templates)
         var route = route
         route.destination = .templates(.init(
@@ -1304,7 +1305,7 @@ private extension PaymentsTransfersViewModel {
             delay(for: .milliseconds(800)) { [weak self] in
                 
                 self?.action.send(
-                    MainViewModelAction.Show.ProductProfile(
+                    PaymentsTransfersViewModelAction.Show.ProductProfile(
                         productId: productID
                     )
                 )

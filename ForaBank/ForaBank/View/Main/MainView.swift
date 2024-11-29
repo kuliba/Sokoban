@@ -100,6 +100,7 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
+        .accessibilityIdentifier(ElementIDs.mainView(.content).rawValue)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
@@ -189,6 +190,7 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .templates(node):
             viewFactory.components.makeTemplatesListFlowView(node)
+                .accessibilityIdentifier(ElementIDs.mainView(.templates).rawValue)
             
         case let .currencyWallet(viewModel):
             viewFactory.components.makeCurrencyWalletView(viewModel)
@@ -404,7 +406,7 @@ private extension MainView {
         _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        viewFactory.components.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
+        viewFactory.components.makeSegmentedPaymentProviderPickerView(flowModel)
             .navigationBarWithBack(
                 title: PaymentsTransfersSectionType.payments.name,
                 dismiss: viewModel.dismissPaymentProviderPicker,

@@ -246,6 +246,7 @@ extension MainViewModel {
             
             self?.action.send(MainViewModelAction.Close.Link())
         }
+        guard let templates else { return }
         let cancellable = bind(templates)
         var route = route
         route.destination = .templates(.init(
@@ -924,7 +925,8 @@ private extension MainViewModel {
                 
             case .byQr:
                 openScanner()
-            case .zku:
+                
+            case .utility:
                 self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             }
         }
