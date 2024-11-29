@@ -25,5 +25,5 @@ extension OperationPickerFlowViewFactory {
     
     typealias MakeContent = () -> ContentView
     
-    typealias MakeDestination = (OperationPickerNavigation) -> DestinationView
+    typealias MakeDestination = (OperationPickerDomain.Navigation.Destination) -> DestinationView
 }

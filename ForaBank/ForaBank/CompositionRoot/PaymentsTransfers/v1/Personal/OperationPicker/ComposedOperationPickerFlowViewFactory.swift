@@ -23,7 +23,7 @@ struct ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel> {
 
 extension ComposedOperationPickerFlowViewFactory {
     
-    typealias MakeDestinationView = (OperationPickerNavigation) -> DestinationView
+    typealias MakeDestinationView = (OperationPickerDomain.Navigation.Destination) -> DestinationView
     typealias Item = OperationPickerState.Item
     typealias MakeItemLabel = (Item) -> ItemLabel
 }

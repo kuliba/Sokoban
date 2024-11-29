@@ -541,30 +541,10 @@ private extension RootView {
         ComposedOperationPickerFlowView(
             binder: binder,
             factory: .init(
-                makeDestinationView: makeOperationPickerDestinationView,
+                makeDestinationView: rootViewFactory.makeOperationPickerDestinationView,
                 makeItemLabel: itemLabel
             )
         )
-    }
-    
-    @ViewBuilder
-    func makeOperationPickerDestinationView(
-        destination: OperationPickerDomain.Navigation
-    ) -> some View {
-        
-        switch destination {
-        case let .exchange(currencyWalletViewModel):
-            rootViewFactory.components.makeCurrencyWalletView(currencyWalletViewModel)
-            
-        case let .latest(latest):
-            Text("TBD: destination " + String(describing: latest))
-            
-        case let .status(operationPickerFlowStatus):
-            EmptyView()
-            
-        case let .templates(templates):
-            Text("TBD: destination " + String(describing: templates))
-        }
     }
     
     @ViewBuilder
