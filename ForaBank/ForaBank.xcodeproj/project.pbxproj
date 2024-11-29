@@ -1214,6 +1214,7 @@
 		2AA09D572CF9AD770062415C /* RootViewFactory+qrDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D562CF9AD770062415C /* RootViewFactory+qrDestinationView.swift */; };
 		2AA09D5D2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D5C2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift */; };
 		2AA09D5F2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D5E2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift */; };
+		2AA09D612CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2585D2CEA434B0038642C /* XCTestCase+wait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2585C2CEA434B0038642C /* XCTestCase+wait.swift */; };
 		2AA2585F2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2585E2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift */; };
@@ -2648,7 +2649,7 @@
 		832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 832FB0AC2C215AB7001CE10F /* SVCardLimitAPI */; };
 		8330E12F2CEF405B00694AD0 /* SavingsServices in Frameworks */ = {isa = PBXBuildFile; productRef = 8330E12E2CEF405B00694AD0 /* SavingsServices */; };
 		833245E02CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */; };
-		833286D02C91BF4700B6FA3F /* RootView+banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286CF2C91BF4700B6FA3F /* RootView+banners.swift */; };
+		833286D02C91BF4700B6FA3F /* RootViewFactory+banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */; };
 		833286D32C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */; };
 		8333238A2BB404F7007C135F /* MD5Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833323892BB404F7007C135F /* MD5Hash.swift */; };
 		833325412B5AE955001920EB /* CardStatementAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 833325402B5AE955001920EB /* CardStatementAPI */; };
@@ -4711,6 +4712,7 @@
 		2AA09D562CF9AD770062415C /* RootViewFactory+qrDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+qrDestinationView.swift"; sourceTree = "<group>"; };
 		2AA09D5C2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersToolbarView.swift"; sourceTree = "<group>"; };
 		2AA09D5E2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersTransfersView.swift"; sourceTree = "<group>"; };
+		2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersCorporateView.swift"; sourceTree = "<group>"; };
 		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
 		2AA2585C2CEA434B0038642C /* XCTestCase+wait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+wait.swift"; sourceTree = "<group>"; };
 		2AA2585E2CEB1C5E0038642C /* RootViewDomainContentWitnessesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewDomainContentWitnessesTests.swift; sourceTree = "<group>"; };
@@ -6112,7 +6114,7 @@
 		832F83102BB8292600C97BBD /* CarouselComponentConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarouselComponentConfig+iFora.swift"; sourceTree = "<group>"; };
 		8330E12D2CEF3FED00694AD0 /* SavingsServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SavingsServices.xctestplan; sourceTree = "<group>"; };
 		833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerTests.swift; sourceTree = "<group>"; };
-		833286CF2C91BF4700B6FA3F /* RootView+banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootView+banners.swift"; sourceTree = "<group>"; };
+		833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+banners.swift"; sourceTree = "<group>"; };
 		833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateContent.swift; sourceTree = "<group>"; };
 		833323892BB404F7007C135F /* MD5Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MD5Hash.swift; sourceTree = "<group>"; };
 		833370BF2B6D369800B424E8 /* ControlButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButtonView.swift; sourceTree = "<group>"; };
@@ -11955,7 +11957,9 @@
 			isa = PBXGroup;
 			children = (
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
+				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
 				2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */,
+				2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */,
 				2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */,
 				2AD767502CF99B8600BFDA70 /* RootViewFactory+makeAnywayFlowView.swift */,
 				2AD767522CF99D8F00BFDA70 /* RootViewFactory+makeOperationPickerView.swift */,
@@ -13604,7 +13608,6 @@
 				2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */,
 				770DCE9227BBF93B004099C1 /* RootView.swift */,
 				2ADB21D32CF86B2700B37234 /* PaymentProviderPicker */,
-				833286CF2C91BF4700B6FA3F /* RootView+banners.swift */,
 				2A2B91E52C7CBA17008F5186 /* EXTRACT_TO_DESIGN_SYSTEM */,
 			);
 			path = Root;
@@ -20979,7 +20982,7 @@
 				774CA5DC28789E6E00544C17 /* LegacyKeychainAgent.swift in Sources */,
 				2A4300852C521835002FF8C7 /* ServicePaymentBinder.swift in Sources */,
 				681142DD27C7D729008D3D67 /* MainSectionProductsViewComponent.swift in Sources */,
-				833286D02C91BF4700B6FA3F /* RootView+banners.swift in Sources */,
+				833286D02C91BF4700B6FA3F /* RootViewFactory+banners.swift in Sources */,
 				2AB139F12AEEDA6D008159A0 /* ComposedCVVPINService+log.swift in Sources */,
 				77499C3A27738F6200F6C079 /* ProductType.swift in Sources */,
 				2AA3A9482BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift in Sources */,
@@ -21621,6 +21624,7 @@
 				C165DDF42A160F0E003CE3DA /* CountryCodeReplace.swift in Sources */,
 				C15CB8E72B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift in Sources */,
 				2AC72B902CEF7AC3001578CC /* RootViewModelFactory+compose.swift in Sources */,
+				2AA09D612CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift in Sources */,
 				2ACFD6652C5CCF5B003F08AE /* OperatorProvider.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */,

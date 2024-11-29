@@ -230,70 +230,10 @@ private extension RootView {
         ) {
             ComposedProfileSwitcherView(
                 model: switcher,
-                corporateView: paymentsTransfersCorporateView,
+                corporateView: rootViewFactory.makePaymentsTransfersCorporateView,
                 personalView: rootViewFactory.makePaymentsTransfersPersonalView,
                 undefinedView: { SpinnerView(viewModel: .init()) }
             )
-        }
-    }
-    
-    func paymentsTransfersCorporateView(
-        _ corporate: PaymentsTransfersCorporate
-    ) -> some View {
-        
-        ComposedPaymentsTransfersCorporateView(
-            corporate: corporate,
-            factory: .init(
-                makeContentView: {
-                    PaymentsTransfersCorporateContentView(
-                        content: corporate.content,
-                        factory: .init(
-                            makeBannerSectionView: makeBannerSectionView,
-                            makeRestrictionNoticeView: makeRestrictionNoticeView,
-                            makeToolbarView: makePaymentsTransfersCorporateToolbarView,
-                            makeTransfersSectionView: makeTransfersSectionView
-                        ),
-                        config: .iFora
-                    )
-                },
-                makeFullScreenCoverView: { _ in
-                
-                    Text("TBD: FullScreenCoverView")
-                },
-                makeDestinationView: { _ in
-                
-                    Text("TBD: DestinationView")
-                }
-            )
-        )
-    }
-    
-    func makeRestrictionNoticeView() -> some View {
-        
-        DisableCorCardsView(text: .disableForCorCards)
-    }
-    
-    func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
-        
-        ToolbarItem(placement: .topBarLeading) {
-            
-            HStack {
-                
-                Image(systemName: "person")
-                Text("TBD: Profile without QR")
-            }
-        }
-    }
-    
-    func makeTransfersSectionView() -> some View {
-        
-        ZStack {
-            
-            Color.green.opacity(0.5)
-            
-            Text("Transfers")
-                .foregroundColor(.white)
-                .font(.title3.bold())
         }
     }
 }
@@ -504,6 +444,7 @@ private extension RootViewFactory {
         }
         
         return .init(
+            isCorporate: { false }, 
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _,_,_,_   in
