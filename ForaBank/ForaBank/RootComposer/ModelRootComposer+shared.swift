@@ -41,7 +41,6 @@ extension ModelRootComposer {
                     model: model,
                     httpClient: httpClient,
                     historyFeatureFlag: true,
-                    marketFeatureFlag: .active,
                     savingsAccountFlag: featureFlags.savingsAccountFlag,
                     schedulers: schedulers
                 )

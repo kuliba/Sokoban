@@ -52,16 +52,6 @@
 			<key>DefaultValue</key>
 			<false/>
 			<key>Title</key>
-			<string>Маркет</string>
-			<key>Key</key>
-			<string>marketplace</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>DefaultValue</key>
-			<false/>
-			<key>Title</key>
 			<string>Накопительный счет</string>
 			<key>Key</key>
 			<string>savingsAccount</string>

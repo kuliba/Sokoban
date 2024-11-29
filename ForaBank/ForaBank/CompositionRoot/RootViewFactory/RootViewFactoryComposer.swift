@@ -25,7 +25,6 @@ final class RootViewFactoryComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let historyFeatureFlag: HistoryFilterFlag
-    private let marketFeatureFlag: MarketplaceFlag
     private let savingsAccountFlag: SavingsAccountFlag
     private let schedulers: Schedulers
 
@@ -33,14 +32,12 @@ final class RootViewFactoryComposer {
         model: Model,
         httpClient: HTTPClient,
         historyFeatureFlag: HistoryFilterFlag,
-        marketFeatureFlag: MarketplaceFlag,
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
         self.historyFeatureFlag = historyFeatureFlag
-        self.marketFeatureFlag = marketFeatureFlag
         self.savingsAccountFlag = savingsAccountFlag
         self.schedulers = schedulers
     }
@@ -863,33 +860,31 @@ private extension RootViewFactoryComposer {
         viewModel: MarketShowcaseDomain.Binder,
         orderCard: @escaping () -> Void,
         payment: @escaping (String) -> Void
-    ) -> MarketShowcaseWrapperView? {
-        marketFeatureFlag.isActive ?
+    ) -> MarketShowcaseWrapperView {
         
-            .init(
-                model: viewModel.flow,
-                makeContentView: { flowState, flowEvent in
-                    MarketShowcaseFlowView(
-                        state: flowState,
-                        event: flowEvent) {
-                            MarketShowcaseContentWrapperView(
-                                model: viewModel.content,
-                                makeContentView: { contentState, contentEvent in
-                                    MarketShowcaseContentView(
-                                        state: contentState,
-                                        event: contentEvent,
-                                        config: .iFora,
-                                        factory: .init(
-                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: {
-                                                self.makeLandingView(contentEvent, flowEvent, $0, orderCard, payment)
-                                            }
-                                        )
+        .init(
+            model: viewModel.flow,
+            makeContentView: { flowState, flowEvent in
+                MarketShowcaseFlowView(
+                    state: flowState,
+                    event: flowEvent) {
+                        MarketShowcaseContentWrapperView(
+                            model: viewModel.content,
+                            makeContentView: { contentState, contentEvent in
+                                MarketShowcaseContentView(
+                                    state: contentState,
+                                    event: contentEvent,
+                                    config: .iFora,
+                                    factory: .init(
+                                        makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+                                        makeLandingView: {
+                                            self.makeLandingView(contentEvent, flowEvent, $0, orderCard, payment)
+                                        }
                                     )
-                                })
-                        }
-                })
-        : nil
+                                )
+                            })
+                    }
+            })
     }
 }
 

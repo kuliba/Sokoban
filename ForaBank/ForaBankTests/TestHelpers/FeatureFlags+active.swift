@@ -14,7 +14,6 @@ extension FeatureFlags {
     static func activeExcept(
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active,
-        marketplaceFlag: MarketplaceFlag = .active,
         historyFilterFlag: HistoryFilterFlag = true,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
         savingsAccountFlag: SavingsAccountFlag = .active,
@@ -24,7 +23,6 @@ extension FeatureFlags {
         return .init(
             changeSVCardLimitsFlag: changeSVCardLimitsFlag,
             getProductListByTypeV6Flag: getProductListByTypeV6Flag,
-            marketplaceFlag: marketplaceFlag,
             historyFilterFlag: historyFilterFlag,
             paymentsTransfersFlag: paymentsTransfersFlag,
             savingsAccountFlag: savingsAccountFlag,
