@@ -73,12 +73,7 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fastPaymentsFactory = FastPaymentsFactory(
-            fastPaymentsViewModel: .new({
-                
-                self.makeNewFastPaymentsViewModel()
-            })
-        )
+        let fastPaymentsFactory = makeFastPaymentsFactory()
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,

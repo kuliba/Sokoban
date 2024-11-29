@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeUserAccount(
         route: UserAccountRoute = .init(),
         close: @escaping () -> Void
@@ -17,12 +18,7 @@ extension RootViewModelFactory {
 
         model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
         
-        let fastPaymentsFactory = FastPaymentsFactory(
-            fastPaymentsViewModel: .new({
-                
-                self.makeNewFastPaymentsViewModel()
-            })
-        )
+        let fastPaymentsFactory = makeFastPaymentsFactory()
 
         let navigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),

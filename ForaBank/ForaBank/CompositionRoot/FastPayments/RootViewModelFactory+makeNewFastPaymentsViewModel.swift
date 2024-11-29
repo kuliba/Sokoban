@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeFastPaymentsFactory.swift
+//  RootViewModelFactory+makeNewFastPaymentsViewModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 27.12.2023.
