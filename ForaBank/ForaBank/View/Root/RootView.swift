@@ -435,11 +435,7 @@ private extension RootView {
         _ transport: TransportPaymentsViewModel
     ) -> some View {
         
-        let mosParkingPickerData: LoadableResourceViewModel<MosParkingPickerData> =  .init(
-            operation: viewModel.model.getMosParkingPickerData
-        )
-        
-        rootViewFactory.components.makeTransportPaymentsView(mosParkingPickerData, transport)
+        rootViewFactory.components.makeTransportPaymentsView(transport)
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .navigationBar(
