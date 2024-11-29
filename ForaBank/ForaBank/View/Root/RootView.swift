@@ -310,7 +310,7 @@ private extension RootView {
                             makeCategoryPickerView: rootViewFactory.makeCategoryPickerSectionView,
                             makeOperationPickerView: rootViewFactory.makeOperationPickerView,
                             makeToolbarView: rootViewFactory.makePaymentsTransfersToolbarView,
-                            makeTransfersView: makePaymentsTransfersTransfersView
+                            makeTransfersView: rootViewFactory.makePaymentsTransfersTransfersView
                         ),
                         config: .iFora
                     )
@@ -324,38 +324,6 @@ private extension RootView {
                     Text("TBD: DestinationView")
                 }
             )
-        )
-    }
-    
-    @ViewBuilder
-    private func makePaymentsTransfersTransfersView(
-        transfersPicker: PayHubUI.TransfersPicker
-    ) -> some View {
-        
-        if let binder = transfersPicker.transfersBinder {
-            
-            makePaymentsTransfersTransfersView(transfers: binder)
-            
-        } else {
-            
-            Text("Unexpected transfersPicker type \(String(describing: transfersPicker))")
-                .foregroundColor(.red)
-        }
-    }
-    
-    private func makePaymentsTransfersTransfersView(
-        transfers: PaymentsTransfersPersonalTransfersDomain.Binder
-    ) -> some View {
-        
-        ComposedPaymentsTransfersTransfersView(
-            flow: transfers.flow,
-            contentView: {
-                
-                ComposedPaymentsTransfersTransfersContentView(
-                    content: transfers.content
-                )
-            },
-            factory: rootViewFactory.personalTransfersFlowViewFactory
         )
     }
 }
