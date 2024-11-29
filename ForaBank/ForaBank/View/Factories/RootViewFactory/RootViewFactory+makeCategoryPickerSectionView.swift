@@ -122,7 +122,6 @@ extension RootViewFactory {
         }
     }
     
-    @ViewBuilder
     private func makeCategoryPickerSectionFullScreenCoverView(
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {

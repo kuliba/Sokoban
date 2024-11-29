@@ -7,10 +7,11 @@
 
 import ActivateSlider
 import AnywayPaymentDomain
+import Banners
+import LoadableResourceComponent
+import MarketShowcase
 import SberQR
 import SwiftUI
-import MarketShowcase
-import LoadableResourceComponent
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -31,6 +32,7 @@ typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     
+    let isCorporate: () -> Bool
     let makeActivateSliderView: MakeActivateSliderView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView

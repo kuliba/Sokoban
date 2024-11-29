@@ -54,9 +54,11 @@ extension RootViewFactoryComposer {
         let generalImageCache = model.generalImageCache()
         
         return .init(
+            isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
+                
                 self.makeHistoryButtonView(
                     self.historyFeatureFlag,
                     isFiltered: isFiltered,
@@ -69,7 +71,10 @@ extension RootViewFactoryComposer {
             makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
-            makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) },
+            makeReturnButtonView: { action in
+                
+                self.makeReturnButtonView(self.historyFeatureFlag, action: action)
+            },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
