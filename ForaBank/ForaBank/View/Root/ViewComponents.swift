@@ -41,6 +41,7 @@ typealias MakeQRView = (QRScanner) -> QRScanner_View
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (LoadableResourceViewModel<MosParkingPickerData>, TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
+typealias MakeOrderCardView = () -> EmptyView
 
 struct ViewComponents {
     
@@ -63,6 +64,7 @@ struct ViewComponents {
     let makeQRView: MakeQRView
     let makeTemplatesListFlowView: MakeTemplatesListFlowView
     let makeTransportPaymentsView: MakeTransportPaymentsView
+    let makeOrderCardView: MakeOrderCardView
 }
 
 extension ViewComponents {
@@ -86,7 +88,8 @@ extension ViewComponents {
         makeQRSearchOperatorView: makeQRSearchOperatorView,
         makeQRView: makeQRView,
         makeTemplatesListFlowView: { _ in fatalError() },
-        makeTransportPaymentsView: { _,_  in fatalError() }
+        makeTransportPaymentsView: { _,_  in fatalError() }, 
+        makeOrderCardView: { EmptyView() }
     )
     
     static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }

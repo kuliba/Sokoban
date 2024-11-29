@@ -265,6 +265,9 @@ struct MainView<NavigationOperationView: View>: View {
             // TODO: There are will added integration in next commit
             Color.clear
                 .edgesIgnoringSafeArea(.bottom)
+            
+        case .orderCard:
+            viewFactory.components.makeOrderCardView()
         }
     }
     
@@ -599,7 +602,8 @@ extension ProductProfileViewModel  {
         updateInfoStatusFlag: .active,
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-        makeServicePaymentBinder: ServicePaymentBinder.preview
+        makeServicePaymentBinder: ServicePaymentBinder.preview,
+        makeOrderCardViewModel: { /*TODO:  implement preview*/ }
     )
 }
 

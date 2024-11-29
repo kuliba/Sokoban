@@ -291,6 +291,10 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
         
+        let makeOrderCardViewModel = {
+            //TODO: implement makeOrderCardViewModel composer
+        }
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -312,7 +316,8 @@ extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder
+            makeServicePaymentBinder: makeServicePaymentBinder,
+            makeOrderCardViewModel: makeOrderCardViewModel
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
@@ -520,6 +525,7 @@ extension ProductProfileViewModel {
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeOrderCardViewModel = () -> Void
     
     static func make(
         with model: Model,
@@ -539,7 +545,8 @@ extension ProductProfileViewModel {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
+        makeOrderCardViewModel: @escaping MakeOrderCardViewModel
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -562,7 +569,8 @@ extension ProductProfileViewModel {
                 updateInfoStatusFlag: updateInfoStatusFlag,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-                makeServicePaymentBinder: makeServicePaymentBinder
+                makeServicePaymentBinder: makeServicePaymentBinder,
+                makeOrderCardViewModel: makeOrderCardViewModel
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -624,6 +632,7 @@ extension ProductProfileViewModel {
                 },
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
+                makeOrderCardViewModel: makeOrderCardViewModel,
                 model: model
             )
             
