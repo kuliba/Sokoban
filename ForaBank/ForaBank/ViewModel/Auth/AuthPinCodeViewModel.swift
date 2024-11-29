@@ -678,6 +678,7 @@ extension AuthPinCodeViewModel {
         openURL: @escaping (URL) -> Void
     ) {
         
+        self.model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
     }
     
@@ -697,7 +698,9 @@ extension AuthPinCodeViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Ok"), action: {
-                        self.clientInformAlerts?.next()
+                        self.clientInformAlertButtonTapped() { _ in
+                        }
+                        
                     })
                     )
                     
@@ -707,8 +710,9 @@ extension AuthPinCodeViewModel {
                                  message: Text(alert.text),
                                  primaryButton: .default(Text("Позже"), action: { }),
                                  secondaryButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in }
-                        self.clientInformAlerts?.next()
+                        self.clientInformAlertButtonTapped() { _ in
+                        }
+                        
                     })
                     )
                     
@@ -717,8 +721,8 @@ extension AuthPinCodeViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in }
-                        self.clientInformAlerts?.next()
+                        self.clientInformAlertButtonTapped() { _ in
+                        }
                     })
                     )
                 }
