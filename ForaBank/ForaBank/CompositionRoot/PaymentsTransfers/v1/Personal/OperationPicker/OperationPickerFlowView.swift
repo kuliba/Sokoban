@@ -29,7 +29,7 @@ where ContentView: View,
         
         factory.makeContent()
             .navigationDestination(
-                destination: state.navigation,
+                destination: state.navigation?.destination,
                 dismiss: { event(.dismiss) },
                 content: factory.makeDestination
             )
@@ -46,7 +46,38 @@ extension OperationPickerFlowView {
     typealias Factory = OperationPickerFlowViewFactory<ContentView, DestinationView>
 }
 
-extension OperationPickerNavigation: Identifiable {
+// MARK: - UI Mapping
+
+extension OperationPickerDomain.Navigation {
+    
+    var destination: Destination? {
+        
+        switch self {
+            
+        case let .exchange(exchange):
+            return .exchange(exchange)
+        
+        case let .latest(latest):
+            return .latest(latest)
+        
+        case let .status(status):
+            return .status(status)
+        
+        case let .templates(templates):
+            return .templates(templates)
+        }
+    }
+    
+    enum Destination {
+        
+        case exchange(CurrencyWalletViewModel)
+        case latest(LatestFlowStub)
+        case status(OperationPickerFlowStatus)
+        case templates(TemplatesStub)
+    }
+}
+
+extension OperationPickerDomain.Navigation.Destination: Identifiable {
     
     var id: ID {
         
