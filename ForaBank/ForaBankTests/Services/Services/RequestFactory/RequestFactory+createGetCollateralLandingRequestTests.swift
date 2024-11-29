@@ -21,7 +21,7 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v1/pages/collateral/getCollateralLanding?landingTypes=\(landingType.rawValue)&serial=\(serial)"
+            "https://pl.forabank.ru/dbo/api/v3/rest/v1/pages/collateral/getCollateralLanding"
         )
     }
     

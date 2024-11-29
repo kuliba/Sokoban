@@ -10,7 +10,7 @@ import RemoteServices
 extension ResponseMapper {
     
     public struct GetCollateralLandingData: Equatable {
-
+        
         public let serial: String
         public let product: Product
         
@@ -26,23 +26,38 @@ extension ResponseMapper {
             public let marketing: Marketing
             public let conditions: [Condition]
             public let calc: Calc
+            public let frequentlyAskedQuestions: [FrequentlyAskedQuestion]
+            public let documents: [Document]
+            public let consents: [Consent]
+            public let cities: [String]
+            public let icons: Icons
             
             public init(
                 theme: Theme,
                 name: String,
                 marketing: Marketing,
                 conditions: [Condition],
-                calc: Calc
+                calc: Calc,
+                frequentlyAskedQuestions: [FrequentlyAskedQuestion],
+                documents: [Document],
+                consents: [Consent],
+                cities: [String],
+                icons: Icons
             ) {
                 self.theme = theme
                 self.name = name
                 self.marketing = marketing
                 self.conditions = conditions
                 self.calc = calc
+                self.frequentlyAskedQuestions = frequentlyAskedQuestions
+                self.documents = documents
+                self.consents = consents
+                self.cities = cities
+                self.icons = icons
             }
             
             public enum Theme: String {
-
+                
                 case gray
                 case white
                 case unknown
@@ -83,30 +98,11 @@ extension ResponseMapper {
                 public let amount: Amount
                 public let collateral: [Collateral]
                 public let rates: [Rate]
-                public let frequentlyAskedQuestions: [FrequentlyAskedQuestion]
-                public let documents: [Document]
-                public let consents: [Consent]
-                public let cities: [String]
-                public let icons: Icons
                 
-                public init(
-                    amount: Amount,
-                    collateral: [Collateral],
-                    rates: [Rate],
-                    frequentlyAskedQuestions: [FrequentlyAskedQuestion],
-                    documents: [Document],
-                    consents: [Consent],
-                    cities: [String],
-                    icons: Icons
-                ) {
+                public init(amount: Amount, collateral: [Collateral], rates: [Rate]) {
                     self.amount = amount
                     self.collateral = collateral
                     self.rates = rates
-                    self.frequentlyAskedQuestions = frequentlyAskedQuestions
-                    self.documents = documents
-                    self.consents = consents
-                    self.cities = cities
-                    self.icons = icons
                 }
                 
                 public struct Amount: Equatable {
@@ -133,7 +129,7 @@ extension ResponseMapper {
                     public let type: String
                     
                     public init(icon: String, name: String, type: String) {
-
+                        
                         self.icon = icon
                         self.name = name
                         self.type = type
@@ -159,67 +155,68 @@ extension ResponseMapper {
                         self.termStringValue = termStringValue
                     }
                 }
+            }
+            
+            public struct FrequentlyAskedQuestion: Equatable {
                 
-                public struct FrequentlyAskedQuestion: Equatable {
+                public let question: String
+                public let answer: String
+                
+                public init(question: String, answer: String) {
                     
-                    public let question: String
-                    public let answer: String
-                    
-                    public init(question: String, answer: String) {
-                     
-                        self.question = question
-                        self.answer = answer
-                    }
+                    self.question = question
+                    self.answer = answer
                 }
+            }
+            
+            public struct Document: Equatable {
                 
-                public struct Document: Equatable {
+                public let title: String
+                public let icon: String?
+                public let link: String
+                
+                public init(title: String, icon: String?, link: String) {
                     
-                    public let title: String
-                    public let icon: String?
-                    public let link: String
-                    
-                    public init(title: String, icon: String?, link: String) {
-                        
-                        self.title = title
-                        self.icon = icon
-                        self.link = link
-                    }
+                    self.title = title
+                    self.icon = icon
+                    self.link = link
                 }
+            }
+            
+            public struct Consent: Equatable {
                 
-                public struct Consent: Equatable {
+                public let name: String
+                public let link: String
+                
+                public init(name: String, link: String) {
                     
-                    public let name: String
-                    public let link: String
-                    
-                    public init(name: String, link: String) {
-                     
-                        self.name = name
-                        self.link = link
-                    }
+                    self.name = name
+                    self.link = link
                 }
+            }
+            
+            public struct Icons: Equatable {
                 
-                public struct Icons: Equatable {
-                    
-                    public let productName: String
-                    public let amount: String
-                    public let term: String
-                    public let rate: String
-                    public let city: String
-                    
-                    public init(
-                        productName: String,
-                        amount: String,
-                        term: String,
-                        rate: String,
-                        city: String
-                    ) {
-                        self.productName = productName
-                        self.amount = amount
-                        self.term = term
-                        self.rate = rate
-                        self.city = city
-                    }
+                public let productName: String
+                public let amount: String
+                public let term: String
+                public let rate: String
+                public let city: String
+                
+                public init(
+                    productName: String,
+                    amount: String,
+                    term: String,
+                    rate: String,
+                    city: String
+                ) {
+                    self.productName = productName
+                    self.amount = amount
+                    self.term = term
+                    self.rate = rate
+                    self.city = city
                 }
             }
         }
-    }}
+    }
+}

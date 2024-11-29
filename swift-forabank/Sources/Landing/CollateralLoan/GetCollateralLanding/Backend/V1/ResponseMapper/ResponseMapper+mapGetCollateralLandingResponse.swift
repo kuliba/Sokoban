@@ -56,7 +56,12 @@ private extension ResponseMapper._Data.Product {
             let name,
             let marketing,
             let conditions,
-            let calc
+            let calc,
+            let frequentlyAskedQuestions,
+            let documents,
+            let consents,
+            let cities,
+            let icons
         else {
             throw ResponseMapper.InvalidResponse()
         }
@@ -66,7 +71,12 @@ private extension ResponseMapper._Data.Product {
             name: name,
             marketing: try marketing.map(),
             conditions: try conditions.map { try $0.map() },
-            calc: try calc.map()
+            calc: try calc.map(),
+            frequentlyAskedQuestions: try frequentlyAskedQuestions.map { try $0.map() },
+            documents: try documents.map { try $0.map() },
+            consents: try consents.map { try $0.map() },
+            cities: cities,
+            icons: try icons.map()
         )
     }
 }
@@ -78,12 +88,7 @@ private extension ResponseMapper._Data.Product.Calc {
         guard
             let amount,
             let collateral,
-            let rates,
-            let frequentlyAskedQuestions,
-            let documents,
-            let consents,
-            let cities,
-            let icons
+            let rates
         else {
             throw ResponseMapper.InvalidResponse()
         }
@@ -91,19 +96,14 @@ private extension ResponseMapper._Data.Product.Calc {
         return .init(
             amount: try amount.map(),
             collateral: try collateral.map { try $0.map() },
-            rates: try rates.map { try $0.map() },
-            frequentlyAskedQuestions: try frequentlyAskedQuestions.map { try $0.map() },
-            documents: try documents.map { try $0.map() },
-            consents: try consents.map { try $0.map() },
-            cities: cities,
-            icons: try icons.map()
+            rates: try rates.map { try $0.map() }
         )
     }
 }
 
-private extension ResponseMapper._Data.Product.Calc.Icons {
+private extension ResponseMapper._Data.Product.Icons {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.Icons {
+    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Icons {
         
         guard
             let productName,
@@ -125,9 +125,9 @@ private extension ResponseMapper._Data.Product.Calc.Icons {
     }
 }
 
-private extension ResponseMapper._Data.Product.Calc.Consent {
+private extension ResponseMapper._Data.Product.Consent {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.Consent {
+    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Consent {
         
         guard
             let name,
@@ -143,9 +143,9 @@ private extension ResponseMapper._Data.Product.Calc.Consent {
     }
 }
 
-private extension ResponseMapper._Data.Product.Calc.Document {
+private extension ResponseMapper._Data.Product.Document {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.Document {
+    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Document {
         
         guard
             let title,
@@ -162,9 +162,9 @@ private extension ResponseMapper._Data.Product.Calc.Document {
     }
 }
 
-private extension ResponseMapper._Data.Product.Calc.FrequentlyAskedQuestion {
+private extension ResponseMapper._Data.Product.FrequentlyAskedQuestion {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.FrequentlyAskedQuestion {
+    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.FrequentlyAskedQuestion {
         
         guard
             let question,
@@ -313,6 +313,11 @@ private extension ResponseMapper {
             let marketing: Marketing?
             let conditions: [Condition]?
             let calc: Calc?
+            let frequentlyAskedQuestions: [FrequentlyAskedQuestion]?
+            let documents: [Document]?
+            let consents: [Consent]?
+            let cities: [String]?
+            let icons: Icons?
 
             struct Marketing: Decodable {
                 
@@ -333,11 +338,6 @@ private extension ResponseMapper {
                 let amount: Amount?
                 let collateral: [Collateral]?
                 let rates: [Rate]?
-                let frequentlyAskedQuestions: [FrequentlyAskedQuestion]?
-                let documents: [Document]?
-                let consents: [Consent]?
-                let cities: [String]?
-                let icons: Icons?
                 
                 struct Amount: Decodable {
                     
@@ -360,35 +360,36 @@ private extension ResponseMapper {
                     let termMonth: UInt?
                     let termStringValue: String?
                 }
-                
-                struct FrequentlyAskedQuestion: Decodable {
-                    
-                    let question: String?
-                    let answer: String?
-                }
-                
-                struct Document: Decodable {
-                    
-                    let title: String?
-                    let icon: String?
-                    let link: String?
-                }
-                
-                struct Consent: Decodable {
-                    
-                    let name: String?
-                    let link: String?
-                }
-                
-                struct Icons: Decodable {
-                    
-                    let productName: String?
-                    let amount: String?
-                    let term: String?
-                    let rate: String?
-                    let city: String?
-                }
             }
+            
+            struct FrequentlyAskedQuestion: Decodable {
+                
+                let question: String?
+                let answer: String?
+            }
+            
+            struct Document: Decodable {
+                
+                let title: String?
+                let icon: String?
+                let link: String?
+            }
+            
+            struct Consent: Decodable {
+                
+                let name: String?
+                let link: String?
+            }
+            
+            struct Icons: Decodable {
+                
+                let productName: String?
+                let amount: String?
+                let term: String?
+                let rate: String?
+                let city: String?
+            }
+
         }
     }
 }
