@@ -23,10 +23,7 @@ extension RootViewModelFactory {
             otpServices: .init(httpClient, logger),
             otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            )
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel
         )
     }
 }
