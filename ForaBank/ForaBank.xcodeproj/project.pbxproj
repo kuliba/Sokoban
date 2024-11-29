@@ -1266,6 +1266,7 @@
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
 		2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8142602A0B9237005CF83F /* SearchBarComponent */; };
 		2A8221532CE5EF3600887367 /* QRFailedViewModelWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8221522CE5EF3600887367 /* QRFailedViewModelWrapperView.swift */; };
+		2A83A6D12CF8A42000A49355 /* RootWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */; };
 		2A840BFE2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840BFD2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift */; };
 		2A840C012C373C1500BA6887 /* TemplatesFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */; };
 		2A840C032C373C2A00BA6887 /* TemplatesFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */; };
@@ -4953,6 +4954,7 @@
 		2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+publicKeyTransferServiceTests.swift"; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
 		2A8221522CE5EF3600887367 /* QRFailedViewModelWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailedViewModelWrapperView.swift; sourceTree = "<group>"; };
+		2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootWrapperView.swift; sourceTree = "<group>"; };
 		2A840BFD2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
 		2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowState.swift; sourceTree = "<group>"; };
 		2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowEvent.swift; sourceTree = "<group>"; };
@@ -7927,8 +7929,6 @@
 				2A8221522CE5EF3600887367 /* QRFailedViewModelWrapperView.swift */,
 				0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */,
 				0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */,
-				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
-				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
 				2ABB84EE2CECBA50007ABFAD /* QRScanner_View.swift */,
 				2A61C5052CEC515000EA9BB7 /* Flow */,
 				2A3834B02C4EDEBE00A5DF8C /* PaymentProviderSegments */,
@@ -9021,6 +9021,8 @@
 				2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift */,
 				2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iFora.swift */,
 				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift */,
+				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
+				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -11356,6 +11358,7 @@
 				2ACFD6662C5CDDF2003F08AE /* QRScanResultMapperComposer.swift */,
 				2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */,
 				2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */,
+				2A945B3F2CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift */,
 				2A3345902CB13FAA00EBF33E /* QRNavigation */,
 			);
 			path = QR;
@@ -11382,7 +11385,6 @@
 				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
 				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
 				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
-				2A945B3F2CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
 				2A2EE90D2CF0AC950019FC31 /* Payments */,
@@ -13050,6 +13052,19 @@
 			path = ProductSelector;
 			sourceTree = "<group>";
 		};
+		2AD767422CF97E5C00BFDA70 /* Factories */ = {
+			isa = PBXGroup;
+			children = (
+				2A6371242BF25EF5007E494A /* IconDomain.swift */,
+				83CE21742CDDED460008375D /* ViewComponents.swift */,
+				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
+				2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */,
+				8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */,
+				2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */,
+			);
+			path = Factories;
+			sourceTree = "<group>";
+		};
 		2AD7EBDB2B0CB1F3009FDCAB /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -13463,17 +13478,10 @@
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A2836E52CC79FD100694241 /* HTTPClientFactory */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
-				2AE350E12C772D3300A766EE /* GenericLoaderOf+ext.swift */,
-				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
-				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
-				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */,
-				2A94AAF52C8F78E5003B4FB1 /* Services */,
-				83F775D22CA4744E00A05F69 /* MarketShowcase */,
 				838C09222C8B59C400E894AC /* LoadBannersList */,
-				2A7CA2192C92147500B900E9 /* SerialServices */,
-				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
+				83F775D22CA4744E00A05F69 /* MarketShowcase */,
 				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
 				2A118E1D2AFEABAE007EF30E /* AuthLogin */,
 				2AD7EBDB2B0CB1F3009FDCAB /* Buttons */,
@@ -13583,19 +13591,26 @@
 		2AFD59EA2B6F98FE00C86FBF /* Infra */ = {
 			isa = PBXGroup;
 			children = (
-				2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */,
-				2A3417852B7CAD66002FAAFC /* KeyChainStore+Bool.swift */,
 				2A3E03232B7499FB00A4494D /* HTTPClientStub.swift */,
 				2A4074872CBA922E0027D7C3 /* GenericLoaderOf.swift */,
-				83EB7CCA2C8B187B0058F417 /* ServiceItemsLoader.swift */,
+				2AE350E12C772D3300A766EE /* GenericLoaderOf+ext.swift */,
+				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
+				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
 				2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */,
+				2A3417852B7CAD66002FAAFC /* KeyChainStore+Bool.swift */,
+				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
 				2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */,
+				2A94991E2B7362A700C67F05 /* NanoServices */,
+				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
+				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
+				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
+				2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */,
+				2A7CA2192C92147500B900E9 /* SerialServices */,
+				2A94AAF52C8F78E5003B4FB1 /* Services */,
+				2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */,
+				83EB7CCA2C8B187B0058F417 /* ServiceItemsLoader.swift */,
 				2A7688D22AF3914C00045293 /* Store.swift */,
 				2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */,
-				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
-				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
-				2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */,
-				2A94991E2B7362A700C67F05 /* NanoServices */,
 			);
 			path = Infra;
 			sourceTree = "<group>";
@@ -14716,17 +14731,12 @@
 				2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */,
 				2AA258622CEB36D60038642C /* RootViewDomain.ContentWitnesses+ext.swift */,
 				2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */,
-				2ABBD6C82CDD61E20078E977 /* RootBinderView.swift */,
-				770DCE9227BBF93B004099C1 /* RootView.swift */,
-				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
-				2A6371242BF25EF5007E494A /* IconDomain.swift */,
-				2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */,
-				8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */,
-				2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */,
 				770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */,
+				2ABBD6C82CDD61E20078E977 /* RootBinderView.swift */,
+				2A83A6D02CF8A42000A49355 /* RootWrapperView.swift */,
+				770DCE9227BBF93B004099C1 /* RootView.swift */,
 				2ADB21D32CF86B2700B37234 /* PaymentProviderPicker */,
 				833286CF2C91BF4700B6FA3F /* RootView+banners.swift */,
-				83CE21742CDDED460008375D /* ViewComponents.swift */,
 				2A2B91E52C7CBA17008F5186 /* EXTRACT_TO_DESIGN_SYSTEM */,
 			);
 			path = Root;
@@ -15646,6 +15656,7 @@
 		77DC125D277098D500C917B0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2AD767422CF97E5C00BFDA70 /* Factories */,
 				83F775DA2CA47B4300A05F69 /* MarketShowcase */,
 				8393319A2C8F191D00D15379 /* Banners */,
 				0B8BC03F2901EEF40022DDE4 /* QR */,
@@ -22731,6 +22742,7 @@
 				2A3624712C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift in Sources */,
 				2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */,
 				834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */,
+				2A83A6D12CF8A42000A49355 /* RootWrapperView.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
 				834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */,
