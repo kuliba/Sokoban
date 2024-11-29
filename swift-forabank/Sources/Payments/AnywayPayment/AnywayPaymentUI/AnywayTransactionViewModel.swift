@@ -180,7 +180,6 @@ private extension AnywayTransactionViewModel {
         /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
         footer.projectionPublisher
             .receive(on: scheduler)
-            .print("===== footer.projectionPublisher")
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
     }

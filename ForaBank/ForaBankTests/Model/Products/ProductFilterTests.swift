@@ -16,7 +16,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 13, 21, 23, 31, 33, 41, 43, 151, 152, 153]
+            [11, 13, 14, 16, 21, 23, 31, 33, 41, 43, 151, 152, 153]
         )
     }
     
@@ -26,7 +26,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 12, 13, 21, 22, 23, 151, 152, 153]
+            [11, 12, 13, 14, 15, 21, 22, 23, 151, 152, 153]
         )
     }
     
@@ -36,7 +36,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 12, 13, 21, 22, 23, 31, 32, 33, 41, 42, 43, 151, 152]
+            [11, 12, 13, 14, 15, 16, 21, 22, 23, 31, 32, 33, 41, 42, 43, 151, 152]
         )
     }
     
@@ -46,7 +46,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 12, 13, 21, 22, 23, 31, 32, 33, 41, 42, 43, 152]
+            [11, 12, 13, 14, 15, 16, 21, 22, 23, 31, 32, 33, 41, 42, 43, 152]
         )
     }
     
@@ -103,7 +103,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 13, 21, 23, 151, 152]
+            [11, 13, 14, 21, 23, 151, 152]
         )
     }
     
@@ -130,7 +130,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 13, 21, 23, 31, 33, 41, 43, 151, 152, 153]
+            [11, 13, 14, 16, 21, 23, 31, 33, 41, 43, 151, 152, 153]
         )
     }
     
@@ -146,7 +146,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 13, 31, 33, 151, 152, 153]
+            [11, 13, 14, 16, 31, 33, 151, 152, 153]
         )
     }
     
@@ -162,7 +162,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 21, 23, 31, 33, 41, 43, 151, 152, 153]
+            [11, 14, 16, 21, 23, 31, 33, 41, 43, 151, 152, 153]
         )
     }
     
@@ -178,7 +178,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [13, 21, 23, 31, 33, 41, 43]
+            [13, 14, 16, 21, 23, 31, 33, 41, 43]
         )
     }
     
@@ -194,7 +194,7 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(
             result.map(\.id),
-            [11, 13, 21, 23, 31, 33, 41, 151, 152, 153]
+            [11, 13, 14, 16, 21, 23, 31, 33, 41, 151, 152, 153]
         )
     }
     
@@ -372,6 +372,10 @@ extension ProductData {
     static let cardBlockedMainRub = ProductCardData(id: 12, currency: .rub, status: .blocked, statusPc: .blockedByBank)
     static let cardActiveAddCreditOnlyRub = ProductCardData(id: 13, currency: .rub, allowDebit: false, isMain: false)
     
+    static let cardIssuedToClientStatusPCActive = ProductCardData(id: 14, currency: .rub, status: .issuedToClient, statusPc: .active)
+    static let cardIssuedToClientStatusPCNotActivated = ProductCardData(id: 15, currency: .rub, status: .issuedToClient, statusPc: .notActivated)
+    static let cardIssuedToClientWithLoanBaseParam = ProductCardData(id: 16, currency: .rub, status: .issuedToClient, loanBaseParam: .init(clientId: 123))
+    
     static let cardActiveMainUsd = ProductCardData(id: 21, currency: .usd)
     static let cardBlockedMainUsd = ProductCardData(id: 22, currency: .usd, status: .blocked, statusPc: .blockedByBank)
     static let cardActiveAddUsd = ProductCardData(id: 23, currency: .usd, isMain: false)
@@ -395,6 +399,10 @@ extension Array where Element == ProductData {
         .cardActiveMainDebitOnlyRub,
         .cardBlockedMainRub,
         .cardActiveAddCreditOnlyRub,
+        
+        .cardIssuedToClientStatusPCActive,
+        .cardIssuedToClientStatusPCNotActivated,
+        .cardIssuedToClientWithLoanBaseParam,
         
         .cardActiveMainUsd,
         .cardBlockedMainUsd,

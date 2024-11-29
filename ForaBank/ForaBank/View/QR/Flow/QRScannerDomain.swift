@@ -7,6 +7,7 @@
 
 import PayHub
 import PayHubUI
+import SberQR
 
 /// A namespace.
 enum QRScannerDomain {}
@@ -26,15 +27,31 @@ extension QRScannerDomain {
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
-    typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    enum Select {
+    typealias NotifyEvent = FlowDomain.NotifyEvent
+    typealias Notify = (NotifyEvent) -> Void
     
+    enum Outside: Equatable {
+        
+        case chat, main, payments
+    }
+    
+    enum Select: Equatable {
+    
+        case outside(Outside)
         case qrResult(QRModelResult)
+        case sberQR(CreateSberQRPaymentResponse?)
     }
     
     enum Navigation {
         
-        case payments(Node<ClosePaymentsViewModelWrapper>)
+        case failure(QRFailedViewModelWrapper)
+        case operatorSearch(QRSearchOperatorViewModel)
+        case operatorView(InternetTVDetailsViewModel)
+        case outside(Outside)
+        case payments(Node<PaymentsViewModel>)
+        case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
+        case providerServicePicker(AnywayServicePickerFlowModel)
+        case sberQR(SberQRConfirmPaymentViewModel?)
     }
 }

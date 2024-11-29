@@ -353,8 +353,8 @@ private extension RootView {
                 makeAlert: makeCategoryPickerSectionAlert(binder: binder),
                 makeContentView: {
                     
-                    ComposedCategoryPickerSectionContentView(
-                        content: binder.content,
+                    RxWrapperView(
+                        model: binder.content,
                         makeContentView: { state, event in
                             
                             CategoryPickerSectionContentView(
@@ -403,7 +403,7 @@ private extension RootView {
                     Text("TBD: \(String(describing: failedPaymentProviderPicker))")
                     
                 case let .success(binder):
-                    paymentProviderPicker(binder)
+                    rootViewFactory.makePaymentProviderPickerView(binder)
                 }
                 
             case let .taxAndStateServices(wrapper):
@@ -428,126 +428,6 @@ private extension RootView {
             rootViewFactory.components.makeQRView(cover.qr.qrScanner)
         }
         .navigationViewStyle(.stack)
-    }
-    
-    func paymentProviderPicker(
-        _ binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: { state, event in
-                
-                PaymentProviderPickerFlowView(
-                    state: state,
-                    event: event,
-                    contentView: {
-                        
-                        paymentProviderPickerContentView(binder)
-                    },
-                    destinationView: {
-                        
-                        paymentProviderPickerDestinationView($0)
-                    }
-                )
-            }
-        )
-    }
-    
-    func paymentProviderPickerContentView(
-        _ binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        PaymentProviderPickerContentView(
-            content: binder.content,
-            factory: .init(
-                makeOperationPickerView: { _ in EmptyView() },
-                makeProviderList: {
-                    
-                    paymentProviderListView(providerList: $0, binder: binder)
-                },
-                makeSearchView: { _ in EmptyView() }
-            )
-        )
-    }
-    
-    func paymentProviderListView(
-        providerList: PaymentProviderPicker.ProviderList,
-        binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        RxWrapperView(
-            model: providerList,
-            makeContentView: { state, event in
-                
-                PrepaymentPickerSuccessView(
-                    state: state,
-                    event: event,
-                    factory: .init(
-                        makeFooterView: {
-                            
-                            FooterView(
-                                state: $0 ? .failure(.iFora) : .footer(.iFora),
-                                event: binder.flow.handleFooterEvent(_:),
-                                config: .iFora
-                            )
-                        },
-                        makeLastPaymentView: {
-                            
-                            makeLatestPaymentView(latest: $0, event: binder.flow.selectLatest(_:))
-                        },
-                        makeOperatorView: {
-                            
-                            makeOperatorView(provider: $0, event: binder.flow.selectProvider(_:))
-                        },
-                        makeSearchView: {
-                            
-                            paymentProviderPickerSearchView(binder.content.search)
-                        }
-                    )
-                )
-            }
-        )
-    }
-    
-    func makeLatestPaymentView(
-        latest: Latest,
-        event: @escaping (Latest) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(latest) },
-            label: {
-                
-                LastPaymentLabel(
-                    amount: latest.amount.map { "\($0) ₽" } ?? "",
-                    title: latest.name,
-                    config: .iFora,
-                    iconView: makeIconView(md5Hash: latest.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
-    }
-    
-    func makeOperatorView(
-        provider: PaymentProviderPicker.Provider,
-        event: @escaping (PaymentProviderPicker.Provider) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(provider) },
-            label: {
-                
-                OperatorLabel(
-                    title: provider.name,
-                    subtitle: provider.inn,
-                    config: .iFora,
-                    iconView: makeIconView(md5Hash: provider.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
     }
         
     @ViewBuilder
@@ -611,7 +491,7 @@ private extension RootView {
         _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        rootViewFactory.components.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
+        rootViewFactory.components.makeSegmentedPaymentProviderPickerView(flowModel)
         //    .navigationBarWithBack(
         //        title: PaymentsTransfersSectionType.payments.name,
         //        dismiss: viewModel.dismissPaymentProviderPicker,
@@ -638,55 +518,6 @@ private extension RootView {
 //        )
     }
     
-    func makeIconView(
-        md5Hash: String?
-    ) -> some View {
-        
-        rootViewFactory.makeIconView(md5Hash.map { .md5Hash(.init($0)) })
-    }
-    
-    @ViewBuilder
-    func paymentProviderPickerSearchView(
-        _ search: PaymentProviderPicker.Search?
-    ) -> some View {
-        
-        search.map { search in
-            
-            DefaultCancellableSearchBarView(
-                viewModel: search,
-                textFieldConfig: .black16,
-                cancel: {
-                    
-                    UIApplication.shared.endEditing()
-                    search.setText(to: nil)
-                }
-            )
-        }
-    }
-    
-    @ViewBuilder
-    func paymentProviderPickerDestinationView(
-        _ destination: PaymentProviderPicker.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .backendFailure(backendFailure):
-            Text("TBD: destination view \(String(describing: backendFailure))")
-            
-        case let .detailPayment(wrapper):
-            rootViewFactory.components.makePaymentsView(wrapper.paymentsViewModel)
-            
-        case let .payment(payment):
-            Text("TBD: destination view \(String(describing: payment))")
-            
-        case let .servicePicker(servicePicker):
-            Text("TBD: destination view \(String(describing: servicePicker))")
-            
-        case let .servicesFailure(servicesFailure):
-            Text("TBD: destination view \(String(describing: servicesFailure))")
-        }
-    }
-    
     @ViewBuilder
     func makeOperationPickerView(
         operationPicker: PayHubUI.OperationPicker
@@ -704,7 +535,7 @@ private extension RootView {
     }
     
     func makeOperationPickerView(
-        binder: OperationPickerBinder
+        binder: OperationPickerDomain.Binder
     ) -> some View {
         
         ComposedOperationPickerFlowView(
@@ -718,7 +549,7 @@ private extension RootView {
     
     @ViewBuilder
     func makeOperationPickerDestinationView(
-        destination: OperationPickerNavigation
+        destination: OperationPickerDomain.Navigation
     ) -> some View {
         
         switch destination {

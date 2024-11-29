@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "5EB41467-27ED-4A7B-90F0-E74985F7FD4B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetConsentsBackendTests",
+        "name" : "CollateralLoanLandingGetConsentsBackendTests"
+      }
+    }
+  ],
+  "version" : 1
+}

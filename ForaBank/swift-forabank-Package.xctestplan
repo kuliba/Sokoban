@@ -540,20 +540,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingShowCaseBackendTests",
-        "name" : "CollateralLoanLandingShowCaseBackendTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingShowCaseUITests",
-        "name" : "CollateralLoanLandingShowCaseUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "СlientInformListTests",
         "name" : "СlientInformListTests"
       }
@@ -582,15 +568,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingGetJsonAbroadUITests",
-        "name" : "CollateralLoanLandingGetJsonAbroadUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingDraftBackendTests",
-        "name" : "CollateralLoanLandingDraftBackendTests"
+        "identifier" : "CollateralLoanLandingGetConsentsBackendTests",
+        "name" : "CollateralLoanLandingGetConsentsBackendTests"
       }
     },
     {
@@ -598,6 +577,41 @@
         "containerPath" : "container:",
         "identifier" : "SavingsServicesTests",
         "name" : "SavingsServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetShowcaseBackendTests",
+        "name" : "CollateralLoanLandingGetShowcaseBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetShowcaseUITests",
+        "name" : "CollateralLoanLandingGetShowcaseUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetCollateralLandingUITests",
+        "name" : "CollateralLoanLandingGetCollateralLandingUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingGetCollateralLandingBackendTests",
+        "name" : "CollateralLoanLandingGetCollateralLandingBackendTests"
       }
     }
   ],

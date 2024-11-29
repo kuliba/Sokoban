@@ -11,40 +11,91 @@ import SberQR
 
 extension RootViewModelFactory {
     
-    func makeSberQRConfirmPaymentViewModel() -> MakeSberQRConfirmPaymentViewModel {
+    func decoratedSberQRPay(
+        _ url: URL,
+        _ completion: @escaping (CreateSberQRPaymentResponse?) -> Void
+    ) -> (SberQRConfirmPaymentState) -> Void {
         
-        let model = self.model
+        let service = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createCreateSberQRPaymentRequest,
+            mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
+        )
         
-        return { response, pay in
+        return { state in
             
-            let getProducts = { [weak model] in
-                
-                model?.sberQRProducts(response) ?? []
+            guard let payload = state.makePayload(with: url) else {
+                return completion(nil)
             }
             
-            struct EmptySberQRProductsError: Error {}
-            
-            let product = try getProducts().first
-                .get(orThrow: EmptySberQRProductsError())
-            
-            let initialState = try SberQRConfirmPaymentState(
-                product: product,
-                response: response
-            )
-            
-            let viewModel: SberQRConfirmPaymentViewModel = .default(
-                initialState: initialState,
-                getProducts: getProducts,
-                pay: pay,
-                scheduler: .makeMain()
-            )
-            
-            return viewModel
+            service(payload) {
+                
+                completion(try? $0.get())
+                _ = service
+            }
         }
     }
 }
 
-private extension Model {
+extension RootViewModelFactory {
+    
+    @inlinable
+    func makeSberQRConfirmPaymentViewModel(
+        url: URL,
+        pay: @escaping (SberQRConfirmPaymentState) -> Void,
+        completion: @escaping (SberQRConfirmPaymentViewModel?) -> Void
+    ) {
+        getSberQRData(url: url) { [weak self] result in
+            
+            guard let self else { return }
+            
+            guard case let .success(response) = result,
+                  let model = try? makeSberQRConfirmPaymentViewModel(response: response, pay: pay)
+            else { return completion(nil) }
+            
+            completion(model)
+        }
+    }
+    
+    @inlinable
+    func makeSberQRConfirmPaymentViewModel(
+        response: GetSberQRDataResponse,
+        pay: @escaping (SberQRConfirmPaymentState) -> Void
+    ) throws -> SberQRConfirmPaymentViewModel {
+        
+        let getProducts = sberQRProducts(response)
+        
+        struct EmptySberQRProductsError: Error {}
+        
+        let product = try getProducts().first
+            .get(orThrow: EmptySberQRProductsError())
+        
+        let initialState = try SberQRConfirmPaymentState(
+            product: product,
+            response: response
+        )
+        
+        let viewModel: SberQRConfirmPaymentViewModel = .default(
+            initialState: initialState,
+            getProducts: getProducts,
+            pay: pay,
+            scheduler: schedulers.main
+        )
+        
+        return viewModel
+    }
+    
+    func sberQRProducts(
+        _ response: GetSberQRDataResponse
+    ) -> () -> [ProductSelect.Product] {
+        
+        return { [weak model] in
+            
+            return model?.sberQRProducts(response) ?? []
+        }
+    }
+}
+
+extension Model {
     
     func sberQRProducts(
         _ response: GetSberQRDataResponse
@@ -56,8 +107,9 @@ private extension Model {
                 formatBalance: { [weak self] in
                     
                     self?.formattedBalance(of: $0) ?? ""
-                }, 
+                },
                 getImage: { self.images.value[$0]?.image }
             )
     }
 }
+
