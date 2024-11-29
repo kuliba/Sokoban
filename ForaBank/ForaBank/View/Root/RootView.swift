@@ -328,20 +328,6 @@ private extension RootView {
     }
 }
 
-// MARK: - View Factories
-
-private extension RootViewFactory {
-    
-    var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
-        
-        return .init(
-            makeContactsView: components.makeContactsView,
-            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
-            makePaymentsView: components.makePaymentsView
-        )
-    }
-}
-
 // MARK: - adapters
 
 /*private*/ extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {

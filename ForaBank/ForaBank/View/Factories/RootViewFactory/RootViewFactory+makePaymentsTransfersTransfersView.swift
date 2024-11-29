@@ -42,3 +42,17 @@ extension RootViewFactory {
         )
     }
 }
+
+// MARK: - View Factories
+
+private extension RootViewFactory {
+    
+    var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
+        
+        return .init(
+            makeContactsView: components.makeContactsView,
+            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
+            makePaymentsView: components.makePaymentsView
+        )
+    }
+}
