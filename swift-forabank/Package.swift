@@ -79,6 +79,7 @@ let package = Package(
         .сlientInformList,
         .linkableText,
         .manageSubscriptionsUI,
+        .orderCard,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -262,6 +263,7 @@ let package = Package(
         .otpInputComponentTests,
         .operatorsListComponents,
         .operatorsListComponentsTests,
+        .orderCard,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -544,6 +546,13 @@ private extension Product {
         name: .operatorsListComponents,
         targets: [
             .operatorsListComponents
+        ]
+    )
+    
+    static let orderCard = library(
+        name: .orderCard,
+        targets: [
+            .orderCard
         ]
     )
     
@@ -2568,6 +2577,17 @@ private extension Target {
         path: "Sources/UI/\(String.savingsAccount)"
     )
 
+    static let orderCard = target(
+        name: .orderCard,
+        dependencies: [
+            // internal packages
+            .sharedConfigs,
+            .uiPrimitives,
+            .rxViewModel,
+        ],
+        path: "Sources/UI/\(String.orderCard)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -3243,6 +3263,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
 
+    static let orderCard = byName(
+        name: .orderCard
+    )
+    
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -3614,6 +3638,8 @@ private extension String {
     
     static let otpInputComponent = "OTPInputComponent"
     static let otpInputComponentTests = "OTPInputComponentTests"
+    
+    static let orderCard = "OrderCard"
     
     static let paymentCompletionUI = "PaymentCompletionUI"
     
