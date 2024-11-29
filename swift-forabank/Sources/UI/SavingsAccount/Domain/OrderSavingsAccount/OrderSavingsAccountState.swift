@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import AmountComponent
 
 public struct OrderSavingsAccountState: Equatable {
     
     let status: Status
+    var amountValue: Decimal
+    var consent: Bool = true
+    var isShowingOTP: Bool = false
     
-    public init(status: Status) {
+
+    public init(
+        status: Status,
+        amountValue: Decimal = 0
+    ) {
         self.status = status
+        self.amountValue = amountValue
     }
 }
 
@@ -28,7 +37,6 @@ public extension OrderSavingsAccountState {
 extension OrderSavingsAccountState {
     
     var data: OrderSavingsAccount? {
-        
         switch status {
         case .inflight:
             return nil
@@ -36,5 +44,13 @@ extension OrderSavingsAccountState {
         case let .result(result):
             return result
         }
+    }
+    
+    var amountView: Amount {
+        Amount(title: "", value: amountValue, button: .init(title: "Продолжить", isEnabled: (amountValue > 0 && !isShowingOTP && consent)))
+    }
+        
+    var currencyCode: String {
+        data?.currency.symbol ?? ""
     }
 }
