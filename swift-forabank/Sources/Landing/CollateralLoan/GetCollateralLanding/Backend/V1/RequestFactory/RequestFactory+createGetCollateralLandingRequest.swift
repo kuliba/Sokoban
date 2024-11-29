@@ -11,39 +11,15 @@ import ForaTools
 
 public extension RequestFactory {
 
-    struct GetCollateralLandingPayload: Encodable, Equatable {
-        
-        public let landingTypes: String
-        
-        public init(landingTypes: String) {
-            self.landingTypes = landingTypes
-        }
+    enum CollateralLoanLandingType: Equatable {
+        case car
+        case realEstate
     }
-    
+
     static func createGetCollateralLandingRequest(
-        url: URL,
-        payload: GetCollateralLandingPayload
+        url: URL
     ) throws -> URLRequest {
                 
-        let url = try url.appendingQueryItems(parameters: payload.parameters)
         return createEmptyRequest(.get, with: url)
-    }
-}
-
-extension RequestFactory.GetCollateralLandingPayload {
-
-    var parameters: [String: String] {
-
-        get throws {
-
-            [
-                "landingTypes": landingTypes,
-            ]
-        }
-    }
-    
-    enum TranscodeError: Error {
-        
-        case dataToStringConversionFailure
     }
 }

@@ -10,11 +10,12 @@ import RemoteServices
 extension ResponseMapper {
     
     public struct GetCollateralLandingData: Equatable {
-        
+
+        public let serial: String
         public let product: Product
         
-        public init(product: Product) {
-         
+        public init(serial: String, product: Product) {
+            self.serial = serial
             self.product = product
         }
         

@@ -36,13 +36,14 @@ private extension ResponseMapper._Data {
     func getGetCollateralLandingData() throws -> ResponseMapper.GetCollateralLandingData {
         
         guard
+            let serial,
             let product
         else {
             throw ResponseMapper.InvalidResponse()
         }
         
         return .init(
-            product: try product.map()
+            serial: serial, product: try product.map()
         )
     }
 }
@@ -52,7 +53,6 @@ private extension ResponseMapper._Data.Product {
     func map() throws -> ResponseMapper.GetCollateralLandingData.Product {
         
         guard
-            let theme,
             let name,
             let marketing,
             let conditions,
@@ -303,6 +303,7 @@ private extension ResponseMapper {
 
     struct _Data: Decodable {
         
+        let serial: String?
         let product: Product?
         
         struct Product: Decodable {
