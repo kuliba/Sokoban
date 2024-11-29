@@ -26,8 +26,7 @@ extension RootViewModelFactory {
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts,
                 c2bSubscription: model.subscriptions.value
-            ),
-            duration: 60
+            )
         )
     }
 }

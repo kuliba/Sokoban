@@ -23,10 +23,11 @@ extension RootViewModelFactory {
         otpServices: FastPaymentsSettingsOTPServices,
         otpDeleteBankServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,
-        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
-        duration: Int,
-        length: Int = 6
+        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel
     ) -> UserAccountNavigationStateManager {
+        
+        let duration = settings.otpDuration
+        let length = settings.otpLength
         
         let fpsReducer = ForaBank.UserAccountNavigationFPSReducer()
         let otpReducer = ForaBank.UserAccountNavigationOTPReducer()
