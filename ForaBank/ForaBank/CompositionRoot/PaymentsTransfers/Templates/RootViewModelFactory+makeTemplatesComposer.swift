@@ -10,85 +10,54 @@ import Foundation
 
 extension RootViewModelFactory {
     
+    @inlinable
+    func makeMakeTemplates(
+        _ paymentsTransfersFlag: PaymentsTransfersFlag
+    ) -> PaymentsTransfersFactory.MakeTemplates {
+        
+        switch paymentsTransfersFlag.rawValue {
+        case .active:
+            return { _ in nil }
+            
+        case .inactive:
+            return makeTemplates
+        }
+    }
+}
+
+extension RootViewModelFactory {
+    
+    typealias Templates = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
+
+    @inlinable
+    func makeTemplates(
+        closeAction: @escaping () -> Void
+    ) -> Templates {
+        
+        let templatesComposer = makeTemplatesComposer(
+            paymentsTransfersFlag: .active
+        )
+        
+        return templatesComposer.compose(dismiss: closeAction)
+    }
+}
+
+extension RootViewModelFactory {
+    
+    @inlinable
     func makeTemplatesComposer(
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> TemplatesListFlowModelComposer {
         
-        let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
-            model: model,
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        let anywayFlowComposer = AnywayFlowComposer(
-            makeAnywayTransactionViewModel: anywayTransactionViewModelComposer.compose(transaction:),
-            model: model,
-            scheduler: schedulers.main
-        )
-        let initiatePayment = NanoServices.initiateAnywayPayment(
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        let composer = InitiateAnywayPaymentMicroServiceComposer(
-            getOutlineProduct: { _ in self.model.outlineProduct() },
-            processPayload: { payload, completion in
-                
-                initiatePayment(payload.outline.payload.puref) {
-                    
-                    switch $0 {
-                    case let .failure(serviceFailure):
-                        switch serviceFailure {
-                        case .connectivityError:
-                            completion(.failure(.connectivityError))
-                            
-                        case let .serverError(message):
-                            completion(.failure(.serverError(message)))
-                        }
-                        
-                    case let .success(response):
-                        completion(.success(response))
-                    }
-                }
-            }
-        )
-        let initiatePaymentMicroService = composer.compose()
-        let initiatePaymentFromTemplate = { template, completion in
-            
-            initiatePaymentMicroService.initiatePayment(.template(template), completion)
-        }
-        
-        let microServicesComposer = TemplatesListFlowEffectHandlerMicroServicesComposer<PaymentsViewModel, AnywayFlowModel>(
-            initiatePayment: { template, completion in
-                
-                initiatePaymentFromTemplate(template) {
-                    
-                    switch $0 {
-                    case let .failure(serviceFailure):
-                        completion(.failure(serviceFailure))
-                        
-                    case let .success(transaction):
-                        completion(.success(anywayFlowComposer.compose(transaction: transaction)))
-                    }
-                }
-            },
-            makeLegacyPayment: { payload in
-                
-                let (template, close) = payload
-                
-                return PaymentsViewModel(
-                    source: .template(template.id),
-                    model: self.model,
-                    closeAction: close
-                )
-            },
+        let composer = TemplatesListFlowEffectHandlerMicroServicesComposer(
+            initiatePayment: initiatePaymentFromTemplate(template:completion:),
+            makeLegacyPayment: makeLegacyTemplatePayment,
             paymentsTransfersFlag: paymentsTransfersFlag
         )
         
         return .init(
-            makeAnywayFlowModel: anywayFlowComposer.compose,
             model: model,
-            microServices: microServicesComposer.compose(),
+            microServices: composer.compose(),
             scheduler: schedulers.main
         )
     }

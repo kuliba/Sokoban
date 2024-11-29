@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeGetOperatorsListByParamPayloads(
         from categories: [ServiceCategory]
     ) -> [RequestFactory.GetOperatorsListByParamPayload] {

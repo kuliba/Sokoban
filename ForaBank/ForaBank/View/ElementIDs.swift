@@ -9,7 +9,15 @@ enum ElementIDs {
     
     case fullScreenCover(FullScreenCover)
     case mainView(MainView)
+    case operatorSearch
+    case operatorView
+    case payments
+    case providerPicker
+    case providerServicePicker
+    case qrFailure
+    case qrScanner
     case rootView(RootView)
+    case sberQRConfirm
     
     enum FullScreenCover: String {
         
@@ -18,13 +26,37 @@ enum ElementIDs {
     
     enum MainView: String {
         
+        case content
         case fullScreenCoverAnchor
         case qrScanner
+        case templates
     }
     
-    enum RootView: String {
+    enum RootView {
         
         case qrFullScreenCover
+        case mainView
+        case destination(Destination)
+        
+        var rawValue: String {
+            
+            switch self {
+            case .qrFullScreenCover:
+                return "qrFullScreenCover"
+                
+            case .mainView:
+                return "mainView"
+                
+            case let .destination(destination):
+                return destination.rawValue
+            }
+        }
+        
+        enum Destination: String {
+            
+            case standardPayment
+            case templates
+        }
     }
 }
 
@@ -39,8 +71,32 @@ extension ElementIDs {
         case let .mainView(mainView):
             return mainView.rawValue
             
+        case .operatorSearch:
+            return "operatorSearch"
+            
+        case .operatorView:
+            return "operatorView"
+            
+        case .payments:
+            return "payments"
+            
+        case .providerPicker:
+            return "providerPicker"
+            
+        case .providerServicePicker:
+            return "providerServicePicker"
+            
+        case .qrFailure:
+            return "qrFailure"
+            
+        case .qrScanner:
+            return "qrScanner"
+            
         case let .rootView(rootView):
             return rootView.rawValue
+            
+        case .sberQRConfirm:
+            return "sberQRConfirm"
         }
     }
 }

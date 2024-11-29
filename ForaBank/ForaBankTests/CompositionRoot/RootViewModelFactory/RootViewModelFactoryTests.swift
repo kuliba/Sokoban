@@ -6,14 +6,18 @@
 //
 
 @testable import ForaBank
+import PayHubUI
 import XCTest
 
-class RootViewModelFactoryTests: XCTestCase {
+class RootViewModelFactoryTests: QRNavigationTests {
     
     typealias SUT = RootViewModelFactory
     
     func makeSUT(
+        scanResult: QRModelResult = .unknown,
         model: Model = .mockWithEmptyExcept(),
+        scanner: QRScannerViewModel = QRScannerViewModelSpy(),
+        schedulers: Schedulers = .immediate,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -27,9 +31,10 @@ class RootViewModelFactoryTests: XCTestCase {
             model: model,
             httpClient: httpClient,
             logger: logger,
+            mapScanResult: { _, completion in completion(scanResult) },
             resolveQR: { _ in .unknown },
-            scanner: QRScannerViewModelSpy(),
-            schedulers: .immediate
+            scanner: scanner,
+            schedulers: schedulers
         )
         
         // factory is captured by long-running closures

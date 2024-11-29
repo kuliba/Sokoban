@@ -14,304 +14,46 @@ import SberQR
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeCategoryPickerSection(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
         
-        let pageSize = settings.pageSize
         let placeholderCount = settings.categoryPickerPlaceholderCount
-        
-        func loadOperators(
-            payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
-            completion: @escaping ([PaymentServiceOperator]) -> Void
-        ) {
-            schedulers.background.schedule {
-                
-                self.model.loadOperators(payload, completion)
-            }
-        }
-        
-        func loadOperatorsForCategory(
-            category: ServiceCategory,
-            completion: @escaping (Result<[PaymentServiceOperator], Error>) -> Void
-        ) {
-            schedulers.background.schedule {
-                
-                self.model.loadOperators(.init(
-                    afterOperatorID: nil,
-                    for: category.type,
-                    searchText: "",
-                    pageSize: pageSize
-                )) {
-                    completion(.success($0))
-                }
-            }
-        }
-        
-        func makeMobile() -> ClosePaymentsViewModelWrapper {
-            
-            return .init(
-                model: model,
-                service: .mobileConnection,
-                scheduler: schedulers.main
-            )
-        }
-        
-        let makeStandard = makeStandard(
-            loadLatestForCategory: nanoServices.loadLatestForCategory,
-            loadOperators: loadOperators,
-            loadOperatorsForCategory: loadOperatorsForCategory,
-            pageSize: pageSize,
-            mainScheduler: schedulers.main
-        )
-        
-        func makeTax() -> ClosePaymentsViewModelWrapper {
-            
-            return .init(
-                model: model,
-                category: .taxes,
-                scheduler: schedulers.main
-            )
-        }
-        
-        func makeTransport() -> TransportPaymentsViewModel? {
-            
-            model.makeTransportPaymentsViewModel(type: .transport)
-        }
         
         let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
             model: model,
             nanoServices: .init(
-                makeMobile: makeMobile,
+                makeMobile: makeMobilePayment,
                 makeQR: makeQRScannerModel,
                 makeQRNavigation: getQRNavigation,
                 makeStandard: makeStandard,
-                makeTax: makeTax,
-                makeTransport: makeTransport
+                makeTax: makeTaxPayment,
+                makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
         let microServices = selectedCategoryComposer.compose()
         
-        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
+        let categoryPickerContent = composeLoadablePickerModel(
             load: nanoServices.loadCategories,
             reload: nanoServices.reloadCategories,
-            microServices: microServices,
-            placeholderCount: placeholderCount,
-            scheduler: schedulers.main,
-            interactiveScheduler: schedulers.interactive
+            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
+            placeholderCount: placeholderCount
         )
         
-        return categoryPickerComposer.compose(
-            prefix: [],
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
+        return compose(
+            getNavigation: microServices.getNavigation,
+            content: categoryPickerContent,
+            witnesses: witnesses()
         )
-        
-        func createSberQRPayment(
-            payload: (URL, SberQRConfirmPaymentState),
-            completion: @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void
-        ){
-            let composer = LoggingRemoteNanoServiceComposer(
-                httpClient: httpClient,
-                logger: logger
-            )
-            let createSberQRPaymentService = composer.compose(
-                createRequest: RequestFactory.createCreateSberQRPaymentRequest,
-                mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
-            )
-            
-            guard let payload = payload.1.makePayload(with: payload.0)
-            else { return completion(.failure(.techError)) }
-            
-            createSberQRPaymentService(payload) {
-                
-                completion($0.mapError { _ in .techError })
-                _ = createSberQRPaymentService
-            }
-        }
-        
-        func getSberQRData(
-            url: URL,
-            completion: @escaping (Result<GetSberQRDataResponse, any Error>) -> Void
-        ) {
-            let composer = LoggingRemoteNanoServiceComposer(
-                httpClient: httpClient,
-                logger: logger
-            )
-            let getSberQRDataService = composer.compose(
-                createRequest: RequestFactory.createGetSberQRRequest,
-                mapResponse: SberQR.ResponseMapper.mapGetSberQRDataResponse,
-                mapError: { $0 }
-            )
-            
-            getSberQRDataService(url) {
-                
-                completion($0.mapError { $0 })
-                _ = getSberQRDataService
-            }
-        }
-        
-        func makeSegmented(
-            multi: MultiElementArray<SegmentedOperatorProvider>,
-            qrCode: QRCode,
-            qrMapping: QRMapping
-        ) -> SegmentedPaymentProviderPickerFlowModel {
-            
-            let make = makeSegmentedPaymentProviderPickerFlowModel(
-                pageSize: pageSize
-            )
-            
-            return make(multi, qrCode, qrMapping)
-        }
-        
-        func makeServicePicker(
-            payload: PaymentProviderServicePickerPayload,
-            completion: @escaping (AnywayServicePickerFlowModel) -> Void
-        ) {
-            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer()
-            
-            completion(servicePickerComposer.compose(payload: payload))
-        }
-        
-        func getQRNavigation(
-            qrResult: QRModelResult,
-            notify: @escaping QRNavigationComposer.Notify,
-            completion: @escaping (QRNavigation) -> Void
-        ) {
-            let microServicesComposer = QRNavigationComposerMicroServicesComposer(
-                httpClient: httpClient, 
-                logger: logger,
-                model: model,
-                createSberQRPayment: createSberQRPayment,
-                getSberQRData: getSberQRData,
-                makeSegmented: makeSegmented,
-                makeServicePicker: makeServicePicker,
-                scanner: scanner,
-                scheduler: schedulers.main
-            )
-            let microServices = microServicesComposer.compose()
-            let composer = QRNavigationComposer(microServices: microServices)
-            
-            composer.getNavigation(
-                payload: .qrResult(qrResult),
-                notify: notify,
-                completion: completion)
-        }
     }
     
-    typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices.MakeStandard
-    /*private*/ typealias LoadLatestForCategory = (ServiceCategory, @escaping (Result<[Latest], Error>) -> Void) -> Void
-    /*private*/ typealias LoadOperators = (UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload, @escaping ([PaymentServiceOperator]) -> Void) -> Void
-    /*private*/ typealias LoadOperatorsForCategory = (ServiceCategory, @escaping (Result<[PaymentServiceOperator], Error>) -> Void) -> Void
-    
-    /*private*/ func makeStandard(
-        loadLatestForCategory: @escaping LoadLatestForCategory,
-        loadOperators: @escaping LoadOperators,
-        loadOperatorsForCategory: @escaping LoadOperatorsForCategory,
-        pageSize: Int,
-        mainScheduler: AnySchedulerOf<DispatchQueue>
-    ) -> MakeStandard {
+    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
         
-        return { category, completion in
-            
-            let microServicesComposer = UtilityPrepaymentMicroServicesComposer(
-                pageSize: pageSize,
-                nanoServices: .init(loadOperators: loadOperators)
-            )
-            let standardNanoServicesComposer = StandardSelectedCategoryDestinationNanoServicesComposer(
-                loadLatest: loadLatestForCategory,
-                loadOperators: loadOperatorsForCategory,
-                makeMicroServices: microServicesComposer.compose,
-                model: self.model,
-                scheduler: mainScheduler
-            )
-            let standardNanoServices = standardNanoServicesComposer.compose(category: category)
-            let composer = StandardSelectedCategoryDestinationMicroServiceComposer(
-                nanoServices: standardNanoServices
-            )
-            let standardMicroService = composer.compose()
-            
-            standardMicroService.makeDestination(category, completion)
-        }
-    }
-}
-
-// MARK: - Helpers
-
-#warning("duplication - see UtilityPaymentOperatorLoaderComposer")
-
-private extension Model {
-    
-    func loadOperators(
-        _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
-        _ completion: @escaping LoadOperatorsCompletion
-    ) {
-        let log = LoggerAgent().log
-        let cacheLog = { log(.debug, .cache, $0, $1, $2) }
-        
-        if let operators = localAgent.load(type: [CodableServicePaymentOperator].self) {
-            cacheLog("Total Operators count \(operators.count)", #file, #line)
-            
-            let page = operators.operators(for: payload)
-            cacheLog("Operators page count \(page.count) for \(payload.categoryType.name)", #file, #line)
-            
-            completion(page)
-        } else {
-            cacheLog("No more Operators", #file, #line)
-            completion([])
-        }
-    }
-    
-    typealias LoadOperatorsCompletion = ([PaymentServiceOperator]) -> Void
-}
-
-// TODO: - add tests
-extension Array where Element == CodableServicePaymentOperator {
-    
-    /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
-    func operators(
-        for payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
-    ) -> [PaymentServiceOperator] {
-        
-        // sorting is performed at cache phase
-        return self
-            .filter { $0.matches(payload) }
-            .page(startingAfter: payload.operatorID, pageSize: payload.pageSize)
-            .map(PaymentServiceOperator.init(codable:))
-    }
-}
-
-// MARK: - Search
-
-// TODO: - add tests
-extension CodableServicePaymentOperator {
-    
-    func matches(
-        _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
-    ) -> Bool {
-        
-        type == payload.categoryType.name && contains(payload.searchText)
-    }
-    
-    func contains(_ searchText: String) -> Bool {
-        
-        guard !searchText.isEmpty else { return true }
-        
-        return name.localizedCaseInsensitiveContains(searchText)
-        || inn.localizedCaseInsensitiveContains(searchText)
-    }
-}
-
-private extension PaymentServiceOperator {
-    
-    init(codable: CodableServicePaymentOperator) {
-        
-        self.init(
-            id: codable.id,
-            inn: codable.inn,
-            md5Hash: codable.md5Hash,
-            name: codable.name,
-            type: codable.type
+        return .init(
+            emitting: { $0.$state.compactMap(\.selected) },
+            receiving: { content in { content.event(.select(nil)) }}
         )
     }
 }
