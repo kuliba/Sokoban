@@ -7,7 +7,20 @@
 
 import PayHubUI
 
-typealias OperationPickerDomain = PayHubUI.OperationPickerDomain<CurrencyWalletViewModel, Latest, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
+typealias OperationPickerDomain = PayHubUI.OperationPickerDomain<Latest, OperationPickerNavigation>
+
+extension OperationPickerDomain {
+    
+    typealias Navigation = OperationPickerNavigation
+}
+
+enum OperationPickerNavigation {
+    
+    case exchange(CurrencyWalletViewModel)
+    case latest(LatestFlowStub)
+    case status(OperationPickerFlowStatus)
+    case templates(TemplatesStub)
+}
 
 final class LatestFlowStub {
     
