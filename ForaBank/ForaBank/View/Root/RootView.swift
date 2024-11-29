@@ -685,44 +685,7 @@ private extension RootViewFactory {
     }
 }
 
-// MARK: - payment flow
-
-private extension RootView {
-    
-    @ViewBuilder
-    func makeAnywayFlowView(
-        flowModel: AnywayFlowModel
-    ) -> some View {
-        
-        let anywayPaymentFactory = rootViewFactory.makeAnywayPaymentFactory {
-            
-            flowModel.state.content.event(.payment($0))
-        }
-        
-        AnywayFlowView(
-            flowModel: flowModel,
-            factory: .init(
-                makeElementView: anywayPaymentFactory.makeElementView,
-                makeFooterView: anywayPaymentFactory.makeFooterView
-            ),
-            makePaymentCompleteView: {
-                
-                rootViewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        merchantIcon: $0.merchantIcon,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { flowModel.event(.goTo(.main)) }
-                )
-            }
-        )
-    }
-}
-
+// MARK: - adapters
 
 private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
