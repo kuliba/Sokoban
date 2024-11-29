@@ -448,7 +448,7 @@ final class RootViewModelTests: XCTestCase {
             product: .cardActiveMainDebitOnlyRub,
             selected: .main
         )
-        sut.tabsViewModel.mainViewModel.fastPayment?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: .zku))
+        sut.tabsViewModel.mainViewModel.fastPayment?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: .utility))
         scheduler.advance()
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -911,6 +911,7 @@ extension BannersBinder {
         model: .emptyMock,
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
+        mapScanResult: { _, completion in completion(.unknown) },
         resolveQR: { _ in .unknown },
         scanner: QRScannerViewModelSpy(),
         schedulers: .immediate

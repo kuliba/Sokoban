@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.08.2024.
 //
 
+import RxViewModel
 import SwiftUI
 
 public struct ComposedOperationPickerFlowView<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>: View
@@ -25,7 +26,7 @@ where DestinationView: View,
     
     public var body: some View {
         
-        OperationPickerFlowWrapperView(
+        RxWrapperView(
             model: binder.flow,
             makeContentView: {
                 
@@ -47,7 +48,8 @@ where DestinationView: View,
 
 public extension ComposedOperationPickerFlowView {
     
-    typealias Binder = OperationPickerBinder<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Domain = OperationPickerDomain<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Binder = Domain.Binder
     typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>
 }
 
@@ -57,7 +59,7 @@ private extension ComposedOperationPickerFlowView {
         _ content: OperationPickerContent<Latest>
     ) -> some View {
         
-        OperationPickerContentWrapperView(
+        RxWrapperView(
             model: content,
             makeContentView: { state, event in
                 

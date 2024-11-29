@@ -54,6 +54,20 @@ final class RootViewBinderComposerTests: XCTestCase {
         XCTAssertNotNil(binder)
     }
     
+    func test_compose_shouldCallBindOutside() {
+        
+        var bindOutsideCallCount = 0
+        let (sut, _) = makeSUT(bindOutside: { _,_ in
+            bindOutsideCallCount += 1
+            return []
+        })
+        XCTAssertEqual(bindOutsideCallCount, 0)
+        
+        _ = sut.compose(with: makeRootViewModel())
+        
+        XCTAssertEqual(bindOutsideCallCount, 1)
+    }
+    
     func test_compose_shouldSetContent() {
         
         let content = makeRootViewModel()
@@ -64,44 +78,42 @@ final class RootViewBinderComposerTests: XCTestCase {
         XCTAssertTrue(binder.content === content)
     }
     
-    func test_flow_shouldSetScanQRNavigationOnContentScanQRSelect() {
+    func test_flow_shouldDeliverNavigationOnContentSelect() {
         
-        let qrScanner = makeQRScanner()
-        let (sut, _) = makeSUT(qrScanner: qrScanner)
+        let navigation = makeNavigation()
+        let (sut, _) = makeSUT(navigation: navigation)
         let binder = sut.compose(with: makeRootViewModel())
         XCTAssertNil(binder.flow.state.navigation)
         
-        binder.content.emit(.scanQR)
+        binder.content.emit(makeSelect())
         
-        XCTAssertNoDiff(
-            binder.flow.state.navigation.map(equatable),
-            .qrScanner(.init(qrScanner))
-        )
+        XCTAssertNoDiff(binder.flow.state.navigation, navigation)
     }
     
     func test_content_shouldReceiveOnFlowNavigationDismiss() {
         
         let (sut, _) = makeSUT()
         let binder = sut.compose(with: makeRootViewModel())
-        binder.content.emit(.scanQR)
+        binder.content.emit(makeSelect())
         XCTAssertEqual(binder.content.receiveCount, 0)
         
         binder.flow.event(.dismiss)
-
+        
         XCTAssertEqual(binder.content.receiveCount, 1)
     }
     
     // MARK: - Helpers
     
-    private typealias Domain = PayHubUI.RootViewDomain<RootViewModel, DismissAll, QRScanner>
+    private typealias Domain = PayHubUI.RootViewDomain<RootViewModel, DismissAll, Select, Navigation>
     private typealias SUT = Domain.BinderComposer
     private typealias DismissAllSubject = PassthroughSubject<DismissAll, Never>
     
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
         dismiss: @escaping () -> Void = {},
+        bindOutside: @escaping (Domain.Content, Domain.Flow) -> Set<AnyCancellable> = { _,_ in [] },
         reset: @escaping () -> Void = {},
-        qrScanner: QRScanner? = nil,
+        navigation: Navigation? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -115,11 +127,9 @@ final class RootViewBinderComposerTests: XCTestCase {
             dismiss: dismiss,
             getNavigation: { select, notify, completion in
                 
-                switch select {
-                case .scanQR:
-                    completion(.scanQR(qrScanner ?? self.makeQRScanner()))
-                }
+                completion(navigation ?? self.makeNavigation())
             },
+            bindOutside: bindOutside,
             schedulers: .immediate,
             witnesses: .init(
                 content: .init(
@@ -148,8 +158,6 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private final class RootViewModel {
         
-        typealias Select = SUT.RootDomain.Select
-        
         private let selectSubject = PassthroughSubject<Select, Never>()
         private(set) var receiveCount = 0
         
@@ -176,25 +184,27 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private struct DismissAll: Equatable {}
     
-    private final class QRScanner {}
-    
-    private func makeQRScanner() -> QRScanner {
+    private struct Select: Equatable {
         
-        return .init()
+        let value: String
     }
     
-    private func equatable(
-        _ navigation: Domain.Navigation
-    ) -> EquatableNavigation {
+    private func makeSelect(
+        _ value: String = anyMessage()
+    ) -> Select {
         
-        switch navigation {
-        case let .scanQR(qrScanner):
-            return .qrScanner(.init(qrScanner))
-        }
+        return .init(value: value)
     }
     
-    private enum EquatableNavigation: Equatable {
+    private struct Navigation: Equatable {
         
-        case qrScanner(ObjectIdentifier)
+        let value: String
+    }
+    
+    private func makeNavigation(
+        _ value: String = anyMessage()
+    ) -> Navigation {
+        
+        return .init(value: value)
     }
 }

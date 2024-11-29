@@ -53,6 +53,13 @@ extension RootViewFactory {
         let makeUpdateInfoView: MakeUpdateInfoView
         let makeDisableCorCardsInfoView: MakeDisableForCorCardsInfoView
     }
+    
+    func makePaymentProviderPickerView(
+        _ binder: PaymentProviderPicker.Binder
+    ) -> PaymentProviderPickerView {
+        
+        return .init(binder: binder, components: components, makeIconView: makeIconView)
+    }
 }
 
 extension RootViewFactory {

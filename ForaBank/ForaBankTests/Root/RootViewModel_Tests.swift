@@ -13,10 +13,9 @@ class RootViewModel_Tests: XCTestCase {
     
     // MARK: - Helpers
     
-    typealias Domain = ForaBank.RootViewDomain
-    typealias Witnesses = ContentWitnesses<RootViewModel, Domain.Select>
     typealias SUT = RootViewModel
-    typealias Spy = ValueSpy<Domain.Select>
+    typealias Spy = ValueSpy<RootViewSelect>
+    typealias Witnesses = ContentWitnesses<RootViewModel, RootViewSelect>
     
     func makeSUT(
         file: StaticString = #file,
@@ -96,6 +95,20 @@ class RootViewModel_Tests: XCTestCase {
         try sut.tapMainViewFastSectionQRButton()
     }
     
+    func tapMainViewFastSectionTemplatesButton(
+        _ sut: SUT
+    ) throws {
+        
+        try sut.tapMainViewFastSectionTemplatesButton()
+    }
+    
+    func tapMainViewFastSectionStandardPaymentButton(
+        _ sut: SUT
+    ) throws {
+        
+        try sut.tapMainViewFastSectionStandardPaymentButton()
+    }
+    
     func tapLegacyPaymentsSectionQRButton(
         _ sut: SUT
     ) throws {
@@ -118,9 +131,28 @@ private extension RootViewModel {
         return mainViewModel.sections
     }
     
-    func tapMainViewFastSectionQRButton() throws {
+    func tapMainViewFastSectionQRButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
         
-        try mainViewModel.tapFastSectionQRButton()
+        try mainViewModel.tapFastSectionButton(type: .qr, file: file, line: line)
+    }
+    
+    func tapMainViewFastSectionStandardPaymentButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try mainViewModel.tapFastSectionButton(type: .utility, file: file, line: line)
+    }
+    
+    func tapMainViewFastSectionTemplatesButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try mainViewModel.tapFastSectionButton(type: .templates, file: file, line: line)
     }
     
     func legacyPaymentsTransfers() throws -> PaymentsTransfersViewModel {
@@ -154,33 +186,45 @@ private extension MainSectionViewModel {
 private extension MainViewModel {
     
     typealias FastSection = MainSectionFastOperationView.ViewModel
+    typealias FastSectionButton = ButtonIconTextView.ViewModel
+    typealias FastSectionButtons = [FastSectionButton]
     
-    func fastSection(
+    func fastSectionButtons(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> FastSection {
+    ) throws -> FastSectionButtons {
         
         let sections = sections.compactMap { $0 as? FastSection }
         
-        return try XCTUnwrap(sections.first, "Expected to have Fast Section", file: file, line: line)
+        return try XCTUnwrap(sections.first?.items, "Expected to have Fast Section.", file: file, line: line)
     }
     
-    func fastSectionQRButton(
+    enum FastSectionButtonType: String {
+        
+        case qr = "Оплата по QR"
+        case templates = "Шаблоны"
+        case byPhone = "Перевод по телефону"
+        case utility = "Оплата ЖКУ"
+    }
+    
+    func fastSectionButton(
+        type: FastSectionButtonType,
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> ButtonIconTextView.ViewModel {
+    ) throws -> FastSectionButton {
         
-        let buttons = try fastSection(file: file, line: line).items
+        let buttons = try fastSectionButtons(file: file, line: line)
         
-        return try XCTUnwrap(buttons.first, "Expected to have QR Button as first", file: file, line: line)
+        return try XCTUnwrap(buttons.first(where: { $0.title.text == type.rawValue }), "Expected to have \(type.rawValue) Button, but got nil instead.", file: file, line: line)
     }
     
-    func tapFastSectionQRButton(
+    func tapFastSectionButton(
+        type: FastSectionButtonType,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
-        try fastSectionQRButton(file: file, line: line).action()
+        try fastSectionButton(type: type, file: file, line: line).action()
     }
 }
 
