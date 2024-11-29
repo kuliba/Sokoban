@@ -1502,9 +1502,7 @@
 		2AD767462CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */; };
 		2AD767482CF9877E00BFDA70 /* OperationPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */; };
 		2AD7674A2CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */; };
-		2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */; };
 		2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift */; };
-		2AD7674F2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */; };
 		2AD7EBDD2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */; };
 		2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */; };
 		2AD8243B2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift */; };
@@ -2798,7 +2796,6 @@
 		83C990E72B052A84003EC486 /* Templates+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C990E62B052A84003EC486 /* Templates+Helpers.swift */; };
 		83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 83CA1C922A600DFC00672AA5 /* PinCodeUI */; };
 		83CA1C952A6013A300672AA5 /* PinCodeChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CA1C942A6013A300672AA5 /* PinCodeChangeView.swift */; };
-		83CC9D292C85BCCA00ABA4C7 /* MarketplaceFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CC9D282C85BCCA00ABA4C7 /* MarketplaceFlag.swift */; };
 		83CC9D2C2C85CCBB00ABA4C7 /* Services+getBannerCatalogListV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CC9D2B2C85CCBB00ABA4C7 /* Services+getBannerCatalogListV2.swift */; };
 		83CC9D2E2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CC9D2D2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift */; };
 		83CDE9912AAF4C0A00212FAA /* LandingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CDE9902AAF4C0A00212FAA /* LandingViewModel.swift */; };
@@ -4982,9 +4979,7 @@
 		2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedOperationPickerFlowViewFactory.swift; sourceTree = "<group>"; };
 		2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowView.swift; sourceTree = "<group>"; };
 		2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowViewFactory.swift; sourceTree = "<group>"; };
-		2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationPickerContentViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationPickerContentViewConfig+primary.swift"; sourceTree = "<group>"; };
-		2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeOperationPickerDestinationView.swift"; sourceTree = "<group>"; };
 		2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerViewFactory+makeDetailButton.swift"; sourceTree = "<group>"; };
 		2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersPersonalViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2AD8243C2C87249F0007B8DF /* CategoryPickerSectionDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionDomain.swift; sourceTree = "<group>"; };
@@ -6249,7 +6244,6 @@
 		83C990E42B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TemplatesListViewModel+GetPhoneNumberTests.swift"; sourceTree = "<group>"; };
 		83C990E62B052A84003EC486 /* Templates+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Templates+Helpers.swift"; sourceTree = "<group>"; };
 		83CA1C942A6013A300672AA5 /* PinCodeChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeChangeView.swift; sourceTree = "<group>"; };
-		83CC9D282C85BCCA00ABA4C7 /* MarketplaceFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketplaceFlag.swift; sourceTree = "<group>"; };
 		83CC9D2B2C85CCBB00ABA4C7 /* Services+getBannerCatalogListV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getBannerCatalogListV2.swift"; sourceTree = "<group>"; };
 		83CC9D2D2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetBannerCatalogListV2Request.swift"; sourceTree = "<group>"; };
 		83CDE9902AAF4C0A00212FAA /* LandingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewModel.swift; sourceTree = "<group>"; };
@@ -10052,7 +10046,6 @@
 				839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */,
 				C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */,
 				2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */,
-				83CC9D282C85BCCA00ABA4C7 /* MarketplaceFlag.swift */,
 				A7ECFEC22CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift */,
 				8307B3B32CD67A1C00484132 /* SavingsAccountFlag.swift */,
 			);
@@ -20426,7 +20419,6 @@
 				6862B55527B688CC006E833F /* AuthConfirmViewModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				2A1F085B2A7909B900C5B11B /* HTTPFactory.swift in Sources */,
-				83CC9D292C85BCCA00ABA4C7 /* MarketplaceFlag.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				2AECBC482BEBAD24000B0C0E /* PaymentsTransfersFlowEffectHandler.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,

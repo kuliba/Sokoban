@@ -113,10 +113,12 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard, viewModel.openPayment).map {
-            $0
-            .taggedTabItem(.market, selected: viewModel.selected)
-        }
+        rootViewFactory.makeMarketShowcaseView(
+            marketShowcaseBinder,
+            viewModel.openCard,
+            viewModel.openPayment
+        )
+        .taggedTabItem(.market, selected: viewModel.selected)
         .onAppear { marketShowcaseBinder.content.event(.load) }
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")

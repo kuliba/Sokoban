@@ -108,30 +108,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-    // MARK: - MarketplaceFlag
-    
-    func test_load_shouldDeliverActiveMarketplaceFlagForActiveRetrieveResult() {
-        
-        let sut = makeSUT { $0 == .marketplaceFlag ? "1" : nil }
-        
-        let flags = sut.load()
-        
-        XCTAssertNoDiff(flags, makeFeatureFlags(
-            marketplaceFlag: .active
-        ))
-    }
-    
-    func test_load_shouldDeliverInactiveMarketplaceFlagForInactiveRetrieveResult() {
-        
-        let sut = makeSUT { _ in "0" }
-        
-        let flags = sut.load()
-        
-        XCTAssertNoDiff(flags, makeFeatureFlags(
-            marketplaceFlag: .inactive
-        ))
-    }
-    
     // MARK: - HistoryFilterFlag
     
     func test_load_shouldDeliverActiveHistoryFilterFlagForInactiveRetrieveResult() {
@@ -229,7 +205,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         historyFilterFlag: HistoryFilterFlag? = nil,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag? = nil,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
-        marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         savingsAccountFlag: SavingsAccountFlag? = nil,
         collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
@@ -238,7 +213,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         .init(
             changeSVCardLimitsFlag: changeSVCardLimitsFlag?.map { $0 } ?? .inactive,
             getProductListByTypeV6Flag: getProductListByTypeV6Flag?.map { $0 } ?? .inactive,
-            marketplaceFlag: marketplaceFlag?.map { $0 } ?? .inactive,
             historyFilterFlag: historyFilterFlag?.map { $0 } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,

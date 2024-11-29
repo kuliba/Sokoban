@@ -27,7 +27,6 @@ final class RootViewModelFactory {
     let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
     let historyFilterFlag: HistoryFilterFlag = true
-    let marketplaceFlag: MarketplaceFlag = .active
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
     
     let schedulers: Schedulers
