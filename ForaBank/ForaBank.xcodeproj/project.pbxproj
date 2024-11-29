@@ -1502,7 +1502,7 @@
 		2AD767462CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */; };
 		2AD767482CF9877E00BFDA70 /* OperationPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */; };
 		2AD7674A2CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */; };
-		2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */; };
+		2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift */; };
 		2AD7674F2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */; };
 		2AD7EBDD2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */; };
 		2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */; };
@@ -4981,7 +4981,7 @@
 		2AD767452CF986FC00BFDA70 /* ComposedOperationPickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedOperationPickerFlowViewFactory.swift; sourceTree = "<group>"; };
 		2AD767472CF9877D00BFDA70 /* OperationPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowView.swift; sourceTree = "<group>"; };
 		2AD767492CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowViewFactory.swift; sourceTree = "<group>"; };
-		2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationPickerContentViewConfig+iFora.swift"; sourceTree = "<group>"; };
+		2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationPickerContentViewConfig+primary.swift"; sourceTree = "<group>"; };
 		2AD7674E2CF98EEE00BFDA70 /* RootViewFactory+makeOperationPickerDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeOperationPickerDestinationView.swift"; sourceTree = "<group>"; };
 		2AD7EBDC2B0CB233009FDCAB /* StickerViewFactory+makeDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerViewFactory+makeDetailButton.swift"; sourceTree = "<group>"; };
 		2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersPersonalViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -8504,7 +8504,7 @@
 				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift */,
 				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
-				2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift */,
+				2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -20011,7 +20011,7 @@
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
 				2A7CA21B2C92149600B900E9 /* RootViewModelFactory+Load.swift in Sources */,
-				2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+iFora.swift in Sources */,
+				2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				8343FE2A2BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift in Sources */,
 				2A3417842B7CAC54002FAAFC /* BankDefaultStore.swift in Sources */,
