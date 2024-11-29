@@ -11,14 +11,18 @@ import CollateralLoanLandingGetCollateralLandingBackend
 
 extension RequestFactory {
     static func createGetCollateralLandingRequest(
-        serial: String,
+        serial: String?,
         landingType: RemoteServices.RequestFactory.CollateralLoanLandingType
     ) throws -> URLRequest {
         
-        let parameters: [(String, String)] = [
-            ("serial", serial),
+        var parameters: [(String, String)] = [
             ("landingTypes", landingType.rawValue)
         ]
+
+        if let serial {
+            
+            parameters.append(("serial", serial))
+        }
         
         let endpoint = Services.Endpoint.getCollateralLanding
         let url = try endpoint.url(withBase: Config.serverAgentEnvironment.baseURL, parameters: parameters)

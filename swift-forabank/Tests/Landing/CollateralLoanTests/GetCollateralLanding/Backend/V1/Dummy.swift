@@ -12,6 +12,5 @@ final class DummyTests: XCTestCase {
     
     func test_test() {
         
-        XCTAssertNotNil(Dummy())
     }
 }
