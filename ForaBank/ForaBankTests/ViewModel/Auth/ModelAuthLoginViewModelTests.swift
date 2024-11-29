@@ -988,4 +988,3 @@ private extension ModelAuthLoginViewModelTests {
         )
     }
 }
-
