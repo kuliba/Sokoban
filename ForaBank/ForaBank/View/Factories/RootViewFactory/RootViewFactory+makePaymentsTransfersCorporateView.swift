@@ -46,7 +46,9 @@ extension RootViewFactory {
         DisableCorCardsView(text: .disableForCorCards)
     }
     
-    private func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
+    private func makePaymentsTransfersCorporateToolbarView(
+        toolbar: any PaymentsTransfersCorporateToolbar
+    ) -> some ToolbarContent {
         
         ToolbarItem(placement: .topBarLeading) {
             

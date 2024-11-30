@@ -50,7 +50,7 @@ where BannerSectionView: View,
             }
             .padding(config.stack)
         }
-        .toolbar(content: factory.makeToolbarView)
+        .toolbar { factory.makeToolbarView(content.toolbar) }
     }
 }
 
@@ -64,6 +64,7 @@ public extension PaymentsTransfersCorporateContentView {
 // MARK: - Previews
 
 #Preview {
+    
     NavigationView {
         
         PaymentsTransfersCorporateContentView(
@@ -88,7 +89,7 @@ public extension PaymentsTransfersCorporateContentView {
                         .background(Color.gray.opacity(0.2))
                         .clipShape(Capsule())
                 },
-                makeToolbarView: {
+                makeToolbarView: { _ in
                     
                     ToolbarItem(placement: .topBarLeading) {
                         
@@ -123,9 +124,11 @@ private extension PaymentsTransfersCorporateContent {
         
         return .init(
             bannerPicker: PreviewBannerPicker(),
+            toolbar: PreviewToolbar(),
             reload: {}
         )
     }
 }
 
 private final class PreviewBannerPicker: CorporateBannerPicker {}
+private final class PreviewToolbar: PaymentsTransfersCorporateToolbar {}

@@ -39,10 +39,15 @@ extension RootViewModelFactory {
             suffix: (0..<6).map { _ in .placeholder(.init()) }
         )
         
+        // MARK: - Toolbar
+        
+        let toolbar = makePaymentsTransfersCorporateToolbar()
+        
         // MARK: - PaymentsTransfers
         
         let content = Domain.Content(
             bannerPicker: bannerPicker,
+            toolbar: toolbar,
             reload: {
                 
                 bannerPicker.content.event(.load)
