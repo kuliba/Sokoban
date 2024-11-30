@@ -33,9 +33,9 @@ struct AuthLoginView: View {
 }
 
 extension AuthLoginView {
-    func alert(forAlertModelType alertModelType: AlertModelType) -> SwiftUI.Alert {
+    func alert(forAlertType alertModelType: AlertModelType) -> SwiftUI.Alert {
         
-        return viewModel.swiftUIAlert(forAlertType: alertModelType) {
+        return viewModel.swiftUIAlert(forAlertModelType: alertModelType) {
             
             viewModel.clientInformAlertButtonTapped { url in openURL(url) }
         }
