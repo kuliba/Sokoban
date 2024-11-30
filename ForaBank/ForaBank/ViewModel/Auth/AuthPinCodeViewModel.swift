@@ -107,7 +107,7 @@ class AuthPinCodeViewModel: ObservableObject {
         bind()
     }
     
-    var alertType: AlertType? {
+    var alertType: AlertModelType? {
         switch (alert, clientInformAlerts?.alert) {
         
         case (let .some(alert), .none):
@@ -678,13 +678,13 @@ extension AuthPinCodeViewModel {
         openURL: @escaping (URL) -> Void
     ) {
         
-        self.model.clientInformAlertManager.dismiss()
+        model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
     }
     
-    func swiftUIAlert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
-        
-        switch alertType {
+    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
+
+        switch alertModelType {
             
         case .clientInformAlerts:
             
@@ -698,9 +698,7 @@ extension AuthPinCodeViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Ok"), action: {
-                        self.clientInformAlertButtonTapped() { _ in
-                        }
-                        
+                        openURL()
                     })
                     )
                     
@@ -710,9 +708,7 @@ extension AuthPinCodeViewModel {
                                  message: Text(alert.text),
                                  primaryButton: .default(Text("Позже"), action: { }),
                                  secondaryButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in
-                        }
-                        
+                        openURL()
                     })
                     )
                     
@@ -721,14 +717,12 @@ extension AuthPinCodeViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in
-                        }
+                        openURL()
                     })
                     )
                 }
                 
             case .none : return .init(title: Text("Ошибка"))
-                
             }
             
         case .alertViewModel:

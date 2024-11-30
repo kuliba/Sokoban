@@ -25,6 +25,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var clientInformAlerts: ClientInformAlerts?
 
     private let eventPublishers: EventPublishers
+    private let clientInformAlertsManager: any AlertManager<ClientInformAlerts>
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
     private let onRegister: () -> Void
@@ -53,6 +54,7 @@ class AuthLoginViewModel: ObservableObject {
     )
     
     init(
+        clientInformAlertsManager: any AlertManager<ClientInformAlerts>,
         eventPublishers: EventPublishers,
         eventHandlers: EventHandlers,
         factory: AuthLoginViewModelFactory,
@@ -62,6 +64,7 @@ class AuthLoginViewModel: ObservableObject {
     ) {
         self.header = .init()
         self.buttons = buttons
+        self.clientInformAlertsManager = clientInformAlertsManager
         self.eventPublishers = eventPublishers
         self.eventHandlers = eventHandlers
         self.factory = factory
@@ -77,7 +80,7 @@ class AuthLoginViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    var alertType: AlertType? {
+    var alertType: AlertModelType? {
         switch (alert, clientInformAlerts?.alert) {
         
         case (let .some(alert), .none): 
@@ -122,12 +125,13 @@ extension AuthLoginViewModel {
         openURL: @escaping (URL) -> Void
     ) {
         
+        clientInformAlertsManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
     }
     
-    func swiftUIAlert(forAlertType alertType: AlertType) -> SwiftUI.Alert {
-        
-        switch alertType {
+    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
+
+        switch alertModelType {
             
         case .clientInformAlerts:
             
@@ -141,7 +145,7 @@ extension AuthLoginViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Ok"), action: {
-                        self.clientInformAlerts?.next()
+                        openURL()
                     })
                     )
                     
@@ -151,8 +155,7 @@ extension AuthLoginViewModel {
                                  message: Text(alert.text),
                                  primaryButton: .default(Text("Позже"), action: { }),
                                  secondaryButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in }
-                        self.clientInformAlerts?.next()
+                        openURL()
                     })
                     )
                     
@@ -161,8 +164,7 @@ extension AuthLoginViewModel {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  dismissButton: .default(Text("Обновить"), action: {
-                        self.clientInformAlertButtonTapped() { _ in }
-                        self.clientInformAlerts?.next()
+                        openURL()
                     })
                     )
                 }
@@ -174,7 +176,7 @@ extension AuthLoginViewModel {
         case .alertViewModel:
             
             switch self.alert {
-            
+                
             case let .some(alert): return Alert(with: alert)
                 
             case .none: return .init(title: Text("Ошибка"))
@@ -245,9 +247,8 @@ private extension AuthLoginViewModel {
             }
             .store(in: &bindings)
         
-        eventPublishers.clientInformAlerts
+        clientInformAlertsManager.alertPublisher
             .receive(on: scheduler)
-            .map(Optional.some)
             .assign(to: &$clientInformAlerts)
         
         eventPublishers.checkClientResponse
@@ -616,9 +617,13 @@ extension AuthLoginViewModel {
         }
     }
     
+    struct ClientInformAlertsManager {
+        
+        let clientInformAlertsManager: any AlertManager<ClientInformAlerts>
+    }
+    
     struct EventPublishers {
         
-        let clientInformAlerts: AnyPublisher<ClientInformAlerts, Never>
         let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
         let catalogProducts: AnyPublisher<([CatalogProductData]), Never>
         let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>

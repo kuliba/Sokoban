@@ -19,7 +19,7 @@ public enum ClientInformActionType: String {
     }
 }
 
-public enum AlertType: Identifiable {
+public enum AlertModelType: Identifiable {
     
     public var id: UUID {
         switch self {
