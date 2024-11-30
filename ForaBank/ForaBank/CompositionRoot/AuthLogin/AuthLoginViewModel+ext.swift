@@ -18,6 +18,7 @@ extension AuthLoginViewModel {
         onRegister: @escaping () -> Void
     ) {
         self.init(
+            clientInformAlertsManager: model.clientInformAlertManager,
             eventPublishers: model.eventPublishers,
             eventHandlers: .init(
                 onRegisterCardNumber: model.register(cardNumber:),
@@ -36,13 +37,14 @@ extension AuthLoginViewModel {
 
 private extension Model {
 
+    var clientInformAlertsManager: AuthLoginViewModel.ClientInformAlertsManager {
+        
+        .init(clientInformAlertsManager: clientInformAlertManager)
+    }
+    
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformAlerts: clientInformAlertManager.alertPublisher
-                .compactMap { $0 }
-                .eraseToAnyPublisher(),
-            
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),

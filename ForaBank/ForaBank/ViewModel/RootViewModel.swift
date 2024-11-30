@@ -492,13 +492,14 @@ class RootViewModel: ObservableObject, Resetable {
 
 private extension Model {
 
+    var authLoginAlertManager: AuthLoginViewModel.ClientInformAlertsManager {
+        
+        .init(clientInformAlertsManager: clientInformAlertManager)
+    }
+
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformAlerts: clientInformAlertManager.alertPublisher
-                .compactMap { $0 }
-                .eraseToAnyPublisher(),
-
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),
