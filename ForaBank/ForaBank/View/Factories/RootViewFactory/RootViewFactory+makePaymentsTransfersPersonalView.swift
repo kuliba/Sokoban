@@ -6,6 +6,7 @@
 //
 
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
 extension RootViewFactory {
@@ -14,16 +15,23 @@ extension RootViewFactory {
         _ binder: PaymentsTransfersPersonalDomain.Binder
     ) -> some View {
         
-        ComposedPaymentsTransfersPersonalView(
-            binder: binder,
-            factory: .init(
-                makeContentView: {
-                    
-                    makePaymentsTransfersPersonalContentView(binder)
-                },
-                makeFullScreenCoverView: makeFullScreenCoverView,
-                makeDestinationView: makeDestinationView
-            )
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                PaymentsTransfersPersonalFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContentView: {
+                            
+                            makePaymentsTransfersPersonalContentView(binder)
+                        },
+                        makeFullScreenCoverView: makeFullScreenCoverView,
+                        makeDestinationView: makeDestinationView
+                    )
+                )
+            }
         )
     }
     
