@@ -482,10 +482,10 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: { _ in
+            makeUserAccountView: {
                 
                 return .init(
-                    viewModel: .sample,
+                    viewModel: $0,
                     config: .preview,
                     viewFactory: .preview
                 )

@@ -18,6 +18,7 @@ class RootViewModel_Tests: XCTestCase {
     typealias Witnesses = ContentWitnesses<RootViewModel, RootViewSelect>
     
     func makeSUT(
+        paymentsModel: RootViewModel.PaymentsModel? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -25,7 +26,14 @@ class RootViewModel_Tests: XCTestCase {
         spy: Spy
     ) {
         let model: Model = .mockWithEmptyExcept()
-        
+        let paymentsModel = paymentsModel ?? .legacy(.init(
+            model: model,
+            makeFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview
+        ))
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
             stickerViewFactory: .preview,
@@ -44,14 +52,7 @@ class RootViewModel_Tests: XCTestCase {
                     onRegister: {},
                     bannersBinder: .preview
                 ),
-                paymentsModel: .legacy(.init(
-                    model: model,
-                    makeFlowManager: { _ in .preview },
-                    userAccountNavigationStateManager: .preview,
-                    sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
-                    paymentsTransfersFactory: .preview
-                )),
+                paymentsModel: paymentsModel,
                 chatViewModel: .init(),
                 marketShowcaseBinder: .preview
             ),

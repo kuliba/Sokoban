@@ -42,8 +42,62 @@ private extension RootViewModel {
         case let .legacy(legacy):
             return legacy.rootEventPublishers
             
-        default:
+        case let .v1(switcher):
+            return switcher.rootEventPublishers
+        }
+    }
+}
+
+private extension PaymentsTransfersSwitcherProtocol {
+    
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        switch self as? PaymentsTransfersSwitcher {
+        case .none:
             return []
+            
+        case let .some(switcher):
+            return switcher.rootEventPublishers
+        }
+    }
+}
+
+private extension PaymentsTransfersSwitcher {
+    
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        switch state {
+        case .none:
+            return []
+            
+        case let .corporate(corporate):
+            return corporate.rootEventPublishers
+            
+        case let .personal(personal):
+            return []
+        }
+    }
+}
+
+private extension PaymentsTransfersCorporateDomain.Binder {
+    
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        let flowRootEventPublisher = flow.$state
+            .compactMap(\.navigation?.rootEvent)
+            .eraseToAnyPublisher()
+        
+        return [flowRootEventPublisher]
+    }
+}
+
+private extension PaymentsTransfersCorporateNavigation {
+    
+    var rootEvent: RootEvent? {
+        
+        switch self {
+        case .userAccount:
+            return .userAccount
         }
     }
 }
