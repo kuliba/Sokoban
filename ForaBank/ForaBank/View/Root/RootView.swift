@@ -6,6 +6,7 @@
 //
 
 import ActivateSlider
+import Combine
 import FooterComponent
 import InfoComponent
 import LandingUIComponent
@@ -235,6 +236,7 @@ private extension RootView {
                 personalView: rootViewFactory.makePaymentsTransfersPersonalView,
                 undefinedView: { SpinnerView(viewModel: .init()) }
             )
+            .padding(.top)
         }
     }
 }
@@ -491,7 +493,11 @@ private extension RootViewFactory {
                 )
             },
             makeMarketShowcaseView: { _,_,_   in .none },
-            components: .preview
+            components: .preview,
+            makeUpdatingUserAccountButtonLabel: {
+                
+                .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
+            }
         )
     }
 }
@@ -516,4 +522,9 @@ private struct IgnoringSafeArea: ViewModifier {
                 .edgesIgnoringSafeArea(edgeSet)
         } else { content }
     }
+}
+
+private extension UserAccountButtonLabelConfig {
+    
+    static let preview = prod
 }
