@@ -1205,7 +1205,7 @@
 		2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */; };
 		2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */; };
 		2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */; };
-		2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporate.swift */; };
+		2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporateDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */; };
 		2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D12C81835800A17677 /* PaymentsTransfersPersonal.swift */; };
 		2A9D79DE2C81862F00A17677 /* ProfileModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */; };
 		2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D82C8183B900A17677 /* QRModelStub.swift */; };
@@ -4707,7 +4707,7 @@
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
 		2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperator.swift; sourceTree = "<group>"; };
 		2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcher.swift; sourceTree = "<group>"; };
-		2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporate.swift; sourceTree = "<group>"; };
+		2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateDomain.swift; sourceTree = "<group>"; };
 		2A9D79D12C81835800A17677 /* PaymentsTransfersPersonal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonal.swift; sourceTree = "<group>"; };
 		2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModelStub.swift; sourceTree = "<group>"; };
 		2A9D79D82C8183B900A17677 /* QRModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelStub.swift; sourceTree = "<group>"; };
@@ -11110,7 +11110,7 @@
 		2A9D79E22C81878A00A17677 /* Corporate */ = {
 			isa = PBXGroup;
 			children = (
-				2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporate.swift */,
+				2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */,
 				2A26C2B22C8819A80011BB5A /* ComposedPaymentsTransfersCorporateView.swift */,
 				2AC72B912CEF8C72001578CC /* PaymentsTransfersCorporateFlowView.swift */,
 				2AC72B932CEF8CA8001578CC /* PaymentsTransfersCorporateFlowViewFactory.swift */,
@@ -20719,7 +20719,7 @@
 				77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */,
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
 				2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */,
-				2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporate.swift in Sources */,
+				2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporateDomain.swift in Sources */,
 				2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonal.swift in Sources */,
 				2A9D79DE2C81862F00A17677 /* ProfileModelStub.swift in Sources */,
 				2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */,

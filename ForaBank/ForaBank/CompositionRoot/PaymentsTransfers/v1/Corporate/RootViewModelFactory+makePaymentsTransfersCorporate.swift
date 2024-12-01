@@ -20,7 +20,7 @@ extension RootViewModelFactory {
     func makePaymentsTransfersCorporate(
         bannerPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersCorporateNanoServices
-    ) -> PaymentsTransfersCorporate {
+    ) -> PaymentsTransfersCorporateDomain.Binder {
         
         // MARK: - BannerPicker
         

@@ -649,7 +649,7 @@ extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     }
 }
 
-extension PaymentsTransfersCorporate {
+extension PaymentsTransfersCorporateDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         

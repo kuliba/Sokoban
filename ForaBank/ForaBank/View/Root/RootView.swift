@@ -202,7 +202,7 @@ extension PaymentsTransfersSwitcher: Refreshable {
     }
 }
 
-extension PaymentsTransfersCorporate {
+extension PaymentsTransfersCorporateDomain.Binder {
     
     func refresh() {
         

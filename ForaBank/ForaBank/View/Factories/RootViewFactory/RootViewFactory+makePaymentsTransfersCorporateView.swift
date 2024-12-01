@@ -11,33 +11,35 @@ import SwiftUI
 extension RootViewFactory {
     
     func makePaymentsTransfersCorporateView(
-        _ corporate: PaymentsTransfersCorporate
+        _ binder: PaymentsTransfersCorporateDomain.Binder
     ) -> some View {
         
         ComposedPaymentsTransfersCorporateView(
-            corporate: corporate,
+            binder: binder,
             factory: .init(
                 makeContentView: {
-                    PaymentsTransfersCorporateContentView(
-                        content: corporate.content,
-                        factory: .init(
-                            makeBannerSectionView: makeBannerSectionView,
-                            makeRestrictionNoticeView: makeRestrictionNoticeView,
-                            makeToolbarView: makePaymentsTransfersCorporateToolbarView,
-                            makeTransfersSectionView: makeTransfersSectionView
-                        ),
-                        config: .iFora
-                    )
-                },
-                makeFullScreenCoverView: { _ in
                     
-                    Text("TBD: FullScreenCoverView")
+                    makePaymentsTransfersCorporateContentView(binder)
                 },
-                makeDestinationView: { _ in
-                    
-                    Text("TBD: DestinationView")
-                }
+                makeFullScreenCoverView: makeFullScreenCoverView,
+                makeDestinationView: makeDestinationView
             )
+        )
+    }
+    
+    private func makePaymentsTransfersCorporateContentView(
+        _ binder: PaymentsTransfersCorporateDomain.Binder
+    ) -> some View {
+        
+        PaymentsTransfersCorporateContentView(
+            content: binder.content,
+            factory: .init(
+                makeBannerSectionView: makeBannerSectionView,
+                makeRestrictionNoticeView: makeRestrictionNoticeView,
+                makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                makeTransfersSectionView: makeTransfersSectionView
+            ),
+            config: .iFora
         )
     }
     
@@ -70,5 +72,19 @@ extension RootViewFactory {
                 .foregroundColor(.white)
                 .font(.title3.bold())
         }
+    }
+    
+    private func makeDestinationView(
+        destination: PaymentsTransfersCorporateNavigation.Destination
+    ) -> some View {
+        
+        Text("TBD: DestinationView")
+    }
+    
+    private func makeFullScreenCoverView(
+        fullScreenCover: PaymentsTransfersCorporateNavigation.FullScreenCover
+    ) -> some View {
+        
+        Text("TBD: FullScreenCoverView")
     }
 }

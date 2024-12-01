@@ -15,13 +15,13 @@ where ContentView: View,
       DestinationView: View,
       FullScreenCoverView: View {
 
-    let corporate: Corporate
+    let binder: Binder
     let factory: Factory
     
     var body: some View {
         
         RxWrapperView(
-            model: corporate.flow,
+            model: binder.flow,
             makeContentView: {
                 
                 PaymentsTransfersCorporateFlowView(
@@ -36,6 +36,6 @@ where ContentView: View,
 
 extension ComposedPaymentsTransfersCorporateView {
     
-    typealias Corporate = PaymentsTransfersCorporate
+    typealias Binder = PaymentsTransfersCorporateDomain.Binder
     typealias Factory = PaymentsTransfersCorporateFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
 }
