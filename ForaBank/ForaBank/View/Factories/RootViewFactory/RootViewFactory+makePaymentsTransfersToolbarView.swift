@@ -17,7 +17,7 @@ extension RootViewFactory {
         
         makeUserAccountToolbarButton {
             
-            binder.flow.event(.select(.outside(.userProfile)))
+            binder.flow.event(.select(.outside(.userAccount)))
         }
         
         ToolbarItem(placement: .topBarTrailing) {

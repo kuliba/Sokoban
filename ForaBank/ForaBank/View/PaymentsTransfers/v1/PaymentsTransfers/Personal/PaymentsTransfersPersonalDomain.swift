@@ -25,7 +25,7 @@ enum PaymentsTransfersPersonalSelect: Equatable {
         case byPhoneTransfer
         case scanQR
         case templates
-        case userProfile
+        case userAccount
         case utilityPayment // service payment
     }
 }

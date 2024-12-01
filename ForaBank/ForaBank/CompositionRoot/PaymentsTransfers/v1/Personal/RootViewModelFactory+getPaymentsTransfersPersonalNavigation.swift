@@ -16,7 +16,7 @@ extension RootViewModelFactory {
         case let.outside(outside):
             switch outside {
                 
-            case .userProfile:
+            case .userAccount:
                 completion(.userAccount)
                 
             default:

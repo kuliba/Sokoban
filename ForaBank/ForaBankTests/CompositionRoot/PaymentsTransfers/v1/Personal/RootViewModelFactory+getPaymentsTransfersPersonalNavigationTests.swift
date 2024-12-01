@@ -14,7 +14,7 @@ final class RootViewModelFactory_getPaymentsTransfersPersonalNavigationTests: Ro
     
     func test_userAccount_shouldDeliverUserAccount() {
         
-        expect(.outside(.userProfile), toDeliver: .userAccount)
+        expect(.outside(.userAccount), toDeliver: .userAccount)
     }
     
     // MARK: - Helpers

@@ -89,7 +89,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
             hasCorporateCardsOnly: false
         )))
         
-        sut.paymentsTransfersPersonalSelect(.outside(.userProfile))
+        sut.paymentsTransfersPersonalSelect(.outside(.userAccount))
         
         XCTAssertNoDiff(spy.values, [.userAccount])
     }
