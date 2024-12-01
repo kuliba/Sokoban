@@ -874,6 +874,9 @@
 		2A5B483B2CFC56650052801D /* RootViewFactory+makeUserAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B483A2CFC56650052801D /* RootViewFactory+makeUserAccountButton.swift */; };
 		2A5B483E2CFC5E640052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B483D2CFC5E640052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigationTests.swift */; };
 		2A5B48402CFC5EB70052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B483F2CFC5EB60052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigation.swift */; };
+		2A5B48432CFC6AEA0052801D /* UserAccountButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B48422CFC6AEA0052801D /* UserAccountButtonLabel.swift */; };
+		2A5B48452CFC6BB80052801D /* UserAccountButtonLabelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B48442CFC6BB80052801D /* UserAccountButtonLabelConfig.swift */; };
+		2A5B48472CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B48462CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift */; };
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
@@ -4377,6 +4380,9 @@
 		2A5B483A2CFC56650052801D /* RootViewFactory+makeUserAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeUserAccountButton.swift"; sourceTree = "<group>"; };
 		2A5B483D2CFC5E640052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getPaymentsTransfersPersonalNavigationTests.swift"; sourceTree = "<group>"; };
 		2A5B483F2CFC5EB60052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getPaymentsTransfersPersonalNavigation.swift"; sourceTree = "<group>"; };
+		2A5B48422CFC6AEA0052801D /* UserAccountButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountButtonLabel.swift; sourceTree = "<group>"; };
+		2A5B48442CFC6BB80052801D /* UserAccountButtonLabelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountButtonLabelConfig.swift; sourceTree = "<group>"; };
+		2A5B48462CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAccountButtonLabelConfig+prod.swift"; sourceTree = "<group>"; };
 		2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SberQRProductTests.swift"; sourceTree = "<group>"; };
 		2A5D2FB82BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2A5D2FBA2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentNanoServices.swift; sourceTree = "<group>"; };
@@ -8517,6 +8523,7 @@
 				2A2137F82B28A2F20044647C /* Config+iFora.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */,
 				2AD7674B2CF9892400BFDA70 /* OperationPickerContentViewConfig+primary.swift */,
+				2A5B48462CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -10006,6 +10013,15 @@
 				2A5B483D2CFC5E640052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigationTests.swift */,
 			);
 			path = Personal;
+			sourceTree = "<group>";
+		};
+		2A5B48412CFC6AC60052801D /* UserAccountButtonLabel */ = {
+			isa = PBXGroup;
+			children = (
+				2A5B48422CFC6AEA0052801D /* UserAccountButtonLabel.swift */,
+				2A5B48442CFC6BB80052801D /* UserAccountButtonLabelConfig.swift */,
+			);
+			path = UserAccountButtonLabel;
 			sourceTree = "<group>";
 		};
 		2A5D2FB72BF3323500BC3092 /* Services */ = {
@@ -14755,6 +14771,7 @@
 				5059D4482863B75900DA446D /* CurrencyWallet */,
 				ED15DAE32811639D00BF7E9F /* Account */,
 				0B4145BA2810931A0097430C /* Messages */,
+				2A5B48412CFC6AC60052801D /* UserAccountButtonLabel */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -20859,6 +20876,7 @@
 				77D01EB429CDAC0B0026B099 /* PaymentC2BParameter.swift in Sources */,
 				77D038632988283B00FBE5AB /* ServerCommands+SBP.swift in Sources */,
 				777460E5291E574400D3FF46 /* ContactsBankItemViewComponent.swift in Sources */,
+				2A5B48452CFC6BB80052801D /* UserAccountButtonLabelConfig.swift in Sources */,
 				774A8B7A2865FEF100B81140 /* ProductViewComponent.swift in Sources */,
 				ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */,
 				A5B55E9C27E2625A00C0B695 /* CreateC2BTransferRequest.swift in Sources */,
@@ -21184,6 +21202,7 @@
 				2A3624522C5E69E500174C50 /* SegmentedPaymentProviderPickerEffect.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				774A8B742865FECB00B81140 /* CircleProgressViewComponent.swift in Sources */,
+				2A5B48432CFC6AEA0052801D /* UserAccountButtonLabel.swift in Sources */,
 				77F468B6284522EB008C9579 /* ChatView.swift in Sources */,
 				0BD8D56428AFDC17006DC9BA /* TransferLimitData.swift in Sources */,
 				776C846D27DF1D4300F8F7E1 /* PaymentsViewModel.swift in Sources */,
@@ -21362,6 +21381,7 @@
 				C16157272C2A89A4000EFC3A /* Reducer+makeProductProfileFlowReducer.swift in Sources */,
 				0C5D7D9E298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift in Sources */,
 				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
+				2A5B48472CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift in Sources */,
 				834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */,
 				77499C462773C0D100F6C079 /* ButtonStyles.swift in Sources */,
 				83CE89FB2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift in Sources */,
