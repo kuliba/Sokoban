@@ -44,7 +44,10 @@ extension RootViewFactory {
             factory: .init(
                 makeBannerSectionView: makeBannerSectionView,
                 makeRestrictionNoticeView: makeRestrictionNoticeView,
-                makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                makeToolbarView: {
+                    
+                    makePaymentsTransfersCorporateToolbarView(binder)
+                },
                 makeTransfersSectionView: makeTransfersSectionView
             ),
             config: .iFora
@@ -57,15 +60,20 @@ extension RootViewFactory {
     }
     
     private func makePaymentsTransfersCorporateToolbarView(
-        toolbar: any PaymentsTransfersCorporateToolbar
+        _ binder: PaymentsTransfersCorporateDomain.Binder
     ) -> some ToolbarContent {
         
         ToolbarItem(placement: .topBarLeading) {
             
-            HStack {
+            Button {
                 
-                Image(systemName: "person")
-                Text("TBD: Profile without QR")
+            } label: {
+                
+                HStack {
+                    
+                    Image(systemName: "person")
+                    Text("TBD: Profile without QR")
+                }
             }
         }
     }
