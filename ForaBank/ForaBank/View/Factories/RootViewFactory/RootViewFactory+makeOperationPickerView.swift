@@ -6,6 +6,7 @@
 //
 
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
 extension RootViewFactory {
@@ -26,17 +27,43 @@ extension RootViewFactory {
         }
     }
     
-    func makeOperationPickerView(
+    private func makeOperationPickerView(
         binder: OperationPickerDomain.Binder
     ) -> some View {
         
-        ComposedOperationPickerFlowView(
-            binder: binder,
-            factory: .init(
-                makeDestinationView: makeOperationPickerDestinationView,
-                makeItemLabel: itemLabel
-            )
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                OperationPickerFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContent: { makeContentView(binder.content) },
+                        makeDestination: makeDestinationView
+                    )
+                )
+            }
         )
+    }
+    
+    private func makeContentView(
+        _ content: OperationPickerContent
+    ) -> some View {
+        
+        RxWrapperView(
+            model: content,
+            makeContentView: { state, event in
+                
+                OperationPickerContentView(
+                    state: state,
+                    event: event,
+                    config: .prod,
+                    itemLabel: itemLabel
+                )
+            }
+        )
+        .onFirstAppear { content.event(.load) }
     }
     
     private func itemLabel(
@@ -54,5 +81,25 @@ extension RootViewFactory {
                 )
             }
         )
+    }
+    
+    @ViewBuilder
+    private func makeDestinationView(
+        destination: OperationPickerDomain.Navigation.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .exchange(currencyWalletViewModel):
+            components.makeCurrencyWalletView(currencyWalletViewModel)
+            
+        case let .latest(latest):
+            Text("TBD: destination " + String(describing: latest))
+            
+        case let .status(operationPickerFlowStatus):
+            EmptyView()
+            
+        case let .templates(templates):
+            Text("TBD: destination " + String(describing: templates))
+        }
     }
 }
