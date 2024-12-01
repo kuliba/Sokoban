@@ -90,7 +90,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     }
     
     // MARK: - Events: clientInform
-    
+    // TODO: Update test according current  AuthLoginViewModel alert handling
 //    func test_clientInform_shouldShowClientInformAlertWithMessage() {
 //        
 //        let message = "message"
