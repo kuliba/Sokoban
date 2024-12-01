@@ -74,9 +74,11 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     func test_shouldEmitUserAccountOnPaymentsTransfersCorporateUserAccountSelect() throws {
         
+        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
         let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
-            hasCorporateCardsOnly: true
+            hasCorporateCardsOnlySubject: hasCorporateCardsOnlySubject
         )))
+        hasCorporateCardsOnlySubject.send(true)
         
         sut.paymentsTransfersCorporateSelect(.userAccount)
         
@@ -85,10 +87,12 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     func test_shouldEmitUserAccountOnPaymentsTransfersPersonalUserAccountSelect() throws {
         
+        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
         let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
-            hasCorporateCardsOnly: false
+            hasCorporateCardsOnlySubject: hasCorporateCardsOnlySubject
         )))
-        
+        hasCorporateCardsOnlySubject.send(false)
+
         sut.paymentsTransfersPersonalSelect(.outside(.userAccount))
         
         XCTAssertNoDiff(spy.values, [.userAccount])
@@ -96,17 +100,10 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     // MARK: - Helpers
     
-    private func makeCorporatePaymentsModel(
-    ) -> RootViewModel.PaymentsModel{
-        
-        return .v1(makeSwitcher(hasCorporateCardsOnly: true))
-    }
-    
     private func makeSwitcher(
-        hasCorporateCardsOnly: Bool
+        hasCorporateCardsOnlySubject: PassthroughSubject<Bool, Never>
     ) -> PaymentsTransfersSwitcher {
         
-        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
         let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
@@ -133,8 +130,6 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
             ),
             scheduler: .immediate
         )
-        
-        hasCorporateCardsOnlySubject.send(hasCorporateCardsOnly)
         
         return switcher
     }
