@@ -38,7 +38,7 @@ extension RootViewModelFactory {
             prefix: [],
             suffix: (0..<6).map { _ in .placeholder(.init()) }
         )
-                
+        
         // MARK: - PaymentsTransfers
         
         let content = Domain.Content(
@@ -50,10 +50,7 @@ extension RootViewModelFactory {
         )
         
         return compose(
-            getNavigation: { select, notify, completion in
-                
-                
-            },
+            getNavigation: getPaymentsTransfersCorporateNavigation,
             content: content,
             witnesses: witnesses()
         )

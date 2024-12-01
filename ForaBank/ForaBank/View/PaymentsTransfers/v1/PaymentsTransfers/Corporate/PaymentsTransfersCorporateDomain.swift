@@ -10,5 +10,18 @@ import PayHubUI
 
 typealias PaymentsTransfersCorporateDomain = PayHubUI.PaymentsTransfersCorporateDomain<PaymentsTransfersCorporateSelect, PaymentsTransfersCorporateNavigation>
 
-enum PaymentsTransfersCorporateSelect {}
-enum PaymentsTransfersCorporateNavigation {}
+extension PaymentsTransfersCorporateDomain {
+    
+    typealias Select = PaymentsTransfersCorporateSelect
+    typealias Navigation = PaymentsTransfersCorporateNavigation
+}
+
+enum PaymentsTransfersCorporateSelect {
+
+    case userAccount
+}
+
+enum PaymentsTransfersCorporateNavigation: Equatable {
+    
+    case userAccount
+}

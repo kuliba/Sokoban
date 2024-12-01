@@ -67,6 +67,8 @@ extension RootViewFactory {
             
             Button {
                 
+                binder.flow.event(.select(.userAccount))
+                
             } label: {
                 
                 HStack {
