@@ -210,7 +210,7 @@ extension PaymentsTransfersCorporateDomain.Binder {
     }
 }
 
-extension PaymentsTransfersPersonal {
+extension PaymentsTransfersPersonalDomain.Binder {
     
     func refresh() {
         

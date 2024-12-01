@@ -18,7 +18,7 @@ extension RootViewModelFactory {
     @inlinable
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonal {
+    ) -> PaymentsTransfersPersonalDomain.Binder {
         
         // MARK: - CategoryPicker
         

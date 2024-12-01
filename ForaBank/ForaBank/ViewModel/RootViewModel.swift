@@ -658,7 +658,7 @@ extension PaymentsTransfersCorporateDomain.Binder {
     }
 }
 
-extension PaymentsTransfersPersonal {
+extension PaymentsTransfersPersonalDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         

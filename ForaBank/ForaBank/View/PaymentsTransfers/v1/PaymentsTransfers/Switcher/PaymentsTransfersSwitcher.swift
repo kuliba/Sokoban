@@ -8,7 +8,7 @@
 import Combine
 import PayHubUI
 
-typealias PaymentsTransfersSwitcher = ProfileSwitcherModel<PaymentsTransfersCorporateDomain.Binder, PaymentsTransfersPersonal>
+typealias PaymentsTransfersSwitcher = ProfileSwitcherModel<PaymentsTransfersCorporateDomain.Binder, PaymentsTransfersPersonalDomain.Binder>
 
 protocol PaymentsTransfersSwitcherProtocol {
     

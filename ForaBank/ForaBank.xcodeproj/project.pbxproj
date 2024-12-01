@@ -1206,7 +1206,7 @@
 		2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */; };
 		2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */; };
 		2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporateDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */; };
-		2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D12C81835800A17677 /* PaymentsTransfersPersonal.swift */; };
+		2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonalDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */; };
 		2A9D79DE2C81862F00A17677 /* ProfileModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */; };
 		2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D82C8183B900A17677 /* QRModelStub.swift */; };
 		2A9D79E42C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79E32C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift */; };
@@ -4708,7 +4708,7 @@
 		2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperator.swift; sourceTree = "<group>"; };
 		2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcher.swift; sourceTree = "<group>"; };
 		2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateDomain.swift; sourceTree = "<group>"; };
-		2A9D79D12C81835800A17677 /* PaymentsTransfersPersonal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonal.swift; sourceTree = "<group>"; };
+		2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalDomain.swift; sourceTree = "<group>"; };
 		2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModelStub.swift; sourceTree = "<group>"; };
 		2A9D79D82C8183B900A17677 /* QRModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelStub.swift; sourceTree = "<group>"; };
 		2A9D79E32C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductsData+hasCorporateCardsOnly.swift"; sourceTree = "<group>"; };
@@ -11087,7 +11087,7 @@
 		2A9D79E02C81877C00A17677 /* Personal */ = {
 			isa = PBXGroup;
 			children = (
-				2A9D79D12C81835800A17677 /* PaymentsTransfersPersonal.swift */,
+				2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */,
 				2A2B91CC2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift */,
 				2AC72B8B2CEF6FF7001578CC /* PaymentsTransfersPersonalFlowView.swift */,
 				2AC72B8D2CEF7095001578CC /* PaymentsTransfersPersonalFlowViewFactory.swift */,
@@ -20720,7 +20720,7 @@
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
 				2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */,
 				2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporateDomain.swift in Sources */,
-				2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonal.swift in Sources */,
+				2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonalDomain.swift in Sources */,
 				2A9D79DE2C81862F00A17677 /* ProfileModelStub.swift in Sources */,
 				2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */,
 				C14C57CF2C619086008C2618 /* Services+makeInfoRepeatPaymentServices.swift in Sources */,
