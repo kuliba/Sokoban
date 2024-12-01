@@ -63,20 +63,9 @@ extension RootViewFactory {
         _ binder: PaymentsTransfersCorporateDomain.Binder
     ) -> some ToolbarContent {
         
-        ToolbarItem(placement: .topBarLeading) {
+        makeUserAccountToolbarButton {
             
-            Button {
-                
-                binder.flow.event(.select(.userAccount))
-                
-            } label: {
-                
-                HStack {
-                    
-                    Image(systemName: "person")
-                    Text("TBD: Profile without QR")
-                }
-            }
+            binder.flow.event(.select(.userAccount))
         }
     }
     

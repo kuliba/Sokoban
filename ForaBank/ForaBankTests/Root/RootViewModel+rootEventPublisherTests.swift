@@ -74,10 +74,22 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     func test_shouldEmitUserAccountOnPaymentsTransfersCorporateUserAccountSelect() throws {
         
-        let paymentsModel = makeCorporatePaymentsModel()
-        let (sut, spy) = makeSUT(paymentsModel: paymentsModel)
+        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
+            hasCorporateCardsOnly: true
+        )))
         
         sut.paymentsTransfersCorporateSelect(.userAccount)
+        
+        XCTAssertNoDiff(spy.values, [.userAccount])
+    }
+    
+    func test_shouldEmitUserAccountOnPaymentsTransfersPersonalUserAccountSelect() throws {
+        
+        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
+            hasCorporateCardsOnly: false
+        )))
+        
+        sut.paymentsTransfersPersonalSelect(.outside(.userProfile))
         
         XCTAssertNoDiff(spy.values, [.userAccount])
     }
@@ -122,7 +134,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
             scheduler: .immediate
         )
         
-        hasCorporateCardsOnlySubject.send(true)
+        hasCorporateCardsOnlySubject.send(hasCorporateCardsOnly)
         
         return switcher
     }
@@ -130,30 +142,57 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
 
 private extension RootViewModel {
     
+    func switcher(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> PaymentsTransfersSwitcher? {
+        
+        switch tabsViewModel.paymentsModel {
+        case let .v1(switcher):
+            let switcher = switcher as? PaymentsTransfersSwitcher
+            
+            switch switcher {
+            case let .some(switcher):
+                return switcher
+                
+            default:
+                XCTFail("Expected PaymentsTransfersSwitcher, but got \(String(describing: switcher)) instead.", file: file, line: line)
+                return nil
+            }
+            
+        default:
+            XCTFail("Expected v1, but got \(tabsViewModel.paymentsModel) instead.", file: file, line: line)
+            return nil
+        }
+    }
+    
     func paymentsTransfersCorporateSelect(
         _ select: ForaBank.PaymentsTransfersCorporateDomain.Select,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        switch tabsViewModel.paymentsModel {
-        case let .v1(switcher):
-            let switcher = switcher as? PaymentsTransfersSwitcher
-            switch switcher {
-            case let .some(switcher):
-                switch switcher.state {
-                case let .corporate(corporate):
-                    corporate.flow.event(.select(select))
-                    
-                default:
-                    XCTFail("Expected Corporate, but got \(String(describing: switcher.state)) instead.", file: file, line: line)
-                }
-                
-            default:
-                XCTFail("Expected PaymentsTransfersSwitcher, but got \(String(describing: switcher)) instead.", file: file, line: line)
-            }
+        let switcher = switcher(file: file, line: line)
+        switch switcher?.state {
+        case let .corporate(corporate):
+            corporate.flow.event(.select(select))
             
         default:
-            XCTFail("Expected v1, but got \(tabsViewModel.paymentsModel) instead.", file: file, line: line)
+            XCTFail("Expected Corporate, but got \(String(describing: switcher?.state)) instead.", file: file, line: line)
+        }
+    }
+    
+    func paymentsTransfersPersonalSelect(
+        _ select: ForaBank.PaymentsTransfersPersonalDomain.Select,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let switcher = switcher(file: file, line: line)
+        switch switcher?.state {
+        case let .personal(personal):
+            personal.flow.event(.select(select))
+            
+        default:
+            XCTFail("Expected Personal, but got \(String(describing: switcher?.state)) instead.", file: file, line: line)
         }
     }
 }

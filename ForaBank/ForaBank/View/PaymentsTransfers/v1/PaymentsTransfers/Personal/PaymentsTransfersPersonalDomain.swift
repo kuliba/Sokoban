@@ -10,6 +10,12 @@ import PayHubUI
 
 typealias PaymentsTransfersPersonalDomain = PayHubUI.PaymentsTransfersPersonalDomain<PaymentsTransfersPersonalSelect, PaymentsTransfersPersonalNavigation>
 
+extension PaymentsTransfersPersonalDomain {
+    
+    typealias Select = PaymentsTransfersPersonalSelect
+    typealias Navigation = PaymentsTransfersPersonalNavigation
+}
+
 enum PaymentsTransfersPersonalSelect: Equatable {
     
     case outside(Outside)
@@ -26,4 +32,5 @@ enum PaymentsTransfersPersonalSelect: Equatable {
 
 enum PaymentsTransfersPersonalNavigation {
     
+    case userAccount
 }

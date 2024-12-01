@@ -44,7 +44,10 @@ extension RootViewFactory {
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerSectionView,
                 makeOperationPickerView: makeOperationPickerView,
-                makeToolbarView: makePaymentsTransfersToolbarView,
+                makeToolbar: {
+                    
+                    makePaymentsTransfersToolbar(binder: binder)
+                },
                 makeTransfersView: makePaymentsTransfersTransfersView
             ),
             config: .iFora

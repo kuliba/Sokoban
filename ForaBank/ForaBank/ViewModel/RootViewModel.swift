@@ -664,16 +664,14 @@ extension PaymentsTransfersPersonalDomain.Binder {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
-        let toolbar = content.toolbar.hasDestination
         let flowHasDestination = Just(false)
         
-        return Publishers.CombineLatest4(
+        return Publishers.CombineLatest3(
             categoryPicker,
             operationPicker,
-            toolbar,
             flowHasDestination
         )
-        .map { $0 || $1 || $2 || $3 }
+        .map { $0 || $1 || $2 }
         .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
@@ -709,27 +707,6 @@ private extension OperationPickerDomain.Binder {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
-}
-
-private extension PayHubUI.PaymentsTransfersPersonalToolbar {
-    
-    var hasDestination: AnyPublisher<Bool, Never> {
-        
-        toolbarBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
-    }
-}
-
-private extension PaymentsTransfersPersonalToolbarDomain.Binder {
-    
-    var hasDestination: AnyPublisher<Bool, Never> {
-        
-        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
-    }
-}
-
-private extension PaymentsTransfersPersonalToolbarDomain.FlowDomain.State {
-    
-    var hasDestination: Bool { navigation != nil }
 }
 
 extension RootViewModel.RootActions {

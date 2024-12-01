@@ -74,7 +74,7 @@ private extension PaymentsTransfersSwitcher {
             return corporate.rootEventPublishers
             
         case let .personal(personal):
-            return []
+            return personal.rootEventPublishers
         }
     }
 }
@@ -92,6 +92,29 @@ private extension PaymentsTransfersCorporateDomain.Binder {
 }
 
 private extension PaymentsTransfersCorporateNavigation {
+    
+    var rootEvent: RootEvent? {
+        
+        switch self {
+        case .userAccount:
+            return .userAccount
+        }
+    }
+}
+
+private extension PaymentsTransfersPersonalDomain.Binder {
+    
+    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        let flowRootEventPublisher = flow.$state
+            .compactMap(\.navigation?.rootEvent)
+            .eraseToAnyPublisher()
+        
+        return [flowRootEventPublisher]
+    }
+}
+
+private extension PaymentsTransfersPersonalNavigation {
     
     var rootEvent: RootEvent? {
         

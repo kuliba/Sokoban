@@ -30,10 +30,6 @@ extension RootViewModelFactory {
         
         let operationPicker = makeOperationPicker(nanoServices: nanoServices)
         
-        // MARK: - Toolbar
-        
-        let toolbar = makePaymentsTransfersPersonalToolbar()
-        
         // MARK: - Transfers
         
         typealias TransfersDomain = PaymentsTransfersPersonalTransfersDomain
@@ -48,7 +44,6 @@ extension RootViewModelFactory {
         let content = Domain.Content(
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
-            toolbar: toolbar,
             transfers: transfers,
             reload: {
                 
@@ -58,10 +53,7 @@ extension RootViewModelFactory {
         )
         
         return compose(
-            getNavigation: { select, notify, completion in
-                
-                
-            },
+            getNavigation: getPaymentsTransfersPersonalNavigation,
             content: content,
             witnesses: witnesses()
         )
@@ -82,10 +74,9 @@ extension Domain.Content {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
-        Publishers.Merge4(
+        Publishers.Merge3(
             categoryPicker.eventPublisher,
             operationPicker.eventPublisher,
-            toolbar.eventPublisher,
             transfers.eventPublisher
         ).eraseToAnyPublisher()
     }
@@ -94,7 +85,6 @@ extension Domain.Content {
         
         categoryPicker.receiving()
         operationPicker.receiving()
-        toolbar.receiving()
         transfers.receiving()
     }
 }
@@ -145,36 +135,6 @@ extension PayHubUI.OperationPicker {
 }
 
 extension OperationPickerDomain.Binder {
-    
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
-        
-        flow.$state
-            .compactMap { _ in return nil }
-            .eraseToAnyPublisher()
-    }
-    
-    func receiving() {
-        
-        content.event(.select(nil))
-    }
-}
-
-// MARK: - PaymentsTransfersPersonalToolbar
-
-extension PayHubUI.PaymentsTransfersPersonalToolbar {
-    
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
-        
-        toolbarBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
-    }
-    
-    func receiving() {
-        
-        toolbarBinder?.receiving()
-    }
-}
-
-extension PaymentsTransfersPersonalToolbarDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
