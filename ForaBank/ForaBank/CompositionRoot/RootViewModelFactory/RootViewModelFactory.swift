@@ -44,7 +44,7 @@ final class RootViewModelFactory {
         mapScanResult: @escaping MapScanResult,
         resolveQR: @escaping ResolveQR,
         scanner: any QRScannerViewModel,
-        settings: RootViewModelFactorySettings = .iFora,
+        settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
     ) {
         self.model = model

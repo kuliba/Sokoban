@@ -145,7 +145,8 @@ struct RootView: View {
             
         case .userAccount(let viewModel):
             NavigationView {
-                rootViewFactory.makeUserAccountView(viewModel, .iFora)
+                
+                rootViewFactory.makeUserAccountView(viewModel)
             }
             
         case let .payments(paymentsViewModel):
@@ -444,7 +445,7 @@ private extension RootViewFactory {
         }
         
         return .init(
-            isCorporate: { false }, 
+            isCorporate: { false },
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _,_,_,_   in
@@ -459,18 +460,21 @@ private extension RootViewFactory {
                     viewModel: $0,
                     viewFactory: .init(
                         makeAnywayPaymentFactory: { _ in fatalError() },
-                        makeIconView: IconDomain.preview, 
+                        makeIconView: IconDomain.preview,
                         makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: .preview) },
+                        makeUserAccountView: {
+                            
+                            return .init(viewModel: $0, config: .preview, viewFactory: .preview)
+                        },
                         components: .preview
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                         makeHistoryButton: { .init(event: $0, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: $3) },
-                        makeRepeatButtonView: { _ in .init(action: {})}
+                        makeRepeatButtonView: { _ in .init(action: {}) }
                     ),
                     getUImage: { _ in nil }
                 )
@@ -478,7 +482,14 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview, viewFactory: .preview) },
+            makeUserAccountView: { _ in
+                
+                return .init(
+                    viewModel: .sample,
+                    config: .preview,
+                    viewFactory: .preview
+                )
+            },
             makeMarketShowcaseView: { _,_,_   in .none },
             components: .preview
         )

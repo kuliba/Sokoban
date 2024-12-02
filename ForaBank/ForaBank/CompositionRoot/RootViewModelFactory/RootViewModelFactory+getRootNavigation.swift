@@ -25,6 +25,9 @@ extension RootViewModelFactory {
         case .templates:
             makeTemplatesNode()
             
+        case .userAccount:
+            makeUserAccount()
+            
         case .utilityPayment:
             makeUtilityPayment()
         }
@@ -92,6 +95,16 @@ extension RootViewModelFactory {
             }
             
             return [outside]
+        }
+        
+        func makeUserAccount() {
+            
+            let userAccount = self.makeUserAccount { notify(.dismiss) }
+            
+            guard let userAccount
+            else { return completion(.failure(.makeUserAccountFailure)) }
+            
+            completion(.userAccount(userAccount))
         }
         
         func makeUtilityPayment() {
