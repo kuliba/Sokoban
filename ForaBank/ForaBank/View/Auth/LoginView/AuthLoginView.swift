@@ -33,7 +33,7 @@ struct AuthLoginView: View {
 }
 
 extension AuthLoginView {
-    func alert(forAlertType alertModelType: AlertModelType) -> SwiftUI.Alert {
+    func alert(forAlertModelType alertModelType: AlertModelType) -> SwiftUI.Alert {
         
         return viewModel.swiftUIAlert(forAlertModelType: alertModelType) {
             
