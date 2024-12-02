@@ -18,7 +18,7 @@ extension RootViewModelFactory {
     @inlinable
     func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonal {
+    ) -> PaymentsTransfersPersonalDomain.Binder {
         
         // MARK: - CategoryPicker
         
@@ -29,10 +29,6 @@ extension RootViewModelFactory {
         // MARK: - OperationPicker
         
         let operationPicker = makeOperationPicker(nanoServices: nanoServices)
-        
-        // MARK: - Toolbar
-        
-        let toolbar = makePaymentsTransfersPersonalToolbar()
         
         // MARK: - Transfers
         
@@ -48,7 +44,6 @@ extension RootViewModelFactory {
         let content = Domain.Content(
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
-            toolbar: toolbar,
             transfers: transfers,
             reload: {
                 
@@ -58,10 +53,7 @@ extension RootViewModelFactory {
         )
         
         return compose(
-            getNavigation: { select, notify, completion in
-                
-                
-            },
+            getNavigation: getPaymentsTransfersPersonalNavigation,
             content: content,
             witnesses: witnesses()
         )
@@ -78,14 +70,13 @@ extension RootViewModelFactory {
 
 // MARK: - Content
 
-extension Domain.Content {
+private extension Domain.Content {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
-        Publishers.Merge4(
+        Publishers.Merge3(
             categoryPicker.eventPublisher,
             operationPicker.eventPublisher,
-            toolbar.eventPublisher,
             transfers.eventPublisher
         ).eraseToAnyPublisher()
     }
@@ -94,14 +85,13 @@ extension Domain.Content {
         
         categoryPicker.receiving()
         operationPicker.receiving()
-        toolbar.receiving()
         transfers.receiving()
     }
 }
 
 // MARK: - CategoryPicker
 
-extension PayHubUI.CategoryPicker {
+private extension PayHubUI.CategoryPicker {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -114,7 +104,7 @@ extension PayHubUI.CategoryPicker {
     }
 }
 
-extension CategoryPickerSectionDomain.Binder {
+private extension CategoryPickerSectionDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -125,13 +115,13 @@ extension CategoryPickerSectionDomain.Binder {
     
     func receiving() {
         
-        content.event(.select(nil))
+        flow.event(.dismiss)
     }
 }
 
 // MARK: - OperationPicker
 
-extension PayHubUI.OperationPicker {
+private extension PayHubUI.OperationPicker {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -144,54 +134,35 @@ extension PayHubUI.OperationPicker {
     }
 }
 
-extension OperationPickerDomain.Binder {
+private extension OperationPickerDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
         flow.$state
-            .compactMap { _ in return nil }
+            .compactMap(\.select)
             .eraseToAnyPublisher()
     }
     
     func receiving() {
         
-        content.event(.select(nil))
+        flow.event(.dismiss)
     }
 }
 
-// MARK: - PaymentsTransfersPersonalToolbar
-
-extension PayHubUI.PaymentsTransfersPersonalToolbar {
+private extension OperationPickerDomain.FlowDomain.State {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var select: PaymentsTransfersPersonalSelect? {
         
-        toolbarBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
-    }
-    
-    func receiving() {
-        
-        toolbarBinder?.receiving()
-    }
-}
-
-extension PaymentsTransfersPersonalToolbarDomain.Binder {
-    
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
-        
-        flow.$state
-            .compactMap { _ in return nil }
-            .eraseToAnyPublisher()
-    }
-    
-    func receiving() {
-        
-        content.event(.select(nil))
+        switch navigation {
+        case .templates: return .outside(.templates)
+        default:         return nil
+        }
     }
 }
 
 // MARK: - TransfersPicker
 
-extension PayHubUI.TransfersPicker {
+private extension PayHubUI.TransfersPicker {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -204,7 +175,7 @@ extension PayHubUI.TransfersPicker {
     }
 }
 
-extension PaymentsTransfersPersonalTransfersDomain.Binder {
+private extension PaymentsTransfersPersonalTransfersDomain.Binder {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -215,6 +186,6 @@ extension PaymentsTransfersPersonalTransfersDomain.Binder {
     
     func receiving() {
         
-        content.event(.select(nil))
+        flow.event(.dismiss)
     }
 }

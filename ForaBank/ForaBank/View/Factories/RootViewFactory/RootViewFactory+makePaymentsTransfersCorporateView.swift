@@ -6,38 +6,51 @@
 //
 
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
 extension RootViewFactory {
     
     func makePaymentsTransfersCorporateView(
-        _ corporate: PaymentsTransfersCorporate
+        _ binder: PaymentsTransfersCorporateDomain.Binder
     ) -> some View {
         
-        ComposedPaymentsTransfersCorporateView(
-            corporate: corporate,
-            factory: .init(
-                makeContentView: {
-                    PaymentsTransfersCorporateContentView(
-                        content: corporate.content,
-                        factory: .init(
-                            makeBannerSectionView: makeBannerSectionView,
-                            makeRestrictionNoticeView: makeRestrictionNoticeView,
-                            makeToolbarView: makePaymentsTransfersCorporateToolbarView,
-                            makeTransfersSectionView: makeTransfersSectionView
-                        ),
-                        config: .iFora
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                PaymentsTransfersCorporateFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContentView: {
+                            
+                            makePaymentsTransfersCorporateContentView(binder)
+                        },
+                        makeFullScreenCoverView: makeFullScreenCoverView,
+                        makeDestinationView: makeDestinationView
                     )
-                },
-                makeFullScreenCoverView: { _ in
+                )
+            }
+        )
+    }
+    
+    private func makePaymentsTransfersCorporateContentView(
+        _ binder: PaymentsTransfersCorporateDomain.Binder
+    ) -> some View {
+        
+        PaymentsTransfersCorporateContentView(
+            content: binder.content,
+            factory: .init(
+                makeBannerSectionView: makeBannerSectionView,
+                makeRestrictionNoticeView: makeRestrictionNoticeView,
+                makeToolbarView: {
                     
-                    Text("TBD: FullScreenCoverView")
+                    makePaymentsTransfersCorporateToolbarView(binder)
                 },
-                makeDestinationView: { _ in
-                    
-                    Text("TBD: DestinationView")
-                }
-            )
+                makeTransfersSectionView: makeTransfersSectionView
+            ),
+            config: .iFora
         )
     }
     
@@ -46,15 +59,13 @@ extension RootViewFactory {
         DisableCorCardsView(text: .disableForCorCards)
     }
     
-    private func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
+    private func makePaymentsTransfersCorporateToolbarView(
+        _ binder: PaymentsTransfersCorporateDomain.Binder
+    ) -> some ToolbarContent {
         
-        ToolbarItem(placement: .topBarLeading) {
+        makeUserAccountToolbarButton {
             
-            HStack {
-                
-                Image(systemName: "person")
-                Text("TBD: Profile without QR")
-            }
+            binder.flow.event(.select(.userAccount))
         }
     }
     
@@ -68,5 +79,19 @@ extension RootViewFactory {
                 .foregroundColor(.white)
                 .font(.title3.bold())
         }
+    }
+    
+    private func makeDestinationView(
+        destination: PaymentsTransfersCorporateNavigation.Destination
+    ) -> some View {
+        
+        Text("TBD: DestinationView")
+    }
+    
+    private func makeFullScreenCoverView(
+        fullScreenCover: PaymentsTransfersCorporateNavigation.FullScreenCover
+    ) -> some View {
+        
+        Text("TBD: FullScreenCoverView")
     }
 }

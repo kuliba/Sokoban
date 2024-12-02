@@ -462,54 +462,16 @@ struct UserAccountButton: View {
     
     var body: some View {
         
-        Button(action: viewModel.action) {
-            
-            HStack {
-                
-                ZStack {
-                    
-                    if let avatar = viewModel.avatar {
-                        
-                        avatar
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                        
-                    } else {
-                        
-                        ZStack {
-                            
-                            Circle()
-                                .foregroundColor(.bgIconGrayLightest)
-                                .frame(width: 40, height: 40)
-                            
-                            Image.ic24User
-                                .renderingMode(.template)
-                                .foregroundColor(.iconGray)
-                        }
-                    }
-                    
-                    ZStack{
-                        
-                        Circle()
-                            .foregroundColor(.iconWhite)
-                            .frame(width: 20, height: 20)
-                        
-                        viewModel.logo
-                            .renderingMode(.original)
-                    }
-                    .offset(x: 18, y: -14)
-                    
-                }
-                
-                Text(viewModel.name)
-                    .foregroundColor(.textSecondary)
-                    .font(.textH4R16240())
-                    .accessibilityIdentifier("mainUserName")
-            }
-        }
-        .accessibilityIdentifier("mainUserButton")
+        Button(action: viewModel.action, label: label)
+            .accessibilityIdentifier("mainUserButton")
+    }
+}
+
+private extension UserAccountButton {
+    
+    func label() -> some View {
+        
+        UserAccountButtonLabel(avatar: viewModel.avatar, name: viewModel.name, config: .prod)
     }
 }
 

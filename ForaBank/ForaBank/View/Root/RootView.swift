@@ -6,6 +6,7 @@
 //
 
 import ActivateSlider
+import Combine
 import FooterComponent
 import InfoComponent
 import LandingUIComponent
@@ -202,7 +203,7 @@ extension PaymentsTransfersSwitcher: Refreshable {
     }
 }
 
-extension PaymentsTransfersCorporate {
+extension PaymentsTransfersCorporateDomain.Binder {
     
     func refresh() {
         
@@ -210,7 +211,7 @@ extension PaymentsTransfersCorporate {
     }
 }
 
-extension PaymentsTransfersPersonal {
+extension PaymentsTransfersPersonalDomain.Binder {
     
     func refresh() {
         
@@ -235,6 +236,7 @@ private extension RootView {
                 personalView: rootViewFactory.makePaymentsTransfersPersonalView,
                 undefinedView: { SpinnerView(viewModel: .init()) }
             )
+            .padding(.top)
         }
     }
 }
@@ -482,16 +484,20 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: { _ in
+            makeUserAccountView: {
                 
                 return .init(
-                    viewModel: .sample,
+                    viewModel: $0,
                     config: .preview,
                     viewFactory: .preview
                 )
             },
             makeMarketShowcaseView: { _,_,_   in .none },
-            components: .preview
+            components: .preview,
+            makeUpdatingUserAccountButtonLabel: {
+                
+                .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
+            }
         )
     }
 }
@@ -516,4 +522,9 @@ private struct IgnoringSafeArea: ViewModifier {
                 .edgesIgnoringSafeArea(edgeSet)
         } else { content }
     }
+}
+
+private extension UserAccountButtonLabelConfig {
+    
+    static let preview = prod
 }
