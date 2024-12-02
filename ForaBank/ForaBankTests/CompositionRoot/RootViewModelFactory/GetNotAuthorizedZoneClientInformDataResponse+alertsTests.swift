@@ -24,26 +24,48 @@ final class GetNotAuthorizedZoneClientInformDataResponse_alertsTests: XCTestCase
         XCTAssertNoDiff(response.alerts?.updateAlert, nil)
     }
     
-//    func test_shouldReturnWithUpdateAlert() {
-//        
-//        let update = makeUpdate()
-//        let response: Result = .success(makeResponse(
-//            list: [makeData(update: update)]
-//        ))
-//        
-//        XCTAssertNoDiff(response.alerts?.informAlerts, [])
-//        XCTAssertNoDiff(response.alerts?.updateAlert, .init(id: <#T##UUID#>, title: <#T##String#>, text: <#T##String#>, link: <#T##String?#>, version: <#T##String?#>, actionType: <#T##ClientInformActionType#>))
-//        XCTAssertNoDiff(response.alerts?.updateAlert?.title, update.
-//    }
+    func test_shouldReturnWithUpdateAlert() {
+        
+        let update = makeUpdate()
+        let response: Result = .success(makeResponse(
+            list: [makeData(update: update)]
+        ))
+        
+        let updateResponse = response.alerts?.updateAlert
+
+        XCTAssertNoDiff(updateResponse?.link, update.link)
+        XCTAssertNoDiff(updateResponse?.version, update.version)
+        XCTAssertNoDiff(updateResponse?.actionType, ClientInformActionType(updateType: update.type))
+    }
     
     func test_shouldReturnListOfOne() {
         
-        XCTFail()
+        let informData = makeData()
+        let response: Result = .success(makeResponse(
+            list: [informData]
+        ))
+        
+        let informResponse = response.alerts?.informAlerts
+        
+        XCTAssertNoDiff(informResponse?.first?.title, informData.title)
+        
+        XCTAssertEqual(informResponse?.count, 1)
     }
     
     func test_shouldReturnListOfTwo() {
         
-        XCTFail()
+        let firstInformData = makeData()
+        let secondInformData = makeData()
+        let response: Result = .success(makeResponse(
+            list: [firstInformData, secondInformData]
+        ))
+        
+        let informResponse = response.alerts?.informAlerts
+        
+        XCTAssertNoDiff(informResponse?[0].title, firstInformData.title)
+        XCTAssertNoDiff(informResponse?[1].title, secondInformData.title)
+
+        XCTAssertEqual(informResponse?.count, 2)
     }
     
     // MARK: - Helpers
@@ -67,7 +89,7 @@ final class GetNotAuthorizedZoneClientInformDataResponse_alertsTests: XCTestCase
     }
     
     private func makeData(
-        authBlocking: Bool = true,
+        authBlocking: Bool = false,
         title: String = anyMessage(),
         text: String = anyMessage(),
         update: Update? = nil
@@ -77,7 +99,7 @@ final class GetNotAuthorizedZoneClientInformDataResponse_alertsTests: XCTestCase
     }
     
     private func makeUpdate(
-        type: String = anyMessage(),
+        type: String = "required",
         platform: String = anyMessage(),
         version: String = anyMessage(),
         link: String = anyMessage()
