@@ -54,9 +54,7 @@ public struct ClientInformListView: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
-            .frame(height: maxHeight < contentHeight ?
-                   maxHeight + config.paddings.bottom :
-                    contentHeight + config.paddings.bottom)
+            .frame(height: maxHeight < contentHeight ? maxHeight : contentHeight)
         }
     }
     
@@ -95,6 +93,7 @@ public struct ClientInformListView: View {
                 multipleInfoView(multipleInfo)
             }
         }
+        .padding(.bottom, config.paddings.bottom)
     }
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
@@ -125,7 +124,7 @@ public struct ClientInformListView: View {
                 titleView(multipleInfo.label.title)
             }
             
-            VStack(alignment: .leading, spacing: config.sizes.spacing) {
+            LazyVStack(alignment: .leading, spacing: config.sizes.spacing) {
                 
                 ForEach(multipleInfo.items) { item in
                     
