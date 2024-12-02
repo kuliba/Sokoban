@@ -61,57 +61,55 @@ extension Result where Success ==  RemoteServices.ResponseMapper.GetNotAuthorize
     
     var alerts: ClientInformAlerts? {
         
-        switch self {
-        case .failure:
-            return nil
+        try? self.map(\.alerts).get()
+    }
+}
+
+private extension RemoteServices.ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
+    
+    var alerts: ClientInformAlerts? {
+        
+        var alerts = ClientInformAlerts(id: .init(), informAlerts: [], updateAlert: nil)
+        
+        list.forEach {
             
-        case let .success(response):
-            
-            var alerts = ClientInformAlerts(id: .init(), informAlerts: [], updateAlert: nil)
-            
-            response.list.forEach {
+            if $0.update == nil && $0.authBlocking == false {
                 
-                if $0.update == nil && $0.authBlocking == false {
-                    
-                    alerts.informAlerts.append(
-                        .init(
-                            id: .init(),
-                            title: $0.title,
-                            text: $0.text
-                        )
+                alerts.informAlerts.append(
+                    .init(
+                        id: .init(),
+                        title: $0.title,
+                        text: $0.text
                     )
-                }
+                )
+            }
+        }
+        
+        
+        if let alert = list.first(where: { $0.authBlocking || $0.update != nil }) {
+            
+            let actionType: ClientInformActionType
+            
+            if alert.authBlocking {
+                actionType = .authBlocking
+            } else {
+                
+                guard let typeString = alert.update?.type,
+                      let action = ClientInformActionType(updateType: typeString)
+                else { return nil }
+                
+                actionType = action
             }
             
-            
-            if let alert = response.list.first(where: {
-                $0.authBlocking || $0.update != nil
-            }) {
-                
-                let actionType: ClientInformActionType
-                
-                if alert.authBlocking {
-                    actionType = .authBlocking
-                } else {
-                    
-                    guard let typeString = alert.update?.type,
-                          let action = ClientInformActionType(updateType: typeString)
-                    else { return nil }
-                    
-                    actionType = action
-                }
-                
-                alerts.updateAlert = .init(
-                    id: .init(),
-                    title: alert.title,
-                    text: alert.text,
-                    link: alert.update?.link,
-                    version: alert.update?.version,
-                    actionType: actionType
-                )}
-            
-            
-            return alerts
-        }
+            alerts.updateAlert = .init(
+                id: .init(),
+                title: alert.title,
+                text: alert.text,
+                link: alert.update?.link,
+                version: alert.update?.version,
+                actionType: actionType
+            )}
+        
+        return alerts
     }
 }
