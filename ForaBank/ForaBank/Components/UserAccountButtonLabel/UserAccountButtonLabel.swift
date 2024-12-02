@@ -48,7 +48,7 @@ private extension UserAccountButtonLabel {
         avatar
             .resizable()
             .scaledToFill()
-            .frame(config.avatarFrame)
+            .frame(config.avatar.frame)
             .clipShape(Circle())
     }
     
@@ -57,10 +57,10 @@ private extension UserAccountButtonLabel {
         ZStack {
             
             Circle()
-                .foregroundColor(config.avatarForegroundColor)
-                .frame(config.avatarFrame)
+                .foregroundColor(config.avatar.color)
+                .frame(config.avatar.frame)
             
-            config.avatarImage
+            config.avatar.image
                 .renderingMode(.template)
                 .foregroundColor(.iconGray)
         }
@@ -71,12 +71,12 @@ private extension UserAccountButtonLabel {
         ZStack{
             
             Circle()
-                .foregroundColor(config.logoForegroundColor)
-                .frame(config.logoFrame)
+                .foregroundColor(config.logo.color)
+                .frame(config.logo.frame)
             
-            config.logo
+            config.logo.image
                 .renderingMode(.original)
         }
-        .offset(config.logoOffset)
+        .offset(config.logo.offset)
     }
 }
