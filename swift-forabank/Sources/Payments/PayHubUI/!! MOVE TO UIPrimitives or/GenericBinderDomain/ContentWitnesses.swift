@@ -7,31 +7,29 @@
 
 import Combine
 
-import Combine
-
-/// A container that holds emitting and receiving functions for content of type `Content`.
+/// A container that holds emitting and dismissing functions for content of type `Content`.
 ///
 /// The `emitting` function produces a publisher of `Select` values given a `Content`.
-/// The `receiving` function produces an action (closure) to be performed given a `Content`.
+/// The `dismissing` function produces an action (closure) to be performed given a `Content`.
 public struct ContentWitnesses<Content, Select> {
     
     /// A function that takes `Content` and returns a publisher emitting `Select` values.
     public let emitting: Emitting
     
     /// A function that takes `Content` and returns an action (closure) to be executed.
-    public let receiving: Receiving
+    public let dismissing: Dismissing
     
-    /// Initializes a new `ContentWitnesses` with the provided emitting and receiving functions.
+    /// Initializes a new `ContentWitnesses` with the provided emitting and dismissing functions.
     ///
     /// - Parameters:
     ///   - emitting: A function that takes `Content` and returns a publisher emitting `Select` values.
-    ///   - receiving: A function that takes `Content` and returns an action (closure) to be executed.
+    ///   - dismissing: A function that takes `Content` and returns an action (closure) to be executed.
     public init(
         emitting: @escaping Emitting,
-        receiving: @escaping Receiving
+        dismissing: @escaping Dismissing
     ) {
         self.emitting = emitting
-        self.receiving = receiving
+        self.dismissing = dismissing
     }
 }
 
@@ -42,23 +40,23 @@ public extension ContentWitnesses {
     /// The function takes a `Content` and returns a publisher emitting `Select` values.
     typealias Emitting = (Content) -> AnyPublisher<Select, Never>
     
-    /// A typealias for the receiving function.
+    /// A typealias for the dismissing function.
     ///
     /// The function takes a `Content` and returns an action (closure) that can be executed.
-    typealias Receiving = (Content) -> () -> Void
+    typealias Dismissing = (Content) -> () -> Void
 }
 
 public extension ContentWitnesses {
     
     /// Merges the current `ContentWitnesses` with another one.
     ///
-    /// The resulting `ContentWitnesses` will combine the emitting and receiving functions of both instances.
+    /// The resulting `ContentWitnesses` will combine the emitting and dismissing functions of both instances.
     ///
     /// - Parameter other: Another `ContentWitnesses` to merge with.
     mutating func merge(with other: Self) {
         
         let emitting = emitting
-        let receiving = receiving
+        let dismissing = dismissing
         
         self = .init(
             emitting: { content in
@@ -66,10 +64,10 @@ public extension ContentWitnesses {
                     .merge(with: other.emitting(content))
                     .eraseToAnyPublisher()
             },
-            receiving: { content in
+            dismissing: { content in
                 return {
-                    receiving(content)()
-                    other.receiving(content)()
+                    dismissing(content)()
+                    other.dismissing(content)()
                 }
             }
         )
@@ -78,14 +76,21 @@ public extension ContentWitnesses {
 
 public extension ContentWitnesses {
     
+    /// Initializes a new `ContentWitnesses` with the provided emitting and dismissing functions.
+    ///
+    /// This initializer allows the emitting function to use a custom publisher type.
+    ///
+    /// - Parameters:
+    ///   - emitting: A function that takes `Content` and returns a publisher emitting `Select` values.
+    ///   - dismissing: A function that takes `Content` and returns an action (closure) to be executed.
     init<P: Publisher>(
         emitting: @escaping (Content) -> P,
-        receiving: @escaping Receiving
+        dismissing: @escaping Dismissing
     ) where P.Output == Select, P.Failure == Never {
         
         self.init(
             emitting: { emitting($0).eraseToAnyPublisher() },
-            receiving: receiving
+            dismissing: dismissing
         )
     }
 }

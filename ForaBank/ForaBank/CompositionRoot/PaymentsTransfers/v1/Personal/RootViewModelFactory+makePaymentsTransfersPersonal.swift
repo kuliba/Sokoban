@@ -23,7 +23,7 @@ extension RootViewModelFactory {
             content: makePaymentsTransfersPersonalContent(nanoServices),
             witnesses: .init(
                 emitting: { $0.eventPublisher },
-                receiving: { $0.receiving }
+                dismissing: { $0.dismiss }
             )
         )
     }
@@ -42,11 +42,11 @@ private extension PaymentsTransfersPersonalDomain.Content {
         ).eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        categoryPicker.receiving()
-        operationPicker.receiving()
-        transfers.receiving()
+        categoryPicker.dismiss()
+        operationPicker.dismiss()
+        transfers.dismiss()
     }
 }
 
@@ -59,9 +59,9 @@ private extension PayHubUI.CategoryPicker {
         sectionBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        sectionBinder?.receiving()
+        sectionBinder?.dismiss()
     }
 }
 
@@ -74,7 +74,7 @@ private extension CategoryPickerSectionDomain.Binder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
         flow.event(.dismiss)
     }
@@ -89,9 +89,9 @@ private extension PayHubUI.OperationPicker {
         operationBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        operationBinder?.receiving()
+        operationBinder?.dismiss()
     }
 }
 
@@ -104,7 +104,7 @@ private extension OperationPickerDomain.Binder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
         flow.event(.dismiss)
     }
@@ -130,9 +130,9 @@ private extension PayHubUI.TransfersPicker {
         transfersBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        transfersBinder?.receiving()
+        transfersBinder?.dismiss()
     }
 }
 
@@ -145,7 +145,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
         flow.event(.dismiss)
     }

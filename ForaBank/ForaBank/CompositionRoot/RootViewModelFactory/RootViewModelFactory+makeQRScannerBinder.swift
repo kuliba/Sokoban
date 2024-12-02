@@ -202,7 +202,7 @@ where Content == QRScannerModel,
         
         return .init(
             emitting: { $0.selectPublisher },
-            receiving: { content in { content.event(.reset) }}
+            dismissing: { content in { content.event(.reset) }}
         )
     }
 }

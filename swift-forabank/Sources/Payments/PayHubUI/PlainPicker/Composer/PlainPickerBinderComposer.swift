@@ -37,8 +37,8 @@ public extension PlainPickerBinderComposer {
             makeContent: { content },
             schedulers: schedulers,
             witnesses: .init(
-                emitting: { $0.$state.compactMap(\.selection).eraseToAnyPublisher() },
-                receiving: { content in { content.event(.select(nil)) }}
+                emitting: { $0.$state.compactMap(\.selection) },
+                dismissing: { content in { content.event(.select(nil)) }}
             )
         )
     }
