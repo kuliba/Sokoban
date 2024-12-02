@@ -16,7 +16,7 @@ extension RootViewModel {
         return Publishers.MergeMany([
             rootRootEventPublisher,
             mainViewRootEventPublisher,
-            paymentsTransfersRootEventPublishers
+            paymentsTransfersRootEventPublisher
         ])
         .eraseToAnyPublisher()
     }
@@ -31,7 +31,7 @@ extension RootViewModel {
         tabsViewModel.mainViewModel.rootEventPublisher
     }
     
-    private var paymentsTransfersRootEventPublishers: AnyPublisher<RootEvent, Never> {
+    private var paymentsTransfersRootEventPublisher: AnyPublisher<RootEvent, Never> {
         
         switch tabsViewModel.paymentsModel {
         case let .legacy(legacy):
@@ -220,7 +220,6 @@ private extension PaymentsTransfersPersonalDomain.Binder {
     private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         let flowRootEventPublisher = flow.$state
-            .handleEvents(receiveOutput: { print("====", $0) })
             .compactMap(\.navigation?.rootEvent)
             .eraseToAnyPublisher()
         
@@ -233,6 +232,9 @@ private extension PaymentsTransfersPersonalNavigation {
     var rootEvent: RootEvent? {
         
         switch self {
+        case .templates:
+            return .templates
+            
         case .userAccount:
             return .userAccount
         }

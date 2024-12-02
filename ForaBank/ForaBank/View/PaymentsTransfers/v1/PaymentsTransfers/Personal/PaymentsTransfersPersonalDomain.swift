@@ -32,5 +32,6 @@ enum PaymentsTransfersPersonalSelect: Equatable {
 
 enum PaymentsTransfersPersonalNavigation {
     
+    case templates
     case userAccount
 }

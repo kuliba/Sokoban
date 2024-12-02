@@ -10,6 +10,13 @@ import XCTest
 
 final class RootViewModelFactory_getPaymentsTransfersPersonalNavigationTests: RootViewModelFactoryTests {
     
+    // MARK: - templates
+    
+    func test_templates_shouldDeliverTemplates() {
+        
+        expect(.outside(.templates), toDeliver: .templates)
+    }
+    
     // MARK: - userAccount
     
     func test_userAccount_shouldDeliverUserAccount() {
