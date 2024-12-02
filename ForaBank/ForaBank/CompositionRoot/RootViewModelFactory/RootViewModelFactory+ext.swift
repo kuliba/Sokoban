@@ -461,7 +461,7 @@ extension RootViewModelFactory {
         model.sessionState
             .map(\.isActive)
             .filter { $0 }
-            .removeDuplicates()
+            .dropFirst()
             .sink { [weak self] _ in self?.updateAlerts() }
             .store(in: &bindings)
         
