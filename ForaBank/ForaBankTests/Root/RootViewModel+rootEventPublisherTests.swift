@@ -74,11 +74,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     func test_shouldEmitUserAccountOnPaymentsTransfersCorporateUserAccountSelect() throws {
         
-        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
-        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
-            hasCorporateCardsOnlySubject: hasCorporateCardsOnlySubject
-        )))
-        hasCorporateCardsOnlySubject.send(true)
+        let (sut, spy) = makeSUTWithV1(hasCorporateCardsOnly: true)
         
         sut.paymentsTransfersCorporateSelect(.userAccount)
         
@@ -87,18 +83,31 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     func test_shouldEmitUserAccountOnPaymentsTransfersPersonalUserAccountSelect() throws {
         
-        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
-        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
-            hasCorporateCardsOnlySubject: hasCorporateCardsOnlySubject
-        )))
-        hasCorporateCardsOnlySubject.send(false)
-
+        let (sut, spy) = makeSUTWithV1(hasCorporateCardsOnly: false)
+        
         sut.paymentsTransfersPersonalSelect(.outside(.userAccount))
         
         XCTAssertNoDiff(spy.values, [.userAccount])
     }
     
     // MARK: - Helpers
+    
+    private func makeSUTWithV1(
+        hasCorporateCardsOnly: Bool = false,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: RootViewModel,
+        spy: Spy
+    ) {
+        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
+        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
+            hasCorporateCardsOnlySubject: hasCorporateCardsOnlySubject
+        )))
+        hasCorporateCardsOnlySubject.send(hasCorporateCardsOnly)
+        
+        return (sut, spy)
+    }
     
     private func makeSwitcher(
         hasCorporateCardsOnlySubject: PassthroughSubject<Bool, Never>
