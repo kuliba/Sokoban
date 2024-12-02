@@ -14,7 +14,6 @@ import Fetcher
 import ForaTools
 import Foundation
 import GenericRemoteService
-import GetClientInformDataServices
 import LandingMapping
 import LandingUIComponent
 import ManageSubscriptionsUI
@@ -46,15 +45,7 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
-        func performOrWaitForAuthorized(
-            _ work: @escaping () -> Void
-        ) {
-            bindings.insert(model.performOrWaitForAuthorized(work))
-        }
-        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
-        
-        let notAuthorizedHTTPClient = HTTPFactory.cachelessLoggingNoSharedCookiesURLSessionHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
@@ -421,7 +412,7 @@ extension RootViewModelFactory {
             }
         }
         
-        performOrWaitForAuthorized {
+        model.performOrWaitForAuthorized {
             
                 createGetAuthorizedZoneClientInformData {
                     
@@ -437,6 +428,7 @@ extension RootViewModelFactory {
                     _ = createGetAuthorizedZoneClientInformData
                 }
         }
+        .store(in: &bindings)
         
         func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
         
@@ -835,13 +827,6 @@ private extension RootViewModelFactory {
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
         
-        let tabsViewModel = TabsViewModel(
-            mainViewModel: mainViewModel,
-            paymentsModel: paymentsModel,
-            chatViewModel: chatViewModel,
-            marketShowcaseBinder: marketShowcaseBinder
-        )
-        
         func shouldUpdateVersion(updateAlert: ClientInformAlerts.UpdateAlert) ->  Bool {
             
             guard let version: String = updateAlert.version else { return false }
@@ -849,15 +834,22 @@ private extension RootViewModelFactory {
             return version.compareVersion(to: Bundle.main.appVersionShort) == .orderedDescending
         }
         
+        let tabsViewModel = TabsViewModel(
+            mainViewModel: mainViewModel,
+            paymentsModel: paymentsModel,
+            chatViewModel: chatViewModel,
+            marketShowcaseBinder: marketShowcaseBinder
+        )
+        
         return .init(
-            fastPaymentsFactory: fastPaymentsFactory, 
+            fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
-            showLoginAction: showLoginAction, 
+            showLoginAction: showLoginAction,
             landingServices: landingServices,
             mainScheduler: schedulers.main
         )
