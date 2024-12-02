@@ -11,8 +11,6 @@ import Foundation
 import PayHub
 import PayHubUI
 
-private typealias Domain = PaymentsTransfersPersonalDomain
-
 extension RootViewModelFactory {
     
     @inlinable
@@ -20,57 +18,20 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonalDomain.Binder {
         
-        // MARK: - CategoryPicker
-        
-        let categoryPicker = makeCategoryPickerSection(
-            nanoServices: nanoServices
-        )
-        
-        // MARK: - OperationPicker
-        
-        let operationPicker = makeOperationPicker(nanoServices: nanoServices)
-        
-        // MARK: - Transfers
-        
-        typealias TransfersDomain = PaymentsTransfersPersonalTransfersDomain
-        
-        let transfers = makeTransfers(
-            buttonTypes: TransfersDomain.ButtonType.allCases,
-            makeQRModel: makeQRScannerModel
-        )
-        
-        // MARK: - PaymentsTransfers
-        
-        let content = Domain.Content(
-            categoryPicker: categoryPicker,
-            operationPicker: operationPicker,
-            transfers: transfers,
-            reload: {
-                
-                categoryPicker.content.event(.reload)
-                operationPicker.content.event(.reload)
-            }
-        )
-        
         return compose(
             getNavigation: getPaymentsTransfersPersonalNavigation,
-            content: content,
-            witnesses: witnesses()
-        )
-    }
-    
-    private func witnesses() -> Domain.Witnesses {
-        
-        return .init(
-            emitting: { $0.eventPublisher },
-            receiving: { $0.receiving }
+            content: makePaymentsTransfersPersonalContent(nanoServices),
+            witnesses: .init(
+                emitting: { $0.eventPublisher },
+                receiving: { $0.receiving }
+            )
         )
     }
 }
 
 // MARK: - Content
 
-private extension Domain.Content {
+private extension PaymentsTransfersPersonalDomain.Content {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         

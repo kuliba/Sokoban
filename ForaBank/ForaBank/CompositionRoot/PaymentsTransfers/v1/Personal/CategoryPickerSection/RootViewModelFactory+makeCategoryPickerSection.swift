@@ -16,7 +16,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerSection(
-        nanoServices: PaymentsTransfersPersonalNanoServices
+        _ nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
         
         let placeholderCount = settings.categoryPickerPlaceholderCount

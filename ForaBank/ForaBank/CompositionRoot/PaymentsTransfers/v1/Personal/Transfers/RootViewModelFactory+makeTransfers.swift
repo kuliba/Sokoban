@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeTransfers(
-        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
+        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType] = PaymentsTransfersPersonalTransfersDomain.ButtonType.allCases,
         makeQRModel: @escaping () -> QRScannerModel
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         

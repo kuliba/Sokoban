@@ -26,7 +26,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationPicker(
-        nanoServices: PaymentsTransfersPersonalNanoServices
+        _ nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> OperationPickerDomain.Binder {
         
         let content = composeLoadablePickerModel(
