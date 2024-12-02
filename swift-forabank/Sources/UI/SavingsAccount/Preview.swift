@@ -103,9 +103,11 @@ extension NumberFormatter {
     static func preview() -> NumberFormatter {
         
         let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 0
-        
+        formatter.currencySymbol = ""
+
         return formatter
     }
 }
@@ -180,7 +182,13 @@ extension OrderSavingsAccountConfig {
 
 extension SavingsAccountDetails {
     
-    static let preview: Self = .init(progress: 0.8)
+    static let preview: Self = .init(
+        currentInterest: 22400,
+        minBalance: 8000,
+        paidInterest: 11134056.77,
+        progress: 0.8, 
+        currencyCode: "₽"
+    )
 }
 
 extension SavingsAccountDetailsConfig {
@@ -194,7 +202,6 @@ extension SavingsAccountDetailsConfig {
             shimmering: .background),
         cornerRadius: 12,
         days: .init(textFont: .system(size: 12), textColor: .gray),
-        header: .init(text: "Детали счета", config: .init(textFont: .system(size: 20), textColor: .white)),
         heights: .init(
             big: 340,
             header: 24,
@@ -205,6 +212,8 @@ extension SavingsAccountDetailsConfig {
         ),
         info: .init(systemName: "info.circle"),
         interestDate: .init(textFont: .system(size: 16), textColor: .white),
+        interestTitle: .init(textFont: .system(size: 14), textColor: .gray),
+        interestSubtitle: .init(textFont: .system(size: 16), textColor: .white),
         padding: 16,
         period: .init(textFont: .system(size: 12), textColor: .gray),
         progressColors: [
@@ -213,6 +222,11 @@ extension SavingsAccountDetailsConfig {
             .buttonPrimary
         ],
         texts: .init(
+            currentInterest: "Проценты текущего периода",
+            header: .init(text: "Детали счета", config: .init(textFont: .system(size: 20), textColor: .white)),
+            minBalance: "Минимальный остаток текущего периода",
+            paidInterest: "Выплачено всего процентов", 
+            per: " / мес",
             days: "5 дней",
             interestDate: "Дата выплаты % - 31 мая",
             period: "Отчетный период 1 мая - 31 мая"
