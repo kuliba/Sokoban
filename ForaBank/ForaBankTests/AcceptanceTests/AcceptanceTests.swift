@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import PayHubUI
+import ViewInspector
 import XCTest
 
 class AcceptanceTests: QRNavigationTests {
@@ -42,13 +43,17 @@ class AcceptanceTests: QRNavigationTests {
         
         init(
             featureFlags: FeatureFlags = .active,
+            httpClient: any HTTPClient = HTTPClientSpy(),
             dismiss: @escaping () -> Void = {},
+            model: Model = .mockWithEmptyExcept(),
             scanResult: QRModelResult = .unknown,
             scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
             schedulers: Schedulers = .immediate
         ) {
             self.rootComposer = .init(
+                httpClient: httpClient,
                 mapScanResult: { _, completion in completion(scanResult) },
+                model: model,
                 scanner: scanner,
                 schedulers: schedulers
             )
@@ -61,7 +66,7 @@ class AcceptanceTests: QRNavigationTests {
             )
         }
         
-        func launch() throws -> RootViewBinderView {
+        func launch() throws -> RootBinderView {
             
             let rootViewController = RootViewHostingViewController(
                 with: binder,
@@ -88,5 +93,19 @@ class AcceptanceTests: QRNavigationTests {
                 XCTFail("Expected Scan QR", file: file, line: line)
             }
         }
+    }
+}
+
+extension RootBinderView {
+    
+    @available(iOS 16.0, *)
+    func rootViewDestination(
+        for id: ElementIDs.RootView.Destination
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        
+        try inspect()
+            .find(RootView.self)
+            .background().navigationLink() // we are using custom `View.navigationDestination(_:item:content:)
+            .find(viewWithAccessibilityIdentifier: id.rawValue)
     }
 }

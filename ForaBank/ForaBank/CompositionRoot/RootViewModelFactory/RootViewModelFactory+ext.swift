@@ -8,7 +8,7 @@
 import AnywayPaymentBackend
 import CalendarUI
 import CodableLanding
-import CollateralLoanLandingShowCaseBackend
+import CollateralLoanLandingGetShowcaseBackend
 import Combine
 import Fetcher
 import ForaTools
@@ -62,9 +62,7 @@ extension RootViewModelFactory {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         }
         
-        if marketplaceFlag.isActive {
-            model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
-        }
+        model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         
         if collateralLoanLandingFlag.isActive {
             model.featureFlags.productsOpenLoanURL = nil
@@ -84,12 +82,7 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fastPaymentsFactory = FastPaymentsFactory(
-            fastPaymentsViewModel: .new({
-                
-                self.makeNewFastPaymentsViewModel()
-            })
-        )
+        let fastPaymentsFactory = makeFastPaymentsFactory()
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,
@@ -97,16 +90,8 @@ extension RootViewModelFactory {
             logger: logger
         )
         
-        let userAccountNavigationStateManager = makeNavigationStateManager(
-            modelEffectHandler: .init(model: model),
-            otpServices: .init(httpClient, logger),
-            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
-            fastPaymentsFactory: fastPaymentsFactory,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
-            duration: 60
+        let userAccountNavigationStateManager = makeUserAccountNavigationStateManager(
+            fastPaymentsFactory: fastPaymentsFactory
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -285,7 +270,7 @@ extension RootViewModelFactory {
             model: model,
             scheduler: schedulers.main
         )
-                
+        
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel()
         
         let getLanding = nanoServiceComposer.compose(
@@ -307,10 +292,7 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
@@ -318,8 +300,8 @@ extension RootViewModelFactory {
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
+            createRequest: RequestFactory.createGetShowcaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
         
         let paymentsTransfersPersonalNanoServices = composePaymentsTransfersPersonalNanoServices()
@@ -497,9 +479,6 @@ extension RootViewModelFactory {
         
         bindings.formUnion(marketBinder.bind())
         
-        let getRootNavigation = makeGetRootNavigation(
-            makeQRScanner: makeQRScannerBinder
-        )
         let witness = RootViewDomain.ContentWitnesses(
             isFlagActive: paymentsTransfersFlag == .active
         )
@@ -508,11 +487,55 @@ extension RootViewModelFactory {
             bindings: bindings,
             dismiss: dismiss,
             getNavigation: getRootNavigation,
+            bindOutside: { $1.bindOutside(to: $0, on: self.schedulers.main) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+private extension RootViewDomain.Flow {
+    
+    func bindOutside(
+        to content: RootViewDomain.Content,
+        on scheduler: AnySchedulerOfDispatchQueue
+    ) -> Set<AnyCancellable> {
+        
+        let outside = $state.compactMap(\.outside)
+            .debounce(for: .milliseconds(500), scheduler: scheduler)
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                guard let self else { return }
+                
+                switch $0 {
+                case let .productProfile(productID):
+                    content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                    
+                case let .tab(tab):
+                    switch tab {
+                    case .main:
+                        content.selected = .main
+
+                    case .payments:
+                        content.selected = .payments
+                    }
+                }
+            }
+        
+        return [outside]
+    }
+}
+
+private extension FlowState<RootViewNavigation> {
+    
+    var outside: RootViewOutside? {
+        
+        guard case let .outside(outside) = navigation else { return nil }
+        
+        return outside
     }
 }
 
@@ -842,28 +865,6 @@ private extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
-
-private extension UserAccountModelEffectHandler {
-    
-    convenience init(model: Model) {
-        
-        self.init(
-            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
-                
-                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
-            },
-            deleteRequest: {
-                
-                model.action.send(ModelAction.ClientInfo.Delete.Request())
-            },
-            exit: {
-                
-                model.auth.value = .unlockRequiredManual
-            }
-        )
-    }
-}
 
 private extension MarketShowcaseDomain.ContentError {
     
