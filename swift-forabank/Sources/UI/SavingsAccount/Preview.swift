@@ -79,6 +79,11 @@ extension Color {
     
     static let gray30: Self = .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3)
     static let background: Self = Color(red: 0.76, green: 0.76, blue: 0.76)
+    static let textSecondary: Self = Color(red: 28/255, green: 28/255, blue: 28/255)
+    static let textPrimary: Self = Color(red: 61/255, green: 61/255, blue: 69/255)
+    static let systemColorActive: Self = Color(red: 34/255, green: 193/255, blue: 131/255)
+    static let new: Self = Color(red: 255/255, green: 187/255, blue: 54/255) //FFBB36
+    static let buttonPrimary: Self = Color(red: 255/255, green: 54/255, blue: 54/255) //FF3636
 }
 
 extension OrderSavingsAccount {
@@ -139,7 +144,7 @@ extension OrderSavingsAccountConfig {
             imageSize: .init(width: 24, height: 24),
             title: .init(text: "Доход",
                          config: .init(textFont: .body, textColor: .gray)),
-            subtitle: .init(textFont: .headline, textColor: .black)), 
+            subtitle: .init(textFont: .headline, textColor: .black)),
         linkableTexts: .init(checkBoxSize: .init(width: 24, height: 24), condition: "Я соглашаюсь с <u>Условиями</u> и ", tariff: "<u>Тарифами</u>"),
         openButton: .init(
             background: .init(active: .red, inactive: .gray),
@@ -173,3 +178,44 @@ extension OrderSavingsAccountConfig {
     )
 }
 
+extension SavingsAccountDetails {
+    
+    static let preview: Self = .init(progress: 0.8)
+}
+
+extension SavingsAccountDetailsConfig {
+    
+    static let preview: Self = .init(
+        chevronDown: .init(systemName: "chevron.down"),
+        colors: .init(
+            background: .textSecondary,
+            chevron: .gray,
+            progress: .textPrimary,
+            shimmering: .background),
+        cornerRadius: 12,
+        days: .init(textFont: .system(size: 12), textColor: .gray),
+        header: .init(text: "Детали счета", config: .init(textFont: .system(size: 20), textColor: .white)),
+        heights: .init(
+            big: 340,
+            header: 24,
+            interest: 20,
+            period: 16,
+            progress: 6,
+            small: 144
+        ),
+        info: .init(systemName: "info.circle"),
+        interestDate: .init(textFont: .system(size: 16), textColor: .white),
+        padding: 16,
+        period: .init(textFont: .system(size: 12), textColor: .gray),
+        progressColors: [
+            .systemColorActive,
+            .new,
+            .buttonPrimary
+        ],
+        texts: .init(
+            days: "5 дней",
+            interestDate: "Дата выплаты % - 31 мая",
+            period: "Отчетный период 1 мая - 31 мая"
+        )
+    )
+}
