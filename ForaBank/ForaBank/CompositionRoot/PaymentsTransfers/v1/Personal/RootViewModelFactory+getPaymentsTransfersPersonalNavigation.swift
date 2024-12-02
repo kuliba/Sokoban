@@ -15,6 +15,8 @@ extension RootViewModelFactory {
         switch select {
         case let.outside(outside):
             switch outside {
+            case .templates:
+                completion(.templates)
                 
             case .userAccount:
                 completion(.userAccount)

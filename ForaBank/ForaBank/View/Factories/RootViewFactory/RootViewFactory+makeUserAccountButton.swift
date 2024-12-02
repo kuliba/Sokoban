@@ -23,12 +23,6 @@ extension RootViewFactory {
         action: @escaping () -> Void
     ) -> some View {
         
-        Button(action: action) {
-            
-            Label(
-                title: { Text("User Account/Profile") },
-                icon: { Image(systemName: "person") }
-            )
-        }
+        Button(action: action, label: makeUpdatingUserAccountButtonLabel)
     }
 }

@@ -66,7 +66,7 @@ extension RootViewModelFactory {
             completion(.latest(.init(latest: latest)))
             
         case .templates:
-            completion(.templates(.init()))
+            completion(.templates)
         }
     }
     

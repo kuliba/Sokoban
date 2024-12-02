@@ -19,7 +19,13 @@ enum OperationPickerNavigation {
     case exchange(CurrencyWalletViewModel)
     case latest(LatestFlowStub)
     case status(OperationPickerFlowStatus)
-    case templates(TemplatesStub)
+    case templates
+}
+
+enum OperationPickerFlowStatus: Equatable {
+    
+    case main
+    case exchangeFailure
 }
 
 final class LatestFlowStub {
@@ -31,12 +37,3 @@ final class LatestFlowStub {
         self.latest = latest
     }
 }
-
-final class TemplatesStub {}
-
-enum OperationPickerFlowStatus: Equatable {
-    
-    case main
-    case exchangeFailure
-}
-

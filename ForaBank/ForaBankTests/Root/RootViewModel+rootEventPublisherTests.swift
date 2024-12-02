@@ -70,13 +70,20 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         XCTAssertNoDiff(spy.values, [.templates])
     }
     
+    func test_shouldEmitTemplatesOnOperationPickerSelectTemplates() throws {
+        
+        let (sut, spy) = makeSUTWithV1(hasCorporateCardsOnly: false)
+        
+        try sut.operationPickerContentSelect(.templates)
+        
+        XCTAssertNoDiff(spy.values, [.templates])
+    }
+    
     // MARK: - userAccount
     
     func test_shouldEmitUserAccountOnPaymentsTransfersCorporateUserAccountSelect() throws {
         
-        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
-            hasCorporateCardsOnly: true
-        )))
+        let (sut, spy) = makeSUTWithV1(hasCorporateCardsOnly: true)
         
         sut.paymentsTransfersCorporateSelect(.userAccount)
         
@@ -85,9 +92,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     func test_shouldEmitUserAccountOnPaymentsTransfersPersonalUserAccountSelect() throws {
         
-        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
-            hasCorporateCardsOnly: false
-        )))
+        let (sut, spy) = makeSUTWithV1(hasCorporateCardsOnly: false)
         
         sut.paymentsTransfersPersonalSelect(.outside(.userAccount))
         
@@ -96,17 +101,27 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     // MARK: - Helpers
     
-    private func makeCorporatePaymentsModel(
-    ) -> RootViewModel.PaymentsModel{
+    private func makeSUTWithV1(
+        hasCorporateCardsOnly: Bool = false,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: RootViewModel,
+        spy: Spy
+    ) {
+        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
+        let (sut, spy) = makeSUT(paymentsModel: .v1(makeSwitcher(
+            hasCorporateCardsOnlySubject: hasCorporateCardsOnlySubject
+        )))
+        hasCorporateCardsOnlySubject.send(hasCorporateCardsOnly)
         
-        return .v1(makeSwitcher(hasCorporateCardsOnly: true))
+        return (sut, spy)
     }
     
     private func makeSwitcher(
-        hasCorporateCardsOnly: Bool
+        hasCorporateCardsOnlySubject: PassthroughSubject<Bool, Never>
     ) -> PaymentsTransfersSwitcher {
         
-        let hasCorporateCardsOnlySubject = PassthroughSubject<Bool, Never>()
         let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
@@ -133,8 +148,6 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
             ),
             scheduler: .immediate
         )
-        
-        hasCorporateCardsOnlySubject.send(hasCorporateCardsOnly)
         
         return switcher
     }
@@ -194,5 +207,38 @@ private extension RootViewModel {
         default:
             XCTFail("Expected Personal, but got \(String(describing: switcher?.state)) instead.", file: file, line: line)
         }
+    }
+    
+    func operationPicker(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> ForaBank.OperationPickerDomain.Binder? {
+        
+        let switcher = switcher(file: file, line: line)
+        switch switcher?.state {
+        case let .personal(personal):
+            switch personal.content.operationPicker.operationBinder {
+            case .none:
+                XCTFail("Expected OperationPicker, but got nil instead.", file: file, line: line)
+                return nil
+                
+            case let .some(binder):
+                return binder
+            }
+            
+        default:
+            XCTFail("Expected OperationPicker, but got \(String(describing: switcher?.state)) instead.", file: file, line: line)
+            return nil
+        }
+    }
+    
+    func operationPickerContentSelect(
+        _ select: ForaBank.OperationPickerDomain.Select,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let operationPicker = try XCTUnwrap(operationPicker(file: file, line: line))
+        operationPicker.content.event(.select(select))
     }
 }

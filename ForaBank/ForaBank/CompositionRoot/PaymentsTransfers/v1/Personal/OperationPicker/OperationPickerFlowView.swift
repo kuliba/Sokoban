@@ -63,8 +63,8 @@ extension OperationPickerDomain.Navigation {
         case let .status(status):
             return .status(status)
         
-        case let .templates(templates):
-            return .templates(templates)
+        case .templates:
+            return nil
         }
     }
     
@@ -73,7 +73,6 @@ extension OperationPickerDomain.Navigation {
         case exchange(CurrencyWalletViewModel)
         case latest(LatestFlowStub)
         case status(OperationPickerFlowStatus)
-        case templates(TemplatesStub)
     }
 }
 
@@ -90,9 +89,6 @@ extension OperationPickerDomain.Navigation.Destination: Identifiable {
             
         case let .status(status):
             return .status(status)
-            
-        case let .templates(templates):
-            return .templates(.init(templates))
         }
     }
     
@@ -101,6 +97,5 @@ extension OperationPickerDomain.Navigation.Destination: Identifiable {
         case exchange(ObjectIdentifier)
         case latest(ObjectIdentifier)
         case status(OperationPickerFlowStatus)
-        case templates(ObjectIdentifier)
     }
 }
