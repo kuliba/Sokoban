@@ -122,28 +122,10 @@ class AuthPinCodeViewModel: ObservableObject {
 
     func bind() {
         
-        model.sessionState
-            .combineLatest(model.clientInformAlertManager.alertPublisher, self.viewDidAppear)
+        model.clientInformAlertManager.alertPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessionState, clientInformAlerts, viewDidAppear in
-                
-                guard let self else { return }
-                
-                switch sessionState {
-                case .active:
-                    
-                    withAnimation {
-                        self.spinner = nil
-                    }
-                    
-                    self.clientInformAlerts = clientInformAlerts
-                    
-                default:
-                    withAnimation {
-                        self.spinner = .init()
-                    }
-                }
-            }.store(in: &bindings)
+            .sink { self.clientInformAlerts = $0 }
+            .store(in: &bindings)
 
         model.action
             .receive(on: DispatchQueue.main)
