@@ -854,6 +854,7 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
     // MARK: - Helpers
 
     private func makeSUT(
+        shouldUpdateVersion: Bool = false,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -865,6 +866,7 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         let rootActionsSpy = RootActionsSpy()
         let sut = AuthLoginViewModel(
             model,
+            shouldUpdateVersion: { _ in shouldUpdateVersion },
             rootActions: rootActionsSpy.rootActions(),
             onRegister: {}
         )

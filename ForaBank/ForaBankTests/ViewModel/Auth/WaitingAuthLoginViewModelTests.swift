@@ -515,6 +515,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     private func makeSUT(
         catalogProductDataStub: CatalogProductData? = nil,
+        shouldUpdateVersion: Bool = false,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -532,8 +533,9 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
         
+        let clientInformAlertManager = AlertManagerSpy()
+        
         let eventPublishers = AuthLoginViewModel.EventPublishers(
-            clientInformAlerts: clientInformAlerts.eraseToAnyPublisher(),
             checkClientResponse: checkClientResponse.eraseToAnyPublisher(),
             catalogProducts: catalogProducts.eraseToAnyPublisher(),
             sessionStateFcmToken: sessionStateFcmToken.eraseToAnyPublisher()
@@ -554,10 +556,12 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         )
         
         let sut = AuthLoginViewModel(
+            clientInformAlertsManager: clientInformAlertManager,
             eventPublishers: eventPublishers,
             eventHandlers: eventHandlers,
             factory: factory,
-            onRegister: {}
+            onRegister: {}, 
+            shouldUpdateVersion: { _ in shouldUpdateVersion }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
