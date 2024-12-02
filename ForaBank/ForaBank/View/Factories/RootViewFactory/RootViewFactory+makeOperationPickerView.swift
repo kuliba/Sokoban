@@ -97,9 +97,6 @@ extension RootViewFactory {
             
         case let .status(operationPickerFlowStatus):
             EmptyView()
-            
-        case let .templates(templates):
-            Text("TBD: destination " + String(describing: templates))
         }
     }
 }

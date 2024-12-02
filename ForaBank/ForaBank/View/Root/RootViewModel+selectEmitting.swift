@@ -220,7 +220,6 @@ private extension PaymentsTransfersPersonalDomain.Binder {
     private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         let flowRootEventPublisher = flow.$state
-            .handleEvents(receiveOutput: { print("====", $0) })
             .compactMap(\.navigation?.rootEvent)
             .eraseToAnyPublisher()
         
@@ -233,6 +232,9 @@ private extension PaymentsTransfersPersonalNavigation {
     var rootEvent: RootEvent? {
         
         switch self {
+        case .templates:
+            return .templates
+            
         case .userAccount:
             return .userAccount
         }
