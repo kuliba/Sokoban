@@ -14,10 +14,11 @@ struct SavingsAccountDetailsConfig: Equatable {
     let colors: Colors
     let cornerRadius: CGFloat
     let days: TextConfig
-    let header: TextWithConfig
     let heights: Heights
     let info: Image
     let interestDate: TextConfig
+    let interestTitle: TextConfig
+    let interestSubtitle: TextConfig
     let padding: CGFloat
     let period: TextConfig
     let progressColors: [Color]
@@ -42,6 +43,12 @@ struct SavingsAccountDetailsConfig: Equatable {
     }
     
     struct Texts: Equatable {
+        
+        let currentInterest: String
+        let header: TextWithConfig
+        let minBalance: String
+        let paidInterest: String
+        let per: String
         
         let days: String
         let interestDate: String

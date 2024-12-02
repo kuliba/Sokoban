@@ -8,6 +8,7 @@ import SwiftUI
 
 struct SavingsAccountDetailsView: View {
     
+    let amountToString: AmountToString
     let state: SavingsAccountDetailsState
     let event: (Event) -> Void
     let config: Config
@@ -15,7 +16,7 @@ struct SavingsAccountDetailsView: View {
     var body: some View {
         
         VStack {
-            header(config.header, needShimmering)
+            header(config.texts.header, needShimmering)
                 .padding(.bottom, config.padding)
             config.texts.period
                 .string(needShimmering)
@@ -24,12 +25,71 @@ struct SavingsAccountDetailsView: View {
                 .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
                 .padding(.bottom, config.padding / 2)
             interest(needShimmering)
+            
             lineProgressView(needShimmering)
+                .frame(height: config.heights.progress)
+            
+            if (!needShimmering && state.isExpanded) {
+                interest()
+            }
         }
         .frame(height: state.isExpanded ? config.heights.big : config.heights.small)
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.colors.background, config.cornerRadius, config.padding))
     }
     
+    private func interest() -> some View {
+        
+        VStack(spacing: config.padding) {
+            titleWithSubtitle(
+                title: .init(text: config.texts.currentInterest, config: config.interestTitle),
+                subtitle: .init(text: currentInterest, config: config.interestSubtitle))
+            
+            titleWithSubtitle(
+                title: .init(text: config.texts.paidInterest, config: config.interestTitle),
+                subtitle: .init(text: paidInterest, config: config.interestSubtitle))
+          
+            titleWithSubtitleAndImage(
+                    title: .init(text: config.texts.minBalance, config: config.interestTitle),
+                    subtitle: .init(text: minBalance, config: config.interestSubtitle))
+        }
+        .padding(.top, config.padding)
+    }
+    
+    private func titleWithSubtitle(
+        title: TextWithConfig,
+        subtitle: TextWithConfig
+    ) -> some View {
+        
+        VStack(spacing: config.padding / 2 ) {
+            
+            title.text.text(withConfig: title.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            subtitle.text.text(withConfig: subtitle.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(height: 48)
+    }
+    
+    private func titleWithSubtitleAndImage(
+        title: TextWithConfig,
+        subtitle: TextWithConfig
+    ) -> some View {
+        
+        VStack(spacing: config.padding / 2 ) {
+            
+            title.text.text(withConfig: title.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack {
+                (subtitle.text + config.texts.per).text(withConfig: subtitle.config)
+                    .frame(alignment: .leading)
+                config.info
+                    .foregroundColor(config.colors.chevron)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
     private func interest(
         _ needShimmering: Bool
     ) -> some View {
@@ -150,6 +210,7 @@ private extension String {
 
 extension SavingsAccountDetailsView {
     
+    typealias AmountToString = (Decimal, String) -> String
     typealias Event = SavingsAccountDetailsEvent
     typealias Config = SavingsAccountDetailsConfig
 }
@@ -159,6 +220,31 @@ private extension SavingsAccountDetailsView {
     var needShimmering: Bool {
         state.data == nil
     }
+}
+
+private extension SavingsAccountDetailsView {
+   
+    var currentInterest: String {
+        amountToString(state.currentInterest, state.currencyCode)
+    }
+    
+    var minBalance: String {
+        amountToString(state.minBalance, state.currencyCode)
+    }
+
+    var paidInterest: String {
+        amountToString(state.paidInterest, state.currencyCode)
+    }
+}
+private extension SavingsAccountDetailsState {
+    
+    var currentInterest: Decimal { data?.currentInterest ?? 0 }
+    
+    var minBalance: Decimal { data?.minBalance ?? 0 }
+
+    var paidInterest: Decimal { data?.paidInterest ?? 0 }
+
+    var currencyCode: String { data?.currencyCode ?? "" }
 }
 
 private struct HeightWithMaxWidthModifier: ViewModifier {
@@ -238,6 +324,7 @@ struct SavingsAccountDetailsWrapperView: View {
             model: viewModel,
             makeContentView: {
                 SavingsAccountDetailsView(
+                    amountToString: { "\($0)" + " " + $1 },
                     state: $0,
                     event: $1,
                     config: config
