@@ -16,7 +16,7 @@ extension RootViewModel {
         return Publishers.MergeMany([
             rootRootEventPublisher,
             mainViewRootEventPublisher,
-            paymentsTransfersRootEventPublishers
+            paymentsTransfersRootEventPublisher
         ])
         .eraseToAnyPublisher()
     }
@@ -31,7 +31,7 @@ extension RootViewModel {
         tabsViewModel.mainViewModel.rootEventPublisher
     }
     
-    private var paymentsTransfersRootEventPublishers: AnyPublisher<RootEvent, Never> {
+    private var paymentsTransfersRootEventPublisher: AnyPublisher<RootEvent, Never> {
         
         switch tabsViewModel.paymentsModel {
         case let .legacy(legacy):
