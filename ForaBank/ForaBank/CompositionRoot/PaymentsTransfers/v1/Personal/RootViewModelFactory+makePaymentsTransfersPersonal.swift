@@ -11,8 +11,6 @@ import Foundation
 import PayHub
 import PayHubUI
 
-private typealias Domain = PaymentsTransfersPersonalDomain
-
 extension RootViewModelFactory {
     
     @inlinable
@@ -20,57 +18,20 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonalDomain.Binder {
         
-        // MARK: - CategoryPicker
-        
-        let categoryPicker = makeCategoryPickerSection(
-            nanoServices: nanoServices
-        )
-        
-        // MARK: - OperationPicker
-        
-        let operationPicker = makeOperationPicker(nanoServices: nanoServices)
-        
-        // MARK: - Transfers
-        
-        typealias TransfersDomain = PaymentsTransfersPersonalTransfersDomain
-        
-        let transfers = makeTransfers(
-            buttonTypes: TransfersDomain.ButtonType.allCases,
-            makeQRModel: makeQRScannerModel
-        )
-        
-        // MARK: - PaymentsTransfers
-        
-        let content = Domain.Content(
-            categoryPicker: categoryPicker,
-            operationPicker: operationPicker,
-            transfers: transfers,
-            reload: {
-                
-                categoryPicker.content.event(.reload)
-                operationPicker.content.event(.reload)
-            }
-        )
-        
         return compose(
             getNavigation: getPaymentsTransfersPersonalNavigation,
-            content: content,
-            witnesses: witnesses()
-        )
-    }
-    
-    private func witnesses() -> Domain.Witnesses {
-        
-        return .init(
-            emitting: { $0.eventPublisher },
-            receiving: { $0.receiving }
+            content: makePaymentsTransfersPersonalContent(nanoServices),
+            witnesses: .init(
+                emitting: { $0.eventPublisher },
+                dismissing: { $0.dismiss }
+            )
         )
     }
 }
 
 // MARK: - Content
 
-private extension Domain.Content {
+private extension PaymentsTransfersPersonalDomain.Content {
     
     var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
         
@@ -81,11 +42,11 @@ private extension Domain.Content {
         ).eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        categoryPicker.receiving()
-        operationPicker.receiving()
-        transfers.receiving()
+        categoryPicker.dismiss()
+        operationPicker.dismiss()
+        transfers.dismiss()
     }
 }
 
@@ -98,9 +59,9 @@ private extension PayHubUI.CategoryPicker {
         sectionBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        sectionBinder?.receiving()
+        sectionBinder?.dismiss()
     }
 }
 
@@ -113,7 +74,7 @@ private extension CategoryPickerSectionDomain.Binder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
         flow.event(.dismiss)
     }
@@ -128,9 +89,9 @@ private extension PayHubUI.OperationPicker {
         operationBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        operationBinder?.receiving()
+        operationBinder?.dismiss()
     }
 }
 
@@ -143,7 +104,7 @@ private extension OperationPickerDomain.Binder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
         flow.event(.dismiss)
     }
@@ -169,9 +130,9 @@ private extension PayHubUI.TransfersPicker {
         transfersBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
-        transfersBinder?.receiving()
+        transfersBinder?.dismiss()
     }
 }
 
@@ -184,7 +145,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismiss() {
         
         flow.event(.dismiss)
     }

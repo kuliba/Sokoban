@@ -70,7 +70,7 @@ private extension RootViewBinderComposer {
         let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
         let bind = factory.bind(with: .init(
             contentEmitting: witnesses.content.emitting,
-            contentReceiving: witnesses.content.receiving,
+            contentDismissing: witnesses.content.dismissing,
             flowEmitting: { (flow: RootDomain.Flow) in
                 
                 flow.$state
