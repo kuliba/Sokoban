@@ -43,7 +43,7 @@ class QRFailureTests: XCTestCase {
             subject.send(select)
         }
         
-        func receive() {
+        func dismiss() {
             
         }
     }

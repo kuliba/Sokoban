@@ -241,6 +241,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         
         return .init(
             content: .init(
+                title: anyMessage(),
                 operationPicker: (),
                 providerList: .init(
                     initialState: .init(

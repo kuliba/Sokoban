@@ -9,8 +9,8 @@ import Foundation
 import PayHub
 import PayHubUI
 import RemoteServices
-import CollateralLoanLandingShowCaseBackend
-import CollateralLoanLandingShowCaseUI
+import CollateralLoanLandingGetShowcaseBackend
+import CollateralLoanLandingGetShowcaseUI
 
 final class CollateralLoanLandingComposer {
         
@@ -42,7 +42,7 @@ final class CollateralLoanLandingComposer {
             
             guard let self else { return }
             
-            let response = ResponseMapper.mapCollateralLoanShowCaseResponse(
+            let response = ResponseMapper.mapCreateGetShowcaseResponse(
                 .init(self.json.utf8),
                 .init(
                     url: URL(string: "http://www.url.com")!,
