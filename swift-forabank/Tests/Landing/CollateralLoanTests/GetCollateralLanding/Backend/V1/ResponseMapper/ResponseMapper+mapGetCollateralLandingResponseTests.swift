@@ -366,20 +366,57 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         XCTAssertTrue(consents.isEmpty)
     }
 
-    func test_map_shouldBeNoThrowWithOneConsent() throws {
+    func test_map_shouldDeliverConsent() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(consents: [.stub()])
-            ]))
+        let (name, link) = (anyMessage(), anyMessage())
+        let consent = makeConsent(name: name, link: link)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: [consent])]
+        ))
+        
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            [.init(name: name, link: link)]
+        )
+    }
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+    func test_map_shouldSkipConsentWithoutName() throws {
+        
+        let consent = makeConsent(name: nil, link: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: [consent])]
+        ))
+        
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            []
+        )
+    }
 
-        let consents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.consents)
+    func test_map_shouldSkipConsentWithoutLink() throws {
+        
+        let consent = makeConsent(name: anyMessage(), link: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: [consent])]
+        ))
+        
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            []
+        )
+    }
 
-        XCTAssertTrue(consents.count == 1)
+    func test_map_shouldSkipConsentWithoutNameAndLink() throws {
+        
+        let consent = makeConsent(name: nil, link: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: [consent])]
+        ))
+        
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowValidWithTwoConsent() throws {
@@ -999,7 +1036,59 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
     }
 }
 
-struct CodableResponse: Encodable {
+private func makeCodableResponse(
+    statusCode: Int = 200,
+    errorMessage: String? = nil,
+    data: CodableResponse.SerialStamped = makeSerialStamped()
+) -> CodableResponse {
+    
+    return .init(statusCode: statusCode, errorMessage: errorMessage, data: data)
+}
+
+private func makeSerialStamped(
+    serial: String = anyMessage(),
+    products: [CollateralLandingStubProduct] = []
+) -> CodableResponse.SerialStamped{
+    
+    return .init(serial: serial, products: products)
+}
+
+private func makeProduct(
+    theme: CollateralLandingStubProduct.Theme? = .stub(),
+    name: String? = anyMessage(),
+    marketing: CollateralLandingStubProduct.Marketing? = .stub(),
+    conditions: [CollateralLandingStubProduct.Condition]? = [],
+    calc: CollateralLandingStubProduct.Calc? = .stub(),
+    frequentlyAskedQuestions: [CollateralLandingStubProduct.FrequentlyAskedQuestion]? = [],
+    documents: [CollateralLandingStubProduct.Document]? = [],
+    consents: [CollateralLandingStubProduct.Consent]? = nil,
+    cities: [String]? = [],
+    icons: CollateralLandingStubProduct.Icons? = .stub()
+) -> CollateralLandingStubProduct {
+    
+    return .init(
+        theme: theme,
+        name: name,
+        marketing: marketing,
+        conditions: conditions,
+        calc: calc,
+        frequentlyAskedQuestions: frequentlyAskedQuestions,
+        documents: documents,
+        consents: consents,
+        cities: cities,
+        icons: icons
+    )
+}
+
+private func makeConsent(
+    name: String?,
+    link: String?
+) -> CollateralLandingStubProduct.Consent {
+    
+    return .init(name: name, link: link)
+}
+
+private struct CodableResponse: Encodable {
     
     let statusCode: Int
     let errorMessage: String?
