@@ -33,8 +33,9 @@ where ContentView: View,
 
 extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSectionDomain.FlowDomain.State
-    typealias Event = CategoryPickerSectionDomain.FlowDomain.Event
+    typealias FlowDomain = CategoryPickerSectionDomain.FlowDomain
+    typealias State = FlowDomain.State
+    typealias Event = FlowDomain.Event
     typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView>
 }
 
@@ -80,9 +81,6 @@ private extension SelectedCategoryNavigation {
             case let .transport(transport):
                 return .paymentFlow(.transport(transport))
             }
-            
-        case .qrNavigation:
-            return nil
         }
     }
     
@@ -94,9 +92,6 @@ private extension SelectedCategoryNavigation {
             
         case .paymentFlow:
             return nil
-            
-        case let .qrNavigation(qrNavigation):
-            return qrNavigation.failure
         }
     }
 }
@@ -106,7 +101,6 @@ extension SelectedCategoryNavigation {
     enum Destination {
         
         case paymentFlow(PaymentFlowDestination)
-        case qrDestination(QRNavigation.Destination)
         
         typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Standard, Tax, Transport>
     }
@@ -119,15 +113,11 @@ extension SelectedCategoryNavigation.Destination: Identifiable {
         switch self {
         case let .paymentFlow(paymentFlow):
             return .paymentFlow(paymentFlow.id)
-            
-        case let .qrDestination(qrDestination):
-            return .qrDestination(qrDestination.id)
         }
     }
     
     enum ID: Hashable {
         
         case paymentFlow(PaymentFlowDestinationID)
-        case qrDestination(QRNavigation.Destination.ID)
     }
 }

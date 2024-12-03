@@ -127,9 +127,6 @@ extension RootViewFactory {
             case let .transport(transport):
                 transportPaymentsView(transport)
             }
-            
-        case let .qrDestination(qrDestination):
-            qrDestinationView(qrDestination)
         }
     }
 }

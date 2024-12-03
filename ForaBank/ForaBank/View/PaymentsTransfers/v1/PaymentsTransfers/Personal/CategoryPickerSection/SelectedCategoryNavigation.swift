@@ -12,7 +12,6 @@ enum SelectedCategoryNavigation {
     
     case failure(SelectedCategoryFailure)
     case paymentFlow(PaymentFlow)
-    case qrNavigation(QRNavigation)
     
     typealias Mobile = ClosePaymentsViewModelWrapper
     typealias Standard = StandardSelectedCategoryDestination
@@ -21,8 +20,6 @@ enum SelectedCategoryNavigation {
     typealias Transport = TransportPaymentsViewModel
     
     typealias PaymentFlow = PayHub.PaymentFlow<Mobile, QR, Standard, Tax, Transport>
-    
-    typealias QRNavigation = ForaBank.QRNavigation
 }
 
 struct SelectedCategoryFailure: Error, Equatable, Identifiable {
