@@ -109,6 +109,7 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
         }
         
         return .init(
+            title: payload.category.name,
             operationPicker: (),
             providerList: providerList,
             search: search,

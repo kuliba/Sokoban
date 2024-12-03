@@ -10,7 +10,7 @@ import Foundation
 import PaymentSticker
 import SwiftUI
 
-class RootViewHostingViewController: UIHostingController<RootViewBinderView> {
+class RootViewHostingViewController: UIHostingController<RootBinderView> {
     
     private let binder: RootViewDomain.Binder
     private let viewModel: RootViewModel
@@ -30,7 +30,7 @@ class RootViewHostingViewController: UIHostingController<RootViewBinderView> {
         self.informer = nil
         self.isCoverDismissing = false
         super.init(
-            rootView: RootViewBinderView(
+            rootView: RootBinderView(
                 binder: binder,
                 rootViewFactory: rootViewFactory
             )

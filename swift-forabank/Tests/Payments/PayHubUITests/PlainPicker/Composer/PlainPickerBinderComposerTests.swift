@@ -6,6 +6,7 @@
 //
 
 import CombineSchedulers
+import PayHub
 import PayHubUI
 import XCTest
 
@@ -32,7 +33,7 @@ final class PlainPickerBinderComposerTests: PlainPickerTests {
         sut.content.event(.select(element))
         scheduler.advance()
         
-        XCTAssertNoDiff(spy.payloads, [element])
+        XCTAssertNoDiff(spy.payloads.map(\.0), [element])
         XCTAssertNotNil(sut)
     }
     
@@ -92,7 +93,7 @@ final class PlainPickerBinderComposerTests: PlainPickerTests {
     
     private typealias Composer = PlainPickerBinderComposer<Element, Navigation>
     private typealias SUT = PlainPickerBinder<Element, Navigation>
-    private typealias MakeNavigationSpy = Spy<Element, Navigation>
+    private typealias MakeNavigationSpy = Spy<(Element, (FlowEvent<Element, Never>) -> Void), Navigation>
     
     private func makeSUT(
         elements: [PlainPickerTests.Element] = [],
@@ -106,13 +107,14 @@ final class PlainPickerBinderComposerTests: PlainPickerTests {
         let spy = MakeNavigationSpy()
         let scheduler = DispatchQueue.test
         let composer = Composer(
-            microServices: .init(
-                getNavigation: spy.process(_:completion:)
-            ),
-            scheduler: scheduler.eraseToAnyScheduler(),
-            interactiveScheduler: .immediate
+            elements: elements,
+            getNavigation: spy.process,
+            schedulers: .init(
+                main: scheduler.eraseToAnyScheduler(),
+                interactive: .immediate
+            )
         )
-        let sut = composer.compose(elements: elements)
+        let sut = composer.compose()
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
