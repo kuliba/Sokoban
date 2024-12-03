@@ -1,5 +1,5 @@
 //
-//  SelectedCategoryNavigationMicroServicesComposer.swift
+//  SelectedCategoryGetNavigationComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 30.09.2024.
@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHubUI
 
-final class SelectedCategoryNavigationMicroServicesComposer {
+final class SelectedCategoryGetNavigationComposer {
     
     private let model: Model
     private let nanoServices: NanoServices
@@ -29,27 +29,14 @@ final class SelectedCategoryNavigationMicroServicesComposer {
     typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices
 }
 
-extension SelectedCategoryNavigationMicroServicesComposer {
-    
-    func compose() -> MicroServices {
-        
-        return .init(getNavigation: getNavigation)
-    }
+extension SelectedCategoryGetNavigationComposer {
     
     typealias Domain = CategoryPickerSectionDomain
-    typealias Select = Domain.Select
     typealias Navigation = Domain.Navigation
-    typealias FlowDomain = Domain.FlowDomain
-    typealias MicroServices = FlowDomain.MicroServices
-}
-
-private extension SelectedCategoryNavigationMicroServicesComposer {
-    
-    typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     func getNavigation(
-        category: ServiceCategory,
-        _ notify: @escaping Notify,
+        _ category: Domain.Select,
+        _ notify: @escaping Domain.Notify,
         _ completion: @escaping (Navigation) -> Void
     ) {
         switch category.paymentFlow {
@@ -57,7 +44,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
             
         case .qr:
-            completion(.paymentFlow(.qr(())))
+            completion(.paymentFlow(.qr(nanoServices.makeQR())))
             
         case .standard:
             nanoServices.makeStandard(category) {
