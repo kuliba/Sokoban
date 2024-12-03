@@ -3193,6 +3193,7 @@
 		C154987029088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154986F29088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift */; };
 		C155ABD92A28F33300BE66AE /* TranferData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C155ABD82A28F33300BE66AE /* TranferData+Stubs.swift */; };
 		C155ABDB2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C155ABDA2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift */; };
+		C15C4C732CF6A36D00A8C922 /* OrderCardFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15C4C722CF6A36D00A8C922 /* OrderCardFlag.swift */; };
 		C15CB8E42B7EF26B00718B49 /* Service+getOperatorsListByParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15CB8E32B7EF26B00718B49 /* Service+getOperatorsListByParam.swift */; };
 		C15CB8E72B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15CB8E62B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift */; };
 		C16157252C2A894A000EFC3A /* ProductProfileFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16157242C2A894A000EFC3A /* ProductProfileFlowManager.swift */; };
@@ -6826,6 +6827,7 @@
 		C154986F29088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPhoneNumberViewComponentsTests.swift; sourceTree = "<group>"; };
 		C155ABD82A28F33300BE66AE /* TranferData+Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TranferData+Stubs.swift"; sourceTree = "<group>"; };
 		C155ABDA2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentTemplateData+Stubs.swift"; sourceTree = "<group>"; };
+		C15C4C722CF6A36D00A8C922 /* OrderCardFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardFlag.swift; sourceTree = "<group>"; };
 		C15CB8E32B7EF26B00718B49 /* Service+getOperatorsListByParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+getOperatorsListByParam.swift"; sourceTree = "<group>"; };
 		C15CB8E62B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getOperatorsListByParam.swift"; sourceTree = "<group>"; };
 		C16157242C2A894A000EFC3A /* ProductProfileFlowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductProfileFlowManager.swift; sourceTree = "<group>"; };
@@ -10792,6 +10794,7 @@
 				83CC9D282C85BCCA00ABA4C7 /* MarketplaceFlag.swift */,
 				A7ECFEC22CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift */,
 				8307B3B32CD67A1C00484132 /* SavingsAccountFlag.swift */,
+				C15C4C722CF6A36D00A8C922 /* OrderCardFlag.swift */,
 			);
 			path = Flags;
 			sourceTree = "<group>";
@@ -22296,6 +22299,7 @@
 				2ABBD6C92CDD61E20078E977 /* RootBinderView.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */,
+				C15C4C732CF6A36D00A8C922 /* OrderCardFlag.swift in Sources */,
 				2AD15D172C19D2C2003329C7 /* PDFDocumentWrapperView.swift in Sources */,
 				0B2B29232808CB2E001C6380 /* DocumentCollectionViewCell.swift in Sources */,
 				2AF177552AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift in Sources */,

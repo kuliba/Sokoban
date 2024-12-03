@@ -184,6 +184,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    //MARK: OrderCardFlag
+    
+    func test_load_shouldDeliverActiveOrderCardFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .orderCardFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            orderCardFlag: .active
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveOrderCardFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            orderCardFlag: .inactive
+        ))
+    }
+    
     // MARK: - SavingsAccountFlag
     
     func test_load_shouldDeliverActiveSavingsAccountFlagForActiveRetrieveResult() {
@@ -232,7 +256,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         savingsAccountFlag: SavingsAccountFlag? = nil,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
+        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil,
+        orderCardFlag: OrderCardFlag? = nil
     ) -> FeatureFlags {
         
         .init(
@@ -242,7 +267,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             historyFilterFlag: historyFilterFlag?.map { $0 } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,
-            collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive
+            collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive,
+            orderCardFlag: orderCardFlag?.map { $0 } ?? .inactive
         )
     }
 }

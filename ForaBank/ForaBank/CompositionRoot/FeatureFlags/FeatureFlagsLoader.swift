@@ -31,7 +31,8 @@ extension FeatureFlagsLoader {
             historyFilterFlag: loadHistoryFilterFlag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             savingsAccountFlag: loadSavingsAccountFlag(),
-            collateralLoanLandingFlag: loadCollateralLoanLandingFlag()
+            collateralLoanLandingFlag: loadCollateralLoanLandingFlag(),
+            orderCardFlag: loadOrderCardFlag()
         )
     }
 }
@@ -45,6 +46,7 @@ enum FeatureFlagKey: String {
     case paymentsTransfersFlag = "payments_transfers"
     case collateralLoanLandingFlag = "collateralLoanLanding"
     case savingsAccountFlag = "savingsAccount"
+    case orderCardFlag = "orderCard"
 }
 
 private extension FeatureFlagsLoader {
@@ -99,6 +101,14 @@ private extension FeatureFlagsLoader {
     func loadCollateralLoanLandingFlag() -> CollateralLoanLandingFlag {
         
         switch retrieve(.collateralLoanLandingFlag) {
+        case "1":  return .active
+        default:   return .inactive
+        }
+    }
+    
+    func loadOrderCardFlag() -> OrderCardFlag {
+        
+        switch retrieve(.orderCardFlag) {
         case "1":  return .active
         default:   return .inactive
         }
