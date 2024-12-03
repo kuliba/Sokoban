@@ -24,7 +24,8 @@ public extension ResponseMapper {
         
         guard
             let serial = data.serial,
-            let products = data.products
+            let products = data.products,
+            !products.compactMap(\.data).isEmpty
         else {
             throw InvalidResponse()
         }

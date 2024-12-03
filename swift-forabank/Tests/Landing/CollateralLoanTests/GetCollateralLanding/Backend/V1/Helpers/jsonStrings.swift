@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  jsonStrings.swift
 //  
 //
 //  Created by Valentin Ozerov on 02.12.2024.

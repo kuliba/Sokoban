@@ -13,7 +13,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
-        let invalidData = "invalid data".data(using: .utf8)!
+        let invalidData = try XCTUnwrap("invalid data".data(using: .utf8))
         
         let result = map(invalidData)
         
@@ -110,980 +110,880 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )))
     }
     
-    func test_map_shouldBeInvalidWithoutTheme() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            theme: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutName() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            name: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutMarketing() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            marketing: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutConditions() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            conditions: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyCondition() throws {
+    func test_map_shouldBeNoThrowWithoutTheme() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    conditions: []
-                )
+                .stub(theme: nil)
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithOneCondition() throws {
+    func test_map_shouldBeThrowsWithoutName() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    conditions: [.stub()]
-                )
+                .stub(name: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowWithoutMarketing() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowWithoutConditions() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(conditions: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowsWithEmptyCondition() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(conditions: [])
+            ]))
+        
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+
+        let conditions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.conditions)
+
+        XCTAssertTrue(conditions.isEmpty)
+    }
+
+    func test_map_shouldBeNoThrowsWithOneCondition() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(conditions: [.stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let conditions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.conditions)
+
+        XCTAssertTrue(conditions.count == 1)
+    }
+
+    func test_map_shouldBeNoThrowsWithTwoCondition() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(conditions: [.stub(), .stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let conditions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.conditions)
+
+        XCTAssertTrue(conditions.count == 2)
+    }
+
+    func test_map_shouldBeThrowsWithoutCalc() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutFrequentlyAskedQuestions() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(frequentlyAskedQuestions: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyFrequentlyAskedQuestions() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(frequentlyAskedQuestions: [])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let frequentlyAskedQuestions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.frequentlyAskedQuestions)
+
+        XCTAssertTrue(frequentlyAskedQuestions.isEmpty)
+    }
+
+    func test_map_shouldBeNoThrowWithOneFrequentlyAskedQuestion() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(frequentlyAskedQuestions: [.stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let frequentlyAskedQuestions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.frequentlyAskedQuestions)
+
+        XCTAssertTrue(frequentlyAskedQuestions.count == 1)
+    }
+
+    func test_map_shouldBeNoThrowWithTwoFrequentlyAskedQuestion() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(frequentlyAskedQuestions: [.stub(), .stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let frequentlyAskedQuestions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.frequentlyAskedQuestions)
+
+        XCTAssertTrue(frequentlyAskedQuestions.count == 2)
+    }
+
+    func test_map_shouldBeThrowsWithoutDocuments() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(documents: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyDocuments() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(documents: [])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let documents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.documents)
+
+        XCTAssertTrue(documents.isEmpty)
+    }
+
+    func test_map_shouldBeNoThrowWithOneDocument() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(documents: [.stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let documents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.documents)
+
+        XCTAssertTrue(documents.count == 1)
+    }
+
+    func test_map_shouldBeNoThrowWithTwoDocuments() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(documents: [.stub(), .stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let documents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.documents)
+
+        XCTAssertTrue(documents.count == 2)
+    }
+
+    func test_map_shouldBeThrowsWithoutConsents() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(consents: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyConsents() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(consents: [])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let consents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.consents)
+
+        XCTAssertTrue(consents.isEmpty)
+    }
+
+    func test_map_shouldBeNoThrowWithOneConsent() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(consents: [.stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+
+        let consents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.consents)
+
+        XCTAssertTrue(consents.count == 1)
+    }
+
+    func test_map_shouldBeNoThrowValidWithTwoConsent() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(consents: [.stub(), .stub()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let consents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.consents)
+
+        XCTAssertTrue(consents.count == 2)
+    }
+
+    func test_map_shouldBeThrowsWithoutCities() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(cities: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyCities() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(cities: [])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let cities = try XCTUnwrap(try map(stub.encoded()).get().list.first?.cities)
+
+        XCTAssertTrue(cities.isEmpty)
+    }
+    
+    func test_map_shouldBeNoThrowWithOneCity() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(cities: [anyMessage()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let cities = try XCTUnwrap(try map(stub.encoded()).get().list.first?.cities)
+
+        XCTAssertTrue(cities.count == 1)
+    }
+    
+    func test_map_shouldBeNoThrowWithTwoCity() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(cities: [anyMessage(), anyMessage()])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let cities = try XCTUnwrap(try map(stub.encoded()).get().list.first?.cities)
+
+        XCTAssertTrue(cities.count == 2)
+    }
+    
+    func test_map_shouldBeThrowsWithoutIcons() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(icons: nil)
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutMarketingLabelTag() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: .stub(labelTag: nil))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutMarketingImage() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: .stub(image: nil))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutMarketingParams() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: .stub(params: nil))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyMarketingParams() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: .stub(params: []))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
+
+        XCTAssertTrue(params.isEmpty)
+    }
+    
+    func test_map_shouldBeNoThrowWithOneMarketingParams() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: .stub(params: [anyMessage()]))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
+
+        XCTAssertTrue(params.count == 1)
+    }
+    
+    func test_map_shouldBeNoThrowWithTwoMarketingParams() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(marketing: .stub(params: [anyMessage(), anyMessage()]))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
+
+        XCTAssertTrue(params.count == 1)
+    }
+    
+    func test_map_shouldBeNoThrowWithoutConditionIcon() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(conditions: [.stub(icon: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithTwoCondition() throws {
+    func test_map_shouldBeNoThrowWithoutConditionTitle() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    conditions: [.stub(), .stub()]
-                )
+                .stub(conditions: [.stub(title: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeInvalidWithoutCalc() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutFrequentlyAskedQuestions() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            frequentlyAskedQuestions: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyFrequentlyAskedQuestions() throws {
+    func test_map_shouldBeNoThrowWithoutConditionSubtitle() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    frequentlyAskedQuestions: []
-                )
+                .stub(conditions: [.stub(title: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithOneFrequentlyAskedQuestion() throws {
+    func test_map_shouldBeThrowsWithoutCalcAmount() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    frequentlyAskedQuestions: [.stub()]
-                )
+                .stub(calc: .stub(amount: nil))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcCollateral() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(collateral: nil))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyCalcCollateral() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(collateral: []))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let collateral = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.collateral)
+
+        XCTAssertTrue(collateral.isEmpty)
+    }
+
+    func test_map_shouldBeNoThrowWithOneCalcCollateral() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(collateral: [.stub()]))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let collateral = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.collateral)
+
+        XCTAssertTrue(collateral.count == 1)
+    }
+
+    func test_map_shouldBeNoThrowWithTwoCalcCollateral() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(collateral: [.stub(), .stub()]))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let collateral = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.collateral)
+
+        XCTAssertTrue(collateral.count == 2)
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcRates() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(rates: nil))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithEmptyCalcRates() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(rates: []))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let rates = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.rates)
+
+        XCTAssertTrue(rates.isEmpty)
+    }
+
+    func test_map_shouldBeNoThrowWithOneCalcRates() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(rates: [.stub()]))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+        
+        let rates = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.rates)
+
+        XCTAssertTrue(rates.count == 1)
+    }
+
+    func test_map_shouldBeNoThrowWithTwoCalcRates() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(rates: [.stub(), .stub()]))
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+
+        let rates = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.rates)
+
+        XCTAssertTrue(rates.count == 2)
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcAmountMinIntValue() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(amount: .stub(minIntValue: nil)))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcAmountMaxIntValue() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(amount: .stub(maxIntValue: nil)))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowWithoutCalcAmountMaxStringValue() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(amount: .stub(maxStringValue: nil)))
+            ]))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithoutCalcCollateralIcon() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(calc: .stub(collateral: [.stub(icon: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithTwoFrequentlyAskedQuestion() throws {
+    func test_map_shouldBeNoThrowWithoutCalcCollateralName() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    frequentlyAskedQuestions: [.stub(), .stub()]
-                )
+                .stub(calc: .stub(collateral: [.stub(name: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeInvalidWithoutDocuments() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            documents: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyDocuments() throws {
+    func test_map_shouldBeNoThrowWithoutCalcCollateralType() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    documents: []
-                )
+                .stub(calc: .stub(collateral: [.stub(type: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithOneDocument() throws {
+    func test_map_shouldBeNoThrowWithoutCalcRateRateBase() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    documents: []
-                )
+                .stub(calc: .stub(rates: [.stub(rateBase: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithTwoDocuments() throws {
+    func test_map_shouldBeNoThrowWithoutCalcRateRatePayrollClient() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    documents: []
-                )
+                .stub(calc: .stub(rates: [.stub(ratePayrollClient: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeInvalidWithoutConsents() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            consents: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyConsents() throws {
+    func test_map_shouldBeNoThrowWithoutCalcRateTermMonth() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    consents: []
-                )
+                .stub(calc: .stub(rates: [.stub(termMonth: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithOneConsent() throws {
+    func test_map_shouldBeNoThrowWithoutCalcRateTermStringValue() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    consents: [.stub()]
-                )
+                .stub(calc: .stub(rates: [.stub(termStringValue: nil)]))
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithTwoConsent() throws {
+    func test_map_shouldBeNoThrowWithoutFrequentlyAskedQuestionQuestion() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    consents: [.stub(), .stub()]
-                )
+                .stub(frequentlyAskedQuestions: [.stub(question: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeInvalidWithoutCities() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            cities: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyCities() throws {
+    func test_map_shouldBeNoThrowWithoutFrequentlyAskedQuestionAnswer() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    cities: []
-                )
+                .stub(frequentlyAskedQuestions: [.stub(answer: nil)])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithoutDocumentTitle() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(documents: [.stub(title: nil)])
+            ]))
+
+        XCTAssertNoThrow(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeNoThrowWithoutDocumentIcon() throws {
+        
+        let stub = CodableResponse(
+            statusCode: 200,
+            errorMessage: nil,
+            data: .init(serial: anyMessage(), products: [
+                .stub(documents: [.stub(icon: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
     
-    func test_map_shouldBeValidWithOneCity() throws {
+    func test_map_shouldBeNoThrowWithoutDocumentLink() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    cities: [anyMessage()]
-                )
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-    
-    func test_map_shouldBeValidWithTwoCity() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    cities: [anyMessage(), anyMessage()]
-                )
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-    
-    func test_map_shouldBeInvalidWithoutIcons() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            icons: nil
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutMarketingLabelTag() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            marketing: .stub(
-                labelTag: nil
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutMarketingImage() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            marketing: .stub(
-                image: nil
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutMarketingParams() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            marketing: .stub(params: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyMarketingParams() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    marketing: .stub(params: [])
-                )
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-    
-    func test_map_shouldBeValidWithOneMarketingParams() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    marketing: .stub(params: [anyMessage()])
-                )
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-    
-    func test_map_shouldBeValidWithTwoMarketingParams() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    marketing: .stub(params: [anyMessage(), anyMessage()])
-                )
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-    
-    func test_map_shouldBeInvalidWithoutConditionIcon() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            conditions: [
-                .stub(icon: nil)
-            ]
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutConditionTitle() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            conditions: [
-                .stub(title: nil)
-            ]
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutConditionSubtitle() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            conditions: [
-                .stub(subTitle: nil)
-            ]
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcAmount() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(amount: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcCollateral() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(collateral: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyCalcCollateral() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    calc: .stub(collateral: [])
-                )
+                .stub(documents: [.stub(link: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithOneCalcCollateral() throws {
+    func test_map_shouldBeNoThrowWithoutConsentName() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    calc: .stub(collateral: [.stub()])
-                )
+                .stub(consents: [.stub(name: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithTwoCalcCollateral() throws {
+    func test_map_shouldBeNoThrowWithoutConsentLink() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    calc: .stub(collateral: [.stub(), .stub()])
-                )
+                .stub(consents: [.stub(link: nil)])
             ]))
 
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeInvalidWithoutCalcRates() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(rates: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithEmptyCalcRates() throws {
+    func test_map_shouldBeThrowsWithoutIconsProductName() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    calc: .stub(rates: [])
-                )
+                .stub(icons: .stub(productName: nil))
             ]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithOneCalcRates() throws {
+    func test_map_shouldBeThrowsWithoutIconsAmount() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    calc: .stub(rates: [.stub()])
-                )
+                .stub(icons: .stub(amount: nil))
             ]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeValidWithTwoCalcRates() throws {
+    func test_map_shouldBeThrowsWithoutIconsTerm() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    calc: .stub(rates: [.stub(), .stub()])
-                )
+                .stub(icons: .stub(term: nil))
             ]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeInvalidWithoutCalcAmountMinIntValue() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                amount: .stub(minIntValue: nil)
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcAmountMaxIntValue() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                amount: .stub(maxIntValue: nil)
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcAmountMaxStringValue() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                amount: .stub(maxStringValue: nil)
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcCollateralIcon() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                collateral: [
-                    .stub(icon: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcCollateralName() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                collateral: [
-                    .stub(name: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcCollateralType() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                collateral: [
-                    .stub(type: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcRateRateBase() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                rates: [
-                    .stub(rateBase: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcRateRatePayrollClient() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                rates: [
-                    .stub(ratePayrollClient: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcRateTermMonth() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                rates: [
-                    .stub(termMonth: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutCalcRateTermStringValue() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            calc: .stub(
-                rates: [
-                    .stub(termStringValue: nil)
-                ]
-            )
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutFrequentlyAskedQuestionQuestion() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            frequentlyAskedQuestions: [
-                .stub(question: nil)
-            ]
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutFrequentlyAskedQuestionAnswer() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            frequentlyAskedQuestions: [
-                .stub(answer: nil)
-            ]
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutDocumentTitle() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            documents: [
-                .stub(title: nil)
-            ]
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeValidWithoutDocumentIcon() throws {
+    func test_map_shouldBeThrowsWithoutIconsRate() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    documents: [
-                        .stub(icon: nil)
-                    ]
-                )
+                .stub(icons: .stub(rate: nil))
             ]))
-        
-        let validData = try stub.encoded()
-        
-        XCTAssertNoThrow(try map(validData).get())
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
     }
-    
-    func test_map_shouldBeValidWithoutDocumentLink() throws {
+
+    func test_map_shouldBeThrowsWithoutIconsCity() throws {
         
         let stub = CodableResponse(
             statusCode: 200,
             errorMessage: nil,
             data: .init(serial: anyMessage(), products: [
-                .stub(
-                    documents: [
-                        .stub(link: nil)
-                    ]
-                )
+                .stub(icons: .stub(city: nil))
             ]))
-        
-        let validData = try stub.encoded()
-        
-        XCTAssertNoThrow(try map(validData).get())
-    }
 
-    func test_map_shouldBeValidWithoutConsentName() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    consents: [
-                        .stub(name: nil)
-                    ]
-                )
-            ]))
-        
-        let validData = try stub.encoded()
-        
-        XCTAssertNoThrow(try map(validData).get())
-    }
-
-    func test_map_shouldBeValidWithoutConsentLink() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(
-                    consents: [
-                        .stub(link: nil)
-                    ]
-                )
-            ]))
-        
-        let validData = try stub.encoded()
-        
-        XCTAssertNoThrow(try map(validData).get())
-    }
-
-    func test_map_shouldBeInvalidWithoutIconsProductName() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            icons: .stub(productName: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutIconsAmount() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            icons: .stub(amount: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutIconsTerm() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            icons: .stub(term: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutIconsRate() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            icons: .stub(rate: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
-    }
-
-    func test_map_shouldBeInvalidWithoutIconsCity() throws {
-        
-        let invalidData = try CollateralLandingStubProduct.stub(
-            icons: .stub(city: nil)
-        ).encoded()
-        
-        let result = map(invalidData)
-        
-        assert(result, equals: .failure(.invalid(
-            statusCode: 200,
-            data: invalidData
-        )))
+        XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     // MARK: - Helpers
