@@ -72,7 +72,7 @@ private extension CategoryPickerSectionDomain.Binder {
     var eventPublisher: EventPublisher {
         
         flow.$state
-            .compactMap(\.event)
+            .compactMap(\.select)
             .eraseToAnyPublisher()
     }
     
@@ -84,11 +84,23 @@ private extension CategoryPickerSectionDomain.Binder {
 
 private extension FlowState<SelectedCategoryNavigation> {
     
-    var event: PaymentsTransfersPersonalSelect? {
+    var select: PaymentsTransfersPersonalSelect? {
         
         switch navigation {
-        case .paymentFlow(.qr(())):
-            return .outside(.scanQR)
+        case let .paymentFlow(paymentFlow):
+            switch paymentFlow {
+            case .mobile:
+                return nil
+                
+            case .qr(()):
+                return .scanQR
+                
+            case let .standard(standard):
+                return .standardPayment
+                
+            case .taxAndStateServices, .transport:
+                return nil
+            }
             
         default:
             return nil
@@ -131,8 +143,20 @@ private extension OperationPickerDomain.FlowDomain.State {
     var select: PaymentsTransfersPersonalSelect? {
         
         switch navigation {
-        case .templates: return .outside(.templates)
-        default:         return nil
+        case .none, .exchange, .latest:
+            return nil
+            
+        case let .status(status):
+            switch status {
+            case .main:
+                return .main
+                
+            case .exchangeFailure:
+                return nil
+            }
+            
+        case .templates:
+            return .templates
         }
     }
 }

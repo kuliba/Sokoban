@@ -220,14 +220,12 @@ private extension PaymentsTransfersPersonalNavigation {
     var rootEvent: RootEvent? {
         
         switch self {
-        case .scanQR:
-            return .scanQR
-            
-        case .templates:
-            return .templates
-            
-        case .userAccount:
-            return .userAccount
+        case .byPhoneTransfer: return nil // .byPhoneTransfer
+        case .main:            return .outside(.tab(.main))
+        case .scanQR:          return .scanQR
+        case .standardPayment: return .utilityPayment
+        case .templates:       return .templates
+        case .userAccount:     return .userAccount
         }
     }
 }

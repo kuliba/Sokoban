@@ -13,21 +13,6 @@ extension RootViewModelFactory {
         notify: @escaping PaymentsTransfersPersonalDomain.Notify,
         completion: @escaping (PaymentsTransfersPersonalDomain.Navigation) -> Void
     ) {
-        switch select {
-        case let.outside(outside):
-            switch outside {
-            case .templates:
-                completion(.templates)
-                
-            case .userAccount:
-                completion(.userAccount)
-                
-            case .scanQR:
-                completion(.scanQR)
-                
-            default:
-                fatalError()
-            }
-        }
+        completion(select)
     }
 }

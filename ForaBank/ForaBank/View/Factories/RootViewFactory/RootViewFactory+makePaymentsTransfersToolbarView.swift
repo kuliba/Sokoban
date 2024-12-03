@@ -17,18 +17,18 @@ extension RootViewFactory {
         
         makeUserAccountToolbarButton {
             
-            binder.flow.event(.select(.outside(.userAccount)))
+            binder.flow.event(.select(.userAccount))
         }
         
         ToolbarItem(placement: .topBarTrailing) {
             
             Button {
                 
-                binder.flow.event(.select(.outside(.scanQR)))
+                binder.flow.event(.select(.scanQR))
                 
             } label: {
                 
-                Image(systemName: "qrcode")
+                Image.ic24BarcodeScanner2
             }
         }
     }
