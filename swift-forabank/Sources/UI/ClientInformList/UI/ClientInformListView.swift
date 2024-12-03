@@ -93,7 +93,7 @@ public struct ClientInformListView: View {
                 multipleInfoView(multipleInfo)
             }
         }
-        .padding(.bottom, config.paddings.bottom)
+        .padding(.bottom, contentHeight < maxHeight ? config.paddings.bottom : .zero)
     }
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
@@ -124,7 +124,7 @@ public struct ClientInformListView: View {
                 titleView(multipleInfo.label.title)
             }
             
-            LazyVStack(alignment: .leading, spacing: config.sizes.spacing) {
+            VStack(alignment: .leading, spacing: config.sizes.spacing) {
                 
                 ForEach(multipleInfo.items) { item in
                     
