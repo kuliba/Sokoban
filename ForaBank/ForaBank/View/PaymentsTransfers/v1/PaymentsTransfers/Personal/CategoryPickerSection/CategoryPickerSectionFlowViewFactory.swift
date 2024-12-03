@@ -20,6 +20,6 @@ extension CategoryPickerSectionFlowViewFactory {
     
     typealias MakeAlert = (SelectedCategoryFailure) -> Alert
     typealias MakeContentView = () -> ContentView
-    typealias MakeDestinationView = (CategoryPickerSectionNavigation.Destination) -> DestinationView
-    typealias MakeFullScreenCoverView = (CategoryPickerSectionNavigation.FullScreenCover) -> FullScreenCoverView
+    typealias MakeDestinationView = (SelectedCategoryNavigation.Destination) -> DestinationView
+    typealias MakeFullScreenCoverView = (SelectedCategoryNavigation.FullScreenCover) -> FullScreenCoverView
 }

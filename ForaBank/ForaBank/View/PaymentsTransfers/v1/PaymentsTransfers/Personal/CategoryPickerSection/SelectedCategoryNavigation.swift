@@ -8,8 +8,6 @@
 import Foundation
 import PayHub
 
-typealias CategoryPickerSectionNavigation = SelectedCategoryNavigation
-
 enum SelectedCategoryNavigation {
     
     case failure(SelectedCategoryFailure)

@@ -36,9 +36,10 @@ extension SelectedCategoryNavigationMicroServicesComposer {
         return .init(getNavigation: getNavigation)
     }
     
-    typealias Select = CategoryPickerSectionDomain.Select
-    typealias Navigation = SelectedCategoryNavigation
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias Domain = CategoryPickerSectionDomain
+    typealias Select = Domain.Select
+    typealias Navigation = Domain.Navigation
+    typealias FlowDomain = Domain.FlowDomain
     typealias MicroServices = FlowDomain.MicroServices
 }
 
@@ -49,7 +50,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     func getNavigation(
         category: ServiceCategory,
         _ notify: @escaping Notify,
-        _ completion: @escaping (SelectedCategoryNavigation) -> Void
+        _ completion: @escaping (Navigation) -> Void
     ) {
         switch category.paymentFlow {
         case .mobile:
@@ -108,7 +109,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     func getNavigation(
         qrSelect payload: QRNavigationComposer.NotifyEvent,
         _ notify: @escaping (FlowDomain.NotifyEvent) -> Void,
-        _ completion: @escaping (SelectedCategoryNavigation) -> Void
+        _ completion: @escaping (Navigation) -> Void
     ) {
         switch payload {
         case let .contactAbroad(source):

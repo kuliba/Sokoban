@@ -47,7 +47,7 @@ extension CategoryPickerSectionFlowView {
 
 private extension CategoryPickerSectionDomain.FlowDomain.State {
     
-    var destination: CategoryPickerSectionNavigation.Destination? {
+    var destination: SelectedCategoryNavigation.Destination? {
         
         navigation?.destination
     }
@@ -57,7 +57,7 @@ private extension CategoryPickerSectionDomain.FlowDomain.State {
         navigation?.failure
     }
     
-    var fullScreenCover: CategoryPickerSectionNavigation.FullScreenCover? {
+    var fullScreenCover: SelectedCategoryNavigation.FullScreenCover? {
         
         navigation?.fullScreenCover
     }

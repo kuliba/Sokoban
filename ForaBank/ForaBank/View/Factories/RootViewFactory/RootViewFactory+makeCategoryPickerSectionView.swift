@@ -104,7 +104,7 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: CategoryPickerSectionNavigation.Destination
+        destination: SelectedCategoryNavigation.Destination
     ) -> some View {
         
         switch destination {
@@ -135,7 +135,7 @@ extension RootViewFactory {
     }
     
     private func makeFullScreenCoverView(
-        cover: CategoryPickerSectionNavigation.FullScreenCover
+        cover: SelectedCategoryNavigation.FullScreenCover
     ) -> some View {
         
         NavigationView {
