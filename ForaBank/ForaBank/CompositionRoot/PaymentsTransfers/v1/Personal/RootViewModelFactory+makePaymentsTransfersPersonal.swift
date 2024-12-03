@@ -29,11 +29,13 @@ extension RootViewModelFactory {
     }
 }
 
+private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect, Never>
+
 // MARK: - Content
 
 private extension PaymentsTransfersPersonalDomain.Content {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         Publishers.Merge3(
             categoryPicker.eventPublisher,
@@ -54,7 +56,7 @@ private extension PaymentsTransfersPersonalDomain.Content {
 
 private extension PayHubUI.CategoryPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         sectionBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -67,7 +69,7 @@ private extension PayHubUI.CategoryPicker {
 
 private extension CategoryPickerSectionDomain.Binder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         flow.$state
             .compactMap { _ in return nil }
@@ -84,7 +86,7 @@ private extension CategoryPickerSectionDomain.Binder {
 
 private extension PayHubUI.OperationPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         operationBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -97,7 +99,7 @@ private extension PayHubUI.OperationPicker {
 
 private extension OperationPickerDomain.Binder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         flow.$state
             .compactMap(\.select)
@@ -125,7 +127,7 @@ private extension OperationPickerDomain.FlowDomain.State {
 
 private extension PayHubUI.TransfersPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         transfersBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -138,7 +140,7 @@ private extension PayHubUI.TransfersPicker {
 
 private extension PaymentsTransfersPersonalTransfersDomain.Binder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         flow.$state
             .compactMap { _ in return nil }
