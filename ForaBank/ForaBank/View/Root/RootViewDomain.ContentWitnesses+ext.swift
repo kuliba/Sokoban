@@ -13,14 +13,14 @@ extension RootViewDomain.ContentWitnesses {
         
         self.init(
             emitting: {
-            
+                
                 if isFlagActive {
                     $0.rootEventPublisher
                 } else {
                     Empty().eraseToAnyPublisher()
                 }
             },
-            receiving: { _ in {}}
+            dismissing: { _ in {}}
         )
     }
 }

@@ -41,7 +41,6 @@ struct FeedWithBottomView<Feed: View, Bottom: View>: View {
 
 // MARK: - Previews
 
-@available(iOS 15.0, *)
 struct FeedWithBottomView_Previews: PreviewProvider {
     
     static var previews: some View {
