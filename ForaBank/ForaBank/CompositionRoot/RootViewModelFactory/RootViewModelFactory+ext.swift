@@ -219,11 +219,7 @@ extension RootViewModelFactory {
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
         
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
-            if self.changeSVCardLimitsFlag.isActive {
-                return .fullScreen(.cardGuardian($0, self.changeSVCardLimitsFlag))
-            } else {
-                return .bottomSheet(.cardGuardian($0, self.changeSVCardLimitsFlag))
-            }
+            return .fullScreen(.cardGuardian($0))
         }
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(

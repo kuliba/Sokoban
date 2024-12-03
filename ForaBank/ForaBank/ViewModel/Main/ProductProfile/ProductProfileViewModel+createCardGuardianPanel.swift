@@ -17,14 +17,13 @@ extension ProductProfileViewModel {
 private extension String {
     
     static func cardGuardianTitle(
-        by status: ProductCardData.StatusCard?,
-        _ flag: ChangeSVCardLimitsFlag
+        by status: ProductCardData.StatusCard?
     ) -> String {
         switch status {
         case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
-            return  flag.isActive ? "Разблок. карту" : "Разблокировать"
+            return "Разблок. карту"
         case .active:
-            return flag.isActive ? "Блокировать карту" : "Блокировать"
+            return "Блокировать карту"
         default:
             return ""
         }
@@ -35,10 +34,9 @@ private extension String {
     }
     
     static func visibilityTitle(
-        by visibility: Bool,
-        _ flag: ChangeSVCardLimitsFlag = .inactive
+        by visibility: Bool
     ) -> String {
-        return visibility ? (flag.isActive ? "Скрыть\nс главного" : "Скрыть с главного") : "Вернуть на главный"
+        return visibility ? "Скрыть\nс главного" : "Вернуть на главный"
     }
     
     static func visibilitySubtitle(by visibility: Bool) -> String {
@@ -71,11 +69,13 @@ private extension Image {
 
 private extension PanelButtonDetails {
     
-    static func createCardGuardianButton(by card: ProductCardData, _ flag: ChangeSVCardLimitsFlag) -> Self {
+    static func createCardGuardianButton(
+        by card: ProductCardData
+    ) -> Self {
         
         return .init(
             id: card.id,
-            title: .cardGuardianTitle(by: card.statusCard, flag),
+            title: .cardGuardianTitle(by: card.statusCard),
             icon: .cardGuardian(by: card.statusCard),
             subtitle: nil,
             kind: .cardGuardian)
@@ -105,19 +105,18 @@ private extension PanelButtonDetails {
 extension Array where Element == PanelButtonDetails {
     
     static func cardGuardian(
-        _ card: ProductCardData,
-        _ flag: ChangeSVCardLimitsFlag
+        _ card: ProductCardData
     ) -> Self {
         
         switch card.cardType {
         case .additionalOther:
             return [
-                .createCardGuardianButton(by: card, flag),
+                .createCardGuardianButton(by: card),
                 .createVisibilityButton(by: card)
             ]
         default:
             return [
-                .createCardGuardianButton(by: card, flag),
+                .createCardGuardianButton(by: card),
                 .createChangePinButton(by: card),
                 .createVisibilityButton(by: card)
             ]
@@ -128,25 +127,23 @@ extension Array where Element == PanelButtonDetails {
 private extension ControlPanelButtonDetails {
     
     static func createCardGuardianButton(
-        by card: ProductCardData,
-        _ flag: ChangeSVCardLimitsFlag
+        by card: ProductCardData
     ) -> Self {
         
         return .init(
             id: card.id,
-            title: .cardGuardianTitle(by: card.statusCard, flag),
+            title: .cardGuardianTitle(by: card.statusCard),
             icon: .cardGuardian(by: card.statusCard),
             event: .delayAlert(card))
     }
     
     static func createVisibilityButton(
-        by card: ProductCardData,
-        _ flag: ChangeSVCardLimitsFlag
+        by card: ProductCardData
     ) -> Self {
         
         return .init(
             id: card.id,
-            title: .visibilityTitle(by: card.isVisible, flag),
+            title: .visibilityTitle(by: card.isVisible),
             icon: .visibility(by: card.isVisible),
             event: .visibility(card))
     }
@@ -164,20 +161,19 @@ private extension ControlPanelButtonDetails {
 extension Array where Element == ControlPanelButtonDetails {
     
     static func cardGuardian(
-        _ card: ProductCardData,
-        _ flag: ChangeSVCardLimitsFlag
+        _ card: ProductCardData
     ) -> Self {
         
         switch card.cardType {
         case .additionalOther:
             return [
-                .createCardGuardianButton(by: card, flag),
-                .createVisibilityButton(by: card, flag)
+                .createCardGuardianButton(by: card),
+                .createVisibilityButton(by: card)
             ]
         default:
             return [
-                .createCardGuardianButton(by: card, flag),
-                .createVisibilityButton(by: card, flag),
+                .createCardGuardianButton(by: card),
+                .createVisibilityButton(by: card),
                 .createChangePinButton(by: card)
             ]
         }

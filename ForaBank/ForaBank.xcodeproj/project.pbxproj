@@ -2817,7 +2817,6 @@
 		83CE89FB2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE89FA2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift */; };
 		83CE89FD2BC43074008CA98C /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE89FC2BC43074008CA98C /* PanelView.swift */; };
 		83CE8A012BC44912008CA98C /* PanelView+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE8A002BC44912008CA98C /* PanelView+Config.swift */; };
-		83CFA2952C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */; };
 		83CFA2992C2D72BD003B5E49 /* ControlPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */; };
 		83CFA29B2C2D7302003B5E49 /* ControlPanelViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29A2C2D7302003B5E49 /* ControlPanelViewConfig.swift */; };
 		83CFA29F2C2D7C51003B5E49 /* PanelButtonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */; };
@@ -6275,7 +6274,6 @@
 		83CE89FA2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductNavigationStateManager+ButtonEvent.swift"; sourceTree = "<group>"; };
 		83CE89FC2BC43074008CA98C /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
 		83CE8A002BC44912008CA98C /* PanelView+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PanelView+Config.swift"; sourceTree = "<group>"; };
-		83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СhangeSVCardLimitsFlag.swift"; sourceTree = "<group>"; };
 		83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelView.swift; sourceTree = "<group>"; };
 		83CFA29A2C2D7302003B5E49 /* ControlPanelViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelViewConfig.swift; sourceTree = "<group>"; };
 		83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelButtonDetails.swift; sourceTree = "<group>"; };
@@ -10098,7 +10096,6 @@
 			isa = PBXGroup;
 			children = (
 				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
-				83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */,
 				839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */,
 				C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */,
 				2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */,
@@ -21644,7 +21641,6 @@
 				77246B3B287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift in Sources */,
 				77A6A9D927F473CB00CE7E28 /* PlacesView.swift in Sources */,
 				83CC9D2E2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift in Sources */,
-				83CFA2952C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift in Sources */,
 				2AB352E22B6BC7D5000EADC2 /* UserAccountReducer.swift in Sources */,
 				0B1781232926E6CE005209B5 /* QRSearchItemComponent.swift in Sources */,
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,
