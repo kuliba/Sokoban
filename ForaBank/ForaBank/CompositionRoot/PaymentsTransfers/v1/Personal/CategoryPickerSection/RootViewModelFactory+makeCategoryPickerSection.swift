@@ -19,19 +19,25 @@ extension RootViewModelFactory {
         _ nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
         
+        return compose(
+            getNavigation: getNavigation,
+            content: makeContent(nanoServices),
+            witnesses: witnesses()
+        )
+    }
+    
+    @inlinable
+    func makeContent(
+        _ nanoServices: PaymentsTransfersPersonalNanoServices
+    ) -> CategoryPickerSectionDomain.Content {
+        
         let placeholderCount = settings.categoryPickerPlaceholderCount
         
-        let content = composeLoadablePickerModel(
+        return composeLoadablePickerModel(
             load: nanoServices.loadCategories,
             reload: nanoServices.reloadCategories,
             suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
             placeholderCount: placeholderCount
-        )
-        
-        return compose(
-            getNavigation: getNavigation,
-            content: content,
-            witnesses: witnesses()
         )
     }
     
