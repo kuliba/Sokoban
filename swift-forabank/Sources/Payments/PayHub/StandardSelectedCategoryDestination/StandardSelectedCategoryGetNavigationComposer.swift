@@ -1,11 +1,11 @@
 //
-//  StandardSelectedCategoryDestinationMicroServiceComposer.swift
+//  StandardSelectedCategoryGetNavigationComposer.swift
 //
 //
 //  Created by Igor Malyarov on 02.09.2024.
 //
 
-public final class StandardSelectedCategoryDestinationMicroServiceComposer<Category, Latest, Operator, Success, Failure: Error> {
+public final class StandardSelectedCategoryGetNavigationComposer<Category, Latest, Operator, Success, Failure: Error> {
     
     private let nanoServices: NanoServices
     
@@ -18,7 +18,7 @@ public final class StandardSelectedCategoryDestinationMicroServiceComposer<Categ
     public typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<Category, Latest, Operator, Success, Failure>
 }
 
-public extension StandardSelectedCategoryDestinationMicroServiceComposer {
+public extension StandardSelectedCategoryGetNavigationComposer {
     
     func makeDestination(
         category: Category,
@@ -28,7 +28,7 @@ public extension StandardSelectedCategoryDestinationMicroServiceComposer {
     }
 }
 
-private extension StandardSelectedCategoryDestinationMicroServiceComposer {
+private extension StandardSelectedCategoryGetNavigationComposer {
     
     func handle(
         _ result: Result<[Operator], Error>,

@@ -16,7 +16,7 @@ extension RootViewModelFactory {
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
         let nanoServices = makeStandardNanoServices(for: category)
-        let composer = StandardSelectedCategoryDestinationMicroServiceComposer(
+        let composer = StandardSelectedCategoryGetNavigationComposer(
             nanoServices: nanoServices
         )
         
@@ -26,9 +26,6 @@ extension RootViewModelFactory {
             _ = composer
         }
     }
-}
-
-extension RootViewModelFactory {
     
     @inlinable
     func makeStandardNanoServices(
@@ -42,7 +39,10 @@ extension RootViewModelFactory {
         
         return .init(
             loadLatest: { getLatestPayments([category.name], $0) },
-            loadOperators: { self.loadOperatorsForCategory(category: category, completion: $0) },
+            loadOperators: {
+                
+                self.loadOperatorsForCategory(category: category, completion: $0)
+            },
             makeFailure: { $0(.init()) },
             makeSuccess: { payload, completion in
                 

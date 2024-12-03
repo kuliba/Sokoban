@@ -1,5 +1,5 @@
 //
-//  StandardSelectedCategoryDestinationMicroServiceComposerTests.swift
+//  StandardSelectedCategoryGetNavigationComposerTests.swift
 //
 //
 //  Created by Igor Malyarov on 02.09.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTestCase {
+final class StandardSelectedCategoryGetNavigationComposerTests: XCTestCase {
     
     func test_makeDestination_shouldDeliverFailureOnLoadOperatorsFailure() {
         
@@ -334,7 +334,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     // MARK: - Helpers
     
-    private typealias SUT = StandardSelectedCategoryDestinationMicroServiceComposer<Category, Latest, Operator, Success, Failure>
+    private typealias SUT = StandardSelectedCategoryGetNavigationComposer<Category, Latest, Operator, Success, Failure>
     private typealias LoadOperatorsSpy = Spy<Void, Result<[Operator], Error>>
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>>
     private typealias MakeFailureSpy = Spy<Void, Failure>
