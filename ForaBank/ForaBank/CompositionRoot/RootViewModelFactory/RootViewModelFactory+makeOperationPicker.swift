@@ -26,7 +26,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationPicker(
-        nanoServices: PaymentsTransfersPersonalNanoServices
+        _ nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> OperationPickerDomain.Binder {
         
         let content = composeLoadablePickerModel(
@@ -66,7 +66,7 @@ extension RootViewModelFactory {
             completion(.latest(.init(latest: latest)))
             
         case .templates:
-            completion(.templates(.init()))
+            completion(.templates)
         }
     }
     
@@ -74,7 +74,7 @@ extension RootViewModelFactory {
         
         return .init(
             emitting: { $0.$state.compactMap(\.selected) },
-            receiving: { content in { content.event(.select(nil)) }}
+            dismissing: { content in { content.event(.select(nil)) }}
         )
     }
 }

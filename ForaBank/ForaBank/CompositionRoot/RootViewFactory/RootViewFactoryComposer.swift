@@ -76,7 +76,8 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
-            components: makeViewComponents()
+            components: makeViewComponents(),
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
         )
     }
     
@@ -188,12 +189,12 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountView(
-        viewModel: UserAccountViewModel,
-        config: UserAccountConfig
+        viewModel: UserAccountViewModel
     ) -> UserAccountView {
-        .init(
+        
+        return .init(
             viewModel: viewModel,
-            config: config,
+            config: .iFora,
             viewFactory: makeUserAccountViewFactory()
         )
     }
@@ -892,6 +893,37 @@ private extension RootViewFactoryComposer {
                             })
                     }
             })
+    }
+}
+
+extension RootViewFactoryComposer {
+    
+    func makeUpdatingUserAccountButtonLabel(
+    ) -> UpdatingUserAccountButtonLabel {
+        
+        return  .init(
+            label: .init(avatar: nil, name: ""),
+            publisher: model.userLabelPublisher,
+            config: .prod
+        )
+    }
+}
+
+private extension Model {
+    
+    var userLabelPublisher: AnyPublisher<UserLabel, Never> {
+        
+        Publishers.CombineLatest3(
+            clientPhoto.map(\.?.photo.image),
+            clientName.map(\.?.name),
+            clientInfo.compactMap(\.?.firstName)
+        )
+        .map { image, name, firstName in
+            
+            return .init(avatar: image, name: name ?? firstName)
+        }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
     }
 }
 

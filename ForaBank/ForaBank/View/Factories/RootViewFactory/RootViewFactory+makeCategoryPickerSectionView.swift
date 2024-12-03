@@ -6,6 +6,7 @@
 //
 
 import LoadableResourceComponent
+import PayHub
 import PayHubUI
 import RxViewModel
 import SwiftUI
@@ -32,33 +33,44 @@ extension RootViewFactory {
         binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
-        ComposedCategoryPickerSectionView(
-            binder: binder,
-            factory: .init(
-                makeAlert: makeCategoryPickerSectionAlert(binder: binder),
-                makeContentView: {
-                    
-                    RxWrapperView(
-                        model: binder.content,
-                        makeContentView: { state, event in
-                            
-                            CategoryPickerSectionContentView(
-                                state: state,
-                                event: event,
-                                config: .iFora,
-                                itemLabel: itemLabel
-                            )
-                        }
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeAlert: makeAlert(binder: binder),
+                        makeContentView: { makeContentView(binder) },
+                        makeDestinationView: makeDestinationView,
+                        makeFullScreenCoverView: makeFullScreenCoverView
                     )
-                },
-                makeDestinationView: makeCategoryPickerSectionDestinationView,
-                makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
-            )
+                )
+            }
         )
         .padding(.top, 20)
     }
     
-    private func makeCategoryPickerSectionAlert(
+    private func makeContentView(
+        _ binder: CategoryPickerSectionDomain.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: binder.content,
+            makeContentView: { state, event in
+                
+                CategoryPickerSectionContentView(
+                    state: state,
+                    event: event,
+                    config: .iFora,
+                    itemLabel: itemLabel
+                )
+            }
+        )
+    }
+    
+    private func makeAlert(
         binder: CategoryPickerSectionDomain.Binder
     ) -> (SelectedCategoryFailure) -> Alert {
         
@@ -87,11 +99,11 @@ extension RootViewFactory {
         category: ServiceCategory
     ) -> some View {
         
-        Color.blue.opacity(0.1)
+        makeIconView(.md5Hash(.init(category.md5Hash)))
     }
     
     @ViewBuilder
-    private func makeCategoryPickerSectionDestinationView(
+    private func makeDestinationView(
         destination: CategoryPickerSectionNavigation.Destination
     ) -> some View {
         
@@ -122,7 +134,7 @@ extension RootViewFactory {
         }
     }
     
-    private func makeCategoryPickerSectionFullScreenCoverView(
+    private func makeFullScreenCoverView(
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
         

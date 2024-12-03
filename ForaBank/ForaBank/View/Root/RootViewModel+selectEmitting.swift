@@ -10,20 +10,15 @@ import Combine
 typealias RootEvent = RootViewSelect
 
 extension RootViewModel {
-        
+    
     var rootEventPublisher: AnyPublisher<RootEvent, Never> {
         
-        return Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
-    }
-}
-
-private extension RootViewModel {
-    
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        [rootRootEventPublisher] 
-        + mainViewRootEventPublishers
-        + paymentsTransfersRootEventPublishers
+        return Publishers.MergeMany([
+            rootRootEventPublisher,
+            mainViewRootEventPublisher,
+            paymentsTransfersRootEventPublisher
+        ])
+        .eraseToAnyPublisher()
     }
     
     private var rootRootEventPublisher: AnyPublisher<RootEvent, Never> {
@@ -31,19 +26,19 @@ private extension RootViewModel {
         action.compactMap(\.rootEvent).eraseToAnyPublisher()
     }
     
-    private var mainViewRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+    private var mainViewRootEventPublisher: AnyPublisher<RootEvent, Never> {
         
-        tabsViewModel.mainViewModel.rootEventPublishers
+        tabsViewModel.mainViewModel.rootEventPublisher
     }
     
-    private var paymentsTransfersRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+    private var paymentsTransfersRootEventPublisher: AnyPublisher<RootEvent, Never> {
         
         switch tabsViewModel.paymentsModel {
         case let .legacy(legacy):
-            return legacy.rootEventPublishers
+            return legacy.rootEventPublisher
             
-        default:
-            return []
+        case let .v1(switcher):
+            return switcher.rootEventPublisher
         }
     }
 }
@@ -63,20 +58,26 @@ private extension Action {
 }
 
 private extension MainViewModel {
-
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
+    }
+    
+    private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         explicitRootEventPublishers + fastRootEventPublishers
     }
-
+    
     private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         sections
             .map {
+                
                 $0.action.compactMap(\.rootEvent).eraseToAnyPublisher()
             }
     }
-
+    
     private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         sections
@@ -114,7 +115,12 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
 
 private extension PaymentsTransfersViewModel {
     
-    var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
+    }
+    
+    private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         sections
             .filter { $0.type == .payments }
@@ -146,3 +152,91 @@ private extension PTSectionPaymentsViewAction.ButtonTapped.Payment {
 }
 
 // MARK: - PaymentsTransfers v1
+
+private extension PaymentsTransfersSwitcherProtocol {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        switch self as? PaymentsTransfersSwitcher {
+        case .none:
+            return Empty().eraseToAnyPublisher()
+            
+        case let .some(switcher):
+            return switcher.$state
+                .compactMap { $0 }
+                .flatMap(\.rootEventPublisher)
+                .eraseToAnyPublisher()
+        }
+    }
+}
+
+private extension PaymentsTransfersSwitcher.State {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        switch self {
+        case let .corporate(corporate):
+            return corporate.rootEventPublisher
+            
+        case let .personal(personal):
+            return personal.rootEventPublisher
+        }
+    }
+}
+
+private extension PaymentsTransfersCorporateDomain.Binder {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
+    }
+    
+    private var rootEventPublishers: AnyPublisher<RootEvent, Never> {
+        
+        return flow.$state
+            .compactMap(\.navigation?.rootEvent)
+            .eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersCorporateNavigation {
+    
+    var rootEvent: RootEvent? {
+        
+        switch self {
+        case .userAccount:
+            return .userAccount
+        }
+    }
+}
+
+private extension PaymentsTransfersPersonalDomain.Binder {
+    
+    var rootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
+    }
+    
+    private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
+        
+        let flowRootEventPublisher = flow.$state
+            .compactMap(\.navigation?.rootEvent)
+            .eraseToAnyPublisher()
+        
+        return [flowRootEventPublisher]
+    }
+}
+
+private extension PaymentsTransfersPersonalNavigation {
+    
+    var rootEvent: RootEvent? {
+        
+        switch self {
+        case .templates:
+            return .templates
+            
+        case .userAccount:
+            return .userAccount
+        }
+    }
+}

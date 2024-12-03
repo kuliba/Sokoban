@@ -73,12 +73,7 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fastPaymentsFactory = FastPaymentsFactory(
-            fastPaymentsViewModel: .new({
-                
-                self.makeNewFastPaymentsViewModel()
-            })
-        )
+        let fastPaymentsFactory = makeFastPaymentsFactory()
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,
@@ -86,16 +81,8 @@ extension RootViewModelFactory {
             logger: logger
         )
         
-        let userAccountNavigationStateManager = makeNavigationStateManager(
-            modelEffectHandler: .init(model: model),
-            otpServices: .init(httpClient, logger),
-            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
-            fastPaymentsFactory: fastPaymentsFactory,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
-            duration: 60
+        let userAccountNavigationStateManager = makeUserAccountNavigationStateManager(
+            fastPaymentsFactory: fastPaymentsFactory
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -232,11 +219,7 @@ extension RootViewModelFactory {
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
         
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
-            if self.changeSVCardLimitsFlag.isActive {
-                return .fullScreen(.cardGuardian($0, self.changeSVCardLimitsFlag))
-            } else {
-                return .bottomSheet(.cardGuardian($0, self.changeSVCardLimitsFlag))
-            }
+            return .fullScreen(.cardGuardian($0))
         }
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
@@ -296,10 +279,7 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
@@ -803,28 +783,6 @@ private extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
-
-private extension UserAccountModelEffectHandler {
-    
-    convenience init(model: Model) {
-        
-        self.init(
-            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
-                
-                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
-            },
-            deleteRequest: {
-                
-                model.action.send(ModelAction.ClientInfo.Delete.Request())
-            },
-            exit: {
-                
-                model.auth.value = .unlockRequiredManual
-            }
-        )
-    }
-}
 
 private extension MarketShowcaseDomain.ContentError {
     

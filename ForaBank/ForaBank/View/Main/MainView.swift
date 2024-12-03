@@ -166,7 +166,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
+            viewFactory.makeUserAccountView(userAccountViewModel)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
@@ -462,54 +462,16 @@ struct UserAccountButton: View {
     
     var body: some View {
         
-        Button(action: viewModel.action) {
-            
-            HStack {
-                
-                ZStack {
-                    
-                    if let avatar = viewModel.avatar {
-                        
-                        avatar
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                        
-                    } else {
-                        
-                        ZStack {
-                            
-                            Circle()
-                                .foregroundColor(.bgIconGrayLightest)
-                                .frame(width: 40, height: 40)
-                            
-                            Image.ic24User
-                                .renderingMode(.template)
-                                .foregroundColor(.iconGray)
-                        }
-                    }
-                    
-                    ZStack{
-                        
-                        Circle()
-                            .foregroundColor(.iconWhite)
-                            .frame(width: 20, height: 20)
-                        
-                        viewModel.logo
-                            .renderingMode(.original)
-                    }
-                    .offset(x: 18, y: -14)
-                    
-                }
-                
-                Text(viewModel.name)
-                    .foregroundColor(.textSecondary)
-                    .font(.textH4R16240())
-                    .accessibilityIdentifier("mainUserName")
-            }
-        }
-        .accessibilityIdentifier("mainUserButton")
+        Button(action: viewModel.action, label: label)
+            .accessibilityIdentifier("mainUserButton")
+    }
+}
+
+private extension UserAccountButton {
+    
+    func label() -> some View {
+        
+        UserAccountButtonLabel(avatar: viewModel.avatar, name: viewModel.name, config: .prod)
     }
 }
 
@@ -563,19 +525,26 @@ extension MainViewFactory {
         
         return .init(
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeIconView: IconDomain.preview, 
+            makeIconView: IconDomain.preview,
             makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
-                .init(
+                return .init(
                     viewModel: $0,
                     map: PublishingInfo.preview(info:),
                     config: .iFora
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: .preview) },
+            makeUserAccountView: {
+                
+                return .init(
+                    viewModel: $0,
+                    config: .preview,
+                    viewFactory: .preview
+                )
+            },
             components: .preview
         )
     }

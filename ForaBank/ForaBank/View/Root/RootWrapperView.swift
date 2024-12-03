@@ -56,6 +56,9 @@ private extension RootWrapperView {
             
         case let .templates(node):
             templatesView(node)
+            
+        case let .userAccount(userAccount):
+            userAccountView(userAccount)
         }
     }
     
@@ -73,6 +76,13 @@ private extension RootWrapperView {
         
         viewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
+    }
+    
+    private func userAccountView(
+        _ userAccount: UserAccountViewModel
+    ) -> some View {
+        
+        viewFactory.makeUserAccountView(userAccount)
     }
     
     // MARK: - FullScreenCover
@@ -145,6 +155,9 @@ extension RootViewNavigation {
             
         case let .templates(node):
             return .templates(node)
+            
+        case let .userAccount(userAccount):
+            return .userAccount(userAccount)
         }
     }
     
@@ -152,6 +165,7 @@ extension RootViewNavigation {
         
         case standardPayment(PaymentProviderPicker.Binder)
         case templates(TemplatesNode)
+        case userAccount(UserAccountViewModel)
         
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
     }
@@ -173,6 +187,9 @@ extension RootViewNavigation {
             
         case .templates:
             return nil
+            
+        case .userAccount:
+            return nil
         }
     }
     
@@ -192,6 +209,9 @@ extension RootViewNavigation.Destination: Identifiable {
             
         case let .templates(templates):
             return .templates(.init(templates.model))
+            
+        case let .userAccount(userAccount):
+            return .userAccount(.init(userAccount))
         }
     }
     
@@ -199,6 +219,7 @@ extension RootViewNavigation.Destination: Identifiable {
         
         case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
+        case userAccount(ObjectIdentifier)
     }
 }
 

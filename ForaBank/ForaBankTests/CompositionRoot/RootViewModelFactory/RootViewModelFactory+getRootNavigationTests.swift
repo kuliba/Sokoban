@@ -89,6 +89,38 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         }
     }
     
+    // MARK: - userAccount
+    
+    func test_userAccount_shouldDeliverFailureOnMissingClientInfo() {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.clientInfo.value = nil
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .userAccount, toDeliver: .failure(.makeUserAccountFailure))
+    }
+    
+    func test_userAccount_shouldDeliverUserAccountOnExistingClientInfo() {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.clientInfo.value = makeClientInfoData()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .userAccount, toDeliver: .userAccount)
+    }
+    
+    func test_userAccount_shouldNotifyWithDismissOnClose() {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.clientInfo.value = makeClientInfoData()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .userAccount, toNotifyWith: [.dismiss]) {
+            
+            $0.userAccount?.close()
+        }
+    }
+    
     // MARK: - utilityPayment
     
     func test_utilityPayment_shouldDeliverFailureOnMissingCategory() {
@@ -148,6 +180,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             
         case .templates:
             return .templates
+            
+        case .userAccount:
+            return .userAccount
         }
     }
     
@@ -158,6 +193,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case scanQR
         case standardPayment
         case templates
+        case userAccount
     }
     
     private func expect(
@@ -210,6 +246,59 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     }
 }
 
+// MARK: - Helpers
+
+extension XCTestCase {
+    
+    func makeClientInfoData(
+        id: Int = .random(in: 1...1_000),
+        lastName: String = anyMessage(),
+        firstName: String = anyMessage(),
+        patronymic: String? = nil,
+        birthDay: String? = nil,
+        regSeries: String? = nil,
+        regNumber: String = anyMessage(),
+        birthPlace: String? = nil,
+        dateOfIssue: String? = nil,
+        codeDepartment: String? = nil,
+        regDepartment: String? = nil,
+        address: String = anyMessage(),
+        addressInfo: ClientInfoData.AddressInfo? = nil,
+        addressResidential: String? = nil,
+        addressResidentialInfo: ClientInfoData.AddressInfo? = nil,
+        phone: String = anyMessage(),
+        phoneSMS: String? = nil,
+        email: String? = nil,
+        inn: String? = nil,
+        customName: String? = nil
+    ) -> ClientInfoData {
+        
+        
+        return .init(
+            id: id,
+            lastName: lastName,
+            firstName: firstName,
+            patronymic: patronymic,
+            birthDay: birthDay,
+            regSeries: regSeries,
+            regNumber: regNumber,
+            birthPlace: birthPlace,
+            dateOfIssue: dateOfIssue,
+            codeDepartment: codeDepartment,
+            regDepartment: regDepartment,
+            address: address,
+            addressInfo: addressInfo,
+            addressResidential: addressResidential,
+            addressResidentialInfo: addressResidentialInfo,
+            phone: phone,
+            phoneSMS: phoneSMS,
+            email: email,
+            inn: inn,
+            customName: customName
+        )
+    }
+}
+
 // MARK: - DSL
 
 extension RootViewNavigation {
@@ -224,6 +313,12 @@ extension RootViewNavigation {
         
         guard case let .templates(node) = self else { return nil }
         return node.model
+    }
+    
+    var userAccount: UserAccountViewModel? {
+        
+        guard case let .userAccount(userAccount) = self else { return nil }
+        return userAccount
     }
 }
 
@@ -298,5 +393,31 @@ extension Model {
             hasSearch: hasSearch,
             type: type
         )
+    }
+}
+
+extension UserAccountViewModel {
+    
+    func close() {
+        
+        navigationBar.backButton?.action()
+    }
+}
+
+extension NavigationBarView.ViewModel {
+    
+    var backButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
+        
+        leftItems
+            .compactMap(\.asBackButton)
+            .first
+    }
+}
+
+private extension NavigationBarView.ViewModel.ItemViewModel {
+    
+    var asBackButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
+        
+        self as? NavigationBarView.ViewModel.BackButtonItemViewModel
     }
 }
