@@ -64,6 +64,7 @@ public extension PaymentsTransfersCorporateContentView {
 // MARK: - Previews
 
 #Preview {
+    
     NavigationView {
         
         PaymentsTransfersCorporateContentView(
@@ -88,7 +89,7 @@ public extension PaymentsTransfersCorporateContentView {
                         .background(Color.gray.opacity(0.2))
                         .clipShape(Capsule())
                 },
-                makeToolbarView: {
+                makeToolbarView: { 
                     
                     ToolbarItem(placement: .topBarLeading) {
                         

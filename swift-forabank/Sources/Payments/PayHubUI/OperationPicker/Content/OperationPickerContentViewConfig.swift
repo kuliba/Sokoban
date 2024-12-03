@@ -10,13 +10,16 @@ import SwiftUI
 public struct OperationPickerContentViewConfig: Equatable {
     
     public let height: CGFloat
+    public let horizontalPadding: CGFloat
     public let spacing: CGFloat
     
     public init(
         height: CGFloat,
+        horizontalPadding: CGFloat,
         spacing: CGFloat
     ) {
         self.height = height
+        self.horizontalPadding = horizontalPadding
         self.spacing = spacing
     }
 }
