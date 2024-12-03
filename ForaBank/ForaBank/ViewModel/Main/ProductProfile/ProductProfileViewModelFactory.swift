@@ -124,7 +124,7 @@ extension ProductProfileViewModelFactory {
             secondary: $0.secondaryButton)
         },
         makeInformerDataUpdateFailure: { nil }, 
-        makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0, .inactive)) },
+        makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
         makeSubscriptionsViewModel: { _,_ in .preview },
         model: .emptyMock
     )
@@ -155,5 +155,5 @@ private extension String {
 
 extension ProductProfileViewModelFactory {
     
-    static let makeCardGuardianPanelPreview: MakeCardGuardianPanel = { card in .bottomSheet(.cardGuardian(card, .inactive)) }
+    static let makeCardGuardianPanelPreview: MakeCardGuardianPanel = { card in .bottomSheet(.cardGuardian(card)) }
 }

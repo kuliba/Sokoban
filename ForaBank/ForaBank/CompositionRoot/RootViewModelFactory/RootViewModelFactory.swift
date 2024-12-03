@@ -24,10 +24,8 @@ final class RootViewModelFactory {
     let settings: RootViewModelFactorySettings
     
     // active flags
-    let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .active
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
     let historyFilterFlag: HistoryFilterFlag = true
-    let marketplaceFlag: MarketplaceFlag = .active
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
     
     let schedulers: Schedulers
@@ -45,7 +43,7 @@ final class RootViewModelFactory {
         mapScanResult: @escaping MapScanResult,
         resolveQR: @escaping ResolveQR,
         scanner: any QRScannerViewModel,
-        settings: RootViewModelFactorySettings = .iFora,
+        settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
     ) {
         self.model = model

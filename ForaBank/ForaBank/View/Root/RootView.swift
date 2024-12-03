@@ -6,18 +6,19 @@
 //
 
 import ActivateSlider
-import InfoComponent
+import Combine
 import FooterComponent
-import PaymentSticker
+import InfoComponent
+import LandingUIComponent
+import LoadableResourceComponent
+import MarketShowcase
 import PayHubUI
+import PaymentSticker
 import RxViewModel
 import SberQR
 import SwiftUI
-import MarketShowcase
 import UIPrimitives
 import UtilityServicePrepaymentUI
-import LandingUIComponent
-import LoadableResourceComponent
 
 struct RootView: View {
     
@@ -113,10 +114,12 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard, viewModel.openPayment).map {
-            $0
-            .taggedTabItem(.market, selected: viewModel.selected)
-        }
+        rootViewFactory.makeMarketShowcaseView(
+            marketShowcaseBinder,
+            viewModel.openCard,
+            viewModel.openPayment
+        )
+        .taggedTabItem(.market, selected: viewModel.selected)
         .onAppear { marketShowcaseBinder.content.event(.load) }
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")
@@ -143,7 +146,8 @@ struct RootView: View {
             
         case .userAccount(let viewModel):
             NavigationView {
-                rootViewFactory.makeUserAccountView(viewModel, .iFora)
+                
+                rootViewFactory.makeUserAccountView(viewModel)
             }
             
         case let .payments(paymentsViewModel):
@@ -199,7 +203,7 @@ extension PaymentsTransfersSwitcher: Refreshable {
     }
 }
 
-extension PaymentsTransfersCorporate {
+extension PaymentsTransfersCorporateDomain.Binder {
     
     func refresh() {
         
@@ -207,7 +211,7 @@ extension PaymentsTransfersCorporate {
     }
 }
 
-extension PaymentsTransfersPersonal {
+extension PaymentsTransfersPersonalDomain.Binder {
     
     func refresh() {
         
@@ -228,692 +232,18 @@ private extension RootView {
         ) {
             ComposedProfileSwitcherView(
                 model: switcher,
-                corporateView: paymentsTransfersCorporateView,
-                personalView: paymentsTransfersPersonalView,
+                corporateView: rootViewFactory.makePaymentsTransfersCorporateView,
+                personalView: rootViewFactory.makePaymentsTransfersPersonalView,
                 undefinedView: { SpinnerView(viewModel: .init()) }
             )
+            .padding(.top)
         }
-    }
-    
-    func paymentsTransfersCorporateView(
-        _ corporate: PaymentsTransfersCorporate
-    ) -> some View {
-        
-        ComposedPaymentsTransfersCorporateView(
-            corporate: corporate,
-            factory: .init(
-                makeContentView: {
-                    PaymentsTransfersCorporateContentView(
-                        content: corporate.content,
-                        factory: .init(
-                            makeBannerSectionView: makeBannerSectionView,
-                            makeRestrictionNoticeView: makeRestrictionNoticeView,
-                            makeToolbarView: makePaymentsTransfersCorporateToolbarView,
-                            makeTransfersSectionView: makeTransfersSectionView
-                        ),
-                        config: .iFora
-                    )
-                },
-                makeFullScreenCoverView: { _ in
-                
-                    Text("TBD: FullScreenCoverView")
-                },
-                makeDestinationView: { _ in
-                
-                    Text("TBD: DestinationView")
-                }
-            )
-        )
-    }
-    
-    func makeRestrictionNoticeView() -> some View {
-        
-        DisableCorCardsView(text: .disableForCorCards)
-    }
-    
-    func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
-        
-        ToolbarItem(placement: .topBarLeading) {
-            
-            HStack {
-                
-                Image(systemName: "person")
-                Text("TBD: Profile without QR")
-            }
-        }
-    }
-    
-    func makeTransfersSectionView() -> some View {
-        
-        ZStack {
-            
-            Color.green.opacity(0.5)
-            
-            Text("Transfers")
-                .foregroundColor(.white)
-                .font(.title3.bold())
-        }
-    }
-    
-    func paymentsTransfersPersonalView(
-        _ personal: PaymentsTransfersPersonal
-    ) -> some View {
-        
-        ComposedPaymentsTransfersPersonalView(
-            personal: personal,
-            factory: .init(
-                makeContentView: {
-                    
-                    PaymentsTransfersPersonalContentView(
-                        content: personal.content,
-                        factory: .init(
-                            makeCategoryPickerView: makeCategoryPickerSectionView,
-                            makeOperationPickerView: makeOperationPickerView,
-                            makeToolbarView: makePaymentsTransfersToolbarView,
-                            makeTransfersView: makePaymentsTransfersTransfersView
-                        ),
-                        config: .iFora
-                    )
-                },
-                makeFullScreenCoverView: { _ in
-                
-                    Text("TBD: FullScreenCoverView")
-                },
-                makeDestinationView: { _ in
-                
-                    Text("TBD: DestinationView")
-                }
-            )
-        )
-    }
-    
-    @ViewBuilder
-    func makeCategoryPickerSectionView(
-        categoryPicker: PayHubUI.CategoryPicker
-    ) -> some View {
-        
-        if let binder = categoryPicker.sectionBinder {
-            
-            makeCategoryPickerSectionView(binder: binder)
-            
-        } else {
-            
-            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
-                .foregroundColor(.red)
-        }
-    }
-    
-    func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionDomain.Binder
-    ) -> some View {
-        
-        ComposedCategoryPickerSectionView(
-            binder: binder,
-            factory: .init(
-                makeAlert: makeCategoryPickerSectionAlert(binder: binder),
-                makeContentView: {
-                    
-                    RxWrapperView(
-                        model: binder.content,
-                        makeContentView: { state, event in
-                            
-                            CategoryPickerSectionContentView(
-                                state: state,
-                                event: event,
-                                config: .iFora,
-                                itemLabel: itemLabel
-                            )
-                        }
-                    )
-                },
-                makeDestinationView: makeCategoryPickerSectionDestinationView,
-                makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
-            )
-        )
-        .padding(.top, 20)
-    }
-    
-    func makeCategoryPickerSectionAlert(
-        binder: CategoryPickerSectionDomain.Binder
-    ) -> (SelectedCategoryFailure) -> Alert {
-        
-        return { failure in
-            
-            return .init(
-                with: .error(message: failure.message, event: .dismiss),
-                event: { binder.flow.event($0) }
-            )
-        }
-    }
-    
-    @ViewBuilder
-    func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionNavigation.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case let .mobile(mobile):
-                rootViewFactory.components.makePaymentsView(mobile.paymentsViewModel)
-                
-            case let .standard(standard):
-                switch standard {
-                case let .failure(failedPaymentProviderPicker):
-                    Text("TBD: \(String(describing: failedPaymentProviderPicker))")
-                    
-                case let .success(binder):
-                    paymentProviderPicker(binder)
-                }
-                
-            case let .taxAndStateServices(wrapper):
-                rootViewFactory.components.makePaymentsView( wrapper.paymentsViewModel)
-                
-            case let .transport(transport):
-                transportPaymentsView(transport)
-            }
-            
-        case let .qrDestination(qrDestination):
-            qrDestinationView(qrDestination)
-        }
-    }
-    
-    @ViewBuilder
-    func makeCategoryPickerSectionFullScreenCoverView(
-        cover: CategoryPickerSectionNavigation.FullScreenCover
-    ) -> some View {
-        
-        NavigationView {
-            
-            rootViewFactory.components.makeQRView(cover.qr.qrScanner)
-        }
-        .navigationViewStyle(.stack)
-    }
-    
-    func paymentProviderPicker(
-        _ binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: { state, event in
-                
-                PaymentProviderPickerFlowView(
-                    state: state,
-                    event: event,
-                    contentView: {
-                        
-                        paymentProviderPickerContentView(binder)
-                    },
-                    destinationView: {
-                        
-                        paymentProviderPickerDestinationView($0)
-                    }
-                )
-            }
-        )
-    }
-    
-    func paymentProviderPickerContentView(
-        _ binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        PaymentProviderPickerContentView(
-            content: binder.content,
-            factory: .init(
-                makeOperationPickerView: { _ in EmptyView() },
-                makeProviderList: {
-                    
-                    paymentProviderListView(providerList: $0, binder: binder)
-                },
-                makeSearchView: { _ in EmptyView() }
-            )
-        )
-    }
-    
-    func paymentProviderListView(
-        providerList: PaymentProviderPicker.ProviderList,
-        binder: PaymentProviderPicker.Binder
-    ) -> some View {
-        
-        RxWrapperView(
-            model: providerList,
-            makeContentView: { state, event in
-                
-                PrepaymentPickerSuccessView(
-                    state: state,
-                    event: event,
-                    factory: .init(
-                        makeFooterView: {
-                            
-                            FooterView(
-                                state: $0 ? .failure(.iFora) : .footer(.iFora),
-                                event: binder.flow.handleFooterEvent(_:),
-                                config: .iFora
-                            )
-                        },
-                        makeLastPaymentView: {
-                            
-                            makeLatestPaymentView(latest: $0, event: binder.flow.selectLatest(_:))
-                        },
-                        makeOperatorView: {
-                            
-                            makeOperatorView(provider: $0, event: binder.flow.selectProvider(_:))
-                        },
-                        makeSearchView: {
-                            
-                            paymentProviderPickerSearchView(binder.content.search)
-                        }
-                    )
-                )
-            }
-        )
-    }
-    
-    func makeLatestPaymentView(
-        latest: Latest,
-        event: @escaping (Latest) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(latest) },
-            label: {
-                
-                LastPaymentLabel(
-                    amount: latest.amount.map { "\($0) ₽" } ?? "",
-                    title: latest.name,
-                    config: .iFora,
-                    iconView: makeIconView(md5Hash: latest.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
-    }
-    
-    func makeOperatorView(
-        provider: PaymentProviderPicker.Provider,
-        event: @escaping (PaymentProviderPicker.Provider) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(provider) },
-            label: {
-                
-                OperatorLabel(
-                    title: provider.name,
-                    subtitle: provider.inn,
-                    config: .iFora,
-                    iconView: makeIconView(md5Hash: provider.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
-    }
-        
-    @ViewBuilder
-    func transportPaymentsView(
-        _ transport: TransportPaymentsViewModel
-    ) -> some View {
-        
-        let mosParkingPickerData: LoadableResourceViewModel<MosParkingPickerData> =  .init(
-            operation: viewModel.model.getMosParkingPickerData
-        )
-        
-        rootViewFactory.components.makeTransportPaymentsView(mosParkingPickerData, transport)
-            .navigationBarTitle("", displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBar(
-                with: .with(
-                    title: "Транспорт",
-                    navLeadingAction: {},//viewModel.dismiss,
-                    navTrailingAction: {}//viewModel.openScanner
-                )
-            )
-    }
-    
-    @ViewBuilder
-    func qrDestinationView(
-        _ qrDestination: QRNavigation.Destination
-    ) -> some View {
-        
-        switch qrDestination {
-        case let .qrFailedViewModel(qrFailedViewModel):
-            rootViewFactory.components.makeQRFailedView(qrFailedViewModel)
-            
-        case let .internetTV(viewModel):
-            InternetTVDetailsView(viewModel: viewModel)
-                .navigationBarTitle("", displayMode: .inline)
-                .edgesIgnoringSafeArea(.all)
-            
-        case let .operatorSearch(viewModel):
-            rootViewFactory.components.makeQRSearchOperatorView(viewModel)
-                .navigationBarTitle("", displayMode: .inline)
-                .navigationBarBackButtonHidden(true)
-            
-        case let .payments(wrapper):
-            rootViewFactory.components.makePaymentsView(wrapper.paymentsViewModel)
-            
-        case let .paymentComplete(paymentComplete):
-            rootViewFactory.components.makePaymentsSuccessView(paymentComplete)
-            
-        case let .providerPicker(providerPicker):
-            paymentProviderPicker(providerPicker)
-            
-        case let .sberQR(sberQR):
-            rootViewFactory.makeSberQRConfirmPaymentView(sberQR)
-            
-        case let .servicePicker(servicePicker):
-            servicePickerView(servicePicker)
-        }
-    }
-    
-    func paymentProviderPicker(
-        _ flowModel: SegmentedPaymentProviderPickerFlowModel
-    ) -> some View {
-        
-        rootViewFactory.components.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
-        //    .navigationBarWithBack(
-        //        title: PaymentsTransfersSectionType.payments.name,
-        //        dismiss: viewModel.dismissPaymentProviderPicker,
-        //        rightItem: .barcodeScanner(
-        //            action: viewModel.dismissPaymentProviderPicker
-        //        )
-        //    )
-    }
-    
-    @ViewBuilder
-    func servicePickerView(
-        _ flowModel: AnywayServicePickerFlowModel
-    ) -> some View {
-        
-        let provider = flowModel.state.content.state.payload.provider
-        
-        rootViewFactory.components.makeAnywayServicePickerFlowView(flowModel)
-//        .navigationBarWithAsyncIcon(
-//            title: provider.origin.title,
-//            subtitle: provider.origin.inn,
-//            dismiss: viewModel.dismissProviderServicePicker,
-//            icon: viewFactory.iconView(provider.origin.icon),
-//            style: .normal
-//        )
-    }
-    
-    func makeIconView(
-        md5Hash: String?
-    ) -> some View {
-        
-        rootViewFactory.makeIconView(md5Hash.map { .md5Hash(.init($0)) })
-    }
-    
-    @ViewBuilder
-    func paymentProviderPickerSearchView(
-        _ search: PaymentProviderPicker.Search?
-    ) -> some View {
-        
-        search.map { search in
-            
-            DefaultCancellableSearchBarView(
-                viewModel: search,
-                textFieldConfig: .black16,
-                cancel: {
-                    
-                    UIApplication.shared.endEditing()
-                    search.setText(to: nil)
-                }
-            )
-        }
-    }
-    
-    @ViewBuilder
-    func paymentProviderPickerDestinationView(
-        _ destination: PaymentProviderPicker.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .backendFailure(backendFailure):
-            Text("TBD: destination view \(String(describing: backendFailure))")
-            
-        case let .detailPayment(wrapper):
-            rootViewFactory.components.makePaymentsView(wrapper.paymentsViewModel)
-            
-        case let .payment(payment):
-            Text("TBD: destination view \(String(describing: payment))")
-            
-        case let .servicePicker(servicePicker):
-            Text("TBD: destination view \(String(describing: servicePicker))")
-            
-        case let .servicesFailure(servicesFailure):
-            Text("TBD: destination view \(String(describing: servicesFailure))")
-        }
-    }
-    
-    @ViewBuilder
-    func makeOperationPickerView(
-        operationPicker: PayHubUI.OperationPicker
-    ) -> some View {
-        
-        if let binder = operationPicker.operationBinder {
-            
-            makeOperationPickerView(binder: binder)
-            
-        } else {
-            
-            Text("Unexpected operationPicker type \(String(describing: operationPicker))")
-                            .foregroundColor(.red)
-        }
-    }
-    
-    func makeOperationPickerView(
-        binder: OperationPickerDomain.Binder
-    ) -> some View {
-        
-        ComposedOperationPickerFlowView(
-            binder: binder,
-            factory: .init(
-                makeDestinationView: makeOperationPickerDestinationView,
-                makeItemLabel: itemLabel
-            )
-        )
-    }
-    
-    @ViewBuilder
-    func makeOperationPickerDestinationView(
-        destination: OperationPickerDomain.Navigation
-    ) -> some View {
-        
-        switch destination {
-        case let .exchange(currencyWalletViewModel):
-            rootViewFactory.components.makeCurrencyWalletView(currencyWalletViewModel)
-            
-        case let .latest(latest):
-            Text("TBD: destination " + String(describing: latest))
-            
-        case let .status(operationPickerFlowStatus):
-            EmptyView()
-            
-        case let .templates(templates):
-            Text("TBD: destination " + String(describing: templates))
-        }
-    }
-    
-    @ViewBuilder
-    func makePaymentsTransfersToolbarView(
-        toolbar: PayHubUI.PaymentsTransfersPersonalToolbar
-    ) -> some View {
-        
-        if let binder = toolbar.toolbarBinder {
-            
-            makePaymentsTransfersToolbarView(binder: binder)
-            
-        } else {
-            
-            Text("Unexpected toolbar type \(String(describing: toolbar))")
-                .foregroundColor(.red)
-        }
-    }
-    
-    func makePaymentsTransfersToolbarView(
-        binder: PaymentsTransfersPersonalToolbarDomain.Binder
-    ) -> some View {
-        
-        ComposedPaymentsTransfersPersonalToolbarView(
-            binder: binder,
-            factory: .init(
-                makeDestinationView: {
-                    
-                    switch $0 {
-                    case let .profile(profileModel):
-                        Text(String(describing: profileModel))
-                    }
-                },
-                makeFullScreenView: {
-                    
-                    switch $0 {
-                    case let .qr(qrModel):
-                        VStack(spacing: 32) {
-                            
-                            Text(String(describing: qrModel))
-                        }
-                    }
-                },
-                makeProfileLabel: {
-                    
-                    HStack {
-                        Image(systemName: "person.circle")
-                        Text("Profile")
-                    }
-                },
-                makeQRLabel: {
-                    
-                    Image(systemName: "qrcode")
-                }
-            )
-        )
-    }
-    
-    @ViewBuilder
-    private func makePaymentsTransfersTransfersView(
-        transfersPicker: PayHubUI.TransfersPicker
-    ) -> some View {
-        
-        if let binder = transfersPicker.transfersBinder {
-            
-            makePaymentsTransfersTransfersView(transfers: binder)
-            
-        } else {
-            
-            Text("Unexpected transfersPicker type \(String(describing: transfersPicker))")
-                .foregroundColor(.red)
-        }
-    }
-    
-    private func makePaymentsTransfersTransfersView(
-        transfers: PaymentsTransfersPersonalTransfersDomain.Binder
-    ) -> some View {
-        
-        ComposedPaymentsTransfersTransfersView(
-            flow: transfers.flow,
-            contentView: {
-                
-                ComposedPaymentsTransfersTransfersContentView(
-                    content: transfers.content
-                )
-            },
-            factory: rootViewFactory.personalTransfersFlowViewFactory
-        )
-    }
-    
-    private func itemLabel(
-        item: CategoryPickerSectionDomain.ContentDomain.State.Item
-    ) -> some View {
-        
-        CategoryPickerSectionStateItemLabel(
-            item: item,
-            config: .iFora,
-            categoryIcon: categoryIcon,
-            placeholderView: { PlaceholderView(opacity: 0.5) }
-        )
-    }
-    
-    private func itemLabel(
-        item: OperationPickerState.Item
-    ) -> some View {
-        
-        OperationPickerStateItemLabel(
-            item: item,
-            config: .iFora,
-            placeholderView:  {
-                
-                LatestPlaceholder(
-                    opacity: 1,
-                    config: OperationPickerStateItemLabelConfig.iFora.latestPlaceholder
-                )
-            }
-        )
-    }
-    
-    private func categoryIcon(
-        category: ServiceCategory
-    ) -> some View {
-        
-        Color.blue.opacity(0.1)
     }
 }
 
-// MARK: - View Factories
+// MARK: - adapters
 
-private extension RootViewFactory {
-    
-    var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
-        
-        return .init(
-            makeContactsView: components.makeContactsView,
-            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
-            makePaymentsView: components.makePaymentsView
-        )
-    }
-}
-
-// MARK: - payment flow
-
-private extension RootView {
-    
-    @ViewBuilder
-    func makeAnywayFlowView(
-        flowModel: AnywayFlowModel
-    ) -> some View {
-        
-        let anywayPaymentFactory = rootViewFactory.makeAnywayPaymentFactory {
-            
-            flowModel.state.content.event(.payment($0))
-        }
-        
-        AnywayFlowView(
-            flowModel: flowModel,
-            factory: .init(
-                makeElementView: anywayPaymentFactory.makeElementView,
-                makeFooterView: anywayPaymentFactory.makeFooterView
-            ),
-            makePaymentCompleteView: {
-                
-                rootViewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        merchantIcon: $0.merchantIcon,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { flowModel.event(.goTo(.main)) }
-                )
-            }
-        )
-    }
-}
-
-
-private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
+/*private*/ extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,
@@ -1117,6 +447,7 @@ private extension RootViewFactory {
         }
         
         return .init(
+            isCorporate: { false },
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _,_,_,_   in
@@ -1131,18 +462,21 @@ private extension RootViewFactory {
                     viewModel: $0,
                     viewFactory: .init(
                         makeAnywayPaymentFactory: { _ in fatalError() },
-                        makeIconView: IconDomain.preview, 
+                        makeIconView: IconDomain.preview,
                         makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: .preview) },
+                        makeUserAccountView: {
+                            
+                            return .init(viewModel: $0, config: .preview, viewFactory: .preview)
+                        },
                         components: .preview
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                         makeHistoryButton: { .init(event: $0, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: $3) },
-                        makeRepeatButtonView: { _ in .init(action: {})}
+                        makeRepeatButtonView: { _ in .init(action: {}) }
                     ),
                     getUImage: { _ in nil }
                 )
@@ -1150,9 +484,20 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview, viewFactory: .preview) },
+            makeUserAccountView: {
+                
+                return .init(
+                    viewModel: $0,
+                    config: .preview,
+                    viewFactory: .preview
+                )
+            },
             makeMarketShowcaseView: { _,_,_   in .none },
-            components: .preview
+            components: .preview,
+            makeUpdatingUserAccountButtonLabel: {
+                
+                .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
+            }
         )
     }
 }
@@ -1177,4 +522,9 @@ private struct IgnoringSafeArea: ViewModifier {
                 .edgesIgnoringSafeArea(edgeSet)
         } else { content }
     }
+}
+
+private extension UserAccountButtonLabelConfig {
+    
+    static let preview = prod
 }

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 15, *)
 struct ClientInformListWrapperView: View {
     
     private let info: ClientInformListDataState
