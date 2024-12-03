@@ -9,7 +9,7 @@ public enum PaymentProviderPickerFlowDomain<DetailPayment, Latest, Payment, Prov
 
 public extension PaymentProviderPickerFlowDomain {
     
-    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    typealias Destination = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
     
     typealias State = PaymentProviderPickerFlowState<Destination>
     typealias Event = PaymentProviderPickerFlowEvent<Destination, Latest, Provider>

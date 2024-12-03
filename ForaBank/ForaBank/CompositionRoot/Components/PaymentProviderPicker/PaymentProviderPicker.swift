@@ -40,7 +40,7 @@ extension PaymentProviderPicker {
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void
     
-    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    typealias Destination = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
 }
 
 // MARK: - ProviderList
