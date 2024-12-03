@@ -52,7 +52,14 @@ extension RootViewModelFactory {
         notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {
-        let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
+        let microServices = makeComposer().compose()
+        microServices.getNavigation(select, notify, completion)
+    }
+    
+    private func makeComposer(
+    ) -> SelectedCategoryNavigationMicroServicesComposer {
+        
+        return .init(
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
@@ -64,8 +71,5 @@ extension RootViewModelFactory {
             ),
             scheduler: schedulers.main
         )
-        let microServices = selectedCategoryComposer.compose()
-        
-        microServices.getNavigation(select, notify, completion)
     }
 }
