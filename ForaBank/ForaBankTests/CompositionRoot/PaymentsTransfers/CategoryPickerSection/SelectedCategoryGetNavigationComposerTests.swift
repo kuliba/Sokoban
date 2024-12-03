@@ -213,7 +213,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
     }
     
     private func makeStandard(
-    ) -> PaymentProviderPicker.Binder {
+    ) -> PaymentProviderPickerDomain.Binder {
         
         return .init(
             content: .init(

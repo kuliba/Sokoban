@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPicker.swift
+//  PaymentProviderPickerDomain.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 24.09.2024.
@@ -9,9 +9,9 @@ import PayHub
 import PayHubUI
 
 /// A namespace.
-enum PaymentProviderPicker {}
+enum PaymentProviderPickerDomain {}
 
-extension PaymentProviderPicker {
+extension PaymentProviderPickerDomain {
     
     // MARK: - Binder
     
@@ -40,7 +40,7 @@ extension PaymentProviderPicker {
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void
     
-    typealias Destination = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    typealias Navigation = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
 }
 
 // MARK: - ProviderList
@@ -49,7 +49,7 @@ import RxViewModel
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
-extension PaymentProviderPicker {
+extension PaymentProviderPickerDomain {
     
     typealias ProviderList = RxViewModel<ProviderListState, ProviderListEvent, ProviderListEffect>
     

@@ -66,14 +66,14 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
         )
     }
     
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPickerStub>
 }
 
 private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makePickerBinder(
         with payload: StandardNanoServices.MakeSuccessPayload
-    ) -> PaymentProviderPicker.Binder {
+    ) -> PaymentProviderPickerDomain.Binder {
         
         let content = makeContent(with: payload)
         let flow = makeFlow(with: payload)
@@ -92,7 +92,7 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makeContent(
         with payload: StandardNanoServices.MakeSuccessPayload
-    ) -> PaymentProviderPicker.Content {
+    ) -> PaymentProviderPickerDomain.Content {
         
         let providerList = makeProviderList(with: payload)
         let search = payload.category.hasSearch ? makeSearch() : nil
@@ -119,12 +119,12 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     private func makeProviderList(
         with payload: StandardNanoServices.MakeSuccessPayload
-    ) -> PaymentProviderPicker.ProviderList {
+    ) -> PaymentProviderPickerDomain.ProviderList {
         
-        let reducer = PaymentProviderPicker.ProviderListReducer(
+        let reducer = PaymentProviderPickerDomain.ProviderListReducer(
             observeLast: observeLast
         )
-        let effectHandler = PaymentProviderPicker.ProviderListEffectHandler(
+        let effectHandler = PaymentProviderPickerDomain.ProviderListEffectHandler(
             microServices: makeMicroServices(payload.category.type)
         )
         
@@ -162,10 +162,10 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makeFlow(
         with payload: StandardNanoServices.MakeSuccessPayload
-    ) -> PaymentProviderPicker.Flow {
+    ) -> PaymentProviderPickerDomain.Flow {
         
-        let flowReducer = PaymentProviderPicker.FlowReducer()
-        let flowEffectHandler = PaymentProviderPicker.FlowEffectHandler(
+        let flowReducer = PaymentProviderPickerDomain.FlowReducer()
+        let flowEffectHandler = PaymentProviderPickerDomain.FlowEffectHandler(
             microServices: .init(
                 initiatePayment: { latest, completion in
                     

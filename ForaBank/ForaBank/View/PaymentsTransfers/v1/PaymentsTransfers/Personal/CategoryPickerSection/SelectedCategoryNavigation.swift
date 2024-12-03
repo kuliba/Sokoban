@@ -28,6 +28,6 @@ struct SelectedCategoryFailure: Error, Equatable, Identifiable {
     let message: String
 }
 
-typealias StandardSelectedCategoryDestination = Result<PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
+typealias StandardSelectedCategoryDestination = Result<PaymentProviderPickerDomain.Binder, FailedPaymentProviderPickerStub>
 
 final class FailedPaymentProviderPickerStub: Error {}
