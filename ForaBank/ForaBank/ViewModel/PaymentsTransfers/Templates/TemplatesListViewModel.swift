@@ -736,26 +736,19 @@ private extension TemplatesListViewModel {
                     
                     switch action {
                     case let payload as MyProductsSectionViewModelAction.Events.ItemTapped:
-                       
+                        
                         self.sheet = nil
                         guard let product = model.products.value.values
-                                                .flatMap({ $0 })
-                                                .first(where: { $0.id == payload.productId })
+                            .flatMap({ $0 })
+                            .first(where: { $0.id == payload.productId })
                         else { return }
                         
                         self.action.send(TemplatesListViewModelAction.OpenProductProfile
-                                            .init(productId: product.id))
+                            .init(productId: product.id))
                     default: break
                     }
-            }.store(in: &bindings)
-            
-            section.$isCollapsed
-                .receive(on: scheduler)
-                .sink { [unowned viewModel] isCollapsed in
-                    
-                    viewModel.containerHeight = viewModel.calcHeight
-                    
-            }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
     }
     
@@ -898,29 +891,35 @@ extension TemplatesListViewModel {
         let title = "Выберите продукт"
         
         @Published var sections: [MyProductsSectionViewModel]
-        @Published var containerHeight: CGFloat
+        @Published private(set) var containerHeight: CGFloat
         
-        var calcHeight: CGFloat {
-            
-            var height: CGFloat = 16
-            for section in sections {
+        private var cancellables = Set<AnyCancellable>()
+        
+        init(
+            sections: [MyProductsSectionViewModel]
+        ) {
+            let initialHeight = sections.reduce(0) { result, section in
                 
-                if section.isCollapsed {
-                    height += 48 + 16
-                } else {
-                    height += CGFloat(section.items.count) * 72 + 48 + 16
-                }
+                let itemsHeight = section.isCollapsed ? 0 : section.items.height
+                return result + section.minSectionHeight + itemsHeight
             }
             
-            return height
-        }
-        
-        init(sections: [MyProductsSectionViewModel],
-             containerHeight: CGFloat = 80) {
             self.sections = sections
-            self.containerHeight = containerHeight
+            self.containerHeight = initialHeight
+            
+            $sections
+                .flatMap { sections -> AnyPublisher<CGFloat, Never> in
+                    
+                    let sectionHeights = sections.map(\.height)
+                    return Publishers.combineLatestMany(sectionHeights)
+                        .map { $0.reduce(0, +) }
+                        .prepend(initialHeight) // initial height as the starting value
+                        .eraseToAnyPublisher()
+                }
+                .map { $0 + 16 }
+                .receive(on: DispatchQueue.main)
+                .assign(to: &$containerHeight)
         }
-        
     }
     
     class RenameTemplateItemViewModel: ObservableObject {
@@ -968,7 +967,35 @@ extension TemplatesListViewModel {
     }
 }
 
-//MARK: - Template Items View Models
+// MARK: - ProductListViewModel Content Size
+
+private extension MyProductsSectionViewModel {
+    
+    var height: AnyPublisher<CGFloat, Never> {
+        
+        Publishers.CombineLatest($isCollapsed, $items)
+            .map { [minSectionHeight] isCollapsed, items in
+                
+                let itemsHeight = isCollapsed ? 0 : items.height
+                return minSectionHeight + itemsHeight
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    var minSectionHeight: CGFloat { 48 + 16 }
+}
+
+private extension Array where Element == MyProductsSectionViewModel.ItemViewModel {
+    
+    var height: CGFloat { reduce(0) { $0 + $1.height } }
+}
+
+private extension MyProductsSectionViewModel.ItemViewModel {
+    
+    var height: CGFloat { 72 }
+}
+
+// MARK: - Template Items View Models
 
 private extension TemplatesListViewModel {
     
