@@ -29,7 +29,6 @@ extension ClientInformListConfig.Strings {
     )
 }
 
-@available(iOS 15, *)
 extension ClientInformListDataState {
     
 //    static let preview: Self = ClientInformListDataState.single(.init(label: .init(image: .clock, title: "Urgent Info"), text: "please drop your phone! Alarm!"))
