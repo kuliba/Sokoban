@@ -444,7 +444,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         sut.createCardGuardianPanel(product)
         
         XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
-        XCTAssertTrue(sut.optionsPanelNew.containsTitle("Разблокировать"))
+        XCTAssertTrue(sut.optionsPanelNew.containsTitle("Разблок. карту"))
 
         sut.event(.init(productID: product.id, type: .cardGuardian))
          

@@ -20,7 +20,7 @@ extension RootViewDomain.ContentWitnesses {
                     Empty().eraseToAnyPublisher()
                 }
             },
-            receiving: { _ in {}}
+            dismissing: { _ in {}}
         )
     }
 }

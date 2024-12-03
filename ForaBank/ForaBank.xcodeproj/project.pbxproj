@@ -1694,6 +1694,7 @@
 		2AF9ACDE2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF9ACDD2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift */; };
 		2AFA3B152CB78DC10019AFBA /* Refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFA3B142CB78DC10019AFBA /* Refreshable.swift */; };
 		2AFA4BD52A9F546000D8CBA9 /* Model+AbroadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFA4BD42A9F546000D8CBA9 /* Model+AbroadTests.swift */; };
+		2AFB97782CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFB97772CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift */; };
 		2AFC3A932C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC3A922C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift */; };
 		2AFD59DB2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */; };
 		2AFD59DD2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */; };
@@ -2797,7 +2798,6 @@
 		83CE89FB2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE89FA2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift */; };
 		83CE89FD2BC43074008CA98C /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE89FC2BC43074008CA98C /* PanelView.swift */; };
 		83CE8A012BC44912008CA98C /* PanelView+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE8A002BC44912008CA98C /* PanelView+Config.swift */; };
-		83CFA2952C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */; };
 		83CFA2992C2D72BD003B5E49 /* ControlPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */; };
 		83CFA29B2C2D7302003B5E49 /* ControlPanelViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29A2C2D7302003B5E49 /* ControlPanelViewConfig.swift */; };
 		83CFA29F2C2D7C51003B5E49 /* PanelButtonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */; };
@@ -5180,6 +5180,7 @@
 		2AF9ACDD2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecorator.swift; sourceTree = "<group>"; };
 		2AFA3B142CB78DC10019AFBA /* Refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refreshable.swift; sourceTree = "<group>"; };
 		2AFA4BD42A9F546000D8CBA9 /* Model+AbroadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+AbroadTests.swift"; sourceTree = "<group>"; };
+		2AFB97772CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersPersonalContent.swift"; sourceTree = "<group>"; };
 		2AFC3A922C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerFlowModelFactory.swift; sourceTree = "<group>"; };
 		2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequest.swift"; sourceTree = "<group>"; };
 		2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequestTests.swift"; sourceTree = "<group>"; };
@@ -6267,7 +6268,6 @@
 		83CE89FA2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductNavigationStateManager+ButtonEvent.swift"; sourceTree = "<group>"; };
 		83CE89FC2BC43074008CA98C /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
 		83CE8A002BC44912008CA98C /* PanelView+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PanelView+Config.swift"; sourceTree = "<group>"; };
-		83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СhangeSVCardLimitsFlag.swift"; sourceTree = "<group>"; };
 		83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelView.swift; sourceTree = "<group>"; };
 		83CFA29A2C2D7302003B5E49 /* ControlPanelViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelViewConfig.swift; sourceTree = "<group>"; };
 		83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelButtonDetails.swift; sourceTree = "<group>"; };
@@ -10118,7 +10118,6 @@
 			isa = PBXGroup;
 			children = (
 				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
-				83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */,
 				839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */,
 				C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */,
 				2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */,
@@ -10340,6 +10339,7 @@
 			children = (
 				2A6826CA2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */,
 				2A5B483F2CFC5EB60052801D /* RootViewModelFactory+getPaymentsTransfersPersonalNavigation.swift */,
+				2AFB97772CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift */,
 				2A6A6A322CAADE7E006D6044 /* CategoryPickerSection */,
 				2A72ACC82CC6E20100B8BF5B /* OperationPicker */,
 				2A6826C52C9D329500B8057F /* PaymentsTransfersPersonalNanoServices.swift */,
@@ -20080,6 +20080,7 @@
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
 				2AD7674C2CF9892400BFDA70 /* OperationPickerContentViewConfig+prod.swift in Sources */,
+				2AFB97782CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				8343FE2A2BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift in Sources */,
 				2A3417842B7CAC54002FAAFC /* BankDefaultStore.swift in Sources */,
@@ -21682,7 +21683,6 @@
 				77246B3B287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift in Sources */,
 				77A6A9D927F473CB00CE7E28 /* PlacesView.swift in Sources */,
 				83CC9D2E2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift in Sources */,
-				83CFA2952C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift in Sources */,
 				2AB352E22B6BC7D5000EADC2 /* UserAccountReducer.swift in Sources */,
 				0B1781232926E6CE005209B5 /* QRSearchItemComponent.swift in Sources */,
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,

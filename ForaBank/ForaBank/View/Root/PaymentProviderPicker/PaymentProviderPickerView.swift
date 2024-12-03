@@ -44,6 +44,15 @@ private extension PaymentProviderPickerView {
                 makeSearchView: { _ in EmptyView() }
             )
         )
+        .ignoresSafeArea()
+        .navigationBarWithBack(
+            title: binder.content.title,
+            dismiss: { binder.flow.event(.dismiss) },
+            rightItem: .barcodeScanner(action: {
+                
+                binder.flow.event(.select(.qr))
+            })
+        )
     }
     
     func makePaymentProviderListView(

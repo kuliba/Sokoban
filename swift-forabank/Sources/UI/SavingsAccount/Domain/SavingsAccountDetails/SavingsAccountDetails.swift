@@ -9,5 +9,10 @@ import SwiftUI
 
 public struct SavingsAccountDetails: Equatable {
     
+    let currentInterest: Decimal
+    let minBalance: Decimal
+    let paidInterest: Decimal
     let progress: CGFloat
+
+    let currencyCode: String
 }
