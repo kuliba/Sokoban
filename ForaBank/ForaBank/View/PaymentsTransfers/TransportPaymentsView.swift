@@ -40,7 +40,7 @@ struct TransportPaymentsView<MosParkingView: View>: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                Transport.LatestPaymentsView(for: viewModel.latestPayments)
+                Transport.LatestPaymentsView(latestPayments: viewModel.latestPayments)
                 
                 Transport.OperatorsView(for: viewModel.viewOperators)
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -87,12 +87,7 @@ extension Transport {
     
     struct LatestPaymentsView: View {
         
-        private let latestPayments: PaymentsServicesLatestPaymentsSectionViewModel
-        
-        init(for latestPayments: PaymentsServicesLatestPaymentsSectionViewModel) {
-            
-            self.latestPayments = latestPayments
-        }
+        let latestPayments: PaymentsServicesLatestPaymentsSectionViewModel
         
         var body: some View {
             
@@ -102,7 +97,7 @@ extension Transport {
                     
                     PaymentsServicesLatestPaymentsSectionView(
                         viewModel: latestPayments,
-                        iconSize: 40
+                        config: .prod(iconSize: 40)
                     )
                     
                     Divider()
@@ -215,9 +210,9 @@ struct TransportPaymentsView_Previews: PreviewProvider {
             
             Group {
                 Transport.LatestPaymentsView(
-                    for: TransportPaymentsViewModel.preview.latestPayments
+                    latestPayments: TransportPaymentsViewModel.preview.latestPayments
                 )
-                Transport.LatestPaymentsView(for: .sample)
+                Transport.LatestPaymentsView(latestPayments: .sample)
             }
             .previewDisplayName("LatestPaymentsView")
             

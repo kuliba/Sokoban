@@ -20,7 +20,7 @@ extension RootViewModelFactory {
             return { _ in nil }
             
         case .inactive:
-            return makeMakeTemplates
+            return makeTemplates
         }
     }
 }
@@ -30,7 +30,7 @@ extension RootViewModelFactory {
     typealias Templates = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
 
     @inlinable
-    func makeMakeTemplates(
+    func makeTemplates(
         closeAction: @escaping () -> Void
     ) -> Templates {
         

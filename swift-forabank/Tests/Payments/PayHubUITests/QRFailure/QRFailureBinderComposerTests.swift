@@ -293,7 +293,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             ),
             contentFlowWitnesses: .init(
                 contentEmitting: { $0.selectPublisher },
-                contentReceiving: { $0.receive },
+                contentDismissing: { $0.dismiss },
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
                 flowReceiving: { flow in { flow.event(.select($0)) }}
             ),

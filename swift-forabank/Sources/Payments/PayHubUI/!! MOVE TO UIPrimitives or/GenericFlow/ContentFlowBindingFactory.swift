@@ -43,7 +43,7 @@ public extension ContentFlowBindingFactory {
             .zip(flowEmitting)
             .filter { $0.0 != nil && $0.1 == nil }
             .delay(for: delay, scheduler: scheduler)
-            .sink { _ in witnesses.contentReceiving(content)() }
+            .sink { _ in witnesses.contentDismissing(content)() }
         
         return [select, dismiss]
     }

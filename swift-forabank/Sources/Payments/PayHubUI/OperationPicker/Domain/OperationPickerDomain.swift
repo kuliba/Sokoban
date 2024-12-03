@@ -8,7 +8,7 @@
 import PayHub
 
 /// A namespace/
-public enum OperationPickerDomain<Exchange, Latest, LatestFlow, Status, Templates> {}
+public enum OperationPickerDomain<Latest, Navigation> {}
 
 public extension OperationPickerDomain {
     
@@ -28,5 +28,4 @@ public extension OperationPickerDomain {
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     typealias Select = OperationPickerElement<Latest>
-    typealias Navigation = OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>
 }
