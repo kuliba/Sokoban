@@ -777,7 +777,7 @@ final class ControlPanelReducerTests: XCTestCase {
 extension Array where Element == ControlPanelButtonDetails {
     
     static func buttons(_ card: ProductCardData) -> Self {
-        .cardGuardian(card, .active)
+        .cardGuardian(card)
     }
 }
 

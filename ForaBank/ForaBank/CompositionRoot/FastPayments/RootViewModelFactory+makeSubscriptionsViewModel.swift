@@ -11,41 +11,40 @@ import TextFieldModel
 
 extension RootViewModelFactory {
     
-    typealias GetSubscriptionProducts = (@escaping OnSubscriptionDelete, @escaping OnSubscriptionDetail) -> [SubscriptionsViewModel.Product]
     typealias OnSubscriptionDelete = (SubscriptionViewModel.Token, String) -> Void
     typealias OnSubscriptionDetail = (SubscriptionViewModel.Token) -> Void
     
     @inlinable
     func makeSubscriptionsViewModel(
-        getProducts: @escaping GetSubscriptionProducts,
-        c2bSubscription: C2BSubscription?
-    ) -> UserAccountNavigationStateManager.MakeSubscriptionsViewModel {
+        onDelete: @escaping OnSubscriptionDelete,
+        onDetail: @escaping OnSubscriptionDetail
+    ) -> SubscriptionsViewModel {
         
-        return { onDelete, onDetail in
-            
-            let products = getProducts(onDelete, onDetail)
-            
-            let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
-                isEmpty: products.count == 0,
-                c2bSubscription: c2bSubscription
-            )
-            
-            let reducer = TransformingReducer(placeholderText: "Поиск")
-            
-            return .init(
-                products: products,
-                searchViewModel: .init(
-                    initialState: .placeholder("Поиск"),
-                    reducer: reducer,
-                    keyboardType: .default
-                ),
-                emptyViewModel: emptyViewModel,
-                configurator: .init(
-                    backgroundColor: .mainColorsGrayLightest
-                ),
-                scheduler: self.schedulers.main
-            )
-        }
+        let getProducts = getSubscriptionProducts(onDelete:onDetail:)
+        let c2bSubscription = model.subscriptions.value
+        
+        let products = getProducts(onDelete, onDetail)
+        
+        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+            isEmpty: products.count == 0,
+            c2bSubscription: c2bSubscription
+        )
+        
+        let reducer = TransformingReducer(placeholderText: "Поиск")
+        
+        return .init(
+            products: products,
+            searchViewModel: .init(
+                initialState: .placeholder("Поиск"),
+                reducer: reducer,
+                keyboardType: .default
+            ),
+            emptyViewModel: emptyViewModel,
+            configurator: .init(
+                backgroundColor: .mainColorsGrayLightest
+            ),
+            scheduler: self.schedulers.main
+        )
     }
     
     func getSubscriptionProducts(
