@@ -54,9 +54,9 @@ final class RootViewModelFactory_updateAlertsTests: RootViewModelFactoryTests {
                 updateAlert: .init(
                     title: "Ой сломалось",
                     text: "Мы уже знаем о проблеме и работаем над её исправлением. Попробуйте зайти позже, а пока можете посмотреть наши продукты",
-                    link: <#T##String?#>,
-                    version: <#T##String?#>,
-                    actionType: <#T##NoIDClientInformAlerts.UpdateAlert.ClientInformActionType#>
+                    link: nil,
+                    version: nil,
+                    actionType: .authBlocking
                 )
             )
         ])
