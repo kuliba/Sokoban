@@ -17,7 +17,7 @@ extension ModelRootComposer {
         model: Model = .mockWithEmptyExcept(),
         resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
         scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
-        settings: RootViewModelFactorySettings = .iFora,
+        settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
     ) {
         self.init(
@@ -37,7 +37,6 @@ extension ModelRootComposer {
                     model: model,
                     httpClient: httpClient,
                     historyFeatureFlag: true,
-                    marketFeatureFlag: .active,
                     savingsAccountFlag: featureFlags.savingsAccountFlag,
                     schedulers: schedulers
                 )

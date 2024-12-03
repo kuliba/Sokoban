@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeTransfers(
-        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
+        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType] = PaymentsTransfersPersonalTransfersDomain.ButtonType.allCases,
         makeQRModel: @escaping () -> QRScannerModel
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         
@@ -34,17 +34,15 @@ extension RootViewModelFactory {
         )
         
         let composer = PaymentsTransfersPersonalTransfersDomain.BinderComposer(
-            microServices: .init(
-                getNavigation: { element, notify, completion in
-                    
-                    let navigation = navigationComposer.compose(element, notify: notify)
-                    completion(navigation)
-                }
-            ),
-            scheduler: schedulers.main,
-            interactiveScheduler: schedulers.interactive
+            elements: elements,
+            getNavigation: { element, notify, completion in
+                
+                let navigation = navigationComposer.compose(element, notify: notify)
+                completion(navigation)
+            },
+            schedulers: schedulers
         )
         
-        return composer.compose(elements: elements)
+        return composer.compose()
     }
 }

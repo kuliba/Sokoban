@@ -239,8 +239,8 @@ private extension String {
           "symbol": "$"
         },
         "fee": {
-          "openAndMaintenance": 50,
-          "subscription": {
+          "open": 50,
+          "maintenance": {
             "period": "month",
             "value": 100
           }
@@ -324,8 +324,8 @@ private extension ResponseMapper.GetOpenAccountFormData {
 private extension ResponseMapper.GetOpenAccountFormData.Fee {
     
     static let valid: Self = .init(
-        openAndMaintenance: 50,
-        subscription: .init(period: "month", value: 100))
+        open: 50,
+        maintenance: .init(period: "month", value: 100))
 }
 
 private extension ResponseMapper.GetOpenAccountFormData.Currency {

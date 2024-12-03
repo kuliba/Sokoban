@@ -11,20 +11,17 @@ public final class PaymentsTransfersPersonalContent: ObservableObject {
     
     public let categoryPicker: any CategoryPicker
     public let operationPicker: any OperationPicker
-    public let toolbar: any PaymentsTransfersPersonalToolbar
     public let transfers: any TransfersPicker
     private let _reload: () -> Void
     
     public init(
         categoryPicker: any CategoryPicker,
         operationPicker: any OperationPicker,
-        toolbar: any PaymentsTransfersPersonalToolbar,
         transfers: any TransfersPicker,
         reload: @escaping () -> Void
     ) {
         self.categoryPicker = categoryPicker
         self.operationPicker = operationPicker
-        self.toolbar = toolbar
         self.transfers = transfers
         self._reload = reload
     }
