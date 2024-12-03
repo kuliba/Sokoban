@@ -7,6 +7,7 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func getPaymentsTransfersPersonalNavigation(
         select: PaymentsTransfersPersonalDomain.Select,
         notify: @escaping PaymentsTransfersPersonalDomain.Notify,
@@ -21,8 +22,11 @@ extension RootViewModelFactory {
             case .userAccount:
                 completion(.userAccount)
                 
+            case .scanQR:
+                completion(.scanQR)
+                
             default:
-                break
+                fatalError()
             }
         }
     }

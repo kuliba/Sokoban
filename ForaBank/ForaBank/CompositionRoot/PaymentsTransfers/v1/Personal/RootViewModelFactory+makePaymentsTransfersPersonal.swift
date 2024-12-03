@@ -72,13 +72,27 @@ private extension CategoryPickerSectionDomain.Binder {
     var eventPublisher: EventPublisher {
         
         flow.$state
-            .compactMap { _ in return nil }
+            .compactMap(\.event)
             .eraseToAnyPublisher()
     }
     
     func dismiss() {
         
         flow.event(.dismiss)
+    }
+}
+
+private extension FlowState<SelectedCategoryNavigation> {
+    
+    var event: PaymentsTransfersPersonalSelect? {
+        
+        switch navigation {
+        case .paymentFlow(.qr(())):
+            return .outside(.scanQR)
+            
+        default:
+            return nil
+        }
     }
 }
 

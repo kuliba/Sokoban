@@ -32,6 +32,7 @@ enum PaymentsTransfersPersonalSelect: Equatable {
 
 enum PaymentsTransfersPersonalNavigation {
     
+    case scanQR
     case templates
     case userAccount
 }

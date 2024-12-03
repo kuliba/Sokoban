@@ -188,11 +188,6 @@ private extension PaymentsTransfersCorporateDomain.Binder {
     
     var rootEventPublisher: AnyPublisher<RootEvent, Never> {
         
-        Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
-    }
-    
-    private var rootEventPublishers: AnyPublisher<RootEvent, Never> {
-        
         return flow.$state
             .compactMap(\.navigation?.rootEvent)
             .eraseToAnyPublisher()
@@ -214,16 +209,9 @@ private extension PaymentsTransfersPersonalDomain.Binder {
     
     var rootEventPublisher: AnyPublisher<RootEvent, Never> {
         
-        Publishers.MergeMany(rootEventPublishers).eraseToAnyPublisher()
-    }
-    
-    private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
-        
-        let flowRootEventPublisher = flow.$state
+        flow.$state
             .compactMap(\.navigation?.rootEvent)
             .eraseToAnyPublisher()
-        
-        return [flowRootEventPublisher]
     }
 }
 
@@ -232,6 +220,9 @@ private extension PaymentsTransfersPersonalNavigation {
     var rootEvent: RootEvent? {
         
         switch self {
+        case .scanQR:
+            return .scanQR
+            
         case .templates:
             return .templates
             

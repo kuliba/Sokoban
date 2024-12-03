@@ -44,7 +44,7 @@ private extension PaymentsTransfersPersonalDomain.FlowDomain.State {
     var destination: PaymentsTransfersPersonalNavigation.Destination? {
         
         switch navigation {
-        case .none, .templates, .userAccount:
+        case .none, .scanQR, .templates, .userAccount:
             return .none
         }
     }
@@ -52,7 +52,7 @@ private extension PaymentsTransfersPersonalDomain.FlowDomain.State {
     var fullScreenCover: PaymentsTransfersPersonalNavigation.FullScreenCover? {
         
         switch navigation {
-        case .none, .templates, .userAccount:
+        case .none, .scanQR, .templates, .userAccount:
             return .none
         }
     }
