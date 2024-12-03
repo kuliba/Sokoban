@@ -18,6 +18,7 @@ class RootViewModel_Tests: XCTestCase {
     typealias Witnesses = ContentWitnesses<RootViewModel, RootViewSelect>
     
     func makeSUT(
+        paymentsModel: RootViewModel.PaymentsModel? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -25,7 +26,14 @@ class RootViewModel_Tests: XCTestCase {
         spy: Spy
     ) {
         let model: Model = .mockWithEmptyExcept()
-        
+        let paymentsModel = paymentsModel ?? .legacy(.init(
+            model: model,
+            makeFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview
+        ))
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
             stickerViewFactory: .preview,
@@ -44,14 +52,7 @@ class RootViewModel_Tests: XCTestCase {
                     onRegister: {},
                     bannersBinder: .preview
                 ),
-                paymentsModel: .legacy(.init(
-                    model: model,
-                    makeFlowManager: { _ in .preview },
-                    userAccountNavigationStateManager: .preview,
-                    sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
-                    paymentsTransfersFactory: .preview
-                )),
+                paymentsModel: paymentsModel,
                 chatViewModel: .init(),
                 marketShowcaseBinder: .preview
             ),
@@ -102,6 +103,13 @@ class RootViewModel_Tests: XCTestCase {
         try sut.tapMainViewFastSectionTemplatesButton()
     }
     
+    func tapMainViewFastSectionStandardPaymentButton(
+        _ sut: SUT
+    ) throws {
+        
+        try sut.tapMainViewFastSectionStandardPaymentButton()
+    }
+    
     func tapLegacyPaymentsSectionQRButton(
         _ sut: SUT
     ) throws {
@@ -130,6 +138,14 @@ private extension RootViewModel {
     ) throws {
         
         try mainViewModel.tapFastSectionButton(type: .qr, file: file, line: line)
+    }
+    
+    func tapMainViewFastSectionStandardPaymentButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try mainViewModel.tapFastSectionButton(type: .utility, file: file, line: line)
     }
     
     func tapMainViewFastSectionTemplatesButton(
@@ -189,6 +205,7 @@ private extension MainViewModel {
         case qr = "Оплата по QR"
         case templates = "Шаблоны"
         case byPhone = "Перевод по телефону"
+        case utility = "Оплата ЖКУ"
     }
     
     func fastSectionButton(

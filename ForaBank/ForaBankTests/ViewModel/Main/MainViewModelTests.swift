@@ -249,7 +249,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.modal)
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .zku)
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .utility)
         
         XCTAssertNotNil(sut.route.modal?.alert)
     }

@@ -120,7 +120,7 @@ final class BinderComposerTests: XCTestCase {
             schedulers: schedulers ?? test,
             witnesses: .init(
                 emitting: { $0.selectPublisher },
-                receiving: { $0.receive }
+                dismissing: { $0.receive }
             )
         )
         

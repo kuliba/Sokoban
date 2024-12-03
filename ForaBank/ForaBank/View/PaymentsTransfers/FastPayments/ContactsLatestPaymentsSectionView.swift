@@ -13,7 +13,7 @@ struct ContactsLatestPaymentsSectionView: View {
     
     var body: some View {
        
-        LatestPaymentsView(viewModel: viewModel.latestPayments)
+        LatestPaymentsView(viewModel: viewModel.latestPayments, config: .prod())
     }
 }
 
