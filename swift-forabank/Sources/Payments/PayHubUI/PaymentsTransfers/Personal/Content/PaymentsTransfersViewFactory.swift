@@ -7,22 +7,22 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView> {
+public struct PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, Toolbar, TransfersView> {
     
     public let makeCategoryPickerView: MakeCategoryPickerView
     public let makeOperationPickerView: MakeOperationPickerView
-    public let makeToolbarView: MakeToolbarView
+    public let makeToolbar: MakeToolbar
     public let makeTransfersView: MakeTransfersView
     
     public init(
         @ViewBuilder makeCategoryPickerView: @escaping MakeCategoryPickerView,
         @ViewBuilder makeOperationPickerView: @escaping MakeOperationPickerView,
-        @ViewBuilder makeToolbarView: @escaping MakeToolbarView,
+        @ToolbarContentBuilder makeToolbar: @escaping MakeToolbar,
         @ViewBuilder makeTransfersView: @escaping MakeTransfersView
     ) {
         self.makeCategoryPickerView = makeCategoryPickerView
         self.makeOperationPickerView = makeOperationPickerView
-        self.makeToolbarView = makeToolbarView
+        self.makeToolbar = makeToolbar
         self.makeTransfersView = makeTransfersView
     }
 }
@@ -31,6 +31,6 @@ public extension PaymentsTransfersPersonalViewFactory {
     
     typealias MakeCategoryPickerView = (CategoryPicker) -> CategoryPickerView
     typealias MakeOperationPickerView = (OperationPicker) -> OperationPickerView
-    typealias MakeToolbarView = (PaymentsTransfersPersonalToolbar) -> ToolbarView
+    typealias MakeToolbar = () -> Toolbar
     typealias MakeTransfersView = (TransfersPicker) -> TransfersView
 }

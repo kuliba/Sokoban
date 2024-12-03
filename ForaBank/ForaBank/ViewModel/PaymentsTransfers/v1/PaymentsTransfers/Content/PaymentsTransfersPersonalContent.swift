@@ -31,18 +31,6 @@ extension PayHubUI.OperationPicker {
     }
 }
 
-// MARK: - PaymentsTransfersPersonalToolbar
-
-extension PaymentsTransfersPersonalToolbarDomain.Binder: PayHubUI.PaymentsTransfersPersonalToolbar {}
-
-extension PayHubUI.PaymentsTransfersPersonalToolbar {
-    
-    var toolbarBinder: PaymentsTransfersPersonalToolbarDomain.Binder? {
-        
-        return self as? PaymentsTransfersPersonalToolbarDomain.Binder
-    }
-}
-
 // MARK: - TransfersPicker
 
 extension PaymentsTransfersPersonalTransfersDomain.Binder: PayHubUI.TransfersPicker {}

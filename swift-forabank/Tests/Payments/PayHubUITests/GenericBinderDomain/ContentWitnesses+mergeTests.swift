@@ -27,7 +27,7 @@ final class ContentWitnesses_mergeTests: XCTestCase {
         let callSpy = CallSpy<Void, Void>(stubs: [()])
         let sut = makeSUT(receivingAction: callSpy.call)
         
-        let action = sut.receiving(content)
+        let action = sut.dismissing(content)
         action()
         
         XCTAssertEqual(callSpy.callCount, 1)
@@ -58,7 +58,7 @@ final class ContentWitnesses_mergeTests: XCTestCase {
         var sut = sut1
         sut.merge(with: sut2)
         
-        let action = sut.receiving(42)
+        let action = sut.dismissing(42)
         action()
         
         XCTAssertEqual(callSpy1.callCount, 1)
@@ -80,11 +80,11 @@ final class ContentWitnesses_mergeTests: XCTestCase {
             return Just(value).eraseToAnyPublisher()
         }
         
-        let receiving: Witnesses.Receiving = { _ in
+        let receiving: Witnesses.Dismissing = { _ in
             
             receivingAction ?? {}
         }
         
-        return Witnesses(emitting: emitting, receiving: receiving)
+        return Witnesses(emitting: emitting, dismissing: receiving)
     }
 }

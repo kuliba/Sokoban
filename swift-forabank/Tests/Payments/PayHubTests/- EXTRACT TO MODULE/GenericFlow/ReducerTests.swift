@@ -53,7 +53,7 @@ final class FlowReducerTests: FlowTests {
     
     // MARK: - select
     
-    func test_select_shouldSetIsLoadingToTrueResetDestination() {
+    func test_select_shouldSetIsLoadingToTrueNotResetDestination() {
         
         let select = makeSelect()
         
@@ -62,7 +62,6 @@ final class FlowReducerTests: FlowTests {
             event: .select(select)
         ) {
             $0.isLoading = true
-            $0.navigation = nil
         }
     }
     

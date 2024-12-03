@@ -292,21 +292,15 @@ extension ProductProfileViewModel {
             
         case .restartChangePin:
             guard let productCard = model.product(productId: cardId.rawValue)?.asCard else { return }
-            
             checkCertificate(.init(cardId.rawValue), certificate: self.cvvPINServicesClient, productCard)
             
         case let .changePin(displayNumber):
-            
-            // TODO: переделать DispatchQueue.main -> combine
-            DispatchQueue.main.async { [weak self] in
-                
-                self?.action.send(DelayWrappedAction(
-                    delayMS: 200,
-                    action: ProductProfileViewModelAction.CVVPin.ChangePin(
-                        cardId: cardId,
-                        phone: displayNumber)
-                ))
-            }
+            action.send(DelayWrappedAction(
+                delayMS: 200,
+                action: ProductProfileViewModelAction.CVVPin.ChangePin(
+                    cardId: cardId,
+                    phone: displayNumber)
+            ))
             
         case .showCvv:
             DispatchQueue.main.async { [weak self] in
@@ -444,7 +438,6 @@ private extension ProductProfileViewModel {
             .sink { [weak self] in
                 
                 self?.action.send($0)
-                
             }
             .store(in: &bindings)
         
@@ -978,6 +971,7 @@ private extension ProductProfileViewModel {
                 guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == activeProductId }) else {
                     return
                 }
+                self.product.productType = product.productType
                 
                 if let deposit = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData {
                     
