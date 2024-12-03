@@ -168,7 +168,7 @@ extension AuthLoginViewModel {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
+                                 dismissButton: .default(dismissText, action: {
                         openURL()
                     })
                     )
