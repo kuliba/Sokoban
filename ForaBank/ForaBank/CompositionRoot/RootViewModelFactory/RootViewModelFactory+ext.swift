@@ -436,9 +436,9 @@ private extension RootViewDomain.Flow {
         let outside = $state.compactMap(\.outside)
             .debounce(for: .milliseconds(500), scheduler: scheduler)
             .receive(on: scheduler)
-            .sink { [weak self] in
+            .sink { [weak content] in
                 
-                guard let self else { return }
+                guard let content else { return }
                 
                 switch $0 {
                 case let .productProfile(productID):
