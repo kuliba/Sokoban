@@ -21,6 +21,37 @@ extension RootViewModelFactory {
         
         let placeholderCount = settings.categoryPickerPlaceholderCount
         
+        let content = composeLoadablePickerModel(
+            load: nanoServices.loadCategories,
+            reload: nanoServices.reloadCategories,
+            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
+            placeholderCount: placeholderCount
+        )
+        
+        return compose(
+            getNavigation: getNavigation,
+            content: content,
+            witnesses: witnesses()
+        )
+    }
+    
+    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
+        
+        return .init(
+            emitting: { $0.$state.compactMap(\.selected) },
+            dismissing: { content in { content.event(.select(nil)) }}
+        )
+    }
+}
+
+extension RootViewModelFactory {
+    
+    @inlinable
+    func getNavigation(
+        select: CategoryPickerSectionDomain.Select,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
+        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) {
         let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
             model: model,
             nanoServices: .init(
@@ -35,25 +66,6 @@ extension RootViewModelFactory {
         )
         let microServices = selectedCategoryComposer.compose()
         
-        let categoryPickerContent = composeLoadablePickerModel(
-            load: nanoServices.loadCategories,
-            reload: nanoServices.reloadCategories,
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
-            placeholderCount: placeholderCount
-        )
-        
-        return compose(
-            getNavigation: microServices.getNavigation,
-            content: categoryPickerContent,
-            witnesses: witnesses()
-        )
-    }
-    
-    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
-        
-        return .init(
-            emitting: { $0.$state.compactMap(\.selected) },
-            dismissing: { content in { content.event(.select(nil)) }}
-        )
+        microServices.getNavigation(select, notify, completion)
     }
 }
