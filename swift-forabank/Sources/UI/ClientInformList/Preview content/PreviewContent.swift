@@ -28,7 +28,6 @@ extension ClientInformListConfig.Strings {
     static let preview: Self = .init(titlePlaceholder: "Информация")
 }
 
-@available(iOS 15, *)
 extension ClientInformListDataState {
     
     static let preview: Self = ClientInformListDataState.multiple(.init(

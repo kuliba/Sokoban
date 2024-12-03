@@ -175,6 +175,7 @@ extension LatestPaymentsView.ViewModel {
         let action: () -> Void
         
         enum Avatar {
+            
             case image(Image)
             case text(String)
             case icon(Image, Color)
@@ -237,7 +238,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 paymentData.phoneNumber.add8IfNeeded(),
                 paymentData.phoneNumber.replace7To8IfNeeded()
             ]
-
+            
             self.avatar = Self.avatar(model: model, for: phoneNumbers) ?? icon
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
             self.description = Self.fullName(model: model, for: phoneNumbers)
@@ -250,7 +251,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             self.avatar = outsideData.avatar ?? defaultIcon
             self.description = outsideData.description ?? (paymentData.lastPaymentName ?? name)
             self.topIcon = outsideData.topIcon
-        
+            
         case (.transport, let paymentData as PaymentServiceData),
             (.taxAndStateService, let paymentData as PaymentServiceData):
             
@@ -259,7 +260,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             self.avatar = operatorData.avatar ?? icon
             self.description = operatorData.description ?? name
             self.topIcon = nil
-
+            
         case (.internet, let paymentData as PaymentServiceData),
             (.service, let paymentData as PaymentServiceData):
             
@@ -268,9 +269,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             self.avatar = operatorData.avatar ?? icon
             self.description = operatorData.description ?? name
             self.topIcon = nil
-
+            
         case (.internet, let paymentData as PaymentServiceData),             (.service, let paymentData as PaymentServiceData)
-:
+            :
             
             let operatorData = Self.reduceAnywayOperator(anywayOperators: model.dictionaryAnywayOperators(), puref: paymentData.puref)
             
@@ -282,7 +283,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             if let phoneNumber = paymentData.additionalList.first?.fieldValue,
                !phoneNumber.isEmpty {
-                                
+                
                 self.avatar = Self.avatar(model: model, for: [phoneNumber]) ?? icon
                 self.description = Self.fullName(model: model, for: [phoneNumber])
                 
@@ -311,12 +312,12 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
 //MARK: Model Helpers
 
 extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
-        
+    
     static func fullName(
         model: Model,
         for phoneNumbers: [String]
     ) -> String {
-
+        
         let phoneFormatter = PhoneNumberKitFormater()
         
         let names = phoneNumbers.compactMap {
@@ -330,7 +331,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         if !names.isEmpty, let name = names.first {
             
             return name
-
+            
         } else {
             
             if let phoneNumber = phoneNumbers.first {
@@ -340,7 +341,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         }
         return ""
     }
-            
+    
     static func avatar(
         model: Model,
         for phoneNumbers: [String]
@@ -431,7 +432,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         switch code {
             
         case .direct:
-           return .icon(.ic24Smartphone, .iconGray)
+            return .icon(.ic24Smartphone, .iconGray)
             
         case .directCard, .dkm, .dkq, .dkr, .pw0:
             return .icon(.ic24CreditCard, .iconGray)
@@ -440,17 +441,17 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             guard let givenName = additionalList.first(where: { $0.isGivenName })?.fieldValue,
                   let middleName = additionalList.first(where: { $0.isMiddleName })?.fieldValue else {
-                 
+                
                 return .icon(.ic24Globe, .iconGray)
             }
-
+            
             return .text(firstLetter(name: givenName, lastName: middleName))
             
         case .unknown:
             return .icon(.ic24Globe, .iconGray)
         }
     }
-
+    
     static func firstLetter(name: String, lastName: String) -> String {
         
         let letters = [name, lastName]
@@ -483,36 +484,27 @@ enum LatestPaymentsViewModelAction {
 
 struct LatestPaymentsView: View {
     
-    @ObservedObject private var viewModel: LatestPaymentsView.ViewModel
-
-    private let iconSize: CGFloat
-
-    init(
-        viewModel: LatestPaymentsView.ViewModel,
-        iconSize: CGFloat = 56
-    ) {
-        self.viewModel = viewModel
-        self.iconSize = iconSize
-    }
+    @ObservedObject var viewModel: LatestPaymentsView.ViewModel
+    
+    var config: LatestPaymentButtonLabelConfig = .prod()
     
     var body: some View {
         
         ScrollView(.horizontal,showsIndicators: false) {
+            
             HStack(spacing: 4) {
+                
                 ForEach(viewModel.items) { item in
                     
                     switch item {
                     case let .templates(templateVM):
-                        LatestPaymentButtonView(viewModel: templateVM)
+                        LatestPaymentButtonView(viewModel: templateVM, config: config)
                         
                     case let .currencyWallet(currencyWalletButtonViewModel):
-                        LatestPaymentButtonView(viewModel: currencyWalletButtonViewModel)
+                        LatestPaymentButtonView(viewModel: currencyWalletButtonViewModel, config: config)
                         
                     case let .latestPayment(latestPaymentVM):
-                        LatestPaymentButtonView(
-                            viewModel: latestPaymentVM,
-                            iconSize: iconSize
-                        )
+                        LatestPaymentButtonView(viewModel: latestPaymentVM, config: config)
                         
                     case let .placeholder(placeholderVM):
                         PlaceholderView(viewModel: placeholderVM)
@@ -521,7 +513,6 @@ struct LatestPaymentsView: View {
                 }
                 
                 Spacer()
-                
             }
             .padding(.leading, 8)
         }
@@ -560,108 +551,196 @@ extension LatestPaymentsView {
     }
 }
 
-//MARK: - LatestPaymentButtonView
+// MARK: - LatestPaymentButtonView
+
+struct LatestPaymentButtonLabel {
+    
+    let amount: String?
+    let avatar: Avatar
+    let description: String
+    let topIcon: Image?
+    
+    typealias Avatar = LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar
+}
+
+struct LatestPaymentButtonLabelConfig: Equatable {
+    
+    let avatarText: TextConfig
+    let description: TextConfig
+    let iconColor: Color
+    let iconSize: CGFloat
+    let size: CGSize
+    let spacing: CGFloat
+    let textFont: Font
+    let topIconSize: CGSize
+    
+    var width: CGFloat { size.width }
+}
+
+extension LatestPaymentButtonLabelConfig {
+    
+    static func prod(
+        iconSize: CGFloat = 56
+    ) -> Self {
+        
+        return .init(
+            avatarText: .init(
+                textFont: .textH4M16240(),
+                textColor: .textPlaceholder
+            ),
+            description: .init(
+                textFont: .textBodySR12160(),
+                textColor: .textSecondary
+            ),
+            iconColor: .mainColorsGrayLightest,
+            iconSize: iconSize,
+            size: .init(width: 80, height: 96),
+            spacing: 8,
+            textFont: .textBodySR12160(),
+            topIconSize: .init(width: 24, height: 24)
+        )
+    }
+}
+
+struct LatestPaymentButtonLabelView: View {
+    
+    let label: LatestPaymentButtonLabel
+    let config: LatestPaymentButtonLabelConfig
+    
+    var body: some View {
+        
+        VStack(alignment: .center, spacing: config.spacing) {
+            
+            iconView()
+            descriptionView()
+        }
+        .frame(width: config.width, height: config.size.height)
+        .accessibilityIdentifier("LatestPaymentsItem")
+    }
+}
+
+private extension LatestPaymentButtonLabelView {
+    
+    func iconView() -> some View {
+        
+        ZStack {
+            
+            Circle()
+                .fill(config.iconColor)
+                .frame(height: config.iconSize)
+                .accessibilityIdentifier("LatestPaymentsAvatarIcon")
+            
+            avatarView()
+            topIconView()
+        }
+    }
+    
+    @ViewBuilder
+    func avatarView() -> some View {
+        
+        switch label.avatar {
+        case let .image(image):
+            image
+                .renderingMode(.original)
+                .resizable()
+                .scaledToFit()
+                .clipShape(Circle())
+                .frame(height: config.iconSize)
+            
+        case let .text(text):
+            text.text(withConfig: config.avatarText)
+            
+        case let .icon(icon, color):
+            icon
+                .resizable()
+                .frame(config.topIconSize)
+                .foregroundColor(color)
+        }
+    }
+    
+    @ViewBuilder
+    func topIconView() -> some View {
+        
+        if let topIcon = label.topIcon {
+            
+            topIcon
+                .renderingMode(.original)
+                .resizable()
+                .clipShape(Circle())
+                .frame(config.topIconSize)
+                .position(x: 64, y: 12)
+                .accessibilityIdentifier("LatestPaymentsTopIcon")
+        }
+    }
+    
+    @ViewBuilder
+    func descriptionView() -> some View {
+        
+        if let amountValue = label.amount, !amountValue.isEmpty {
+            
+            VStack(alignment: .center, spacing: 0) {
+                
+                label.description.text(withConfig: config.description, alignment: .center)
+                    .lineLimit(1)
+                    .frame(width: config.width, alignment: .top)
+                    .accessibilityIdentifier("LatestPaymentsName")
+                
+                Text(amountValue)
+                    .font(config.description.textFont)
+                    .lineLimit(1)
+                    .foregroundColor(.textRed)
+                    .frame(width: config.width, height: 16, alignment: .top)
+                    .multilineTextAlignment(.center)
+            }
+        } else {
+            
+            label.description.text(withConfig: config.description, alignment: .center)
+                .lineLimit(2)
+                .frame(width: config.width, height: 32, alignment: .top)
+                .accessibilityIdentifier("LatestPaymentsName")
+        }
+    }
+}
 
 extension LatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
         
-        private let viewModel: ViewModel.LatestPaymentButtonVM
-        private let iconSize: CGFloat
-
-        init(
-            viewModel: ViewModel.LatestPaymentButtonVM,
-            iconSize: CGFloat = 56
-        ) {
-            self.viewModel = viewModel
-            self.iconSize = iconSize
-        }
+        let viewModel: ViewModel.LatestPaymentButtonVM
+        let config: LatestPaymentButtonLabelConfig
         
         var body: some View {
             
-            Button(action: viewModel.action, label: {
-                VStack(alignment: .center, spacing: 8) {
-                    ZStack {
-                        
-                        Circle()
-                            .fill(Color.mainColorsGrayLightest)
-                            .frame(height: iconSize)
-                            .accessibilityIdentifier("LatestPaymentsAvatarIcon")
-                        
-                        switch viewModel.avatar {
-                        case let .image(image):
-                            
-                            image
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(Circle())
-                                .frame(height: iconSize)
-                            
-                        case let .text(text):
-                            Text(text)
-                                .font(.textH4M16240())
-                                .foregroundColor(.textPlaceholder)
-                            
-                        case let .icon(icon, color):
-                            icon
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(color)
-                        }
-                        
-                        if let topIcon = viewModel.topIcon {
-                            topIcon
-                                .renderingMode(.original)
-                                .resizable()
-                                .clipShape(Circle())
-                                .frame(width: 24, height: 24)
-                                .position(x: 64, y: 12)
-                                .accessibilityIdentifier("LatestPaymentsTopIcon")
-                        }
-                    }
-                    
-                    if let amountValue = viewModel.amount,
-                       !amountValue.isEmpty {
-                        
-                        VStack(alignment: .center, spacing: 0) {
-                            
-                            Text(viewModel.description)
-                                .font(.textBodySR12160())
-                                .lineLimit(1)
-                                .foregroundColor(.textSecondary)
-                                .frame(width: 80, alignment: .top)
-                                .multilineTextAlignment(.center)
-                            
-                            Text(amountValue)
-                                .font(.textBodySR12160())
-                                .lineLimit(1)
-                                .foregroundColor(.textRed)
-                                .frame(width: 80, height: 16, alignment: .top)
-                                .multilineTextAlignment(.center)
-                        }
-                    } else {
-                        
-                        Text(viewModel.description)
-                            .font(.textBodySR12160())
-                            .lineLimit(2)
-                            .foregroundColor(.textSecondary)
-                            .frame(width: 80, height: 32, alignment: .top)
-                            .multilineTextAlignment(.center)
-                            .accessibilityIdentifier("LatestPaymentsName")
-                    }
-                }
-                .frame(width: 80, height: 96)
-            })
-            .accessibilityIdentifier("LatestPaymentsItem")
+            Button(action: viewModel.action, label: label)
+        }
+        
+        private func label() -> some View {
             
+            LatestPaymentButtonLabelView(label: viewModel.label, config: config)
         }
     }
 }
 
+private extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        return .init(amount: amount, avatar: avatar, description: description, topIcon: topIcon)
+    }
+}
+
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
+    
     static var previews: some View {
-        LatestPaymentsView(viewModel: .init(.emptyMock,
-                                            mode: .regular, items: [], isBaseButtons: true, filter: nil))
+        
+        LatestPaymentsView(
+            viewModel: .init(
+                .emptyMock,
+                mode: .regular,
+                items: [],
+                isBaseButtons: true,
+                filter: nil
+            )
+        )
     }
 }

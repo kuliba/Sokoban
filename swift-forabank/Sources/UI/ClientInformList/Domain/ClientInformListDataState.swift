@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 15, *)
 public enum ClientInformListDataState {
     
     case single(Single)
@@ -53,7 +52,6 @@ public enum ClientInformListDataState {
     }
 }
 
-@available(iOS 15, *)
 extension ClientInformListDataState {
 
     func navBarTitle() -> String {

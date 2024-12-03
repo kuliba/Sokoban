@@ -1,0 +1,147 @@
+//
+//  RootViewFactory+makeCategoryPickerSectionView.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 29.11.2024.
+//
+
+import LoadableResourceComponent
+import PayHub
+import PayHubUI
+import RxViewModel
+import SwiftUI
+
+extension RootViewFactory {
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionView(
+        categoryPicker: PayHubUI.CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(binder: binder)
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
+    private func makeCategoryPickerSectionView(
+        binder: CategoryPickerSectionDomain.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeAlert: makeAlert(binder: binder),
+                        makeContentView: { makeContentView(binder) },
+                        makeDestinationView: makeDestinationView,
+                        makeFullScreenCoverView: makeFullScreenCoverView
+                    )
+                )
+            }
+        )
+        .padding(.top, 20)
+    }
+    
+    private func makeContentView(
+        _ binder: CategoryPickerSectionDomain.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: binder.content,
+            makeContentView: { state, event in
+                
+                CategoryPickerSectionContentView(
+                    state: state,
+                    event: event,
+                    config: .iFora,
+                    itemLabel: itemLabel
+                )
+            }
+        )
+    }
+    
+    private func makeAlert(
+        binder: CategoryPickerSectionDomain.Binder
+    ) -> (SelectedCategoryFailure) -> Alert {
+        
+        return { failure in
+            
+            return .init(
+                with: .error(message: failure.message, event: .dismiss),
+                event: { binder.flow.event($0) }
+            )
+        }
+    }
+    
+    private func itemLabel(
+        item: CategoryPickerSectionDomain.ContentDomain.State.Item
+    ) -> some View {
+        
+        CategoryPickerSectionStateItemLabel(
+            item: item,
+            config: .iFora,
+            categoryIcon: categoryIcon,
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        makeIconView(.md5Hash(.init(category.md5Hash)))
+    }
+    
+    @ViewBuilder
+    private func makeDestinationView(
+        destination: CategoryPickerSectionNavigation.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .paymentFlow(paymentFlow):
+            switch paymentFlow {
+            case let .mobile(mobile):
+                components.makePaymentsView(mobile.paymentsViewModel)
+                
+            case let .standard(standard):
+                switch standard {
+                case let .failure(failedPaymentProviderPicker):
+                    Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+                    
+                case let .success(binder):
+                    makePaymentProviderPickerView(binder)
+                }
+                
+            case let .taxAndStateServices(wrapper):
+                components.makePaymentsView( wrapper.paymentsViewModel)
+                
+            case let .transport(transport):
+                transportPaymentsView(transport)
+            }
+            
+        case let .qrDestination(qrDestination):
+            qrDestinationView(qrDestination)
+        }
+    }
+    
+    private func makeFullScreenCoverView(
+        cover: CategoryPickerSectionNavigation.FullScreenCover
+    ) -> some View {
+        
+        NavigationView {
+            
+            components.makeQRView(cover.qr.qrScanner)
+        }
+        .navigationViewStyle(.stack)
+    }
+}

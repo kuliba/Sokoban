@@ -16,7 +16,7 @@ extension MainSectionFastOperationView {
         
         override var type: MainSectionType { .fastOperations }
         @Published var items: [ButtonIconTextView.ViewModel]
-        private let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .zku, .templates]
+        private let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .utility, .templates]
 
         internal init(items: [ButtonIconTextView.ViewModel], isCollapsed: Bool) {
             
@@ -47,7 +47,7 @@ extension MainSectionFastOperationView {
         private func createButtonViewModel(for type: FastOperations, action: @escaping () -> Void) -> ButtonIconTextView.ViewModel {
             
             switch type {
-            case .zku:
+            case .utility:
                 return ButtonIconTextView.ViewModel(
                     icon: .init(
                         image: type.icon,
@@ -82,25 +82,25 @@ extension MainSectionFastOperationView {
         
         enum FastOperations {
             
-            case byQr, byPhone, templates, zku
+            case byQr, byPhone, templates, utility
             
             var title: String {
                 
                 switch self {
-                case .byQr: return FastOperationsTitles.qr
-                case .byPhone: return FastOperationsTitles.byPhone
+                case .byQr:      return FastOperationsTitles.qr
+                case .byPhone:   return FastOperationsTitles.byPhone
                 case .templates: return FastOperationsTitles.templates
-                case .zku: return FastOperationsTitles.zku
+                case .utility:   return FastOperationsTitles.utilityPayment
                 }
             }
             
             var icon: Image {
                 
                 switch self {
-                case .byQr: return .ic24BarcodeScanner2
-                case .byPhone: return .ic24Smartphone
+                case .byQr:      return .ic24BarcodeScanner2
+                case .byPhone:   return .ic24Smartphone
                 case .templates: return .ic24Star
-                case .zku: return .ic24Bulb
+                case .utility:   return .ic24Bulb
                 }
             }
         }
@@ -112,8 +112,7 @@ enum FastOperationsTitles {
     static let qr = "Оплата по QR"
     static let byPhone = "Перевод по телефону"
     static let templates = "Шаблоны"
-    static let zku = "Оплата ЖКУ"
-    
+    static let utilityPayment = "Оплата ЖКУ"    
 }
 
 //MARK: - View

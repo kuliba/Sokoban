@@ -8,10 +8,10 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView>: View
+public struct PaymentsTransfersPersonalContentView<CategoryPickerView, OperationPickerView, Toolbar, TransfersView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
-      ToolbarView: View,
+      Toolbar: ToolbarContent,
       TransfersView: View {
     
     @ObservedObject private var content: Content
@@ -44,20 +44,21 @@ where CategoryPickerView: View,
             
             factory.makeCategoryPickerView(content.categoryPicker)
         }
-        .toolbar { factory.makeToolbarView(content.toolbar) }
+        .toolbar(content: factory.makeToolbar)
     }
 }
 
 public extension PaymentsTransfersPersonalContentView {
     
     typealias Content = PaymentsTransfersPersonalContent
-    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, ToolbarView, TransfersView>
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerView, OperationPickerView, Toolbar, TransfersView>
     typealias Config = PaymentsTransfersPersonalViewConfig
 }
 
 // MARK: - Previews
 
 #Preview {
+    
     PaymentsTransfersPersonalContentView(
         content: .preview,
         factory: .init(
@@ -75,9 +76,9 @@ public extension PaymentsTransfersPersonalContentView {
                     .padding()
                     .background(Color.green.opacity(0.1))
             },
-            makeToolbarView: {
+            makeToolbar: {
                 
-                Text("Toolbar \(String(describing: $0))")
+                ToolbarItem { Text("Toolbar") }
             },
             makeTransfersView: { transfers in
                 
@@ -107,7 +108,6 @@ private extension PaymentsTransfersPersonalContent {
         return .init(
             categoryPicker: PreviewCategoryPicker(),
             operationPicker: PreviewOperationPicker(),
-            toolbar: PreviewToolbar(),
             transfers: PreviewTransfers(),
             reload: {}
         )
@@ -117,7 +117,5 @@ private extension PaymentsTransfersPersonalContent {
 private final class PreviewCategoryPicker: CategoryPicker {}
 
 private final class PreviewOperationPicker: OperationPicker {}
-
-private final class PreviewToolbar: PaymentsTransfersPersonalToolbar {}
 
 private final class PreviewTransfers: TransfersPicker {}
