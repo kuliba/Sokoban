@@ -24,7 +24,28 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
             "https://pl.forabank.ru/dbo/api/v3/rest/v1/pages/collateral/getCollateralLanding?landingTypes=\(landingType.rawValue)&serial=\(serial)"
         )
     }
-    
+
+    func test_createGetCollateralLandingRequest_shouldBeEmptySerialInRequestWithNoSerialInParameters() throws {
+        
+        let landingType = randomLandingType
+
+        let queryItems = try getQueryItems(serial: nil, landingType: landingType)
+
+        XCTAssertNoDiff(queryItems.first { $0.name == "serial" }?.value, nil)
+        XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType.rawValue)
+    }
+
+    func test_createGetCollateralLandingRequest_shouldBeEqualParams() throws {
+        
+        let landingType = randomLandingType
+        let serial = anyMessage()
+
+        let queryItems = try getQueryItems(serial: serial, landingType: landingType)
+
+        XCTAssertNoDiff(queryItems.first { $0.name == "serial" }?.value, serial)
+        XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType.rawValue)
+    }
+
     func test_createGetCollateralLandingRequest_shouldSetRequestMethodToGet() throws {
         
         let request = try createRequest()
@@ -42,9 +63,8 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func createRequest(
-        serial: String = UUID().uuidString,
-        landingType: LandingType = [LandingType.car, LandingType.realEstate].randomElement() ?? .car,
-        _ operatorID: String = UUID().uuidString
+        serial: String? = UUID().uuidString,
+        landingType: LandingType = [LandingType.car, LandingType.realEstate].randomElement() ?? .car
     ) throws -> URLRequest {
         
         try RequestFactory.createGetCollateralLandingRequest(
@@ -53,6 +73,17 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
         )
     }
     
+    private func getQueryItems(serial: String?, landingType: LandingType) throws -> [URLQueryItem] {
+
+        let request = try createRequest(serial: serial, landingType: landingType)
+        
+        let requestUrl = try XCTUnwrap(request.url)
+        let urlComponents = try XCTUnwrap(URLComponents(url: requestUrl, resolvingAgainstBaseURL: false))
+        let queryItems = try XCTUnwrap(urlComponents.queryItems)
+
+        return queryItems
+    }
+
     private var randomLandingType: LandingType {
         
         [LandingType.car, LandingType.realEstate].randomElement() ?? .car

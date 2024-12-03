@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+mapGetCollateralLandingResponse.swift
-//  
+//
 //
 //  Created by Valentin Ozerov on 28.11.2024.
 //
@@ -13,97 +13,82 @@ public extension ResponseMapper {
     static func mapCreateGetCollateralLandingResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<GetCollateralLandingData> {
-
-        map(
-            data, httpURLResponse,
-            mapOrThrow: map
-        )
+    ) -> MappingResult<GetCollateralLandingResponse> {
+        
+        map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
         _ data: _Data
-    ) throws -> GetCollateralLandingData {
-
-        try data.getGetCollateralLandingData()
+    ) throws -> GetCollateralLandingResponse {
+        
+        guard
+            let serial = data.serial,
+            let products = data.products
+        else {
+            throw InvalidResponse()
+        }
+        
+        return .init(list: products.compactMap(\.data), serial: serial)
     }
     
     private struct InvalidResponse: Error {}
 }
 
-private extension ResponseMapper._Data {
-    
-    func getGetCollateralLandingData() throws -> ResponseMapper.GetCollateralLandingData {
-        
-        guard
-            let serial,
-            let product
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
-        
-        return .init(
-            serial: serial, product: try product.map()
-        )
-    }
-}
-
 private extension ResponseMapper._Data.Product {
-
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product {
+    
+    var data: ResponseMapper.CollateralLandingProduct? {
         
         guard
             let name,
-            let marketing,
+            let marketing = marketing?.data,
             let conditions,
-            let calc,
+            let calc = calc?.data,
             let frequentlyAskedQuestions,
             let documents,
             let consents,
             let cities,
-            let icons
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+            let icons = icons?.data
+        else { return nil }
         
         return .init(
             theme: themeMap,
             name: name,
-            marketing: try marketing.map(),
-            conditions: try conditions.map { try $0.map() },
-            calc: try calc.map(),
-            frequentlyAskedQuestions: try frequentlyAskedQuestions.map { try $0.map() },
-            documents: try documents.map { try $0.map() },
-            consents: try consents.map { try $0.map() },
+            marketing: marketing,
+            conditions: conditions.compactMap(\.data),
+            calc: calc,
+            frequentlyAskedQuestions: frequentlyAskedQuestions.compactMap(\.data),
+            documents: documents.compactMap(\.data),
+            consents: consents.compactMap(\.data),
             cities: cities,
-            icons: try icons.map()
+            icons: icons
         )
     }
 }
 
 private extension ResponseMapper._Data.Product.Calc {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc {
+    var data: ResponseMapper.CollateralLandingProduct.Calc? {
         
         guard
-            let amount,
+            let amount = amount?.data,
             let collateral,
             let rates
         else {
-            throw ResponseMapper.InvalidResponse()
+            return nil
         }
         
         return .init(
-            amount: try amount.map(),
-            collateral: try collateral.map { try $0.map() },
-            rates: try rates.map { try $0.map() }
+            amount: amount,
+            collateral: collateral.compactMap(\.data),
+            rates: rates.compactMap(\.data)
         )
     }
 }
 
 private extension ResponseMapper._Data.Product.Icons {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Icons {
+    var data: ResponseMapper.CollateralLandingProduct.Icons? {
         
         guard
             let productName,
@@ -112,7 +97,7 @@ private extension ResponseMapper._Data.Product.Icons {
             let rate,
             let city
         else {
-            throw ResponseMapper.InvalidResponse()
+            return nil
         }
         
         return .init(
@@ -127,13 +112,13 @@ private extension ResponseMapper._Data.Product.Icons {
 
 private extension ResponseMapper._Data.Product.Consent {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Consent {
+    var data: ResponseMapper.CollateralLandingProduct.Consent? {
         
         guard
             let name,
             let link
         else {
-            throw ResponseMapper.InvalidResponse()
+            return nil
         }
         
         return .init(
@@ -145,13 +130,13 @@ private extension ResponseMapper._Data.Product.Consent {
 
 private extension ResponseMapper._Data.Product.Document {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Document {
+    var data: ResponseMapper.CollateralLandingProduct.Document? {
         
         guard
             let title,
             let link
         else {
-            throw ResponseMapper.InvalidResponse()
+            return nil
         }
         
         return .init(
@@ -164,14 +149,12 @@ private extension ResponseMapper._Data.Product.Document {
 
 private extension ResponseMapper._Data.Product.FrequentlyAskedQuestion {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.FrequentlyAskedQuestion {
+    var data: ResponseMapper.CollateralLandingProduct.FrequentlyAskedQuestion? {
         
         guard
             let question,
             let answer
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+        else { return nil }
         
         return .init(
             question: question,
@@ -182,16 +165,14 @@ private extension ResponseMapper._Data.Product.FrequentlyAskedQuestion {
 
 private extension ResponseMapper._Data.Product.Calc.Rate {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.Rate {
+    var data: ResponseMapper.CollateralLandingProduct.Calc.Rate? {
         
         guard
             let rateBase,
             let ratePayrollClient,
             let termMonth,
             let termStringValue
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+        else { return nil }
         
         return .init(
             rateBase: rateBase,
@@ -204,15 +185,13 @@ private extension ResponseMapper._Data.Product.Calc.Rate {
 
 private extension ResponseMapper._Data.Product.Calc.Collateral {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.Collateral {
+    var data: ResponseMapper.CollateralLandingProduct.Calc.Collateral? {
         
         guard
             let icon,
             let name,
             let type
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+        else { return nil }
         
         return .init(
             icon: icon,
@@ -224,15 +203,13 @@ private extension ResponseMapper._Data.Product.Calc.Collateral {
 
 private extension ResponseMapper._Data.Product.Calc.Amount {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Calc.Amount {
+    var data: ResponseMapper.CollateralLandingProduct.Calc.Amount? {
         
         guard
             let minIntValue,
             let maxIntValue,
             let maxStringValue
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+        else { return nil }
         
         return .init(
             minIntValue: minIntValue,
@@ -244,15 +221,13 @@ private extension ResponseMapper._Data.Product.Calc.Amount {
 
 private extension ResponseMapper._Data.Product.Condition {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Condition {
+    var data: ResponseMapper.CollateralLandingProduct.Condition? {
         
         guard
             let icon,
             let title,
             let subTitle
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+        else { return nil }
         
         return .init(
             icon: icon,
@@ -264,15 +239,13 @@ private extension ResponseMapper._Data.Product.Condition {
 
 private extension ResponseMapper._Data.Product.Marketing {
     
-    func map() throws -> ResponseMapper.GetCollateralLandingData.Product.Marketing {
+    var data: ResponseMapper.CollateralLandingProduct.Marketing? {
         
         guard
             let labelTag,
             let image,
             let params
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
+        else { return nil }
         
         return .init(
             labelTag: labelTag,
@@ -283,8 +256,8 @@ private extension ResponseMapper._Data.Product.Marketing {
 }
 
 private extension ResponseMapper._Data.Product {
-
-    typealias Theme = ResponseMapper.GetCollateralLandingData.Product.Theme
+    
+    typealias Theme = ResponseMapper.CollateralLandingProduct.Theme
     
     var themeMap: Theme {
         
@@ -294,20 +267,20 @@ private extension ResponseMapper._Data.Product {
            let themeMap = Theme(rawValue: themeFromData.lowercased()) {
             theme = themeMap
         }
-
+        
         return theme
     }
 }
 
 private extension ResponseMapper {
-
+    
     struct _Data: Decodable {
         
         let serial: String?
-        let product: Product?
+        let products: [Product]?
         
         struct Product: Decodable {
-
+            
             let theme: String?
             let name: String?
             let marketing: Marketing?
@@ -318,7 +291,7 @@ private extension ResponseMapper {
             let consents: [Consent]?
             let cities: [String]?
             let icons: Icons?
-
+            
             struct Marketing: Decodable {
                 
                 let labelTag: String?
@@ -389,7 +362,7 @@ private extension ResponseMapper {
                 let rate: String?
                 let city: String?
             }
-
+            
         }
     }
 }

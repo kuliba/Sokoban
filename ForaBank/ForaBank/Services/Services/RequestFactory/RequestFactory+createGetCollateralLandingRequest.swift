@@ -10,6 +10,7 @@ import RemoteServices
 import CollateralLoanLandingGetCollateralLandingBackend
 
 extension RequestFactory {
+    
     static func createGetCollateralLandingRequest(
         serial: String?,
         landingType: RemoteServices.RequestFactory.CollateralLoanLandingType
