@@ -10,18 +10,18 @@ import Combine
 public struct ContentFlowWitnesses<Content, Flow, Select, Navigation> {
     
     public let contentEmitting: ContentEmitting
-    public let contentReceiving: ContentReceiving
+    public let contentDismissing: ContentDismissing
     public let flowEmitting: FlowEmitting
     public let flowReceiving: FlowReceiving
     
     public init(
         contentEmitting: @escaping ContentEmitting,
-        contentReceiving: @escaping ContentReceiving,
+        contentDismissing: @escaping ContentDismissing,
         flowEmitting: @escaping FlowEmitting,
         flowReceiving: @escaping FlowReceiving
     ) {
         self.contentEmitting = contentEmitting
-        self.contentReceiving = contentReceiving
+        self.contentDismissing = contentDismissing
         self.flowEmitting = flowEmitting
         self.flowReceiving = flowReceiving
     }
@@ -30,7 +30,7 @@ public struct ContentFlowWitnesses<Content, Flow, Select, Navigation> {
 public extension ContentFlowWitnesses {
     
     typealias ContentEmitting = (Content) -> AnyPublisher<Select, Never>
-    typealias ContentReceiving = (Content) -> () -> Void
+    typealias ContentDismissing = (Content) -> () -> Void
     typealias FlowEmitting = (Flow) -> AnyPublisher<Navigation?, Never>
     typealias FlowReceiving = (Flow) -> (Select) -> Void
 }

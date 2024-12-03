@@ -60,7 +60,7 @@ public extension BinderComposer {
             flow: flowComposer.compose(initialState: initialState),
             bind: factory.bind(with: .init(
                 contentEmitting: witnesses.emitting,
-                contentReceiving: witnesses.receiving,
+                contentDismissing: witnesses.dismissing,
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
                 flowReceiving: { flow in { flow.event(.select($0)) }}
             ))

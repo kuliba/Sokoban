@@ -1305,7 +1305,7 @@ private extension PaymentsTransfersViewModel {
             delay(for: .milliseconds(800)) { [weak self] in
                 
                 self?.action.send(
-                    MainViewModelAction.Show.ProductProfile(
+                    PaymentsTransfersViewModelAction.Show.ProductProfile(
                         productId: productID
                     )
                 )
