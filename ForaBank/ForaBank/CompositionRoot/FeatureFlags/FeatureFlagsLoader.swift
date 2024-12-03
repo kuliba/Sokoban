@@ -25,7 +25,6 @@ extension FeatureFlagsLoader {
     func load() -> FeatureFlags {
         
         return .init(
-            changeSVCardLimitsFlag: loadChangeSVCardLimitsFlag(),
             getProductListByTypeV6Flag: loadGetProductListByTypeV6Flag(),
             historyFilterFlag: loadHistoryFilterFlag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
@@ -37,7 +36,6 @@ extension FeatureFlagsLoader {
 
 enum FeatureFlagKey: String {
     
-    case changeSVCardLimitsFlag = "changeSVCardLimits"
     case getProductListByTypeV6Flag = "getProductListByTypeV6"
     case historyFilterFlag = "history_filter"
     case paymentsTransfersFlag = "payments_transfers"
@@ -46,14 +44,6 @@ enum FeatureFlagKey: String {
 }
 
 private extension FeatureFlagsLoader {
-    
-    func loadChangeSVCardLimitsFlag() -> ChangeSVCardLimitsFlag {
-        
-        switch retrieve(.changeSVCardLimitsFlag) {
-        case "1":  return .active
-        default:   return .inactive
-        }
-    }
     
     func loadGetProductListByTypeV6Flag() -> GetProductListByTypeV6Flag {
         
