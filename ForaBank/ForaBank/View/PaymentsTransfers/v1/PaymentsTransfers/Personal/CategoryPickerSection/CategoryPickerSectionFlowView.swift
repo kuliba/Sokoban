@@ -9,10 +9,9 @@ import PayHub
 import SwiftUI
 import UIPrimitives
 
-struct CategoryPickerSectionFlowView<ContentView, DestinationView, FullScreenCoverView>: View
+struct CategoryPickerSectionFlowView<ContentView, DestinationView>: View
 where ContentView: View,
-      DestinationView: View,
-      FullScreenCoverView: View {
+      DestinationView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -25,10 +24,6 @@ where ContentView: View,
                 item: state.failure,
                 content: factory.makeAlert
             )
-            .fullScreenCover(
-                cover: state.fullScreenCover,
-                content: factory.makeFullScreenCoverView
-            )
             .navigationDestination(
                 destination: state.destination,
                 content: factory.makeDestinationView
@@ -40,7 +35,7 @@ extension CategoryPickerSectionFlowView {
     
     typealias State = CategoryPickerSectionDomain.FlowDomain.State
     typealias Event = CategoryPickerSectionDomain.FlowDomain.Event
-    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
+    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView>
 }
 
 // MARK: - UI mapping
@@ -55,11 +50,6 @@ private extension CategoryPickerSectionDomain.FlowDomain.State {
     var failure: SelectedCategoryFailure? {
         
         navigation?.failure
-    }
-    
-    var fullScreenCover: SelectedCategoryNavigation.FullScreenCover? {
-        
-        navigation?.fullScreenCover
     }
 }
 
@@ -91,8 +81,8 @@ private extension SelectedCategoryNavigation {
                 return .paymentFlow(.transport(transport))
             }
             
-        case let .qrNavigation(qrNavigation):
-            return qrNavigation.destination.map { .qrDestination($0) }
+        case .qrNavigation:
+            return nil
         }
     }
     
@@ -102,29 +92,16 @@ private extension SelectedCategoryNavigation {
         case let .failure(failure):
             return failure
             
+        case .paymentFlow:
+            return nil
+            
         case let .qrNavigation(qrNavigation):
             return qrNavigation.failure
-            
-        default:
-            return nil
         }
-    }
-    
-    var fullScreenCover: FullScreenCover? {
-        
-        guard case let .paymentFlow(.qr(qr)) = self else { return nil }
-        
-        return .init(id: .init(), qr: qr.model)
     }
 }
 
 extension SelectedCategoryNavigation {
-    
-    struct FullScreenCover: Identifiable {
-        
-        let id: UUID
-        let qr: QRScannerModel
-    }
     
     enum Destination {
         

@@ -57,11 +57,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
             
         case .qr:
-            let qr = nanoServices.makeQR()
-            completion(.paymentFlow(.qr(.init(
-                model: qr,
-                cancellables: []//cancellable
-            ))))
+            completion(.paymentFlow(.qr(())))
             
         case .standard:
             nanoServices.makeStandard(category) {

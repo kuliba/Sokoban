@@ -8,12 +8,11 @@
 import PayHub
 import SwiftUI
 
-struct CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, FullScreenCoverView> {
+struct CategoryPickerSectionFlowViewFactory<ContentView, DestinationView> {
     
     let makeAlert: MakeAlert
     let makeContentView: MakeContentView
     let makeDestinationView: MakeDestinationView
-    let makeFullScreenCoverView: MakeFullScreenCoverView
 }
 
 extension CategoryPickerSectionFlowViewFactory {
@@ -21,5 +20,4 @@ extension CategoryPickerSectionFlowViewFactory {
     typealias MakeAlert = (SelectedCategoryFailure) -> Alert
     typealias MakeContentView = () -> ContentView
     typealias MakeDestinationView = (SelectedCategoryNavigation.Destination) -> DestinationView
-    typealias MakeFullScreenCoverView = (SelectedCategoryNavigation.FullScreenCover) -> FullScreenCoverView
 }

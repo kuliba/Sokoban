@@ -16,7 +16,7 @@ enum SelectedCategoryNavigation {
     
     typealias Mobile = ClosePaymentsViewModelWrapper
     typealias Standard = StandardSelectedCategoryDestination
-    typealias QR = Node<QRScannerModel>
+    typealias QR = Void // it's up to root to handle QR
     typealias Tax = ClosePaymentsViewModelWrapper
     typealias Transport = TransportPaymentsViewModel
     

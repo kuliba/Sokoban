@@ -43,8 +43,7 @@ extension RootViewFactory {
                     factory: .init(
                         makeAlert: makeAlert(binder: binder),
                         makeContentView: { makeContentView(binder) },
-                        makeDestinationView: makeDestinationView,
-                        makeFullScreenCoverView: makeFullScreenCoverView
+                        makeDestinationView: makeDestinationView
                     )
                 )
             }
@@ -132,16 +131,5 @@ extension RootViewFactory {
         case let .qrDestination(qrDestination):
             qrDestinationView(qrDestination)
         }
-    }
-    
-    private func makeFullScreenCoverView(
-        cover: SelectedCategoryNavigation.FullScreenCover
-    ) -> some View {
-        
-        NavigationView {
-            
-            components.makeQRView(cover.qr.qrScanner)
-        }
-        .navigationViewStyle(.stack)
     }
 }
