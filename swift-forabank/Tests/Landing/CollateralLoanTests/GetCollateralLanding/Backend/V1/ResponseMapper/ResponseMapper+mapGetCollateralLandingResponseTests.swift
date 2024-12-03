@@ -551,7 +551,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         
         let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
 
-        XCTAssertTrue(params.count == 1)
+        XCTAssertTrue(params.count == 2)
     }
     
     func test_map_shouldBeNoThrowWithoutConditionIcon() throws {
