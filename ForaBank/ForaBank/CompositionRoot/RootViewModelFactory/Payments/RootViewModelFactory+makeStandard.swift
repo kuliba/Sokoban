@@ -19,12 +19,11 @@ extension RootViewModelFactory {
         let composer = StandardSelectedCategoryDestinationMicroServiceComposer(
             nanoServices: nanoServices
         )
-        let standardMicroService = composer.compose()
         
-        standardMicroService.makeDestination(category) {
+        composer.makeDestination(category: category) {
             
             completion($0)
-            _ = standardMicroService
+            _ = composer
         }
     }
 }
