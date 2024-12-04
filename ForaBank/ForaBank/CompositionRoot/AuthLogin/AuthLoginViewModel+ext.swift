@@ -13,6 +13,7 @@ extension AuthLoginViewModel {
     convenience init(
         _ model: Model,
         buttons: [ButtonAuthView.ViewModel] = [],
+        shouldUpdateVersion: @escaping (ClientInformAlerts.UpdateAlert) -> Bool,
         rootActions: RootViewModel.RootActions,
         onRegister: @escaping () -> Void
     ) {
@@ -28,7 +29,8 @@ extension AuthLoginViewModel {
             factory: model.authLoginViewModelFactory(
                 rootActions: rootActions
             ),
-            onRegister: onRegister
+            onRegister: onRegister, 
+            shouldUpdateVersion: shouldUpdateVersion
         )
     }
 }

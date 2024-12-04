@@ -56,7 +56,16 @@ public struct ClientInformAlerts: Equatable {
         
         public var alert: Alert {
             
-            return actionType == .required ? .required(self) : .optionalRequired(self)
+            switch actionType {
+            case .required:
+                return .required(self)
+                
+            case .optional:
+                return .optionalRequired(self)
+                
+            case .authBlocking:
+                return .required(self)
+            }
         }
     }
     

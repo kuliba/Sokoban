@@ -30,7 +30,8 @@ class AuthLoginViewModel: ObservableObject {
     private let factory: AuthLoginViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
-
+    private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
+    
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
             action: { [weak self] in
@@ -60,7 +61,8 @@ class AuthLoginViewModel: ObservableObject {
         factory: AuthLoginViewModelFactory,
         onRegister: @escaping () -> Void,
         buttons: [ButtonAuthView.ViewModel] = [],
-        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
+        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain(),
+        shouldUpdateVersion: @escaping (ClientInformAlerts.UpdateAlert) -> Bool
     ) {
         self.header = .init()
         self.buttons = buttons
@@ -69,6 +71,7 @@ class AuthLoginViewModel: ObservableObject {
         self.eventHandlers = eventHandlers
         self.factory = factory
         self.onRegister = onRegister
+        self.shouldUpdateVersion = shouldUpdateVersion
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
@@ -80,10 +83,10 @@ class AuthLoginViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    var alertType: AlertModelType? {
+    var currentAlertModel: AlertModelType? {
         switch (alert, clientInformAlerts?.alert) {
         
-        case (let .some(alert), .none): 
+        case (let .some(alert), _):
             return .alertViewModel(alert)
             
         case (_, let .some(alert)): 
@@ -106,17 +109,16 @@ class AuthLoginViewModel: ObservableObject {
 
 extension AuthLoginViewModel {
     
-    private func updateVersion() -> String? {
+    private func updateVersion() -> Bool {
         
-        guard let updateVersion = clientInformAlerts?.updateAlert?.version,
-              Bundle.main.appVersionLong < updateVersion else { return nil }
+        guard let updateAlert = clientInformAlerts?.updateAlert else { return false }
         
-        return updateVersion
+        return shouldUpdateVersion(updateAlert)
     }
     
     private func createAppStoreURL() -> URL? {
         
-        guard updateVersion() != nil else { return nil }
+        guard updateVersion() == true else { return nil }
         
         return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
     }
@@ -127,61 +129,6 @@ extension AuthLoginViewModel {
         
         clientInformAlertsManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
-    }
-    
-    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
-
-        switch alertModelType {
-            
-        case .clientInformAlerts:
-            
-            switch clientInformAlerts?.alert {
-                
-            case let .some(alert):
-                
-                switch alert {
-                case let .inform(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .optionalRequired(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .required(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                }
-                
-            case .none : return .init(title: Text("Ошибка"))
-                
-            }
-            
-        case .alertViewModel:
-            
-            switch self.alert {
-                
-            case let .some(alert): return Alert(with: alert)
-                
-            case .none: return .init(title: Text("Ошибка"))
-            }
-        }
     }
 }
 

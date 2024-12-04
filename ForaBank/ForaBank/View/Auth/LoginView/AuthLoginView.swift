@@ -23,7 +23,7 @@ struct AuthLoginView: View {
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: viewModel.card)
         }
-        .alert(item: viewModel.alertType, content: alert(forAlertType:))
+        .alert(item: viewModel.currentAlertModel, content: alert(forAlertModelType:))
         .present(item: $viewModel.cardScanner, style: .fullScreen) {
             
             CardScannerView(viewModel: $0)
@@ -33,9 +33,9 @@ struct AuthLoginView: View {
 }
 
 extension AuthLoginView {
-    func alert(forAlertType alertModelType: AlertModelType) -> SwiftUI.Alert {
+    func alert(forAlertModelType alertModelType: AlertModelType) -> SwiftUI.Alert {
         
-        return viewModel.swiftUIAlert(forAlertModelType: alertModelType) {
+        return swiftUIAlert(forAlertModelType: alertModelType) {
             
             viewModel.clientInformAlertButtonTapped { url in openURL(url) }
         }
@@ -181,5 +181,65 @@ struct AuthLoginView_Previews: PreviewProvider {
     static var previews: some View {
         
         AuthLoginView(viewModel: .preview)
+    }
+}
+
+extension AuthLoginView {
+    
+    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
+        
+        switch alertModelType {
+            
+        case .clientInformAlerts:
+            
+            switch viewModel.clientInformAlerts?.alert {
+                
+            case let .some(alert):
+                
+                switch alert {
+                case let .inform(alert):
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 dismissButton: .default(Text("Ok"), action: {
+                        openURL()
+                    })
+                    )
+                    
+                case let .optionalRequired(alert):
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 primaryButton: .default(Text("Позже"), action: { }),
+                                 secondaryButton: .default(Text("Обновить"), action: {
+                        openURL()
+                    })
+                    )
+                    
+                case let .required(alert):
+                    
+                    let dismissText = alert.actionType == .authBlocking ?
+                    Text("Ok") : Text("Обновить")
+                    
+                    return .init(title: Text(alert.title),
+                                 message: Text(alert.text),
+                                 dismissButton: .default(Text("Обновить"), action: {
+                        openURL()
+                    })
+                    )
+                }
+                
+            case .none : return .init(title: Text("Ошибка"))
+            }
+            
+        case .alertViewModel:
+            
+            switch viewModel.alert {
+                
+            case let .some(alert): return Alert(with: alert)
+                
+            case .none: return .init(title: Text("Ошибка"))
+            }
+        }
     }
 }

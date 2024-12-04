@@ -26,9 +26,9 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var isPermissionsViewPresented: Bool
     var permissionsViewModel: AuthPermissionsViewModel?
     
-    @Published private var alert: Alert.ViewModel?
+    @Published private(set) var alert: Alert.ViewModel?
     @Published var mistakes: Int
-    @Published private var clientInformAlerts: ClientInformAlerts?
+    @Published private(set) var clientInformAlerts: ClientInformAlerts?
     
     private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
     private var viewDidAppear: CurrentValueSubject<Bool, Never>
@@ -107,10 +107,10 @@ class AuthPinCodeViewModel: ObservableObject {
         bind()
     }
     
-    var alertType: AlertModelType? {
+    var currentAlertModel: AlertModelType? {
         switch (alert, clientInformAlerts?.alert) {
         
-        case (let .some(alert), .none):
+        case (let .some(alert), _):
             return .alertViewModel(alert)
             
         case (_, let .some(alert)):
@@ -123,8 +123,10 @@ class AuthPinCodeViewModel: ObservableObject {
     func bind() {
         
         model.clientInformAlertManager.alertPublisher
-            .sink { self.clientInformAlerts = $0 }.store(in: &bindings)
-        
+            .receive(on: DispatchQueue.main)
+            .sink { self.clientInformAlerts = $0 }
+            .store(in: &bindings)
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -375,7 +377,6 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
-                            self?.model.clientInformAlertManager.dismiss()
                             
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
@@ -662,8 +663,8 @@ extension AuthPinCodeViewModel {
     private func updateVersion() -> String? {
         
         guard let updateVersion = clientInformAlerts?.updateAlert?.version,
-              Bundle.main.appVersionLong < updateVersion else { return nil }
-        
+              updateVersion.compare(Bundle.main.appVersionShort, options: .numeric) == .orderedDescending else { return nil }
+
         return updateVersion
     }
     
@@ -680,60 +681,6 @@ extension AuthPinCodeViewModel {
         
         model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
-    }
-    
-    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
-
-        switch alertModelType {
-            
-        case .clientInformAlerts:
-            
-            switch clientInformAlerts?.alert {
-                
-            case let .some(alert):
-                
-                switch alert {
-                case let .inform(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .optionalRequired(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .required(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                }
-                
-            case .none : return .init(title: Text("Ошибка"))
-            }
-            
-        case .alertViewModel:
-            
-            switch self.alert {
-                
-            case let .some(alert): return Alert(with: alert)
-                
-            case .none: return .init(title: Text("Ошибка"))
-            }
-        }
     }
 }
 
