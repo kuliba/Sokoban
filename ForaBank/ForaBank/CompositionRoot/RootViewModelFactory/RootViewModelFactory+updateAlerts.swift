@@ -11,9 +11,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func updateAlerts() {
-        
-        print("==== updateAlerts")
-        
+                
         let _createGetNotAuthorizedZoneClientInformData = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetNotAuthorizedZoneClientInformDataRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse
@@ -32,7 +30,6 @@ extension RootViewModelFactory {
             if let alerts = $0 {
                 
                 self.logger.log(level: .info, category: .network, message: "notifications \(alerts)", file: #file, line: #line)
-                
                 
                 self.model.clientInformAlertManager.update(alerts: alerts)
             } else {
@@ -84,7 +81,6 @@ private extension RemoteServices.ResponseMapper.GetNotAuthorizedZoneClientInform
                 )
             }
         }
-        
         
         if let alert = list.first(where: { $0.authBlocking || $0.update != nil }) {
             

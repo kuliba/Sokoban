@@ -60,7 +60,6 @@ final class RootViewModelFactory_updateAlertsTests: RootViewModelFactoryTests {
                 )
             )
         ])
-        _ = sut
     }
     
     // MARK: - Helpers
