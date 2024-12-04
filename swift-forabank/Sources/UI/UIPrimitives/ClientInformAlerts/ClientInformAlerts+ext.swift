@@ -12,14 +12,16 @@ public enum ClientInformActionType: String {
     
     case required
     case optional
+    case authBlocking
     
-    public init(updateType: String) {
+    public init?(updateType: String) {
         
-        self = ClientInformActionType(rawValue: updateType) ?? .required
+        guard let type = ClientInformActionType(rawValue: updateType) else { return nil }
+        self = type
     }
 }
 
-public enum AlertType: Identifiable {
+public enum AlertModelType: Identifiable {
     
     public var id: UUID {
         switch self {

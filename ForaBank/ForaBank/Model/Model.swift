@@ -80,7 +80,7 @@ class Model {
     // MARK: Client Inform Alerts and Notifications
     let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
-    let clientNotAuthorizedAlerts: CurrentValueSubject<ClientInformAlerts?, Never>
+    let clientInformAlertManager: any AlertManager<ClientInformAlerts>
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
@@ -197,8 +197,8 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol, userModel: UserModel<ProductData.ID> = .init()) {
-        
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol, userModel: UserModel<ProductData.ID> = .init(), clientInformAlertManager: any AlertManager<ClientInformAlerts>
+    ) {
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
         self.fcmToken = .init(.none)
@@ -256,7 +256,7 @@ class Model {
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
         self.сlientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
-        self.clientNotAuthorizedAlerts = .init(nil)
+        self.clientInformAlertManager = clientInformAlertManager
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
@@ -361,7 +361,10 @@ class Model {
         // networkMonitor agent
         let networkMonitorAgent = NetworkMonitorAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent)
+        // clientInformAlert manager
+        let clientInformAlertManager = NotAuthorizedAlertManager()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent, clientInformAlertManager: clientInformAlertManager)
     }()
     
     //MARK: - Session Agent State

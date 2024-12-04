@@ -14,6 +14,7 @@ extension AuthLoginViewModel {
             .init(.abroad, action: {}),
             .init(.card, action: {})
         ],
+        shouldUpdateVersion: { _ in return false },
         rootActions: .emptyMock,
         onRegister: {}
     )

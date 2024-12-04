@@ -54,9 +54,7 @@ public struct ClientInformListView: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
-            .frame(height: maxHeight < contentHeight ?
-                   maxHeight + config.paddings.bottom :
-                    contentHeight + config.paddings.bottom)
+            .frame(height: maxHeight < contentHeight ? maxHeight : contentHeight)
         }
     }
     
@@ -99,7 +97,7 @@ public struct ClientInformListView: View {
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
         
-        VStack(alignment: .center, spacing: config.sizes.spacing) {
+        LazyVStack(alignment: .center, spacing: config.sizes.spacing) {
             
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
@@ -112,6 +110,7 @@ public struct ClientInformListView: View {
                 .foregroundColor(config.titleConfig.textColor)
                 .padding(.horizontal, config.paddings.horizontal)
         }
+        .padding(.bottom, config.paddings.bottom)
         .frame(maxWidth: .infinity)
     }
 
@@ -140,6 +139,7 @@ public struct ClientInformListView: View {
             .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight +
                      config.sizes.bigSpacing : 0)
         }
+        .padding(.bottom, contentHeight < maxHeight ? config.paddings.bottom : .zero)
     }
     
     @ViewBuilder
