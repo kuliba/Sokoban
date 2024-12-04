@@ -223,7 +223,8 @@ private extension PaymentsTransfersPersonalNavigation {
         case .byPhoneTransfer: return nil // .byPhoneTransfer
         case .main:            return .outside(.tab(.main))
         case .scanQR:          return .scanQR
-        case .standardPayment: return .utilityPayment
+        case let .standardPayment(type):
+            return .standardPayment(type)
         case .templates:       return .templates
         case .userAccount:     return .userAccount
         }

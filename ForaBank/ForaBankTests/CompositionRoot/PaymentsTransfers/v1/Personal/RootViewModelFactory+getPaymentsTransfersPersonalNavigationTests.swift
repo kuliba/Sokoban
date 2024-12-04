@@ -12,30 +12,35 @@ final class RootViewModelFactory_getPaymentsTransfersPersonalNavigationTests: Ro
     
     // MARK: - byPhoneTransfer
     
-    func test_byPhoneTransfer_shouldDeliverTemplates() {
+    func test_byPhoneTransfer_shouldDeliverByPhoneTransfer() {
         
         expect(.byPhoneTransfer, toDeliver: .byPhoneTransfer)
     }
     
     // MARK: - main
     
-    func test_main_shouldDeliverTemplates() {
+    func test_main_shouldDeliverMain() {
         
         expect(.main, toDeliver: .main)
     }
     
     // MARK: - scanQR
     
-    func test_scanQR_shouldDeliverTemplates() {
+    func test_scanQR_shouldDeliverScanQR() {
         
         expect(.scanQR, toDeliver: .scanQR)
     }
     
     // MARK: - standardPayment
     
-    func test_standardPayment_shouldDeliverTemplates() {
+    func test_standardPayment_shouldDeliverStandardPayment_charity() {
         
-        expect(.standardPayment, toDeliver: .standardPayment)
+        expect(.standardPayment(.charity), toDeliver: .standardPayment(.charity))
+    }
+    
+    func test_standardPayment_shouldDeliverStandardPayment_security() {
+        
+        expect(.standardPayment(.security), toDeliver: .standardPayment(.security))
     }
     
     // MARK: - templates

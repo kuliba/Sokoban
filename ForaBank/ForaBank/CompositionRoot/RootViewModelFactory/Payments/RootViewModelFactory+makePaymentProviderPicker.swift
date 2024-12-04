@@ -7,8 +7,55 @@
 
 import Combine
 import PayHub
+import RemoteServices
+
+typealias StandardSelectedCategoryDestination = Result<PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+
+final class FailedPaymentProviderPicker: Error {}
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func makePaymentProviderPicker(
+        for category: ServiceCategory,
+        completion: @escaping (StandardSelectedCategoryDestination) -> Void
+    ) {
+        let nanoServices = makeNanoServices(for: category)
+        let composer = StandardSelectedCategoryGetNavigationComposer(
+            nanoServices: nanoServices
+        )
+        
+        composer.makeDestination(category: category) {
+            
+            completion($0)
+            _ = composer
+        }
+    }
+    
+    private func makeNanoServices(
+        for category: ServiceCategory
+    ) -> NanoServices {
+        
+        let getLatestPayments = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
+        )
+        
+        return .init(
+            loadLatest: { getLatestPayments([category.name], $0) },
+            loadOperators: {
+                
+                self.loadOperatorsForCategory(category: category, completion: $0)
+            },
+            makeFailure: { $0(.init()) },
+            makeSuccess: { payload, completion in
+                
+                completion(self.makePaymentProviderPicker(payload: payload))
+            }
+        )
+    }
+    
+    private typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
     
     @inlinable
     func makePaymentProviderPicker(
@@ -35,7 +82,7 @@ extension RootViewModelFactory {
         
         let providerList = makeProviderList(with: payload)
         let search = payload.category.hasSearch ? makeSearch() : nil
-                
+        
         return .init(
             title: payload.category.name,
             operationPicker: (),
@@ -101,10 +148,7 @@ extension RootViewModelFactory {
         let flowReducer = PaymentProviderPickerDomain.FlowReducer()
         let flowEffectHandler = PaymentProviderPickerDomain.FlowEffectHandler(
             microServices: .init(
-                initiatePayment: { latest, completion in
-                    
-                    completion(.backendFailure(.connectivity("connectivity failure")))
-                },
+                initiatePayment: initiateAnywayPayment,
                 makeDetailPayment: {
                     
                     $0(.detailPayment(.init(
@@ -126,5 +170,68 @@ extension RootViewModelFactory {
             handleEffect: flowEffectHandler.handleEffect(_:_:),
             scheduler: schedulers.main
         )
+    }
+    
+    @inlinable
+    func initiateAnywayPayment(
+        latest: Latest,
+        completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
+    ) {
+        initiateAnywayPayment(.latest(latest.latest)) {
+            
+            switch $0 {
+            case let .failure(failure):
+                switch failure {
+                case .connectivityError:
+                    completion(.backendFailure(.connectivity("connectivity failure")))
+                    
+                case let .serverError(message):
+                    completion(.backendFailure(.server(message)))
+                }
+                
+            case let .success(transaction):
+                completion(.payment(()))
+            }
+        }
+    }
+}
+
+// MARK: - Adapters
+
+private extension RemoteServices.ResponseMapper.LatestPayment {
+    
+    var latest: RemoteServices.ResponseMapper.LatestServicePayment {
+        
+        switch self {
+        case let .service(service):
+            return service.latest
+            
+        case let .withPhone(withPhone):
+            return withPhone.latest
+        }
+    }
+}
+
+private extension RemoteServices.ResponseMapper.LatestPayment.Service {
+    
+    var latest: RemoteServices.ResponseMapper.LatestServicePayment {
+        
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, additionalItems: additionalItems?.map(\.additional) ?? [])
+    }
+}
+
+private extension RemoteServices.ResponseMapper.LatestPayment.Service.AdditionalItem {
+    
+    var additional: RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem {
+        
+        return .init(fieldName: fieldName, fieldValue: fieldValue, fieldTitle: fieldTitle, svgImage: svgImage)
+    }
+}
+
+private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
+    
+    var latest: RemoteServices.ResponseMapper.LatestServicePayment {
+        
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", additionalItems: [])
     }
 }

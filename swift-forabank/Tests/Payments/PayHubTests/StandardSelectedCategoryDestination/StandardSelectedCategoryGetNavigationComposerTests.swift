@@ -362,6 +362,8 @@ final class StandardSelectedCategoryGetNavigationComposerTests: XCTestCase {
             makeSuccess: makeSuccessSpy.process(_:completion:)
         ))
         
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
         return (sut, loadLatestSpy, loadOperatorsSpy, makeFailureSpy, makeSuccessSpy)
     }
     

@@ -69,11 +69,8 @@ private extension SelectedCategoryNavigation {
             case let .mobile(mobile):
                 return .paymentFlow(.mobile(mobile))
                 
-            case .qr:
+            case .qr, .standard:
                 return nil
-                
-            case let .standard(standard):
-                return .paymentFlow(.standard(standard))
                 
             case let .taxAndStateServices(taxAndStateServices):
                 return .paymentFlow(.taxAndStateServices(taxAndStateServices))
@@ -102,7 +99,7 @@ extension SelectedCategoryNavigation {
         
         case paymentFlow(PaymentFlowDestination)
         
-        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Standard, Tax, Transport>
+        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Never, Tax, Transport>
     }
 }
 

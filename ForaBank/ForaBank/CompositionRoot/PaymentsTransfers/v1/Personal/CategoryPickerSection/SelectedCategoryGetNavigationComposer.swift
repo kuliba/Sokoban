@@ -44,13 +44,10 @@ extension SelectedCategoryGetNavigationComposer {
             completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
             
         case .qr:
-            completion(.paymentFlow(.qr(nanoServices.makeQR())))
+            completion(.paymentFlow(.qr(())))
             
         case .standard:
-            nanoServices.makeStandard(category) {
-                
-                completion(.paymentFlow(.standard($0)))
-            }
+            completion(.paymentFlow(.standard(category)))
             
         case .taxAndStateServices:
             completion(.paymentFlow(.taxAndStateServices(nanoServices.makeTax())))

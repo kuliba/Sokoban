@@ -11,7 +11,7 @@ struct UtilityPaymentProvider: Equatable, Identifiable {
     
     let id: String
     let icon: String?
-    let inn: String?
+    let inn: String
     let title: String
     let segment: String
 }

@@ -108,6 +108,7 @@ private extension SberOperator {
         id: UUID().uuidString,
         inn: "ИНН description",
         md5Hash: "md5hash",
-        title: "title"
+        title: "title",
+        type: "utility"
     )
 }

@@ -1129,10 +1129,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
 
     private func makeOperator(
-        _ id: String = UUID().uuidString
+        _ id: String = anyMessage(),
+        inn: String = anyMessage(),
+        title: String = anyMessage(),
+        icon: String? = nil,
+        type: String = anyMessage()
     ) -> UtilityPaymentOperator {
         
-        .init(id: id, title: id, subtitle: nil, icon: "abc")
+        .init(id: id, inn: inn, title: title, icon: icon, type: type)
     }
     
     private func makeLatestPayment(

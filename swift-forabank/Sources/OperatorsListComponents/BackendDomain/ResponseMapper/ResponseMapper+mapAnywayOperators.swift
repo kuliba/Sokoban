@@ -22,29 +22,7 @@ public extension ResponseMapper {
         _ data: AnywayOperatorGroupData
     ) -> [SberOperator] {
         
-        guard let list = data.operatorList.first?.atributeList
-        else { return [] }
-        
-        let operators = list.compactMap(SberOperator.init)
-        
-        return operators
-    }
-}
-
-private extension SberOperator {
-    
-    init?(
-        _ `operator`: ResponseMapper.AnywayOperatorGroupData.Operator.OperatorData
-    ) {
-        guard let id = `operator`.customerId,
-              !id.isEmpty,
-              let inn = `operator`.inn,
-              !inn.isEmpty,
-              let title = `operator`.juridicalName,
-              !title.isEmpty
-        else { return nil }
-        
-        self.init(id: id, inn: inn, md5Hash: `operator`.md5hash, title: title)
+        return data.operatorList.flatMap(\.sberOperators)
     }
 }
 
@@ -61,7 +39,7 @@ private extension ResponseMapper {
             let atributeList: [OperatorData]
             
             struct OperatorData: Decodable {
-            
+                
                 let md5hash: String?
                 let juridicalName: String?
                 let customerId: String?
@@ -72,6 +50,31 @@ private extension ResponseMapper {
                 
                 case housingAndCommunalService
             }
+        }
+    }
+}
+
+private extension ResponseMapper.AnywayOperatorGroupData.Operator {
+    
+    var sberOperators: [SberOperator] {
+        
+        atributeList.compactMap { (attribute) -> SberOperator? in
+            
+            guard let id = attribute.customerId,
+                  !id.isEmpty,
+                  let inn = attribute.inn,
+                  !inn.isEmpty,
+                  let title = attribute.juridicalName,
+                  !title.isEmpty
+            else { return nil }
+            
+            return .init(
+                id: id,
+                inn: inn,
+                md5Hash: attribute.md5hash,
+                title: title,
+                type: type
+            )
         }
     }
 }

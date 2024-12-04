@@ -106,7 +106,7 @@ private extension UtilityPrepaymentWrapperView {
                 
                 OperatorLabel(
                     title: `operator`.title,
-                    subtitle: `operator`.inn,
+                    subtitle: "ИНН \(`operator`.inn)",
                     config: .iFora,
                     iconView: makeIconView(`operator`.icon)
                 )
@@ -126,18 +126,6 @@ private extension UtilityPrepaymentWrapperView {
                 searchModel.setText(to: nil)
             }
         )
-    }
-}
-
-// MARK: - Helpers
-
-private extension UtilityPaymentOperator {
-    
-    var inn: String? {
-        
-        guard let subtitle, !subtitle.isEmpty else { return nil }
-        
-        return "ИНН \(subtitle)"
     }
 }
 

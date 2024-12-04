@@ -106,7 +106,7 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
     private func makePayload(
         id: String = anyMessage(),
         icon: String? = anyMessage(),
-        inn: String? = anyMessage(),
+        inn: String = anyMessage(),
         title: String = anyMessage(),
         segment: String = anyMessage(),
         qrCode: QRCode = .init(original: "", rawData: [:]),

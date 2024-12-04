@@ -111,16 +111,7 @@ extension RootViewFactory {
             switch paymentFlow {
             case let .mobile(mobile):
                 components.makePaymentsView(mobile.paymentsViewModel)
-                
-            case let .standard(standard):
-                switch standard {
-                case let .failure(failedPaymentProviderPicker):
-                    Text("TBD: \(String(describing: failedPaymentProviderPicker))")
-                    
-                case let .success(binder):
-                    makePaymentProviderPickerView(binder)
-                }
-                
+                                
             case let .taxAndStateServices(wrapper):
                 components.makePaymentsView( wrapper.paymentsViewModel)
                 

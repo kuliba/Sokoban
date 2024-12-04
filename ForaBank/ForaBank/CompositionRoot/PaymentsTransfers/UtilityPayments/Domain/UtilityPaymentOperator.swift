@@ -8,7 +8,8 @@
 struct UtilityPaymentOperator: Equatable, Identifiable {
     
     let id: String
+    let inn: String
     let title: String
-    let subtitle: String?
     let icon: String?
+    let type: String
 }

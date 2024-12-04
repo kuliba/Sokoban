@@ -21,7 +21,7 @@ enum RootViewSelect: Equatable {
     case outside(RootViewOutside)
     case scanQR
     case userAccount
-    case utilityPayment
+    case standardPayment(ServiceCategory.CategoryType)
     case templates
 }
 

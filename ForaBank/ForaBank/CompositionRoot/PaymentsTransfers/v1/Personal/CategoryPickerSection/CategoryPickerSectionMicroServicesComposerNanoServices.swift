@@ -8,14 +8,10 @@
 struct CategoryPickerSectionMicroServicesComposerNanoServices {
     
     let makeMobile: MakeMobile
-    let makeQR: MakeQR
-    let makeStandard: MakeStandard
     let makeTax: MakeTax
     let makeTransport: MakeTransport
     
     typealias MakeMobile = () -> ClosePaymentsViewModelWrapper
-    typealias MakeQR = () -> Void
-    typealias MakeStandard = (ServiceCategory, @escaping (StandardSelectedCategoryDestination) -> Void) -> Void
     typealias MakeTax = () -> ClosePaymentsViewModelWrapper
     typealias MakeTransport = () -> TransportPaymentsViewModel?
 }
