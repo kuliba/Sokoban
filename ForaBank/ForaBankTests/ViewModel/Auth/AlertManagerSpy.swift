@@ -36,6 +36,10 @@ extension AlertManagerSpy: AlertManager {
         dismissCount += 0
     }
     
+    func dismissAll() {
+        
+    }
+    
     func update(alerts: Alert) {
         
         updates.append(alerts)

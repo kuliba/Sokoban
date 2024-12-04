@@ -522,7 +522,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
     ) -> (
         sut: AuthLoginViewModel,
         scheduler: TestSchedulerOfDispatchQueue,
-        clientInformMessage: ClientInformAlertsSubject,
+        clientInformAlertsManager: AlertManagerSpy,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -530,7 +530,6 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformMessage = ClientInformAlertsSubject()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
@@ -575,7 +574,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         trackForMemoryLeaks(factory, file: file, line: line)
         trackForMemoryLeaks(rootActionsSpy, file: file, line: line)
         
-        return (sut, scheduler, clientInformMessage, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
+        return (sut, scheduler, clientInformAlertsManager, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
     }
     
     private func tapTransferButton(

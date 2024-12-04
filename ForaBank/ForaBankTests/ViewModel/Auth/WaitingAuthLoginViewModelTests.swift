@@ -91,20 +91,161 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     // MARK: - Events: clientInform
     
-//    func test_clientInform_shouldShowClientInformAlertWithMessage() {
-//        
-//        let message = "message"
-//        let (sut, clientInformMessage, _, _, _, _, _, _) = makeSUT()
-//        let spy = ValueSpy(sut.alertPublisher)
-//        
-//        clientInformMessage.send(message)
-//        XCTAssertNoDiff(spy.values, [nil])
-//        
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//        
-//        XCTAssertNoDiff(spy.values, [nil, .alert(message: message)])
-//    }
+    func test_clientInform_shouldShowClientInformAlertWithMessage() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem()],
+            updateAlert: makeUpdateAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
     
+    func test_swiftUIAlert_forClientInformAlerts_ShouldNotDeliverAlertsOnNil() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: nil)
+        
+        XCTAssertNoDiff(spy.values, [])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndNilUpdateAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(informAlerts: [], updateAlert: nil)
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withOneInformElementArrayAndNilUpdateAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem()],
+            updateAlert: nil
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withTwoInformElementsArrayAndNilUpdateAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem(), makeInformAlertItem()],
+            updateAlert: nil
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndUpdateAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [],
+            updateAlert: makeUpdateAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withAuthBlockingAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [],
+            updateAlert: makeAuthBlockingAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withOneInformElementsArrayAndUpdateAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem()],
+            updateAlert: makeUpdateAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_withTwoInformElementsArrayAndUpdateAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem(), makeInformAlertItem()],
+            updateAlert: makeUpdateAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
+    func test_swiftUIAlert_forClientInformAlerts_mixedResponse() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let oneElementInformArrayAndUpdateAlert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem()],
+            updateAlert: makeUpdateAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        let twoElementInformArrayAndUpdateAlert = makeClientInformAlert(
+            informAlerts: [makeInformAlertItem(), makeInformAlertItem()],
+            updateAlert: makeUpdateAlertItem()
+        )
+        send(alertManager, alerts: nil)
+        send(alertManager, alerts: oneElementInformArrayAndUpdateAlert)
+        send(alertManager, alerts: nil)
+        send(alertManager, alerts: nil)
+        send(alertManager, alerts: twoElementInformArrayAndUpdateAlert)
+        send(alertManager, alerts: nil)
+        
+        XCTAssertNoDiff(spy.values, [
+            oneElementInformArrayAndUpdateAlert,
+            twoElementInformArrayAndUpdateAlert
+        ])
+    }
+        
     // MARK: - Events: Auth.CheckClient.Response
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseSuccess() {
@@ -520,7 +661,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         line: UInt = #line
     ) -> (
         sut: AuthLoginViewModel,
-        clientInformMessage: ClientInformAlertsSubject,
+        clientInformAlertManager: AlertManagerSpy,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -528,7 +669,6 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformAlerts = ClientInformAlertsSubject()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
@@ -560,7 +700,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
             eventPublishers: eventPublishers,
             eventHandlers: eventHandlers,
             factory: factory,
-            onRegister: {}, 
+            onRegister: {},
             shouldUpdateVersion: { _ in shouldUpdateVersion }
         )
         
@@ -568,7 +708,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         trackForMemoryLeaks(factory, file: file, line: line)
         trackForMemoryLeaks(rootActionsSpy, file: file, line: line)
         
-        return (sut, clientInformAlerts, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
+        return (sut, clientInformAlertManager, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
     }
     
     private func tapTransferButton(
@@ -599,5 +739,69 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         let orderCardButton = try XCTUnwrap(sut.buttons.first(where: { $0.id == .card }), "Expected to have order card button but got nil.", file: file, line: line)
         
         orderCardButton.action()
+    }
+    
+    private func send(
+        _ alertManager: AlertManagerSpy,
+        alerts: ClientInformAlerts?,
+        timeout: TimeInterval = 0.05
+    ) {
+        alertManager.emit(alerts)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    private func makeInformAlertItem(
+        informTitle: String = anyMessage(),
+        informText: String = anyMessage()
+    ) -> ClientInformAlerts.InformAlert {
+        
+        .init(id: .init(), title: informTitle, text: informText)
+    }
+    
+    private func makeAuthBlockingAlertItem(
+        updateTitle: String = anyMessage(),
+        updateText: String = anyMessage(),
+        updateLink: String = anyMessage(),
+        updateVersion: String = anyMessage()
+    )  -> ClientInformAlerts.UpdateAlert {
+        
+        .init(
+            id: .init(),
+            title: updateTitle,
+            text: updateText,
+            link: updateLink,
+            version: updateVersion,
+            actionType: .authBlocking
+        )
+    }
+
+    private func makeUpdateAlertItem(
+        updateTitle: String = anyMessage(),
+        updateText: String = anyMessage(),
+        updateLink: String = anyMessage(),
+        updateVersion: String = anyMessage()
+    )  -> ClientInformAlerts.UpdateAlert {
+        
+        .init(
+            id: .init(),
+            title: updateTitle,
+            text: updateText,
+            link: updateLink,
+            version: updateVersion,
+            actionType: .required
+        )
+    }
+    
+    private func makeClientInformAlert(
+        id: UUID = .init(),
+        informAlerts: [ClientInformAlerts.InformAlert],
+        updateAlert: ClientInformAlerts.UpdateAlert?
+    ) -> ClientInformAlerts {
+        
+        ClientInformAlerts(
+            id: id,
+            informAlerts: informAlerts,
+            updateAlert: updateAlert
+        )
     }
 }
