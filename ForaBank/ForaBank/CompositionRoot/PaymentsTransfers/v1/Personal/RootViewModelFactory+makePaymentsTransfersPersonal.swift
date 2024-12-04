@@ -89,17 +89,14 @@ private extension FlowState<SelectedCategoryNavigation> {
         switch navigation {
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
-            case .mobile:
+            case .mobile, .taxAndStateServices, .transport:
                 return nil
                 
             case .qr(()):
                 return .scanQR
                 
-            case let .standard(standard):
-                return .standardPayment
-                
-            case .taxAndStateServices, .transport:
-                return nil
+            case let .standard(category):
+                return .standardPayment(category.type)
             }
             
         default:

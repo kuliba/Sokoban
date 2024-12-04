@@ -21,7 +21,7 @@ enum PaymentsTransfersPersonalSelect: Equatable {
     case byPhoneTransfer
     case main
     case scanQR
-    case standardPayment
+    case standardPayment(ServiceCategory.CategoryType)
     case templates
     case userAccount
 }

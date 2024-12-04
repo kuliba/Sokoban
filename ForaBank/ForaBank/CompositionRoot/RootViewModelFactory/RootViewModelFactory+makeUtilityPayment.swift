@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeUtilityPayment.swift
+//  RootViewModelFactory+makeStandardPayment.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 28.11.2024.
@@ -8,12 +8,14 @@
 extension RootViewModelFactory {
     
     @inlinable
-    func makeUtilityPayment(
-        completion: @escaping (UtilityPaymentResult) -> Void
+    func makeStandardPayment(
+        ofType type: ServiceCategory.CategoryType,
+        completion: @escaping (StandardPaymentResult) -> Void
     ) {
-        loadCategory(type: .housingAndCommunalService) {
+        loadCategory(type: type) {
             
-            guard let category = $0 else { return completion(.missingUtility) }
+            guard let category = $0
+            else { return completion(.failure(.missingCategoryOfType(type))) }
             
             self.makeStandard(category) {
                 
@@ -28,16 +30,11 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias UtilityPaymentResult = Result<PaymentProviderPickerDomain.Binder, UtilityPaymentFailure>
+    typealias StandardPaymentResult = Result<PaymentProviderPickerDomain.Binder, StandardPaymentFailure>
     
-    enum UtilityPaymentFailure: Error {
+    enum StandardPaymentFailure: Error {
         
         case makeStandardPaymentFailure
         case missingCategoryOfType(ServiceCategory.CategoryType)
     }
-}
-
-private extension RootViewModelFactory.UtilityPaymentResult {
-    
-    static let missingUtility: Self = .failure(.missingCategoryOfType(.housingAndCommunalService))
 }

@@ -121,20 +121,20 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         }
     }
     
-    // MARK: - utilityPayment
+    // MARK: - standardPayment
     
     func test_utilityPayment_shouldDeliverFailureOnMissingCategory() {
         
-        expect(.utilityPayment, toDeliver: .failure(.missingCategoryOfType(.housingAndCommunalService)))
+        expect(.standardPayment(.charity), toDeliver: .failure(.missingCategoryOfType(.housingAndCommunalService)))
     }
     
     func test_utilityPayment_shouldDeliverFailureOnFailure() throws {
         
         let (sut, httpClient, _) = try makeSUT(
-            model: .withServiceCategoryAndOperator()
+            model: .withServiceCategoryAndOperator(ofType: .charity)
         )
         
-        expect(sut: sut, .utilityPayment, toDeliver: .standardPayment) {
+        expect(sut: sut, .standardPayment(.charity), toDeliver: .standardPayment) {
             
             completeGetAllLatestPayments(httpClient)
         }
