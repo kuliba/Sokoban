@@ -31,7 +31,7 @@ class AuthLoginViewModel: ObservableObject {
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
-
+    
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
             action: { [weak self] in
@@ -129,60 +129,6 @@ extension AuthLoginViewModel {
         
         clientInformAlertsManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
-    }
-    
-    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
-
-        switch alertModelType {
-            
-        case .clientInformAlerts:
-            
-            switch clientInformAlerts?.alert {
-                
-            case let .some(alert):
-                
-                switch alert {
-                case let .inform(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .optionalRequired(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .required(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                }
-                
-            case .none : return .init(title: Text("Ошибка"))
-            }
-            
-        case .alertViewModel:
-            
-            switch self.alert {
-                
-            case let .some(alert): return Alert(with: alert)
-                
-            case .none: return .init(title: Text("Ошибка"))
-            }
-        }
     }
 }
 
