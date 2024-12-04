@@ -62,8 +62,6 @@ extension RootViewModelFactory {
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
-                makeQR: {},
-                makeStandard: makeStandard,
                 makeTax: makeTaxPayment,
                 makeTransport: makeTransportPayment
             ),

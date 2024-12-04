@@ -13,13 +13,13 @@ enum SelectedCategoryNavigation {
     case failure(SelectedCategoryFailure)
     case paymentFlow(PaymentFlow)
     
+    typealias PaymentFlow = PayHub.PaymentFlow<Mobile, QR, Standard, Tax, Transport>
+    
     typealias Mobile = ClosePaymentsViewModelWrapper
-    typealias Standard = StandardSelectedCategoryDestination
+    typealias Standard = ServiceCategory // it's up to root to handle it
     typealias QR = Void // it's up to root to handle QR
     typealias Tax = ClosePaymentsViewModelWrapper
     typealias Transport = TransportPaymentsViewModel
-    
-    typealias PaymentFlow = PayHub.PaymentFlow<Mobile, QR, Standard, Tax, Transport>
 }
 
 struct SelectedCategoryFailure: Error, Equatable, Identifiable {

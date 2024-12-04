@@ -49,30 +49,14 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         return .init(model: model, sections: sections)
     }
     
-    func test_getNavigation_shouldDeliverStandardFailureOnStandardFailure() {
-        
-        let sut = makeSUT(standard: .failure(.init()))
-        
-        getNavigation(sut, flow: .standard) {
-            
-            switch $0 {
-            case .paymentFlow(.standard(.failure)):
-                break
-                
-            default:
-                XCTFail("Expected standard failure, got \($0) instead.")
-            }
-        }
-    }
-    
     func test_getNavigation_shouldDeliverStandardOnStandard() {
         
-        let sut = makeSUT(standard: .success(makeStandard()))
+        let sut = makeSUT()
         
         getNavigation(sut, flow: .standard) {
             
             switch $0 {
-            case .paymentFlow(.standard(.success)):
+            case .paymentFlow(.standard):
                 break
                 
             default:
@@ -133,7 +117,6 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
     private typealias SUT = SelectedCategoryGetNavigationComposer
     
     private func makeSUT(
-        standard: StandardSelectedCategoryDestination = .failure(.init()),
         transport: TransportPaymentsViewModel? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -143,8 +126,6 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
             model: .mockWithEmptyExcept(),
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeQR: {},
-                makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
             ),
@@ -210,34 +191,6 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
     ) -> ClosePaymentsViewModelWrapper {
         
         return .init(model: model, category: category, scheduler: scheduler)
-    }
-    
-    private func makeStandard(
-    ) -> PaymentProviderPickerDomain.Binder {
-        
-        return .init(
-            content: .init(
-                title: anyMessage(),
-                operationPicker: (),
-                providerList: .init(
-                    initialState: .init(
-                        lastPayments: [],
-                        operators: [],
-                        searchText: ""
-                    ),
-                    reduce: { state, _ in return (state, nil) },
-                    handleEffect: { _,_ in }
-                ),
-                search: .none,
-                cancellables: []
-            ),
-            flow: .init(
-                initialState: .init(),
-                reduce: { state, _ in return (state, nil) },
-                handleEffect: { _,_ in }
-            ),
-            bind: { _,_ in [] }
-        )
     }
     
     private func makeTransport(
