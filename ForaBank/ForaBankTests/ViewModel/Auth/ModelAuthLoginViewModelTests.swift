@@ -370,127 +370,6 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         ])
         XCTAssertNotNil(sut)
     }
-    
-    // MARK: - Events: ClientInformAlerts
-    
-    func test_swiftUIAlert_forClientInformAlerts_ShouldNotDeliverAlertsOnNil() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(nil)
-
-        XCTAssertNoDiff(spy.values, [])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndNilUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert([], nil)
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(alert)
-        
-        XCTAssertNoDiff(spy.values, [alert])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_withOneInformElementArrayAndNilUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert([makeInformAlertItem()], nil)
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(alert)
-        
-        XCTAssertNoDiff(spy.values, [alert])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_withTwoInformElementsArrayAndNilUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert([makeInformAlertItem(),
-                                           makeInformAlertItem()], nil)
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(alert)
-        
-        XCTAssertNoDiff(spy.values, [alert])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_withEmptyArrayAndUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert([], makeUpdateAlertItem())
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(alert)
-        
-        XCTAssertNoDiff(spy.values, [alert])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_withOneInformElementsArrayAndUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert([makeInformAlertItem()],
-                                          makeUpdateAlertItem())
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(alert)
-        
-        XCTAssertNoDiff(spy.values, [alert])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_withTwoInformElementsArrayAndUpdateAlert() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert([makeInformAlertItem(), makeInformAlertItem()],
-                                          makeUpdateAlertItem())
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(alert)
-        
-        XCTAssertNoDiff(spy.values, [alert])
-    }
-    
-    func test_swiftUIAlert_forClientInformAlerts_mixedResponse() {
-        
-        let (sut, model, _) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let oneElementInformArrayAndUpdateAlert = makeClientInformAlert(
-            [makeInformAlertItem()],
-            makeUpdateAlertItem()
-        )
-        
-        let twoElementInformArrayAndUpdateAlert = makeClientInformAlert(
-            [makeInformAlertItem(), makeInformAlertItem()],
-            makeUpdateAlertItem()
-        )
-            
-        XCTAssertNoDiff(spy.values, [])
-        
-        model.sendClientInformNotAuthorized(nil)
-        model.sendClientInformNotAuthorized(oneElementInformArrayAndUpdateAlert)
-        model.sendClientInformNotAuthorized(nil)
-        model.sendClientInformNotAuthorized(nil)
-        model.sendClientInformNotAuthorized(twoElementInformArrayAndUpdateAlert)
-        model.sendClientInformNotAuthorized(nil)
-
-        XCTAssertNoDiff(spy.values, [oneElementInformArrayAndUpdateAlert, twoElementInformArrayAndUpdateAlert])
-    }
 
     // MARK: - Events: AuthLoginViewModelAction.Register
 
@@ -929,16 +808,6 @@ private extension Model {
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
-    func sendClientInformNotAuthorized(
-        _ data: ClientInformAlerts?,
-        timeout: TimeInterval = 0.05
-    ) {
-        guard let alerts = data else { return }
-        clientInformAlertManager.update(alerts: alerts)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-    }
-    
     func sendClientInformAuthorized(
         _ data: ClientAuthorizationState,
         timeout: TimeInterval = 0.05
@@ -946,48 +815,5 @@ private extension Model {
         сlientAuthorizationState.send(data)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-    }
-}
-
-
-// MARK: - ClientInform Alerts
-private extension ModelAuthLoginViewModelTests {
-    
-    func makeInformAlertItem(
-        informTitle: String = anyMessage(),
-        informText: String = anyMessage()
-    ) -> ClientInformAlerts.InformAlert {
-        
-        .init(id: .init(), title: informTitle, text: informText)
-    }
-
-    func makeUpdateAlertItem(
-        updateTitle: String = anyMessage(),
-        updateText: String = anyMessage(),
-        updateLink: String = anyMessage(),
-        updateVersion: String = anyMessage()
-    )  -> ClientInformAlerts.UpdateAlert {
-        
-        .init(
-            id: .init(), 
-            title: updateTitle,
-            text: updateText,
-            link: updateLink,
-            version: updateVersion,
-            actionType: .required
-        )
-    }
-
-    func makeClientInformAlert(
-        id: UUID = .init(),
-        _ informAlerts: [ClientInformAlerts.InformAlert],
-        _ updateAlert: ClientInformAlerts.UpdateAlert?
-    ) -> ClientInformAlerts {
-        
-        ClientInformAlerts(
-            id: id,
-            informAlerts: informAlerts,
-            updateAlert: updateAlert
-        )
     }
 }

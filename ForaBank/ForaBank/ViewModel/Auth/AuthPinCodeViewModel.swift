@@ -377,7 +377,6 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
-                            self?.model.clientInformAlertManager.dismiss()
                             
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
@@ -708,7 +707,10 @@ extension AuthPinCodeViewModel {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
+                                 primaryButton: .default(Text("Позже"), action: { [weak self] in
+                        
+                        self?.model.clientInformAlertManager.dismissAll()
+                    }),
                                  secondaryButton: .default(Text("Обновить"), action: {
                         openURL()
                     })

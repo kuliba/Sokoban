@@ -155,7 +155,10 @@ extension AuthLoginViewModel {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
+                                 primaryButton: .default(Text("Позже"), action: { [weak self] in
+                        
+                        self?.clientInformAlertsManager.dismissAll()
+                    }),
                                  secondaryButton: .default(Text("Обновить"), action: {
                         openURL()
                     })
