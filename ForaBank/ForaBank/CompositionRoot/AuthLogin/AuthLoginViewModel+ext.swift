@@ -34,11 +34,6 @@ extension AuthLoginViewModel {
 }
 
 private extension Model {
-
-    var clientInformAlertsManager: AuthLoginViewModel.ClientInformAlertsManager {
-        
-        .init(clientInformAlertsManager: clientInformAlertManager)
-    }
     
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
