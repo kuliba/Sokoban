@@ -278,6 +278,7 @@ let package = Package(
         .rxViewModel,
         .rxViewModelTests,
         .savingsAccount,
+        .savingsAccountTests,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -2630,6 +2631,17 @@ private extension Target {
         ],
         path: "Sources/UI/\(String.savingsAccount)"
     )
+    
+    static let savingsAccountTests = testTarget(
+        name: .savingsAccountTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .savingsAccount
+        ],
+        path: "Tests/UI/\(String.savingsAccountTests)"
+    )
 
     static let searchBarComponent = target(
         name: .searchBarComponent,
@@ -3712,7 +3724,8 @@ private extension String {
     static let rxViewModelTests = "RxViewModelTests"
     
     static let savingsAccount = "SavingsAccount"
-    
+    static let savingsAccountTests = "SavingsAccountTests"
+
     static let searchBarComponent = "SearchBarComponent"
     
     static let textFieldUI = "TextFieldUI"

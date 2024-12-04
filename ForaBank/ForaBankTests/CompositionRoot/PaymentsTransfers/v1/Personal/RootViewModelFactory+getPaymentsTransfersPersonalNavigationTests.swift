@@ -10,18 +10,46 @@ import XCTest
 
 final class RootViewModelFactory_getPaymentsTransfersPersonalNavigationTests: RootViewModelFactoryTests {
     
+    // MARK: - byPhoneTransfer
+    
+    func test_byPhoneTransfer_shouldDeliverTemplates() {
+        
+        expect(.byPhoneTransfer, toDeliver: .byPhoneTransfer)
+    }
+    
+    // MARK: - main
+    
+    func test_main_shouldDeliverTemplates() {
+        
+        expect(.main, toDeliver: .main)
+    }
+    
+    // MARK: - scanQR
+    
+    func test_scanQR_shouldDeliverTemplates() {
+        
+        expect(.scanQR, toDeliver: .scanQR)
+    }
+    
+    // MARK: - standardPayment
+    
+    func test_standardPayment_shouldDeliverTemplates() {
+        
+        expect(.standardPayment, toDeliver: .standardPayment)
+    }
+    
     // MARK: - templates
     
     func test_templates_shouldDeliverTemplates() {
         
-        expect(.outside(.templates), toDeliver: .templates)
+        expect(.templates, toDeliver: .templates)
     }
     
     // MARK: - userAccount
     
     func test_userAccount_shouldDeliverUserAccount() {
         
-        expect(.outside(.userAccount), toDeliver: .userAccount)
+        expect(.userAccount, toDeliver: .userAccount)
     }
     
     // MARK: - Helpers

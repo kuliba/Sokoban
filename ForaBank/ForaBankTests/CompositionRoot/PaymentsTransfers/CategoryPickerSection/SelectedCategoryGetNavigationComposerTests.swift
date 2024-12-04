@@ -1,5 +1,5 @@
 //
-//  SelectedCategoryNavigationMicroServicesComposerTests.swift
+//  SelectedCategoryGetNavigationComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 30.09.2024.
@@ -9,17 +9,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
-    
-    // MARK: - init
-    
-    func test_init_shouldNotCallCollaborators() {
-        
-        let (sut, makeQRNavigation) = makeSUT()
-        
-        XCTAssertEqual(makeQRNavigation.callCount, 0)
-        XCTAssertNotNil(sut)
-    }
+final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
     
     // MARK: - getNavigation
     
@@ -61,7 +51,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverStandardFailureOnStandardFailure() {
         
-        let sut = makeSUT(standard: .failure(.init())).sut
+        let sut = makeSUT(standard: .failure(.init()))
         
         getNavigation(sut, flow: .standard) {
             
@@ -77,7 +67,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverStandardOnStandard() {
         
-        let sut = makeSUT(standard: .success(makeStandard())).sut
+        let sut = makeSUT(standard: .success(makeStandard()))
         
         getNavigation(sut, flow: .standard) {
             
@@ -107,7 +97,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverFailureOnTransportFailure() {
         
-        let sut = makeSUT(transport: nil).sut
+        let sut = makeSUT(transport: nil)
         
         getNavigation(sut, flow: .transport) {
             
@@ -123,7 +113,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverTransportOnTransportSuccess() {
         
-        let sut = makeSUT(transport: makeTransport()).sut
+        let sut = makeSUT(transport: makeTransport())
         
         getNavigation(sut, flow: .transport) {
             
@@ -139,33 +129,21 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = SelectedCategoryNavigationMicroServicesComposer
-    private typealias MakeQRNavigationSpy = Spy<(QRModelResult, SUT.NanoServices.Notify), QRNavigation, Never>
+    private typealias Domain = CategoryPickerSectionDomain
+    private typealias SUT = SelectedCategoryGetNavigationComposer
     
     private func makeSUT(
-        qrResult: QRModelResult = .unknown,
         standard: StandardSelectedCategoryDestination = .failure(.init()),
         transport: TransportPaymentsViewModel? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (
-        sut: SUT,
-        makeQRNavigation: MakeQRNavigationSpy
-    ) {
-        let makeQRNavigation = MakeQRNavigationSpy()
+    ) -> SUT {
+        
         let sut = SUT(
             model: .mockWithEmptyExcept(),
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeQR: {
-                    
-                    return .init(
-                        mapScanResult: { _, completion in completion(qrResult) },
-                        makeQRScanner: QRViewModel.preview,
-                        scheduler: .immediate
-                    )
-                },
-                makeQRNavigation: makeQRNavigation.process(_:_:completion:),
+                makeQR: {},
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
@@ -174,16 +152,15 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(makeQRNavigation, file: file, line: line)
         
-        return (sut, makeQRNavigation)
+        return sut
     }
     
     private func getNavigation(
         _ sut: SUT? = nil,
         flow: ServiceCategory.PaymentFlow,
-        notify: @escaping (SUT.FlowDomain.NotifyEvent) -> Void = { _ in },
-        completion: @escaping (SUT.Navigation) -> Void,
+        notify: @escaping Domain.Notify = { _ in },
+        completion: @escaping (Domain.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -198,17 +175,16 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     private func getNavigation(
         _ sut: SUT? = nil,
-        with select: SUT.Select,
-        notify: @escaping (SUT.FlowDomain.NotifyEvent) -> Void = { _ in },
+        with select: Domain.Select,
+        notify: @escaping Domain.Notify = { _ in },
         completion: @escaping (SUT.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(file: file, line: line).sut
-        let microServices = sut.compose()
+        let sut = sut ?? makeSUT(file: file, line: line)
         let exp = expectation(description: "wait for completion")
         
-        microServices.getNavigation(select, notify) {
+        sut.getNavigation(select, notify) {
             
             completion($0)
             exp.fulfill()
@@ -237,7 +213,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     }
     
     private func makeStandard(
-    ) -> PaymentProviderPicker.Binder {
+    ) -> PaymentProviderPickerDomain.Binder {
         
         return .init(
             content: .init(

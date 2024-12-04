@@ -63,7 +63,7 @@ private extension RootWrapperView {
     }
     
     private func standardPaymentView(
-        _ picker: PaymentProviderPicker.Binder
+        _ picker: PaymentProviderPickerDomain.Binder
     ) -> some View {
         
         viewFactory.makePaymentProviderPickerView(picker)
@@ -163,7 +163,7 @@ extension RootViewNavigation {
     
     enum Destination {
         
-        case standardPayment(PaymentProviderPicker.Binder)
+        case standardPayment(PaymentProviderPickerDomain.Binder)
         case templates(TemplatesNode)
         case userAccount(UserAccountViewModel)
         

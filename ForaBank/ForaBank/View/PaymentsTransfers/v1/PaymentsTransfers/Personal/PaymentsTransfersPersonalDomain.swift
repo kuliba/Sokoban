@@ -18,20 +18,12 @@ extension PaymentsTransfersPersonalDomain {
 
 enum PaymentsTransfersPersonalSelect: Equatable {
     
-    case outside(Outside)
-    
-    enum Outside: Equatable {
-        
-        case byPhoneTransfer
-        case scanQR
-        case templates
-        case userAccount
-        case utilityPayment // service payment
-    }
-}
-
-enum PaymentsTransfersPersonalNavigation {
-    
+    case byPhoneTransfer
+    case main
+    case scanQR
+    case standardPayment
     case templates
     case userAccount
 }
+
+typealias PaymentsTransfersPersonalNavigation = PaymentsTransfersPersonalSelect

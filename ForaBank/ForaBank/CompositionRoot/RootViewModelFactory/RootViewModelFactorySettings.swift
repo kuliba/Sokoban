@@ -12,6 +12,7 @@ struct RootViewModelFactorySettings {
     let categoryPickerPlaceholderCount: Int
     let delay: DispatchQueue.SchedulerTimeType.Stride
     let fraudDelay: Double
+    let observeLast: Int
     let operationPickerPlaceholderCount: Int
     let otpDuration: Int
     let otpLength: Int
@@ -24,6 +25,7 @@ extension RootViewModelFactorySettings {
         categoryPickerPlaceholderCount: 6,
         delay: .milliseconds(100),
         fraudDelay: 120,
+        observeLast: 10,
         operationPickerPlaceholderCount: 4,
         otpDuration: 60,
         otpLength: 6,

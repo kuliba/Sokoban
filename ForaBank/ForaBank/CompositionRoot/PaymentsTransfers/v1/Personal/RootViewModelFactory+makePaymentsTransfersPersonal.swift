@@ -29,11 +29,13 @@ extension RootViewModelFactory {
     }
 }
 
+private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect, Never>
+
 // MARK: - Content
 
 private extension PaymentsTransfersPersonalDomain.Content {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         Publishers.Merge3(
             categoryPicker.eventPublisher,
@@ -54,7 +56,7 @@ private extension PaymentsTransfersPersonalDomain.Content {
 
 private extension PayHubUI.CategoryPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         sectionBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -67,10 +69,10 @@ private extension PayHubUI.CategoryPicker {
 
 private extension CategoryPickerSectionDomain.Binder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         flow.$state
-            .compactMap { _ in return nil }
+            .compactMap(\.select)
             .eraseToAnyPublisher()
     }
     
@@ -80,11 +82,37 @@ private extension CategoryPickerSectionDomain.Binder {
     }
 }
 
+private extension FlowState<SelectedCategoryNavigation> {
+    
+    var select: PaymentsTransfersPersonalSelect? {
+        
+        switch navigation {
+        case let .paymentFlow(paymentFlow):
+            switch paymentFlow {
+            case .mobile:
+                return nil
+                
+            case .qr(()):
+                return .scanQR
+                
+            case let .standard(standard):
+                return .standardPayment
+                
+            case .taxAndStateServices, .transport:
+                return nil
+            }
+            
+        default:
+            return nil
+        }
+    }
+}
+
 // MARK: - OperationPicker
 
 private extension PayHubUI.OperationPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         operationBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -97,7 +125,7 @@ private extension PayHubUI.OperationPicker {
 
 private extension OperationPickerDomain.Binder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         flow.$state
             .compactMap(\.select)
@@ -115,8 +143,20 @@ private extension OperationPickerDomain.FlowDomain.State {
     var select: PaymentsTransfersPersonalSelect? {
         
         switch navigation {
-        case .templates: return .outside(.templates)
-        default:         return nil
+        case .none, .exchange, .latest:
+            return nil
+            
+        case let .status(status):
+            switch status {
+            case .main:
+                return .main
+                
+            case .exchangeFailure:
+                return nil
+            }
+            
+        case .templates:
+            return .templates
         }
     }
 }
@@ -125,7 +165,7 @@ private extension OperationPickerDomain.FlowDomain.State {
 
 private extension PayHubUI.TransfersPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         transfersBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -138,7 +178,7 @@ private extension PayHubUI.TransfersPicker {
 
 private extension PaymentsTransfersPersonalTransfersDomain.Binder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersPersonalSelect, Never> {
+    var eventPublisher: EventPublisher {
         
         flow.$state
             .compactMap { _ in return nil }

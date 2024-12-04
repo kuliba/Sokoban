@@ -8,23 +8,18 @@
 import Foundation
 import PayHub
 
-typealias CategoryPickerSectionNavigation = SelectedCategoryNavigation
-
 enum SelectedCategoryNavigation {
     
     case failure(SelectedCategoryFailure)
     case paymentFlow(PaymentFlow)
-    case qrNavigation(QRNavigation)
     
     typealias Mobile = ClosePaymentsViewModelWrapper
     typealias Standard = StandardSelectedCategoryDestination
-    typealias QR = Node<QRScannerModel>
+    typealias QR = Void // it's up to root to handle QR
     typealias Tax = ClosePaymentsViewModelWrapper
     typealias Transport = TransportPaymentsViewModel
     
     typealias PaymentFlow = PayHub.PaymentFlow<Mobile, QR, Standard, Tax, Transport>
-    
-    typealias QRNavigation = ForaBank.QRNavigation
 }
 
 struct SelectedCategoryFailure: Error, Equatable, Identifiable {
@@ -33,6 +28,6 @@ struct SelectedCategoryFailure: Error, Equatable, Identifiable {
     let message: String
 }
 
-typealias StandardSelectedCategoryDestination = Result<PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
+typealias StandardSelectedCategoryDestination = Result<PaymentProviderPickerDomain.Binder, FailedPaymentProviderPickerStub>
 
 final class FailedPaymentProviderPickerStub: Error {}

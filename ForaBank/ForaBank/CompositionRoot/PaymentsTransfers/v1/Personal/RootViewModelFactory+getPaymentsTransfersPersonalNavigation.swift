@@ -7,23 +7,12 @@
 
 extension RootViewModelFactory {
     
+    @inlinable
     func getPaymentsTransfersPersonalNavigation(
         select: PaymentsTransfersPersonalDomain.Select,
         notify: @escaping PaymentsTransfersPersonalDomain.Notify,
         completion: @escaping (PaymentsTransfersPersonalDomain.Navigation) -> Void
     ) {
-        switch select {
-        case let.outside(outside):
-            switch outside {
-            case .templates:
-                completion(.templates)
-                
-            case .userAccount:
-                completion(.userAccount)
-                
-            default:
-                break
-            }
-        }
+        completion(select)
     }
 }

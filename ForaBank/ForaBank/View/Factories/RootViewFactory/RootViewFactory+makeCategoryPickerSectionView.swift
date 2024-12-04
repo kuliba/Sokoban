@@ -43,8 +43,7 @@ extension RootViewFactory {
                     factory: .init(
                         makeAlert: makeAlert(binder: binder),
                         makeContentView: { makeContentView(binder) },
-                        makeDestinationView: makeDestinationView,
-                        makeFullScreenCoverView: makeFullScreenCoverView
+                        makeDestinationView: makeDestinationView
                     )
                 )
             }
@@ -104,7 +103,7 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: CategoryPickerSectionNavigation.Destination
+        destination: SelectedCategoryNavigation.Destination
     ) -> some View {
         
         switch destination {
@@ -128,20 +127,6 @@ extension RootViewFactory {
             case let .transport(transport):
                 transportPaymentsView(transport)
             }
-            
-        case let .qrDestination(qrDestination):
-            qrDestinationView(qrDestination)
         }
-    }
-    
-    private func makeFullScreenCoverView(
-        cover: CategoryPickerSectionNavigation.FullScreenCover
-    ) -> some View {
-        
-        NavigationView {
-            
-            components.makeQRView(cover.qr.qrScanner)
-        }
-        .navigationViewStyle(.stack)
     }
 }

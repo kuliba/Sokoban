@@ -1,5 +1,5 @@
 //
-//  StandardSelectedCategoryDestinationMicroServiceComposerTests.swift
+//  StandardSelectedCategoryGetNavigationComposerTests.swift
 //
 //
 //  Created by Igor Malyarov on 02.09.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTestCase {
+final class StandardSelectedCategoryGetNavigationComposerTests: XCTestCase {
     
     func test_makeDestination_shouldDeliverFailureOnLoadOperatorsFailure() {
         
@@ -41,7 +41,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         (sut, _, loadOperatorsSpy, _,_) = makeSUT()
         var receivedResult: Result<Success, Failure>?
         
-        sut?.makeDestination(makeCategory()) { receivedResult = $0 }
+        sut?.makeDestination(category: makeCategory()) { receivedResult = $0 }
         sut = nil
         loadOperatorsSpy.complete(with: .failure(anyError()))
         
@@ -52,7 +52,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         
         let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category: makeCategory()) { _ in }
         loadOperatorsSpy.complete(with: .failure(anyError()))
         
         XCTAssertEqual(loadLatestSpy.callCount, 0)
@@ -62,7 +62,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         
         let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category: makeCategory()) { _ in }
         loadOperatorsSpy.complete(with: .success([]))
         
         XCTAssertEqual(loadLatestSpy.callCount, 0)
@@ -72,7 +72,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         
         let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category: makeCategory()) { _ in }
         loadOperatorsSpy.complete(with: .success([makeOperator()]))
         
         XCTAssertEqual(loadLatestSpy.callCount, 1)
@@ -82,7 +82,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         
         let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category: makeCategory()) { _ in }
         loadOperatorsSpy.complete(with: .success([makeOperator(), makeOperator()]))
         
         XCTAssertEqual(loadLatestSpy.callCount, 1)
@@ -94,7 +94,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .failure(anyError()))
         
@@ -111,7 +111,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .success([]))
         
@@ -129,7 +129,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .success([latest]))
         
@@ -147,7 +147,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .success([latest1, latest2]))
         
@@ -164,7 +164,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .failure(anyError()))
         
@@ -181,7 +181,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .success([]))
         
@@ -199,7 +199,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .success([latest]))
         
@@ -217,7 +217,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(category) { _ in }
+        sut.makeDestination(category: category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .success([latest1, latest2]))
         
@@ -334,8 +334,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     // MARK: - Helpers
     
-    private typealias Composer = StandardSelectedCategoryDestinationMicroServiceComposer<Category, Latest, Operator, Success, Failure>
-    private typealias SUT = Composer.MicroService
+    private typealias SUT = StandardSelectedCategoryGetNavigationComposer<Category, Latest, Operator, Success, Failure>
     private typealias LoadOperatorsSpy = Spy<Void, Result<[Operator], Error>>
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>>
     private typealias MakeFailureSpy = Spy<Void, Failure>
@@ -356,13 +355,12 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         let loadLatestSpy = LoadLatestSpy()
         let makeFailureSpy = MakeFailureSpy()
         let makeSuccessSpy = MakeSuccessSpy()
-        let composer = Composer(nanoServices: .init(
+        let sut = SUT(nanoServices: .init(
             loadLatest: loadLatestSpy.process(completion:),
             loadOperators: loadOperatorsSpy.process(completion:),
             makeFailure: makeFailureSpy.process(completion:),
             makeSuccess: makeSuccessSpy.process(_:completion:)
         ))
-        let sut = composer.compose()
         
         return (sut, loadLatestSpy, loadOperatorsSpy, makeFailureSpy, makeSuccessSpy)
     }
@@ -437,7 +435,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.makeDestination(category ?? makeCategory()) {
+        sut.makeDestination(category: category ?? makeCategory()) {
             
             exp.fulfill()
             XCTAssertNoDiff($0, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
