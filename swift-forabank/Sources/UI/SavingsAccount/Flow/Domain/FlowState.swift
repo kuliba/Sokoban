@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct FlowState<InformerPayload> {
+public struct FlowState<Destination, InformerPayload> {
     
     public var isLoading: Bool
     public var status: Status?
@@ -26,6 +26,7 @@ public extension FlowState {
     enum Status {
         
         case alert(AlertFailure)
+        case destination(Destination)
         case informer(InformerPayload)
         case outside(Outside)
         
@@ -36,6 +37,6 @@ public extension FlowState {
     }
 }
 
-extension FlowState.Status: Equatable where InformerPayload: Equatable {}
+extension FlowState.Status: Equatable where Destination: Equatable, InformerPayload: Equatable {}
 
-extension FlowState: Equatable where InformerPayload: Equatable {}
+extension FlowState: Equatable where Destination: Equatable, InformerPayload: Equatable {}

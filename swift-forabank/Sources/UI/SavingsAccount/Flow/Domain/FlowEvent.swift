@@ -5,14 +5,15 @@
 //  Created by Andryusina Nataly on 04.12.2024.
 //
 
-public enum FlowEvent<InformerPayload> {
+public enum FlowEvent<Destination, InformerPayload> {
     
+    case destination(Destination)
     case failure(FlowFailureKind<InformerPayload>)
     case reset
     case select(Selection)
 }
 
-extension FlowEvent: Equatable where InformerPayload: Equatable {}
+extension FlowEvent: Equatable where Destination: Equatable, InformerPayload: Equatable {}
 
 public enum FlowFailureKind<InformerPayload> {
     
