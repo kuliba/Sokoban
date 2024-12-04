@@ -1350,6 +1350,7 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
+            .foraTools,
             .remoteServices
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/Backend/V1"

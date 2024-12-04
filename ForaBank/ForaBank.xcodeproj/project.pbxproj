@@ -2916,6 +2916,9 @@
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
 		A70BE3F72CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A70BE3F62CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend */; };
+		A73E430E2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73E430D2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift */; };
+		A73E43102CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A73E430F2CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend */; };
+		A73E43122CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73E43112CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift */; };
 		A7598A6D2CE7673F001980B1 /* CollateralLoanLandingShowcaseDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7598A442CE766DC001980B1 /* CollateralLoanLandingShowcaseDataAdapter.swift */; };
 		A7598A6E2CE76744001980B1 /* CollateralLoanLandingComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7598A462CE766DC001980B1 /* CollateralLoanLandingComposer.swift */; };
 		A7598A6F2CE76747001980B1 /* ContentViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7598A472CE766DC001980B1 /* ContentViewModelComposer.swift */; };
@@ -6376,6 +6379,8 @@
 		A70BE3F82CF724A000083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend.xctestplan; sourceTree = "<group>"; };
 		A73E21F02CB6CF8A00BD6D3B /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CollateralLoanLanding.xctestplan; path = ../CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A73E430C2CF868700060A548 /* CollateralLoanLandingGetCollateralLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingBackend.xctestplan; sourceTree = "<group>"; };
+		A73E430D2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCollateralLandingRequest.swift"; sourceTree = "<group>"; };
+		A73E43112CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCollateralLandingRequestTests.swift"; sourceTree = "<group>"; };
 		A7598A442CE766DC001980B1 /* CollateralLoanLandingShowcaseDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingShowcaseDataAdapter.swift; sourceTree = "<group>"; };
 		A7598A462CE766DC001980B1 /* CollateralLoanLandingComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingComposer.swift; sourceTree = "<group>"; };
 		A7598A472CE766DC001980B1 /* ContentViewModelComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewModelComposer.swift; sourceTree = "<group>"; };
@@ -7134,6 +7139,7 @@
 				77B243DC2A2F658500CDCEC6 /* UserModel in Frameworks */,
 				2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
+				A73E43102CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend in Frameworks */,
 				C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */,
 				A78AC1DB2CEC652500154B88 /* CollateralLoanLandingGetConsentsBackend in Frameworks */,
 				2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */,
@@ -9751,6 +9757,7 @@
 				2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */,
 				2A58FABE2AD7355700BD1967 /* SessionID.swift */,
 				A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */,
+				A73E430D2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift */,
 				A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */,
 				A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */,
 				83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */,
@@ -9797,6 +9804,7 @@
 			children = (
 				C11779DE2C59003C00CAF414 /* RequestFactory+getInfoForRepeatPaymentRequestTests.swift */,
 				2AF5DF352BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift */,
+				A73E43112CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift */,
 				2A5190382A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift */,
 				2A51903A2A7E12CB0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequestTests.swift */,
 				2A58FAA62AD705A800BD1967 /* RequestFactory+makeGetPINConfirmationCodeRequestTests.swift */,
@@ -18589,6 +18597,7 @@
 				A7E8D0372CF6E608008DF828 /* CollateralLoanLandingGetShowcaseBackend */,
 				A7E8D0392CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI */,
 				A70BE3F62CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend */,
+				A73E430F2CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend */,
 				83C6A1E82CFF43540076BC25 /* SavingsAccount */,
 			);
 			productName = ForaBank;
@@ -20431,6 +20440,7 @@
 				2A3F1B252A49895100D8FE55 /* MosParkingPickerData.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				0CA1CDE9284551A000021671 /* PaymentData.swift in Sources */,
+				A73E430E2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift in Sources */,
 				2A2E3FC62BB2CC3900730D37 /* RequestFactory+createGetOperationDetailByPaymentIDRequestModule.swift in Sources */,
 				83A219B02A4D8FD500A34482 /* ProductConfig.swift in Sources */,
 				2A58FAA92AD70D5C00BD1967 /* RequestFactory+makeGetPINConfirmationCodeRequest.swift in Sources */,
@@ -22032,6 +22042,7 @@
 				8343FE2F2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift in Sources */,
 				D4A5A7A62BAA5AEA006EE7A5 /* ProductDepositData_getProductListByTypeV5.swift in Sources */,
 				835741C22C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift in Sources */,
+				A73E43122CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift in Sources */,
 				2AD5F0CA2CA54CE100AA5619 /* ClosePaymentsViewModelWrapperTests.swift in Sources */,
 				2A4A19EE2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift in Sources */,
 				2AA2585D2CEA434B0038642C /* XCTestCase+wait.swift in Sources */,
@@ -27821,6 +27832,10 @@
 		A70BE3F62CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend;
+		};
+		A73E430F2CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CollateralLoanLandingGetCollateralLandingBackend;
 		};
 		A7598A752CE76848001980B1 /* CollateralLoanLandingShowCaseBackend */ = {
 			isa = XCSwiftPackageProductDependency;
