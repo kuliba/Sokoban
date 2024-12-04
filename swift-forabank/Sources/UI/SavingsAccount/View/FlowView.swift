@@ -8,7 +8,7 @@
 import SwiftUI
 import UIPrimitives
 
-public struct FlowView<ContentView, InformerPayload>: View
+public struct FlowView<ContentView, Destination, InformerPayload>: View
 where ContentView: View {
     
     private let state: State
@@ -65,10 +65,18 @@ extension FlowView {
         
         return alertFailure
     }
+
+    var destination: Destination? {
+        
+        guard case let .destination(destination) = state.status
+        else { return nil }
+        
+        return destination
+    }
 }
 
 public extension FlowView {
     
-    typealias State = FlowState<InformerPayload>
-    typealias Event = FlowEvent<InformerPayload>
+    typealias State = FlowState<Destination, InformerPayload>
+    typealias Event = FlowEvent<Destination, InformerPayload>
 }
