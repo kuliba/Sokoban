@@ -2841,9 +2841,9 @@
 		83E455E42AC2E0DB0045BEC1 /* C2BFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E455E32AC2E0DB0045BEC1 /* C2BFactory.swift */; };
 		83E455E62AC2EE980045BEC1 /* DecodeQrData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E455E52AC2EE980045BEC1 /* DecodeQrData.swift */; };
 		83E455EB2AC590C60045BEC1 /* QrDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E455EA2AC590C60045BEC1 /* QrDataMapperTests.swift */; };
-		83E45EAA2D00835600158F64 /* SavingsAccountContentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EA92D00835500158F64 /* SavingsAccountContentWrapperView.swift */; };
 		83E45EAC2D0089F900158F64 /* SavingsAccountWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */; };
 		83E45EAF2D009E2000158F64 /* SavingsAccountDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */; };
+		83E45EB12D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */; };
 		83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */ = {isa = PBXBuildFile; productRef = 83E513382AA73CFC00F8183B /* LandingMapping */; };
 		83E82B732A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */; };
 		83E84BC429E42CD800E1A445 /* PaymentsServicesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */; };
@@ -6302,9 +6302,9 @@
 		83E455E32AC2E0DB0045BEC1 /* C2BFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BFactory.swift; sourceTree = "<group>"; };
 		83E455E52AC2EE980045BEC1 /* DecodeQrData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeQrData.swift; sourceTree = "<group>"; };
 		83E455EA2AC590C60045BEC1 /* QrDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrDataMapperTests.swift; sourceTree = "<group>"; };
-		83E45EA92D00835500158F64 /* SavingsAccountContentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountContentWrapperView.swift; sourceTree = "<group>"; };
 		83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountWrapperView.swift; sourceTree = "<group>"; };
 		83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountDomain.swift; sourceTree = "<group>"; };
+		83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavingsAccountDomain+ComposerNanoServices.swift"; sourceTree = "<group>"; };
 		83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemRule.swift; sourceTree = "<group>"; };
 		83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesData.swift; sourceTree = "<group>"; };
 		83EB7CC82C8A004E0058F417 /* ItemsWithSerial+BannersData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ItemsWithSerial+BannersData.swift"; sourceTree = "<group>"; };
@@ -15659,7 +15659,6 @@
 		83E45EA82D00816800158F64 /* SavingsAccount */ = {
 			isa = PBXGroup;
 			children = (
-				83E45EA92D00835500158F64 /* SavingsAccountContentWrapperView.swift */,
 				83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */,
 			);
 			path = SavingsAccount;
@@ -15669,6 +15668,7 @@
 			isa = PBXGroup;
 			children = (
 				83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */,
+				83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -20961,6 +20961,7 @@
 				8357E3312B6809540065E581 /* OperationDetailFactoryl.swift in Sources */,
 				83A9C6DE2C060ED0005EAF62 /* UpdateInfoView.swift in Sources */,
 				0BDE453126E2A8CB00B64A0A /* ExtensionGKHMainQR.swift in Sources */,
+				83E45EB12D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift in Sources */,
 				2A49221C2ABC6ABA00880784 /* Services+bindKeyService.swift in Sources */,
 				68A07C48281B18C900797A54 /* OpenDepositListView.swift in Sources */,
 				2AF0B0D92B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift in Sources */,
@@ -21803,7 +21804,6 @@
 				0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */,
 				777460EF291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift in Sources */,
 				777167D627CE858500655D60 /* SettingsAgentMock.swift in Sources */,
-				83E45EAA2D00835600158F64 /* SavingsAccountContentWrapperView.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				2AD8243D2C87249F0007B8DF /* CategoryPickerSectionDomain.swift in Sources */,
 				5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */,
