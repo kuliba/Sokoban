@@ -13,7 +13,6 @@ import XCTest
 
 class AuthLoginViewModelTests: XCTestCase {
     
-    typealias ClientInformAlertsSubject = PassthroughSubject<ClientInformAlerts, Never>
     typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
     typealias CatalogProducts = PassthroughSubject<([CatalogProductData]), Never>
     typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>

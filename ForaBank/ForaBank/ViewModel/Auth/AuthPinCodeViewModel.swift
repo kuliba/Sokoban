@@ -123,8 +123,10 @@ class AuthPinCodeViewModel: ObservableObject {
     func bind() {
         
         model.clientInformAlertManager.alertPublisher
-            .sink { self.clientInformAlerts = $0 }.store(in: &bindings)
-        
+            .receive(on: DispatchQueue.main)
+            .sink { self.clientInformAlerts = $0 }
+            .store(in: &bindings)
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -375,7 +377,6 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
-                            self?.model.clientInformAlertManager.dismiss()
                             
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())

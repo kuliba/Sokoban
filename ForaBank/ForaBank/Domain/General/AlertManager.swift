@@ -14,6 +14,7 @@ protocol AlertManager<Alert> {
     
     var alertPublisher: AnyPublisher<Alert?, Never> { get }
     func dismiss()
+    func dismissAll()
     func update(alerts: ClientInformAlerts)
 }
 
@@ -44,6 +45,11 @@ extension NotAuthorizedAlertManager: AlertManager {
         guard var currentValue = subject.value else { return }
         currentValue.next()
         subject.send(currentValue)
+    }
+    
+    func dismissAll() {
+        
+        subject.value = nil
     }
     
     func update(alerts: ClientInformAlerts) {
