@@ -7,8 +7,55 @@
 
 import Combine
 import PayHub
+import RemoteServices
+
+typealias StandardSelectedCategoryDestination = Result<PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+
+final class FailedPaymentProviderPicker: Error {}
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func makePaymentProviderPicker(
+        for category: ServiceCategory,
+        completion: @escaping (StandardSelectedCategoryDestination) -> Void
+    ) {
+        let nanoServices = makeNanoServices(for: category)
+        let composer = StandardSelectedCategoryGetNavigationComposer(
+            nanoServices: nanoServices
+        )
+        
+        composer.makeDestination(category: category) {
+            
+            completion($0)
+            _ = composer
+        }
+    }
+    
+    private func makeNanoServices(
+        for category: ServiceCategory
+    ) -> NanoServices {
+        
+        let getLatestPayments = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
+        )
+        
+        return .init(
+            loadLatest: { getLatestPayments([category.name], $0) },
+            loadOperators: {
+                
+                self.loadOperatorsForCategory(category: category, completion: $0)
+            },
+            makeFailure: { $0(.init()) },
+            makeSuccess: { payload, completion in
+                
+                completion(self.makePaymentProviderPicker(payload: payload))
+            }
+        )
+    }
+    
+    private typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
     
     @inlinable
     func makePaymentProviderPicker(
@@ -35,7 +82,7 @@ extension RootViewModelFactory {
         
         let providerList = makeProviderList(with: payload)
         let search = payload.category.hasSearch ? makeSearch() : nil
-                
+        
         return .init(
             title: payload.category.name,
             operationPicker: (),

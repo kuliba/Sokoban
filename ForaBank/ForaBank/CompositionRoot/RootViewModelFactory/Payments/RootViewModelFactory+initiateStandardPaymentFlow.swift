@@ -17,7 +17,7 @@ extension RootViewModelFactory {
             guard let category = $0
             else { return completion(.failure(.missingCategoryOfType(type))) }
             
-            self.makeStandard(category) {
+            self.makePaymentProviderPicker(for: category) {
                 
                 switch $0 {
                 case .failure:
