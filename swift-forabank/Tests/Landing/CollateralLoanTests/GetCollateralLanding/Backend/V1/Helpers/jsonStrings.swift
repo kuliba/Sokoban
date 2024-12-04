@@ -160,36 +160,36 @@ let validJson = """
                 "answer": "Если вы получаете заработную плату на карту нашего банка, то вам не потребуется дополнительно подтверждать размер дохода, в ином случае доход можно подтвердить, предоставив извещение о состоянии лицевого счета СФР выгрузив его в личном кабинете на портале Госуслуг или предоставив справку о доходах полученную у работодателя, возможны иные варианты подтверждения дохода."
             }],
             "documents": [{
-                "title": "Общие условия потребительского кредита «Фора-Залоговый",
+                "title": "Общие условия потребительского кредита «Залоговый",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
             }, {
                 "title": "Заявление-анкета на получение потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
+                "link": "https://www.test.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
             }, {
                 "title": "Требования к заемщику",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Fora_Zalogovyi_.doc"
+                "link": "https://www.test.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Fora_Zalogovyi_.doc"
             }, {
                 "title": "Необходимые документы для оформления потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
             }, {
                 "title": "Список документов по залогу (недвижимость)",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Fora_Zalogovyi_.docx"
             }, {
                 "title": "Условия договора потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
+                "link": "https://www.test.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
             }],
             "consents": [{
                 "name": "Согласие 1",
-                "link": "https://www.forabank.ru/"
+                "link": "https://www.test.ru/"
             }, {
                 "name": "Согласие 2",
-                "link": "https://www.forabank.ru/"
+                "link": "https://www.test.ru/"
             }],
             "cities": ["Москва", "п.Коммунарка", "Реутов", "Орехово-Зуево", "Апрелевка", "Наро-Фоминск", "Подольск", "Балашиха", "Люберцы", "Одинцово", "Химки", "Мытищи", "Красногорск", "Серпухов", "Домодедово", "п.Случайный", "Калуга", "Обнинск", "п.Воротынск", "Малоярославец", "Балабаново", "Тула", "Коломна", "Ярославль", "Рыбинск", "Иваново", "Пермь", "Саранск", "Нижний Новгород", "Ростов-на-Дону", "Сочи", "Краснодар", "Армавир", "Тамбов", "Санкт-Петербург", "Ставрополь", "Тверь", "Липецк"],
             "icons": {
@@ -342,36 +342,36 @@ let noSerialJson = """
                 "answer": "Если вы получаете заработную плату на карту нашего банка, то вам не потребуется дополнительно подтверждать размер дохода, в ином случае доход можно подтвердить, предоставив извещение о состоянии лицевого счета СФР выгрузив его в личном кабинете на портале Госуслуг или предоставив справку о доходах полученную у работодателя, возможны иные варианты подтверждения дохода."
             }],
             "documents": [{
-                "title": "Общие условия потребительского кредита «Фора-Залоговый",
+                "title": "Общие условия потребительского кредита «Залоговый",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
             }, {
                 "title": "Заявление-анкета на получение потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
+                "link": "https://www.test.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
             }, {
                 "title": "Требования к заемщику",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Fora_Zalogovyi_.doc"
+                "link": "https://www.test.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Fora_Zalogovyi_.doc"
             }, {
                 "title": "Необходимые документы для оформления потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
             }, {
                 "title": "Список документов по залогу (недвижимость)",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Fora_Zalogovyi_.docx"
             }, {
                 "title": "Условия договора потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.forabank.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
+                "link": "https://www.test.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
             }],
             "consents": [{
                 "name": "Согласие 1",
-                "link": "https://www.forabank.ru/"
+                "link": "https://www.test.ru/"
             }, {
                 "name": "Согласие 2",
-                "link": "https://www.forabank.ru/"
+                "link": "https://www.test.ru/"
             }],
             "cities": ["Москва", "п.Коммунарка", "Реутов", "Орехово-Зуево", "Апрелевка", "Наро-Фоминск", "Подольск", "Балашиха", "Люберцы", "Одинцово", "Химки", "Мытищи", "Красногорск", "Серпухов", "Домодедово", "п.Случайный", "Калуга", "Обнинск", "п.Воротынск", "Малоярославец", "Балабаново", "Тула", "Коломна", "Ярославль", "Рыбинск", "Иваново", "Пермь", "Саранск", "Нижний Новгород", "Ростов-на-Дону", "Сочи", "Краснодар", "Армавир", "Тамбов", "Санкт-Петербург", "Ставрополь", "Тверь", "Липецк"],
             "icons": {
