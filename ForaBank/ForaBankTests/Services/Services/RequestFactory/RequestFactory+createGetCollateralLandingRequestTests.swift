@@ -31,7 +31,7 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
 
         let queryItems = try getQueryItems(serial: nil, landingType: landingType)
 
-        XCTAssertNoDiff(queryItems.first { $0.name == "serial" }?.value, nil)
+        XCTAssertNil(queryItems.first { $0.name == "serial" }?.value)
         XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType.rawValue)
     }
 

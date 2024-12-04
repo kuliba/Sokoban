@@ -112,258 +112,413 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
     
     func test_map_shouldBeNoThrowWithoutTheme() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(theme: nil)
-            ]))
-
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(theme: nil)]))
+        
         XCTAssertNoThrow(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowsWithoutName() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(name: nil)
-            ]))
+
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(name: nil)]))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowWithoutMarketing() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: nil)
-            ]))
+
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(marketing: nil)]))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowWithoutConditions() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: nil)]))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowsWithEmptyCondition() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: [])
-            ]))
-        
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [])]))
 
-        let conditions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.conditions)
-
-        XCTAssertTrue(conditions.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowsWithOneCondition() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: [.stub()])
-            ]))
+        let (icon, title, subTitle) = (anyMessage(), anyMessage(), anyMessage())
+        let condition = makeCondition(icon: icon, title: title, subTitle: subTitle)
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let conditions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.conditions)
-
-        XCTAssertTrue(conditions.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            [.init(icon: icon, title: title, subTitle: subTitle)]
+        )
     }
 
     func test_map_shouldBeNoThrowsWithTwoCondition() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: [.stub(), .stub()])
-            ]))
+        let (iconFirst, titleFirst, subTitleFirst) = (anyMessage(), anyMessage(), anyMessage())
+        let (iconSecond, titleSecond, subTitleSecond) = (anyMessage(), anyMessage(), anyMessage())
+        let conditionFirst = makeCondition(icon: iconFirst, title: titleFirst, subTitle: subTitleFirst)
+        let conditionSecond = makeCondition(icon: iconSecond, title: titleSecond, subTitle: subTitleSecond)
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [
+            conditionFirst,
+            conditionSecond
+        ])]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            [
+                .init(icon: iconFirst, title: titleFirst, subTitle: subTitleFirst),
+                .init(icon: iconSecond, title: titleSecond, subTitle: subTitleSecond)
+            ]
+        )
+    }
+
+    func test_map_shouldSkipConditionWithoutIcon() throws {
         
-        let conditions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.conditions)
+        let condition = makeCondition(icon: nil, title: anyMessage(), subTitle: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
-        XCTAssertTrue(conditions.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
+    }
+    
+    func test_map_shouldSkipConditionWithoutTitle() throws {
+        
+        let condition = makeCondition(icon: anyMessage(), title: nil, subTitle: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
+    }
+    
+    func test_map_shouldSkipConditionWithoutSubTitle() throws {
+        
+        let condition = makeCondition(icon: anyMessage(), title: anyMessage(), subTitle: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
+    }
+    
+    func test_map_shouldSkipConditionWithoutIconAndTitle() throws {
+        
+        let condition = makeCondition(icon: nil, title: nil, subTitle: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
+    }
+
+    func test_map_shouldSkipConditionWithoutIconAndSubTitle() throws {
+        
+        let condition = makeCondition(icon: nil, title: anyMessage(), subTitle: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
+    }
+
+    func test_map_shouldSkipConditionWithoutTitleAndSubTitle() throws {
+        
+        let condition = makeCondition(icon: anyMessage(), title: nil, subTitle: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
+    }
+
+    func test_map_shouldSkipConditionWithoutIconAndTitleAndSubTitle() throws {
+        
+        let condition = makeCondition(icon: nil, title: nil, subTitle: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.conditions),
+            []
+        )
     }
 
     func test_map_shouldBeThrowsWithoutCalc() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(calc: nil)]))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowsWithoutFrequentlyAskedQuestions() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(frequentlyAskedQuestions: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(frequentlyAskedQuestions: nil)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyFrequentlyAskedQuestions() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(frequentlyAskedQuestions: [])
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(frequentlyAskedQuestions: [])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let frequentlyAskedQuestions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.frequentlyAskedQuestions)
-
-        XCTAssertTrue(frequentlyAskedQuestions.isEmpty)
-    }
-
-    func test_map_shouldBeNoThrowWithOneFrequentlyAskedQuestion() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(frequentlyAskedQuestions: [.stub()])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let frequentlyAskedQuestions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.frequentlyAskedQuestions)
-
-        XCTAssertTrue(frequentlyAskedQuestions.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowWithTwoFrequentlyAskedQuestion() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(frequentlyAskedQuestions: [.stub(), .stub()])
-            ]))
+        let (questionFirst, answerFirst) = (anyMessage(), anyMessage())
+        let (questionSecond, answerSecond) = (anyMessage(), anyMessage())
+        let frequentlyAskedQuestionFirst = makeFrequentlyAskedQuestion(
+            question: questionFirst,
+            answer: answerFirst
+        )
+        let frequentlyAskedQuestionSecond = makeFrequentlyAskedQuestion(
+            question: questionSecond,
+            answer: answerSecond
+        )
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(frequentlyAskedQuestions: [
+                frequentlyAskedQuestionFirst,
+                frequentlyAskedQuestionSecond,
+            ])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            [
+                .init(question: questionFirst, answer: answerFirst),
+                .init(question: questionSecond, answer: answerSecond)
+            ]
+        )
+    }
+
+    func test_map_shouldSkipFrequentlyAskedQuestionWithoutQuestion() throws {
         
-        let frequentlyAskedQuestions = try XCTUnwrap(try map(stub.encoded()).get().list.first?.frequentlyAskedQuestions)
+        let frequentlyAskedQuestion = makeFrequentlyAskedQuestion(question: nil, answer: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(frequentlyAskedQuestions: [frequentlyAskedQuestion])])
+        )
 
-        XCTAssertTrue(frequentlyAskedQuestions.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            []
+        )
+    }
+
+    func test_map_shouldSkipFrequentlyAskedQuestionWithoutAnswer() throws {
+        
+        let frequentlyAskedQuestion = makeFrequentlyAskedQuestion(question: anyMessage(), answer: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(frequentlyAskedQuestions: [frequentlyAskedQuestion])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            []
+        )
+    }
+
+    func test_map_shouldSkipFrequentlyAskedQuestionWithoutQuestionAndAnswer() throws {
+        
+        let frequentlyAskedQuestion = makeFrequentlyAskedQuestion(question: nil, answer: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(frequentlyAskedQuestions: [frequentlyAskedQuestion])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            []
+        )
     }
 
     func test_map_shouldBeThrowsWithoutDocuments() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: nil)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyDocuments() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: [])
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let documents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.documents)
-
-        XCTAssertTrue(documents.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowWithOneDocument() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: [.stub()])
-            ]))
+        let (title, icon, link) = (anyMessage(), anyMessage(), anyMessage())
+        let document = makeDocument(title: title, icon: icon, link: link)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let documents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.documents)
-
-        XCTAssertTrue(documents.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            [.init(title: title, icon: icon, link: link)]
+        )
     }
 
     func test_map_shouldBeNoThrowWithTwoDocuments() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: [.stub(), .stub()])
-            ]))
+        let (titleFirst, iconFirst, linkFirst) = (anyMessage(), anyMessage(), anyMessage())
+        let (titleSecond, iconSecond, linkSecond) = (anyMessage(), anyMessage(), anyMessage())
+        let documentFirst = makeDocument(title: titleFirst, icon: iconFirst, link: linkFirst)
+        let documentSecond = makeDocument(title: titleSecond, icon: iconSecond, link: linkSecond)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [documentFirst, documentSecond])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            [
+                .init(title: titleFirst, icon: iconFirst, link: linkFirst),
+                .init(title: titleSecond, icon: iconSecond, link: linkSecond)
+            ]
+        )
+    }
+
+    func test_map_shouldSkipDocumentWithoutTitle() throws {
         
-        let documents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.documents)
+        let document = makeDocument(title: nil, icon: anyMessage(), link: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
 
-        XCTAssertTrue(documents.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
+    }
+
+    func test_map_shouldNotSkipDocumentWithoutIcon() throws {
+        
+        let title = anyMessage()
+        let link = anyMessage()
+        
+        let document = makeDocument(title: title, icon: nil, link: link)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            [.init(title: title, icon: nil, link: link)]
+        )
+    }
+
+    func test_map_shouldSkipDocumentWithoutLink() throws {
+        
+        let document = makeDocument(title: anyMessage(), icon: anyMessage(), link: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
+    }
+
+    func test_map_shouldSkipDocumentWithoutTitleAndIcon() throws {
+        
+        let document = makeDocument(title: nil, icon: nil, link: anyMessage())
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
+    }
+
+    func test_map_shouldSkipDocumentWithoutTitleAndLink() throws {
+        
+        let document = makeDocument(title: nil, icon: anyMessage(), link: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
+    }
+
+    func test_map_shouldSkipDocumentWithoutIconAndLink() throws {
+        
+        let document = makeDocument(title: anyMessage(), icon: nil, link: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
+    }
+
+    func test_map_shouldSkipDocumentWithoutTitleAndIconAndLink() throws {
+        
+        let document = makeDocument(title: nil, icon: nil, link: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(documents: [document])])
+        )
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.documents),
+            []
+        )
     }
 
     func test_map_shouldBeThrowsWithoutConsents() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(consents: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: nil)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyConsents() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(consents: [])
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: [])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let consents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.consents)
-
-        XCTAssertTrue(consents.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            []
+        )
     }
 
     func test_map_shouldDeliverConsent() throws {
@@ -421,606 +576,635 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
 
     func test_map_shouldBeNoThrowValidWithTwoConsent() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(consents: [.stub(), .stub()])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let (nameFirst, linkFirst) = (anyMessage(), anyMessage())
+        let (nameSecond, linkSecond) = (anyMessage(), anyMessage())
+        let consentFirst = makeConsent(name: nameFirst, link: linkFirst)
+        let consentSecond = makeConsent(name: nameSecond, link: linkSecond)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(consents: [consentFirst, consentSecond])]
+        ))
         
-        let consents = try XCTUnwrap(try map(stub.encoded()).get().list.first?.consents)
-
-        XCTAssertTrue(consents.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            [
+                .init(name: nameFirst, link: linkFirst),
+                .init(name: nameSecond, link: linkSecond)
+            ]
+        )
     }
 
     func test_map_shouldBeThrowsWithoutCities() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(cities: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(cities: nil)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyCities() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(cities: [])
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(cities: [])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let cities = try XCTUnwrap(try map(stub.encoded()).get().list.first?.cities)
-
-        XCTAssertTrue(cities.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.consents),
+            []
+        )
     }
     
     func test_map_shouldBeNoThrowWithOneCity() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(cities: [anyMessage()])
-            ]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let cities = try XCTUnwrap(try map(stub.encoded()).get().list.first?.cities)
+        let city = anyMessage()
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(cities: [city])])
+        )
 
-        XCTAssertTrue(cities.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.cities),
+            [city]
+        )
     }
     
     func test_map_shouldBeNoThrowWithTwoCity() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(cities: [anyMessage(), anyMessage()])
-            ]))
+        let cityFirst = anyMessage()
+        let citySecond = anyMessage()
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(cities: [cityFirst, citySecond])])
+        )
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let cities = try XCTUnwrap(try map(stub.encoded()).get().list.first?.cities)
-
-        XCTAssertTrue(cities.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.flatMap(\.cities),
+            [cityFirst, citySecond]
+        )
     }
     
     func test_map_shouldBeThrowsWithoutIcons() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(icons: nil)
-            ]))
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(icons: nil)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
+    func test_map_shouldBeThrowsWithoutAnyParamInIcons() throws {
+        
+        var val: String { anyMessage() }
+        
+        try [
+            makeIcons(productName: nil, amount: val, term: val, rate: val, city: val),
+            makeIcons(productName: val, amount: nil, term: val, rate: val, city: val),
+            makeIcons(productName: val, amount: val, term: nil, rate: val, city: val),
+            makeIcons(productName: val, amount: val, term: val, rate: nil, city: val),
+            makeIcons(productName: val, amount: val, term: val, rate: val, city: nil),
+            makeIcons(productName: val, amount: nil, term: nil, rate: val, city: val),
+            makeIcons(productName: val, amount: nil, term: val, rate: nil, city: val),
+            makeIcons(productName: val, amount: nil, term: val, rate: val, city: nil),
+            makeIcons(productName: val, amount: val, term: nil, rate: nil, city: val),
+            makeIcons(productName: val, amount: val, term: nil, rate: val, city: nil),
+            makeIcons(productName: val, amount: val, term: val, rate: nil, city: nil),
+            makeIcons(productName: val, amount: val, term: nil, rate: nil, city: nil),
+            makeIcons(productName: val, amount: nil, term: val, rate: nil, city: nil),
+            makeIcons(productName: val, amount: nil, term: nil, rate: val, city: nil),
+            makeIcons(productName: val, amount: nil, term: nil, rate: nil, city: val),
+            makeIcons(productName: nil, amount: val, term: val, rate: nil, city: nil),
+            makeIcons(productName: nil, amount: val, term: nil, rate: val, city: nil),
+            makeIcons(productName: nil, amount: val, term: nil, rate: nil, city: val),
+            makeIcons(productName: nil, amount: nil, term: val, rate: val, city: nil),
+            makeIcons(productName: nil, amount: nil, term: val, rate: nil, city: val),
+            makeIcons(productName: nil, amount: nil, term: nil, rate: val, city: val),
+            makeIcons(productName: val, amount: nil, term: nil, rate: nil, city: nil),
+            makeIcons(productName: nil, amount: val, term: nil, rate: nil, city: nil),
+            makeIcons(productName: nil, amount: nil, term: val, rate: nil, city: nil),
+            makeIcons(productName: nil, amount: nil, term: nil, rate: val, city: nil),
+            makeIcons(productName: nil, amount: nil, term: nil, rate: nil, city: val),
+            makeIcons(productName: nil, amount: nil, term: nil, rate: nil, city: nil)
+        ].forEach {
+            
+            let stub = makeCodableResponse(data: makeSerialStamped(
+                products: [makeProduct(icons: $0)]
+            ))
+            
+            XCTAssertThrowsError(try map(stub.encoded()).get())
+        }
+    }
+    
     func test_map_shouldBeThrowsWithoutMarketingLabelTag() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: .stub(labelTag: nil))
-            ]))
-
+        let marketing = makeMarketing(labelTag: nil, image: anyMessage(), params: [anyMessage()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(marketing: marketing)]
+        ))
+        
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowsWithoutMarketingImage() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: .stub(image: nil))
-            ]))
-
+        let marketing = makeMarketing(labelTag: anyMessage(), image: nil, params: [anyMessage()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(marketing: marketing)]
+        ))
+        
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowsWithoutMarketingParams() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: .stub(params: nil))
-            ]))
-
+        let marketing = makeMarketing(labelTag: anyMessage(), image: anyMessage(), params: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(marketing: marketing)]
+        ))
+        
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyMarketingParams() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: .stub(params: []))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let marketing = makeMarketing(labelTag: anyMessage(), image: anyMessage(), params: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(marketing: marketing)]
+        ))
         
-        let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
-
-        XCTAssertTrue(params.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.marketing.params,
+            []
+        )
     }
     
     func test_map_shouldBeNoThrowWithOneMarketingParams() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: .stub(params: [anyMessage()]))
-            ]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let param = anyMessage()
+        let marketing = makeMarketing(labelTag: anyMessage(), image: anyMessage(), params: [param])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(marketing: marketing)]
+        ))
         
-        let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
-
-        XCTAssertTrue(params.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.marketing.params,
+            [param]
+        )
     }
     
     func test_map_shouldBeNoThrowWithTwoMarketingParams() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(marketing: .stub(params: [anyMessage(), anyMessage()]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let paramFirst = anyMessage()
+        let paramSecond = anyMessage()
+        let marketing = makeMarketing(
+            labelTag: anyMessage(),
+            image: anyMessage(),
+            params: [paramFirst, paramSecond]
+        )
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(marketing: marketing)]
+        ))
         
-        let params = try XCTUnwrap(try map(stub.encoded()).get().list.first?.marketing.params)
-
-        XCTAssertTrue(params.count == 2)
-    }
-    
-    func test_map_shouldBeNoThrowWithoutConditionIcon() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: [.stub(icon: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutConditionTitle() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: [.stub(title: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutConditionSubtitle() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(conditions: [.stub(title: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.marketing.params,
+            [paramFirst, paramSecond]
+        )
     }
 
     func test_map_shouldBeThrowsWithoutCalcAmount() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(amount: nil))
-            ]))
+        let calc = makeCalc(amount: nil, collateral: [.stub()], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowsWithoutCalcCollateral() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: nil))
-            ]))
+        let calc = makeCalc(amount: .stub(), collateral: nil, rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcAmountAndCollateral() throws {
+        
+        let calc = makeCalc(amount: nil, collateral: nil, rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcAmountAndRates() throws {
+        
+        let calc = makeCalc(amount: nil, collateral: [.stub()], rates: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcCollateralAndRates() throws {
+        
+        let calc = makeCalc(amount: .stub(), collateral: nil, rates: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        XCTAssertThrowsError(try map(stub.encoded()).get())
+    }
+
+    func test_map_shouldBeThrowsWithoutCalcAmountAndCollateralAndRates() throws {
+        
+        let calc = makeCalc(amount: nil, collateral: nil, rates: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyCalcCollateral() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: []))
-            ]))
+        let calc = makeCalc(amount: .stub(), collateral: [], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let collateral = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.collateral)
-
-        XCTAssertTrue(collateral.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowWithOneCalcCollateral() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: [.stub()]))
-            ]))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let icon = anyMessage()
+        let name = anyMessage()
+        let type = anyMessage()
         
-        let collateral = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.collateral)
+        let collateral = makeCollateral(icon: icon, name: name, type: type)
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
-        XCTAssertTrue(collateral.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            [.init(icon: icon, name: name, type: type)]
+        )
+    }
+    
+    func test_map_shouldSkipCalcCollateralWithoutIcon() throws {
+
+        let collateral = makeCollateral(icon: nil, name: anyMessage(), type: anyMessage())
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
+    }
+
+    func test_map_shouldSkipCalcCollateralWithoutName() throws {
+
+        let collateral = makeCollateral(icon: anyMessage(), name: nil, type: anyMessage())
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
+    }
+
+    func test_map_shouldSkipCalcCollateralWithoutType() throws {
+
+        let collateral = makeCollateral(icon: anyMessage(), name: anyMessage(), type: nil)
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
+    }
+
+    func test_map_shouldSkipCalcCollateralWithoutIconAndName() throws {
+
+        let collateral = makeCollateral(icon: nil, name: nil, type: anyMessage())
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
+    }
+
+    func test_map_shouldSkipCalcCollateralWithoutIconAndType() throws {
+
+        let collateral = makeCollateral(icon: nil, name: anyMessage(), type: nil)
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
+    }
+
+    func test_map_shouldSkipCalcCollateralWithoutNameAndType() throws {
+
+        let collateral = makeCollateral(icon: anyMessage(), name: nil, type: nil)
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
+    }
+
+    func test_map_shouldSkipCalcCollateralWithoutIconAndNameAndType() throws {
+
+        let collateral = makeCollateral(icon: nil, name: nil, type: nil)
+        let calc = makeCalc(amount: .stub(), collateral: [collateral], rates: [.stub()])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
+
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowWithTwoCalcCollateral() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: [.stub(), .stub()]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let iconFirst = anyMessage()
+        let nameFirst = anyMessage()
+        let typeFirst = anyMessage()
+        let iconSecond = anyMessage()
+        let nameSecond = anyMessage()
+        let typeSecond = anyMessage()
         
-        let collateral = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.collateral)
+        let collateralFirst = makeCollateral(icon: iconFirst, name: nameFirst, type: typeFirst)
+        let collateralSecond = makeCollateral(icon: iconSecond, name: nameSecond, type: typeSecond)
+        let calc = makeCalc(
+            amount: .stub(),
+            collateral: [collateralFirst, collateralSecond],
+            rates: [.stub()]
+        )
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
-        XCTAssertTrue(collateral.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.collateral,
+            [
+                .init(icon: iconFirst, name: nameFirst, type: typeFirst),
+                .init(icon: iconSecond, name: nameSecond, type: typeSecond)
+            ]
+        )
     }
 
     func test_map_shouldBeThrowsWithoutCalcRates() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: nil))
-            ]))
+        let calc = makeCalc(amount: .stub(), collateral: [.stub()], rates: nil)
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeNoThrowWithEmptyCalcRates() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: []))
-            ]))
+        let calc = makeCalc(amount: .stub(), collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-        
-        let rates = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.rates)
-
-        XCTAssertTrue(rates.isEmpty)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.rates,
+            []
+        )
     }
 
     func test_map_shouldBeNoThrowWithOneCalcRates() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: [.stub()]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
+        let rateBase = Double.random
+        let ratePayrollClient = Double.random
+        let termMonth = UInt.random
+        let termStringValue = anyMessage()
         
-        let rates = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.rates)
+        let rate = makeRate(
+            rateBase: rateBase,
+            ratePayrollClient: ratePayrollClient,
+            termMonth: termMonth,
+            termStringValue: termStringValue
+        )
+        
+        let calc = makeCalc(amount: .stub(), collateral: [.stub()], rates: [rate])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
-        XCTAssertTrue(rates.count == 1)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.rates,
+            [.init(
+                rateBase: rateBase,
+                ratePayrollClient: ratePayrollClient,
+                termMonth: termMonth,
+                termStringValue: termStringValue
+            )]
+        )
     }
 
     func test_map_shouldBeNoThrowWithTwoCalcRates() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: [.stub(), .stub()]))
-            ]))
+        let rateBaseFirst = Double.random
+        let ratePayrollClientFirst = Double.random
+        let termMonthFirst = UInt.random
+        let termStringValueFirst = anyMessage()
+        
+        let rateBaseSecond = Double.random
+        let ratePayrollClientSecond = Double.random
+        let termMonthSecond = UInt.random
+        let termStringValueSecond = anyMessage()
+        
+        let rateFirst = makeRate(
+            rateBase: rateBaseFirst,
+            ratePayrollClient: ratePayrollClientFirst,
+            termMonth: termMonthFirst,
+            termStringValue: termStringValueFirst
+        )
+        
+        let rateSecond = makeRate(
+            rateBase: rateBaseSecond,
+            ratePayrollClient: ratePayrollClientSecond,
+            termMonth: termMonthSecond,
+            termStringValue: termStringValueSecond
+        )
+        
+        let calc = makeCalc(amount: .stub(), collateral: [.stub()], rates: [rateFirst, rateSecond])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-
-        let rates = try XCTUnwrap(try map(stub.encoded()).get().list.first?.calc.rates)
-
-        XCTAssertTrue(rates.count == 2)
+        try XCTAssertNoDiff(
+            map(stub.encoded()).get().list.first?.calc.rates,
+            [
+                .init(
+                    rateBase: rateBaseFirst,
+                    ratePayrollClient: ratePayrollClientFirst,
+                    termMonth: termMonthFirst,
+                    termStringValue: termStringValueFirst
+                ),
+                .init(
+                    rateBase: rateBaseSecond,
+                    ratePayrollClient: ratePayrollClientSecond,
+                    termMonth: termMonthSecond,
+                    termStringValue: termStringValueSecond
+                )
+            ]
+        )
     }
 
     func test_map_shouldBeThrowsWithoutCalcAmountMinIntValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(amount: .stub(minIntValue: nil)))
-            ]))
+        let amount = makeAmount(minIntValue: nil, maxIntValue: .random, maxStringValue: anyMessage())
+        
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowsWithoutCalcAmountMaxIntValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(amount: .stub(maxIntValue: nil)))
-            ]))
+        let amount = makeAmount(minIntValue: .random, maxIntValue: nil, maxStringValue: anyMessage())
+        
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
     func test_map_shouldBeThrowWithoutCalcAmountMaxStringValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(amount: .stub(maxStringValue: nil)))
-            ]))
+        let amount = makeAmount(minIntValue: .random, maxIntValue: .random, maxStringValue: nil)
+        
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeNoThrowWithoutCalcCollateralIcon() throws {
+    func test_map_shouldBeThrowWithoutCalcAmountMinIntValueAndMaxIntValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: [.stub(icon: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutCalcCollateralName() throws {
+        let amount = makeAmount(minIntValue: nil, maxIntValue: nil, maxStringValue: anyMessage())
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: [.stub(name: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutCalcCollateralType() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(collateral: [.stub(type: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutCalcRateRateBase() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: [.stub(rateBase: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutCalcRateRatePayrollClient() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: [.stub(ratePayrollClient: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutCalcRateTermMonth() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: [.stub(termMonth: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutCalcRateTermStringValue() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(calc: .stub(rates: [.stub(termStringValue: nil)]))
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutFrequentlyAskedQuestionQuestion() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(frequentlyAskedQuestions: [.stub(question: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutFrequentlyAskedQuestionAnswer() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(frequentlyAskedQuestions: [.stub(answer: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutDocumentTitle() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: [.stub(title: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutDocumentIcon() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: [.stub(icon: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-    
-    func test_map_shouldBeNoThrowWithoutDocumentLink() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(documents: [.stub(link: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutConsentName() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(consents: [.stub(name: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeNoThrowWithoutConsentLink() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(consents: [.stub(link: nil)])
-            ]))
-
-        XCTAssertNoThrow(try map(stub.encoded()).get())
-    }
-
-    func test_map_shouldBeThrowsWithoutIconsProductName() throws {
-        
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(icons: .stub(productName: nil))
-            ]))
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeThrowsWithoutIconsAmount() throws {
+    func test_map_shouldBeThrowWithoutCalcAmountMinIntValueAndMaxStringValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(icons: .stub(amount: nil))
-            ]))
+        let amount = makeAmount(minIntValue: nil, maxIntValue: .random, maxStringValue: nil)
+        
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeThrowsWithoutIconsTerm() throws {
+    func test_map_shouldBeThrowWithoutCalcAmountMaxIntValueAndMaxStringValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(icons: .stub(term: nil))
-            ]))
+        let amount = makeAmount(minIntValue: .random, maxIntValue: nil, maxStringValue: nil)
+        
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeThrowsWithoutIconsRate() throws {
+    func test_map_shouldBeThrowWithoutCalcAmountMaxIntValueAndMaxIntValueAndMaxStringValue() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(icons: .stub(rate: nil))
-            ]))
+        let amount = makeAmount(minIntValue: nil, maxIntValue: nil, maxStringValue: nil)
+        
+        let calc = makeCalc(amount: amount, collateral: [.stub()], rates: [])
+        let stub = makeCodableResponse(data: makeSerialStamped(
+            products: [makeProduct(calc: calc)]
+        ))
 
         XCTAssertThrowsError(try map(stub.encoded()).get())
     }
 
-    func test_map_shouldBeThrowsWithoutIconsCity() throws {
+    func test_map_shouldBeSkipCalcRateWithoutOneOrMoreParams() throws {
         
-        let stub = CodableResponse(
-            statusCode: 200,
-            errorMessage: nil,
-            data: .init(serial: anyMessage(), products: [
-                .stub(icons: .stub(city: nil))
-            ]))
-
-        XCTAssertThrowsError(try map(stub.encoded()).get())
+        try [
+            makeRate(rateBase: nil),
+            makeRate(ratePayrollClient: nil),
+            makeRate(termMonth: nil),
+            makeRate(termStringValue: nil),
+            makeRate(rateBase: nil, ratePayrollClient: nil),
+            makeRate(rateBase: nil, termMonth: nil),
+            makeRate(rateBase: nil, termStringValue: nil),
+            makeRate(ratePayrollClient: nil, termMonth: nil),
+            makeRate(ratePayrollClient: nil, termStringValue: nil),
+            makeRate(termMonth: nil, termStringValue: nil),
+            makeRate(ratePayrollClient: nil, termMonth: nil, termStringValue: nil),
+            makeRate(rateBase: nil, termMonth: nil, termStringValue: nil),
+            makeRate(rateBase: nil, ratePayrollClient: nil, termStringValue: nil),
+            makeRate(rateBase: nil, ratePayrollClient: nil, termMonth: nil),
+            makeRate(rateBase: nil, ratePayrollClient: nil, termMonth: nil, termStringValue: nil)
+        ].forEach {
+            
+            let stub = makeCodableResponse(data: makeSerialStamped(
+                products: [makeProduct(calc: makeCalc(
+                    amount: .stub(),
+                    collateral: [.stub()],
+                    rates: [$0]))]
+            ))
+            
+            try XCTAssertNoDiff(
+                map(stub.encoded()).get().list.first?.calc.rates,
+                []
+            )
+        }
     }
 
     // MARK: - Helpers
@@ -1033,6 +1217,11 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
     ) -> Response {
         
         ResponseMapper.mapCreateGetCollateralLandingResponse(data, httpURLResponse)
+    }
+    
+    private func mapAndGetProductFromStub(_ stub: CodableResponse) throws -> ResponseMapper.CollateralLandingProduct {
+        
+        try XCTUnwrap(map(try stub.encoded()).get().list.first)
     }
 }
 
@@ -1061,7 +1250,7 @@ private func makeProduct(
     calc: CollateralLandingStubProduct.Calc? = .stub(),
     frequentlyAskedQuestions: [CollateralLandingStubProduct.FrequentlyAskedQuestion]? = [],
     documents: [CollateralLandingStubProduct.Document]? = [],
-    consents: [CollateralLandingStubProduct.Consent]? = nil,
+    consents: [CollateralLandingStubProduct.Consent]? = [],
     cities: [String]? = [],
     icons: CollateralLandingStubProduct.Icons? = .stub()
 ) -> CollateralLandingStubProduct {
@@ -1086,6 +1275,102 @@ private func makeConsent(
 ) -> CollateralLandingStubProduct.Consent {
     
     return .init(name: name, link: link)
+}
+
+private func makeCondition(
+    icon: String?,
+    title: String?,
+    subTitle: String?
+) -> CollateralLandingStubProduct.Condition {
+    
+    .init(icon: icon, title: title, subTitle: subTitle)
+}
+
+private func makeFrequentlyAskedQuestion(
+    question: String?,
+    answer: String?
+) -> CollateralLandingStubProduct.FrequentlyAskedQuestion {
+    
+    .init(question: question, answer: answer)
+}
+
+private func makeDocument(
+    title: String?,
+    icon: String?,
+    link: String?
+) -> CollateralLandingStubProduct.Document {
+    
+    .init(title: title, icon: icon, link: link)
+}
+
+private func makeIcons(
+    productName: String?,
+    amount: String?,
+    term: String?,
+    rate: String?,
+    city: String?
+) -> CollateralLandingStubProduct.Icons {
+    
+    .init(productName: productName, amount: amount, term: term, rate: rate, city: city)
+}
+
+private func makeMarketing(
+    labelTag: String?,
+    image: String?,
+    params: [String]?
+) -> CollateralLandingStubProduct.Marketing {
+    
+    .init(labelTag: labelTag, image: image, params: params)
+}
+
+private func makeCalc(
+    amount: CollateralLandingStubProduct.Calc.Amount?,
+    collateral: [CollateralLandingStubProduct.Calc.Collateral]?,
+    rates: [CollateralLandingStubProduct.Calc.Rate]?
+) -> CollateralLandingStubProduct.Calc {
+    
+    .init(
+        amount: amount,
+        collateral: collateral,
+        rates: rates
+    )
+}
+
+private func makeCollateral(
+    icon: String?,
+    name: String?,
+    type: String?
+) -> CollateralLandingStubProduct.Calc.Collateral {
+    
+    .init(icon: icon, name: name, type: type)
+}
+
+private func makeRate(
+    rateBase: Double? = .random,
+    ratePayrollClient: Double? = .random,
+    termMonth: UInt? = .random,
+    termStringValue: String? = anyMessage()
+) -> CollateralLandingStubProduct.Calc.Rate {
+    
+    .init(
+        rateBase: rateBase,
+        ratePayrollClient: ratePayrollClient,
+        termMonth: termMonth,
+        termStringValue: termStringValue
+    )
+}
+
+private func makeAmount(
+    minIntValue: UInt?,
+    maxIntValue: UInt?,
+    maxStringValue: String?
+) -> CollateralLandingStubProduct.Calc.Amount {
+    
+    .init(
+        minIntValue: minIntValue,
+        maxIntValue: maxIntValue,
+        maxStringValue: maxStringValue
+    )
 }
 
 private struct CodableResponse: Encodable {
@@ -1297,8 +1582,8 @@ extension CollateralLandingStubProduct.Calc {
 extension CollateralLandingStubProduct.Calc.Amount {
     
     static func stub(
-        minIntValue: UInt? = .random(in: (0...UInt.max)),
-        maxIntValue: UInt? = .random(in: (0...UInt.max)),
+        minIntValue: UInt? = .random,
+        maxIntValue: UInt? = .random,
         maxStringValue: String? = anyMessage()
     ) -> Self {
         
@@ -1329,9 +1614,9 @@ extension CollateralLandingStubProduct.Calc.Collateral {
 extension CollateralLandingStubProduct.Calc.Rate {
     
     static func stub(
-        rateBase: Double? = .random(in: (0...Double.greatestFiniteMagnitude)),
-        ratePayrollClient: Double? = .random(in: (0...Double.greatestFiniteMagnitude)),
-        termMonth: UInt? = .random(in: (0...UInt.max)),
+        rateBase: Double? = .random,
+        ratePayrollClient: Double? = .random,
+        termMonth: UInt? = .random,
         termStringValue: String? = anyMessage()
     ) -> Self {
         
