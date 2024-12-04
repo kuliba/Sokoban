@@ -174,6 +174,21 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNoDiff(spy.values, [alert])
     }
     
+    func test_swiftUIAlert_forClientInformAlerts_withAuthBlockingAlert() {
+        
+        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
+        let spy = ValueSpy(sut.clientInformAlertPublisher)
+        let alert = makeClientInformAlert(
+            informAlerts: [],
+            updateAlert: makeAuthBlockingAlertItem()
+        )
+        XCTAssertNoDiff(spy.values, [])
+        
+        send(alertManager, alerts: alert)
+        
+        XCTAssertNoDiff(spy.values, [alert])
+    }
+    
     func test_swiftUIAlert_forClientInformAlerts_withOneInformElementsArrayAndUpdateAlert() {
         
         let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
@@ -230,6 +245,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
             twoElementInformArrayAndUpdateAlert
         ])
     }
+        
     // MARK: - Events: Auth.CheckClient.Response
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseSuccess() {
@@ -742,6 +758,23 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         .init(id: .init(), title: informTitle, text: informText)
     }
     
+    private func makeAuthBlockingAlertItem(
+        updateTitle: String = anyMessage(),
+        updateText: String = anyMessage(),
+        updateLink: String = anyMessage(),
+        updateVersion: String = anyMessage()
+    )  -> ClientInformAlerts.UpdateAlert {
+        
+        .init(
+            id: .init(),
+            title: updateTitle,
+            text: updateText,
+            link: updateLink,
+            version: updateVersion,
+            actionType: .authBlocking
+        )
+    }
+
     private func makeUpdateAlertItem(
         updateTitle: String = anyMessage(),
         updateText: String = anyMessage(),
