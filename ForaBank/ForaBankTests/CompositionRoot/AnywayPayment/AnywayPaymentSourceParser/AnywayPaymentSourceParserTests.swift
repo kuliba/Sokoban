@@ -232,23 +232,14 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         XCTAssertNoDiff(output.outline.payload.title, title)
     }
     
-    func test_parse_oneOf_shouldSetNilOutlinePayloadSubtitle() throws {
-        
-        let source = oneOf()
-        
-        let output = try makeSUT().parse(source: source)
-        
-        XCTAssertNil(output.outline.payload.subtitle)
-    }
-    
     func test_parse_oneOf_shouldSetOutlinePayloadSubtitle() throws {
         
-        let subtitle = anyMessage()
-        let source = oneOf(subtitle: subtitle)
+        let inn = anyMessage()
+        let source = oneOf(inn: inn)
         
         let output = try makeSUT().parse(source: source)
         
-        XCTAssertNoDiff(output.outline.payload.subtitle, subtitle)
+        XCTAssertNoDiff(output.outline.payload.subtitle, inn)
     }
     
     func test_parse_oneOf_shouldSetNilOutlinePayloadIconOnNil() throws {
@@ -257,7 +248,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         let output = try makeSUT().parse(source: source)
         
-        XCTAssertNil(output.outline.payload.subtitle)
+        XCTAssertNil(output.outline.payload.icon)
     }
     
     func test_parse_oneOf_shouldSetOutlinePayloadIcon() throws {
@@ -294,8 +285,8 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     func test_parse_oneOf_shouldDeliverOutput() throws {
         
         let product = makeOutlineProduct()
-        let (puref, title, name, subtitle, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
-        let source = oneOf(name: name, puref: puref, title: title, subtitle: subtitle, icon: icon)
+        let (puref, title, name, inn, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let source = oneOf(name: name, puref: puref, title: title, inn: inn, icon: icon)
         let sut = makeSUT(outlineProduct: product)
         
         let output = try sut.parse(source: source)
@@ -308,7 +299,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                 payload: .init(
                     puref: puref,
                     title: title,
-                    subtitle: subtitle,
+                    subtitle: inn,
                     icon: icon
                 )
             ),
@@ -403,15 +394,6 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         XCTAssertNoDiff(output.outline.payload.title, title)
     }
     
-    func test_parse_picked_shouldSetNilOutlinePayloadSubtitle() throws {
-        
-        let source = picked()
-        
-        let output = try makeSUT().parse(source: source)
-        
-        XCTAssertNil(output.outline.payload.subtitle)
-    }
-    
     func test_parse_picked_shouldSetOutlinePayloadSubtitle() throws {
         
         let subtitle = anyMessage()
@@ -428,7 +410,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         let output = try makeSUT().parse(source: source)
         
-        XCTAssertNil(output.outline.payload.subtitle)
+        XCTAssertNil(output.outline.payload.icon)
     }
     
     func test_parse_picked_shouldSetOutlinePayloadIcon() throws {
@@ -531,13 +513,13 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         XCTAssertNoDiff(output.outline.payload.title, title)
     }
     
-    func test_parse_single_shouldSetNilOutlinePayloadSubtitle() throws {
+    func test_parse_single_shouldSetOutlinePayloadSubtitle() throws {
         
         let source = single()
         
         let output = try makeSUT().parse(source: source)
         
-        XCTAssertNil(output.outline.payload.subtitle)
+        XCTAssertNotNil(output.outline.payload.subtitle)
     }
     
     func test_parse_single_shouldSetNilOutlinePayloadIconOnNil() throws {
@@ -546,7 +528,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         let output = try makeSUT().parse(source: source)
         
-        XCTAssertNil(output.outline.payload.subtitle)
+        XCTAssertNil(output.outline.payload.icon)
     }
     
     func test_parse_single_shouldSetOutlinePayloadIcon() throws {
@@ -571,9 +553,9 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     func test_parse_single_shouldDeliverOutput() throws {
         
         let product = makeOutlineProduct()
-        let (name, puref, title, subtitle, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let (name, puref, title, inn, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
         let source = single(
-            name: name, puref: puref, title: title, subtitle: subtitle, icon: icon
+            name: name, puref: puref, title: title, inn: inn, icon: icon
         )
         let sut = makeSUT(outlineProduct: product)
         
@@ -587,7 +569,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                 payload: .init(
                     puref: puref,
                     title: title,
-                    subtitle: subtitle,
+                    subtitle: inn,
                     icon: icon
                 )
             ),
@@ -661,7 +643,6 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     func test_parse_template_shouldSetOutlineOneFieldOnOne() throws {
         
         let (name, value) = (anyMessage(), anyMessage())
-        let additional = makeAdditional(fieldName: name, fieldValue: value)
         let source = template(additional: [
             .init(fieldid: .random(in: 1...100), fieldname: name, fieldvalue: value)
         ])
@@ -803,13 +784,14 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         puref: String = anyMessage(),
         id: String = anyMessage(),
         title: String = anyMessage(),
-        subtitle: String? = nil,
-        icon: String? = nil
+        inn: String = anyMessage(),
+        icon: String? = nil,
+        type: String = anyMessage()
     ) -> AnywayPaymentSourceParser.Source {
         
         return .oneOf(
             .init(name: name, puref: puref),
-            .init(id: id, title: title, subtitle: subtitle, icon: icon)
+            .init(id: id, inn: inn, title: title, icon: icon, type: type)
         )
     }
     
@@ -819,7 +801,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         isOneOf: Bool = .random(),
         id: String = anyMessage(),
         icon: String? = nil,
-        inn: String? = nil,
+        inn: String = anyMessage(),
         title: String = anyMessage(),
         segment: String = anyMessage(),
         qrCode: QRCode = .init(original: "", rawData: [:]),
@@ -897,13 +879,14 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         puref: String = anyMessage(),
         id: String = anyMessage(),
         title: String = anyMessage(),
-        subtitle: String? = nil,
-        icon: String? = nil
+        inn: String = anyMessage(),
+        icon: String? = nil,
+        type: String = anyMessage()
     ) -> AnywayPaymentSourceParser.Source {
         
         return .single(
             .init(name: name, puref: puref),
-            .init(id: id, title: title, subtitle: subtitle, icon: icon)
+            .init(id: id, inn: inn, title: title, icon: icon, type: type)
         )
     }
     

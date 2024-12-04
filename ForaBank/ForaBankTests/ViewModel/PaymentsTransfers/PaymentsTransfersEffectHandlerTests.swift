@@ -173,12 +173,16 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     }
     
     private func makeOperator(
-        _ id: String = UUID().uuidString
-    ) -> Operator {
+        _ id: String = anyMessage(),
+        inn: String = anyMessage(),
+        title: String = anyMessage(),
+        icon: String? = nil,
+        type: String = anyMessage()
+    ) -> UtilityPaymentOperator {
         
-        .init(id: id, title: id, subtitle: nil, icon: "abc")
+        .init(id: id, inn: inn, title: title, icon: icon, type: type)
     }
-    
+
     private func makeLatestPayment(
         date: Date = .init(),
         _ title: String = UUID().uuidString,
