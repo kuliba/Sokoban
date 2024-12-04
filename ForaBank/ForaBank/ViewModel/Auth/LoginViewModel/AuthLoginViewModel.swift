@@ -21,14 +21,16 @@ class AuthLoginViewModel: ObservableObject {
     
     @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
-    
     @Published var buttons: [ButtonAuthView.ViewModel]
-    
+    @Published var clientInformAlerts: ClientInformAlerts?
+
     private let eventPublishers: EventPublishers
+    private let clientInformAlertsManager: any AlertManager<ClientInformAlerts>
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
+    private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
     
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
@@ -53,20 +55,24 @@ class AuthLoginViewModel: ObservableObject {
     )
     
     init(
+        clientInformAlertsManager: any AlertManager<ClientInformAlerts>,
         eventPublishers: EventPublishers,
         eventHandlers: EventHandlers,
         factory: AuthLoginViewModelFactory,
         onRegister: @escaping () -> Void,
         buttons: [ButtonAuthView.ViewModel] = [],
-        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
+        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain(),
+        shouldUpdateVersion: @escaping (ClientInformAlerts.UpdateAlert) -> Bool
     ) {
         self.header = .init()
         self.buttons = buttons
+        self.clientInformAlertsManager = clientInformAlertsManager
         self.eventPublishers = eventPublishers
         self.eventHandlers = eventHandlers
         self.factory = factory
         self.onRegister = onRegister
-        
+        self.shouldUpdateVersion = shouldUpdateVersion
+
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
         bind(on: scheduler)
@@ -77,12 +83,52 @@ class AuthLoginViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
+    var currentAlertModel: AlertModelType? {
+        switch (alert, clientInformAlerts?.alert) {
+        
+        case (let .some(alert), _):
+            return .alertViewModel(alert)
+            
+        case (_, let .some(alert)): 
+            return .clientInformAlerts(alert)
+            
+        case (.none, .none): return nil
+        }
+    }
+    
     func showTransfers() {
         handleLandingAction(.transfer)
     }
     
     func showProducts() {
         handleLandingAction(.orderCard)
+    }
+}
+
+// MARK: Alert Handling
+
+extension AuthLoginViewModel {
+    
+    private func updateVersion() -> Bool {
+        
+        guard let updateAlert = clientInformAlerts?.updateAlert else { return false }
+        
+        return shouldUpdateVersion(updateAlert)
+    }
+    
+    private func createAppStoreURL() -> URL? {
+        
+        guard updateVersion() == true else { return nil }
+        
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+    }
+    
+    func clientInformAlertButtonTapped(
+        openURL: @escaping (URL) -> Void
+    ) {
+        
+        clientInformAlertsManager.dismiss()
+        if let url = createAppStoreURL() { openURL(url) }
     }
 }
 
@@ -148,13 +194,9 @@ private extension AuthLoginViewModel {
             }
             .store(in: &bindings)
         
-        eventPublishers.clientInformMessage
+        clientInformAlertsManager.alertPublisher
             .receive(on: scheduler)
-            .sink { [weak self] message in
-                
-                self?.showClientInformAlert(withMessage: message)
-            }
-            .store(in: &bindings)
+            .assign(to: &$clientInformAlerts)
         
         eventPublishers.checkClientResponse
             .receive(on: scheduler)
@@ -336,24 +378,6 @@ private extension AuthLoginViewModel {
             
             self.cardScanner = nil
         })
-    }
-    
-    func showClientInformAlert(
-        withMessage message: String
-    ) {
-        LoggerAgent.shared.log(category: .ui, message: "AuthLoginViewModelAction.Show.AlertClientInform: \(message)")
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
-        
-        alert = .init(
-            title: "Ошибка",
-            message: message,
-            primary: .init(
-                type: .default,
-                title: "Ok",
-                action: { [weak self] in self?.alert = nil }
-            )
-        )
     }
     
     func handleCloseLinkAction() {
@@ -540,9 +564,13 @@ extension AuthLoginViewModel {
         }
     }
     
+    struct ClientInformAlertsManager {
+        
+        let clientInformAlertsManager: any AlertManager<ClientInformAlerts>
+    }
+    
     struct EventPublishers {
         
-        let clientInformMessage: AnyPublisher<String, Never>
         let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
         let catalogProducts: AnyPublisher<([CatalogProductData]), Never>
         let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>
@@ -561,4 +589,9 @@ extension AuthLoginViewModel {
             case tarif(Int, type: Int)
         }
     }
+}
+
+extension String {
+    
+    static let appStoreFora = "https://apps.apple.com/ru/app/%D1%84%D0%BE%D1%80%D0%B0-%D0%B1%D0%B0%D0%BD%D0%BA/id1434684472"
 }

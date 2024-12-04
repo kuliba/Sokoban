@@ -78,7 +78,7 @@ let package = Package(
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .calendarUI,
-        .сlientInformList,
+        .clientInformList,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -259,8 +259,8 @@ let package = Package(
         .c2bSubscriptionUI,
         .cardGuardianUI,
         .cardGuardianUITests,
-        .сlientInformList,
-        .сlientInformListTests,
+        .clientInformList,
+        .clientInformListTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -505,10 +505,10 @@ private extension Product {
         ]
     )
     
-    static let сlientInformList = library(
-        name: .сlientInformList,
+    static let clientInformList = library(
+        name: .clientInformList,
         targets: [
-            .сlientInformList
+            .clientInformList
         ]
     )
 
@@ -2158,8 +2158,12 @@ private extension Target {
     
     static let transferPublicKey = target(
         name: .transferPublicKey,
+        dependencies: [
+            .foraTools
+        ],
         path: "Sources/Services/\(String.transferPublicKey)"
     )
+
     static let transferPublicKeyTests = testTarget(
         name: .transferPublicKeyTests,
         dependencies: [
@@ -2167,6 +2171,7 @@ private extension Target {
             .customDump,
             // internal modules
             .transferPublicKey,
+            .foraTools
         ],
         path: "Tests/Services/\(String.transferPublicKeyTests)"
     )
@@ -2478,20 +2483,20 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
-    static let сlientInformList = target(
-        name: .сlientInformList,
+    static let clientInformList = target(
+        name: .clientInformList,
         dependencies: [
             .sharedConfigs
         ],
-        path: "Sources/UI/\(String.сlientInformList)"
+        path: "Sources/UI/\(String.clientInformList)"
     )
     
-    static let сlientInformListTests = testTarget(
-        name: .сlientInformListTests,
+    static let clientInformListTests = testTarget(
+        name: .clientInformListTests,
         dependencies: [
-            .сlientInformList
+            .clientInformList
         ],
-        path: "Tests/UI/\(String.сlientInformListTests)"
+        path: "Tests/UI/\(String.clientInformListTests)"
     )
 
     static let linkableText = target(
@@ -2725,6 +2730,7 @@ private extension Target {
     static let uiPrimitivesTests = testTarget(
         name: .uiPrimitivesTests,
         dependencies: [
+            .customDump,
             .foraTools,
             .sharedConfigs,
             .uiPrimitives,
@@ -3266,8 +3272,8 @@ private extension Target.Dependency {
         name: .cardGuardianUI
     )
     
-    static let сlientInformList = byName(
-        name: .сlientInformList
+    static let clientInformList = byName(
+        name: .clientInformList
     )
 
     static let linkableText = byName(
@@ -3686,8 +3692,8 @@ private extension String {
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
     
-    static let сlientInformList = "СlientInformList"
-    static let сlientInformListTests = "СlientInformListTests"
+    static let clientInformList = "ClientInformList"
+    static let clientInformListTests = "ClientInformListTests"
 
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"

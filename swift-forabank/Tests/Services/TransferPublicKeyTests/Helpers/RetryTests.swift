@@ -7,6 +7,7 @@
 
 import TransferPublicKey
 import XCTest
+import ForaTools
 
 final class RetryTests: XCTestCase {
     

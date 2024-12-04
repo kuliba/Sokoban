@@ -12,15 +12,27 @@ import SwiftUI
 #if os(iOS)
 public extension Image {
     
-    init?(svg: String) {
+    init?(svg: String, retry attempts: Int = 0) {
+        
+        do {
+            self = try retry(attempts: attempts) { try svg.svgImage() }
+        } catch { return nil }
+    }
+}
+
+private extension String {
+    
+    func svgImage() throws -> Image {
         
         guard
-            let data = svg.data(using: .utf8),
+            let data = self.data(using: .utf8),
             let svgImage = SVGKImage(data: data),
             let uiImage = svgImage.uiImage
-        else { return nil }
+        else {
+            throw NSError(domain: "SVG failure", code: -1)
+        }
         
-        self.init(uiImage: uiImage)
+        return .init(uiImage: uiImage)
     }
 }
 #endif

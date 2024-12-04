@@ -15,32 +15,40 @@ public enum ClientInformListDataState {
     public struct Single {
         
         public let label: Label<String>
-        public let text: AttributedString
+        public let text: String
+        public let url: URL?
         
-        public init(label: Label<String>, text: AttributedString) {
+        public init(label: Label<String>, text: String, url: URL?) {
+            
             self.label = label
             self.text = text
+            self.url = url
         }
     }
     
     public struct Multiple {
         
-        public let title: Label<String>
-        public let items: [Label<AttributedString>]
+        public let label: Label<String>
+        public let items: [Label<String>]
         
-        public init(title: Label<String>, items: [Label<AttributedString>]) {
-            self.title = title
+        public init(title: Label<String>, items: [Label<String>]) {
+            self.label = title
             self.items = items
         }
     }
     
     public struct Label<Title>: Identifiable {
         
-        public let id = UUID()
-        public let image: Image
+        public let id: UUID
+        public let image: Image?
         public let title: Title
         
-        public init(image: Image, title: Title) {
+        public init(
+            id: UUID = .init(),
+            image: Image?,
+            title: Title
+        ) {
+            self.id = id
             self.image = image
             self.title = title
         }
@@ -48,7 +56,7 @@ public enum ClientInformListDataState {
 }
 
 extension ClientInformListDataState {
-    
+
     func navBarTitle() -> String {
         
         switch self {
@@ -56,7 +64,7 @@ extension ClientInformListDataState {
             return singleInfo.label.title
             
         case .multiple(let multipleInfo):
-            return multipleInfo.title.title
+            return multipleInfo.label.title
         }
     }
 }

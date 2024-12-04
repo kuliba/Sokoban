@@ -2128,7 +2128,6 @@ extension Model {
     
     // ClientInform
     func handleClientInform(_ serial: String?) {
-        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return

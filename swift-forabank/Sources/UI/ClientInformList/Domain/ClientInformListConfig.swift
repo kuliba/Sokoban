@@ -16,80 +16,78 @@ public struct ClientInformListConfig {
     let textConfig: TextConfig
     let sizes: Sizes
     let paddings: Paddings
+    let image: Image
 
     public struct Colors {
         
-        let grayGrabber: Color
-        let grayBackground: Color
+        let bgIconRedLight: Color
         
         public init(
-            grayGrabber: Color,
-            grayBackground: Color
+            bgIconRedLight: Color
         ) {
-            self.grayGrabber = grayGrabber
-            self.grayBackground = grayBackground
+            self.bgIconRedLight = bgIconRedLight
         }
     }
     
     public struct Sizes {
         
         let iconSize: CGFloat
+        let iconBackgroundSize: CGFloat
         let rowIconSize: CGFloat
         let navBarHeight: CGFloat
         let navBarMaxWidth: CGFloat
-        let grabberWidth: CGFloat
-        let grabberHeight: CGFloat
-        let grabberCornerRadius: CGFloat
         let spacing: CGFloat
+        let bigSpacing: CGFloat
 
         public init(
             iconSize: CGFloat,
+            iconBackgroundSize: CGFloat,
             rowIconSize: CGFloat,
             navBarHeight: CGFloat,
             navBarMaxWidth: CGFloat,
-            grabberWidth: CGFloat,
-            grabberHeight: CGFloat,
-            grabberCornerRadius: CGFloat,
-            spacing: CGFloat
+            spacing: CGFloat,
+            bigSpacing: CGFloat
         ) {
             
             self.iconSize = iconSize
+            self.iconBackgroundSize = iconBackgroundSize
             self.rowIconSize = rowIconSize
             self.navBarHeight = navBarHeight
             self.navBarMaxWidth = navBarMaxWidth
-            self.grabberWidth = grabberWidth
-            self.grabberHeight = grabberHeight
-            self.grabberCornerRadius = grabberCornerRadius
             self.spacing = spacing
+            self.bigSpacing = bigSpacing
         }
     }
     
     public struct Paddings {
                 
-        let topGrabber: CGFloat
         let topImage: CGFloat
         let horizontal: CGFloat
         let vertical: CGFloat
+        let bottom: CGFloat
         
         public init(
-            topGrabber: CGFloat,
             topImage: CGFloat,
             horizontal: CGFloat,
-            vertical: CGFloat
+            vertical: CGFloat,
+            bottom: CGFloat
         ) {
-            self.topGrabber = topGrabber
             self.topImage = topImage
             self.horizontal = horizontal
             self.vertical = vertical
+            self.bottom = bottom
         }
     }
     
     public struct Strings {
         
         let titlePlaceholder: String
+        let foraBankLink: String
         
-        public init(titlePlaceholder: String) {
+        public init(titlePlaceholder: String, foraBankLink: String) {
+           
             self.titlePlaceholder = titlePlaceholder
+            self.foraBankLink = foraBankLink
         }
     }
     
@@ -100,8 +98,7 @@ public struct ClientInformListConfig {
         textConfig: TextConfig,
         sizes: Sizes,
         paddings: Paddings,
-        image: Image,
-        rowImage: Image
+        image: Image
     ) {
         self.colors = colors
         self.strings = strings
@@ -109,5 +106,6 @@ public struct ClientInformListConfig {
         self.textConfig = textConfig
         self.sizes = sizes
         self.paddings = paddings
+        self.image = image
     }
 }

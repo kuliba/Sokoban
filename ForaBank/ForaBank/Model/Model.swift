@@ -15,6 +15,8 @@ import SymmetricEncryption
 import UserModel
 import GetProductListByTypeService
 import GetProductListByTypeV6Service
+import ForaTools
+import SwiftUI
 
 class Model {
     let action: PassthroughSubject<Action, Never>
@@ -74,8 +76,12 @@ class Model {
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
-    let clientInform: CurrentValueSubject<ClientInformDataState, Never>
     
+    // MARK: Client Inform Alerts and Notifications
+    let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
+    let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
+    let clientInformAlertManager: any AlertManager<ClientInformAlerts>
+
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
     //MARK: Deposits
@@ -191,8 +197,8 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol, userModel: UserModel<ProductData.ID> = .init()) {
-        
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol, userModel: UserModel<ProductData.ID> = .init(), clientInformAlertManager: any AlertManager<ClientInformAlerts>
+    ) {
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
         self.fcmToken = .init(.none)
@@ -249,6 +255,8 @@ class Model {
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
+        self.сlientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
+        self.clientInformAlertManager = clientInformAlertManager
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
@@ -278,6 +286,9 @@ class Model {
     
     //FIXME: remove after refactoring
     static var shared: Model = {
+        
+        // Warm up SVGKit
+        _ = Image(svg: .warm, retry: 1)
         
         // session agent
         let sessionAgent = SessionAgent()
@@ -350,7 +361,10 @@ class Model {
         // networkMonitor agent
         let networkMonitorAgent = NetworkMonitorAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent)
+        // clientInformAlert manager
+        let clientInformAlertManager = NotAuthorizedAlertManager()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent, clientInformAlertManager: clientInformAlertManager)
     }()
     
     //MARK: - Session Agent State
@@ -1740,4 +1754,15 @@ extension LocalAgentDomain {
         
         let landing: Landing
     }
+}
+
+private extension String {
+    
+    static let warm = """
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8808 2H5.99969C5.46934 2 4.96071 2.21074 4.58569 2.58586C4.21068 2.96098 4 3.46975 4 4.00025V20.0023C4 20.5327 4.21068 21.0415 4.58569 21.4166C4.96071 21.7918 5.46934 22.0025 5.99969 22.0025H17.9978C18.5282 22.0025 19.0368 21.7918 19.4118 21.4166C19.7868 21.0415 19.9975 20.5327 19.9975 20.0023V8.11841M13.8808 2L19.9975 8.11841M13.8808 2V8.11841H19.9975" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.94043 15.5313H11.4775M6.94043 17.2962H11.4775M8.64184 13.7664L8.07471 19.0611M10.3433 13.7664L9.77612 19.0611" stroke="#999999" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+"""
 }

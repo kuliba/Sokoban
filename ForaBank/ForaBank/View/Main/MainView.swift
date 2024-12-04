@@ -17,6 +17,7 @@ import SberQR
 import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
+import ClientInformList
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -304,8 +305,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openAccount(openAccountViewModel):
             OpenAccountView(viewModel: openAccountViewModel)
             
-        case let .clientInform(clientInformViewModel):
-            ClientInformView(viewModel: clientInformViewModel)
+        case let .clientInform(clientInform):
+            ClientInformListView(config: .iFora, info: clientInform.client)
         }
     }
     
@@ -715,4 +716,34 @@ extension PaymentSticker.OperationViewConfiguration {
 extension OperationStateViewModel {
     
     static let empty = OperationStateViewModel { _,_ in }
+}
+
+// MARK: - Adapters
+
+private extension ClientInformListDataState {
+    
+    var client: ClientInformList.ClientInformListDataState {
+        
+        switch self {
+        case let .single(single):
+            
+            return .single(.init(
+                
+                label: .init(image: single.label.image, title: single.label.title),
+                text: single.text, 
+                url: single.url
+            ))
+            
+        case let .multiple(multiple):
+            
+            return .multiple(.init(
+                
+                title: .init(image: multiple.title.image, title: multiple.title.title),
+                items: multiple.items.map {
+                    
+                    return .init(id: $0.id, image: $0.image, title: $0.title)
+                }
+            ))
+        }
+    }
 }

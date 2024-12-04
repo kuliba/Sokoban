@@ -12,7 +12,7 @@ public extension RequestFactory {
     
     static func createGetNotAuthorizedZoneClientInformData(
         url: URL
-    ) throws -> URLRequest {
+    ) -> URLRequest {
         
         createEmptyRequest(.get, with: url)
     }
