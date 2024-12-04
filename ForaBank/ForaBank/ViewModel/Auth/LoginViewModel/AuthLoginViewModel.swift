@@ -31,7 +31,8 @@ class AuthLoginViewModel: ObservableObject {
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
-
+    private let viewFactory = AuthLoginViewFactory()
+    
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
             action: { [weak self] in
@@ -144,19 +145,19 @@ extension AuthLoginViewModel {
                 switch alert {
                 case let .inform(alert):
                     
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
+                    return .init(title: viewFactory.makeText(alert.title),
+                                 message: viewFactory.makeText(alert.text),
+                                 dismissButton: viewFactory.makeAlertButton(text: "Ok") {
                         openURL()
-                    })
+                    }
                     )
                     
                 case let .optionalRequired(alert):
                     
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
+                    return .init(title: viewFactory.makeText(alert.title),
+                                 message: viewFactory.makeText(alert.text),
+                                 primaryButton: viewFactory.makeAlertButton(text: "Позже") { },
+                                 secondaryButton: viewFactory.makeAlertButton(text: "Обновить", action: {
                         openURL()
                     })
                     )
@@ -168,13 +169,13 @@ extension AuthLoginViewModel {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
+                                 dismissButton: viewFactory.makeAlertButton(text: "Обновить", action: {
                         openURL()
                     })
                     )
                 }
                 
-            case .none : return .init(title: Text("Ошибка"))
+            case .none : return .init(title: viewFactory.makeText("Ошибка"))
             }
             
         case .alertViewModel:
@@ -183,7 +184,7 @@ extension AuthLoginViewModel {
                 
             case let .some(alert): return Alert(with: alert)
                 
-            case .none: return .init(title: Text("Ошибка"))
+            case .none: return .init(title: viewFactory.makeText("Ошибка"))
             }
         }
     }

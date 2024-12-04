@@ -37,6 +37,7 @@ class AuthPinCodeViewModel: ObservableObject {
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
+    private let viewFactory = AuthLoginViewFactory()
 
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
@@ -695,34 +696,37 @@ extension AuthPinCodeViewModel {
                 switch alert {
                 case let .inform(alert):
                     
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
+                    return .init(title: viewFactory.makeText(alert.title),
+                                 message: viewFactory.makeText(alert.text),
+                                 dismissButton: viewFactory.makeAlertButton(text: "Ok") {
                         openURL()
-                    })
+                    }
                     )
                     
                 case let .optionalRequired(alert):
                     
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
+                    return .init(title: viewFactory.makeText(alert.title),
+                                 message: viewFactory.makeText(alert.text),
+                                 primaryButton: viewFactory.makeAlertButton(text: "Позже") { },
+                                 secondaryButton: viewFactory.makeAlertButton(text: "Обновить", action: {
                         openURL()
                     })
                     )
                     
                 case let .required(alert):
                     
+                    let dismissText = alert.actionType == .authBlocking ?
+                    Text("Ok") : Text("Обновить")
+                    
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
+                                 dismissButton: viewFactory.makeAlertButton(text: "Обновить", action: {
                         openURL()
                     })
                     )
                 }
                 
-            case .none : return .init(title: Text("Ошибка"))
+            case .none : return .init(title: viewFactory.makeText("Ошибка"))
             }
             
         case .alertViewModel:
@@ -731,7 +735,7 @@ extension AuthPinCodeViewModel {
                 
             case let .some(alert): return Alert(with: alert)
                 
-            case .none: return .init(title: Text("Ошибка"))
+            case .none: return .init(title: viewFactory.makeText("Ошибка"))
             }
         }
     }
