@@ -131,63 +131,6 @@ extension AuthLoginViewModel {
         clientInformAlertsManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
     }
-    
-    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
-
-        switch alertModelType {
-            
-        case .clientInformAlerts:
-            
-            switch clientInformAlerts?.alert {
-                
-            case let .some(alert):
-                
-                switch alert {
-                case let .inform(alert):
-                    
-                    return .init(title: viewFactory.makeText(alert.title),
-                                 message: viewFactory.makeText(alert.text),
-                                 dismissButton: viewFactory.makeAlertButton(text: "Ok") {
-                        openURL()
-                    }
-                    )
-                    
-                case let .optionalRequired(alert):
-                    
-                    return .init(title: viewFactory.makeText(alert.title),
-                                 message: viewFactory.makeText(alert.text),
-                                 primaryButton: viewFactory.makeAlertButton(text: "Позже") { },
-                                 secondaryButton: viewFactory.makeAlertButton(text: "Обновить", action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .required(alert):
-                    
-                    let dismissText = alert.actionType == .authBlocking ?
-                    Text("Ok") : Text("Обновить")
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: viewFactory.makeAlertButton(text: "Обновить", action: {
-                        openURL()
-                    })
-                    )
-                }
-                
-            case .none : return .init(title: viewFactory.makeText("Ошибка"))
-            }
-            
-        case .alertViewModel:
-            
-            switch self.alert {
-                
-            case let .some(alert): return Alert(with: alert)
-                
-            case .none: return .init(title: viewFactory.makeText("Ошибка"))
-            }
-        }
-    }
 }
 
 // MARK: - Factory

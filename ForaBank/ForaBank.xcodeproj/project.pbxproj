@@ -3130,7 +3130,6 @@
 		EC40E80F2CFF615500DEEF1B /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC40E7FB2CFF615500DEEF1B /* RemoteNanoServiceFactory.swift */; };
 		EC40E8102CFF615500DEEF1B /* RemoteService+httpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC40E7FC2CFF615500DEEF1B /* RemoteService+httpClient.swift */; };
 		EC40E8112CFF615500DEEF1B /* StringSerialRemoteDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC40E7FD2CFF615500DEEF1B /* StringSerialRemoteDomain.swift */; };
-		EC51A29D2D0081E0008EEA54 /* AuthLoginViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC51A29C2D0081E0008EEA54 /* AuthLoginViewFactory.swift */; };
 		EC554A402CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */; };
 		EC554A422CC92919002A8C3A /* RootViewModelFactory+logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */; };
 		EC554A442CC9291E002A8C3A /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */; };
@@ -6582,7 +6581,6 @@
 		EC40E7FB2CFF615500DEEF1B /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
 		EC40E7FC2CFF615500DEEF1B /* RemoteService+httpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RemoteService+httpClient.swift"; sourceTree = "<group>"; };
 		EC40E7FD2CFF615500DEEF1B /* StringSerialRemoteDomain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringSerialRemoteDomain.swift; sourceTree = "<group>"; };
-		EC51A29C2D0081E0008EEA54 /* AuthLoginViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewFactory.swift; sourceTree = "<group>"; };
 		EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeBannersBinder.swift"; sourceTree = "<group>"; };
 		EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logging.swift"; sourceTree = "<group>"; };
 		EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Load.swift"; sourceTree = "<group>"; };
@@ -10755,7 +10753,6 @@
 		2A7B5EE72AB06E46002F2D00 /* LoginView */ = {
 			isa = PBXGroup;
 			children = (
-				EC51A29C2D0081E0008EEA54 /* AuthLoginViewFactory.swift */,
 				2A7B5EE32AB068C9002F2D00 /* ComposedLoginView.swift */,
 				6862B53C27B6886A006E833F /* AuthLoginView.swift */,
 				2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */,
@@ -20002,7 +19999,6 @@
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				839331992C8F17DC00D15379 /* BannerPickerSectionBinder.swift in Sources */,
 				2AC067E62BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift in Sources */,
-				EC51A29D2D0081E0008EEA54 /* AuthLoginViewFactory.swift in Sources */,
 				2A3345942CB1401500EBF33E /* QRNavigationComposerMicroServices.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				2A1F083C2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift in Sources */,

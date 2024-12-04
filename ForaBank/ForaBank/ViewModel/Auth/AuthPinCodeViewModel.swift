@@ -26,9 +26,9 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var isPermissionsViewPresented: Bool
     var permissionsViewModel: AuthPermissionsViewModel?
     
-    @Published private var alert: Alert.ViewModel?
+    @Published private(set) var alert: Alert.ViewModel?
     @Published var mistakes: Int
-    @Published private var clientInformAlerts: ClientInformAlerts?
+    @Published private(set) var clientInformAlerts: ClientInformAlerts?
     
     private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
     private var viewDidAppear: CurrentValueSubject<Bool, Never>
@@ -37,7 +37,6 @@ class AuthPinCodeViewModel: ObservableObject {
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-    private let viewFactory = AuthLoginViewFactory()
 
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
@@ -681,63 +680,6 @@ extension AuthPinCodeViewModel {
         
         model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
-    }
-    
-    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
-
-        switch alertModelType {
-            
-        case .clientInformAlerts:
-            
-            switch clientInformAlerts?.alert {
-                
-            case let .some(alert):
-                
-                switch alert {
-                case let .inform(alert):
-                    
-                    return .init(title: viewFactory.makeText(alert.title),
-                                 message: viewFactory.makeText(alert.text),
-                                 dismissButton: viewFactory.makeAlertButton(text: "Ok") {
-                        openURL()
-                    }
-                    )
-                    
-                case let .optionalRequired(alert):
-                    
-                    return .init(title: viewFactory.makeText(alert.title),
-                                 message: viewFactory.makeText(alert.text),
-                                 primaryButton: viewFactory.makeAlertButton(text: "Позже") { },
-                                 secondaryButton: viewFactory.makeAlertButton(text: "Обновить", action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .required(alert):
-                    
-                    let dismissText = alert.actionType == .authBlocking ?
-                    Text("Ok") : Text("Обновить")
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: viewFactory.makeAlertButton(text: "Обновить", action: {
-                        openURL()
-                    })
-                    )
-                }
-                
-            case .none : return .init(title: viewFactory.makeText("Ошибка"))
-            }
-            
-        case .alertViewModel:
-            
-            switch self.alert {
-                
-            case let .some(alert): return Alert(with: alert)
-                
-            case .none: return .init(title: viewFactory.makeText("Ошибка"))
-            }
-        }
     }
 }
 
