@@ -123,20 +123,26 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     
     // MARK: - standardPayment
     
-    func test_utilityPayment_shouldDeliverFailureOnMissingCategory() {
+    func test_standardPayment_shouldDeliverFailureOnMissingCategory() {
         
-        expect(.standardPayment(.charity), toDeliver: .failure(.missingCategoryOfType(.housingAndCommunalService)))
+        for type in categoryTypes {
+            
+            expect(.standardPayment(type), toDeliver: .failure(.missingCategoryOfType(type)))
+        }
     }
     
-    func test_utilityPayment_shouldDeliverFailureOnFailure() throws {
+    func test_standardPayment_shouldDeliverStandardPayment() throws {
         
-        let (sut, httpClient, _) = try makeSUT(
-            model: .withServiceCategoryAndOperator(ofType: .charity)
-        )
-        
-        expect(sut: sut, .standardPayment(.charity), toDeliver: .standardPayment) {
+        for type in codableCategoryTypes {
             
-            completeGetAllLatestPayments(httpClient)
+            let (sut, httpClient, _) = try makeSUT(
+                model: .withServiceCategoryAndOperator(ofType: type)
+            )
+            
+            expect(sut: sut, .standardPayment(categoryType(type)), toDeliver: .standardPayment) {
+                
+                completeGetAllLatestPayments(httpClient)
+            }
         }
     }
     
@@ -148,6 +154,30 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     private func makeProductID() -> ProductData.ID {
         
         return .random(in: 0..<Int.max)
+    }
+    
+    private let categoryTypes = [ServiceCategory.CategoryType.charity, .digitalWallets, .education, .housingAndCommunalService, .internet, .mobile, .networkMarketing, .qr, .repaymentLoansAndAccounts, .security, .socialAndGames, .taxAndStateService, .transport]
+    private let codableCategoryTypes = [CodableServiceCategory.CategoryType.charity, .digitalWallets, .education, .housingAndCommunalService, .internet, .mobile, .networkMarketing, .qr, .repaymentLoansAndAccounts, .security, .socialAndGames, .taxAndStateService, .transport]
+    
+    private func categoryType(
+        _ type: CodableServiceCategory.CategoryType
+    ) -> ServiceCategory.CategoryType {
+        
+        switch type {
+        case .charity:                   return .charity
+        case .digitalWallets:            return .digitalWallets
+        case .education:                 return .education
+        case .housingAndCommunalService: return .housingAndCommunalService
+        case .internet:                  return .internet
+        case .mobile:                    return .mobile
+        case .networkMarketing:          return .networkMarketing
+        case .qr:                        return .qr
+        case .repaymentLoansAndAccounts: return .repaymentLoansAndAccounts
+        case .security:                  return .security
+        case .socialAndGames:            return .socialAndGames
+        case .transport:                 return .transport
+        case .taxAndStateService:        return .taxAndStateService
+        }
     }
     
     private func completeGetAllLatestPayments(
@@ -366,11 +396,19 @@ extension Model {
     ) -> String {
         
         switch type {
-        case .housingAndCommunalService:
-            return "housingAndCommunalService"
-            
-        default:
-            return unimplemented()
+        case .charity:                   return "charity"
+        case .digitalWallets:            return "digitalWallets"
+        case .education:                 return "education"
+        case .housingAndCommunalService: return "housingAndCommunalService"
+        case .internet:                  return "internet"
+        case .mobile:                    return "mobile"
+        case .networkMarketing:          return "networkMarketing"
+        case .qr:                        return "qr"
+        case .repaymentLoansAndAccounts: return "repaymentLoansAndAccounts"
+        case .security:                  return "security"
+        case .socialAndGames:            return "socialAndGames"
+        case .transport:                 return "transport"
+        case .taxAndStateService:        return "taxAndStateService"
         }
     }
     
