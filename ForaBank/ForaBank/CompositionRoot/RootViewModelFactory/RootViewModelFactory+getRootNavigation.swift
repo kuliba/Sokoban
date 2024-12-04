@@ -29,7 +29,7 @@ extension RootViewModelFactory {
             makeUserAccount()
             
         case let .standardPayment(type):
-            makeStandardPayment(type)
+            initiateStandardPaymentFlow(type)
         }
         
         func makeScanQR() {
@@ -107,10 +107,10 @@ extension RootViewModelFactory {
             completion(.userAccount(userAccount))
         }
         
-        func makeStandardPayment(
+        func initiateStandardPaymentFlow(
             _ type: ServiceCategory.CategoryType
         ) {
-            self.makeStandardPayment(ofType: type) {
+            self.initiateStandardPaymentFlow(ofType: type) {
                 
                 switch $0 {
                 case let .failure(failure):

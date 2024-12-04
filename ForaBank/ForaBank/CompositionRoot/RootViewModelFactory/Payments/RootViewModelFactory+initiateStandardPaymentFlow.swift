@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeStandardPayment.swift
+//  RootViewModelFactory+initiateStandardPaymentFlow.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 28.11.2024.
@@ -8,7 +8,7 @@
 extension RootViewModelFactory {
     
     @inlinable
-    func makeStandardPayment(
+    func initiateStandardPaymentFlow(
         ofType type: ServiceCategory.CategoryType,
         completion: @escaping (StandardPaymentResult) -> Void
     ) {
