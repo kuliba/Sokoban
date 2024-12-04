@@ -613,6 +613,13 @@
         "identifier" : "CollateralLoanLandingGetCollateralLandingBackendTests",
         "name" : "CollateralLoanLandingGetCollateralLandingBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SavingsAccountTests",
+        "name" : "SavingsAccountTests"
+      }
     }
   ],
   "version" : 1
