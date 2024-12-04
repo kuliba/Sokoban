@@ -26,9 +26,9 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var isPermissionsViewPresented: Bool
     var permissionsViewModel: AuthPermissionsViewModel?
     
-    @Published private var alert: Alert.ViewModel?
+    @Published private(set) var alert: Alert.ViewModel?
     @Published var mistakes: Int
-    @Published private var clientInformAlerts: ClientInformAlerts?
+    @Published private(set) var clientInformAlerts: ClientInformAlerts?
     
     private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
     private var viewDidAppear: CurrentValueSubject<Bool, Never>
@@ -681,66 +681,6 @@ extension AuthPinCodeViewModel {
         
         model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
-    }
-    
-    func swiftUIAlert(forAlertModelType alertModelType: AlertModelType, openURL: @escaping () -> Void) -> SwiftUI.Alert {
-
-        switch alertModelType {
-            
-        case .clientInformAlerts:
-            
-            switch clientInformAlerts?.alert {
-                
-            case let .some(alert):
-                
-                switch alert {
-                case let .inform(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .optionalRequired(alert):
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { [weak self] in
-                        
-                        self?.model.clientInformAlertManager.dismissAll()
-                    }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
-                    )
-                    
-                case let .required(alert):
-                    
-                    let dismissText = alert.actionType == .authBlocking ?
-                    Text("Ok") : Text("Обновить")
-                    
-                    return .init(title: Text(alert.title),
-                                 message: Text(alert.text),
-                                 dismissButton: .default(dismissText, action: {
-                        openURL()
-                    })
-                    )
-                }
-                
-            case .none : return .init(title: Text("Ошибка"))
-            }
-            
-        case .alertViewModel:
-            
-            switch self.alert {
-                
-            case let .some(alert): return Alert(with: alert)
-                
-            case .none: return .init(title: Text("Ошибка"))
-            }
-        }
     }
 }
 
