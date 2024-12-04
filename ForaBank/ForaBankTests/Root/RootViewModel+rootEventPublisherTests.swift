@@ -94,7 +94,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         let (sut, spy) = makeSUTWithV1(hasCorporateCardsOnly: false)
         
-        sut.paymentsTransfersPersonalSelect(.outside(.userAccount))
+        sut.paymentsTransfersPersonalSelect(.userAccount)
         
         XCTAssertNoDiff(spy.values, [.userAccount])
     }

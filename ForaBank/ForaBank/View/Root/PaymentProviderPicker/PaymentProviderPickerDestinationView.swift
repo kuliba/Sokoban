@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PaymentProviderPickerDestinationView: View {
     
-    let destination: PaymentProviderPicker.Destination
+    let destination: PaymentProviderPickerDomain.Navigation
     let components: ViewComponents
     
     var body: some View {

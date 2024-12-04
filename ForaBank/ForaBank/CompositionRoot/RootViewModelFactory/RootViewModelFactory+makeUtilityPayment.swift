@@ -28,7 +28,7 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias UtilityPaymentResult = Result<PaymentProviderPicker.Binder, UtilityPaymentFailure>
+    typealias UtilityPaymentResult = Result<PaymentProviderPickerDomain.Binder, UtilityPaymentFailure>
     
     enum UtilityPaymentFailure: Error {
         

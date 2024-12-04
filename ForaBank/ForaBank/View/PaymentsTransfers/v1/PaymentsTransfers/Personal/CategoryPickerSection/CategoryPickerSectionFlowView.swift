@@ -9,10 +9,9 @@ import PayHub
 import SwiftUI
 import UIPrimitives
 
-struct CategoryPickerSectionFlowView<ContentView, DestinationView, FullScreenCoverView>: View
+struct CategoryPickerSectionFlowView<ContentView, DestinationView>: View
 where ContentView: View,
-      DestinationView: View,
-      FullScreenCoverView: View {
+      DestinationView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -25,10 +24,6 @@ where ContentView: View,
                 item: state.failure,
                 content: factory.makeAlert
             )
-            .fullScreenCover(
-                cover: state.fullScreenCover,
-                content: factory.makeFullScreenCoverView
-            )
             .navigationDestination(
                 destination: state.destination,
                 content: factory.makeDestinationView
@@ -38,16 +33,17 @@ where ContentView: View,
 
 extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSectionDomain.FlowDomain.State
-    typealias Event = CategoryPickerSectionDomain.FlowDomain.Event
-    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
+    typealias FlowDomain = CategoryPickerSectionDomain.FlowDomain
+    typealias State = FlowDomain.State
+    typealias Event = FlowDomain.Event
+    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView>
 }
 
 // MARK: - UI mapping
 
 private extension CategoryPickerSectionDomain.FlowDomain.State {
     
-    var destination: CategoryPickerSectionNavigation.Destination? {
+    var destination: SelectedCategoryNavigation.Destination? {
         
         navigation?.destination
     }
@@ -55,11 +51,6 @@ private extension CategoryPickerSectionDomain.FlowDomain.State {
     var failure: SelectedCategoryFailure? {
         
         navigation?.failure
-    }
-    
-    var fullScreenCover: CategoryPickerSectionNavigation.FullScreenCover? {
-        
-        navigation?.fullScreenCover
     }
 }
 
@@ -90,9 +81,6 @@ private extension SelectedCategoryNavigation {
             case let .transport(transport):
                 return .paymentFlow(.transport(transport))
             }
-            
-        case let .qrNavigation(qrNavigation):
-            return qrNavigation.destination.map { .qrDestination($0) }
         }
     }
     
@@ -102,34 +90,17 @@ private extension SelectedCategoryNavigation {
         case let .failure(failure):
             return failure
             
-        case let .qrNavigation(qrNavigation):
-            return qrNavigation.failure
-            
-        default:
+        case .paymentFlow:
             return nil
         }
-    }
-    
-    var fullScreenCover: FullScreenCover? {
-        
-        guard case let .paymentFlow(.qr(qr)) = self else { return nil }
-        
-        return .init(id: .init(), qr: qr.model)
     }
 }
 
 extension SelectedCategoryNavigation {
     
-    struct FullScreenCover: Identifiable {
-        
-        let id: UUID
-        let qr: QRScannerModel
-    }
-    
     enum Destination {
         
         case paymentFlow(PaymentFlowDestination)
-        case qrDestination(QRNavigation.Destination)
         
         typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Standard, Tax, Transport>
     }
@@ -142,15 +113,11 @@ extension SelectedCategoryNavigation.Destination: Identifiable {
         switch self {
         case let .paymentFlow(paymentFlow):
             return .paymentFlow(paymentFlow.id)
-            
-        case let .qrDestination(qrDestination):
-            return .qrDestination(qrDestination.id)
         }
     }
     
     enum ID: Hashable {
         
         case paymentFlow(PaymentFlowDestinationID)
-        case qrDestination(QRNavigation.Destination.ID)
     }
 }

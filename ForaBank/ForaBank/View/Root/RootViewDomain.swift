@@ -41,7 +41,7 @@ enum RootViewNavigation {
     case failure(Failure)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
-    case standardPayment(Node<PaymentProviderPicker.Binder>)
+    case standardPayment(Node<PaymentProviderPickerDomain.Binder>)
     case templates(TemplatesNode)
     case userAccount(UserAccountViewModel)
     

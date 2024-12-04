@@ -284,7 +284,7 @@ private extension RootView {
     }
 }
 
-extension PaymentProviderPicker.Flow {
+extension PaymentProviderPickerDomain.Flow {
     
     func handleFooterEvent(
         _ event: FooterEvent
@@ -305,7 +305,7 @@ extension PaymentProviderPicker.Flow {
     }
     
     func selectProvider(
-        _ provider: PaymentProviderPicker.Provider
+        _ provider: PaymentProviderPickerDomain.Provider
     ) {
         self.event(.select(.provider(provider)))
     }

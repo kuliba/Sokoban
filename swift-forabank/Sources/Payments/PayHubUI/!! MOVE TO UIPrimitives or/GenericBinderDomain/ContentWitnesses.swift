@@ -72,7 +72,33 @@ public extension ContentWitnesses {
             }
         )
     }
-}
+    
+    /// Creates a new `ContentWitnesses` by merging the current instance with another.
+    ///
+    /// The resulting `ContentWitnesses` will combine the emitting and dismissing functions of both instances.
+    ///
+    /// - Parameter other: Another `ContentWitnesses` to merge with.
+    /// - Returns: A new `ContentWitnesses` instance where the `emitting` functions are merged into a single publisher
+    ///            and the `dismissing` functions are executed sequentially.
+    func merging(with other: Self) -> Self {
+        
+        let emitting = emitting
+        let dismissing = dismissing
+        
+        return .init(
+            emitting: { content in
+                emitting(content)
+                    .merge(with: other.emitting(content))
+                    .eraseToAnyPublisher()
+            },
+            dismissing: { content in
+                return {
+                    dismissing(content)()
+                    other.dismissing(content)()
+                }
+            }
+        )
+    }}
 
 public extension ContentWitnesses {
     
