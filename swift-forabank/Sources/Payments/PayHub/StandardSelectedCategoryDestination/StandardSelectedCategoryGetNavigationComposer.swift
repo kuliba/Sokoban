@@ -24,7 +24,10 @@ public extension StandardSelectedCategoryGetNavigationComposer {
         category: Category,
         completion: @escaping (Result<Success, Failure>) -> Void
     ) {
-        nanoServices.loadOperators { self.handle($0, category, completion) }
+        nanoServices.loadOperators { [weak self] in
+            
+            self?.handle($0, category, completion)
+        }
     }
 }
 
@@ -43,9 +46,9 @@ private extension StandardSelectedCategoryGetNavigationComposer {
             if operators.isEmpty {
                 nanoServices.makeFailure { completion(.failure($0)) }
             } else {
-                nanoServices.loadLatest {
+                nanoServices.loadLatest { [weak self] in
                     
-                    self.nanoServices.makeSuccess(.init(
+                    self?.nanoServices.makeSuccess(.init(
                         category: category,
                         latest: (try? $0.get()) ?? [],
                         operators: operators
