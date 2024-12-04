@@ -7,6 +7,7 @@
 
 import Foundation
 import PayHub
+import RemoteServices
 
 extension RootViewModelFactory {
     
@@ -14,28 +15,41 @@ extension RootViewModelFactory {
         _ category: ServiceCategory,
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
-        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
-        let microServicesComposer = UtilityPrepaymentMicroServicesComposer(
-            pageSize: settings.pageSize,
-            nanoServices: .init(loadOperators: loadOperators)
+        let nanoServices = makeStandardNanoServices(for: category)
+        let composer = StandardSelectedCategoryGetNavigationComposer(
+            nanoServices: nanoServices
         )
-        let standardNanoServicesComposer = StandardSelectedCategoryDestinationNanoServicesComposer(
-            loadLatest: { getLatestPayments([$0.name], $1) },
-            loadOperators: loadOperatorsForCategory,
-            makeMicroServices: microServicesComposer.compose,
-            model: self.model,
-            scheduler: schedulers.main
-        )
-        let standardNanoServices = standardNanoServicesComposer.compose(category: category)
-        let composer = StandardSelectedCategoryDestinationMicroServiceComposer(
-            nanoServices: standardNanoServices
-        )
-        let standardMicroService = composer.compose()
         
-        standardMicroService.makeDestination(category) {
+        composer.makeDestination(category: category) {
             
             completion($0)
-            _ = standardMicroService
+            _ = composer
         }
     }
+    
+    @inlinable
+    func makeStandardNanoServices(
+        for category: ServiceCategory
+    ) -> StandardNanoServices {
+        
+        let getLatestPayments = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
+        )
+        
+        return .init(
+            loadLatest: { getLatestPayments([category.name], $0) },
+            loadOperators: {
+                
+                self.loadOperatorsForCategory(category: category, completion: $0)
+            },
+            makeFailure: { $0(.init()) },
+            makeSuccess: { payload, completion in
+                
+                completion(self.makePaymentProviderPicker(payload: payload))
+            }
+        )
+    }
+    
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPickerStub>
 }
