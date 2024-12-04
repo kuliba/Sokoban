@@ -31,7 +31,6 @@ class AuthLoginViewModel: ObservableObject {
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
-    private let viewFactory = AuthLoginViewFactory()
     
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
