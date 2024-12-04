@@ -23,14 +23,15 @@ class AuthLoginViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var buttons: [ButtonAuthView.ViewModel]
     @Published var clientInformAlerts: ClientInformAlerts?
-    @Published var alertType: AlertType?
 
     private let eventPublishers: EventPublishers
+    private let clientInformAlertsManager: any AlertManager<ClientInformAlerts>
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
-
+    private var shouldUpdateVersion: (ClientInformAlerts.UpdateAlert) -> Bool
+    
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
             action: { [weak self] in
@@ -54,19 +55,23 @@ class AuthLoginViewModel: ObservableObject {
     )
     
     init(
+        clientInformAlertsManager: any AlertManager<ClientInformAlerts>,
         eventPublishers: EventPublishers,
         eventHandlers: EventHandlers,
         factory: AuthLoginViewModelFactory,
         onRegister: @escaping () -> Void,
         buttons: [ButtonAuthView.ViewModel] = [],
-        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
+        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain(),
+        shouldUpdateVersion: @escaping (ClientInformAlerts.UpdateAlert) -> Bool
     ) {
         self.header = .init()
         self.buttons = buttons
+        self.clientInformAlertsManager = clientInformAlertsManager
         self.eventPublishers = eventPublishers
         self.eventHandlers = eventHandlers
         self.factory = factory
         self.onRegister = onRegister
+        self.shouldUpdateVersion = shouldUpdateVersion
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
@@ -76,6 +81,19 @@ class AuthLoginViewModel: ObservableObject {
     deinit {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
+    }
+    
+    var currentAlertModel: AlertModelType? {
+        switch (alert, clientInformAlerts?.alert) {
+        
+        case (let .some(alert), _):
+            return .alertViewModel(alert)
+            
+        case (_, let .some(alert)): 
+            return .clientInformAlerts(alert)
+            
+        case (.none, .none): return nil
+        }
     }
     
     func showTransfers() {
@@ -91,49 +109,26 @@ class AuthLoginViewModel: ObservableObject {
 
 extension AuthLoginViewModel {
     
-    func handleLink() -> URL? {
+    private func updateVersion() -> Bool {
         
-        guard let updateVersion = clientInformAlerts?.alert?.version,
-              Bundle.main.appVersionLong < updateVersion else { return nil }
+        guard let updateAlert = clientInformAlerts?.updateAlert else { return false }
         
-        let link = clientInformAlerts?.alert?.link
-        return URL(string: link ?? String.appStoreFora)
+        return shouldUpdateVersion(updateAlert)
     }
     
-    func showNextAlert(action: ClientInformActionType) {
+    private func createAppStoreURL() -> URL? {
         
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+        guard updateVersion() == true else { return nil }
         
-        eventHandlers.showSpinner()
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Call show spinner rootAction")
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+    }
+    
+    func clientInformAlertButtonTapped(
+        openURL: @escaping (URL) -> Void
+    ) {
         
-        DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
-            
-            guard let self = self else { return }
-            
-            switch action {
-            case .notRequired:
-                
-                if let alert = self.clientInformAlerts?.alert,
-                   alert.authBlocking {
-                    
-                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
-                    self.alertType = .clientInformAlerts(alert)
-                } else {
-                    
-                    self.clientInformAlerts?.dropFirst()
-                }
-                
-            case .required, .optional:
-                
-                if let alert = self.clientInformAlerts?.alert {
-                    
-                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
-                }
-            }
-            
-            self.eventHandlers.hideSpinner()
-        }
+        clientInformAlertsManager.dismiss()
+        if let url = createAppStoreURL() { openURL(url) }
     }
 }
 
@@ -199,17 +194,10 @@ private extension AuthLoginViewModel {
             }
             .store(in: &bindings)
         
-        eventPublishers.clientInformAlerts
+        clientInformAlertsManager.alertPublisher
             .receive(on: scheduler)
-            .sink { [weak self] in
-                
-                self?.clientInformAlerts = $0
-                
-                guard let alert = $0.alert else { return }
-                self?.alertType = .clientInformAlerts(alert)
-            }
-            .store(in: &bindings)
-
+            .assign(to: &$clientInformAlerts)
+        
         eventPublishers.checkClientResponse
             .receive(on: scheduler)
             .sink { [weak self] payload in
@@ -282,9 +270,6 @@ private extension AuthLoginViewModel {
                     action: { [weak self] in self?.alert = nil }
                 )
             )
-            
-            guard let alert = alert else { return }
-            self.alertType = .alertViewModel(alert)
         }
     }
     
@@ -579,9 +564,13 @@ extension AuthLoginViewModel {
         }
     }
     
+    struct ClientInformAlertsManager {
+        
+        let clientInformAlertsManager: any AlertManager<ClientInformAlerts>
+    }
+    
     struct EventPublishers {
         
-        let clientInformAlerts: AnyPublisher<ClientInformAlerts, Never>
         let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
         let catalogProducts: AnyPublisher<([CatalogProductData]), Never>
         let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>

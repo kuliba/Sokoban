@@ -32,28 +32,29 @@ public struct ClientInformListView: View {
                 
                 navBarView()
                     .transition(.identity)
+                    .opacity(isShowNavBar ? 1 : 0)
             }
             
             ScrollView(axes, showsIndicators: false) {
                 
                 contentStack()
-                    .background(GeometryReader { geometry in
-                        Color.clear
-                            .preference(key: ContentHeightKey.self, value: geometry.size.height)
+                    .background(GeometryReader {
+                        Color.clear.preference(key: ContentHeightKey.self,
+                                               value: -$0.frame(in: .named("scroll")).origin.y)
                     })
-                
+                    .onPreferenceChange(ContentHeightKey.self) { value in
+                        
+                        withAnimation(Animation.linear(duration: 0.3)) {
+                            
+                            isShowNavBar = value > config.sizes.navBarHeight + config.sizes.navBarHeight
+                        }
+                        shouldScroll = contentHeight > maxHeight
+                    }
+                    .readSize { contentHeight = $0.height }
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
             .frame(height: maxHeight < contentHeight ? maxHeight : contentHeight)
-            .onPreferenceChange(ContentHeightKey.self) { contentHeight in
-                    
-                self.contentHeight = (contentHeight < maxHeight / 2) ? 
-                (maxHeight / 2) : contentHeight
-
-                isShowNavBar = contentHeight > UIScreen.main.bounds.height
-                shouldScroll = contentHeight > UIScreen.main.bounds.height
-            }
         }
     }
     
@@ -61,7 +62,7 @@ public struct ClientInformListView: View {
         
         ZStack(alignment: .top) {
 
-            config.colors.grayBackground
+            Color.white
                 .frame(height: config.sizes.navBarHeight)
                 .ignoresSafeArea()
                         
@@ -77,7 +78,7 @@ public struct ClientInformListView: View {
             .padding(.horizontal, config.paddings.horizontal)
             .padding(.vertical, config.paddings.vertical)
             .frame(maxWidth: .infinity, maxHeight: config.sizes.navBarMaxWidth, alignment: .leading)
-            .background(config.colors.grayBackground)
+            .background(.white)
     }
     
     private func contentStack() -> some View {
@@ -96,7 +97,7 @@ public struct ClientInformListView: View {
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
         
-        VStack(alignment: .center, spacing: config.sizes.spacing) {
+        LazyVStack(alignment: .center, spacing: config.sizes.spacing) {
             
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
@@ -109,6 +110,7 @@ public struct ClientInformListView: View {
                 .foregroundColor(config.titleConfig.textColor)
                 .padding(.horizontal, config.paddings.horizontal)
         }
+        .padding(.bottom, config.paddings.bottom)
         .frame(maxWidth: .infinity)
     }
 
@@ -117,6 +119,7 @@ public struct ClientInformListView: View {
         VStack(spacing: config.sizes.spacing) {
             
             if !isShowNavBar {
+                
                 iconView()
                 titleView(multipleInfo.label.title)
             }
@@ -136,6 +139,7 @@ public struct ClientInformListView: View {
             .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight +
                      config.sizes.bigSpacing : 0)
         }
+        .padding(.bottom, contentHeight < maxHeight ? config.paddings.bottom : .zero)
     }
     
     @ViewBuilder
@@ -172,10 +176,10 @@ public struct ClientInformListView: View {
     }
     
     private struct ContentHeightKey: PreferenceKey {
-        
+
         static var defaultValue: CGFloat = 0
         static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-            value = max(value, nextValue())
+            value += nextValue()
         }
     }
 }
@@ -198,3 +202,25 @@ struct PlainClientInformView_Previews: PreviewProvider {
     }
 }
 
+public extension View {
+    
+    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+        
+        background(
+            
+            GeometryReader { geometry in
+                
+                Color.clear
+                    .preference(key: SizePreferenceKey.self,
+                                value: geometry.size)
+            }
+        )
+        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+    }
+}
+
+private struct SizePreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
+}

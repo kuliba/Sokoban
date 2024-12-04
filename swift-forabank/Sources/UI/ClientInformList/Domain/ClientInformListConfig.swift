@@ -20,14 +20,11 @@ public struct ClientInformListConfig {
 
     public struct Colors {
         
-        let grayBackground: Color
         let bgIconRedLight: Color
         
         public init(
-            grayBackground: Color,
             bgIconRedLight: Color
         ) {
-            self.grayBackground = grayBackground
             self.bgIconRedLight = bgIconRedLight
         }
     }
@@ -67,15 +64,18 @@ public struct ClientInformListConfig {
         let topImage: CGFloat
         let horizontal: CGFloat
         let vertical: CGFloat
+        let bottom: CGFloat
         
         public init(
             topImage: CGFloat,
             horizontal: CGFloat,
-            vertical: CGFloat
+            vertical: CGFloat,
+            bottom: CGFloat
         ) {
             self.topImage = topImage
             self.horizontal = horizontal
             self.vertical = vertical
+            self.bottom = bottom
         }
     }
     

@@ -2169,6 +2169,7 @@ private extension Target {
             .customDump,
             // internal modules
             .transferPublicKey,
+            .foraTools
         ],
         path: "Tests/Services/\(String.transferPublicKeyTests)"
     )
@@ -2716,6 +2717,7 @@ private extension Target {
     static let uiPrimitivesTests = testTarget(
         name: .uiPrimitivesTests,
         dependencies: [
+            .customDump,
             .foraTools,
             .sharedConfigs,
             .uiPrimitives,

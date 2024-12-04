@@ -13,7 +13,6 @@ import XCTest
 
 class AuthLoginViewModelTests: XCTestCase {
     
-    typealias ClientInformAlertsResponse = PassthroughSubject<ClientInformAlerts, Never>
     typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
     typealias CatalogProducts = PassthroughSubject<([CatalogProductData]), Never>
     typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>
@@ -216,6 +215,12 @@ extension AuthLoginViewModel {
     }
     
     // MARK: - Publishers
+    var clientInformAlertPublisher: AnyPublisher<ClientInformAlerts, Never> {
+        
+        $clientInformAlerts
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
+    }
     
     var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
         
@@ -557,13 +562,13 @@ extension Alert.ViewModel {
         }
         
         static func alert(
-            title: String? = nil,
+            title: String = "Ошибка",
             message: String,
             primary: ButtonViewModel = .default,
             secondary: ButtonViewModel? = nil
         ) -> Self {
             
-            .init(title: title ?? "Ошибка", message: message, primary: primary, secondary: secondary)
+            .init(title: title, message: message, primary: primary, secondary: secondary)
         }
     }
 }

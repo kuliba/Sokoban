@@ -11,7 +11,6 @@ extension ClientInformListConfig {
     
     static let iFora: Self = .init(
         colors: .init(
-            grayBackground: .mainColorsGrayLightest,
             bgIconRedLight: .bgIconRedLight
         ),
         strings: .init(
@@ -38,7 +37,8 @@ extension ClientInformListConfig {
         paddings: .init(
             topImage: 20,
             horizontal: 20,
-            vertical: 12
+            vertical: 12,
+            bottom: 80
         ),
         image: .ic24Info
     )

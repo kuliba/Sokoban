@@ -27,7 +27,6 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
-import GetClientInformDataServices
 
 extension RootViewModelFactory {
     
@@ -46,15 +45,7 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
-        func performOrWaitForAuthorized(
-            _ work: @escaping () -> Void
-        ) {
-            bindings.insert(model.performOrWaitForAuthorized(work))
-        }
-        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
-        
-        let notAuthorizedHTTPClient = HTTPFactory.cachelessLoggingNoSharedCookiesURLSessionHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
@@ -417,7 +408,7 @@ extension RootViewModelFactory {
             }
         }
         
-        performOrWaitForAuthorized {
+        model.performOrWaitForAuthorized {
             
                 createGetAuthorizedZoneClientInformData {
                     
@@ -433,89 +424,16 @@ extension RootViewModelFactory {
                     _ = createGetAuthorizedZoneClientInformData
                 }
         }
+        .store(in: &bindings)
         
         func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
         
-        let _createGetNotAuthorizedZoneClientInformData = LoggingRemoteNanoServiceComposer(httpClient: notAuthorizedHTTPClient, logger: logger).compose(
-            createRequest: RequestFactory.createGetNotAuthorizedZoneClientInformDataRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse
-        )
-        
-        let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAlerts?) -> Void) in
-            _createGetNotAuthorizedZoneClientInformData(()) { result in
-                
-                switch result {
-                case .failure:
-                    completion(nil)
-                    
-                case let .success(response):
-                    
-                    var list = ClientInformAlerts(notRequired: [], required: nil)
-                    
-                    list.notRequired = response.list.filter {
-                        if let update = $0.update {
-                            
-                            return $0.update?.type == "not_required" && 
-                            $0.update?.platform == "iOS"
-                        } else { return true }
-                    }.compactMap {
-                        
-                        .init(
-                            title: $0.title,
-                            text: $0.text,
-                            authBlocking: $0.authBlocking
-                        )
-                    }
-                    
-                    if let required = response.list.first(where: {
-                        
-                        $0.update?.platform == "iOS"
-                    }) {
-                        
-                        if required.update?.type == "required" {
-                            list.required = .init(
-                                title: required.title,
-                                text: required.text,
-                                type: .required,
-                                link: required.update?.link,
-                                version: required.update?.version,
-                                authBlocking: required.authBlocking
-                            )
-                        }
-                        
-                        if required.update?.type == "optional" {
-                            list.required = .init(
-                                title: required.title,
-                                text: required.text,
-                                type: .optional,
-                                link: required.update?.link,
-                                version: required.update?.version,
-                                authBlocking: required.authBlocking
-                                
-                            )
-                        }
-                    }
-                    
-                    completion(list)
-                }
-                
-                _ = _createGetNotAuthorizedZoneClientInformData
-            }
-        }
-        
-        createGetNotAuthorizedZoneClientInformData {
-            
-            if let info = $0 {
-                
-                self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                self.model.clientNotAuthorizedAlerts.value = info
-            } else {
-                
-                self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
-            }
-            
-            _ = createGetNotAuthorizedZoneClientInformData
-        }
+        model.sessionState
+            .map(\.isActive)
+            .filter { $0 }
+            .removeDuplicates()
+            .sink { [weak self] _ in self?.updateAlerts() }
+            .store(in: &bindings)
         
         let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -896,12 +814,20 @@ private extension RootViewModelFactory {
             let loginViewModel = ComposedLoginViewModel(
                 authLoginViewModel: .init(
                     self.model,
+                    shouldUpdateVersion: shouldUpdateVersion,
                     rootActions: $0,
                     onRegister: onRegister
                 )
             )
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
+        }
+        
+        func shouldUpdateVersion(updateAlert: ClientInformAlerts.UpdateAlert) ->  Bool {
+            
+            guard let version: String = updateAlert.version else { return false }
+            
+            return version.compareVersion(to: Bundle.main.appVersionShort) == .orderedDescending
         }
         
         let tabsViewModel = TabsViewModel(
@@ -912,14 +838,14 @@ private extension RootViewModelFactory {
         )
         
         return .init(
-            fastPaymentsFactory: fastPaymentsFactory, 
+            fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
-            showLoginAction: showLoginAction, 
+            showLoginAction: showLoginAction,
             landingServices: landingServices,
             mainScheduler: schedulers.main
         )
@@ -964,5 +890,3 @@ private extension Error {
         }
     }
 }
-
-

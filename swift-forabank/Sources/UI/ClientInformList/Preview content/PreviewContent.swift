@@ -11,7 +11,6 @@ extension ClientInformListConfig.Colors {
     
     static let preview: Self = .init(
 
-        grayBackground: Color(red: 0.97, green: 0.97, blue: 0.97),
         bgIconRedLight: Color(red: 1.00, green: 0.62, blue: 0.62)
     )
 }
@@ -38,7 +37,14 @@ extension ClientInformListDataState {
         title: Label(image: .infoCircle, title: "Информация"),
         items: [
             Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
-            Label(image: .infoCircle, title: "Информация на главном портале обновилась")
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00")
         ]
     ))
 }
@@ -68,7 +74,8 @@ extension ClientInformListConfig {
         paddings: .init(
             topImage: 20,
             horizontal: 20,
-            vertical: 12
+            vertical: 12,
+            bottom: 80
         ),
         image: .infoCircle
     )
