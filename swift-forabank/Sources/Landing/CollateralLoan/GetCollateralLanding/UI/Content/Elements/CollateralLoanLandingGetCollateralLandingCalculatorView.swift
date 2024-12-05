@@ -343,9 +343,9 @@ struct CollateralLoanLandingGetCollateralLandingView_Previews: PreviewProvider {
         )
     }
     
-    static let cardData = GetCollateralLandingData.cardStub
-    static let realEstateData = GetCollateralLandingData.realEstateStub
-    static let content = Content(data: cardData)
+    static let cardData = GetCollateralLandingProduct.cardStub
+    static let realEstateData = GetCollateralLandingProduct.realEstateStub
+    static let content = Content(product: cardData)
     static let factory = Factory()
     
     typealias Content = CollateralLoanLandingGetCollateralLandingContent
