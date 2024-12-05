@@ -54,11 +54,7 @@ public struct ClientInformListView: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
-            .frame(height: maxHeight(
-                maxHeight: maxHeight,
-                contentHeight: contentHeight,
-                padding: config.paddings.bottom
-            ))
+            .frame(height: min(maxHeight, contentHeight))
         }
     }
     
@@ -226,18 +222,6 @@ private struct SizePreferenceKey: PreferenceKey {
     
     static var defaultValue: CGSize = .zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
-}
-
-private extension ClientInformListView {
-    
-    func maxHeight(
-        maxHeight: CGFloat,
-        contentHeight: CGFloat,
-        padding: CGFloat
-    ) -> CGFloat {
-        
-        return min(maxHeight, contentHeight)/* + padding*/
-    }
 }
 
 private extension ClientInformListView {
