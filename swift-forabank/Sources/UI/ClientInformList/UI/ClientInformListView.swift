@@ -16,8 +16,8 @@ public struct ClientInformListView: View {
     
     private let config: Config
     private let info: Info
-    private let maxHeight = UIScreen.main.bounds.height - 180
-    
+    private let maxHeight = UIScreen.maxHeightWithSafeArea()
+
     public init(config: Config, info: Info) {
         
         self.config = config
@@ -54,7 +54,11 @@ public struct ClientInformListView: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
-            .frame(height: maxHeight < contentHeight ? maxHeight + config.paddings.bottom : contentHeight + config.paddings.bottom)
+            .frame(height: maxHeight(
+                maxHeight: maxHeight,
+                contentHeight: contentHeight,
+                padding: config.paddings.bottom
+            ))
         }
     }
     
@@ -222,4 +226,27 @@ private struct SizePreferenceKey: PreferenceKey {
     
     static var defaultValue: CGSize = .zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
+}
+
+private extension View {
+    
+    func maxHeight(
+        maxHeight: CGFloat,
+        contentHeight: CGFloat,
+        padding: CGFloat
+    ) -> CGFloat {
+        
+        return min(maxHeight, contentHeight)/* + padding*/
+    }
+}
+
+private extension UIScreen {
+    
+    static func maxHeightWithSafeArea() -> CGFloat {
+        
+        guard let window = UIApplication.shared.windows.first else { return UIScreen.main.bounds.height }
+        
+        let safeAreaInsets = window.safeAreaInsets
+        return UIScreen.main.bounds.height - safeAreaInsets.top - 30
+    }
 }
