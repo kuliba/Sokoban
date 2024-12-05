@@ -210,7 +210,9 @@ extension AuthLoginView {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
+                                 primaryButton: .default(Text("Позже"), action: {
+                        viewModel.dismissAll()
+                    }),
                                  secondaryButton: .default(Text("Обновить"), action: {
                         openURL()
                     })
