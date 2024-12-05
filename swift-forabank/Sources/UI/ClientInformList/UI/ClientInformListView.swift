@@ -16,7 +16,7 @@ public struct ClientInformListView: View {
     
     private let config: Config
     private let info: Info
-    private let maxHeight = UIScreen.maxHeightWithSafeArea()
+    private let maxHeight = maxHeightWithSafeArea()
 
     public init(config: Config, info: Info) {
         
@@ -228,7 +228,7 @@ private struct SizePreferenceKey: PreferenceKey {
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
 }
 
-private extension View {
+private extension ClientInformListView {
     
     func maxHeight(
         maxHeight: CGFloat,
@@ -240,7 +240,7 @@ private extension View {
     }
 }
 
-private extension UIScreen {
+private extension ClientInformListView {
     
     static func maxHeightWithSafeArea() -> CGFloat {
         
