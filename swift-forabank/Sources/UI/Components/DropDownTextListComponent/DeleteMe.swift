@@ -6,8 +6,6 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct DeleteMe {
-    
-    let deleteMe: String
-}
+public struct DeleteMe { public init() {} }

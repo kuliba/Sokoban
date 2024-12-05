@@ -95,6 +95,7 @@ let package = Package(
         .userAccountNavigationComponent,
         // UI Components
         .carouselComponent,
+        .dropDownTextListComponent,
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
@@ -663,6 +664,11 @@ private extension Product {
         ]
     )
     
+    static let dropDownTextListComponent = library(
+        name: .dropDownTextListComponent,
+        targets: [.dropDownTextListComponent]
+    )
+
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -683,7 +689,7 @@ private extension Product {
             .sharedConfigs,
         ]
     )
-    
+        
     static let productProfileComponents = library(
         name: .productProfileComponents,
         targets: [
