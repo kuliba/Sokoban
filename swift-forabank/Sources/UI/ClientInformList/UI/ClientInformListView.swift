@@ -16,7 +16,7 @@ public struct ClientInformListView: View {
     
     private let config: Config
     private let info: Info
-    private let maxHeight = UIScreen.main.bounds.height - 100
+    private let maxHeight = UIScreen.main.bounds.height - 180
     
     public init(config: Config, info: Info) {
         
@@ -54,7 +54,7 @@ public struct ClientInformListView: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
-            .frame(height: maxHeight < contentHeight ? maxHeight : contentHeight)
+            .frame(height: maxHeight < contentHeight ? maxHeight + config.paddings.bottom : contentHeight + config.paddings.bottom)
         }
     }
     
@@ -97,7 +97,7 @@ public struct ClientInformListView: View {
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
         
-        LazyVStack(alignment: .center, spacing: config.sizes.spacing) {
+        VStack(alignment: .center, spacing: config.sizes.spacing) {
             
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
@@ -139,7 +139,6 @@ public struct ClientInformListView: View {
             .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight +
                      config.sizes.bigSpacing : 0)
         }
-        .padding(.bottom, contentHeight < maxHeight ? config.paddings.bottom : .zero)
     }
     
     @ViewBuilder
