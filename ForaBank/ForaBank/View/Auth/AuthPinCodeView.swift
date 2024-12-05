@@ -379,7 +379,7 @@ extension AuthPinCodeView {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: { openURL() })
+                                 dismissButton: .default(dismissText, action: { openURL() })
                     )
                 }
                 
