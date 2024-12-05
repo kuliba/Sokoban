@@ -114,5 +114,5 @@ extension CollateralLoanLandingGetCollateralLandingConditionsView {
     
     typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
     typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
-    typealias Condition = GetCollateralLandingData.Product.Condition
+    typealias Condition = GetCollateralLandingProduct.Condition
 }

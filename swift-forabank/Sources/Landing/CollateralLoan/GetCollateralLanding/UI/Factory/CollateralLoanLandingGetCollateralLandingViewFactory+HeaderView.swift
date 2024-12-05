@@ -7,7 +7,7 @@
 
 extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
-    func makeHeaderView(with product: GetCollateralLandingData.Product)
+    func makeHeaderView(with product: GetCollateralLandingProduct)
         -> CollateralLoanLandingGetCollateralLandingHeaderView {
 
             .init(
