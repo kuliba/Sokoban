@@ -8,9 +8,13 @@
 extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
     func makeConditionsView(with product: GetCollateralLandingProduct)
-        -> CollateralLoanLandingGetCollateralLandingConditionsView {
+        -> CollateralLoanLandingGetCollateralLandingConditionsView? {
 
-            .init(
+            guard
+                !product.conditions.isEmpty
+            else { return nil }
+            
+            return .init(
                 config: config,
                 theme: product.theme.map(),
                 conditions: product.conditions

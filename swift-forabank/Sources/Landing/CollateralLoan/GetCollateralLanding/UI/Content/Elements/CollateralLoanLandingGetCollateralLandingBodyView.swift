@@ -11,7 +11,7 @@ struct CollateralLoanLandingGetCollateralLandingBodyView: View {
     
     let backgroundImage: String
     let headerView: HeaderView
-    let conditionsView: ConditionsView
+    let conditionsView: ConditionsView?
     let calculatorView: CalculatorView
     let config: Config
     let theme: Theme
@@ -58,7 +58,11 @@ private extension CollateralLoanLandingGetCollateralLandingBodyView {
         VStack {
             
             headerView
-            conditionsView
+            
+            if let conditionsView {
+                conditionsView
+            }
+            
             calculatorView
         }
         .background(Color.clear)
@@ -74,4 +78,25 @@ extension CollateralLoanLandingGetCollateralLandingBodyView {
     typealias ConditionsView = CollateralLoanLandingGetCollateralLandingConditionsView
     typealias CalculatorView = CollateralLoanLandingGetCollateralLandingCalculatorView
     typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+}
+
+// MARK: - Previews
+
+struct CollateralLoanLandingGetCollateralLandingView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        CollateralLoanLandingGetCollateralLandingView(
+            content: content,
+            factory: factory
+        )
+    }
+    
+    static let cardData = GetCollateralLandingProduct.cardStub
+    static let realEstateData = GetCollateralLandingProduct.realEstateStub
+    static let content = Content(product: cardData)
+    static let factory = Factory()
+    
+    typealias Content = CollateralLoanLandingGetCollateralLandingContent
+    typealias Factory = CollateralLoanLandingGetCollateralLandingViewFactory
 }

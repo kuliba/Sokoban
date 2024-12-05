@@ -331,27 +331,6 @@ extension CollateralLoanLandingGetCollateralLandingCalculatorView {
     typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
 }
 
-// MARK: - Previews
-
-struct CollateralLoanLandingGetCollateralLandingView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        CollateralLoanLandingGetCollateralLandingView(
-            content: content,
-            factory: factory
-        )
-    }
-    
-    static let cardData = GetCollateralLandingProduct.cardStub
-    static let realEstateData = GetCollateralLandingProduct.realEstateStub
-    static let content = Content(product: cardData)
-    static let factory = Factory()
-    
-    typealias Content = CollateralLoanLandingGetCollateralLandingContent
-    typealias Factory = CollateralLoanLandingGetCollateralLandingViewFactory
-}
-
 private struct CalculatorToggleStyle: ToggleStyle {
     
     let viewConfig: CollateralLoanLandingGetCollateralLandingViewConfig.Calculator
