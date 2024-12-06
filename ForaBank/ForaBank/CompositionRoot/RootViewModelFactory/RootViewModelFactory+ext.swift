@@ -372,6 +372,8 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
+                
+        let savingsAccount = makeSavingsAccount()
 
         // MARK: - Notifications Authorized
         
@@ -481,6 +483,85 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension SavingsAccountDomain.ContentState {
+    
+    var select: SavingsAccountDomain.Select? {
+        
+        switch selection {
+        case .none: return nil
+        case .order: return .order
+        }
+    }
+}
+
+extension RootViewModelFactory {
+    
+    @inlinable
+    func makeSavingsAccount() -> SavingsAccountDomain.Binder {
+        
+        let nanoServices: SavingsAccountDomain.ComposerNanoServices = { fatalError() }()
+        
+        return makeSavingsAccount(nanoServices: nanoServices)
+    }
+    
+    @inlinable
+    func makeSavingsAccount(
+        nanoServices: SavingsAccountDomain.ComposerNanoServices
+    ) -> SavingsAccountDomain.Binder {
+        
+        return compose(
+            getNavigation: getSavingsAccountNavigation,
+            content: makeContent(
+                nanoServices: nanoServices,
+                status: .initiate
+            ),
+            witnesses: .init(
+                emitting: {
+                    $0.$state.compactMap(\.select)
+                },
+                dismissing: { content in
+                    { content.event(.resetSelection) }
+                }
+            )
+        )
+    }
+    
+    private func makeContent(
+        nanoServices: SavingsAccountDomain.ComposerNanoServices,
+        status: SavingsAccountDomain.ContentStatus
+    ) -> SavingsAccountDomain.Content {
+        
+        let reducer = SavingsAccountDomain.ContentReducer()
+        let effectHandler = SavingsAccountDomain.ContentEffectHandler(
+            microServices: .init(
+                loadLanding: nanoServices.loadLanding
+            ),
+            landingType: "DEFAULT"
+        )
+        
+        return .init(
+            initialState: .init(status: status),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect,
+            scheduler: schedulers.main
+        )
+    }
+
+    @inlinable
+    func getSavingsAccountNavigation(
+        select: SavingsAccountDomain.Select,
+        notify: @escaping SavingsAccountDomain.Notify,
+        completion: @escaping (SavingsAccountDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case .goToMain:
+            completion(.main)
+        case .order:
+            completion(.order)
+        }
     }
 }
 

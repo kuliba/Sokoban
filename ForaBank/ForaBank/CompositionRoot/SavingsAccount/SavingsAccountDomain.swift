@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PayHubUI
 import RemoteServices
 import RxViewModel
 import SavingsAccount
@@ -19,6 +20,38 @@ extension SavingsAccountDomain {
     typealias InformerPayload = InformerData
     typealias Landing = RemoteServices.ResponseMapper.GetSavingLandingData
     
+    enum Select: Equatable {
+        
+        case goToMain
+        case order
+    }
+
+    enum Navigation {
+        
+        case main
+        case order
+        case failure(FlowFailureKind)
+        
+        enum FlowFailureKind {
+            
+            case timeout(InformerPayload)
+            case error(String)
+        }
+    }
+    
+    // MARK: - Binder
+    
+    typealias BinderDomain = PayHubUI.BinderDomain<Content, Select, Navigation>
+    typealias Binder = BinderDomain.Binder
+        
+    // MARK: - Flow
+    
+    typealias FlowDomain = BinderDomain.FlowDomain
+    typealias Flow = FlowDomain.Flow
+    
+    typealias Notify = (NotifyEvent) -> Void
+    typealias NotifyEvent = FlowDomain.NotifyEvent
+
     // MARK: - Content
     
     typealias ContentState = SavingsAccountContentState<Landing, InformerPayload>
