@@ -31,33 +31,32 @@ extension RootViewModelFactory {
     
     typealias ServiceCategoryLoad = Load<[ServiceCategory]>
     
-    /// Decorate with loading operators for category.
-    private func composeDecoratedServiceCategoryListLoaders(
+    /// Compose `ServiceCategory` Loaders decorated with `operatorsService` (operators loading and caching).
+    @inlinable
+    func composeDecoratedServiceCategoryListLoaders(
     ) -> (load: ServiceCategoryLoad, reload: ServiceCategoryLoad) {
-        
-        let operatorsService = servicePaymentOperatorService
         
         let (loadCategories, reloadCategories) = composeServiceCategoryListLoaders()
         
-        let decorated = decorate(
-            decoratee: reloadCategories,
-            with: { categories, completion in
-                
-                let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
-                
-                operatorsService(payloads) { failed in
-                    
-                    completion(failed.map(\.category))
-                    _ = operatorsService
-                }
-            }
-        )
+        let decorated = decorate(reloadCategories, with: batchOperators)
         
         // threading
         let load = schedulers.background.scheduled(loadCategories)
         let reload = schedulers.background.scheduled(decorated)
         
         return (load, reload)
+    }
+    
+    private func batchOperators(
+        categories: [ServiceCategory],
+        completion: @escaping ([ServiceCategory]) -> Void
+    ) {
+        let payloads = makeGetOperatorsListByParamPayloads(from: categories)
+        
+        servicePaymentOperatorService(payloads: payloads) { failed in
+            
+            completion(failed.map(\.category))
+        }
     }
     
     private func composeServiceCategoryListLoaders(
