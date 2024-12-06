@@ -41,8 +41,8 @@ extension RootViewModelFactory {
         let decorated = decorate(reloadCategories, with: batchOperators)
         
         // threading
-        let load = schedulers.background.scheduled(loadCategories)
-        let reload = schedulers.background.scheduled(decorated)
+        let load = schedulers.userInitiated.scheduled(loadCategories)
+        let reload = schedulers.userInitiated.scheduled(decorated)
         
         return (load, reload)
     }

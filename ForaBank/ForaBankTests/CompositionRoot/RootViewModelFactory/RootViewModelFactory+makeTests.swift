@@ -14,14 +14,14 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotCallHTTPClientOnInactiveSessionState() {
         
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: .inactive
         )
         XCTAssertEqual(httpClient.callCount, 0)
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         XCTAssertNoDiff(httpClient.callCount, 0)
         XCTAssertNotNil(sut)
@@ -29,13 +29,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClientOnActiveSessionState() {
         
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         XCTAssertGreaterThan(httpClient.callCount, 0)
         XCTAssertNotNil(sut)
@@ -43,13 +43,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClientOnSessionStateChangeToActive() {
         
-        let (sut, httpClient, sessionAgent, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, sessionAgent, userInitiatedScheduler) = makeSUT(
             sessionState: .inactive
         )
         XCTAssertEqual(httpClient.callCount, 0)
         
         sessionAgent.sessionState.value = active()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
         
         XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
@@ -59,13 +59,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSession() throws {
         
         let request = try createGetServiceCategoryListRequest(serial: nil)
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         XCTAssert(httpClient.requests.contains(request))
         XCTAssertNotNil(sut)
@@ -82,14 +82,14 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
-        let (sut, _,_, backgroundScheduler) = makeSUT(
+        let (sut, _,_, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         let initialState = try sut.content.categoryPickerContent().state
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
@@ -98,11 +98,11 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
         
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
         
         httpClient.complete(with: success())
@@ -126,13 +126,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         sut: SUT,
         httpClient: HTTPClientSpy,
         sessionAgent: SessionAgentEmptyMock,
-        backgroundScheduler: TestSchedulerOf<DispatchQueue>
+        userInitiatedScheduler: TestSchedulerOf<DispatchQueue>
     ) {
-        let httpClient = HTTPClientSpy()
-        let backgroundScheduler = DispatchQueue.test
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
+        let httpClient = HTTPClientSpy()
+        let userInitiatedScheduler = DispatchQueue.test
         let sut = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
@@ -142,7 +142,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             scanner: QRScannerViewModelSpy(),
             schedulers: .test(
                 main: .immediate,
-                background: backgroundScheduler.eraseToAnyScheduler()
+                userInitiated: userInitiatedScheduler.eraseToAnyScheduler()
             ).0
         ).make(
             dismiss: {},
@@ -151,7 +151,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             savingsAccountFlag: .active
         )
         
-        return (sut, httpClient, sessionAgent, backgroundScheduler)
+        return (sut, httpClient, sessionAgent, userInitiatedScheduler)
     }
     
     private func createGetServiceCategoryListRequest(
