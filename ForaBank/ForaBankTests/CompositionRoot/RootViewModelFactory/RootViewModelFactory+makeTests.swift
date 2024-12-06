@@ -10,7 +10,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class RootViewModelFactory_makeTests: XCTestCase {
+final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryTests {
     
     func test_shouldNotCallHTTPClientOnInactiveSessionState() {
         
@@ -93,7 +93,6 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
-        XCTAssertNotNil(sut)
     }
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
@@ -105,11 +104,55 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
         
-        httpClient.complete(with: success())
+        httpClient.complete(with: mobileJSON())
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
+    }
+    
+    func test_shouldRequestOperatorsAfterCategories() throws {
+        
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            sessionState: active()
+        )
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getServiceCategoryList",
+        ])
+        
+        httpClient.complete(with: getServiceCategoryListJSON())
+        
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getServiceCategoryList",
+            "getOperatorsListByParam-housingAndCommunalService"
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldRequestNextTypeOperators() throws {
+        
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            sessionState: active()
+        )
+        
+        userInitiatedScheduler.advance()
+        
+        awaitActorThreadHop()
+        httpClient.complete(with: getServiceCategoryListJSON())
+        
+        awaitActorThreadHop()
+        httpClient.complete(with: anyError(), at: 1)
+        
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getServiceCategoryList",
+            "getOperatorsListByParam-housingAndCommunalService",
+            "getOperatorsListByParam-internet"
+        ])
         XCTAssertNotNil(sut)
     }
     
@@ -161,41 +204,9 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
     
-    private func success(
-    ) -> Result<(Data, HTTPURLResponse), any Error> {
+    private func mobileJSON() -> Data {
         
-        return .success((validData(), anyHTTPURLResponse()))
-    }
-    
-    private func validData(
-    ) -> Data {
-        
-        return .init(validJSON().utf8)
-    }
-    
-    private func validJSON(
-    ) -> String {
-        
-        return """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": {
-        "serial": "abc",
-        "categoryGroupList": [
-            {
-                "type": "mobile",
-                "name": "Мобильная связь",
-                "ord": 20,
-                "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
-                "paymentFlow": "MOBILE",
-                "latestPaymentsCategory": "isMobilePayments",
-                "search": false
-            }
-        ]
-    }
-}
-"""
+        return .init(String.mobileJSON.utf8)
     }
     
     private func active() -> SessionState {
@@ -241,4 +252,30 @@ private extension RootViewModel {
         
         return personal
     }
+}
+
+// MARK: - DSL
+
+extension String {
+    
+    static let mobileJSON = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "abc",
+        "categoryGroupList": [
+            {
+                "type": "mobile",
+                "name": "Мобильная связь",
+                "ord": 20,
+                "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
+                "paymentFlow": "MOBILE",
+                "latestPaymentsCategory": "isMobilePayments",
+                "search": false
+            }
+        ]
+    }
+}
+"""
 }
