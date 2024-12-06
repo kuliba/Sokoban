@@ -2828,7 +2828,6 @@
 		83E45EAC2D0089F900158F64 /* SavingsAccountWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */; };
 		83E45EAF2D009E2000158F64 /* SavingsAccountDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */; };
 		83E45EB12D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */; };
-		83E45EB62D019B9300158F64 /* SavingsAccountComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EB52D019B9300158F64 /* SavingsAccountComposerTests.swift */; };
 		83E45EC52D01C98900158F64 /* FlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EBD2D01C98800158F64 /* FlowEffectHandlerMicroServices.swift */; };
 		83E45EC82D01CA4200158F64 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EC72D01CA4200158F64 /* FlowView.swift */; };
 		83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */ = {isa = PBXBuildFile; productRef = 83E513382AA73CFC00F8183B /* LandingMapping */; };
@@ -6311,7 +6310,6 @@
 		83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountWrapperView.swift; sourceTree = "<group>"; };
 		83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountDomain.swift; sourceTree = "<group>"; };
 		83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavingsAccountDomain+ComposerNanoServices.swift"; sourceTree = "<group>"; };
-		83E45EB52D019B9300158F64 /* SavingsAccountComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountComposerTests.swift; sourceTree = "<group>"; };
 		83E45EBD2D01C98800158F64 /* FlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
 		83E45EC72D01CA4200158F64 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowView.swift; sourceTree = "<group>"; };
 		83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemRule.swift; sourceTree = "<group>"; };
@@ -15693,7 +15691,6 @@
 		83E45EB42D019B6B00158F64 /* SavingsAccount */ = {
 			isa = PBXGroup;
 			children = (
-				83E45EB52D019B9300158F64 /* SavingsAccountComposerTests.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -22173,7 +22170,6 @@
 				D4A5A7A62BAA5AEA006EE7A5 /* ProductDepositData_getProductListByTypeV5.swift in Sources */,
 				835741C22C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift in Sources */,
 				A73E43122CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift in Sources */,
-				83E45EB62D019B9300158F64 /* SavingsAccountComposerTests.swift in Sources */,
 				2AD5F0CA2CA54CE100AA5619 /* ClosePaymentsViewModelWrapperTests.swift in Sources */,
 				2A4A19EE2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift in Sources */,
 				2AA2585D2CEA434B0038642C /* XCTestCase+wait.swift in Sources */,
