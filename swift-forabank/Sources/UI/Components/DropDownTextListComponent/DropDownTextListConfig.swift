@@ -33,11 +33,22 @@ public struct DropDownTextListConfig {
     
     public struct Layouts {
         
-        public let horizontalPadding: CGFloat
-        public let verticalPadding: CGFloat
-        public let itemHeight: CGFloat
+        public let topPadding: CGFloat?
+        public let bottomPadding: CGFloat?
+        public let horizontalPadding: CGFloat?
+        public let verticalPadding: CGFloat?
+        public let itemHeight: CGFloat?
         
-        public init(horizontalPadding: CGFloat, verticalPadding: CGFloat, itemHeight: CGFloat) {
+        public init(
+            topPadding: CGFloat? = nil,
+            bottomPadding: CGFloat? = nil,
+            horizontalPadding: CGFloat? = nil,
+            verticalPadding: CGFloat? = nil,
+            itemHeight: CGFloat?
+        ) {
+            
+            self.topPadding = topPadding
+            self.bottomPadding = bottomPadding
             self.horizontalPadding = horizontalPadding
             self.verticalPadding = verticalPadding
             self.itemHeight = itemHeight

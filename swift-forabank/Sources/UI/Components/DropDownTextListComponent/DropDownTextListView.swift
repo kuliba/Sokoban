@@ -30,6 +30,8 @@ public struct DropDownTextListView: View {
                     text.text(withConfig: config.fonts.title)
                         .modifier(
                             PaddingsModifier(
+                                top: config.layouts.topPadding,
+                                bottom: config.layouts.bottomPadding,
                                 horizontal: config.layouts.horizontalPadding,
                                 vertical: config.layouts.verticalPadding
                             )
@@ -93,7 +95,9 @@ public struct DropDownTextListView: View {
                 .accessibilityIdentifier("ItemChevron")
         }
         .modifier(PaddingsModifier(horizontal: config.layouts.horizontalPadding))
-        .frame(height: config.layouts.itemHeight)
+        .if(config.layouts.itemHeight != nil) {
+            $0.frame(height: config.layouts.itemHeight)
+        }
     }
     
     private func subTitleView(_ subTitle: String) -> some View {
@@ -110,4 +114,74 @@ public extension DropDownTextListView {
     typealias Config = DropDownTextListConfig
     typealias TextList = DropDownTextList
     typealias Item = DropDownTextList.Item
+}
+
+extension View {
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
+
+// MARK: - Previews
+
+#Preview {
+    NavigationView {
+        
+        DropDownTextListView(config: .preview, list: .preview)
+    }
+    .navigationViewStyle(.stack)
+}
+
+extension DropDownTextList {
+    
+    static let preview: Self = .init(
+        title: "Часто задаваемые вопросы",
+        items: [
+            .init(
+                title: "Какой кредит выгоднее оформить залоговый или взять несколько потребительских кредитов без обязательного подтверждения целевого использования и оформления залога?",
+                subTitle: "При наличии, имущества которое можно передать в залог банку конечно выгоднее оформить залоговый кредит по таким кредитам процентная ставка будет значительно меньше, а срок и сумма кредита всегда больше чем у без залогового потребительского кредита."
+            ),
+            .init(
+                title: "Какое имущество я могу передать в залог банку по кредиту?",
+                subTitle: "В залог может быть передано любое движимое или недвижимое имущество, а также ценные бумаги, или права требования, передаваемом в залог имуществе не должно быть обременено правами третьих лиц."
+            ),
+            .init(
+                title: "Как можно увеличить сумму кредита?",
+                subTitle: "Если вашего дохода недостаточно, то вы можете привлечь созаемщика с доходом, созаемщиком может являться любое физическое лицо."
+            )
+        ]
+    )
+}
+
+extension DropDownTextListConfig {
+    
+    static let preview: Self = .init(
+        cornerRadius: 16,
+        chevronDownImage: Image(systemName: "chevron.down"),
+        layouts: .init(
+            topPadding: 14,
+            bottomPadding: nil,
+            horizontalPadding: 16,
+            verticalPadding: nil,
+            itemHeight: nil
+        ),
+        colors: .init(
+            divider: .gray,
+            background: .gray30
+        ),
+        fonts: .init(
+            title: .init(textFont: .title3, textColor: .green),
+            itemTitle: .init(textFont: .footnote, textColor: .black),
+            itemSubtitle: .init(textFont: .footnote, textColor: .gray)
+        )
+    )
+}
+
+extension Color {
+    
+    static let gray30: Self = .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3)
 }
