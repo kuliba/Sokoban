@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createBindPublicKeyWithEventIDRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 05.08.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  GetCurrencyListSaved.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 07.09.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  HintView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 14.12.2022.
 //

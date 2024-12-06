@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Valentin Ozerov on 27.11.2024.
 //

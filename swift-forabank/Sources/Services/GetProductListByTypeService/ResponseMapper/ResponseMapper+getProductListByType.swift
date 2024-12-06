@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+getProductListByType.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Disman Dmitry on 10.03.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  SearchBanksViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 14.07.2021.
 //

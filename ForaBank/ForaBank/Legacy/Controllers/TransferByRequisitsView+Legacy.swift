@@ -1,6 +1,6 @@
 //
 //  TransferByRequisitsView+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 14.06.2022.
 //

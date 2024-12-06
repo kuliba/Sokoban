@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+getSberQRData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 22.11.2024.
 //

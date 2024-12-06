@@ -1,6 +1,6 @@
 //
 //  Resetable.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 08.07.2022.
 //

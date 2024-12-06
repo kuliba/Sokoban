@@ -1,6 +1,6 @@
 //
 //  Service+modifyC2B.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 11.11.2024.
 //

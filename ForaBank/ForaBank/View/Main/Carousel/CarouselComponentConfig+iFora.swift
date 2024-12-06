@@ -1,6 +1,6 @@
 //
 //  CarouselComponentConfig+iFora.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 30.03.2024.
 //

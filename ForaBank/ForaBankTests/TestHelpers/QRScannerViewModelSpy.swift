@@ -1,6 +1,6 @@
 //
 //  QRScannerViewModelSpy.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 20.11.2024.
 //

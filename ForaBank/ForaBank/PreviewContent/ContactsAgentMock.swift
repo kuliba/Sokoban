@@ -1,6 +1,6 @@
 //
 //  ContactsAgentMock.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 01.06.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  InfoViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 16.11.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  ServicePaymentFlowEffect.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 25.07.2024.
 //

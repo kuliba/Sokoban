@@ -1,6 +1,6 @@
 //
 //  PaymentsSuccessView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 09.10.2022.
 //

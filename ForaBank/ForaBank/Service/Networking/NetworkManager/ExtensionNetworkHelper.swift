@@ -1,6 +1,6 @@
 //
 //  ExtensionNetworkHelper.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 21.06.2021.
 //

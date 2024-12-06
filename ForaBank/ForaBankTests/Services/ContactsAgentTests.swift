@@ -1,6 +1,6 @@
 //
 //  ContactsAgentTest.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Dmitry Martynov on 06.06.2022.
 //

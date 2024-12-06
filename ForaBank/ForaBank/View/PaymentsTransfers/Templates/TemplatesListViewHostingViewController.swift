@@ -1,6 +1,6 @@
 //
 //  TemplatesListViewHostingViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 25.01.2022.
 //

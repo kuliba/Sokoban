@@ -1,6 +1,6 @@
 //
 //  CurrencySwapViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 24.06.2022.
 //

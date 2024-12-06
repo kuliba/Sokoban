@@ -1,6 +1,6 @@
 //
 //  ModelNotificationsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Константин Савялов on 26.04.2022.
 //

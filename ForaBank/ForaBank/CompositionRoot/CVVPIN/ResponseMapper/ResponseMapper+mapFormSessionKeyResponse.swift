@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+mapFormSessionKeyResponse.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 22.10.2023.
 //

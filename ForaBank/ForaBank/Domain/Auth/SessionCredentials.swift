@@ -1,6 +1,6 @@
 //
 //  SessionCredentials.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 03.03.2022.
 //

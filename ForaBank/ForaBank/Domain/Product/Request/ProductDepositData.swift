@@ -1,6 +1,6 @@
 //
 //  ProductDepositData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 05.04.2022.
 //
@@ -131,7 +131,7 @@ extension ProductDepositData {
             
             if isDebitInterestAvailable == true {
                 
-                // Fora Hit Deposit
+                // Vortex Hit Deposit
                 
                 if endDateNf {
                     

@@ -1,6 +1,6 @@
 //
 //  AgreementViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 12.06.2022.
 //

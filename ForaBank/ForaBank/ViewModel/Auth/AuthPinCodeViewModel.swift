@@ -1,6 +1,6 @@
 //
 //  AuthPinCodeViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Андрей Лятовец on 10.02.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  EncryptionLocalAgent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 24.07.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  MeToMeReqestSwitchView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 03.09.2021.
 //

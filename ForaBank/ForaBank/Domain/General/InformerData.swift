@@ -1,6 +1,6 @@
 //
 //  InformerData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 13.09.2022.
 //

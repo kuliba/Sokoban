@@ -1,6 +1,6 @@
 //
 //  AnotherCardView+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 17.06.2022.
 //

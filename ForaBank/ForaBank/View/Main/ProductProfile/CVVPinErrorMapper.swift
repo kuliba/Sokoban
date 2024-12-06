@@ -1,6 +1,6 @@
 //
 //  CVVPinErrorMapper.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 13.10.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  MosParkingSelectorView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 12.06.2023.
 //

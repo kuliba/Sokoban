@@ -1,6 +1,6 @@
 //
 //  AnywayServicePickerFlowEvent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 04.08.2024.
 //

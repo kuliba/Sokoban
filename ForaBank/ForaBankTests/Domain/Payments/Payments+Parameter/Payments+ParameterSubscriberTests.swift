@@ -1,6 +1,6 @@
 //
 //  Payments+ParameterSubscriberTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 02.04.2024.
 //

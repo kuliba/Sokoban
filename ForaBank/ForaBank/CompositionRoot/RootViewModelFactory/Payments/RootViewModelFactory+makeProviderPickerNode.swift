@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makeProviderPickerNode.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 24.11.2024.
 //

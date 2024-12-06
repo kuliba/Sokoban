@@ -1,6 +1,6 @@
 //
 //  Model+ToAnotherCardTransfer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 22.02.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  OptionSelectorViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 25.02.2023.
 //

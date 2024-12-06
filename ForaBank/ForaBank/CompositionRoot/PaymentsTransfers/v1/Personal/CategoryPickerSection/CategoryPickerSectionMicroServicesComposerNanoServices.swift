@@ -1,6 +1,6 @@
 //
 //  CategoryPickerSectionMicroServicesComposerNanoServices.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 30.09.2024.
 //

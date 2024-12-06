@@ -1,6 +1,6 @@
 //
 //  MyProductsViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 06.06.2024.
 //

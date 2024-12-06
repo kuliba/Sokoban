@@ -1,6 +1,6 @@
 //
 //  OperatorGroupDataOperatorDataHelpersTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 22.02.2023.
 //

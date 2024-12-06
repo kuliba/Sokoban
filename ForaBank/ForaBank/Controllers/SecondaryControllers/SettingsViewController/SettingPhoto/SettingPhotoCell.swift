@@ -1,6 +1,6 @@
 //
 //  SettingPhotoCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 13.04.2022.
 //

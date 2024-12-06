@@ -1,6 +1,6 @@
 //
 //  ItemView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 22.06.2023.
 //

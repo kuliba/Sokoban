@@ -1,6 +1,6 @@
 //
 //  ExtensionGKHSearch.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 23.08.2021.
 //

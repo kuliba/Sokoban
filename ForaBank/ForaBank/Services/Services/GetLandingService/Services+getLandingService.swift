@@ -1,6 +1,6 @@
 //
 //  Services+getLandingService.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 05.09.2023.
 //

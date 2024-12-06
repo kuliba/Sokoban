@@ -1,6 +1,6 @@
 //
 //  CustomLineShapeWithAlignment.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 22.03.2022.
 //

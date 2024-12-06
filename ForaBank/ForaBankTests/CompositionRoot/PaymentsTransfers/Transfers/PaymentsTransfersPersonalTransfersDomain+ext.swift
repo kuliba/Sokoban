@@ -1,6 +1,6 @@
 //
 //  PaymentsTransfersPersonalTransfersDomain+ext.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 26.10.2024.
 //

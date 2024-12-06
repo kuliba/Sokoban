@@ -1,6 +1,6 @@
 //
 //  ServiceFailureAlert.ServiceFailure+ext.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 10.08.2024.
 //

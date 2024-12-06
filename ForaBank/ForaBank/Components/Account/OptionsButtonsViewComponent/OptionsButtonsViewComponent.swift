@@ -1,6 +1,6 @@
 //
 //  OptionsButtonsViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 10.08.2022.
 //

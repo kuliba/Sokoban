@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createCreateAnywayTransferNewRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 27.03.2024.
 //

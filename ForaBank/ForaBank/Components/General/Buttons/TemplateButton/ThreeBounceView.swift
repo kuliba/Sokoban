@@ -1,6 +1,6 @@
 //
 //  ThreeBounceView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 05.06.2023.
 //

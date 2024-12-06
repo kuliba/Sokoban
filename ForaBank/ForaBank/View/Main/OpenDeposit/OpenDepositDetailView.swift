@@ -1,6 +1,6 @@
 //
 //  OpenDepositDetailView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 06.05.2022.
 //

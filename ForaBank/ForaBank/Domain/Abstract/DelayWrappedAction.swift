@@ -1,6 +1,6 @@
 //
 //  DelayWrappedAction.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 18.04.2023.
 //

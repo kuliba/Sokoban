@@ -1,6 +1,6 @@
 //
 //  CardActivateSliderViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 25.02.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  MainSectionCurrencyMetalComponentMock.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 12.07.2022.
 //

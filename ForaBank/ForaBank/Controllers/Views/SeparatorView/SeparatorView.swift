@@ -1,6 +1,6 @@
 //
 //  SeparatorView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 27.06.2021.
 //

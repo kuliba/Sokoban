@@ -1,6 +1,6 @@
 //
 //  Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 13.08.2023.
 //

@@ -1,6 +1,6 @@
 //
-//  ForaBankUITests.swift
-//  ForaBankUITests
+//  VortexUITests.swift
+//  VortexUITests
 //
 //  Created by Max Gribov on 20.12.2021.
 //

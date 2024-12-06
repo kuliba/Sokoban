@@ -1,6 +1,6 @@
 //
 //  DictionaryExtensionsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 22.05.2024.
 //

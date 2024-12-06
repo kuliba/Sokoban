@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makeCategoryPickerSection.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 01.10.2024.
 //

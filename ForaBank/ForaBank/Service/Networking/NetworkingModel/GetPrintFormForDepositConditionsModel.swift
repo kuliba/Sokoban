@@ -1,6 +1,6 @@
 //
 //  GetPrintFormForDepositConditionsModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 17.05.2022.
 //

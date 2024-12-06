@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetShowcaseRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Valentin Ozerov on 04.10.2024.
 //

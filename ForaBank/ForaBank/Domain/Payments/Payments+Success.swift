@@ -1,6 +1,6 @@
 //
 //  Payments+Success.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 21.03.2023.
 //

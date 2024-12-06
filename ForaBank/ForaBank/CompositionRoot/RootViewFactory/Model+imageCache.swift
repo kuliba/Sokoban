@@ -1,6 +1,6 @@
 //
 //  Model+imageCache.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 19.12.2023.
 //

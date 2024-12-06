@@ -1,6 +1,6 @@
 //
 //  PaymentComponents.ButtonView+goToMain.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 12.06.2024.
 //

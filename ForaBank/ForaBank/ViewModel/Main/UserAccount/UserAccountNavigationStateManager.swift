@@ -1,6 +1,6 @@
 //
 //  UserAccountNavigationStateManager.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 01.02.2024.
 //

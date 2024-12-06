@@ -1,6 +1,6 @@
 //
 //  CameraAgent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 29.06.2022.
 //

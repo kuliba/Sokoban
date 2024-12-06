@@ -1,6 +1,6 @@
 //
 //  RequestFactory+getCardStatementForPeriod.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 16.01.2024.
 //

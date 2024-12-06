@@ -1,6 +1,6 @@
 //
 //  SpendingViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 02.03.2022.
 //

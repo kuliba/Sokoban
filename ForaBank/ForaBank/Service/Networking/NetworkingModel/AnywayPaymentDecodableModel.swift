@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 15.06.2021.
 //

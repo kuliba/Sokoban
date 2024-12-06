@@ -1,6 +1,6 @@
 //
 //  PanelButton.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 09.04.2024.
 //

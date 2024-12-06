@@ -1,6 +1,6 @@
 //
 //  LoggingRemoteNanoServiceComposer+composeSerialTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 18.10.2024.
 //

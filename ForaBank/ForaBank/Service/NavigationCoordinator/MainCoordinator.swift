@@ -1,6 +1,6 @@
 //
 //  AppCoordinator.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 19.10.2021.
 //

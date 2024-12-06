@@ -1,6 +1,6 @@
 //
 //   ExtensionPushHistoryViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 16.11.2021.
 //

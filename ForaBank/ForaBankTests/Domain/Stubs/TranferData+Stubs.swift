@@ -1,6 +1,6 @@
 //
 //  TranferData+Stubs.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 01.06.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  GetNotAuthorizedZoneClientInformDataResponse+alertsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 02.12.2024.
 //

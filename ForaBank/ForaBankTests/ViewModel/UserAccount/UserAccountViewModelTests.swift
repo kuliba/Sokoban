@@ -1,6 +1,6 @@
 //
 //  UserAccountViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andrew Kurdin on 19.10.2023.
 //

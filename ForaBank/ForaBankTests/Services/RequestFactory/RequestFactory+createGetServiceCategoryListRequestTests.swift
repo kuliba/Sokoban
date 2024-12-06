@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetServiceCategoryListRequestTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 13.08.2024.
 //

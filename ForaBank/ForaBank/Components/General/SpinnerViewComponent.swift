@@ -1,6 +1,6 @@
 //
 //  SpinnerViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 28.02.2022.
 //

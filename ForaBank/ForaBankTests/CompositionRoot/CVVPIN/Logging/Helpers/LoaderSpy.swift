@@ -1,6 +1,6 @@
 //
 //  LoaderSpy.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 02.11.2023.
 //

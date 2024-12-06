@@ -1,6 +1,6 @@
 //
 //  RoundedCornerShape.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 19.07.2022.
 //

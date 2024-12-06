@@ -1,6 +1,6 @@
 //
 //  QRImagePackerController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 12.12.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  ServerCommandsC2BSubscriptionTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 30.01.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  MainQueueReducerDecoratorTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 10.01.2024.
 //

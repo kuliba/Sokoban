@@ -1,6 +1,6 @@
 //
 //  BicAccountCheck.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 12.12.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  BannersBinder.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 09.09.2024.
 //

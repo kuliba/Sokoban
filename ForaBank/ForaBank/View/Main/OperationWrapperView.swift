@@ -1,6 +1,6 @@
 //
 //  OperationWrapperView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 15.11.2023.
 //

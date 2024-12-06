@@ -1,6 +1,6 @@
 //
 //  Model+PaymentsTransportAvtodor.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 16.06.2023.
 //

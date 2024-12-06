@@ -1,6 +1,6 @@
 //
 //  Refreshable.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 10.10.2024.
 //

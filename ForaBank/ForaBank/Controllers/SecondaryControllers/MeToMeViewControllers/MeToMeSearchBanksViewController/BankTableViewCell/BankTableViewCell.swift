@@ -1,6 +1,6 @@
 //
 //  BankTableViewCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 19.08.2021.
 //

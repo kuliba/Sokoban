@@ -1,6 +1,6 @@
 //
 //  OperationDetailData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Андрей Лятовец on 1/24/22.
 //

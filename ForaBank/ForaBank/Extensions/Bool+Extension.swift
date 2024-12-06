@@ -1,6 +1,6 @@
 //
 //  Bool+Extension.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 05.04.2023.
 //

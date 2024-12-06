@@ -1,6 +1,6 @@
 //
 //  Model+MeToMe.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 25.10.2022.
 //

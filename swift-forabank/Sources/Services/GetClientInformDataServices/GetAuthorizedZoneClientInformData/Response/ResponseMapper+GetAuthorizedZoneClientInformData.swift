@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+GetAuthorizedZoneClientInformData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Nikolay Pochekuev on 27.09.2024.
 //

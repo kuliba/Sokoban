@@ -1,6 +1,6 @@
 //
 //  ECKeysProvider.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 21.01.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  HideTabBarModifier.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 28.06.2022.
 //

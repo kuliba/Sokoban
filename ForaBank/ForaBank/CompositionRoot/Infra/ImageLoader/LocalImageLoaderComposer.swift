@@ -1,6 +1,6 @@
 //
 //  LocalImageLoaderComposer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 01.07.2024.
 //

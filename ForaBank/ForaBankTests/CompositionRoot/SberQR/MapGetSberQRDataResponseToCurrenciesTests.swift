@@ -1,6 +1,6 @@
 //
 //  MapGetSberQRDataResponseToCurrenciesTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 09.12.2023.
 //

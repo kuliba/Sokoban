@@ -1,6 +1,6 @@
 //
 //  CardsScrollView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 28.09.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetOperationDetailByPaymentIDRequestModuleTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 26.03.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  QRErrorViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 09.11.2021.
 //

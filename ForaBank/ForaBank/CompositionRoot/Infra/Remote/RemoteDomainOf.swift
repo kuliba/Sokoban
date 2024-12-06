@@ -1,6 +1,6 @@
 //
 //  RemoteDomainOf.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 14.09.2024.
 //

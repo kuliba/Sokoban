@@ -1,6 +1,6 @@
 //
 //  LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 15.10.2024.
 //

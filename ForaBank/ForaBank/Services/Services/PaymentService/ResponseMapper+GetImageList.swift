@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+GetImageList.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 13.11.2023.
 //

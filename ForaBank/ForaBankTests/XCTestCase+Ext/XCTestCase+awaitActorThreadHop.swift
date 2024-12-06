@@ -1,6 +1,6 @@
 //
 //  XCTestCase+awaitActorThreadHop.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 16.10.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  ManagingSubscriptionView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 27.07.2023.
 //

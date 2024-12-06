@@ -1,6 +1,6 @@
 //
 //  ServerCommandsDepositControllerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Андрей Лятовец on 1/31/22.
 //

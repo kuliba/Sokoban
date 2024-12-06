@@ -1,6 +1,6 @@
 //
 //  ServerCommandsSettingsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 31.10.2022.
 //

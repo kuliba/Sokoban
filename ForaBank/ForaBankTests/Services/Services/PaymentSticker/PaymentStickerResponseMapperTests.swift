@@ -1,6 +1,6 @@
 //
 //  PaymentStickerResponseMapperTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 01.11.2023.
 //

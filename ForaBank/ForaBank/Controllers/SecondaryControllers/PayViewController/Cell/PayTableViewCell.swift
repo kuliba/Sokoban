@@ -1,6 +1,6 @@
 //
 //  PayTableViewCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 17.09.2021.
 //

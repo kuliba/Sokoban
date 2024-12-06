@@ -1,6 +1,6 @@
 //
 //  Config.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 02.03.2023.
 //

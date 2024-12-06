@@ -1,6 +1,6 @@
 //
 //  TextFieldPhoneNumberViewComponentsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 26.10.2022.
 //

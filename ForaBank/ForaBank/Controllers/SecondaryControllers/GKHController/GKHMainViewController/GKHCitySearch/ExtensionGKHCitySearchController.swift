@@ -1,6 +1,6 @@
 //
 //  ExtensionGKHCitySearchController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 22.08.2021.
 //

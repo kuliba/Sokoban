@@ -1,6 +1,6 @@
 //
 //  ProductProfileDetailCircleProgressViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 17.06.2022.
 //

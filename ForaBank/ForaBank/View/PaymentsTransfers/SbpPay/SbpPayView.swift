@@ -1,6 +1,6 @@
 //
 //  SbpPayView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 29.08.2022.
 //

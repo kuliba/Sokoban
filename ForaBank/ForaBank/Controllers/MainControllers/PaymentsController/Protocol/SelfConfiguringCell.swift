@@ -1,6 +1,6 @@
 //
 //  SelfConfiguringCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 03.06.2021.
 //

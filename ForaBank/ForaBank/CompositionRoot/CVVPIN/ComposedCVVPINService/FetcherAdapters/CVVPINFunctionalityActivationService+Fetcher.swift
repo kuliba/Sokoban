@@ -1,6 +1,6 @@
 //
 //  CVVPINFunctionalityActivationService+Fetcher.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 11.11.2023.
 //

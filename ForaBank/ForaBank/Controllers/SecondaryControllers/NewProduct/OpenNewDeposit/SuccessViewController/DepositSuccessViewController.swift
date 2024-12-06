@@ -1,6 +1,6 @@
 //
 //  DepositSuccessViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 07.12.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  BaseViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 20.10.2021.
 //

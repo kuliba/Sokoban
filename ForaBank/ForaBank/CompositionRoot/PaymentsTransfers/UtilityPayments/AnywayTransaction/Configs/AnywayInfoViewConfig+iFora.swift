@@ -1,6 +1,6 @@
 //
 //  AnywayInfoViewConfig+iFora.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 03.07.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  CardChooseView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 29.06.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  QRFoundOrgCell.swift.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Роман Воробьев on 16.12.2021.
 //

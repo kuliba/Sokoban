@@ -1,6 +1,6 @@
 //
 //  DocumentCellType.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 30.05.2022.
 //

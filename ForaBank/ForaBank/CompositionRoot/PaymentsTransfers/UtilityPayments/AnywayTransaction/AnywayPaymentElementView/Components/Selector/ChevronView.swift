@@ -1,6 +1,6 @@
 //
 //  ChevronView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 15.06.2024.
 //

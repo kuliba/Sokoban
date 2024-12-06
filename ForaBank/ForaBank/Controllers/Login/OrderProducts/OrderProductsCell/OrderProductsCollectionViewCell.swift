@@ -1,6 +1,6 @@
 //
 //  OrderProductsCollectionViewCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 25.05.2021.
 //  Copyright © 2021 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.

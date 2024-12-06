@@ -1,6 +1,6 @@
 //
 //  LandingToCodable.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 13.09.2023.
 //

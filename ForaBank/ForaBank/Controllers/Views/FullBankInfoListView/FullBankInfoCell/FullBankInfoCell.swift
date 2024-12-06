@@ -1,6 +1,6 @@
 //
 //  FullBankInfoCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 28.07.2021.
 //

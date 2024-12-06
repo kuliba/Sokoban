@@ -1,6 +1,6 @@
 //
 //  DepositCalculateAmountViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andrew Kurdin on 18.06.2024.
 //

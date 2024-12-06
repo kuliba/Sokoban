@@ -1,6 +1,6 @@
 //
 //  PaymentsGroupView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 20.02.2023.
 //

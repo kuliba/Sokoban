@@ -1,6 +1,6 @@
 //
 //  ControlPanelModelEffectHandler.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 22.07.2024.
 //

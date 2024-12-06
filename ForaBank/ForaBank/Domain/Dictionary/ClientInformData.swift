@@ -1,6 +1,6 @@
 //
 //  ClientInformData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 30.01.2023.
 //

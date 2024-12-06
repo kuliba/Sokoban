@@ -1,6 +1,6 @@
 //
 //  DoubleExtensionsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Dmitry Martynov on 20.12.2022.
 //

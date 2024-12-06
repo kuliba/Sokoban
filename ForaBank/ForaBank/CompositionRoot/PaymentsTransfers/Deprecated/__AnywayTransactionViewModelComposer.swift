@@ -1,6 +1,6 @@
 //
 //  __AnywayTransactionViewModelComposer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 10.06.2024.
 //

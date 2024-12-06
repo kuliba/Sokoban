@@ -1,6 +1,6 @@
 //
 //  RootViewModel+openUtilityPayment.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 25.10.2024.
 //

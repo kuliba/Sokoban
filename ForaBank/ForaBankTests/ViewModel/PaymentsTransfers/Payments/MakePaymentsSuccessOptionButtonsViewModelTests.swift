@@ -1,6 +1,6 @@
 //
 //  MakePaymentsSuccessOptionButtonsViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 15.09.2023.
 //

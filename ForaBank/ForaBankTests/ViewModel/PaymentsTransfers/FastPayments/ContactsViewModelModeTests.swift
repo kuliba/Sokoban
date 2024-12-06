@@ -1,6 +1,6 @@
 //
 //  ContactsViewModelModeTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 10.05.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  UserAccountDocumentsView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 22.04.2022.
 //

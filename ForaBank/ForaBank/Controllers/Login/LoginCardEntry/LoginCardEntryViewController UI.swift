@@ -1,6 +1,6 @@
 //
 //  LoginCardEntryViewController UI.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 02.06.2021.
 //

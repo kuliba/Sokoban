@@ -1,6 +1,6 @@
 //
 //  UInt64+Extention.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 27.10.2022.
 //

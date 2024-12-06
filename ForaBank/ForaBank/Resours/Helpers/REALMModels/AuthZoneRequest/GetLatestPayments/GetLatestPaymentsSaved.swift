@@ -1,6 +1,6 @@
 //
 //  GetLatestPaymentsSaved.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 14.09.2021.
 //

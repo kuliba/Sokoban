@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetOperationDetailByPaymentIDRequestModule.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 26.03.2024.
 //

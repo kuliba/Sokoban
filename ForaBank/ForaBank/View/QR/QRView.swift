@@ -1,6 +1,6 @@
 //
 //  QRView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 21.10.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 24.10.2023.
 //

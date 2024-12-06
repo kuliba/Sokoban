@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 13.05.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  CollapsableSectionView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 04.03.2022.
 //

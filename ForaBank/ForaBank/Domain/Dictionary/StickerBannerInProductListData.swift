@@ -1,6 +1,6 @@
 //
 //  StickerBannerInProductListData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andrew Kurdin on 25.10.2023.
 //

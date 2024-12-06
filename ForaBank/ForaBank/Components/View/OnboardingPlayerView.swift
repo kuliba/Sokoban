@@ -1,6 +1,6 @@
 //
 //  OnboardingPlayer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 20.10.2022.
 //

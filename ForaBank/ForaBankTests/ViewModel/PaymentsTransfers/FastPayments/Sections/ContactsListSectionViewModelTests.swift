@@ -1,6 +1,6 @@
 //
 //  ContactsListSectionViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 25.10.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  ControlPanelWrapperView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 03.07.2024.
 //

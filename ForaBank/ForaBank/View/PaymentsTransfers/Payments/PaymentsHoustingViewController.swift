@@ -1,6 +1,6 @@
 //
 //  PaymentsHoustingViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 14.03.2022.
 //

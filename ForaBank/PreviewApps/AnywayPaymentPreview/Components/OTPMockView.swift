@@ -1,6 +1,6 @@
 //
 //  OTPMockView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 12.04.2024.
 //

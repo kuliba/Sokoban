@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 05.12.2024.
 //

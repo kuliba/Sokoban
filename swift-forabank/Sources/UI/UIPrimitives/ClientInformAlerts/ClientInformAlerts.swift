@@ -1,6 +1,6 @@
 //
 //  Alerts.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Nikolay Pochekuev on 29.10.2024.
 //

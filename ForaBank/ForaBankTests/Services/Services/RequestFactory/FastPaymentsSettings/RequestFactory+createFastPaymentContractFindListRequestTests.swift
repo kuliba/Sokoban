@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createFastPaymentContractFindListRequestTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 02.02.2024.
 //

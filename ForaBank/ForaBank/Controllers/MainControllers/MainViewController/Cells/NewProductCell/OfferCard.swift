@@ -1,6 +1,6 @@
 //
 //  OfferCard.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 08.09.2021.
 //

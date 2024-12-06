@@ -1,6 +1,6 @@
 //
 //  GetOperationDetailByPaymentIdDO.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Роман Воробьев on 31.03.2022.
 //

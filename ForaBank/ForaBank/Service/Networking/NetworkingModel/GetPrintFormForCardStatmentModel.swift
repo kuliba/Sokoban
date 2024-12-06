@@ -1,6 +1,6 @@
 //
 //  GetPrintFormForCardStatmentModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 01.05.2022.
 //

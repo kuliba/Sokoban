@@ -1,6 +1,6 @@
 //
 //  ResultOperationView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 15.12.2021.
 //

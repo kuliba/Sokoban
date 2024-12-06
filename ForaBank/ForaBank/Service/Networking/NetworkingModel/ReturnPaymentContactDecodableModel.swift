@@ -1,6 +1,6 @@
 //
 //  ReturnPaymentContactDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 21.12.2021.
 //

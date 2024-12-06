@@ -1,6 +1,6 @@
 //
 //  ButtonIconTextRectViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 31.05.2022.
 //

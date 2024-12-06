@@ -1,6 +1,6 @@
 //
 //  CurrencyBigListVIewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 16.07.2022.
 //

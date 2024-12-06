@@ -1,6 +1,6 @@
 //
 //  DepositProductsHostingViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 28.04.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  CountryPayCoordinator.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 29.10.2021.
 //

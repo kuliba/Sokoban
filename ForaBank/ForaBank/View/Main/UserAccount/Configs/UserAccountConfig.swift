@@ -1,6 +1,6 @@
 //
 //  UserAccountConfig.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 30.09.2024.
 //

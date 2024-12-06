@@ -1,6 +1,6 @@
 //
 //  DefaultMosParkingPickerDataMapperTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 26.06.2023.
 //

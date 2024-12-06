@@ -1,6 +1,6 @@
 //
 //  NetworkPDFManager.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 23.06.2021.
 //

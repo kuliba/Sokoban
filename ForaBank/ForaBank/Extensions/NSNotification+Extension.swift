@@ -1,6 +1,6 @@
 //
 //  NSNotification+Extension.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 14.07.2022.
 //

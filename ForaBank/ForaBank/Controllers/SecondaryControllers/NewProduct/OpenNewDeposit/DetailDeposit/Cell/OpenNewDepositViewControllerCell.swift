@@ -1,6 +1,6 @@
 //
 //  OpenNewDepositViewControllerCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 30.11.2021.
 //

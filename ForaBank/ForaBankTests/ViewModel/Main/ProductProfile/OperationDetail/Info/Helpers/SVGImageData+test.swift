@@ -1,6 +1,6 @@
 //
 //  SVGImageData+test.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 02.07.2023.
 //

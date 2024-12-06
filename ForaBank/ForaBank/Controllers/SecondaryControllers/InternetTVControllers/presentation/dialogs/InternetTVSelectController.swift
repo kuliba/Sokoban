@@ -1,6 +1,6 @@
 //
 //  InternetTVSelectController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Роман Воробьев on 06.12.2021.
 //

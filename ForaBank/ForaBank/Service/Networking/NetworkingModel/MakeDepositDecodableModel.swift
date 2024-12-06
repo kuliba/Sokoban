@@ -1,6 +1,6 @@
 //
 //  MakeDepositDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 08.12.2021.
 //

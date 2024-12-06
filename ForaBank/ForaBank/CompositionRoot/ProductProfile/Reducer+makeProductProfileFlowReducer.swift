@@ -1,6 +1,6 @@
 //
 //  Reducer+makeProductProfileFlowReducer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 24.06.2024.
 //

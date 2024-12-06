@@ -1,6 +1,6 @@
 //
 //  GKHHistoryModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 06.12.2021.
 //

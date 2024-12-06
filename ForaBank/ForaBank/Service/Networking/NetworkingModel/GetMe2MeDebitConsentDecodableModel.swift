@@ -1,6 +1,6 @@
 //
 //  GetMe2MeDebitConsentDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 13.09.2021.
 //

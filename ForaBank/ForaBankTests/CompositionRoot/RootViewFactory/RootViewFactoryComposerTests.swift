@@ -1,6 +1,6 @@
 //
 //  RootViewFactoryComposerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 25.05.2024.
 //

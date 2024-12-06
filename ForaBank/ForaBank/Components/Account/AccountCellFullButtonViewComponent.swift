@@ -1,6 +1,6 @@
 //
 //  AccountCellFullButtonViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 25.04.2022.
 //

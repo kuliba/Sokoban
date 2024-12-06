@@ -1,6 +1,6 @@
 //
 //  TemplatesListViewModel+GetPhoneNumberTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 15.11.2023.
 //

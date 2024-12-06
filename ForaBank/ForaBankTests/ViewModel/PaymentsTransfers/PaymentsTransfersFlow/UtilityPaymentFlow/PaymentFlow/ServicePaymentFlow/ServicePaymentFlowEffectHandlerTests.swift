@@ -1,6 +1,6 @@
 //
 //  ServicePaymentFlowEffectHandlerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 25.07.2024.
 //

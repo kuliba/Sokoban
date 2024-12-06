@@ -1,6 +1,6 @@
 //
 //  DocumentDelailCellViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 28.05.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentOutline+LatestServicePaymentsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 29.06.2024.
 //

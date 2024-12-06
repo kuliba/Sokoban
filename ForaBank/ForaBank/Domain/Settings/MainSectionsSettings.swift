@@ -1,6 +1,6 @@
 //
 //  MainSectionsSettings.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 23.03.2022.
 //

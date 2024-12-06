@@ -1,6 +1,6 @@
 //
 //  AntifraudViewHostingController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 11.01.2022.
 //

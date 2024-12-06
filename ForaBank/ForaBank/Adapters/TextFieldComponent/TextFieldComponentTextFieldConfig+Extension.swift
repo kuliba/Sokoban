@@ -1,6 +1,6 @@
 //
 //  TextFieldView.TextFieldConfig+Extension.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 26.04.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  TransferByRequisitesViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 30.06.2021.
 //

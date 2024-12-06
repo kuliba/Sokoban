@@ -1,6 +1,6 @@
 //
 //  EPContactSelfDataView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 15.03.2022.
 //

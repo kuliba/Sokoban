@@ -1,6 +1,6 @@
 //
 //  LoginViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 21.06.2021.
 //

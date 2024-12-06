@@ -1,6 +1,6 @@
 //
 //  TemplatesAcceptanceTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 23.11.2024.
 //

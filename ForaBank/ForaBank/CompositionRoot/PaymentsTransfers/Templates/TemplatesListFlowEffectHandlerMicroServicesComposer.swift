@@ -1,6 +1,6 @@
 //
 //  TemplatesListFlowEffectHandlerMicroServicesComposer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 27.08.2024.
 //

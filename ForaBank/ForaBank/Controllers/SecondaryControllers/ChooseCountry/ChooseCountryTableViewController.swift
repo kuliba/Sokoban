@@ -1,6 +1,6 @@
 //
 //  ChooseCountryTableViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 05.06.2021.
 //

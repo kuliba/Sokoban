@@ -1,6 +1,6 @@
 //
 //  NetworkMonitorAgent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 26.01.2023.
 //

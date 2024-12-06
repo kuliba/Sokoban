@@ -1,6 +1,6 @@
 //
 //  PaymentsInputPhoneViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 01.12.2022.
 //

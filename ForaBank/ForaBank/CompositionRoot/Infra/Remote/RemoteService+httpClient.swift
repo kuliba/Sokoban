@@ -1,6 +1,6 @@
 //
 //  RemoteService+httpClient.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 08.09.2024.
 //

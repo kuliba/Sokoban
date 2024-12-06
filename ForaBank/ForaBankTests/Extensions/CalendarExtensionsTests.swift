@@ -1,6 +1,6 @@
 //
 //  CalendarExtensionsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 14.06.2022.
 //

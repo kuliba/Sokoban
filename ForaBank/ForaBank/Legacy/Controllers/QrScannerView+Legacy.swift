@@ -1,6 +1,6 @@
 //
 //  QrView+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 01.07.2022.
 //

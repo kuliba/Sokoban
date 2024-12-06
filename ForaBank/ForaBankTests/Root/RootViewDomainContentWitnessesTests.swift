@@ -1,6 +1,6 @@
 //
 //  RootViewDomainContentWitnessesTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 18.11.2024.
 //

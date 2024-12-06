@@ -1,6 +1,6 @@
 //
 //  RequestFactory_createGetServiceCategoryListRequestTests.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Nikolay Pochekuev on 30.09.2024.
 //

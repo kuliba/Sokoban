@@ -1,6 +1,6 @@
 //
 //  ModelAuthLoginViewModelFactory.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 10.11.2023.
 //

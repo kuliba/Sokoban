@@ -1,6 +1,6 @@
 //
 //  XCTestCase+getJSON.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 03.05.2023.
 //

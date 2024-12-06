@@ -1,6 +1,6 @@
 //
 //  Model+CurrencyWallet.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 06.07.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  PlainClientInformBottomSheetConfig+iFora.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Nikolay Pochekuev on 14.10.2024.
 //

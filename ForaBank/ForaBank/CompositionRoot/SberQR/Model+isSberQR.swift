@@ -1,6 +1,6 @@
 //
 //  Model+isSberQR.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 07.12.2023.
 //

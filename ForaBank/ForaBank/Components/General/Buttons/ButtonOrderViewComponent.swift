@@ -1,6 +1,6 @@
 //
 //  ButtonOrderViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 13.12.2022.
 //

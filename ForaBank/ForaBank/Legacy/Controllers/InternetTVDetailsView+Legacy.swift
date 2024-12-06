@@ -1,6 +1,6 @@
 //
 //  InternetTVDetailsView+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 28.06.2022.
 //

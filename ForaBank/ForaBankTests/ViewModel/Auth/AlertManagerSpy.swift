@@ -1,6 +1,6 @@
 //
 //  AlertManagerSpy.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Nikolay Pochekuev on 02.12.2024.
 //

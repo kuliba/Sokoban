@@ -1,6 +1,6 @@
 //
 //  XCTestCase+makeServiceCategory.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 21.10.2024.
 //

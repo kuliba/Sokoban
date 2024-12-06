@@ -1,6 +1,6 @@
 //
 //  NanoServices+initiateAnywayPayment.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 12.08.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  Services+getBannerCatalogListV2.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 02.09.2024.
 //

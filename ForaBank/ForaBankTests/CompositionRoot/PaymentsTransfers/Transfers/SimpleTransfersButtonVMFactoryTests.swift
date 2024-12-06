@@ -1,6 +1,6 @@
 //
 //  SimpleTransfersButtonVMFactoryTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 22.10.2024.
 //

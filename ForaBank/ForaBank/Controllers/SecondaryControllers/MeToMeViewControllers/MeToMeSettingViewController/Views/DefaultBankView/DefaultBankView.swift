@@ -1,6 +1,6 @@
 //
 //  DefaultBankView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 25.07.2022.
 //

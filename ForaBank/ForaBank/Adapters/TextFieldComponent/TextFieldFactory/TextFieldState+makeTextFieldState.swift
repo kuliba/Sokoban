@@ -1,6 +1,6 @@
 //
 //  TextFieldState+makeTextFieldState.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 22.05.2023.
 //

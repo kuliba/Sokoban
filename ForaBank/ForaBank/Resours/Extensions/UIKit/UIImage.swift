@@ -1,6 +1,6 @@
 //
 //  UIImage.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 23.08.2021.
 //

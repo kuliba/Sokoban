@@ -1,6 +1,6 @@
 //
 //  LoggerAgentProtocol.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 16.08.2022.
 //

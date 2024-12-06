@@ -1,6 +1,6 @@
 //
 //  LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 13.09.2024.
 //

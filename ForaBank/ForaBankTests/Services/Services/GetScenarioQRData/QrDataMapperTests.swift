@@ -1,6 +1,6 @@
 //
 //  QrDataMapperTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 28.09.2023.
 //

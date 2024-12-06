@@ -1,6 +1,6 @@
 //
 //  DeepLinkType.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 27.07.2022.
 //

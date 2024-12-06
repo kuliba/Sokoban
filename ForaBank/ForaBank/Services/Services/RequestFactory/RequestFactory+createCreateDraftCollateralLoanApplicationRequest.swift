@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Valentin Ozerov on 27.11.2024.
 //

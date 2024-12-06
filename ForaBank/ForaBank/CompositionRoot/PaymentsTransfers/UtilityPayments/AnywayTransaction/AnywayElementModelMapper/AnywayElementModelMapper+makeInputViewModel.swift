@@ -1,6 +1,6 @@
 //
 //  AnywayElementModelMapper+makeInputViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 08.08.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  TextFieldFormatableViewComponentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 17.03.2022.
 //

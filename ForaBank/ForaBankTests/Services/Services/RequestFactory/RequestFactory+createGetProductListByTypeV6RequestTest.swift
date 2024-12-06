@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetProductListByTypeV6RequestTest.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 15.08.2024.
 //

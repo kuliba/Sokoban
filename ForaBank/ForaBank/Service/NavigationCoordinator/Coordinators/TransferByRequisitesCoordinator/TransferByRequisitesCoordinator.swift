@@ -1,6 +1,6 @@
 //
 //  TransferByRequisitesCoordinator.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 10.11.2021.
 //

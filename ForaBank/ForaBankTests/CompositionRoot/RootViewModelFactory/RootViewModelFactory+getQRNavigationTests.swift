@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+getQRNavigationTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 24.11.2024.
 //

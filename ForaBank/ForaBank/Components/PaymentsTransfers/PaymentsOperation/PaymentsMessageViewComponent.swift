@@ -1,6 +1,6 @@
 //
 //  PaymentsMessageViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 19.01.2023.
 //

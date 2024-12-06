@@ -1,6 +1,6 @@
 //
 //  LandingServices.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 11.10.2024.
 //

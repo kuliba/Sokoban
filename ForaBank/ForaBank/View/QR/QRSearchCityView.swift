@@ -1,6 +1,6 @@
 //
 //  QRSearchCityView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 15.12.2022.
 //

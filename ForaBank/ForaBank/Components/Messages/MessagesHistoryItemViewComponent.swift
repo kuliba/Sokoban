@@ -1,6 +1,6 @@
 //
 //  MessagesHistoryItemComponentView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 20.04.2022.
 //

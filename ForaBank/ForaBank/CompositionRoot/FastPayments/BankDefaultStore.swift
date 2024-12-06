@@ -1,6 +1,6 @@
 //
 //  BankDefaultStore.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 14.02.2024.
 //

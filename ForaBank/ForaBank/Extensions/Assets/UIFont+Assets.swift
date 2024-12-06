@@ -1,6 +1,6 @@
 //
 //  UIFont+Assets.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 04.04.2023.
 //

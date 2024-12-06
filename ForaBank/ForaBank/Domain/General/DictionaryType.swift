@@ -1,6 +1,6 @@
 //
 //  DictionaryType.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 11.07.2022.
 //

@@ -1,5 +1,5 @@
 //
-//  ForaCrypto.swift
+//  VortexCrypto.swift
 //  
 //
 //  Created by Igor Malyarov on 10.08.2023.

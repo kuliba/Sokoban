@@ -1,6 +1,6 @@
 //
 //  DetailOperationTableViewCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 03.11.2021.
 //

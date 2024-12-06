@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makeNavigationStateManager.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 26.12.2023.
 //

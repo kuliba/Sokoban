@@ -1,6 +1,6 @@
 //
 //  QRCodeTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Константин Савялов on 19.10.2022.
 //

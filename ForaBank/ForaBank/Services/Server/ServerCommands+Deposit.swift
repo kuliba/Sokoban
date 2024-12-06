@@ -1,6 +1,6 @@
 //
 //  ServerCommands+DepositController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Андрей Лятовец on 1/31/22.
 //

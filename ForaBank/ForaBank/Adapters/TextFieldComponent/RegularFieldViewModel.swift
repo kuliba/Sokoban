@@ -1,6 +1,6 @@
 //
 //  RegularFieldViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 02.06.2023.
 //

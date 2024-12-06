@@ -1,6 +1,6 @@
 //
 //  NavigationModel+ext.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 16.11.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  ErasedRemoteNanoServiceFactory.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 08.09.2024.
 //

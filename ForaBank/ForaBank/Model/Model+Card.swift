@@ -1,6 +1,6 @@
 //
 //  Model+Card.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 22.04.2022.
 //

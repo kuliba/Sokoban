@@ -1,6 +1,6 @@
 //
 //  PaymentsAmountViewViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 16.08.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  CloseAccountSpinnerViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 03.11.2022.
 //

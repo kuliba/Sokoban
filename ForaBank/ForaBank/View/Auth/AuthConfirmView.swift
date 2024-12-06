@@ -1,6 +1,6 @@
 //
 //  AuthConfirmView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 10.02.2022.
 //

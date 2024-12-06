@@ -1,6 +1,6 @@
 //
 //  BankData+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 08.06.2022.
 //

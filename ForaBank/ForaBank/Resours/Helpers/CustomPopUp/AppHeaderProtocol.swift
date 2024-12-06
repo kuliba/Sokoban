@@ -1,6 +1,6 @@
 //
 //  AppHeaderProtocol.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 28.06.2021.
 //

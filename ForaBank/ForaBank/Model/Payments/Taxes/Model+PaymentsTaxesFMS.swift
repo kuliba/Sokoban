@@ -1,6 +1,6 @@
 //
 //  Model+PaymentsTaxes.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 09.02.2022.
 //

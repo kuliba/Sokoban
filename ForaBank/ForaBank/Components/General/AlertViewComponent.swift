@@ -1,6 +1,6 @@
 //
 //  AlertViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 22.02.2022.
 //

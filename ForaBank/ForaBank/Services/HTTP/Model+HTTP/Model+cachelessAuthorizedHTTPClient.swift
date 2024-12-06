@@ -1,6 +1,6 @@
 //
 //  Model+cachelessAuthorizedHTTPClient.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 03.10.2023.
 //

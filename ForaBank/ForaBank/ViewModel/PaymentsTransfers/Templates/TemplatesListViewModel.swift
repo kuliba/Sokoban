@@ -1,6 +1,6 @@
 //
 //  TemplatesListViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 18.01.2022.
 //

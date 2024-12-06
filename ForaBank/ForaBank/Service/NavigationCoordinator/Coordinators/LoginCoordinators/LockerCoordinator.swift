@@ -1,6 +1,6 @@
 //
 //  LockerCoordinator.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 05.11.2021.
 //

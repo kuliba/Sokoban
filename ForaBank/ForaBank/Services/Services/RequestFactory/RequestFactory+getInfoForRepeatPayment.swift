@@ -1,6 +1,6 @@
 //
 //  RequestFactory+getInfoForRepeatPayment.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 30.07.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  Model+PaymentsTaxesFSSP.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 15.03.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  DigitModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //

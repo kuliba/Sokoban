@@ -1,6 +1,6 @@
 //
 //  ServerAgentStub.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 21.02.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  SVCardLandingServices.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 09.07.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  DepositCalculatorView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 02.05.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  GKHInputCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 21.08.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  CurrencyData+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 14.06.2022.
 //

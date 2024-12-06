@@ -1,6 +1,6 @@
 //
 //  LiveCVVPINJSONMaker.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 29.10.2023.
 //

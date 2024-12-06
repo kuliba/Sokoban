@@ -1,6 +1,6 @@
 //
 //  SecKeySwaddleCryptographer+live.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 27.09.2023.
 //

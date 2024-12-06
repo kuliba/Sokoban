@@ -1,6 +1,6 @@
 //
 //  CardGuardianConfig.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 01.02.2024.
 //

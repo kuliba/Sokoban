@@ -1,6 +1,6 @@
 //
 //  ServerAgentSessionCodeAPIClientAdapter.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 21.07.2023.
 //

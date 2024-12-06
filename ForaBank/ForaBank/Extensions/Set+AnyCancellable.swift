@@ -1,6 +1,6 @@
 //
 //  Set+AnyCancellable.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 16.09.2024.
 //

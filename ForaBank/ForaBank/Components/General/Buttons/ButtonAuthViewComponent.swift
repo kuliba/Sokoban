@@ -1,6 +1,6 @@
 //
 //  ButtonAuthView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 23.11.2022.
 //

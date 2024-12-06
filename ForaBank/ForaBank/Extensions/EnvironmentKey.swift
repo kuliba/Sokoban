@@ -1,6 +1,6 @@
 //
 //  EnvironmentKey.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 17.04.2023.
 //

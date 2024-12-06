@@ -1,6 +1,6 @@
 //
 //  PaymentViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 03.12.2021.
 //

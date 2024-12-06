@@ -1,6 +1,6 @@
 //
 //  Reducer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 10.01.2024.
 //

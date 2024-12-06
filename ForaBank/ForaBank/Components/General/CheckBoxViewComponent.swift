@@ -1,6 +1,6 @@
 //
 //  CheckBoxViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 07.12.2022.
 //

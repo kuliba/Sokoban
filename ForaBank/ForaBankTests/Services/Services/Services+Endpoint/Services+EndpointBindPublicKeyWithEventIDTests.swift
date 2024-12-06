@@ -1,6 +1,6 @@
 //
 //  Services+EndpointBindPublicKeyWithEventIDTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 04.08.2023.
 //

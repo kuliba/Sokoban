@@ -1,6 +1,6 @@
 //
 //  PaymentsMeToMeViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 21.06.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  FastPaymentContractFullInfoType.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 21.06.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  MyProductsMoneyViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 10.04.2022.
 //  Full refactored by Dmitry Martynov on 20.08.2022

@@ -1,6 +1,6 @@
 //
 //  ConfirmCodeView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 26.07.2023.
 //

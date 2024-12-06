@@ -1,6 +1,6 @@
 //
 //  ChatViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 29.04.2022.
 //

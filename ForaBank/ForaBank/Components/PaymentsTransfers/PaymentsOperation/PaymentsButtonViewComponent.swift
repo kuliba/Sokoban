@@ -1,6 +1,6 @@
 //
 //  PaymentsContinueButtonViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 27.10.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  AtmData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 04.04.2022.
 //

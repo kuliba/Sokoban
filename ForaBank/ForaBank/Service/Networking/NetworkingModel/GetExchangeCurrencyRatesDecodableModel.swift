@@ -1,6 +1,6 @@
 //
 //  GetExchangeCurrencyRatesDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 01.07.2021.
 //

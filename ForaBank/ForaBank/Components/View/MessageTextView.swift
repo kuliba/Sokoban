@@ -1,6 +1,6 @@
 //
 //  MessageTextView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 26.07.2022.
 //

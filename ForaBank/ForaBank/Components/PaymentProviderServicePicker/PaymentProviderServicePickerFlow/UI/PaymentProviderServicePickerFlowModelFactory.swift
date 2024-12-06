@@ -1,6 +1,6 @@
 //
 //  PaymentProviderServicePickerFlowModelFactory.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 26.07.2024.
 //

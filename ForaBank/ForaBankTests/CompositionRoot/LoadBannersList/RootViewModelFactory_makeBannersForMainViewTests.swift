@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory_makeBannersForMainViewTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 10.09.2024.
 //

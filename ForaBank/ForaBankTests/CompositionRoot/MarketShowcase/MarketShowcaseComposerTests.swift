@@ -1,6 +1,6 @@
 //
 //  MarketShowcaseComposerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 01.10.2024.
 //

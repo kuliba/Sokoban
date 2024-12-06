@@ -1,6 +1,6 @@
 //
 //  ColorExtensionsTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 03.06.2024.
 //

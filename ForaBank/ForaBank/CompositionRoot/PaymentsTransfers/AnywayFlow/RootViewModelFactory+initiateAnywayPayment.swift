@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+initiateAnywayPayment.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 04.12.2024.
 //

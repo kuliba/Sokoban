@@ -1,6 +1,6 @@
 //
 //  RequestFactory+getProductDetailsRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 06.03.2024.
 //

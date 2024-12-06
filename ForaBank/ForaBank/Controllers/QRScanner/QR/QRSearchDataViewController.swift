@@ -1,6 +1,6 @@
 //
 //  QRSearchDataViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 20.03.2022.
 //

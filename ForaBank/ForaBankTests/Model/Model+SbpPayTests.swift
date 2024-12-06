@@ -1,6 +1,6 @@
 //
 //  Model+SbpPayTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 17.08.2023.
 //

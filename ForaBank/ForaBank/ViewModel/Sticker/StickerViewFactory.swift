@@ -1,6 +1,6 @@
 //
 //  StickerViewFactory.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 27.10.2024.
 //

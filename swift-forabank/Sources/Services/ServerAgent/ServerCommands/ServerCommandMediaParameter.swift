@@ -1,6 +1,6 @@
 //
 //  ServerCommandMediaParameter.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 03.09.2023.
 //

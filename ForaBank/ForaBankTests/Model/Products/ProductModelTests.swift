@@ -1,6 +1,6 @@
 //
 //  ProductModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий on 14.04.2022.
 //

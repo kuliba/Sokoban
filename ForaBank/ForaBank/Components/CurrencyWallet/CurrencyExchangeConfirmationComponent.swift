@@ -1,6 +1,6 @@
 //
 //  CurrencyExchangeConfirmationComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 17.07.2022.
 //

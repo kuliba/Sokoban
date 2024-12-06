@@ -1,6 +1,6 @@
 //
 //  ClosePaymentsViewModelWrapper.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 26.09.2024.
 //

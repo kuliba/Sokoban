@@ -1,6 +1,6 @@
 //
 //  HistoryReducer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 20.06.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createPrepareDeleteDefaultBankRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 03.10.2024.
 //

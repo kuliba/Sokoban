@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentElementConfig+iFora.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 24.05.2024.
 //

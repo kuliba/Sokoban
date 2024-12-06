@@ -1,6 +1,6 @@
 //
 //  ModelAction+Payments.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 07.02.2022.
 //
@@ -722,7 +722,7 @@ extension Model {
         default:
             switch operation.service {
             case .sfp:
-                // Fora client payment first step response
+                // Vortex client payment first step response
                 return try await paymentsProcessRemoteStepSFP(operation: operation, response: response)
             
             case .requisites:

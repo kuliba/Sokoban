@@ -1,6 +1,6 @@
 //
 //  StickerDictionaryResponse.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 02.11.2023.
 //

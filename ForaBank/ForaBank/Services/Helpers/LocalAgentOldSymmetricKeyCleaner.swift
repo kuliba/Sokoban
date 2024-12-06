@@ -1,6 +1,6 @@
 //
 //  LocalAgentOldSymmetricKeyCleaner.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 26.07.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  ProcessSpy.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 28.02.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  AnywayElementModel+Receiver.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 26.06.2024.
 //

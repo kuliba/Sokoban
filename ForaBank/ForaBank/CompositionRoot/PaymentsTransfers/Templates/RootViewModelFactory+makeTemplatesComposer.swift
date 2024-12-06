@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makeTemplatesComposer.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 10.08.2024.
 //

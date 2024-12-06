@@ -1,6 +1,6 @@
 ////
 ////  HistoryReducerTests.swift
-////  ForaBankTests
+////  VortexTests
 ////
 ////  Created by Дмитрий Савушкин on 27.06.2024.
 ////

@@ -1,6 +1,6 @@
 //
 //  GetUserSettingDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 22.09.2021.
 //

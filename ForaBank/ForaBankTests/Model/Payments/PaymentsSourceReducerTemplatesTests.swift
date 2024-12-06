@@ -1,6 +1,6 @@
 //
 //  PaymentsSourceReducerTemplateTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 30.05.2023.
 //

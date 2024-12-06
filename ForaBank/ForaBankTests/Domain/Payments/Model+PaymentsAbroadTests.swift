@@ -1,6 +1,6 @@
 //
 //  Model+PaymentsAbroadTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 30.05.2023.
 //

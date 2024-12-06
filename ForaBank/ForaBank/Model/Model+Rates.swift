@@ -1,6 +1,6 @@
 //
 //  Model+Rates.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 25.05.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  OperationDetailViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 21.12.2021.
 //

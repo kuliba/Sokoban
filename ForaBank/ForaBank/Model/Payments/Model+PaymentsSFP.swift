@@ -1,6 +1,6 @@
 //
 //  Model+PaymensSFP.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 09.11.2022.
 //

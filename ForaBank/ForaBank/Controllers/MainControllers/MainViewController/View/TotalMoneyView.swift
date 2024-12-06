@@ -1,6 +1,6 @@
 //
 //  totalMoneyView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 02.09.2021.
 //

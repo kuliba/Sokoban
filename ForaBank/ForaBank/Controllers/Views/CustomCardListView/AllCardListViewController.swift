@@ -1,6 +1,6 @@
 //
 //  CustomCardListViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 08.07.2021.
 //

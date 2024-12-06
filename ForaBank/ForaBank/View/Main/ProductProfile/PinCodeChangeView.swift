@@ -1,6 +1,6 @@
 //
 //  PinCodeChangeView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 13.07.2023.
 //

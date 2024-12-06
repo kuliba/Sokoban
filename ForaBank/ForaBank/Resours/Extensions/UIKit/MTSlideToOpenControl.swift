@@ -1,6 +1,6 @@
 //
 //  MTSlideToOpenControl.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 13.10.2021.
 //

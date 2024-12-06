@@ -1,6 +1,6 @@
 //
 //  ButtonConfig+iFora.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 12.02.2024.
 //

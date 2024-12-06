@@ -1,6 +1,6 @@
 //
 //  PaymentsTransfersPersonalNanoServices.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 20.09.2024.
 //

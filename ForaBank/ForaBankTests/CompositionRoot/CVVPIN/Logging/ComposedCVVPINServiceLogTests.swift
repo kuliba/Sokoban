@@ -1,6 +1,6 @@
 //
 //  ComposedCVVPINServiceLogTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 03.11.2023.
 //

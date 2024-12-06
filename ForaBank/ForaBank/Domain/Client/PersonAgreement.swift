@@ -1,6 +1,6 @@
 //
 //  PersonAgreement.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 31.08.2022.
 //

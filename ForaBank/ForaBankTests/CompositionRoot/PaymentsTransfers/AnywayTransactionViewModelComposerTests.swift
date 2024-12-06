@@ -1,6 +1,6 @@
 //
 //  AnywayTransactionViewModelComposerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 10.06.2024.
 //

@@ -1,6 +1,6 @@
 //
 //  QRWrapperView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 19.11.2024.
 //

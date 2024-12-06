@@ -1,6 +1,6 @@
 //
 //  SwipeActionView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 23.09.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  ResultAccountStatementModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 18.11.2021.
 //

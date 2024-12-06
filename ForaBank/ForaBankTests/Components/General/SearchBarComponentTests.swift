@@ -1,6 +1,6 @@
 //
 //  SearchBarComponentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 28.04.2023.
 //

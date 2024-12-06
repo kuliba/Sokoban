@@ -1,6 +1,6 @@
 //
 //  ParameterDataTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 28.02.2023.
 //

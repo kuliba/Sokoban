@@ -1,6 +1,6 @@
 //
 //  ServerCommands+Account.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Андрей Лятовец on 1/18/22.
 //

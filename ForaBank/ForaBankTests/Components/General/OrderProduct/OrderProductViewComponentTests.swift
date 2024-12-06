@@ -1,6 +1,6 @@
 //
 //  OrderProductViewComponentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 27.04.2023.
 //

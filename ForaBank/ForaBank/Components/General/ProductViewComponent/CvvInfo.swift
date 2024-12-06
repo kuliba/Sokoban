@@ -1,6 +1,6 @@
 //
 //  CvvInfo.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 05.04.2024.
 //

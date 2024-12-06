@@ -1,6 +1,6 @@
 //
 //  PhonePaymentView+Legacy.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 17.06.2022.
 //

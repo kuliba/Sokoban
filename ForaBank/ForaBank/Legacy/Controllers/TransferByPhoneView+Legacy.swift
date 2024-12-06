@@ -1,6 +1,6 @@
 //
 //  TransferByPhoneView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 06.06.2022.
 //

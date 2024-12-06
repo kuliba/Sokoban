@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makeLoadBannersList.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 05.09.2024.
 //

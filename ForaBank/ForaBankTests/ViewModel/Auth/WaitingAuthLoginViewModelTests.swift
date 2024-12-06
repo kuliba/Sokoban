@@ -1,6 +1,6 @@
 //
 //  WaitingAuthLoginViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 17.09.2023.
 //

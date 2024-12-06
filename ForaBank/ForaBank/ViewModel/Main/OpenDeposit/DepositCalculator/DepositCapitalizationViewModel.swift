@@ -1,6 +1,6 @@
 //
 //  DepositCapitalizationViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 04.05.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  XCTestCase+assertError.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 15.07.2024.
 //

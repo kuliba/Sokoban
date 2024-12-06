@@ -1,6 +1,6 @@
 //
 //  MockEncryptionAgent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 07.02.2023.
 //

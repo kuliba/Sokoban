@@ -1,6 +1,6 @@
 //
 //  NanoServices+Fetch.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 07.02.2024.
 //

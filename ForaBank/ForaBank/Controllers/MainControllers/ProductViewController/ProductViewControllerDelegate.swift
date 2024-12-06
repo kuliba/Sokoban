@@ -1,6 +1,6 @@
 //
 //  ProductViewControllerDelegate.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 11.11.2021.
 //

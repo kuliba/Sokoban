@@ -1,6 +1,6 @@
 //
 //  ChatViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 28.09.2021.
 //

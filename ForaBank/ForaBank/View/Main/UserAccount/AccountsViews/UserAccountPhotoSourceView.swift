@@ -1,6 +1,6 @@
 //
 //  UserAccountPhotoSourceView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 28.06.2022.
 //

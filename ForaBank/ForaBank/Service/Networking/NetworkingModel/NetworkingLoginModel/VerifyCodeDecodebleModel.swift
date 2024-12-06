@@ -1,6 +1,6 @@
 //
 //  VerifyCodeDecodebleModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 08.06.2021.
 //

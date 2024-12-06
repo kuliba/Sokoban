@@ -1,6 +1,6 @@
 //
 //  ClearRealm.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 06.12.2021.
 //

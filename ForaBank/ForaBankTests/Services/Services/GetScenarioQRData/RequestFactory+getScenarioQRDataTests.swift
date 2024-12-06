@@ -1,6 +1,6 @@
 //
 //  RequestFactory+getScenarioQRDataTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 26.09.2023.
 //

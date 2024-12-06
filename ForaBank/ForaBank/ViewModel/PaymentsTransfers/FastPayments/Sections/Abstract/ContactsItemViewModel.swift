@@ -1,6 +1,6 @@
 //
 //  ContactsItemViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 11.11.2022.
 //

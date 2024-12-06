@@ -1,6 +1,6 @@
 //
 //  DocumentCollectionViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 14.04.2022.
 //

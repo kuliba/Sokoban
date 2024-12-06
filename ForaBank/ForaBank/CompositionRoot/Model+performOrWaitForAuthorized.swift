@@ -1,6 +1,6 @@
 //
 //  Model+performOrWaitForAuthorized.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Nikolay Pochekuev on 22.10.2024.
 //

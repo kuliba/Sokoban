@@ -1,6 +1,6 @@
 //
 //  Model+Notifications.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 22.04.2022.
 //

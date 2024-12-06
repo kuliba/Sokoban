@@ -1,6 +1,6 @@
 //
 //  ConfigSticker.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andrew Kurdin on 02.10.2023.
 //

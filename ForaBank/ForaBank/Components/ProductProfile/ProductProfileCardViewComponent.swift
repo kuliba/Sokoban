@@ -1,6 +1,6 @@
 //
 //  ProductProfileCardView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 24.02.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  MarketShowcaseContentView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 25.09.2024.
 //

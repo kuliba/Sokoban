@@ -1,6 +1,6 @@
 //
 //  KeyExchangeDecodebleModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 11.06.2021.
 //

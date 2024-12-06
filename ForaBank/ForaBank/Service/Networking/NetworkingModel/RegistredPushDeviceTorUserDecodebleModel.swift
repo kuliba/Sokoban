@@ -1,6 +1,6 @@
 //
 //  RegistredPushDeviceTorUserDecodebleModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 10.06.2021.
 //

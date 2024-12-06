@@ -1,6 +1,6 @@
 //
 //  ClosePaymentsViewModelWrapperTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 26.09.2024.
 //

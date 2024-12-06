@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 27.05.2021.
 //

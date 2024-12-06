@@ -1,6 +1,6 @@
 //
 //  TextFieldMaskableViewComponentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 21.02.2022.
 //

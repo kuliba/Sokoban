@@ -1,6 +1,6 @@
 //
 //  UserAccountExitInfoView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 04.07.2022.
 //

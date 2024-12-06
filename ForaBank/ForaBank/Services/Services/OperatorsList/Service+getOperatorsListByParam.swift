@@ -1,6 +1,6 @@
 //
 //  Service+getOperatorsListByParam.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 16.02.2024.
 //

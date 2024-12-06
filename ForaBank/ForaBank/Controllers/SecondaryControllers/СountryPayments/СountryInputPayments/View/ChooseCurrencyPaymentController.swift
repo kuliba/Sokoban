@@ -1,6 +1,6 @@
 //
 //  ChooseCurrencyPaymentController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 15.11.2021.
 //

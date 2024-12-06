@@ -1,6 +1,6 @@
 //
 //  HistoryTableViewCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 14.09.2021.
 //

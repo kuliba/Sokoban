@@ -1,6 +1,6 @@
 //
 //  Model+AntifraudDataTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 14.11.2023.
 //

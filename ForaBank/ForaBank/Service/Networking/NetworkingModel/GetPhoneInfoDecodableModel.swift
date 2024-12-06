@@ -1,6 +1,6 @@
 //
 //  GetPhoneInfoDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 23.09.2021.
 //

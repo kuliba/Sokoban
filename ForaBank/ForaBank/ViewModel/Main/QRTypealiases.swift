@@ -1,6 +1,6 @@
 //
 //  QRTypealiases.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 05.12.2023.
 //

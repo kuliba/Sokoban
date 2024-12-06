@@ -1,6 +1,6 @@
 //
 //  RootViewModel+Preview.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 06.07.2022.
 //

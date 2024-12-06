@@ -1,6 +1,6 @@
 //
 //  TemplatesListViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Dmitry Martynov on 04.06.2023.
 //

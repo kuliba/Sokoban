@@ -1,6 +1,6 @@
 //
 //  NanoServices+initiateAnywayPaymentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 12.08.2024.
 //

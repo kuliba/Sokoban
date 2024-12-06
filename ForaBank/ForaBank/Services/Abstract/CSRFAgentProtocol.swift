@@ -1,6 +1,6 @@
 //
 //  CSRFAgentProtocol.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 23.01.2022.
 //

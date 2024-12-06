@@ -1,6 +1,6 @@
 //
 //  ProductsData+hasCorporateCardsOnly.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 30.08.2024.
 //

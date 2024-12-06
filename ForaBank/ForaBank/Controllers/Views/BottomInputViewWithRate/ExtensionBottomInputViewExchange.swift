@@ -1,6 +1,6 @@
 //
 //  ExtensionBottomInputViewExchange.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 03.08.2021.
 //

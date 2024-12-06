@@ -1,6 +1,6 @@
 //
 //  GeneralImageCacheImagePublisherTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 20.09.2024.
 //

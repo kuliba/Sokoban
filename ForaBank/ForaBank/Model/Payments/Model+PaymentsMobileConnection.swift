@@ -1,6 +1,6 @@
 //
 //  Model+PaymentsMobileConnection.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 20.02.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  GetPaymentSystemList.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 05.09.2021.
 //

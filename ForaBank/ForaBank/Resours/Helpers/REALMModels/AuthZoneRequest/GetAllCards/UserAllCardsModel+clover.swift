@@ -1,6 +1,6 @@
 //
 //  UserAllCardsModel+clover.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 02.04.2024.
 //

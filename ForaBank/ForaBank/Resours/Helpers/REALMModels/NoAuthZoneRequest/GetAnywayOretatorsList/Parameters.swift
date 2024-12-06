@@ -1,6 +1,6 @@
 //
 //  GKHParametersModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 30.08.2021.
 //

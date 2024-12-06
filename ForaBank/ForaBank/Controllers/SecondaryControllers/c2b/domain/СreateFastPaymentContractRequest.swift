@@ -1,6 +1,6 @@
 //
 //  СreateFastPaymentContractRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Роман Воробьев on 16.03.2022.
 //

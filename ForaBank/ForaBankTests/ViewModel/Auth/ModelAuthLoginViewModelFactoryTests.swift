@@ -1,6 +1,6 @@
 //
 //  ModelAuthLoginViewModelFactoryTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 14.09.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  TemplateButtonViewComponentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 07.06.2023.
 //

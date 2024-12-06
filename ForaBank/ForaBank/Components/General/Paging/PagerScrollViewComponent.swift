@@ -1,6 +1,6 @@
 //
 //  PagerScrollViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 10.07.2022.
 //

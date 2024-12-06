@@ -1,6 +1,6 @@
 //
 //  DepositBottomSheetViewModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 03.05.2022.
 //

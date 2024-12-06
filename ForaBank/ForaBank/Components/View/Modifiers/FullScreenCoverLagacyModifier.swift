@@ -1,6 +1,6 @@
 //
 //  FullScreenCoverLagacyModifier.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Max Gribov on 13.03.2022.
 //

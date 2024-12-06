@@ -1,6 +1,6 @@
 //
 //  SettingTableViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 16.09.2021.
 //

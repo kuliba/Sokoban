@@ -1,6 +1,6 @@
 //
 //  FraudNoticeView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 08.05.2024.
 //

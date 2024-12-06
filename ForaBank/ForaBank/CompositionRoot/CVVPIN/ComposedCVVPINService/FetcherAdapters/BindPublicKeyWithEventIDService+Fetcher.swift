@@ -1,6 +1,6 @@
 //
 //  BindPublicKeyWithEventIDService+Fetcher.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 06.11.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  SessionAgentTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Max Gribov on 25.08.2022.
 //

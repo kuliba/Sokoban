@@ -1,6 +1,6 @@
 //
 //  NavigationBarUIView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 18.08.2021.
 //

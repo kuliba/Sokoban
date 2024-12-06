@@ -1,6 +1,6 @@
 //
 //  TemplateButtonStateWrapperView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 30.07.2024.
 //

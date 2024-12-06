@@ -1,6 +1,6 @@
 //
 //  SberOperatorFailureFlowState.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 17.05.2024.
 //

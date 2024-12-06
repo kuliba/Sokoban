@@ -1,6 +1,6 @@
 //
 //  ChoosePhoneNumber.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 27.01.2022.
 //

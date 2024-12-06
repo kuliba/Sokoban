@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetClientConsentMe2MePullRequestTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 02.02.2024.
 //

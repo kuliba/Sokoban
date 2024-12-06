@@ -1,6 +1,6 @@
 //
 //  TextFieldToolbarViewComponent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Pavel Samsonov on 20.06.2022.
 //

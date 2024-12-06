@@ -1,6 +1,6 @@
 //
 //  IsSingleServiceModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Роман Воробьев on 04.12.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  CalendarWrapperView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 22.07.2024.
 //

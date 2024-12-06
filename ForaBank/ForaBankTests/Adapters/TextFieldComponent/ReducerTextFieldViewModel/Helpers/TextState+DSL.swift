@@ -1,6 +1,6 @@
 //
 //  TextState+DSL.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 22.05.2023.
 //

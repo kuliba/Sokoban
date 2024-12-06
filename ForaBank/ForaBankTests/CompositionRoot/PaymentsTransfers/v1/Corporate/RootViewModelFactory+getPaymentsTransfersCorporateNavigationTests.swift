@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+getPaymentsTransfersCorporateNavigationTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 01.12.2024.
 //

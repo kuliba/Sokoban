@@ -1,6 +1,6 @@
 //
 //  GetSessionTimeoutDecodableModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 28.09.2021.
 //

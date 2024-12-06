@@ -1,6 +1,6 @@
 //
 //  RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 16.05.2024.
 //

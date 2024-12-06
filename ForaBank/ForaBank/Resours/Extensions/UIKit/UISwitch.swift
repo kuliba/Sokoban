@@ -1,6 +1,6 @@
 //
 //  UISwitch.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 23.06.2021.
 //

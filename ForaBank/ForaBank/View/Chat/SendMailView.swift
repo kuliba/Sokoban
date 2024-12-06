@@ -1,6 +1,6 @@
 //
 //  SendMailView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 03.05.2022.
 //

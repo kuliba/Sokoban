@@ -1,6 +1,6 @@
 //
 //  OperatorProvider.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 02.08.2024.
 //

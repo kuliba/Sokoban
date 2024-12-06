@@ -1,6 +1,6 @@
 //
 //  PaymentsValidationRulesSystemRule.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Andryusina Nataly on 26.05.2023.
 //

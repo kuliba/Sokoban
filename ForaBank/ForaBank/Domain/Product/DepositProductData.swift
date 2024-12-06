@@ -1,6 +1,6 @@
 //
 //  DepositProductData.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 05.03.2022.
 //

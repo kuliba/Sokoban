@@ -1,6 +1,6 @@
 //
 //  SettingsViewController.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 21.07.2021.
 //

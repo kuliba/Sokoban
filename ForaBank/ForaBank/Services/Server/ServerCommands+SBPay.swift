@@ -1,6 +1,6 @@
 //
 //  ServerCommand+Sbp.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий on 30.08.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  SelectedCategoryGetNavigationComposerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 30.09.2024.
 //

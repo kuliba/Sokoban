@@ -1,6 +1,6 @@
 //
 //  Model+ReturnAbroad.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 24.03.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 11.10.2023.
 //

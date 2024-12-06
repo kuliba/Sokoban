@@ -1,6 +1,6 @@
 //
 //  DocDepositCollectionViewCell.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 10.12.2021.
 //

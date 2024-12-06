@@ -1,6 +1,6 @@
 //
 //  HTTPClientStub.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 08.02.2024.
 //

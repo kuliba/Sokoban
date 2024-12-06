@@ -1,6 +1,6 @@
 //
 //  PushHistoryModel.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Константин Савялов on 01.06.2022.
 //

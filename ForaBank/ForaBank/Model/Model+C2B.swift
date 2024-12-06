@@ -1,6 +1,6 @@
 //
 //  Model+C2B.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 28.07.2023.
 //

@@ -1,6 +1,6 @@
 //
 //  CsrfDtoTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий on 19.01.2022.
 //

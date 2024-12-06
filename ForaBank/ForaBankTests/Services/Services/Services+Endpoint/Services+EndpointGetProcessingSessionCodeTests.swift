@@ -1,6 +1,6 @@
 //
 //  Services+EndpointGetProcessingSessionCodeTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 31.07.2023.
 //

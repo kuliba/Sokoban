@@ -1,6 +1,6 @@
 //
 //  CentralBankRates.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Dmitry Martynov on 16.08.2022.
 //

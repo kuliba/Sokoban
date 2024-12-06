@@ -1,6 +1,6 @@
 //
 //  QRAcceptanceTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 17.11.2024.
 //

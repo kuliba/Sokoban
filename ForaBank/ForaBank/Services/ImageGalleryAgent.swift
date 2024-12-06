@@ -1,6 +1,6 @@
 //
 //  ImageGalleryAgent.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Mikhail on 30.06.2022.
 //

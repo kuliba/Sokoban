@@ -1,6 +1,6 @@
 //
 //  AccountCellViewModelTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 09.08.2023.
 //
