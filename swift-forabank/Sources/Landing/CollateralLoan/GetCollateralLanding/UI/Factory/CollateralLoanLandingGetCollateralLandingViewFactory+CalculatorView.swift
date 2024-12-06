@@ -7,7 +7,7 @@
 
 extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
-    func makeCalculatorView(with product: GetCollateralLandingData.Product)
+    func makeCalculatorView(with product: GetCollateralLandingProduct)
         -> CollateralLoanLandingGetCollateralLandingCalculatorView {
 
             .init(

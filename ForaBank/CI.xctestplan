@@ -572,6 +572,13 @@
     },
     {
       "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
+      }
+    },
+    {
+      "target" : {
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "GetBannersMyProductListServiceTests",
         "name" : "GetBannersMyProductListServiceTests"

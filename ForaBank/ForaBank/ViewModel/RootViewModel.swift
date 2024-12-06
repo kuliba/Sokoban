@@ -14,6 +14,7 @@ import PayHub
 import PayHubUI
 import RemoteServices
 import SwiftUI
+import ClientInformList
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -163,11 +164,9 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     delay(for: .milliseconds(600)) { [unowned self] in
                         
-                        guard let clientInformData = self.model.clientInform.value.data?.authorized,
-                              let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
-                        else { return }
-                        
-                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
+
+                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
                     }
                 }
             }
@@ -492,22 +491,15 @@ class RootViewModel: ObservableObject, Resetable {
 }
 
 private extension Model {
-    
+
+    var authLoginAlertManager: AuthLoginViewModel.ClientInformAlertsManager {
+        
+        .init(clientInformAlertsManager: clientInformAlertManager)
+    }
+
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
-                .eraseToAnyPublisher(),
-            
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),

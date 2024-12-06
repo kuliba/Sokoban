@@ -78,7 +78,7 @@ let package = Package(
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .calendarUI,
-        .сlientInformList,
+        .clientInformList,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -95,6 +95,7 @@ let package = Package(
         .userAccountNavigationComponent,
         // UI Components
         .carouselComponent,
+        .dropDownTextListComponent,
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
@@ -259,8 +260,8 @@ let package = Package(
         .c2bSubscriptionUI,
         .cardGuardianUI,
         .cardGuardianUITests,
-        .сlientInformList,
-        .сlientInformListTests,
+        .clientInformList,
+        .clientInformListTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -297,6 +298,7 @@ let package = Package(
         .buttonComponent,
         .infoComponent,
         .checkBoxComponent,
+        .dropDownTextListComponent,
         .footerComponent,
         .nameComponent,
         .optionalSelectorComponent,
@@ -505,10 +507,10 @@ private extension Product {
         ]
     )
     
-    static let сlientInformList = library(
-        name: .сlientInformList,
+    static let clientInformList = library(
+        name: .clientInformList,
         targets: [
-            .сlientInformList
+            .clientInformList
         ]
     )
 
@@ -662,6 +664,11 @@ private extension Product {
         ]
     )
     
+    static let dropDownTextListComponent = library(
+        name: .dropDownTextListComponent,
+        targets: [.dropDownTextListComponent]
+    )
+
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -682,7 +689,7 @@ private extension Product {
             .sharedConfigs,
         ]
     )
-    
+        
     static let productProfileComponents = library(
         name: .productProfileComponents,
         targets: [
@@ -1350,6 +1357,7 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
+            .foraTools,
             .remoteServices
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/Backend/V1"
@@ -2157,8 +2165,12 @@ private extension Target {
     
     static let transferPublicKey = target(
         name: .transferPublicKey,
+        dependencies: [
+            .foraTools
+        ],
         path: "Sources/Services/\(String.transferPublicKey)"
     )
+
     static let transferPublicKeyTests = testTarget(
         name: .transferPublicKeyTests,
         dependencies: [
@@ -2166,6 +2178,7 @@ private extension Target {
             .customDump,
             // internal modules
             .transferPublicKey,
+            .foraTools
         ],
         path: "Tests/Services/\(String.transferPublicKeyTests)"
     )
@@ -2477,20 +2490,20 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
-    static let сlientInformList = target(
-        name: .сlientInformList,
+    static let clientInformList = target(
+        name: .clientInformList,
         dependencies: [
             .sharedConfigs
         ],
-        path: "Sources/UI/\(String.сlientInformList)"
+        path: "Sources/UI/\(String.clientInformList)"
     )
     
-    static let сlientInformListTests = testTarget(
-        name: .сlientInformListTests,
+    static let clientInformListTests = testTarget(
+        name: .clientInformListTests,
         dependencies: [
-            .сlientInformList
+            .clientInformList
         ],
-        path: "Tests/UI/\(String.сlientInformListTests)"
+        path: "Tests/UI/\(String.clientInformListTests)"
     )
 
     static let linkableText = target(
@@ -2724,6 +2737,7 @@ private extension Target {
     static let uiPrimitivesTests = testTarget(
         name: .uiPrimitivesTests,
         dependencies: [
+            .customDump,
             .foraTools,
             .sharedConfigs,
             .uiPrimitives,
@@ -2802,6 +2816,14 @@ private extension Target {
             .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.checkBoxComponent)"
+    )
+    
+    static let dropDownTextListComponent = target(
+        name: .dropDownTextListComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.dropDownTextListComponent)"
     )
     
     static let footerComponent = target(
@@ -3265,8 +3287,8 @@ private extension Target.Dependency {
         name: .cardGuardianUI
     )
     
-    static let сlientInformList = byName(
-        name: .сlientInformList
+    static let clientInformList = byName(
+        name: .clientInformList
     )
 
     static let linkableText = byName(
@@ -3337,6 +3359,10 @@ private extension Target.Dependency {
     
     static let checkBoxComponent = byName(
         name: .checkBoxComponent
+    )
+    
+    static let dropDownTextListComponent = byName(
+        name: .dropDownTextListComponent
     )
     
     static let footerComponent = byName(
@@ -3685,8 +3711,8 @@ private extension String {
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
     
-    static let сlientInformList = "СlientInformList"
-    static let сlientInformListTests = "СlientInformListTests"
+    static let clientInformList = "ClientInformList"
+    static let clientInformListTests = "ClientInformListTests"
 
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"
@@ -3751,6 +3777,8 @@ private extension String {
     static let infoComponent = "InfoComponent"
     
     static let checkBoxComponent = "CheckBoxComponent"
+
+    static let dropDownTextListComponent = "DropDownTextListComponent"
     
     static let footerComponent = "FooterComponent"
     

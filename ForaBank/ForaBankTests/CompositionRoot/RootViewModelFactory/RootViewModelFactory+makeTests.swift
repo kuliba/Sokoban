@@ -95,6 +95,27 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         XCTAssertNoDiff(state, initialState)
     }
     
+    func test_shouldChangeCategoryPickerStateOnHTTPFailure() throws {
+        
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            sessionState: active()
+        )
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+        
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: anyError(), at: 1)
+        awaitActorThreadHop()
+        
+        let state = try sut.content.categoryPickerContent().state
+        XCTAssertNoDiff(state.isLoading, false)
+    }
+    
     func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
         
         let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
@@ -103,8 +124,13 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
         
-        httpClient.complete(with: mobileJSON())
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: mobileJSON(), at: 1)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
@@ -120,13 +146,16 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
         
-        httpClient.complete(with: getServiceCategoryListJSON())
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         
         awaitActorThreadHop()
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getOperatorsListByParam-housingAndCommunalService"
         ])
@@ -142,13 +171,15 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         userInitiatedScheduler.advance()
         
         awaitActorThreadHop()
-        httpClient.complete(with: getServiceCategoryListJSON())
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         
         awaitActorThreadHop()
-        httpClient.complete(with: anyError(), at: 1)
+        httpClient.complete(with: anyError(), at: 2)
         
         awaitActorThreadHop()
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getOperatorsListByParam-housingAndCommunalService",
             "getOperatorsListByParam-internet"

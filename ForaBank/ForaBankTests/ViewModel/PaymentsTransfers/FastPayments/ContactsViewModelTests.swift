@@ -3014,7 +3014,8 @@ extension Model {
         contactsAgent: ContactsAgentProtocol = ContactsAgentMock(),
         cameraAgent: CameraAgentProtocol = CameraAgentMock(),
         imageGalleryAgent: ImageGalleryAgentProtocol = ImageGalleryAgentMock(),
-        networkMonitorAgent: NetworkMonitorAgentProtocol = NetworkMonitorAgentMock()
+        networkMonitorAgent: NetworkMonitorAgentProtocol = NetworkMonitorAgentMock(),
+        clientInformAlertManager: any AlertManager<ClientInformAlerts> = AlertManagerSpy()
     ) -> Model {
         
         .init(
@@ -3028,7 +3029,8 @@ extension Model {
             contactsAgent: contactsAgent,
             cameraAgent: cameraAgent,
             imageGalleryAgent: imageGalleryAgent,
-            networkMonitorAgent: networkMonitorAgent
+            networkMonitorAgent: networkMonitorAgent,
+            clientInformAlertManager: clientInformAlertManager
         )
     }
 }
