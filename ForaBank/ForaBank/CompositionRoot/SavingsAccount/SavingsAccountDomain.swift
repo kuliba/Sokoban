@@ -18,7 +18,7 @@ extension SavingsAccountDomain {
     
     typealias Destination = Void
     typealias InformerPayload = InformerData
-    typealias Landing = RemoteServices.ResponseMapper.GetSavingLandingData
+    typealias Landing = RemoteServices.ResponseMapper.GetSavingLandingResponse
     
     enum Select: Equatable {
         

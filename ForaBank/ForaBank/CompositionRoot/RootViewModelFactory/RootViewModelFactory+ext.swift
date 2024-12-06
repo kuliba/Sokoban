@@ -23,6 +23,7 @@ import PayHub
 import PayHubUI
 import PaymentSticker
 import RemoteServices
+import SavingsServices
 import SberQR
 import SerialComponents
 import SharedAPIInfra
@@ -502,7 +503,16 @@ extension RootViewModelFactory {
     @inlinable
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {
         
-        let nanoServices: SavingsAccountDomain.ComposerNanoServices = { fatalError() }()
+        let getSavingLanding = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetSavingLandingRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
+            mapError: SavingsAccountDomain.ContentError.init(error:)
+        )
+
+        let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
+            loadLanding: { getSavingLanding(( "", $0), $1) },
+            orderAccount: {_ in }
+        )
         
         return makeSavingsAccount(nanoServices: nanoServices)
     }
@@ -938,6 +948,27 @@ private extension RootViewModelFactory {
 private extension MarketShowcaseDomain.ContentError {
     
     typealias RemoteError = RemoteServiceError<Error, Error, LandingMapper.MapperError>
+    
+    init(
+        error: RemoteError
+    ) {
+        switch error {
+        case let .performRequest(error):
+            if error.isNotConnectedToInternetOrTimeout() {
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+            } else {
+                self = .init(kind: .alert("Попробуйте позже."))
+            }
+            
+        default:
+            self = .init(kind: .alert("Попробуйте позже."))
+        }
+    }
+}
+
+private extension SavingsAccountDomain.ContentError {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     
     init(
         error: RemoteError
