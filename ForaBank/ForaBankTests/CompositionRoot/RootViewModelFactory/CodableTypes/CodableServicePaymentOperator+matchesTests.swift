@@ -8,17 +8,17 @@
 @testable import ForaBank
 import XCTest
 
-final class CodableServicePaymentOperator_matchesTests: XCTestCase {
+final class CodableServicePaymentOperator_matchesTests: CodableServicePaymentOperatorTests {
     
     func test_shouldNotMatchByDefault() {
         
-        assertNoMatch(makeOperator(), makePayload())
+        assertNoMatch(makeCodable(), makePayload())
     }
     
     func test_shouldNotMatchOnDifferentTypes() {
         
         assertNoMatch(
-            makeOperator(type: .digitalWallets),
+            makeCodable(type: .digitalWallets),
             makePayload(for: .security)
         )
     }
@@ -26,7 +26,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldMatchOnSameTypes() {
         
         assertMatch(
-            makeOperator(type: .taxAndStateService),
+            makeCodable(type: .taxAndStateService),
             makePayload(for: .taxAndStateService)
         )
     }
@@ -34,7 +34,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldNotMatchWhenNameDoesNotContainSearchText() {
         
         assertNoMatch(
-            makeOperator(
+            makeCodable(
                 name: "abc",
                 type: .digitalWallets
             ),
@@ -48,7 +48,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldMatchWhenNameContainsSearchText() {
         
         assertMatch(
-            makeOperator(
+            makeCodable(
                 name: "abc",
                 type: .taxAndStateService
             ),
@@ -62,7 +62,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldNotMatchWhenInnDoesNotContainSearchText() {
         
         assertNoMatch(
-            makeOperator(
+            makeCodable(
                 inn: "abc",
                 type: .digitalWallets
             ),
@@ -76,7 +76,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldMatchWhenInnContainsSearchText() {
         
         assertMatch(
-            makeOperator(
+            makeCodable(
                 inn: "abc",
                 type: .taxAndStateService
             ),
@@ -90,7 +90,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldMatchOnCaseInsensitiveSearchText() {
         
         assertMatch(
-            makeOperator(
+            makeCodable(
                 name: "ABC",
                 type: .education
             ),
@@ -104,7 +104,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldMatchIfSearchTextInBothNameAndInn() {
         
         assertMatch(
-            makeOperator(
+            makeCodable(
                 inn: "someInnWith123",
                 name: "someNameWith123",
                 type: .digitalWallets
@@ -119,7 +119,7 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     func test_shouldNotMatchIfSearchTextNotFoundInEitherNameOrInn() {
         
         assertNoMatch(
-            makeOperator(
+            makeCodable(
                 inn: "bar",
                 name: "foo",
                 type: .digitalWallets
@@ -132,30 +132,6 @@ final class CodableServicePaymentOperator_matchesTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    
-    private typealias Payload = UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
-    
-    private func makeOperator(
-        id: String = anyMessage(),
-        inn: String = anyMessage(),
-        md5Hash: String? = anyMessage(),
-        name: String = anyMessage(),
-        type: ServiceCategory.CategoryType = .repaymentLoansAndAccounts,
-        sortedOrder: Int = .random(in: 1...100)
-    ) -> CodableServicePaymentOperator {
-        
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type.name, sortedOrder: sortedOrder)
-    }
-    
-    private func makePayload(
-        afterOperatorID id: String? = nil,
-        for type: ServiceCategory.CategoryType = .internet,
-        searchText: String = "",
-        pageSize: Int = 3
-    ) -> Payload {
-        
-        return .init(afterOperatorID: id, for: type, searchText: searchText, pageSize: pageSize)
-    }
     
     private func assertMatch(
         _ codable: CodableServicePaymentOperator,

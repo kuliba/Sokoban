@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class ArrayOfCodableServicePaymentOperator_pageOfOperatorsTests: XCTestCase {
+final class ArrayOfCodableServicePaymentOperator_pageOfOperatorsTests: CodableServicePaymentOperatorTests {
     
     func test_shouldDeliverEmptyOnEmpty() {
         
@@ -20,18 +20,6 @@ final class ArrayOfCodableServicePaymentOperator_pageOfOperatorsTests: XCTestCas
     }
     
     // MARK: - Helpers
-    
-    private typealias Payload = UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
-    
-    private func makePayload(
-        afterOperatorID id: String? = nil,
-        for type: ServiceCategory.CategoryType = .internet,
-        searchText: String = "",
-        pageSize: Int = 3
-    ) -> Payload {
-        
-        return .init(afterOperatorID: id, for: type, searchText: searchText, pageSize: pageSize)
-    }
     
     private func assert(
         payload: Payload,
