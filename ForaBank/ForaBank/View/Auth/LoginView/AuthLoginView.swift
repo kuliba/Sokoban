@@ -201,19 +201,15 @@ extension AuthLoginView {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: {
-                        openURL()
-                    })
+                                 dismissButton: .default(Text("Ok"), action: { openURL() })
                     )
                     
                 case let .optionalRequired(alert):
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 primaryButton: .default(Text("Позже"), action: { }),
-                                 secondaryButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
+                                 primaryButton: .default(Text("Позже"), action: viewModel.dismissAll),
+                                 secondaryButton: .default(Text("Обновить"), action: { openURL() })
                     )
                     
                 case let .required(alert):
@@ -223,9 +219,7 @@ extension AuthLoginView {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Обновить"), action: {
-                        openURL()
-                    })
+                                 dismissButton: .default(dismissText, action: { openURL() })
                     )
                 }
                 
