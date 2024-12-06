@@ -114,6 +114,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
+        XCTAssertNoDiff(state.elements, [])
     }
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
@@ -135,6 +136,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
+        XCTAssertNoDiff(state.elements.map(\.type), [.mobile])
     }
     
     func test_shouldRequestOperatorsAfterCategories() throws {
