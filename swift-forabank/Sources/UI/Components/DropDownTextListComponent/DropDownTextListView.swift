@@ -86,6 +86,7 @@ public struct DropDownTextListView: View {
             item.title.text(withConfig: config.fonts.itemTitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityIdentifier("Title")
+                .fixedSize(horizontal: false, vertical: true)
             
             config.chevronDownImage
                 .foregroundColor(.gray)
@@ -93,9 +94,6 @@ public struct DropDownTextListView: View {
                 .accessibilityIdentifier("ItemChevron")
         }
         .modifier(PaddingsModifier(horizontal: config.layouts.horizontalPadding))
-        .if(config.layouts.itemHeight != nil) {
-            $0.frame(height: config.layouts.itemHeight)
-        }
     }
     
     private func subTitleView(_ subTitle: String) -> some View {
@@ -112,16 +110,6 @@ public extension DropDownTextListView {
     typealias Config = DropDownTextListConfig
     typealias TextList = DropDownTextList
     typealias Item = DropDownTextList.Item
-}
-
-extension View {
-    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-        if condition {
-            transform(self)
-        } else {
-            self
-        }
-    }
 }
 
 // MARK: - Previews
@@ -162,8 +150,7 @@ extension DropDownTextListConfig {
         chevronDownImage: Image(systemName: "chevron.down"),
         layouts: .init(
             horizontalPadding: 16,
-            verticalPadding: 12,
-            itemHeight: 64
+            verticalPadding: 12
         ),
         colors: .init(
             divider: .gray,
