@@ -52,7 +52,7 @@ private extension Model {
         if let operators = localAgent.load(type: [CodableServicePaymentOperator].self) {
             cacheLog("Total Operators count \(operators.count)", #file, #line)
             
-            let page = operators.operators(for: payload)
+            let page = operators.pageOfOperators(for: payload)
             cacheLog("Operators page count \(page.count) for \(payload.categoryType.name)", #file, #line)
             
             completion(page)
@@ -69,7 +69,7 @@ private extension Model {
 extension Array where Element == CodableServicePaymentOperator {
     
     /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
-    func operators(
+    func pageOfOperators(
         for payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
     ) -> [PaymentServiceOperator] {
         
