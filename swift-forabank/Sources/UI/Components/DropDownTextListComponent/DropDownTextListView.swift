@@ -25,13 +25,11 @@ public struct DropDownTextListView: View {
             
             list.title.map { text in
                 
-                VStack {
+                VStack(spacing: 0) {
                     
                     text.text(withConfig: config.fonts.title)
                         .modifier(
                             PaddingsModifier(
-                                top: config.layouts.topPadding,
-                                bottom: config.layouts.bottomPadding,
                                 horizontal: config.layouts.horizontalPadding,
                                 vertical: config.layouts.verticalPadding
                             )
@@ -163,11 +161,9 @@ extension DropDownTextListConfig {
         cornerRadius: 16,
         chevronDownImage: Image(systemName: "chevron.down"),
         layouts: .init(
-            topPadding: 14,
-            bottomPadding: nil,
             horizontalPadding: 16,
-            verticalPadding: nil,
-            itemHeight: nil
+            verticalPadding: 12,
+            itemHeight: 64
         ),
         colors: .init(
             divider: .gray,
