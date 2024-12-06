@@ -13,7 +13,6 @@ import XCTest
 
 class AuthLoginViewModelTests: XCTestCase {
     
-    typealias ClientInformMessage = PassthroughSubject<String, Never>
     typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
     typealias CatalogProducts = PassthroughSubject<([CatalogProductData]), Never>
     typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>
@@ -216,6 +215,12 @@ extension AuthLoginViewModel {
     }
     
     // MARK: - Publishers
+    var clientInformAlertPublisher: AnyPublisher<ClientInformAlerts, Never> {
+        
+        $clientInformAlerts
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
+    }
     
     var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
         

@@ -43,56 +43,31 @@ private extension PaymentsTransfersPersonalDomain.FlowDomain.State {
     
     var destination: PaymentsTransfersPersonalNavigation.Destination? {
         
-        switch navigation {
-        case .none:
-            return .none
-        }
+        return nil
     }
     
     var fullScreenCover: PaymentsTransfersPersonalNavigation.FullScreenCover? {
         
-        switch navigation {
-        case .none:
-            return .none
-        }
+        return nil
     }
 }
 
 extension PaymentsTransfersPersonalNavigation {
     
-    enum Destination {
-        
-    }
-    
-    enum FullScreenCover {
-        
-    }
+    enum Destination {}
+    enum FullScreenCover {}
 }
 
 extension PaymentsTransfersPersonalNavigation.Destination: Identifiable {
     
-    var id: ID {
-        
-        switch self {
-            
-        }
-    }
+    var id: ID { switch self {} }
     
-    enum ID: Hashable {
-        
-    }
+    enum ID: Hashable {}
 }
 
 extension PaymentsTransfersPersonalNavigation.FullScreenCover: Identifiable {
     
-    var id: ID {
-        
-        switch self {
-            
-        }
-    }
+    var id: ID { switch self {} }
     
-    enum ID: Hashable {
-        
-    }
+    enum ID: Hashable {}
 }

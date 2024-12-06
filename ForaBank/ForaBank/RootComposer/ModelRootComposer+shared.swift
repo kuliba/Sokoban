@@ -32,7 +32,7 @@ extension ModelRootComposer {
                 mapScanResult: mapper.mapScanResult,
                 resolveQR: resolver.resolve,
                 scanner: QRScannerView.ViewModel(),
-                settings: .iFora,
+                settings: .prod,
                 schedulers: schedulers
             ),
             makeRootViewFactoryComposer: { featureFlags in
@@ -41,7 +41,6 @@ extension ModelRootComposer {
                     model: model,
                     httpClient: httpClient,
                     historyFeatureFlag: true,
-                    marketFeatureFlag: .active,
                     savingsAccountFlag: featureFlags.savingsAccountFlag,
                     schedulers: schedulers
                 )

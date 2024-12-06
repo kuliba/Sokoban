@@ -7,14 +7,9 @@
 
 extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
-    func makeHeaderView(with product: GetCollateralLandingData.Product)
+    func makeHeaderView(with product: GetCollateralLandingProduct)
         -> CollateralLoanLandingGetCollateralLandingHeaderView {
 
-            .init(
-                labelTag: product.marketing.labelTag,
-                params: product.marketing.params,
-                config: config,
-                theme: product.theme.map()
-            )
+            .init(config: config)
     }
 }

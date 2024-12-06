@@ -9,20 +9,26 @@ import Foundation
 
 struct RootViewModelFactorySettings {
     
+    let categoryPickerPlaceholderCount: Int
     let delay: DispatchQueue.SchedulerTimeType.Stride
     let fraudDelay: Double
-    let pageSize: Int
-    let categoryPickerPlaceholderCount: Int
+    let observeLast: Int
     let operationPickerPlaceholderCount: Int
+    let otpDuration: Int
+    let otpLength: Int
+    let pageSize: Int
 }
 
 extension RootViewModelFactorySettings {
     
-    static let iFora: Self = .init(
+    static let prod: Self = .init(
+        categoryPickerPlaceholderCount: 6,
         delay: .milliseconds(100),
         fraudDelay: 120,
-        pageSize: 50,
-        categoryPickerPlaceholderCount: 6,
-        operationPickerPlaceholderCount: 4
+        observeLast: 10,
+        operationPickerPlaceholderCount: 4,
+        otpDuration: 60,
+        otpLength: 6,
+        pageSize: 50
     )
 }

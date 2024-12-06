@@ -25,8 +25,11 @@ extension RootViewModelFactory {
         case .templates:
             makeTemplatesNode()
             
-        case .utilityPayment:
-            makeUtilityPayment()
+        case .userAccount:
+            makeUserAccount()
+            
+        case let .standardPayment(type):
+            initiateStandardPaymentFlow(type)
         }
         
         func makeScanQR() {
@@ -94,9 +97,20 @@ extension RootViewModelFactory {
             return [outside]
         }
         
-        func makeUtilityPayment() {
+        func makeUserAccount() {
             
-            self.makeUtilityPayment {
+            let userAccount = self.makeUserAccount { notify(.dismiss) }
+            
+            guard let userAccount
+            else { return completion(.failure(.makeUserAccountFailure)) }
+            
+            completion(.userAccount(userAccount))
+        }
+        
+        func initiateStandardPaymentFlow(
+            _ type: ServiceCategory.CategoryType
+        ) {
+            self.initiateStandardPaymentFlow(ofType: type) {
                 
                 switch $0 {
                 case let .failure(failure):
@@ -140,7 +154,7 @@ private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel
 
 private extension RootViewNavigation.Failure {
     
-    init(_ failure: RootViewModelFactory.UtilityPaymentFailure) {
+    init(_ failure: RootViewModelFactory.StandardPaymentFailure) {
         
         switch failure {
         case .makeStandardPaymentFailure:

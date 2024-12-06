@@ -20,7 +20,7 @@ extension RootViewModelFactory {
     func makePaymentsTransfersCorporate(
         bannerPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersCorporateNanoServices
-    ) -> PaymentsTransfersCorporate {
+    ) -> PaymentsTransfersCorporateDomain.Binder {
         
         // MARK: - BannerPicker
         
@@ -50,10 +50,7 @@ extension RootViewModelFactory {
         )
         
         return compose(
-            getNavigation: { select, notify, completion in
-                
-                
-            },
+            getNavigation: getPaymentsTransfersCorporateNavigation,
             content: content,
             witnesses: witnesses()
         )
@@ -63,7 +60,7 @@ extension RootViewModelFactory {
         
         return .init(
             emitting: { $0.eventPublisher },
-            receiving: { $0.receiving }
+            dismissing: { $0.dismissing }
         )
     }
 }
@@ -77,9 +74,9 @@ extension Domain.Content {
         bannerPicker.eventPublisher
     }
     
-    func receiving() {
+    func dismissing() {
         
-        bannerPicker.receiving()
+        bannerPicker.dismissing()
     }
 }
 
@@ -92,9 +89,9 @@ extension PayHubUI.CorporateBannerPicker {
         bannerBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismissing() {
         
-        bannerBinder?.receiving()
+        bannerBinder?.dismissing()
     }
 }
 
@@ -107,7 +104,7 @@ extension BannerPickerSectionBinder {
             .eraseToAnyPublisher()
     }
     
-    func receiving() {
+    func dismissing() {
         
         content.event(.select(nil))
     }

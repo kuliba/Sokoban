@@ -19,17 +19,17 @@ where ItemLabel: View,
     
     private let transition: AnyTransition = .opacity
         .combined(with: .scale)
-//        .combined(with: .asymmetric(
-//            insertion: .identity,
-//            removal: .scale
-//        ))
+    // .combined(with: .asymmetric(
+    //     insertion: .identity,
+    //     removal: .scale
+    // ))
     // .combined(with: .asymmetric(
     //     insertion: .move(edge: .trailing),
     //     removal: .move(edge: .leading).combined(with: .scale)
     // ))
     
     public init(
-        state: State, 
+        state: State,
         event: @escaping (Event) -> Void,
         config: Config,
         itemLabel: @escaping (Item) -> ItemLabel
@@ -49,6 +49,7 @@ where ItemLabel: View,
                 ForEach(state.items, content: itemView)
                     .animation(.easeInOut, value: state)
             }
+            .padding(.horizontal, config.horizontalPadding)
         }
         .frame(height: config.height)
     }

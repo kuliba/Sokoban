@@ -33,10 +33,11 @@ final class SberOperator_precedesTests: XCTestCase {
         id: String = anyMessage(),
         inn: String = anyMessage(),
         md5Hash: String? = nil,
-        title: String = anyMessage()
+        title: String = anyMessage(),
+        type: String = anyMessage()
     ) -> SberOperator {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, title: title)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, title: title, type: type)
     }
 }
 

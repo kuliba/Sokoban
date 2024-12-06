@@ -19,7 +19,7 @@ extension Services {
             
             case binding
             case dict
-            case getShowcaseCollateralLoanLanding
+            case collateralLoanLanding
             case processing(Processing)
             case rest
             case transfer
@@ -33,7 +33,7 @@ extension Services {
                 case .dict:
                     return "dict"
 
-                case .getShowcaseCollateralLoanLanding:
+                case .collateralLoanLanding:
                     return "rest/v1/pages/collateral"
                     
                 case let .processing(processing):
@@ -88,6 +88,7 @@ extension Services {
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
+            case getCollateralLanding = "getCollateralLanding"
             case getConsentsCollateralLoanLanding = "getConsents"
             case getDigitalCardLanding
             case getInfoForRepeatPayment
@@ -109,6 +110,8 @@ extension Services {
             case getSVCardLimits
             case getSvgImageList
             case getVerificationCode
+            case getAuthorizedZoneClientInformData
+            case getNotAuthorizedZoneClientInformData
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
@@ -394,6 +397,18 @@ extension Services.Endpoint {
         serviceName: .getVerificationCode
     )
     
+    static let getAuthorizedZoneClientInform: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getAuthorizedZoneClientInformData
+    )
+    
+    static let getNotAuthorizedZoneClientInform: Self = .init(
+        pathPrefix: .dict,
+        version: .v1,
+        serviceName: .getNotAuthorizedZoneClientInformData
+    )
+    
     static let makeDeleteBankDefault: Self = .init(
         pathPrefix: .rest,
         version: .none,
@@ -509,9 +524,15 @@ extension Services.Endpoint {
     )
     
     static let getShowcaseCollateralLoanLanding: Self = .init(
-        pathPrefix: .getShowcaseCollateralLoanLanding,
+        pathPrefix: .collateralLoanLanding,
         version: nil,
         serviceName: .getShowcaseCollateralLoanLanding
+    )
+    
+    static let getCollateralLanding: Self = .init(
+        pathPrefix: .collateralLoanLanding,
+        version: nil,
+        serviceName: .getCollateralLanding
     )
     
     static let createDraftCollateralLoanApplication: Self = .init(

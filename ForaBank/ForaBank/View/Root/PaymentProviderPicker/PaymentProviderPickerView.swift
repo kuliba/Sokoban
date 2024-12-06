@@ -11,7 +11,7 @@ import SwiftUI
 
 struct PaymentProviderPickerView: View {
     
-    let binder: PaymentProviderPicker.Binder
+    let binder: PaymentProviderPickerDomain.Binder
     let components: ViewComponents
     let makeIconView: MakeIconView
 
@@ -44,10 +44,19 @@ private extension PaymentProviderPickerView {
                 makeSearchView: { _ in EmptyView() }
             )
         )
+        .ignoresSafeArea()
+        .navigationBarWithBack(
+            title: binder.content.title,
+            dismiss: { binder.flow.event(.dismiss) },
+            rightItem: .barcodeScanner(action: {
+                
+                binder.flow.event(.select(.qr))
+            })
+        )
     }
     
     func makePaymentProviderListView(
-        providerList: PaymentProviderPicker.ProviderList
+        providerList: PaymentProviderPickerDomain.ProviderList
     ) -> some View {
         
         PaymentProviderListView(
@@ -59,7 +68,7 @@ private extension PaymentProviderPickerView {
         
     @ViewBuilder
     func destinationView(
-        _ destination: PaymentProviderPicker.Destination
+        _ destination: PaymentProviderPickerDomain.Navigation
     ) -> some View {
         
         PaymentProviderPickerDestinationView(

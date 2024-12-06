@@ -313,7 +313,7 @@ final class QRScanResultMapperTests: XCTestCase {
     private func makeProvider(
         id: String = anyMessage(),
         icon: String? = anyMessage(),
-        inn: String? = anyMessage(),
+        inn: String = anyMessage(),
         title: String = anyMessage(),
         segment: String = anyMessage()
     ) -> UtilityPaymentProvider {
