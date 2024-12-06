@@ -9,10 +9,9 @@ import PayHub
 import SwiftUI
 import UIPrimitives
 
-struct CategoryPickerSectionFlowView<ContentView, DestinationView, FullScreenCoverView>: View
+struct CategoryPickerSectionFlowView<ContentView, DestinationView>: View
 where ContentView: View,
-      DestinationView: View,
-      FullScreenCoverView: View {
+      DestinationView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -25,10 +24,6 @@ where ContentView: View,
                 item: state.failure,
                 content: factory.makeAlert
             )
-            .fullScreenCover(
-                cover: state.fullScreenCover,
-                content: factory.makeFullScreenCoverView
-            )
             .navigationDestination(
                 destination: state.destination,
                 content: factory.makeDestinationView
@@ -38,16 +33,17 @@ where ContentView: View,
 
 extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSectionDomain.FlowDomain.State
-    typealias Event = CategoryPickerSectionDomain.FlowDomain.Event
-    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
+    typealias FlowDomain = CategoryPickerSectionDomain.FlowDomain
+    typealias State = FlowDomain.State
+    typealias Event = FlowDomain.Event
+    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView>
 }
 
 // MARK: - UI mapping
 
 private extension CategoryPickerSectionDomain.FlowDomain.State {
     
-    var destination: CategoryPickerSectionNavigation.Destination? {
+    var destination: SelectedCategoryNavigation.Destination? {
         
         navigation?.destination
     }
@@ -56,9 +52,69 @@ private extension CategoryPickerSectionDomain.FlowDomain.State {
         
         navigation?.failure
     }
+}
+
+// MARK: - UI mapping
+
+private extension SelectedCategoryNavigation {
     
-    var fullScreenCover: CategoryPickerSectionNavigation.FullScreenCover? {
+    var destination: Destination? {
         
-        navigation?.fullScreenCover
+        switch self {
+        case .failure:
+            return nil
+            
+        case let .paymentFlow(paymentFlow):
+            switch paymentFlow {
+            case let .mobile(mobile):
+                return .paymentFlow(.mobile(mobile))
+                
+            case .qr, .standard:
+                return nil
+                
+            case let .taxAndStateServices(taxAndStateServices):
+                return .paymentFlow(.taxAndStateServices(taxAndStateServices))
+                
+            case let .transport(transport):
+                return .paymentFlow(.transport(transport))
+            }
+        }
+    }
+    
+    var failure: SelectedCategoryFailure? {
+        
+        switch self {
+        case let .failure(failure):
+            return failure
+            
+        case .paymentFlow:
+            return nil
+        }
+    }
+}
+
+extension SelectedCategoryNavigation {
+    
+    enum Destination {
+        
+        case paymentFlow(PaymentFlowDestination)
+        
+        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Never, Tax, Transport>
+    }
+}
+
+extension SelectedCategoryNavigation.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .paymentFlow(paymentFlow):
+            return .paymentFlow(paymentFlow.id)
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case paymentFlow(PaymentFlowDestinationID)
     }
 }

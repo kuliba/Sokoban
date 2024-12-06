@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9DEB56AC-6BD8-4C4C-8A22-01814C9758B7",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SavingsAccountTests",
+        "name" : "SavingsAccountTests"
+      }
+    }
+  ],
+  "version" : 1
+}

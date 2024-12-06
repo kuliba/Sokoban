@@ -139,14 +139,14 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     
     private let selectWitnesses = ContentFlowWitnesses<Content, FlowSpy, Select, Navigation>(
         contentEmitting: { $0.eraseToAnyPublisher() },
-        contentReceiving: { _ in {}},
+        contentDismissing: { _ in {}},
         flowEmitting: { _ in Empty().eraseToAnyPublisher() },
         flowReceiving: { flow in { flow.call(payload: $0) }}
     )
     
     private let navigationWitnesses = ContentFlowWitnesses<ContentSpy, Flow, Select, Navigation>(
         contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-        contentReceiving: { $0.call },
+        contentDismissing: { $0.call },
         flowEmitting: { $0.eraseToAnyPublisher() },
         flowReceiving: { _ in { _ in }}
     )

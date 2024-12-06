@@ -8,7 +8,7 @@
 import SwiftUI
 import SharedConfigs
 
-struct SavingsAccountView: View {
+public struct SavingsAccountView: View {
     
     let state: SavingsAccountState
     let event: (Event) -> Void
@@ -20,7 +20,7 @@ struct SavingsAccountView: View {
     @State private(set) var selectedQuestion: Question?
     @State private(set) var isShowHeader = false
     
-    init(
+    public init(
         state: SavingsAccountState,
         event: @escaping (SavingsAccountEvent) -> Void,
         config: Config,
@@ -34,7 +34,7 @@ struct SavingsAccountView: View {
         self.coordinateSpace = coordinateSpace
     }
     
-    var body: some View {
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: config.spacing) {
             ScrollView(showsIndicators: false) {
@@ -244,7 +244,7 @@ struct SavingsAccountView: View {
     }
 }
 
-extension SavingsAccountView {
+public extension SavingsAccountView {
     
     typealias Event = SavingsAccountEvent
     typealias Config = SavingsAccountConfig

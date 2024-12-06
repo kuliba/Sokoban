@@ -140,21 +140,7 @@ public struct OrderSavingsAccountConfig {
             self.title = title
         }
     }
-    
-    public struct TextWithConfig {
         
-        let text: String
-        let config: TextConfig
-        
-        public init(
-            text: String,
-            config: TextConfig
-        ) {
-            self.text = text
-            self.config = config
-        }
-    }
-    
     public struct TopUp {
         
         let amount: AmountInfo

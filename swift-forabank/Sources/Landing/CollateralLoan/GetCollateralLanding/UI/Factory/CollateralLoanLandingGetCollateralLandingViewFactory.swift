@@ -12,7 +12,7 @@ struct CollateralLoanLandingGetCollateralLandingViewFactory {
 
 extension CollateralLoanLandingGetCollateralLandingViewFactory {
     
-    func makeView(_ product: GetCollateralLandingData.Product) -> CollateralLoanLandingGetCollateralLandingBodyView {
+    func makeView(_ product: GetCollateralLandingProduct) -> CollateralLoanLandingGetCollateralLandingBodyView {
 
         let headerView = makeHeaderView(with: product)
         let conditionsView = makeConditionsView(with: product)
