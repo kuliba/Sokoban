@@ -420,52 +420,6 @@ where AmountInfo: View,
     }
 }
 
-private struct ViewWithBackgroundCornerRadiusAndPaddingModifier: ViewModifier {
-    
-    let background: Color
-    let cornerRadius: CGFloat
-    let padding: CGFloat
-    
-    init(_ background: Color, _ cornerRadius: CGFloat, _ padding: CGFloat) {
-        self.background = background
-        self.cornerRadius = cornerRadius
-        self.padding = padding
-    }
-    
-    func body(content: Content) -> some View {
-        content
-            .padding(.all, padding)
-            .background(background)
-            .cornerRadius(cornerRadius)
-    }
-}
-
-struct ShimmeringModifier: ViewModifier {
-    
-    let needShimmering: Bool
-    let color: Color
-    
-    init(
-        _ needShimmering: Bool = false,
-        _ color: Color
-    ) {
-        self.needShimmering = needShimmering
-        self.color = color
-    }
-    
-    func body(content: Content) -> some View {
-        if needShimmering {
-            content
-                .background(color)
-                .cornerRadius(90)
-                .shimmering()
-        }
-        else {
-            content
-        }
-    }
-}
-
 extension OrderSavingsAccountView {
     
     typealias Event = OrderSavingsAccountEvent

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ForaTools
 
 public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey> {
     

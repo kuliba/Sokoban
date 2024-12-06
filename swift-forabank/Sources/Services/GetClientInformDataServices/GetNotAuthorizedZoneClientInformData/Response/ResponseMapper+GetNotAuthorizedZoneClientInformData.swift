@@ -35,18 +35,18 @@ extension ResponseMapper {
         
         public struct Update: Equatable {
             
-            public let action: String
+            public let type: String
             public let platform: String
             public let version: String
             public let link: String
             
             public init(
-                action: String,
+                type: String,
                 platform: String,
                 version: String,
                 link: String
             ) {
-                self.action = action
+                self.type = type
                 self.platform = platform
                 self.version = version
                 self.link = link

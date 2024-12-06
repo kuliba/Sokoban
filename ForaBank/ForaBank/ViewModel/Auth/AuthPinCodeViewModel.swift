@@ -26,8 +26,9 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var isPermissionsViewPresented: Bool
     var permissionsViewModel: AuthPermissionsViewModel?
     
-    @Published var alert: Alert.ViewModel?
+    @Published private(set) var alert: Alert.ViewModel?
     @Published var mistakes: Int
+    @Published private(set) var clientInformAlerts: ClientInformAlerts?
     
     private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
     private var viewDidAppear: CurrentValueSubject<Bool, Never>
@@ -36,7 +37,7 @@ class AuthPinCodeViewModel: ObservableObject {
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-    
+
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
     init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0, sensorAutoEvaluationStatus: SensorAutoEvaluationStatus? = nil, isViewDidAppear: Bool = false, spinner: SpinnerView.ViewModel? = nil) {
@@ -106,43 +107,26 @@ class AuthPinCodeViewModel: ObservableObject {
         bind()
     }
     
+    var currentAlertModel: AlertModelType? {
+        switch (alert, clientInformAlerts?.alert) {
+        
+        case (let .some(alert), _):
+            return .alertViewModel(alert)
+            
+        case (_, let .some(alert)):
+            return .clientInformAlerts(alert)
+            
+        case (.none, .none): return nil
+        }
+    }
+
     func bind() {
         
-        model.sessionState
-            .combineLatest(model.clientInform, self.viewDidAppear)
+        model.clientInformAlertManager.alertPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state, clientInformData, isViewDidAppear in
-                
-                guard let self else { return }
-        
-                switch state {
-                
-                case .active:
-                    
-                    guard clientInformData.isRecieved, isViewDidAppear else { return }
-                    
-                    withAnimation {
-                        self.spinner = nil
-                    }
-                        
-                    if !self.model.clientInformStatus.isShowNotAuthorized,
-                       let message = clientInformData.data?.notAuthorized  {
-                       
-                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(message: message))
-                    
-                    } else {
-                    
-                        tryAutoEvaluateSensor()
-                    }
-                    
-                default:
-                    withAnimation {
-                        self.spinner = .init()
-                    }
-                }
-                
-            }.store(in: &bindings)
-        
+            .sink { self.clientInformAlerts = $0 }
+            .store(in: &bindings)
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -191,6 +175,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
+                        
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .restricted:
@@ -207,11 +192,13 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Failed")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed())
                         }))
+
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: failure, message: \(message)")
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
@@ -250,7 +237,9 @@ class AuthPinCodeViewModel: ObservableObject {
 
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Sensor.Evaluate.Response: failure, message: \(message)")
+                        
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil}))
+
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
@@ -284,6 +273,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.alert = nil
                             
                         }))
+
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
@@ -306,6 +296,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
+
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
@@ -324,6 +315,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
+
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     default:
@@ -382,12 +374,14 @@ class AuthPinCodeViewModel: ObservableObject {
 
                     case .exit:
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: exit")
-                        alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
+                        self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
+                            
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
                         }))
+                        
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         AudioServicesPlaySystemSound(1156)
                         
@@ -511,6 +505,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.pinCode.isAnimated = true
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Check.Request")
+                        model.clientInformAlertManager.dismiss()
                         model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pincodeValue.value, attempt: attempt))
                         
                     case .create:
@@ -562,6 +557,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         self?.pincodeValue.value = ""
                         self?.numpad.isEnabled = true
                     }
+
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "reset pincode")
                     
                 case _ as AuthPinCodeViewModelAction.Unlock.Failed:
@@ -576,6 +572,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Logout")
                     model.action.send(ModelAction.Auth.Logout())
                     
+                    #warning("delete obsolet alert")
                 case let payload as AuthPinCodeViewModelAction.Show.AlertClientInform:
                     LoggerAgent.shared.log(category: .ui,
                                            message: "received AuthPinCodeViewModelAction.Show.AlertClientInform with \(payload.message)")
@@ -656,6 +653,34 @@ class AuthPinCodeViewModel: ObservableObject {
     deinit {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
+    }
+}
+
+// MARK: - Alert Handling
+
+extension AuthPinCodeViewModel {
+    
+    private func updateVersion() -> String? {
+        
+        guard let updateVersion = clientInformAlerts?.updateAlert?.version,
+              updateVersion.compare(Bundle.main.appVersionShort, options: .numeric) == .orderedDescending else { return nil }
+
+        return updateVersion
+    }
+    
+    private func createAppStoreURL() -> URL? {
+        
+        guard updateVersion() != nil else { return nil }
+        
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+    }
+    
+    func clientInformAlertButtonTapped(
+        openURL: @escaping (URL) -> Void
+    ) {
+        
+        model.clientInformAlertManager.dismiss()
+        if let url = createAppStoreURL() { openURL(url) }
     }
 }
 
@@ -930,6 +955,7 @@ enum AuthPinCodeViewModelAction {
         
         struct AlertClientInform: Action {
             
+            let title: String
             let message: String
         }
     }

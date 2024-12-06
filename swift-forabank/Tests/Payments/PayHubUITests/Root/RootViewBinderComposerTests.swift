@@ -90,16 +90,16 @@ final class RootViewBinderComposerTests: XCTestCase {
         XCTAssertNoDiff(binder.flow.state.navigation, navigation)
     }
     
-    func test_content_shouldReceiveOnFlowNavigationDismiss() {
+    func test_content_shouldDismissOnFlowNavigationDismiss() {
         
         let (sut, _) = makeSUT()
         let binder = sut.compose(with: makeRootViewModel())
         binder.content.emit(makeSelect())
-        XCTAssertEqual(binder.content.receiveCount, 0)
+        XCTAssertEqual(binder.content.dismissCount, 0)
         
         binder.flow.event(.dismiss)
         
-        XCTAssertEqual(binder.content.receiveCount, 1)
+        XCTAssertEqual(binder.content.dismissCount, 1)
     }
     
     // MARK: - Helpers
@@ -134,7 +134,7 @@ final class RootViewBinderComposerTests: XCTestCase {
             witnesses: .init(
                 content: .init(
                     emitting: { $0.selectPublisher },
-                    receiving: { $0.receive }
+                    dismissing: { $0.dismiss }
                 ),
                 dismiss: .init(
                     dismissAll: { _ in dismissAllSubject.eraseToAnyPublisher() },
@@ -159,7 +159,7 @@ final class RootViewBinderComposerTests: XCTestCase {
     private final class RootViewModel {
         
         private let selectSubject = PassthroughSubject<Select, Never>()
-        private(set) var receiveCount = 0
+        private(set) var dismissCount = 0
         
         var selectPublisher: AnyPublisher<Select, Never> {
             
@@ -171,9 +171,9 @@ final class RootViewBinderComposerTests: XCTestCase {
             selectSubject.send(select)
         }
         
-        func receive() {
+        func dismiss() {
             
-            receiveCount += 1
+            dismissCount += 1
         }
     }
     

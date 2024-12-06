@@ -1252,6 +1252,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetCollateralLandingBackend"
+               BuildableName = "CollateralLoanLandingGetCollateralLandingBackend"
+               BlueprintName = "CollateralLoanLandingGetCollateralLandingBackend"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetCollateralLandingUI"
+               BuildableName = "CollateralLoanLandingGetCollateralLandingUI"
+               BlueprintName = "CollateralLoanLandingGetCollateralLandingUI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1363,6 +1391,16 @@
                BlueprintIdentifier = "SerialComponentsTests"
                BuildableName = "SerialComponentsTests"
                BlueprintName = "SerialComponentsTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SavingsAccountTests"
+               BuildableName = "SavingsAccountTests"
+               BlueprintName = "SavingsAccountTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
