@@ -560,9 +560,7 @@ extension QRSearchOperatorViewModel {
     
     private var backButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
         
-        return navigationBar.leftItems
-            .compactMap(\.asBackButton)
-            .first
+        return navigationBar.backButton
     }
     
     func tapPayWithDetailsButton(
@@ -578,14 +576,6 @@ extension QRSearchOperatorViewModel {
         
         noCompanyInListViewModel.buttons
             .first { $0.title == "Оплатить по реквизитам" }
-    }
-}
-
-private extension NavigationBarView.ViewModel.ItemViewModel {
-    
-    var asBackButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
-        
-        self as? NavigationBarView.ViewModel.BackButtonItemViewModel
     }
 }
 

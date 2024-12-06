@@ -304,7 +304,7 @@ class QRBinderTests: XCTestCase {
             self.subject.send(value)
         }
         
-        func receive() {
+        func dismiss() {
             
             callCount += 1
         }

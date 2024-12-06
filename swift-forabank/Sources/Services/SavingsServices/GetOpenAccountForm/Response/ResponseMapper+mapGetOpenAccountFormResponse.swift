@@ -79,13 +79,13 @@ private extension ResponseMapper.GetOpenAccountFormData.Fee {
     
     init(_ data: ResponseMapper._Data._Fee) {
         
-        self.init(openAndMaintenance: data.openAndMaintenance ?? 0, subscription: .init(data.subscription ?? .init(period: nil, value: nil)))
+        self.init(open: data.open ?? 0, maintenance: .init(data.maintenance ?? .init(period: nil, value: nil)))
     }
 }
 
-private extension ResponseMapper.GetOpenAccountFormData.Subscription {
+private extension ResponseMapper.GetOpenAccountFormData.Maintenance {
     
-    init(_ data: ResponseMapper._Data._Subscription) {
+    init(_ data: ResponseMapper._Data._Maintenance) {
         
         self.init(period: data.period ?? "", value: data.value ?? 0)
     }
@@ -120,11 +120,11 @@ private extension ResponseMapper {
         
         struct _Fee: Decodable {
             
-            let openAndMaintenance: Int?
-            let subscription: _Subscription?
+            let open: Int?
+            let maintenance: _Maintenance?
         }
         
-        struct _Subscription: Decodable {
+        struct _Maintenance: Decodable {
             
             let period: String?
             let value: Int?

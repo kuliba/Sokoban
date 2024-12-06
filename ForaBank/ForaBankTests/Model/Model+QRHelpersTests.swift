@@ -144,10 +144,11 @@ final class Model_QRHelpersTests: XCTestCase {
         inn: String = anyMessage(),
         md5Hash: String? = anyMessage(),
         title: String = anyMessage(),
+        type: String = anyMessage(),
         sortedOrder: Int = 0
     ) -> CachingOperator {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, title: title, sortedOrder: sortedOrder)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, title: title, type: type, sortedOrder: sortedOrder)
     }
     
     private func makeCachingOperators(

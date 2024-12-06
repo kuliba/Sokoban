@@ -20,7 +20,8 @@ enum RootViewSelect: Equatable {
     
     case outside(RootViewOutside)
     case scanQR
-    case utilityPayment
+    case userAccount
+    case standardPayment(ServiceCategory.CategoryType)
     case templates
 }
 
@@ -40,12 +41,14 @@ enum RootViewNavigation {
     case failure(Failure)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
-    case standardPayment(Node<PaymentProviderPicker.Binder>)
+    case standardPayment(Node<PaymentProviderPickerDomain.Binder>)
     case templates(TemplatesNode)
+    case userAccount(UserAccountViewModel)
     
     enum Failure: Equatable {
         
         case makeStandardPaymentFailure
+        case makeUserAccountFailure
         case missingCategoryOfType(ServiceCategory.CategoryType)
     }
     

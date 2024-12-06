@@ -129,10 +129,7 @@ private extension SegmentedProvider {
     var `operator`: UtilityPaymentOperator {
         
         return .init(
-            id: origin.id,
-            title: origin.title,
-            subtitle: origin.inn,
-            icon: origin.icon
+            id: origin.id, inn: origin.inn, title: origin.title, icon: origin.icon, type: origin.segment
         )
     }
 }

@@ -13,16 +13,19 @@ public struct SberOperator: Identifiable, Equatable {
     public let inn: String
     public let md5Hash: String?
     public let title: String
+    public let type: String
     
     public init(
         id: String,
         inn: String,
         md5Hash: String?,
-        title: String
+        title: String,
+        type: String
     ) {
         self.id = id
         self.inn = inn
         self.md5Hash = md5Hash
         self.title = title
+        self.type = type
     }
 }

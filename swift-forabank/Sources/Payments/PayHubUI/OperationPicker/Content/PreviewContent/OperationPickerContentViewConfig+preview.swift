@@ -9,6 +9,7 @@ extension OperationPickerContentViewConfig {
     
     static let preview: Self = .init(
         height: 96,
+        horizontalPadding: 8,
         spacing: 4
     )
 }

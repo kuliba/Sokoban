@@ -53,9 +53,7 @@ extension RootViewModelFactory {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         }
         
-        if marketplaceFlag.isActive {
-            model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
-        }
+        model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         
         if collateralLoanLandingFlag.isActive {
             model.featureFlags.productsOpenLoanURL = nil
@@ -75,12 +73,7 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let fastPaymentsFactory = FastPaymentsFactory(
-            fastPaymentsViewModel: .new({
-                
-                self.makeNewFastPaymentsViewModel()
-            })
-        )
+        let fastPaymentsFactory = makeFastPaymentsFactory()
         
         let stickerViewFactory: StickerViewFactory = .init(
             model: model,
@@ -88,16 +81,8 @@ extension RootViewModelFactory {
             logger: logger
         )
         
-        let userAccountNavigationStateManager = makeNavigationStateManager(
-            modelEffectHandler: .init(model: model),
-            otpServices: .init(httpClient, logger),
-            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
-            fastPaymentsFactory: fastPaymentsFactory,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
-            duration: 60
+        let userAccountNavigationStateManager = makeUserAccountNavigationStateManager(
+            fastPaymentsFactory: fastPaymentsFactory
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -234,11 +219,7 @@ extension RootViewModelFactory {
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
         
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
-            if self.changeSVCardLimitsFlag.isActive {
-                return .fullScreen(.cardGuardian($0, self.changeSVCardLimitsFlag))
-            } else {
-                return .bottomSheet(.cardGuardian($0, self.changeSVCardLimitsFlag))
-            }
+            return .fullScreen(.cardGuardian($0))
         }
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
@@ -298,10 +279,7 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
-            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts,
-                c2bSubscription: model.subscriptions.value
-            ),
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
@@ -394,6 +372,68 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
+
+        // MARK: - Notifications Authorized
+        
+        let _createGetAuthorizedZoneClientInformData = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAuthorizedZoneClientInformDataRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
+        )
+        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformListDataState?) -> Void) in
+            
+            _createGetAuthorizedZoneClientInformData(()) { result in
+                
+                switch result {
+                case .failure:
+                    completion(nil)
+                    
+                case let .success(response):
+                    
+                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData.init($0) }
+                  
+                    list.count == 1 && list.first != nil ?
+                    completion(.init(list,
+                            infoLabel: .init(
+                                image: list.first?.image,
+                                title: list.first?.title ?? "Информация"))
+                    )
+                    : completion(.init(list,
+                            infoLabel: .init(
+                                image: nil,
+                                title: "Информация"))
+                    )
+                }
+                
+                _ = _createGetAuthorizedZoneClientInformData
+            }
+        }
+        
+        model.performOrWaitForAuthorized {
+            
+                createGetAuthorizedZoneClientInformData {
+                    
+                    if let info = $0 {
+                        
+                        self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
+                        self.model.сlientAuthorizationState.value.authorized = info
+                    } else {
+                        
+                        self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
+                    }
+                    
+                    _ = createGetAuthorizedZoneClientInformData
+                }
+        }
+        .store(in: &bindings)
+        
+        func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
+        
+        model.sessionState
+            .map(\.isActive)
+            .filter { $0 }
+            .removeDuplicates()
+            .sink { [weak self] _ in self?.updateAlerts() }
+            .store(in: &bindings)
         
         let rootViewModel = make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -454,9 +494,9 @@ private extension RootViewDomain.Flow {
         let outside = $state.compactMap(\.outside)
             .debounce(for: .milliseconds(500), scheduler: scheduler)
             .receive(on: scheduler)
-            .sink { [weak self] in
+            .sink { [weak content] in
                 
-                guard let self else { return }
+                guard let content else { return }
                 
                 switch $0 {
                 case let .productProfile(productID):
@@ -774,12 +814,20 @@ private extension RootViewModelFactory {
             let loginViewModel = ComposedLoginViewModel(
                 authLoginViewModel: .init(
                     self.model,
+                    shouldUpdateVersion: shouldUpdateVersion,
                     rootActions: $0,
                     onRegister: onRegister
                 )
             )
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
+        }
+        
+        func shouldUpdateVersion(updateAlert: ClientInformAlerts.UpdateAlert) ->  Bool {
+            
+            guard let version: String = updateAlert.version else { return false }
+            
+            return version.compareVersion(to: Bundle.main.appVersionShort) == .orderedDescending
         }
         
         let tabsViewModel = TabsViewModel(
@@ -790,14 +838,14 @@ private extension RootViewModelFactory {
         )
         
         return .init(
-            fastPaymentsFactory: fastPaymentsFactory, 
+            fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
-            showLoginAction: showLoginAction, 
+            showLoginAction: showLoginAction,
             landingServices: landingServices,
             mainScheduler: schedulers.main
         )
@@ -805,28 +853,6 @@ private extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
-
-private extension UserAccountModelEffectHandler {
-    
-    convenience init(model: Model) {
-        
-        self.init(
-            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
-                
-                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
-            },
-            deleteRequest: {
-                
-                model.action.send(ModelAction.ClientInfo.Delete.Request())
-            },
-            exit: {
-                
-                model.auth.value = .unlockRequiredManual
-            }
-        )
-    }
-}
 
 private extension MarketShowcaseDomain.ContentError {
     

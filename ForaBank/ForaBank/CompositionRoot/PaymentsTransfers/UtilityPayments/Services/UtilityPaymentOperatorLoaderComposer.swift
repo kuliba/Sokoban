@@ -158,9 +158,10 @@ private extension UtilityPaymentOperator {
         
         self.init(
             id: sberOperator.id,
+            inn: sberOperator.inn,
             title: sberOperator.title,
-            subtitle: sberOperator.inn,
-            icon: sberOperator.md5Hash ?? ""
+            icon: sberOperator.md5Hash,
+            type: sberOperator.type
         )
     }
 }
@@ -174,13 +175,13 @@ private extension Array where Element == UtilityPaymentOperator {
 
 private extension UtilityPaymentOperator {
     
-    static let empty:   Self = .init("empty", "No Service Operator", "123")
-    static let failing: Self = .init("failing", "Failing Operator", "456")
-    static let multi:   Self = .init("multi-d1", "Multi Service Operator", "abc")
-    static let single:  Self = .init("single-d2", "Single Service Operator", "cde")
+    static let empty:   Self = .init("empty", "0", "No Service Operator", "123", type: "utility")
+    static let failing: Self = .init("failing", "1", "Failing Operator", "456", type: "utility")
+    static let multi:   Self = .init("multi-d1", "2", "Multi Service Operator", "abc", type: "utility")
+    static let single:  Self = .init("single-d2", "3", "Single Service Operator", "cde", type: "utility")
     
-    private init(_ id: String, _ title: String, _ subtitle: String? = nil) {
+    private init(_ id: String, _ inn: String, _ title: String, _ icon: String? = nil, type: String) {
         
-        self.init(id: id, title: title, subtitle: subtitle, icon: nil)
+        self.init(id: id, inn: inn, title: title, icon: icon, type: type)
     }
 }

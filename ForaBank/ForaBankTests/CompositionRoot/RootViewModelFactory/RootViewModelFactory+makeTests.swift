@@ -106,6 +106,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         awaitActorThreadHop()
         
         httpClient.complete(with: success())
+        httpClient.complete(with: success(), at: 1)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
@@ -228,12 +229,12 @@ private extension RootViewModel {
     func personal(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> PaymentsTransfersPersonal {
+    ) throws -> PaymentsTransfersPersonalDomain.Binder {
         
         try XCTUnwrap(personal, "Expected to have v1", file: file, line: line)
     }
     
-    private var personal: PaymentsTransfersPersonal? {
+    private var personal: PaymentsTransfersPersonalDomain.Binder? {
         
         guard case let .v1(switcher as PaymentsTransfersSwitcher) = tabsViewModel.paymentsModel,
               case let .personal(personal) = switcher.state

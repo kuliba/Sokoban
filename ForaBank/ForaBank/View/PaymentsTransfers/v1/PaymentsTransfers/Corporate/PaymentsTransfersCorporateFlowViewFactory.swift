@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 21.11.2024.
 //
 
-import SwiftUI
-
 struct PaymentsTransfersCorporateFlowViewFactory<ContentView, DestinationView, FullScreenCoverView> {
     
     let makeContentView: MakeContentView
