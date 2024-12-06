@@ -114,7 +114,7 @@ extension RootViewModelFactory {
         )
         let microServicesComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: settings.pageSize,
-            nanoServices: .init(loadOperators: loadOperators)
+            nanoServices: .init(loadOperators: loadCachedOperators)
         )
         let effectHandler = PaymentProviderPickerDomain.ProviderListEffectHandler(
             microServices: microServicesComposer.compose(

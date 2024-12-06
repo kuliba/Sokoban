@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+loadOperatorsTests.swift
+//  RootViewModelFactory+loadCachedOperatorsTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 06.12.2024.
@@ -9,7 +9,7 @@
 import PayHubUI
 import XCTest
 
-final class RootViewModelFactory_loadOperatorsTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryTests {
     
     func test_init_shouldNotCallLocalAgent() {
         
@@ -18,26 +18,26 @@ final class RootViewModelFactory_loadOperatorsTests: RootViewModelFactoryTests {
         XCTAssertEqual(localAgent.loadCallCount, 0)
     }
     
-    func test_loadOperators_shouldCallLocalAgent() {
+    func test_loadCachedOperators_shouldCallLocalAgent() {
         
         let (sut, localAgent) = makeSUT()
         
-        sut.loadOperators(payload: makePayload()) { _ in }
+        sut.loadCachedOperators(payload: makePayload()) { _ in }
         
         XCTAssertEqual(localAgent.loadCallCount, 1)
     }
     
-    func test_loadOperators_shouldDeliverEmptyOnMissingValue() {
+    func test_loadCachedOperators_shouldDeliverEmptyOnMissingValue() {
         
         expect(withLoadStub: nil, payload: makePayload(), toDeliver: [])
     }
         
-    func test_loadOperators_shouldDeliverEmptyOnEmptyValue() {
+    func test_loadCachedOperators_shouldDeliverEmptyOnEmptyValue() {
         
         expect(withLoadStub: [], payload: makePayload(), toDeliver: [])
     }
         
-    func test_loadOperators_shouldDeliverEmptyOnNonMatchingCategoryType() {
+    func test_loadCachedOperators_shouldDeliverEmptyOnNonMatchingCategoryType() {
         
         let (_, model) = makeOperatorWithModel(type: .charity)
         let (sut, _) = makeSUT(loadStub: [model])
@@ -50,7 +50,7 @@ final class RootViewModelFactory_loadOperatorsTests: RootViewModelFactoryTests {
         )
     }
         
-    func test_loadOperators_shouldDeliverOneOnValueOfOneForMatchingCategoryType() {
+    func test_loadCachedOperators_shouldDeliverOneOnValueOfOneForMatchingCategoryType() {
         
         let categoryType: CategoryType = .networkMarketing
         let (`operator`, model) = makeOperatorWithModel(type: categoryType)
@@ -64,7 +64,7 @@ final class RootViewModelFactory_loadOperatorsTests: RootViewModelFactoryTests {
         )
     }
         
-    func test_loadOperators_shouldDeliverTwoOnValueOfOneForMatchingCategoryType() {
+    func test_loadCachedOperators_shouldDeliverTwoOnValueOfOneForMatchingCategoryType() {
         
         let categoryType: CategoryType = .socialAndGames
         let (operator1, model1) = makeOperatorWithModel(type: categoryType)
@@ -156,7 +156,7 @@ final class RootViewModelFactory_loadOperatorsTests: RootViewModelFactoryTests {
         let sut = sut ?? makeSUT(loadStub: loadStub).sut
         let exp = expectation(description: "wait for load completion")
         
-        sut.loadOperators(payload: payload) {
+        sut.loadCachedOperators(payload: payload) {
             
             XCTAssertNoDiff($0, expectedValue, "Expected \(String(describing: expectedValue)), but got \(String(describing: $0)) instead.", file: file, line: line)
             

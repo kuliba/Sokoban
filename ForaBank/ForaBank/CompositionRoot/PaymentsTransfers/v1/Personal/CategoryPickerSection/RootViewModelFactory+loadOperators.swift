@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+loadOperators.swift
+//  RootViewModelFactory+loadCachedOperators.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 22.11.2024.
@@ -10,7 +10,7 @@ extension RootViewModelFactory {
 #warning("duplication - see UtilityPaymentOperatorLoaderComposer")
     
     @inlinable
-    func loadOperators(
+    func loadCachedOperators(
         payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
         completion: @escaping ([PaymentServiceOperator]) -> Void
     ) {
@@ -28,7 +28,7 @@ extension RootViewModelFactory {
         category: ServiceCategory,
         completion: @escaping (Result<[PaymentServiceOperator], Error>) -> Void
     ) {
-        loadOperators(
+        loadCachedOperators(
             payload: .init(
                 afterOperatorID: nil,
                 for: category.type,
