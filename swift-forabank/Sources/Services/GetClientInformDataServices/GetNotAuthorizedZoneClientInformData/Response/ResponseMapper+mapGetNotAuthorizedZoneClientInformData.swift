@@ -58,14 +58,14 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformData.Update {
     
     init?(_ updateData: ResponseMapper._Data._Update) {
 
-        guard let action = updateData.action,
+        guard let type = updateData.type,
               let platform = updateData.platform,
               let version = updateData.version,
               let link = updateData.link
         else { return nil }
         
         self.init(
-            action: action,
+            type: type,
             platform: platform,
             version: version,
             link: link
@@ -90,10 +90,15 @@ private extension ResponseMapper {
         
         struct _Update: Decodable {
             
-            let action: String?
+            let type: String?
             let platform: String?
             let version: String?
             let link: String?
+            
+            enum CodingKeys: String, CodingKey {
+                case type = "action"
+                case platform, version, link
+            }
         }
     }
 }

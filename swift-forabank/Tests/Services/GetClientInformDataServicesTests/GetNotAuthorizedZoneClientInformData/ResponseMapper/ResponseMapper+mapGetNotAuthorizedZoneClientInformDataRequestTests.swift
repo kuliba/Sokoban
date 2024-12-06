@@ -124,7 +124,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withNilAction)
         
-        XCTAssertNil(mapped.list.first?.update?.action)
+        XCTAssertNil(mapped.list.first?.update?.type)
     }
     
     func test_map_withNilPlatform_shouldOmitItem() throws {
@@ -175,7 +175,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         XCTAssertNoDiff(mapped.list.map(\.update), [ nil,
             .init(
-                action: "ACTION",
+                type: "ACTION",
                 platform: "iOS",
                 version: "VERSION",
                 link: "LINK"
@@ -187,7 +187,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withNilActionInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update?.action), [nil, "ACTION"])
+        XCTAssertNoDiff(mapped.list.map(\.update?.type), [nil, "ACTION"])
     }
     
     func test_map_shouldHandleOptionalPlatformInUpdate() throws {
@@ -229,7 +229,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withEmptyAction)
         
-        XCTAssertNoDiff(mapped.list.first?.update?.action, "")
+        XCTAssertNoDiff(mapped.list.first?.update?.type, "")
     }
     
     func test_map_withEmptyPlatform_shouldDeliverValidPlatform() throws {
@@ -306,7 +306,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
                 title: "Внимание!",
                 text: "Вышло новое обновление! Обновитесь скорее!",
                 update: .init(
-                    action: "optional",
+                    type: "optional",
                     platform: "iOS",
                     version: "7.12.15",
                     link: "LINK"

@@ -6,16 +6,19 @@
 //
 
 import Foundation
+import Combine
 
 extension AuthLoginViewModel {
     
     convenience init(
         _ model: Model,
         buttons: [ButtonAuthView.ViewModel] = [],
+        shouldUpdateVersion: @escaping (ClientInformAlerts.UpdateAlert) -> Bool,
         rootActions: RootViewModel.RootActions,
         onRegister: @escaping () -> Void
     ) {
         self.init(
+            clientInformAlertsManager: model.clientInformAlertManager,
             eventPublishers: model.eventPublishers,
             eventHandlers: .init(
                 onRegisterCardNumber: model.register(cardNumber:),
@@ -26,7 +29,8 @@ extension AuthLoginViewModel {
             factory: model.authLoginViewModelFactory(
                 rootActions: rootActions
             ),
-            onRegister: onRegister
+            onRegister: onRegister, 
+            shouldUpdateVersion: shouldUpdateVersion
         )
     }
 }
@@ -36,18 +40,6 @@ private extension Model {
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
-                .eraseToAnyPublisher(),
-            
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),

@@ -9,12 +9,12 @@ import Foundation
 
 public final class CollateralLoanLandingGetCollateralLandingContent {
         
-    let data: GetCollateralLandingData
+    let product: GetCollateralLandingProduct
 
     public init(
-        data: GetCollateralLandingData
+        product: GetCollateralLandingProduct
     ) {
         
-        self.data = data
+        self.product = product
     }
 }

@@ -35,7 +35,8 @@ extension Model {
             contactsAgent:       .unimplementedMock(),
             cameraAgent:         .unimplementedMock(),
             imageGalleryAgent:   .unimplementedMock(),
-            networkMonitorAgent: .unimplementedMock()
+            networkMonitorAgent: .unimplementedMock(),
+            clientInformAlertManager: AlertManagerSpy()
         )
     }
 }

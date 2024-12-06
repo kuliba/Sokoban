@@ -37,6 +37,7 @@ struct CachingSberOperator: Codable, Equatable {
     let inn: String
     let md5Hash: String?
     let title: String
+    let type: String
     let sortedOrder: Int
 }
 
@@ -61,6 +62,7 @@ private extension CachingSberOperator {
             inn: sberOperator.inn,
             md5Hash: sberOperator.md5Hash,
             title: sberOperator.title,
+            type: sberOperator.type,
             sortedOrder: index
         )
     }

@@ -26,14 +26,13 @@ extension View {
 
     func bottomSheet<Item, Content>(item: Binding<Item?>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : BottomSheetCustomizable, Content : View {
         
-        if let itemWrappedValue = item.wrappedValue {
-            
-            return modifier(BottomSheetItemModifier(item: item, animationSpeed: itemWrappedValue.animationSpeed, sheetContent: content))
-            
-        } else {
-            
-            return modifier(BottomSheetItemModifier(item: item, animationSpeed: animationSpeed, sheetContent: content))
-        }
+        return modifier(
+            BottomSheetItemModifier(
+                item: item,
+                animationSpeed: item.wrappedValue?.animationSpeed ?? animationSpeed,
+                sheetContent: content
+            )
+        )
     }
 }
 

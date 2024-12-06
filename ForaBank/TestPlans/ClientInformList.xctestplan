@@ -14,9 +14,9 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "СlientInformListTests",
-        "name" : "СlientInformListTests"
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
       }
     }
   ],
