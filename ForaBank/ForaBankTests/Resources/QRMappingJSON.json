@@ -82,7 +82,7 @@
     ],
     "operators": [
       {
-        "operator": "iFora||4747",
+        "operator": "iVortex||4747",
         "parameters": [
           {
             "parameter": "a3_PERSONAL_ACCOUNT_1_1",
@@ -94,7 +94,7 @@
         ]
       },
       {
-        "operator": "iFora||5872",
+        "operator": "iVortex||5872",
         "parameters": [
           {
             "parameter": "a3_PERSONAL_ACCOUNT_1_3",
@@ -106,7 +106,7 @@
         ]
       },
       {
-        "operator": "iFora||6420",
+        "operator": "iVortex||6420",
         "parameters": [
           {
             "parameter": "a3_PERSONAL_ACCOUNT_1_1",
@@ -118,7 +118,7 @@
         ]
       },
       {
-        "operator": "iFora||4147",
+        "operator": "iVortex||4147",
         "parameters": [
           {
             "parameter": "a3_NUMBER_1_2",
@@ -130,7 +130,7 @@
         ]
       },
       {
-        "operator": "iFora||6526",
+        "operator": "iVortex||6526",
         "parameters": [
           {
             "parameter": "a3_PERSONAL_ACCOUNT_1_1",
@@ -142,7 +142,7 @@
         ]
       },
       {
-        "operator": "iFora||TVK",
+        "operator": "iVortex||TVK",
         "parameters": [
           {
             "parameter": "account",
@@ -154,7 +154,7 @@
         ]
       },
       {
-        "operator": "iFora||4568",
+        "operator": "iVortex||4568",
         "parameters": [
           {
             "parameter": "a3_PersonalAccount_1_2",
@@ -166,7 +166,7 @@
         ]
       },
       {
-        "operator": "iFora||RIZ",
+        "operator": "iVortex||RIZ",
         "parameters": [
           {
             "parameter": "account",
@@ -178,7 +178,7 @@
         ]
       },
       {
-        "operator": "iFora||5476",
+        "operator": "iVortex||5476",
         "parameters": [
           {
             "parameter": "a3_NUMBER_1_2",
@@ -190,7 +190,7 @@
         ]
       },
       {
-        "operator": "iFora||KSK",
+        "operator": "iVortex||KSK",
         "parameters": [
           {
             "parameter": "account",

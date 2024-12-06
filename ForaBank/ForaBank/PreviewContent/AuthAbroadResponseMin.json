@@ -110,7 +110,7 @@
                   "list": [
                     {
                       "imageLink": "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
-                      "link": "https://www.forabank.ru/landings/mig/",
+                      "link": "https://www.vortex.ru/landings/mig/",
                       "details": {
                         "detailsGroupId": "bannersLanding",
                         "detailViewId": "oneThousandForTransfer"
@@ -118,7 +118,7 @@
                     },
                     {
                       "imageLink": "dict/getProductCatalogImage?image=/products/banners/deposit.png",
-                      "link": "https://www.forabank.ru/landings/mig/",
+                      "link": "https://www.vortex.ru/landings/mig/",
                       "details": {
                         "detailsGroupId": "bannersLanding",
                         "detailViewId": "moreTransfers"

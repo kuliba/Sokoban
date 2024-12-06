@@ -17,7 +17,7 @@
                 "cardId":10000184511
             },
             
-            "puref": "iFora||MIG",
+            "puref": "iVortex||MIG",
             "additional":[ {
                 
                 "fieldname": "trnPickupPoint",
@@ -31,7 +31,7 @@
                 "cardId": 10000184511
             },
             
-            "puref": "iFora||MIG",
+            "puref": "iVortex||MIG",
             "additional":[
                 {
                     
@@ -42,7 +42,7 @@
                 {
                     "fieldname": "DIRECT_BANKS",
                     "fieldid": 2,
-                    "fieldvalue": "iFora||TransferEvocaClient12"
+                    "fieldvalue": "iVortex||TransferEvocaClient12"
                 }]
             
         }, {
@@ -54,7 +54,7 @@
                 "cardId": 10000184511
             },
             
-            "puref": "iFora||MIG",
+            "puref": "iVortex||MIG",
             "additional":[ {
                 
                 "fieldname": "trnPickupPoint",
@@ -63,7 +63,7 @@
             },{
                 "fieldname": "DIRECT_BANKS",
                 "fieldid": 2,
-                "fieldvalue": "iFora||TransferEvocaClient12"
+                "fieldvalue": "iVortex||TransferEvocaClient12"
             },{
                 "fieldname":"RECP",
                 "fieldid":3,

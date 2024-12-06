@@ -2,7 +2,7 @@
   "data": {
     "operatorGroupList": [
       {
-        "code": "iFora||1011001",
+        "code": "iVortex||1011001",
         "isGroup": true,
         "logotypeList": [
           {
@@ -15,7 +15,7 @@
         "name": "Мобильная связь",
         "operators": [
           {
-            "code": "iFora||4285",
+            "code": "iVortex||4285",
             "isGroup": false,
             "logotypeList": [
               {
@@ -40,7 +40,7 @@
                 "viewType": "INPUT"
               }
             ],
-            "parentCode": "iFora||1011001",
+            "parentCode": "iVortex||1011001",
             "synonymList": [
               "string"
             ]

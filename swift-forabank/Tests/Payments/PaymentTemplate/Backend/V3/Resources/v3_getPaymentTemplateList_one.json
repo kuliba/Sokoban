@@ -24,7 +24,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -47,7 +47,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -57,7 +57,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 2,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             }
                         ],
                         "mcc": null
@@ -75,7 +75,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -85,7 +85,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 2,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             },
                             {
                                 "fieldname": "RECP",

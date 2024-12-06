@@ -2,9 +2,9 @@
   "data": {
     "ProductCatalogList": [
       {
-        "conditionLink": "https://www.forabank.ru/",
+        "conditionLink": "https://www.vortex.ru/",
         "imageLink": "dict/getProductCatalogImage?image=1",
-        "orderLink": "https://www.forabank.ru/",
+        "orderLink": "https://www.vortex.ru/",
         "productName": "Карта 'Миг'",
         "cardTarif": 1,
         "cardType": 1,

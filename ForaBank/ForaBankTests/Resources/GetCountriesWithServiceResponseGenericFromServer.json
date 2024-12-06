@@ -12,7 +12,7 @@
                 "md5hash":"873ae820e558f131084e80df69d6efad",
                 "servicesList":[
                     {
-                        "code":"iFora||Addressless",
+                        "code":"iVortex||Addressless",
                         "isDefault":true
                     }
                 ]},
@@ -24,7 +24,7 @@
                 "md5hash":"3d35ab0a583e052f1157b1e703bda356",
                 "servicesList":[
                     {
-                        "code":"iFora||Addressless",
+                        "code":"iVortex||Addressless",
                         "isDefault":true
                     }
                 ]},
@@ -36,7 +36,7 @@
                 "md5hash":"a1feeead31c90c41d6f6b7fd62023009",
                 "servicesList":[
                     {
-                        "code":"iFora||Addressless",
+                        "code":"iVortex||Addressless",
                         "isDefault":true
                     }
                 ]},
@@ -48,15 +48,15 @@
                 "md5hash":"824df2043628ef1ad8e56c397115a027",
                 "servicesList":[
                     {
-                        "code":"iFora||MIG",
+                        "code":"iVortex||MIG",
                         "isDefault":true
                     },
                     {
-                        "code":"iFora||Addressless",
+                        "code":"iVortex||Addressless",
                         "isDefault":false
                     },
                     {
-                        "code":"iFora||MIG||card"
+                        "code":"iVortex||MIG||card"
                         ,"isDefault":false
                         
                     }

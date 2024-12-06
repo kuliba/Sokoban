@@ -24,7 +24,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -47,7 +47,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -57,7 +57,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 2,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             }
                         ],
                         "mcc": null
@@ -75,7 +75,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -85,7 +85,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 2,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             },
                             {
                                 "fieldname": "RECP",
@@ -195,7 +195,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||TransferC2CSTEP",
+                        "puref": "iVortex||TransferC2CSTEP",
                         "additional": [
                             {
                                 "fieldname": "BankRecipientID",
@@ -307,7 +307,7 @@
                         "currencyAmount": null,
                         "payer": null,
                         "comment": null,
-                        "puref": "iFora||Addressing||cash",
+                        "puref": "iVortex||Addressing||cash",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -323,7 +323,7 @@
                         "currencyAmount": null,
                         "payer": null,
                         "comment": null,
-                        "puref": "iFora||Addressing||cash",
+                        "puref": "iVortex||Addressing||cash",
                         "additional": [
                             {
                                 "fieldname": "bCountryId",
@@ -349,7 +349,7 @@
                         "currencyAmount": null,
                         "payer": null,
                         "comment": null,
-                        "puref": "iFora||Addressing||cash",
+                        "puref": "iVortex||Addressing||cash",
                         "additional": [
                             {
                                 "fieldname": "bCountryId",
@@ -387,7 +387,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||Addressing||cash",
+                        "puref": "iVortex||Addressing||cash",
                         "additional": [
                             {
                                 "fieldname": "bCountryId",
@@ -476,7 +476,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||MIG",
+                        "puref": "iVortex||MIG",
                         "additional": [
                             {
                                 "fieldname": "RECP",
@@ -486,7 +486,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 1,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             },
                             {
                                 "fieldname": "##CURR",
@@ -558,35 +558,35 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||TNS",
+                        "puref": "iVortex||TNS",
                         "additional": [
                             {
-                                "fieldname": "ru.forabank.sense.operator",
+                                "fieldname": "ru.vortex.sense.operator",
                                 "fieldid": 1,
-                                "fieldvalue": "iFora||TNS"
+                                "fieldvalue": "iVortex||TNS"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.header",
+                                "fieldname": "ru.vortex.sense.header",
                                 "fieldid": 2,
-                                "fieldvalue": "ru.forabank.sense.header"
+                                "fieldvalue": "ru.vortex.sense.header"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.product",
+                                "fieldname": "ru.vortex.sense.product",
                                 "fieldid": 3,
                                 "fieldvalue": "10000216938"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.amount",
+                                "fieldname": "ru.vortex.sense.amount",
                                 "fieldid": 9,
                                 "fieldvalue": "101.5"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.fee",
+                                "fieldname": "ru.vortex.sense.fee",
                                 "fieldid": 11,
                                 "fieldvalue": "0 ₽"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.code",
+                                "fieldname": "ru.vortex.sense.code",
                                 "fieldid": 13,
                                 "fieldvalue": "926961"
                             }
@@ -656,7 +656,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -691,7 +691,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -726,7 +726,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||CTV",
+                        "puref": "iVortex||CTV",
                         "additional": [
                             {
                                 "fieldname": "P1",
@@ -741,7 +741,7 @@
                             {
                                 "fieldname": "paymentsServiceOperatorLogo",
                                 "fieldid": 8,
-                                "fieldvalue": "iFora||CTV"
+                                "fieldvalue": "iVortex||CTV"
                             }
                         ],
                         "mcc": null
@@ -772,7 +772,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||CTV",
+                        "puref": "iVortex||CTV",
                         "additional": [
                             {
                                 "fieldname": "P1",
@@ -882,7 +882,7 @@
                             "INN": null
                         },
                         "comment": "Перевод денежных средств по распоряжению клиента № 2 от 31.05.2024, получатель Эвоков Финстрим Финстримович, источником не являются дивиденды и иные аналогичные выплаты от распределения прибыли",
-                        "puref": "iFora||TransferEvocaClient12",
+                        "puref": "iVortex||TransferEvocaClient12",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -892,7 +892,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 2,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             },
                             {
                                 "fieldname": "RECP",
@@ -925,7 +925,7 @@
                                 "fieldvalue": "220 ₽"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.fee",
+                                "fieldname": "ru.vortex.sense.fee",
                                 "fieldid": 10,
                                 "fieldvalue": "100 ₽"
                             },
@@ -960,7 +960,7 @@
                             "INN": null
                         },
                         "comment": "Перевод денежных средств по распоряжению клиента № 1 от 03.06.2024, получатель Эвоков Финстрим Финстримович, источником не являются дивиденды и иные аналогичные выплаты от распределения прибыли",
-                        "puref": "iFora||TransferEvocaClient12",
+                        "puref": "iVortex||TransferEvocaClient12",
                         "additional": [
                             {
                                 "fieldname": "trnPickupPoint",
@@ -970,7 +970,7 @@
                             {
                                 "fieldname": "DIRECT_BANKS",
                                 "fieldid": 2,
-                                "fieldvalue": "iFora||TransferEvocaClient12"
+                                "fieldvalue": "iVortex||TransferEvocaClient12"
                             },
                             {
                                 "fieldname": "RECP",
@@ -1033,7 +1033,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -1068,7 +1068,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -1103,7 +1103,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||TNS",
+                        "puref": "iVortex||TNS",
                         "additional": [
                             {
                                 "fieldname": "account",
@@ -1138,7 +1138,7 @@
                             {
                                 "fieldname": "paymentsServiceOperatorLogo",
                                 "fieldid": 12,
-                                "fieldvalue": "iFora||TNS"
+                                "fieldvalue": "iVortex||TNS"
                             }
                         ],
                         "mcc": null
@@ -1168,7 +1168,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||TNS",
+                        "puref": "iVortex||TNS",
                         "additional": [
                             {
                                 "fieldname": "account",
@@ -1223,7 +1223,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||TNS",
+                        "puref": "iVortex||TNS",
                         "additional": [
                             {
                                 "fieldname": "account",
@@ -1258,7 +1258,7 @@
                             {
                                 "fieldname": "paymentsServiceOperatorLogo",
                                 "fieldid": 12,
-                                "fieldvalue": "iFora||TNS"
+                                "fieldvalue": "iVortex||TNS"
                             }
                         ],
                         "mcc": null
@@ -1288,7 +1288,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -1323,7 +1323,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||CTV",
+                        "puref": "iVortex||CTV",
                         "additional": [
                             {
                                 "fieldname": "P1",
@@ -1338,7 +1338,7 @@
                             {
                                 "fieldname": "paymentsServiceOperatorLogo",
                                 "fieldid": 8,
-                                "fieldvalue": "iFora||CTV"
+                                "fieldvalue": "iVortex||CTV"
                             }
                         ],
                         "mcc": null
@@ -1407,7 +1407,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||KSK",
+                        "puref": "iVortex||KSK",
                         "additional": [
                             {
                                 "fieldname": "account",
@@ -1443,7 +1443,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6273",
+                        "puref": "iVortex||6273",
                         "additional": [
                             {
                                 "fieldname": "a3_dutyCategory_1_1",
@@ -1471,7 +1471,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6273",
+                        "puref": "iVortex||6273",
                         "additional": [
                             {
                                 "fieldname": "a3_categorySelect_3_1",
@@ -1504,7 +1504,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6273",
+                        "puref": "iVortex||6273",
                         "additional": [
                             {
                                 "fieldname": "a3_fio_1_2",
@@ -1527,7 +1527,7 @@
                                 "fieldvalue": "500803508035"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.amount",
+                                "fieldname": "ru.vortex.sense.amount",
                                 "fieldid": 5,
                                 "fieldvalue": "94.0"
                             }
@@ -1560,7 +1560,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -1595,7 +1595,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||TransferC2CSTEP",
+                        "puref": "iVortex||TransferC2CSTEP",
                         "additional": [
                             {
                                 "fieldname": "BankRecipientID",
@@ -1648,7 +1648,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -1683,20 +1683,20 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||CTV",
+                        "puref": "iVortex||CTV",
                         "additional": [
                             {
-                                "fieldname": "ru.forabank.sense.operator",
+                                "fieldname": "ru.vortex.sense.operator",
                                 "fieldid": 1,
-                                "fieldvalue": "iFora||CTV"
+                                "fieldvalue": "iVortex||CTV"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.header",
+                                "fieldname": "ru.vortex.sense.header",
                                 "fieldid": 2,
-                                "fieldvalue": "ru.forabank.sense.header"
+                                "fieldvalue": "ru.vortex.sense.header"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.product",
+                                "fieldname": "ru.vortex.sense.product",
                                 "fieldid": 3,
                                 "fieldvalue": "10000220675"
                             },
@@ -1706,7 +1706,7 @@
                                 "fieldvalue": "33694934"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.amount",
+                                "fieldname": "ru.vortex.sense.amount",
                                 "fieldid": 5,
                                 "fieldvalue": "25.0"
                             },
@@ -1716,17 +1716,17 @@
                                 "fieldvalue": "25 ₽"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.fee",
+                                "fieldname": "ru.vortex.sense.fee",
                                 "fieldid": 7,
                                 "fieldvalue": "0 ₽"
                             },
                             {
                                 "fieldname": "paymentsServiceOperatorLogo",
                                 "fieldid": 8,
-                                "fieldvalue": "iFora||CTV"
+                                "fieldvalue": "iVortex||CTV"
                             },
                             {
-                                "fieldname": "ru.forabank.sense.code",
+                                "fieldname": "ru.vortex.sense.code",
                                 "fieldid": 9,
                                 "fieldvalue": "338516"
                             }
@@ -1759,7 +1759,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||CTV",
+                        "puref": "iVortex||CTV",
                         "additional": [
                             {
                                 "fieldname": "P1",
@@ -1795,7 +1795,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -1823,7 +1823,7 @@
                         "currencyAmount": null,
                         "payer": null,
                         "comment": null,
-                        "puref": "iForaNKORR||18662",
+                        "puref": "iVortexNKORR||18662",
                         "additional": [
                             {
                                 "fieldname": "1",
@@ -1839,7 +1839,7 @@
                         "currencyAmount": null,
                         "payer": null,
                         "comment": null,
-                        "puref": "iForaNKORR||18662",
+                        "puref": "iVortexNKORR||18662",
                         "additional": [
                             {
                                 "fieldname": "1",
@@ -1870,7 +1870,7 @@
                         "currencyAmount": null,
                         "payer": null,
                         "comment": null,
-                        "puref": "iForaNKORR||18662",
+                        "puref": "iVortexNKORR||18662",
                         "additional": [],
                         "mcc": null
                     },
@@ -1887,7 +1887,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iForaNKORR||18662",
+                        "puref": "iVortexNKORR||18662",
                         "additional": [
                             {
                                 "fieldname": "1",
@@ -1970,7 +1970,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6887",
+                        "puref": "iVortex||6887",
                         "additional": [
                             {
                                 "fieldname": "a3_divisionSelect_2_1",
@@ -1998,7 +1998,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6887",
+                        "puref": "iVortex||6887",
                         "additional": [
                             {
                                 "fieldname": "a3_divisionSelect_2_1",
@@ -2041,7 +2041,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6887",
+                        "puref": "iVortex||6887",
                         "additional": [
                             {
                                 "fieldname": "a3_address_2_2",
@@ -2117,7 +2117,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6887",
+                        "puref": "iVortex||6887",
                         "additional": [
                             {
                                 "fieldname": "a3_divisionSelect_2_1",
@@ -2145,7 +2145,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6887",
+                        "puref": "iVortex||6887",
                         "additional": [
                             {
                                 "fieldname": "a3_divisionSelect_2_1",
@@ -2188,7 +2188,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6887",
+                        "puref": "iVortex||6887",
                         "additional": [
                             {
                                 "fieldname": "a3_address_2_2",
@@ -2264,7 +2264,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6273",
+                        "puref": "iVortex||6273",
                         "additional": [
                             {
                                 "fieldname": "a3_divisionSelect_2_1",
@@ -2292,7 +2292,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6273",
+                        "puref": "iVortex||6273",
                         "additional": [
                             {
                                 "fieldname": "a3_divisionSelect_2_1",
@@ -2335,7 +2335,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||6273",
+                        "puref": "iVortex||6273",
                         "additional": [
                             {
                                 "fieldname": "a3_address_2_2",
@@ -2525,7 +2525,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||KSK",
+                        "puref": "iVortex||KSK",
                         "additional": [
                             {
                                 "fieldname": "account",
@@ -2561,7 +2561,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||CTV",
+                        "puref": "iVortex||CTV",
                         "additional": [
                             {
                                 "fieldname": "P1",
@@ -2597,7 +2597,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||4285",
+                        "puref": "iVortex||4285",
                         "additional": [
                             {
                                 "fieldname": "a3_NUMBER_1_2",
@@ -2632,7 +2632,7 @@
                             "INN": null
                         },
                         "comment": null,
-                        "puref": "iFora||AVDD",
+                        "puref": "iVortex||AVDD",
                         "additional": [
                             {
                                 "fieldname": "P1",

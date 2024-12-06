@@ -5,7 +5,7 @@
         "serial": "079c233d3859d5b609d975e84304b8d4",
         "operatorGroupList": [
             {
-                "code": "iFora||1001005",
+                "code": "iVortex||1001005",
                 "name": "Контакт",
                 "region": null,
                 "city": null,
@@ -21,12 +21,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||Addressing",
+                        "code": "iVortex||Addressing",
                         "name": "Отправка адресного перевода",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1001005",
+                        "parentCode": "iVortex||1001005",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -39,12 +39,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||Addressless",
+                        "code": "iVortex||Addressless",
                         "name": "Отправка безадресного перевода",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1001005",
+                        "parentCode": "iVortex||1001005",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -57,12 +57,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||ChangeOutgoing",
+                        "code": "iVortex||ChangeOutgoing",
                         "name": "Изменение перевода",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1001005",
+                        "parentCode": "iVortex||1001005",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -75,12 +75,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||ReturnOutgoing",
+                        "code": "iVortex||ReturnOutgoing",
                         "name": "Возврат перевода",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1001005",
+                        "parentCode": "iVortex||1001005",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -95,7 +95,7 @@
                 ]
             },
             {
-                "code": "iFora||1031001",
+                "code": "iVortex||1031001",
                 "name": "Коммунальные услуги и ЖКХ",
                 "region": null,
                 "city": null,
@@ -111,12 +111,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||4630",
+                        "code": "iVortex||4630",
                         "name": "ЖКХ Москвы (ЕИРЦ Банк Москвы)",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -150,12 +150,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||5872",
+                        "code": "iVortex||5872",
                         "name": "МосОблЕИРЦ",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -189,12 +189,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||C31",
+                        "code": "iVortex||C31",
                         "name": "Газпром Межрегионгаз Ярославль",
                         "region": "Ярославская обл",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "7604049153"
                         ],
@@ -310,12 +310,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||DEMO3841",
+                        "code": "iVortex||DEMO3841",
                         "name": "МособлЕИРЦ без комиссии",
                         "region": "Московская обл",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "5037008735"
                         ],
@@ -491,12 +491,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||DEMO4177",
+                        "code": "iVortex||DEMO4177",
                         "name": "МособлЕИРЦ с комиссией",
                         "region": "Московская обл",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "5037008735"
                         ],
@@ -672,12 +672,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||KSK",
+                        "code": "iVortex||KSK",
                         "name": "ПАО Калужская сбытовая компания",
                         "region": "Калужская обл",
                         "city": "Калуга",
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "4029030252"
                         ],
@@ -773,12 +773,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||MOO2",
+                        "code": "iVortex||MOO2",
                         "name": "Мосэнергосбыт (произвольная сумма)",
                         "region": "Москва г, Московская обл",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "7736520080"
                         ],
@@ -834,12 +834,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||PIK",
+                        "code": "iVortex||PIK",
                         "name": "ПИК-Комфорт",
                         "region": "Калининградская обл, Калужская обл, Краснодарский край, Москва г, Московская обл, Нижегородская обл,",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "7701208190"
                         ],
@@ -935,12 +935,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||RIZ",
+                        "code": "iVortex||RIZ",
                         "name": "ООО Расчетно-информационный центр г.Калуга",
                         "region": "Калужская обл",
                         "city": "Калуга",
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "4027115126"
                         ],
@@ -1056,12 +1056,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||TNS",
+                        "code": "iVortex||TNS",
                         "name": "ПАО ТНС энерго Ярославль",
                         "region": "Ярославская обл",
                         "city": "Ярославль",
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "7606052264"
                         ],
@@ -1177,12 +1177,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||UKIRR",
+                        "code": "iVortex||UKIRR",
                         "name": "АО Управдом Кировского района",
                         "region": "Ярославская обл",
                         "city": "Ярославль",
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "7604119315"
                         ],
@@ -1338,12 +1338,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||ULENR",
+                        "code": "iVortex||ULENR",
                         "name": "Управдом Ленинского района",
                         "region": "Ярославская обл",
                         "city": "Ярославль",
                         "isGroup": false,
-                        "parentCode": "iFora||1031001",
+                        "parentCode": "iVortex||1031001",
                         "synonymList": [
                             "7606066274"
                         ],
@@ -1501,7 +1501,7 @@
                 ]
             },
             {
-                "code": "iFora||1051001",
+                "code": "iVortex||1051001",
                 "name": "Телефония, интернет, коммерческое ТВ",
                 "region": null,
                 "city": null,
@@ -1517,12 +1517,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||4285",
+                        "code": "iVortex||4285",
                         "name": "Билайн",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1556,12 +1556,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||4286",
+                        "code": "iVortex||4286",
                         "name": "МТС",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1595,12 +1595,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||515",
+                        "code": "iVortex||515",
                         "name": "Yota A3",
                         "region": "Амурская область",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1613,12 +1613,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||515A3",
+                        "code": "iVortex||515A3",
                         "name": "Yota",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1631,12 +1631,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||5536",
+                        "code": "iVortex||5536",
                         "name": "Билайн Интернет A3",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1649,12 +1649,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||5576",
+                        "code": "iVortex||5576",
                         "name": "ТЕЛЕ2",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1688,12 +1688,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||5814",
+                        "code": "iVortex||5814",
                         "name": "Мегафон",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1727,12 +1727,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||6169",
+                        "code": "iVortex||6169",
                         "name": "Тинькофф Мобайл",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1745,12 +1745,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||BE6",
+                        "code": "iVortex||BE6",
                         "name": "Билайн",
                         "region": "Все регионы",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1784,12 +1784,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||MM5",
+                        "code": "iVortex||MM5",
                         "name": "Мегафон",
                         "region": "Все регионы",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1823,12 +1823,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||RR9",
+                        "code": "iVortex||RR9",
                         "name": "МТС",
                         "region": "Все регионы",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1862,12 +1862,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||TEL",
+                        "code": "iVortex||TEL",
                         "name": "Теле2",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1901,12 +1901,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||YSC",
+                        "code": "iVortex||YSC",
                         "name": "Yota (сотовая связь)",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051001",
+                        "parentCode": "iVortex||1051001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -1942,7 +1942,7 @@
                 ]
             },
             {
-                "code": "iFora||1051062",
+                "code": "iVortex||1051062",
                 "name": "Транспорт",
                 "region": null,
                 "city": null,
@@ -1958,12 +1958,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||4811",
+                        "code": "iVortex||4811",
                         "name": "ГИБДД",
                         "region": "Москва",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7710568760"
                         ],
@@ -1999,12 +1999,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||4990",
+                        "code": "iVortex||4990",
                         "name": "Московский паркинг",
                         "region": "Москва и Московская область",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7714887870"
                         ],
@@ -2160,12 +2160,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||5173",
+                        "code": "iVortex||5173",
                         "name": "Штрафы ГИБДД",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7710568760"
                         ],
@@ -2180,12 +2180,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||5300",
+                        "code": "iVortex||5300",
                         "name": "Стрелка",
                         "region": "Москва и Московская область",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7750005860"
                         ],
@@ -2221,12 +2221,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||AVDD",
+                        "code": "iVortex||AVDD",
                         "name": "Автодор Платные дороги (по договору)",
                         "region": "Все регионы",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7710965662"
                         ],
@@ -2262,12 +2262,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||AVDТ",
+                        "code": "iVortex||AVDТ",
                         "name": "Автодор Платные дороги (по транспондеру)",
                         "region": "Все регионы",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7710965662"
                         ],
@@ -2303,12 +2303,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||MMR",
+                        "code": "iVortex||MMR",
                         "name": "Транспортная карта \"Тройка\"",
                         "region": "Москва г, Московская обл",
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7702038150"
                         ],
@@ -2344,12 +2344,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||PYD",
+                        "code": "iVortex||PYD",
                         "name": "Подорожник",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1051062",
+                        "parentCode": "iVortex||1051062",
                         "synonymList": [
                             "7840379186"
                         ],
@@ -2387,7 +2387,7 @@
                 ]
             },
             {
-                "code": "iFora||1291001",
+                "code": "iVortex||1291001",
                 "name": "СБП",
                 "region": null,
                 "city": null,
@@ -2403,12 +2403,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||PullMe2MeSTEP",
+                        "code": "iVortex||PullMe2MeSTEP",
                         "name": "Запрос перевода Me2Me",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1291001",
+                        "parentCode": "iVortex||1291001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2421,12 +2421,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||PullSBPSTEP",
+                        "code": "iVortex||PullSBPSTEP",
                         "name": "Запрос перевода",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1291001",
+                        "parentCode": "iVortex||1291001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2439,12 +2439,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||SetBankDefSTEP",
+                        "code": "iVortex||SetBankDefSTEP",
                         "name": "Установка банка получателя по умолчанию",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1291001",
+                        "parentCode": "iVortex||1291001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2457,12 +2457,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||TransferC2CSTEP",
+                        "code": "iVortex||TransferC2CSTEP",
                         "name": "Перевод третьему лицу",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1291001",
+                        "parentCode": "iVortex||1291001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2475,12 +2475,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||TransferMe2MeSTEP",
+                        "code": "iVortex||TransferMe2MeSTEP",
                         "name": "Перевод на свой счет в другом банке",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1291001",
+                        "parentCode": "iVortex||1291001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2495,7 +2495,7 @@
                 ]
             },
             {
-                "code": "iFora||1301001",
+                "code": "iVortex||1301001",
                 "name": "Direct",
                 "region": null,
                 "city": null,
@@ -2511,12 +2511,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||TransferArdshinClientP",
+                        "code": "iVortex||TransferArdshinClientP",
                         "name": "Переводы МИГ ArdshinBank",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1301001",
+                        "parentCode": "iVortex||1301001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2630,12 +2630,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||TransferArmBBClientP",
+                        "code": "iVortex||TransferArmBBClientP",
                         "name": "Переводы МИГ ArmBB",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1301001",
+                        "parentCode": "iVortex||1301001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2749,12 +2749,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||TransferEvocaClientP",
+                        "code": "iVortex||TransferEvocaClientP",
                         "name": "Переводы МИГ Evocabank",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1301001",
+                        "parentCode": "iVortex||1301001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2868,12 +2868,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||TransferIDClientP",
+                        "code": "iVortex||TransferIDClientP",
                         "name": "Переводы МИГ IDBank",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1301001",
+                        "parentCode": "iVortex||1301001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -2989,7 +2989,7 @@
                 ]
             },
             {
-                "code": "iFora||1311001",
+                "code": "iVortex||1311001",
                 "name": "Тестовый контур А3",
                 "region": null,
                 "city": null,
@@ -3005,12 +3005,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||5090",
+                        "code": "iVortex||5090",
                         "name": "УК Ромашка",
                         "region": null,
                         "city": "Москва",
                         "isGroup": false,
-                        "parentCode": "iFora||1311001",
+                        "parentCode": "iVortex||1311001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3023,12 +3023,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||5091",
+                        "code": "iVortex||5091",
                         "name": "УК Одуванчик",
                         "region": null,
                         "city": "Ярославль",
                         "isGroup": false,
-                        "parentCode": "iFora||1311001",
+                        "parentCode": "iVortex||1311001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3041,12 +3041,12 @@
                         "parameterList": []
                     },
                     {
-                        "code": "iFora||5092",
+                        "code": "iVortex||5092",
                         "name": "УК Терминатор",
                         "region": null,
                         "city": "Калуга",
                         "isGroup": false,
-                        "parentCode": "iFora||1311001",
+                        "parentCode": "iVortex||1311001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3061,7 +3061,7 @@
                 ]
             },
             {
-                "code": "iFora||1321001",
+                "code": "iVortex||1321001",
                 "name": "Синтетика",
                 "region": null,
                 "city": null,
@@ -3077,12 +3077,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||AAA",
+                        "code": "iVortex||AAA",
                         "name": "AAA (одношаг)",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1321001",
+                        "parentCode": "iVortex||1321001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3116,12 +3116,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||MMM",
+                        "code": "iVortex||MMM",
                         "name": "MMM (многошаг)",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1321001",
+                        "parentCode": "iVortex||1321001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3255,12 +3255,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||MMMSTEP",
+                        "code": "iVortex||MMMSTEP",
                         "name": "MMMSTEP (рстеп)",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1321001",
+                        "parentCode": "iVortex||1321001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3275,7 +3275,7 @@
                 ]
             },
             {
-                "code": "iFora||1331001",
+                "code": "iVortex||1331001",
                 "name": "Налоги и госуслуги",
                 "region": null,
                 "city": null,
@@ -3291,12 +3291,12 @@
                 ],
                 "operators": [
                     {
-                        "code": "iFora||5429",
+                        "code": "iVortex||5429",
                         "name": "ФССП",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1331001",
+                        "parentCode": "iVortex||1331001",
                         "synonymList": [
                             "7710568760"
                         ],
@@ -3332,12 +3332,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||6273",
+                        "code": "iVortex||6273",
                         "name": "ФНС",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1331001",
+                        "parentCode": "iVortex||1331001",
                         "synonymList": [
                             "7710568760"
                         ],
@@ -3393,12 +3393,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||6887",
+                        "code": "iVortex||6887",
                         "name": "ФМС",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1331001",
+                        "parentCode": "iVortex||1331001",
                         "synonymList": [],
                         "logotypeList": [
                             {
@@ -3452,12 +3452,12 @@
                         ]
                     },
                     {
-                        "code": "iFora||7069",
+                        "code": "iVortex||7069",
                         "name": "ФНС по УИН",
                         "region": null,
                         "city": null,
                         "isGroup": false,
-                        "parentCode": "iFora||1331001",
+                        "parentCode": "iVortex||1331001",
                         "synonymList": [
                             "7710568760"
                         ],
@@ -3495,7 +3495,7 @@
                 ]
             },
             {
-                "code": "iFora||1501001",
+                "code": "iVortex||1501001",
                 "name": "Разное",
                 "region": null,
                 "city": null,
