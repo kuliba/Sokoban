@@ -141,7 +141,7 @@ extension RootViewModelFactory {
     
     // MARK: - Flow
     
-    func makeFlow(
+    private func makeFlow(
         with payload: MakeSelectedCategorySuccessPayload
     ) -> PaymentProviderPickerDomain.Flow {
         
@@ -149,18 +149,8 @@ extension RootViewModelFactory {
         let flowEffectHandler = PaymentProviderPickerDomain.FlowEffectHandler(
             microServices: .init(
                 initiatePayment: initiateAnywayPayment,
-                makeDetailPayment: {
-                    
-                    $0(.detailPayment(.init(
-                        model: self.model,
-                        service: .requisites,
-                        scheduler: self.schedulers.main
-                    )))
-                },
-                processProvider: { provider, completion in
-                    
-                    completion(.payment(()))
-                }
+                makeDetailPayment: makeDetailPayment,
+                processProvider: processProvider
             )
         )
         
@@ -193,6 +183,25 @@ extension RootViewModelFactory {
                 completion(.payment(()))
             }
         }
+    }
+    
+    @inlinable
+    func makeDetailPayment(
+        completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
+    ) {
+        completion(.detailPayment(.init(
+            model: self.model,
+            service: .requisites,
+            scheduler: self.schedulers.main
+        )))
+    }
+    
+    @inlinable
+    func processProvider(
+        provider: PaymentProviderPickerDomain.Provider,
+        completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
+    ) {
+        completion(.payment(()))
     }
 }
 
