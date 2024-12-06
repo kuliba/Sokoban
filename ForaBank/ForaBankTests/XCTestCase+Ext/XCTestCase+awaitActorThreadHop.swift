@@ -10,8 +10,8 @@ import XCTest
 extension XCTestCase {
     
     func awaitActorThreadHop(
-        timeout: TimeInterval = 0.1
+        timeout: TimeInterval = 0.05
     ) {
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
