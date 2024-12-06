@@ -187,7 +187,7 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         let decoration = Decoration()
         
         let decorated = sut.decorate(
-            decoratee: decoratee.process(completion:),
+            decoratee.process(completion:),
             with: decoration.process(_:completion:)
         )
         

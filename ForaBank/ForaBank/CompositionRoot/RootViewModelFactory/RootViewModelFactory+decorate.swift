@@ -11,7 +11,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func decorate(
-        decoratee: @escaping Load<[ServiceCategory]>,
+        _ decoratee: @escaping Load<[ServiceCategory]>,
         with decoration: @escaping ServiceCategoryBatchService
     ) -> Load<[ServiceCategory]> {
         

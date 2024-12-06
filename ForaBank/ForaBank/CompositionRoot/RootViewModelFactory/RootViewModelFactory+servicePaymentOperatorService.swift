@@ -28,11 +28,7 @@ extension RootViewModelFactory {
         
         guard !withStandard.isEmpty else { return completion([]) }
         
-        composed(withStandard) {
-            
-            completion($0)
-            _ = composed
-        }
+        composed(withStandard) { completion($0); _ = composed }
     }
 }
 
