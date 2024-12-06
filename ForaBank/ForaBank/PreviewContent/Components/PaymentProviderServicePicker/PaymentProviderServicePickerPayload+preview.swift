@@ -14,7 +14,7 @@ extension PaymentProviderServicePickerPayload {
             origin: .init(
                 id: UUID().uuidString,
                 icon: nil,
-                inn: nil,
+                inn: "01234556789",
                 title: "Some Provider",
                 segment: "Services"
             ),

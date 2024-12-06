@@ -12,8 +12,8 @@ import UtilityServicePrepaymentUI
 
 struct PaymentProviderListView: View {
     
-    let providerList: PaymentProviderPicker.ProviderList
-    let binder: PaymentProviderPicker.Binder
+    let providerList: PaymentProviderPickerDomain.ProviderList
+    let binder: PaymentProviderPickerDomain.Binder
     let makeIconView: MakeIconView
     
     var body: some View {
@@ -28,8 +28,8 @@ struct PaymentProviderListView: View {
 private extension PaymentProviderListView {
     
     func makeContentView(
-        state: PaymentProviderPicker.ProviderListState,
-        event: @escaping (PaymentProviderPicker.ProviderListEvent) -> Void
+        state: PaymentProviderPickerDomain.ProviderListState,
+        event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
     ) -> some View {
         
         PrepaymentPickerSuccessView(
@@ -90,8 +90,8 @@ private extension PaymentProviderListView {
     }
     
     func makeOperatorView(
-        provider: PaymentProviderPicker.Provider,
-        event: @escaping (PaymentProviderPicker.Provider) -> Void
+        provider: PaymentProviderPickerDomain.Provider,
+        event: @escaping (PaymentProviderPickerDomain.Provider) -> Void
     ) -> some View {
         
         Button(

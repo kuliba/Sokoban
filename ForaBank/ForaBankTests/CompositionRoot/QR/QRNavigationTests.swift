@@ -103,7 +103,7 @@ class QRNavigationTests: XCTestCase {
             origin: .init(
                 id: anyMessage(),
                 icon: nil,
-                inn: nil,
+                inn: anyMessage(),
                 title: anyMessage(),
                 segment: anyMessage()
             ),
@@ -160,7 +160,7 @@ class QRNavigationTests: XCTestCase {
     func makeUtilityPaymentProvider(
         id: String = anyMessage(),
         icon: String? = nil,
-        inn: String? = nil,
+        inn: String = anyMessage(),
         title: String = anyMessage(),
         segment: String = anyMessage()
     ) -> UtilityPaymentProvider {

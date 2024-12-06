@@ -181,7 +181,7 @@ extension PaymentsTransfersView {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
+            viewFactory.makeUserAccountView(userAccountViewModel)
             
         case let .exampleDetail(title):
             ExampleDetailMock(title: title)
@@ -267,11 +267,8 @@ extension PaymentsTransfersView {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .transportPayments(transportPaymentsViewModel):
-            transportPaymentsView(
-                viewModel: viewModel,
-                transportPaymentsViewModel: transportPaymentsViewModel
-            )
+        case let .transportPayments(transportViewModel):
+            transportPaymentsView(transportViewModel: transportViewModel)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
@@ -333,15 +330,10 @@ extension PaymentsTransfersView {
     
     @ViewBuilder
     private func transportPaymentsView(
-        viewModel: PaymentsTransfersViewModel,
-        transportPaymentsViewModel: TransportPaymentsViewModel
+        transportViewModel: TransportPaymentsViewModel
     ) -> some View {
         
-        let mosParkingPickerData: LoadableResourceViewModel<MosParkingPickerData> = .init(
-            operation: viewModel.getMosParkingPickerData
-        )
-        
-        viewFactory.components.makeTransportPaymentsView(mosParkingPickerData, transportPaymentsViewModel)
+        viewFactory.components.makeTransportPaymentsView(transportViewModel)
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .navigationBar(

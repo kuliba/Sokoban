@@ -35,7 +35,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         let factory = ContentFlowBindingFactory(scheduler: mainScheduler)
         let witnesses = Witnesses(
             contentEmitting: { $0.publisher },
-            contentReceiving: { content in { content.receive() }},
+            contentDismissing: { content in { content.dismiss() }},
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )

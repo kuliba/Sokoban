@@ -14,6 +14,7 @@ import PayHub
 import PayHubUI
 import RemoteServices
 import SwiftUI
+import ClientInformList
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -163,11 +164,9 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     delay(for: .milliseconds(600)) { [unowned self] in
                         
-                        guard let clientInformData = self.model.clientInform.value.data?.authorized,
-                              let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
-                        else { return }
-                        
-                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
+
+                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
                     }
                 }
             }
@@ -492,22 +491,15 @@ class RootViewModel: ObservableObject, Resetable {
 }
 
 private extension Model {
-    
+
+    var authLoginAlertManager: AuthLoginViewModel.ClientInformAlertsManager {
+        
+        .init(clientInformAlertsManager: clientInformAlertManager)
+    }
+
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
-                .eraseToAnyPublisher(),
-            
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),
@@ -649,7 +641,7 @@ extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     }
 }
 
-extension PaymentsTransfersCorporate {
+extension PaymentsTransfersCorporateDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
@@ -658,22 +650,20 @@ extension PaymentsTransfersCorporate {
     }
 }
 
-extension PaymentsTransfersPersonal {
+extension PaymentsTransfersPersonalDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
-        let toolbar = content.toolbar.hasDestination
         let flowHasDestination = Just(false)
         
-        return Publishers.CombineLatest4(
+        return Publishers.CombineLatest3(
             categoryPicker,
             operationPicker,
-            toolbar,
             flowHasDestination
         )
-        .map { $0 || $1 || $2 || $3 }
+        .map { $0 || $1 || $2 }
         .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
@@ -709,27 +699,6 @@ private extension OperationPickerDomain.Binder {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
-}
-
-private extension PayHubUI.PaymentsTransfersPersonalToolbar {
-    
-    var hasDestination: AnyPublisher<Bool, Never> {
-        
-        toolbarBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
-    }
-}
-
-private extension PaymentsTransfersPersonalToolbarDomain.Binder {
-    
-    var hasDestination: AnyPublisher<Bool, Never> {
-        
-        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
-    }
-}
-
-private extension PaymentsTransfersPersonalToolbarDomain.FlowDomain.State {
-    
-    var hasDestination: Bool { navigation != nil }
 }
 
 extension RootViewModel.RootActions {

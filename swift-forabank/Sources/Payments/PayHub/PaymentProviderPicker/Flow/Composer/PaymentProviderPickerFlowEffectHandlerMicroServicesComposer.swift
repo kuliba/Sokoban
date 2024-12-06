@@ -31,7 +31,7 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         )
     }
     
-    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    typealias Destination = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
     typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Destination, Latest, Provider>
 }
 

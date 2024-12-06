@@ -29,5 +29,5 @@ enum CategoryPickerSectionDomain {
         
     typealias Select = ServiceCategory
     
-    typealias Navigation = CategoryPickerSectionNavigation
+    typealias Navigation = SelectedCategoryNavigation
 }
