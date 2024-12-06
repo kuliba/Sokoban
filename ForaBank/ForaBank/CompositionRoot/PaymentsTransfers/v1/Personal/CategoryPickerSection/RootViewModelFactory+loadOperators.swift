@@ -65,7 +65,6 @@ private extension Model {
     typealias LoadOperatorsCompletion = ([PaymentServiceOperator]) -> Void
 }
 
-// TODO: - add tests
 extension Array where Element == CodableServicePaymentOperator {
     
     /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.

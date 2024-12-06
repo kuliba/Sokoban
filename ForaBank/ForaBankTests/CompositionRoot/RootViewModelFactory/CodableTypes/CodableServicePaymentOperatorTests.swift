@@ -11,10 +11,11 @@ import XCTest
 class CodableServicePaymentOperatorTests: XCTestCase {
     
     typealias Payload = UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
+    typealias CategoryType = ServiceCategory.CategoryType
     
     func makePayload(
         afterOperatorID id: String? = nil,
-        for type: ServiceCategory.CategoryType = .internet,
+        for type: CategoryType = .internet,
         searchText: String = "",
         pageSize: Int = 3
     ) -> Payload {
@@ -27,7 +28,7 @@ class CodableServicePaymentOperatorTests: XCTestCase {
         inn: String = anyMessage(),
         md5Hash: String? = anyMessage(),
         name: String = anyMessage(),
-        type: ServiceCategory.CategoryType = .repaymentLoansAndAccounts,
+        type: CategoryType = .repaymentLoansAndAccounts,
         sortedOrder: Int = .random(in: 1...100)
     ) -> CodableServicePaymentOperator {
         
