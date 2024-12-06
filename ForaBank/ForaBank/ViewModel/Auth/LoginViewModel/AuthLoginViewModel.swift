@@ -130,6 +130,11 @@ extension AuthLoginViewModel {
         clientInformAlertsManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
     }
+    
+    func dismissAll() {
+        
+        clientInformAlertsManager.dismissAll()
+    }
 }
 
 // MARK: - Factory
