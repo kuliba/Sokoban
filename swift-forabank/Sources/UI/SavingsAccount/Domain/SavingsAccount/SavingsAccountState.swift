@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DropDownTextListComponent
 
 public struct SavingsAccountState: Equatable {
     
@@ -80,5 +81,22 @@ public struct SavingsAccountState: Equatable {
                 self.subtitle = subtitle
             }
         }
+    }
+}
+
+extension SavingsAccountState.Questions {
+    
+    func map() -> DropDownTextList {
+        
+        .init(
+            title: title,
+            items: questions.map { 
+            
+                DropDownTextList.Item(
+                    title: $0.question,
+                    subTitle: $0.answer
+                )
+            }
+        )
     }
 }

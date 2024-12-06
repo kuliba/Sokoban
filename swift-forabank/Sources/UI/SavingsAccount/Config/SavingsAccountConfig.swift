@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SharedConfigs
+import DropDownTextListComponent
 
 public struct SavingsAccountConfig {
     
@@ -107,5 +108,29 @@ public struct SavingsAccountConfig {
             self.item = item
             self.title = title
         }
+    }
+}
+
+extension SavingsAccountConfig {
+    
+    func map() -> DropDownTextListConfig {
+        
+        .init(
+            cornerRadius: cornerRadius,
+            chevronDownImage: chevronDownImage,
+            layouts: .init(
+                horizontalPadding: paddings.list.horizontal,
+                verticalPadding: paddings.list.vertical
+            ),
+            colors: .init(
+                divider: divider,
+                background: list.background
+            ),
+            fonts: .init(
+                title: list.title,
+                itemTitle: list.item.title,
+                itemSubtitle: list.item.subtitle
+            )
+        )
     }
 }

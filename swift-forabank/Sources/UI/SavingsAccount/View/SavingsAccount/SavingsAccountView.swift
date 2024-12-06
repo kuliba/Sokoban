@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SharedConfigs
+import DropDownTextListComponent
 
 public struct SavingsAccountView: View {
     
@@ -160,79 +161,11 @@ public struct SavingsAccountView: View {
     }
     
     private func questionsView() -> some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
-            
-            state.questions.title.map { text in
-                
-                VStack(spacing: 0) {
-                    
-                    text.text(withConfig: config.list.title)
-                        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal, vertical: config.paddings.list.vertical))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityIdentifier("QuestionsTitle")
-                    
-                    config.divider
-                        .frame(height: 0.5)
-                }
-            }
-            
-            ForEach(state.questions.questions, content: questionView)
-        }
-        .modifier(BackgroundAndCornerRadiusModifier(background: config.list.background, cornerRadius: config.cornerRadius))
-    }
-    
-    private func question(item: Question) -> some View {
-        return HStack {
-            
-            item.question.text(withConfig: config.list.item.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("Question")
-            
-            config.chevronDownImage
-                .foregroundColor(.gray)
-                .rotationEffect(selectedQuestion == item ? .degrees(180) : .degrees(0))
-                .accessibilityIdentifier("ItemChevron")
-        }
-        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-        .frame(height: config.questionHeight)
-    }
-    
-    private func answer(answer: String) -> some View {
-        return Text(answer)
-            .multilineTextAlignment(.leading)
-            .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .accessibilityIdentifier("Answer")
-    }
-    
-    private func questionWithAnswer(item: Question) -> some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
-            
-            Button(action: {
-                withAnimation { selectedQuestion = selectedQuestion == item ? nil : item }
-            }, label: {
-                question(item: item)
-            })
-            
-            if selectedQuestion == item {
-                answer(answer: item.answer)
-            }
-        }
-    }
-    
-    private func questionView(item: Question) -> some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
-            
-            questionWithAnswer(item: item)
-            
-            if state.questions.questions.last != item {
-                config.divider
-                    .frame(height: 0.5)
-            }
-        }
+
+        DropDownTextListView(
+            config: config.map(),
+            list: state.questions.map()
+        )
     }
     
     private struct ViewOffsetKey: PreferenceKey {
