@@ -13,7 +13,7 @@ extension ServerCommands {
     enum ProductTemplateController {
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/ProductTemplateController/deleteProductTemplate
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/ProductTemplateController/deleteProductTemplate
          */
         struct DeleteProductTemplate: ServerCommand {
             

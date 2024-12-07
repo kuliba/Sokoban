@@ -17,7 +17,7 @@ final class NanoServices_makeMakeTransferTests: XCTestCase {
     
     func test_shouldSetURL() throws {
         
-        try assertURL("https://pl.forabank.ru/dbo/api/v3/rest/transfer/makeTransfer")
+        try assertURL("https://pl.\(Config.domen)/dbo/api/v3/rest/transfer/makeTransfer")
     }
     
     func test_shouldSetHTTPMethodToPOST() throws {

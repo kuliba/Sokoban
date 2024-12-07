@@ -17,7 +17,7 @@ final class RequestFactory_createGetAllLatestPaymentsV2RequestTests: XCTestCase 
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v2/getAllLatestPayments?isServicePayments=true"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v2/getAllLatestPayments?isServicePayments=true"
         )
     }
     

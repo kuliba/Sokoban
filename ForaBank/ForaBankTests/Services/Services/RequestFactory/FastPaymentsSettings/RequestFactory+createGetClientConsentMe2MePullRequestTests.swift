@@ -16,7 +16,7 @@ final class RequestFactory_createGetClientConsentMe2MePullRequestTests: XCTestCa
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/getClientConsentMe2MePull"
+            "https://pl.innovation.ru/dbo/api/v3/rest/getClientConsentMe2MePull"
         )
     }
     

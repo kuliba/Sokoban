@@ -15,9 +15,9 @@ class URLHostTests: XCTestCase {
         let host = URLHost.getHost()
         
         #if DEBUG
-        XCTAssertEqual(host, "pl.forabank.ru/dbo/api/v3")
+        XCTAssertEqual(host, "pl.innovation.ru/dbo/api/v3")
         #else
-        XCTAssertEqual(host, "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b")
+        XCTAssertEqual(host, "bg.innovation.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b")
         #endif
     }
 }

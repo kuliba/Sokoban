@@ -352,7 +352,7 @@ private extension String {
         "serial": "7134778f549cab1edc68704066472e72",
         "accountBannerList": [{
             "productName": "Накопительный счет",
-            "link": "https://www.forabank.ru/private/",
+            "link": "https://www.innovation.ru/private/",
             "md5hash": "",
             "action": {
                 "target": "DEFAULT",
@@ -370,7 +370,7 @@ private extension String {
         }],
         "loanBannerList": [{
             "productName": "Кредит под залог транспорта",
-            "link": "https://www.forabank.ru/private/credits/zalogovyy/",
+            "link": "https://www.innovation.ru/private/credits/zalogovyy/",
             "md5hash": "0f2c00910196b526db03abd7ee2af4a1",
             "action": {
                 "actionType": "landing",
@@ -378,7 +378,7 @@ private extension String {
             }
         }, {
             "productName": "Кредит под залог транспорта",
-            "link": "https://www.forabank.ru/private/credits/zalogovyy/",
+            "link": "https://www.innovation.ru/private/credits/zalogovyy/",
             "md5hash": "0f2c00910196b526db03abd7ee2af4a1",
             "action": {
                 "actionType": "landing",

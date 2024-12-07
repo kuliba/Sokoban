@@ -17,7 +17,7 @@ final class RequestFactory_createMakeTransferRequestTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/transfer/makeTransfer"
+            "https://pl.innovation.ru/dbo/api/v3/rest/transfer/makeTransfer"
         )
     }
     

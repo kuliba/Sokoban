@@ -35,16 +35,16 @@ extension Services.Endpoint.ServiceName {
             
         case .getProcessingSessionCode:
 #if RELEASE
-            return "https://bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
+            return "https://bg.\(Config.domen)/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
 #else
-            return "https://pl.forabank.ru/dbo/api/v3"
+            return "https://pl.\(Config.domen)/dbo/api/v3"
 #endif
             
         default:
 #if RELEASE
-            return "https://dmz-api-gate.forabank.ru"
+            return "https://dmz-api-gate.\(Config.domen)"
 #else
-            return "https://dmz-api-gate-test.forabank.ru"
+            return "https://dmz-api-gate-test.\(Config.domen)"
 #endif
             
         }

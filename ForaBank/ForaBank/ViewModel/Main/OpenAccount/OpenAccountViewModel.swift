@@ -269,8 +269,8 @@ extension OpenAccountViewModel {
         items: [
             .init(
                 currency: "RUB",
-                conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
-                ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                conditionLinkURL: "https://www.innovation.ru/dkbo/dkbo.pdf",
+                ratesLinkURL: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 810,
                 header: .init(
                     title: "RUB счет",
@@ -286,8 +286,8 @@ extension OpenAccountViewModel {
                 isAccountOpen: false),
             .init(
                 currency: "USD",
-                conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
-                ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                conditionLinkURL: "https://www.innovation.ru/dkbo/dkbo.pdf",
+                ratesLinkURL: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 840,
                 header: .init(
                     title: "USD счет",
@@ -303,8 +303,8 @@ extension OpenAccountViewModel {
                 isAccountOpen: false),
             .init(
                 currency: "EUR",
-                conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
-                ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                conditionLinkURL: "https://www.innovation.ru/dkbo/dkbo.pdf",
+                ratesLinkURL: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 978,
                 header: .init(
                     title: "EUR счет",
@@ -320,8 +320,8 @@ extension OpenAccountViewModel {
                 isAccountOpen: true),
             .init(
                 currency: "GBP",
-                conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
-                ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                conditionLinkURL: "https://www.innovation.ru/dkbo/dkbo.pdf",
+                ratesLinkURL: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 826,
                 header: .init(
                     title: "GBP счет",
@@ -337,8 +337,8 @@ extension OpenAccountViewModel {
                 isAccountOpen: true),
             .init(
                 currency: "CHF",
-                conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
-                ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                conditionLinkURL: "https://www.innovation.ru/dkbo/dkbo.pdf",
+                ratesLinkURL: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 756,
                 header: .init(
                     title: "CHF счет",

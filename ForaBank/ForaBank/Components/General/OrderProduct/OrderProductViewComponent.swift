@@ -335,7 +335,7 @@ extension OrderProductView {
         
         private func openLinkURL() {
             
-            let linkURL = "https://www.forabank.ru/polozhenie/Soglasie_na_obrabotku_personalnyh_dannyh.pdf"
+            let linkURL = "https://www.innovation.ru/polozhenie/Soglasie_na_obrabotku_personalnyh_dannyh.pdf"
 
             guard let url = URL(string: linkURL) else {
                 return

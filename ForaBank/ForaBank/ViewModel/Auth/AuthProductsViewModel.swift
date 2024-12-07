@@ -209,8 +209,8 @@ extension AuthProductsViewModel {
                 title: deposit.name,
                 subtitle: deposit.generalСondition.generalTxtСondition,
                 image: .endpoint(deposit.generalСondition.imageLink),
-                infoButton: .init(url: .init(string: "https://www.forabank.ru")!),
-                orderButtonType: .main(.init(url: .init(string: "https://www.forabank.ru")!)),
+                infoButton: .init(url: .init(string: "https://www.\(Config.domen)")!),
+                orderButtonType: .main(.init(url: .init(string: "https://www.\(Config.domen)")!)),
                 conditionViewModel: .init(
                     percent: "\(deposit.generalСondition.maxSum)",
                     amount: "\(deposit.generalСondition.minSum)",

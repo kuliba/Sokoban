@@ -17,7 +17,7 @@ final class RequestFactory_createCreateDraftCollateralLoanApplicationRequestTest
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v1/createDraftCollateralLoanApplication"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v1/createDraftCollateralLoanApplication"
         )
     }
     

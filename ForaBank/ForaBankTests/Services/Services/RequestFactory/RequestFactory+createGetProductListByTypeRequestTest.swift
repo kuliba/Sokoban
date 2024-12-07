@@ -16,7 +16,7 @@ final class RequestFactory_createGetProductListByTypeRequestTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v5/getProductListByType?productType=CARD"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v5/getProductListByType?productType=CARD"
         )
     }
     

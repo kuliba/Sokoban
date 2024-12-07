@@ -60,7 +60,7 @@ final class Services_EndpointShowCVVTests: XCTestCase {
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/cardInfo/v1/showCVV"
+            "https://pl.innovation.ru/dbo/api/v3/processing/cardInfo/v1/showCVV"
         )
     }
     
@@ -68,6 +68,6 @@ final class Services_EndpointShowCVVTests: XCTestCase {
     
     private func baseURL() -> URL {
         
-        .init(staticString: "https://pl.forabank.ru/dbo/api/v3")
+        .init(staticString: "https://pl.innovation.ru/dbo/api/v3")
     }
 }

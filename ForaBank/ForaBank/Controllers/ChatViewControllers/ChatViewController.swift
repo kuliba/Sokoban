@@ -124,7 +124,7 @@ class ChatViewController: UIViewController, MFMailComposeViewControllerDelegate 
     @objc func sendEmail() {
          let mailVC = MFMailComposeViewController()
          mailVC.mailComposeDelegate = self
-         mailVC.setToRecipients(["fora-digital@forabank.ru"])
+         mailVC.setToRecipients(["vortex-digital@vortex.ru"])
          mailVC.setSubject("ФОРА-ОНЛАЙН")
          mailVC.setMessageBody("", isHTML: false)
 

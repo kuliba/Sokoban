@@ -13,7 +13,7 @@ extension ServerCommands {
     enum SBPController {
     
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SBPController/getScenarioQRData
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SBPController/getScenarioQRData
          */
         
         struct GetScenarioQRData: ServerCommand {
@@ -46,7 +46,7 @@ extension ServerCommands {
     enum SBPPaymentController {
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SBPPaymentController/createC2BPaymentAcc
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SBPPaymentController/createC2BPaymentAcc
          */
         
         struct CreateC2BPaymentAcc: ServerCommand {
@@ -76,7 +76,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SBPPaymentController/createC2BPaymentCard
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SBPPaymentController/createC2BPaymentCard
          */
         
         struct CreateC2BPaymentCard: ServerCommand {

@@ -42,7 +42,7 @@ enum ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/getPaymentTemplateList
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/getPaymentTemplateList
          */
         struct GetPaymentTemplateList: ServerCommand {
             

@@ -390,7 +390,7 @@ final class MapperTests: XCTestCase {
             .init(list: [
                 .init(
                     imageLink: "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
-                    link: "https://www.forabank.ru/private/cards/",
+                    link: "https://www.innovation.ru/private/cards/",
                     detail: .init(groupId: "QR_SCANNER", viewId: "")
                 ),
                 .init(
@@ -442,7 +442,7 @@ final class MapperTests: XCTestCase {
             .init(list: [
                 .init(
                     imageLink: "",
-                    link: "https://www.forabank.ru/private/cards/",
+                    link: "https://www.innovation.ru/private/cards/",
                     detail: .init(groupId: "QR_SCANNER", viewId: "")
                 ),
                 .init(
@@ -672,7 +672,7 @@ final class MapperTests: XCTestCase {
     ) -> HTTPURLResponse {
         
         .init(
-            url: URL(string: "https://www.forabank.ru/")!,
+            url: URL(string: "https://www.innovation.ru/")!,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil)!
@@ -1018,7 +1018,7 @@ private extension String {
                     "backgroundColor": "GREY",
                     "md5hash": "63895ae0220683560a3d999da619c88d",
                     "text": "Подробные условия",
-                    "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/vse-vklyucheno_2-0.pdf",
+                    "textLink": "https://www.innovation.ru/user-upload/dok-dbo-fl/tariffs/vse-vklyucheno_2-0.pdf",
                     "buttonText": "Заказать",
                     "buttonStyle": "whiteRed",
                     "action": {
@@ -1075,7 +1075,7 @@ private extension String {
                     "backgroundColor": "BLACK",
                     "md5hash": "cac49ca8557d2e66d321f5fe1151235e",
                     "text": "Подробные условия",
-                    "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/paket-premialnyy.pdf",
+                    "textLink": "https://www.innovation.ru/user-upload/dok-dbo-fl/tariffs/paket-premialnyy.pdf",
                     "buttonText": "Заказать",
                     "buttonStyle": "whiteRed",
                     "action": {
@@ -1131,7 +1131,7 @@ private extension String {
                     "backgroundColor": "GREY",
                     "md5hash": "63895ae0220683560a3d999da619c88d",
                     "text": "Подробные условия",
-                    "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/mir-pensionnaya.pdf",
+                    "textLink": "https://www.innovation.ru/user-upload/dok-dbo-fl/tariffs/mir-pensionnaya.pdf",
                     "buttonText": "Заказать",
                     "buttonStyle": "whiteRed",
                     "action": {
@@ -1308,7 +1308,7 @@ private extension String {
                     "list": [
                         {
                             "imageLink": "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
-                            "link": "https://www.forabank.ru/landings/mig/",
+                            "link": "https://www.innovation.ru/landings/mig/",
                             "details": {
                                 "detailsGroupId": "bannersLanding",
                                 "detailViewId": "oneThousandForTransfer"
@@ -1316,7 +1316,7 @@ private extension String {
                         },
                         {
                             "imageLink": "dict/getProductCatalogImage?image=/products/banners/deposit.png",
-                            "link": "https://www.forabank.ru/landings/mig/",
+                            "link": "https://www.innovation.ru/landings/mig/",
                             "details": {
                                 "detailsGroupId": "bannersLanding",
                                 "detailViewId": "moreTransfers"
@@ -1770,7 +1770,7 @@ private extension String {
                                 "type": "MULTI_TEXT",
                                 "data": {
                                     "list": [
-                                        "*Акция «Кешбэк до 1000 руб. за первый перевод» – стимулирующее мероприятие, не является лотереей. Период проведения акции «Кешбэк до 1000 руб. за первый перевод» с 01 ноября 2022 по 31 января 2023 года. Информацию об организаторе акции, о правилах, порядке, сроках и месте ее проведения можно узнать на официальном сайте www.forabank.ru и в офисах АКБ «ФОРА-БАНК» (АО).",
+                                        "*Акция «Кешбэк до 1000 руб. за первый перевод» – стимулирующее мероприятие, не является лотереей. Период проведения акции «Кешбэк до 1000 руб. за первый перевод» с 01 ноября 2022 по 31 января 2023 года. Информацию об организаторе акции, о правилах, порядке, сроках и месте ее проведения можно узнать на официальном сайте www.innovation.ru и в офисах АКБ «ФОРА-БАНК» (АО).",
                                         "** Участник Акции имеет право заключить с банком договор банковского счета с использованием карты МИР по тарифному плану «МИГ» или «Все включено-Промо» с бесплатным обслуживанием.",
                                         "*** Банк выплачивает Участнику Акции кешбэк в размере 100% от суммы комиссии за первый перевод, но не более 1000 рублей."
                                     ]
@@ -1845,7 +1845,7 @@ private extension String {
                                     "backgroundColor": "GREY",
                                     "md5hash": "63895ae0220683560a3d999da619c88d",
                                     "text": "Подробные условия",
-                                    "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/vse-vklyucheno_2-0.pdf",
+                                    "textLink": "https://www.innovation.ru/user-upload/dok-dbo-fl/tariffs/vse-vklyucheno_2-0.pdf",
                                     "buttonText": "Заказать",
                                     "buttonStyle": "whiteRed",
                                     "action": {
@@ -1902,7 +1902,7 @@ private extension String {
                                     "backgroundColor": "BLACK",
                                     "md5hash": "cac49ca8557d2e66d321f5fe1151235e",
                                     "text": "Подробные условия",
-                                    "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/paket-premialnyy.pdf",
+                                    "textLink": "https://www.innovation.ru/user-upload/dok-dbo-fl/tariffs/paket-premialnyy.pdf",
                                     "buttonText": "Заказать",
                                     "buttonStyle": "whiteRed",
                                     "action": {
@@ -1958,7 +1958,7 @@ private extension String {
                                     "backgroundColor": "GREY",
                                     "md5hash": "63895ae0220683560a3d999da619c88d",
                                     "text": "Подробные условия",
-                                    "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/mir-pensionnaya.pdf",
+                                    "textLink": "https://www.innovation.ru/user-upload/dok-dbo-fl/tariffs/mir-pensionnaya.pdf",
                                     "buttonText": "Заказать",
                                     "buttonStyle": "whiteRed",
                                     "action": {
@@ -3019,7 +3019,7 @@ private extension String {
               "list": [
                 {
                   "imageLink": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
-                  "link": "https://www.forabank.ru/private/cards/",
+                  "link": "https://www.innovation.ru/private/cards/",
                   "details": {
                     "detailsGroupId": "QR_SCANNER",
                     "detailViewId": null
@@ -3137,7 +3137,7 @@ private extension String {
               "list": [
                 {
                   "image": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
-                  "link": "https://www.forabank.ru/private/cards/",
+                  "link": "https://www.innovation.ru/private/cards/",
                   "details": {
                     "detailsGroupId": "QR_SCANNER",
                     "detailViewId": null
@@ -3516,7 +3516,7 @@ private extension String {
                     "imageLink": "imageLink1",
                     "link": "link1"
                 }, {
-                    "link": "https://www.forabank.ru/landings/na-zdorovie/"
+                    "link": "https://www.innovation.ru/landings/na-zdorovie/"
                 }]
             }
         }

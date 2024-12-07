@@ -20,7 +20,7 @@ final class Services_getProcessingSessionCodeTests: XCTestCase {
     func test_perform_shouldCallHTTPClientWithCorrectURLInRequest() {
         
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode"
         
         sut.process { _ in }
         

@@ -229,8 +229,8 @@ extension OpenAccountItemView.ViewModel {
 
     static let sample = OpenAccountItemViewModel(
         currency: "USD",
-        conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
-        ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+        conditionLinkURL: "https://www.innovation.ru/dkbo/dkbo.pdf",
+        ratesLinkURL: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
         currencyCode: 840,
         header: .init(
             title: "USD счет",

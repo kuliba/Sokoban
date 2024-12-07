@@ -17,7 +17,7 @@ final class NanoServices_makeCreateAnywayTransferNewV2Tests: XCTestCase {
     
     func test_shouldSetURL() throws {
         
-        try assertURL("https://pl.forabank.ru/dbo/api/v3/rest/transfer/v2/createAnywayTransfer?isNewPayment=true")
+        try assertURL("https://pl.\(Config.domen)/dbo/api/v3/rest/transfer/v2/createAnywayTransfer?isNewPayment=true")
     }
     
     func test_shouldSetHTTPMethodToPOST() throws {

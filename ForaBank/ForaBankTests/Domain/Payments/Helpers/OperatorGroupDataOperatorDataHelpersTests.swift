@@ -15,7 +15,7 @@ final class OperatorGroupDataOperatorDataHelpersTests: XCTestCase {
     func test_operatorID_iFora4285() {
         
         let data = OperatorGroupData.OperatorData.iFora4285
-        
+        print("@@@ data=\(data)")
         XCTAssertEqual(data.operatorID, "a3_NUMBER_1_2")
     }
     

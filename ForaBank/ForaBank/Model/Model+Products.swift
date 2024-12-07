@@ -23,11 +23,11 @@ typealias LoansData = [PersonsCreditData]
 
 extension Model {
     
-    var productsOpenAccountURL: URL { URL(string: "https://promo2.forabank.ru/")! }
-    var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
-    var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
+    var productsOpenAccountURL: URL { URL(string: "https://promo2.\(Config.domen)/")! }
+    var productsOpenInsuranceURL: URL { URL(string: "https://www.\(Config.domen)/landings/e-osago/")! }
+    var productsOpenMortgageURL: URL { URL(string: "https://www.\(Config.domen)/private/mortgage/")! }
     
-    var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
+    var productsOpenLoanURL: URL { URL(string: "https://www.\(Config.domen)/private/credits/")! }
     
     var allProducts: [ProductData] {
         

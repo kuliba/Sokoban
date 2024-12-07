@@ -32,7 +32,7 @@ public extension Crypto {
         return encrypted
     }
     
-    // From ForaBank, modified
+    // From Vortex, modified
     static func encryptWithRSAKey(
         _ data: Data,
         publicKey key: SecKey,

@@ -7,7 +7,7 @@
 
 import XCTest
 
-/// https://pl.forabank.ru/dbo/api/v3/dict/QRPaymentType?serial=7d6bbcc2a0f9aee7b4cd02c8392f4e8c
+/// https://pl.innovation.ru/dbo/api/v3/dict/QRPaymentType?serial=7d6bbcc2a0f9aee7b4cd02c8392f4e8c
 
 /// Пример ссылки  https://platiqr.ru/?uuid=3001638371&amount=27.50&trxid=2023072420443097822
 

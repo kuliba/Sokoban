@@ -17,7 +17,7 @@ final class RequestFactory_createGetBannerCatalogListV2RequestTests: XCTestCase 
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/v2/getBannerCatalogList?serial=\(serial)"
+            "https://pl.innovation.ru/dbo/api/v3/dict/v2/getBannerCatalogList?serial=\(serial)"
         )
     }
     

@@ -60,7 +60,7 @@ final class Services_EndpointGetProcessingSessionCodeTests: XCTestCase {
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode"
+            "https://pl.innovation.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode"
         )
     }
     
@@ -68,6 +68,6 @@ final class Services_EndpointGetProcessingSessionCodeTests: XCTestCase {
     
     private func baseURL() -> URL {
         
-        .init(staticString: "https://pl.forabank.ru/dbo/api/v3")
+        .init(staticString: "https://pl.innovation.ru/dbo/api/v3")
     }
 }

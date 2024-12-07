@@ -60,7 +60,7 @@ final class Services_EndpointProcessPublicKeyAuthenticationRequestTests: XCTestC
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/authenticate/v1/processPublicKeyAuthenticationRequest"
+            "https://pl.innovation.ru/dbo/api/v3/processing/authenticate/v1/processPublicKeyAuthenticationRequest"
         )
     }
     
@@ -68,6 +68,6 @@ final class Services_EndpointProcessPublicKeyAuthenticationRequestTests: XCTestC
     
     private func baseURL() -> URL {
         
-        .init(staticString: "https://pl.forabank.ru/dbo/api/v3")
+        .init(staticString: "https://pl.innovation.ru/dbo/api/v3")
     }
 }

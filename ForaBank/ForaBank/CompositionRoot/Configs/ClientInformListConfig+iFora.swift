@@ -15,7 +15,7 @@ extension ClientInformListConfig {
         ),
         strings: .init(
             titlePlaceholder: "Информация",
-            foraBankLink: "https://www.forabank.ru"
+            foraBankLink: "https://www.www.vortex.ru"
         ),
         titleConfig: .init(
             textFont: .textH3Sb18240(),

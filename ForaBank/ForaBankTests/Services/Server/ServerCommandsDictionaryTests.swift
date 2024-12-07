@@ -709,8 +709,8 @@ class ServerCommandsDictionaryTests: XCTestCase {
                 .init(productCatalogList: [.init(name: "Карта 'Миг'",
                                                  description: ["string"],
                                                  imageEndpoint: "dict/getProductCatalogImage?image=1",
-                                                 infoURL: URL(string: "https://www.forabank.ru/")!,
-                                                 orderURL: URL(string: "https://www.forabank.ru/")!,
+                                                 infoURL: URL(string: "https://www.innovation.ru/")!,
+                                                 orderURL: URL(string: "https://www.innovation.ru/")!,
                                                  tariff: 1,
                                                  productType: 1)],
                       serial: "bea36075a58954199a6b8980549f6b69")
@@ -769,9 +769,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let conditionalLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let orderLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
         
         let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
         
@@ -792,9 +792,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let conditionalLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let orderLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
         
         let migTransferAction = BannerActionMigTransfer(countryId: "AM")
         let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "АКЦИЯ", conditions: ["Нам 30 лет!"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil), .init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: migTransferAction), .init(productName: "Переводы Турция", conditions: ["Мгновенные переводы в Турцию Комиссия 0%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "serial"), errorMessage: "string")
@@ -816,9 +816,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let conditionalLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let orderLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
         
         let landing = BannerAction(type: .landing)
         let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: landing)], serial: "serial"), errorMessage: "string")

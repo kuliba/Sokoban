@@ -16,7 +16,7 @@ extension ServerCommands {
 
 extension ServerCommands.CvvPin {
     
-    // https://pl.forabank.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode
+    // https://pl.innovation.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode
     
     // https://<DBO_server_url>/dbo/api/v3/processing/registration/{version}/getProcessingSessionCode
     struct GetProcessingSessionCode: ServerCommand {

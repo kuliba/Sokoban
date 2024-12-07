@@ -18,7 +18,7 @@ final class RequestFactory_createGetSVCardLimitsTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/getSVCardLimits"
+            "https://pl.innovation.ru/dbo/api/v3/rest/getSVCardLimits"
         )
     }
     

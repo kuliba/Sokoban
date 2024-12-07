@@ -16,7 +16,7 @@ final class RequestFactory_getSberQRDataTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/binding/v1/getSberQRData"
+            "https://pl.innovation.ru/dbo/api/v3/rest/binding/v1/getSberQRData"
         )
     }
     

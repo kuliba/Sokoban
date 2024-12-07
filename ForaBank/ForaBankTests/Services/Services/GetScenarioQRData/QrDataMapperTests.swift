@@ -116,7 +116,7 @@ final class QrDataMapperTests: XCTestCase {
     ) -> HTTPURLResponse {
         
         .init(
-            url: URL(string: "https://www.forabank.ru/")!,
+            url: URL(string: "https://www.innovation.ru/")!,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil)!

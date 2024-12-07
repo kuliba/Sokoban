@@ -17,7 +17,7 @@ final class RequestFactory_createCreateAnywayTransferNewRequestTests: XCTestCase
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/transfer/createAnywayTransfer?isNewPayment=true"
+            "https://pl.innovation.ru/dbo/api/v3/rest/transfer/createAnywayTransfer?isNewPayment=true"
         )
     }
     

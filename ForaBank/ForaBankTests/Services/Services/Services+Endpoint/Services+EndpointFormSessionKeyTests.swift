@@ -60,7 +60,7 @@ final class Services_EndpointFormSessionKeyTests: XCTestCase {
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/registration/v1/formSessionKey"
+            "https://pl.innovation.ru/dbo/api/v3/processing/registration/v1/formSessionKey"
         )
     }
     
@@ -68,6 +68,6 @@ final class Services_EndpointFormSessionKeyTests: XCTestCase {
     
     private func baseURL() -> URL {
         
-        .init(staticString: "https://pl.forabank.ru/dbo/api/v3")
+        .init(staticString: "https://pl.innovation.ru/dbo/api/v3")
     }
 }

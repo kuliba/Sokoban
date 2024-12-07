@@ -56,8 +56,8 @@ extension ProductsResponse.UniqueProperties {
                 dateOpen: 1596402000000,
                 status: .notBlocked,
                 branchName: #"АКБ "ФОРА-БАНК" (АО)"#,
-                detailedRatesUrl: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
-                detailedConditionUrl: "https://www.forabank.ru/dkbo/dkbo.pdf"
+                detailedRatesUrl: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+                detailedConditionUrl: "https://www.innovation.ru/dkbo/dkbo.pdf"
             )
         )
     }

@@ -202,7 +202,7 @@
                         "type":"MULTI_TEXT",
                         "data":{
                            "list":[
-                              "*Акция «Кешбэк до 1000 руб. за первый перевод» – стимулирующее мероприятие, не является лотереей. Период проведения акции «Кешбэк до 1000 руб. за первый перевод» с 01 ноября 2022 по 31 января 2023 года. Информацию об организаторе акции, о правилах, порядке, сроках и месте ее проведения можно узнать на официальном сайте www.forabank.ru и в офисах АКБ «ФОРА-БАНК» (АО).",
+                              "*Акция «Кешбэк до 1000 руб. за первый перевод» – стимулирующее мероприятие, не является лотереей. Период проведения акции «Кешбэк до 1000 руб. за первый перевод» с 01 ноября 2022 по 31 января 2023 года. Информацию об организаторе акции, о правилах, порядке, сроках и месте ее проведения можно узнать на официальном сайте www.innovation.ru и в офисах АКБ «ФОРА-БАНК» (АО).",
                               "** Участник Акции имеет право заключить с банком договор банковского счета с использованием карты МИР по тарифному плану «МИГ» или «Все включено-Промо» с бесплатным обслуживанием.",
                               "*** Банк выплачивает Участнику Акции кешбэк в размере 100% от суммы комиссии за первый перевод, но не более 1000 рублей."
                            ]
@@ -281,7 +281,7 @@
                               },
                               "actionType":"orderCard"
                            },
-                           "textLink":"https:\/\/www.forabank.ru\/user-upload\/dok-dbo-fl\/tariffs\/vse-vklyucheno_2-0.pdf",
+                           "textLink":"https:\/\/www.innovation.ru\/user-upload\/dok-dbo-fl\/tariffs\/vse-vklyucheno_2-0.pdf",
                            "text":"Подробные условия",
                            "buttonText":"Заказать",
                            "md5hash":"63895ae0220683560a3d999da619c88d",
@@ -338,7 +338,7 @@
                               },
                               "actionType":"orderCard"
                            },
-                           "textLink":"https:\/\/www.forabank.ru\/user-upload\/dok-dbo-fl\/tariffs\/paket-premialnyy.pdf",
+                           "textLink":"https:\/\/www.innovation.ru\/user-upload\/dok-dbo-fl\/tariffs\/paket-premialnyy.pdf",
                            "text":"Подробные условия",
                            "buttonText":"Заказать",
                            "md5hash":"cac49ca8557d2e66d321f5fe1151235e",
@@ -394,7 +394,7 @@
                               },
                               "actionType":"orderCard"
                            },
-                           "textLink":"https:\/\/www.forabank.ru\/user-upload\/dok-dbo-fl\/tariffs\/mir-pensionnaya.pdf",
+                           "textLink":"https:\/\/www.innovation.ru\/user-upload\/dok-dbo-fl\/tariffs\/mir-pensionnaya.pdf",
                            "text":"Подробные условия",
                            "buttonText":"Заказать",
                            "md5hash":"63895ae0220683560a3d999da619c88d",
@@ -1525,7 +1525,7 @@
             "data":{
                "list":[
                   {
-                     "link":"https:\/\/www.forabank.ru\/landings\/mig\/",
+                     "link":"https:\/\/www.innovation.ru\/landings\/mig\/",
                      "details":{
                         "detailsGroupId":"bannersLanding",
                         "detailViewId":"oneThousandForTransfer"
@@ -1533,7 +1533,7 @@
                      "imageLink":"dict\/getProductCatalogImage?image=\/products\/banners\/Product_abroad_1.png"
                   },
                   {
-                     "link":"https:\/\/www.forabank.ru\/landings\/mig\/",
+                     "link":"https:\/\/www.innovation.ru\/landings\/mig\/",
                      "details":{
                         "detailsGroupId":"bannersLanding",
                         "detailViewId":"moreTransfers"

@@ -307,7 +307,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/setProductsVisibility
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/setProductsVisibility
          */
         struct UserVisibilityProductsSettings: ServerCommand {
             
@@ -350,7 +350,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/setProductsOrder
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/setProductsOrder
          */
         struct UserOrdersProductsSettings: ServerCommand {
             

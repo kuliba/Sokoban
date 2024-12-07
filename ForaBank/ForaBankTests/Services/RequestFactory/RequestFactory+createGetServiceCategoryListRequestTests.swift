@@ -15,7 +15,7 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
         
         try XCTAssertNoDiff(
             createRequest(serial: nil).url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList"
+            "https://pl.innovation.ru/dbo/api/v3/dict/getServiceCategoryList"
         )
     }
     
@@ -23,7 +23,7 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
         
         try XCTAssertNoDiff(
             createRequest(serial: "").url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList"
+            "https://pl.innovation.ru/dbo/api/v3/dict/getServiceCategoryList"
         )
     }
     
@@ -33,7 +33,7 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
         
         try XCTAssertNoDiff(
             createRequest(serial: serial).url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList?serial=\(serial)"
+            "https://pl.innovation.ru/dbo/api/v3/dict/getServiceCategoryList?serial=\(serial)"
         )
     }
     

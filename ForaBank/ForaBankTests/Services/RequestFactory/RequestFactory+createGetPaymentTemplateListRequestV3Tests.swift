@@ -15,7 +15,7 @@ final class RequestFactory_createGetPaymentTemplateListRequestV3Tests: XCTestCas
         
         try XCTAssertNoDiff(
             createRequest(serial: nil).url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v3/getPaymentTemplateList"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v3/getPaymentTemplateList"
         )
     }
     
@@ -23,7 +23,7 @@ final class RequestFactory_createGetPaymentTemplateListRequestV3Tests: XCTestCas
         
         try XCTAssertNoDiff(
             createRequest(serial: "").url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v3/getPaymentTemplateList"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v3/getPaymentTemplateList"
         )
     }
     
@@ -33,7 +33,7 @@ final class RequestFactory_createGetPaymentTemplateListRequestV3Tests: XCTestCas
         
         try XCTAssertNoDiff(
             createRequest(serial: serial).url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v3/getPaymentTemplateList?serial=\(serial)"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v3/getPaymentTemplateList?serial=\(serial)"
         )
     }
     

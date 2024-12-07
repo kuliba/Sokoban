@@ -91,7 +91,7 @@ private extension String {
     
     static var consentLink: Self {
         
-        "https://www.forabank.ru/user-upload/sbpay/Usloviya-osuschestvleniya-perevodov-klientov.pdf"
+        "https://www.www.vortex.ru/user-upload/sbpay/Usloviya-osuschestvleniya-perevodov-klientov.pdf"
     }
 }
 

@@ -17,7 +17,7 @@ final class RequestFactory_createGetShowcaseRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v1/pages/collateral/getShowcase?serial=\(serial)"
+            "https://pl.innovation.ru/dbo/api/v3/rest/v1/pages/collateral/getShowcase?serial=\(serial)"
         )
     }
 

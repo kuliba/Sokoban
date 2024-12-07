@@ -13,7 +13,7 @@ extension ServerCommands {
     enum SubscriptionController {
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/ConfirmC2BSubAcc
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/ConfirmC2BSubAcc
          */
         
         struct ConfirmC2BSubAcc: ServerCommand {
@@ -45,7 +45,7 @@ extension ServerCommands {
         
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/сonfirmC2BSubCard
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/сonfirmC2BSubCard
          */
         
         struct ConfirmC2BSubCard: ServerCommand {
@@ -76,7 +76,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/deniedC2BSubscription
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/deniedC2BSubscription
          */
         
         struct DeniedC2BSubscription: ServerCommand {
@@ -133,7 +133,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/getDetailC2BSub
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/getDetailC2BSub
          */
         
         struct GetC2bDetailSubscriptions: ServerCommand {
@@ -163,7 +163,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/cancelC2BSub
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/cancelC2BSub
          */
         
         struct CancelC2bSubscriptions: ServerCommand {
@@ -193,7 +193,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/updateC2BSubCard
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/updateC2BSubCard
          */
         
         struct UpdateC2bSubscriptionCard: ServerCommand {
@@ -224,7 +224,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/updateC2BSubCard
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/SubscriptionController/updateC2BSubCard
          */
         
         struct UpdateC2bSubscriptionAcc: ServerCommand {

@@ -209,7 +209,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @objc func action(sender: UIBarButtonItem) {
-        guard let url = URL(string: "https://promo.forabank.ru" ) else { return  }
+        guard let url = URL(string: "https://promo.innovation.ru" ) else { return  }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
@@ -335,7 +335,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 && indexPath.row == activeProduct.count {
-            guard let url = URL(string: "https://promo.forabank.ru/?metka=leads1&affiliate_id=44935&source=leads1&transaction_id=6dae603673619b0681e492d4bd1d8f3a" ) else { return  }
+            guard let url = URL(string: "https://promo.innovation.ru/?metka=leads1&affiliate_id=44935&source=leads1&transaction_id=6dae603673619b0681e492d4bd1d8f3a" ) else { return  }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else if indexPath.section == 2 && indexPath.row == deposits.count {
            /*

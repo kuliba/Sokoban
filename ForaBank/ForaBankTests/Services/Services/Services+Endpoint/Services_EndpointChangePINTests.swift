@@ -61,7 +61,7 @@ final class Services_EndpointChangePINTests: XCTestCase {
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/cardInfo/v1/changePIN"
+            "https://pl.innovation.ru/dbo/api/v3/processing/cardInfo/v1/changePIN"
         )
     }
     
@@ -69,6 +69,6 @@ final class Services_EndpointChangePINTests: XCTestCase {
     
     private func baseURL() -> URL {
         
-        .init(staticString: "https://pl.forabank.ru/dbo/api/v3")
+        .init(staticString: "https://pl.innovation.ru/dbo/api/v3")
     }
 }

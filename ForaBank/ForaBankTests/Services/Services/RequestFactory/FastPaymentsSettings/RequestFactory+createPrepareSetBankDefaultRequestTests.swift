@@ -16,7 +16,7 @@ final class RequestFactory_createPrepareSetBankDefaultRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/prepareSetBankDefault"
+            "https://pl.innovation.ru/dbo/api/v3/rest/prepareSetBankDefault"
         )
     }
     

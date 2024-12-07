@@ -22,7 +22,7 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getOperatorsListByParam?customerId=\(operatorID)&operatorOnly=false&type=housingAndCommunalService"
+            "https://pl.innovation.ru/dbo/api/v3/dict/getOperatorsListByParam?customerId=\(operatorID)&operatorOnly=false&type=housingAndCommunalService"
         )
     }
     

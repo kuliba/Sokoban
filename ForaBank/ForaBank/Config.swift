@@ -9,6 +9,12 @@ import Foundation
 
 enum Config {
     
+    static let domen = "businessinnovation.ru"
+    static let name = "businessinnovation"
+    static let primary = "bInnovation"
+    static let telegram = "telegram"
+    
+    // "group.com.isimplelab.isimplemobile.\(Config.name)" TODO
     /// used in `AppDelegate`
     static let googleServiceInfoFileName: String = {
         
@@ -37,13 +43,13 @@ enum Config {
     static let host: String = {
         
         #if DEBUG
-            "pl.forabank.ru/dbo/api/v3"
+        "pl.\(Config.domen)/dbo/api/v3"
         #elseif MOCK
             "10.1.206.85:8443"
         #elseif PREPROD
-            "pl.forabank.ru/preprod/dbo/api/v3"
+            "pl.\(Config.domen)/preprod/dbo/api/v3"
         #else
-            "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
+            "bg.\(Config.domen)/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
         #endif
     }()
 }

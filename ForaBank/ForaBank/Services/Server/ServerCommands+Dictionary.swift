@@ -98,7 +98,7 @@ extension ServerCommands {
         }
         
         /*
-         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getPrefferdBanksList
+         https://pl.innovation.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getPrefferdBanksList
          */
         struct GetPrefferdBanksList: ServerCommand {
             

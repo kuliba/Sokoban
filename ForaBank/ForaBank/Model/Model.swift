@@ -150,7 +150,7 @@ class Model {
     // TODO: Temporary solution. Need to move to CompositionRoot
     struct FeatureFlags: Equatable {
         
-        var productsOpenLoanURL = URL(string: "https://www.forabank.ru/private/credits/")
+        var productsOpenLoanURL = URL(string: "https://www.\(Config.domen)/private/credits/")
     }
     
     // services

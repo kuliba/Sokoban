@@ -301,7 +301,7 @@ public extension Crypto {
         return try serverCertPublicKey(contents)
     }
     
-    // MARK: - From ForaBank
+    // MARK: - From Vortex
     
     /// Extracts first certificate public RSA key in `SecKey` format from certificates data string
     /// - Parameter certificatesData: certificates data encoded in base64 string

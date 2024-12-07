@@ -61,7 +61,7 @@ final class QRResolverTests: XCTestCase {
     
     func  test_defaultURLString_shouldDeliverURL() {
         
-        XCTAssertNoDiff(resolve(anyURL(string: "forabank.ru")), .url(anyURL(string: "forabank.ru")))
+        XCTAssertNoDiff(resolve(anyURL(string: "innovation.ru")), .url(anyURL(string: "innovation.ru")))
     }
     
     func test_validQRCodeStringNotURL_shouldDeliverQRCode_whenST00011() {

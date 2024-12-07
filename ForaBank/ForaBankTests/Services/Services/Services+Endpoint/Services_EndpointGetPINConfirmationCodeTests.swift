@@ -60,7 +60,7 @@ final class Services_EndpointGetPINConfirmationCodeTests: XCTestCase {
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/cardInfo/v1/getPINConfirmationCode"
+            "https://pl.innovation.ru/dbo/api/v3/processing/cardInfo/v1/getPINConfirmationCode"
         )
     }
     
@@ -68,6 +68,6 @@ final class Services_EndpointGetPINConfirmationCodeTests: XCTestCase {
     
     private func baseURL() -> URL {
         
-        .init(staticString: "https://pl.forabank.ru/dbo/api/v3")
+        .init(staticString: "https://pl.innovation.ru/dbo/api/v3")
     }
 }

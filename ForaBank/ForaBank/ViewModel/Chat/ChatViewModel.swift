@@ -38,7 +38,7 @@ extension ChatViewModel {
         
         init() {
             self.buttons = [[.phone(url: "telprompt://\("88001009889")", title: "8 (800) 100 9889"),
-                             .email(mail: "fora-digital@forabank.ru")
+                             .email(mail: "vortex-digital@vortex.ru")
                             ],
                             [.whatsapp(url: "https://api.whatsapp.com/send/?phone=%2B79257756555&text&app_absent=0"),
                              .telegram(url: "https://telegram.me/forabank_bot")

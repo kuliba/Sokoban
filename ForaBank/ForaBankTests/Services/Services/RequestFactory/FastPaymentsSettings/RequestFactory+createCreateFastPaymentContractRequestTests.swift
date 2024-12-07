@@ -18,7 +18,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/createFastPaymentContract"
+            "https://pl.innovation.ru/dbo/api/v3/rest/createFastPaymentContract"
         )
     }
     

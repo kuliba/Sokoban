@@ -39,7 +39,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .transfer
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=abroadTransfer"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=abroadTransfer"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -53,7 +53,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .orderCard
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=abroadOrderCard"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=abroadOrderCard"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -67,7 +67,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.main)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_MAIN_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_MAIN_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -81,7 +81,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.regular)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_REGULAR_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_REGULAR_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -95,7 +95,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.additionalSelf)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -109,7 +109,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.additionalSelfAccOwn)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -123,7 +123,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.additionalOther)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_OTHER_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_OTHER_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -137,7 +137,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.additionalCorporate)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_CORPORATE_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_CORPORATE_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -151,7 +151,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.corporate)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_CORPORATE_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_CORPORATE_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -165,7 +165,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.individualBusinessman)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_INDIVIDUAL_BUSINESSMAN_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_INDIVIDUAL_BUSINESSMAN_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -179,7 +179,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .control(.individualBusinessmanMain)
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_INDIVIDUAL_BUSINESSMAN_MAIN_CARD"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_INDIVIDUAL_BUSINESSMAN_MAIN_CARD"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         
@@ -193,7 +193,7 @@ final class Services_getLandingServiceTests: XCTestCase {
         
         let abroadType: AbroadType = .marketShowcase
         let (sut, spy) = makeSUT()
-        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=market_showcase"
+        let correctURLString = "https://pl.innovation.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=market_showcase"
         
         sut.process((serial: "1", abroadType: abroadType)) { _ in }
         

@@ -91,7 +91,7 @@ private extension String {
                ]
             },
             "image":"dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_car_collateral_loan.png",
-            "terms":"https://www.forabank.ru/",
+            "terms":"https://www.innovation.ru/",
             "landingId":"COLLATERAL_LOAN_CALC_CAR"
          },
          {
@@ -120,7 +120,7 @@ private extension String {
                ],
             },
             "image":"dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_real_estate_collateral_loan.png",
-            "terms":"https://www.forabank.ru/",
+            "terms":"https://www.innovation.ru/",
             "landingId":"COLLATERAL_LOAN_CALC_REAL_ESTATE"
          }
       ]
