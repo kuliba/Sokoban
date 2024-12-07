@@ -9,6 +9,12 @@ import ForaTools
 
 extension RootViewModelFactory {
     
+    /// Loads and returns a paginated subset of decodable, filterable items.
+    ///
+    /// - Parameters:
+    ///   - type: The decodable array type to load. Defaults to `[T].self`.
+    ///   - query: Defines the paging and filtering criteria.
+    /// - Returns: A filtered, paginated array of items, or `nil` if none were found.
     @inlinable
     func loadPage<T: Decodable & FilterableItem>(
         of type: [T].Type = [T].self,

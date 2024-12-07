@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 22.11.2024.
 //
 
+import ForaTools
+
 extension RootViewModelFactory {
     
     @inlinable
@@ -16,10 +18,9 @@ extension RootViewModelFactory {
             
             guard let self else { return }
             
-            let operators: [CodableServicePaymentOperator] = logDecoratedLocalLoad() ?? []
-            let page = operators.pageOfOperators(for: payload)
-            debugLog(pageCount: page.count, of: operators.count)
-            completion(page)
+            // sorting is performed at cache phase
+            let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
+            completion(page.map(PaymentServiceOperator.init(codable:)))
         }
     }
     
@@ -43,22 +44,7 @@ extension RootViewModelFactory {
 
 // MARK: - Helpers
 
-extension Array where Element == CodableServicePaymentOperator {
-    
-    /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
-    func pageOfOperators(
-        for payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
-    ) -> [PaymentServiceOperator] {
-        
-        // sorting is performed at cache phase
-        return self
-            .filter { $0.matches(payload) }
-            .page(startingAfter: payload.operatorID, pageSize: payload.pageSize)
-            .map(PaymentServiceOperator.init(codable:))
-    }
-}
-
-extension CodableServicePaymentOperator {
+extension CodableServicePaymentOperator: FilterableItem {
     
     func matches(
         _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
@@ -75,6 +61,13 @@ extension CodableServicePaymentOperator {
         || inn.localizedCaseInsensitiveContains(searchText)
     }
 }
+
+extension UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload: PageQuery {
+    
+    var id: String? { operatorID }
+}
+
+// MARK: - Adapters
 
 private extension PaymentServiceOperator {
     
