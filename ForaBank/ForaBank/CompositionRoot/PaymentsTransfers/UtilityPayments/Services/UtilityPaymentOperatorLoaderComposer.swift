@@ -8,6 +8,20 @@
 import ForaTools
 import Foundation
 
+struct UtilityPaymentOperatorLoaderComposerPayload<Operator: Identifiable>: Equatable {
+    
+    let operatorID: Operator.ID?
+    let searchText: String
+    
+    init(
+        operatorID: Operator.ID? = nil,
+        searchText: String = ""
+    ) {
+        self.operatorID = operatorID
+        self.searchText = searchText
+    }
+}
+
 final class UtilityPaymentOperatorLoaderComposer {
     
     private let model: Model
@@ -31,22 +45,8 @@ extension UtilityPaymentOperatorLoaderComposer {
         return live
     }
     
-    struct Payload: Equatable {
-        
-        let operatorID: Operator.ID?
-        let searchText: String
-        
-        init(
-            operatorID: Operator.ID? = nil,
-            searchText: String = ""
-        ) {
-            self.operatorID = operatorID
-            self.searchText = searchText
-        }
-    }
-    
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (Payload, @escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperators = (UtilityPaymentOperatorLoaderComposerPayload<Operator>, @escaping LoadOperatorsCompletion) -> Void
     
     typealias Operator = UtilityPaymentOperator
 }
@@ -54,7 +54,7 @@ extension UtilityPaymentOperatorLoaderComposer {
 private extension UtilityPaymentOperatorLoaderComposer {
     
     func live(
-        payload: Payload,
+        payload: UtilityPaymentOperatorLoaderComposerPayload<Operator>,
         completion: @escaping LoadOperatorsCompletion
     ) {
         let payload = LoadOperatorsPayload(

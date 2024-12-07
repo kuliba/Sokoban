@@ -46,7 +46,7 @@ final class PaymentsTransfersFlowManagerComposer {
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
         
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (UtilityPaymentOperatorLoaderComposer.Payload, @escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperators = (UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>, @escaping LoadOperatorsCompletion) -> Void
 }
 
 extension PaymentsTransfersFlowManagerComposer {
@@ -272,7 +272,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        let payload = UtilityPaymentOperatorLoaderComposer.Payload(
+        let payload = UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>(
             operatorID: payload.operatorID,
             searchText: payload.searchText
         )

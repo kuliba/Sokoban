@@ -8,7 +8,7 @@
 extension RootViewModelFactory {
     
     func composedLoadOperators(
-        payload: UtilityPaymentOperatorLoaderComposer.Payload,
+        payload: UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>,
         completion: @escaping ([UtilityPaymentOperator]) -> Void
     ) {
         let composer = UtilityPaymentOperatorLoaderComposer(
