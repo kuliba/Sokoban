@@ -1740,6 +1740,9 @@
 		2AFF32132D041BEF006DD60C /* XCTestCase+factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32122D041BEF006DD60C /* XCTestCase+factories.swift */; };
 		2AFF32152D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */; };
 		2AFF32172D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */; };
+		2AFF32192D047FE9006DD60C /* RootViewModelFactory+loadPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */; };
+		2AFF321B2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */; };
+		2AFF321D2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50043665287B3747000545BD /* PagerScrollViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50043664287B3747000545BD /* PagerScrollViewComponent.swift */; };
 		5008781C2853453A0033DDD5 /* SpinnerRefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50087819285345390033DDD5 /* SpinnerRefreshView.swift */; };
@@ -5246,6 +5249,9 @@
 		2AFF32122D041BEF006DD60C /* XCTestCase+factories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+factories.swift"; sourceTree = "<group>"; };
 		2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersFlowManager.swift"; sourceTree = "<group>"; };
 		2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composedLoadOperators.swift"; sourceTree = "<group>"; };
+		2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadPage.swift"; sourceTree = "<group>"; };
+		2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadPageTests.swift"; sourceTree = "<group>"; };
+		2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactoryLocalLoadTests.swift; sourceTree = "<group>"; };
 		50043664287B3747000545BD /* PagerScrollViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollViewComponent.swift; sourceTree = "<group>"; };
 		50087819285345390033DDD5 /* SpinnerRefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerRefreshView.swift; sourceTree = "<group>"; };
 		5008781A285345390033DDD5 /* PageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageIndicatorView.swift; sourceTree = "<group>"; };
@@ -10427,6 +10433,7 @@
 				2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */,
 				2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */,
 				2AFF32062D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift */,
+				2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */,
 				2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */,
 				2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */,
 			);
@@ -10606,6 +10613,8 @@
 				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
 				2A85775D2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift */,
 				2AFF32042D030F18006DD60C /* RootViewModelFactory+logDecoratedLocalLoadTests.swift */,
+				2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */,
+				2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */,
 				2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadCachedOperatorsTests.swift */,
 				2A887BAE2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift */,
 				2A887BAC2D01A0A7004CB7DE /* RootViewModelFactory+composeDecoratedServiceCategoryListLoadersTests.swift */,
@@ -21283,6 +21292,7 @@
 				834E3F6C2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				2AD109672CBF85B8007C9593 /* LoggingSerialLoaderComposer.swift in Sources */,
+				2AFF32192D047FE9006DD60C /* RootViewModelFactory+loadPage.swift in Sources */,
 				0B4145BC281093600097430C /* MessagesHistoryItemViewComponent.swift in Sources */,
 				2A6826C42C9D322900B8057F /* RootViewModelFactory+makePaymentsTransfersCorporate.swift in Sources */,
 				83E455E62AC2EE980045BEC1 /* DecodeQrData.swift in Sources */,
@@ -22329,6 +22339,7 @@
 				2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */,
 				8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
+				2AFF321B2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift in Sources */,
 				2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */,
 				2A94AAEA2C8ECCA0003B4FB1 /* LoggingRemoteNanoServiceComposerTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
@@ -22561,6 +22572,7 @@
 				77517FD427A98052005CFB77 /* ServerCommandsProductTests.swift in Sources */,
 				2AEDAD5A29A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift in Sources */,
 				687F9B1127FED202007A38A5 /* ServerCommandsLoanTests.swift in Sources */,
+				2AFF321D2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift in Sources */,
 				2A2E32F729A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift in Sources */,
 				2A58BC1D2C8C127200D688C1 /* RequestFactory+createGetAllLatestPaymentsV3RequestTests.swift in Sources */,
 				2A18BB2D29E59CB900BB460D /* StringRestrictedTests.swift in Sources */,
