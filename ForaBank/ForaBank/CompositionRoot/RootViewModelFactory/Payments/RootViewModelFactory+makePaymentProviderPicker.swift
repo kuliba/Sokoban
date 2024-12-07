@@ -21,6 +21,15 @@ extension RootViewModelFactory {
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
         let nanoServices = makeNanoServices(for: category)
+        makePaymentProviderPicker(for: category, nanoServices: nanoServices, completion: completion)
+    }
+    
+    @inlinable
+    func makePaymentProviderPicker(
+        for category: ServiceCategory,
+        nanoServices: StandardNanoServices,
+        completion: @escaping (StandardSelectedCategoryDestination) -> Void
+    ) {
         let composer = StandardSelectedCategoryGetNavigationComposer(
             nanoServices: nanoServices
         )
@@ -34,7 +43,7 @@ extension RootViewModelFactory {
     
     private func makeNanoServices(
         for category: ServiceCategory
-    ) -> NanoServices {
+    ) -> StandardNanoServices {
         
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
@@ -55,7 +64,7 @@ extension RootViewModelFactory {
         )
     }
     
-    private typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
     
     @inlinable
     func makePaymentProviderPicker(

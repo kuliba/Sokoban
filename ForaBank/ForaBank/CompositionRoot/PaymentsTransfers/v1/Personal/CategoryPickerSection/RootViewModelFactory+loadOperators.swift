@@ -58,8 +58,6 @@ extension Array where Element == CodableServicePaymentOperator {
     }
 }
 
-// MARK: - Helpers
-
 extension CodableServicePaymentOperator {
     
     func matches(
