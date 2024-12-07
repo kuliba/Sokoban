@@ -12,7 +12,7 @@ extension RootViewModelFactory {
         payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
         completion: @escaping ([PaymentServiceOperator]) -> Void
     ) {
-        schedulers.background.schedule { [weak self] in
+        schedulers.userInitiated.schedule { [weak self] in
             
             guard let self else { return }
             
