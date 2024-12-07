@@ -11,15 +11,11 @@ extension RootViewModelFactory {
         spinner: RootViewModel.RootActions.Spinner?
     ) -> PaymentsTransfersFlowManager {
         
-        let operatorLoaderComposer = UtilityPaymentOperatorLoaderComposer(
-            model: model,
-            pageSize: settings.pageSize
-        )
         let composer = PaymentsTransfersFlowManagerComposer(
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            loadOperators: operatorLoaderComposer.compose(),
+            loadOperators: composedLoadOperators,
             scheduler: schedulers.main
         )
         
