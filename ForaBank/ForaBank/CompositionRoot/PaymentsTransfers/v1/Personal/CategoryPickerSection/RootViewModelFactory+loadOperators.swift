@@ -7,8 +7,6 @@
 
 extension RootViewModelFactory {
     
-#warning("duplication - see UtilityPaymentOperatorLoaderComposer")
-    
     @inlinable
     func loadCachedOperators(
         payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,

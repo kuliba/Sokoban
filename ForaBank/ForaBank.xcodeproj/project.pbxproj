@@ -1229,7 +1229,6 @@
 		2AA3A0F52BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */; };
 		2AA3A0F92BF3E97B00B1D104 /* UtilityPrepaymentMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A0F82BF3E97B00B1D104 /* UtilityPrepaymentMicroServicesComposer.swift */; };
 		2AA3A0FD2BF3F0A700B1D104 /* UtilityPrepaymentNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A0FC2BF3F0A700B1D104 /* UtilityPrepaymentNanoServices.swift */; };
-		2AA3A1012BF4BB9B00B1D104 /* UtilityPaymentOperatorLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A1002BF4BB9B00B1D104 /* UtilityPaymentOperatorLoaderComposer.swift */; };
 		2AA3A9302BFF886300AEBCC9 /* AnywayTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A92F2BFF886300AEBCC9 /* AnywayTransaction.swift */; };
 		2AA3A9322BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9312BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift */; };
 		2AA3A9342BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9332BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift */; };
@@ -4764,7 +4763,6 @@
 		2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowReducerFactoryComposer.swift; sourceTree = "<group>"; };
 		2AA3A0F82BF3E97B00B1D104 /* UtilityPrepaymentMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2AA3A0FC2BF3F0A700B1D104 /* UtilityPrepaymentNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentNanoServices.swift; sourceTree = "<group>"; };
-		2AA3A1002BF4BB9B00B1D104 /* UtilityPaymentOperatorLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorLoaderComposer.swift; sourceTree = "<group>"; };
 		2AA3A92F2BFF886300AEBCC9 /* AnywayTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransaction.swift; sourceTree = "<group>"; };
 		2AA3A9312BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransactionEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2AA3A9332BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransactionEffectHandlerNanoServices.swift; sourceTree = "<group>"; };
@@ -10110,7 +10108,6 @@
 				2A5D2FB82BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift */,
 				2AA3A0F82BF3E97B00B1D104 /* UtilityPrepaymentMicroServicesComposer.swift */,
 				2AA3A0FC2BF3F0A700B1D104 /* UtilityPrepaymentNanoServices.swift */,
-				2AA3A1002BF4BB9B00B1D104 /* UtilityPaymentOperatorLoaderComposer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -20979,7 +20976,6 @@
 				0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */,
 				77F9F26A2A47125F00699433 /* SuccessViewModelMode+ParameterReducerCase.swift in Sources */,
 				6806FAAA27E9234A00EA005A /* CustomLineShapeWithAlignment.swift in Sources */,
-				2AA3A1012BF4BB9B00B1D104 /* UtilityPaymentOperatorLoaderComposer.swift in Sources */,
 				2AA54A6D2C57A31700542C49 /* PaymentProviderServicePickerPayload.swift in Sources */,
 				2A72ACC02CC6A73800B8BF5B /* RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift in Sources */,
 				77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */,
