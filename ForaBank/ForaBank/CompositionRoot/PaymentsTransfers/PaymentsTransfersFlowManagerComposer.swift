@@ -26,20 +26,20 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-    private let _loadOperators: LoadOperators
+    private let loadOperators: LoadOperators
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
-        _loadOperators: @escaping LoadOperators,
+        loadOperators: @escaping LoadOperators,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
         self.httpClient = httpClient
         self.log = log
-        self._loadOperators = _loadOperators
+        self.loadOperators = loadOperators
         self.scheduler = scheduler
     }
     
@@ -195,7 +195,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     private func loadOperators(
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        _loadOperators(.init(), completion)
+        loadOperators(.init(), completion)
     }
     
     private func makeLegacyViewModel(
@@ -277,7 +277,7 @@ private extension PaymentsTransfersFlowManagerComposer {
             searchText: payload.searchText
         )
         
-        _loadOperators(payload, completion)
+        loadOperators(payload, completion)
     }
     
     typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
