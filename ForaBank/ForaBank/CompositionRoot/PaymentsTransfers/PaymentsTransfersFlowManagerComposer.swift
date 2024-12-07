@@ -26,21 +26,27 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
+    private let _loadOperators: LoadOperators
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
+        _loadOperators: @escaping LoadOperators,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
         self.httpClient = httpClient
         self.log = log
+        self._loadOperators = _loadOperators
         self.scheduler = scheduler
     }
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
+        
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperators = (UtilityPaymentOperatorLoaderComposer.Payload, @escaping LoadOperatorsCompletion) -> Void
 }
 
 extension PaymentsTransfersFlowManagerComposer {
@@ -189,9 +195,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     private func loadOperators(
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        let load = loadOperators()
-        
-        load(.init()) { completion($0); _ = load }
+        _loadOperators(.init(), completion)
     }
     
     private func makeLegacyViewModel(
@@ -268,33 +272,15 @@ private extension PaymentsTransfersFlowManagerComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        let load = loadOperators()
-        
-        typealias Payload = UtilityPaymentOperatorLoaderComposer.Payload
-        
-        let payload = Payload(
+        let payload = UtilityPaymentOperatorLoaderComposer.Payload(
             operatorID: payload.operatorID,
             searchText: payload.searchText
         )
         
-        load(payload) { completion($0); _ = load }
+        _loadOperators(payload, completion)
     }
     
     typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
-    
-    private func loadOperators(
-    ) -> (
-        UtilityPaymentOperatorLoaderComposer.Payload,
-        @escaping ([Operator]) -> Void
-    ) -> Void {
-        
-        let loaderComposer = UtilityPaymentOperatorLoaderComposer(
-            model: model,
-            pageSize: settings.pageSize
-        )
-        
-        return loaderComposer.compose()
-    }
 }
 
 // MARK: - Adapters
