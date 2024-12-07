@@ -17,7 +17,9 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             let operators: [CodableServicePaymentOperator] = logDecoratedLocalLoad() ?? []
-            completion(operators.pageOfOperators(for: payload))
+            let page = operators.pageOfOperators(for: payload)
+            debugLog(pageCount: page.count, of: operators.count)
+            completion(page)
         }
     }
     

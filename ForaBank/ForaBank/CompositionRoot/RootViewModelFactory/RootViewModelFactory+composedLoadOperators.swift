@@ -25,7 +25,12 @@ extension RootViewModelFactory {
         
         schedulers.userInitiated.schedule { [weak self] in
             
-            self?.model.loadOperators(payload, completion)
+            guard let self else { return }
+            
+            let operators: [CachingSberOperator] = logDecoratedLocalLoad() ?? []
+            let page = operators.pageOfOperators(for: payload)
+            debugLog(pageCount: page.count, of: operators.count)
+            completion(page)
         }
     }
 }
@@ -46,32 +51,6 @@ struct UtilityPaymentOperatorLoaderComposerPayload<Operator: Identifiable>: Equa
 
 // MARK: - Load Operators
 
-#warning("duplication: see RootViewModelFactory+loadCachedOperators")
-
-private extension Model {
-    
-    func loadOperators(
-        _ payload: LoadOperatorsPayload,
-        _ completion: @escaping ([UtilityPaymentOperator]) -> Void
-    ) {
-        let log = LoggerAgent().log
-        let cacheLog = { log(.debug, .cache, $0, $1, $2) }
-        
-        if let operators = localAgent.load(type: [CachingSberOperator].self) {
-            cacheLog("Operators count \(operators.count)", #file, #line)
-            
-            let page = operators.operators(for: payload)
-            cacheLog("Operators page count \(page.count)", #file, #line)
-            
-            completion(page)
-        } else {
-            cacheLog("No more Operators", #file, #line)
-            completion([])
-        }
-    }
-    
-}
-
 struct LoadOperatorsPayload: Equatable {
     
     let operatorID: String?
@@ -85,7 +64,7 @@ struct LoadOperatorsPayload: Equatable {
 extension Array where Element == CachingSberOperator {
     
     /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
-    func operators(
+    func pageOfOperators(
         for payload: LoadOperatorsPayload
     ) -> [UtilityPaymentOperator] {
         
