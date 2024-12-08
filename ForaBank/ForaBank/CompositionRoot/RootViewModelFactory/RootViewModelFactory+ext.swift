@@ -308,6 +308,9 @@ extension RootViewModelFactory {
                     self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
                 }
             }
+        } else {
+            
+            model.handleDictionaryAnywayOperatorsRequest(nil)
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
