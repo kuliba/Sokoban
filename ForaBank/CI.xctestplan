@@ -181,8 +181,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ForaCryptoTests",
-        "name" : "ForaCryptoTests"
+        "identifier" : "VortexCryptoTests",
+        "name" : "VortexCryptoTests"
       }
     },
     {

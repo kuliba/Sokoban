@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ForaCrypto
+import VortexCrypto
 
 extension SecKeySwaddleCryptographer {
     
@@ -21,7 +21,7 @@ extension SecKeySwaddleCryptographer {
     private static func generateRSA4096BitKeys(
     ) throws -> (privateKey: SecKey, publicKey: SecKey)  {
         
-        try ForaCrypto.Crypto.createRandomSecKeys(
+        try VortexCrypto.Crypto.createRandomSecKeys(
             keyType: .rsa,
             keySize: .bits4096
         )
@@ -32,7 +32,7 @@ extension SecKeySwaddleCryptographer {
         privateKey: SecKey
     ) throws -> Data {
         
-        let clientSecretOTP = try ForaCrypto.Crypto.signNoHash(
+        let clientSecretOTP = try VortexCrypto.Crypto.signNoHash(
             .init(otp.value.utf8),
             withPrivateKey: privateKey,
             algorithm: .rsaSignatureDigestPKCS1v15Raw
@@ -52,9 +52,9 @@ extension SecKeySwaddleCryptographer {
     ) throws -> Data {
         
         do {
-            let transportKey = try ForaCrypto.Crypto.transportKey()
+            let transportKey = try VortexCrypto.Crypto.transportKey()
             
-            let encrypted = try ForaCrypto.Crypto.encrypt(
+            let encrypted = try VortexCrypto.Crypto.encrypt(
                 data: data,
                 withPublicKey: transportKey,
                 algorithm: .rsaEncryptionRaw
@@ -85,7 +85,7 @@ extension SecKeySwaddleCryptographer {
         publicKey: SecKey
     ) throws -> Data {
         
-        let x509Representation = try ForaCrypto.Crypto.x509Representation(of: publicKey)
+        let x509Representation = try VortexCrypto.Crypto.x509Representation(of: publicKey)
         LoggerAgent.shared.log(level: .debug, category: .crypto, message: "x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".")
 
         return x509Representation
@@ -96,7 +96,7 @@ extension SecKeySwaddleCryptographer {
         secret: SecKeySwaddler.SharedSecret
     ) throws -> Data {
         
-        let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+        let aes256CBC = try VortexCrypto.AES256CBC(key: secret.data)
         LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
         
         let result = try aes256CBC.encrypt(data)

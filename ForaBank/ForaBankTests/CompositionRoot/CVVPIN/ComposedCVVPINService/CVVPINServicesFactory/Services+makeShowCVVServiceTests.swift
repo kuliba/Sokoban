@@ -7,7 +7,7 @@
 
 import CVVPIN_Services
 @testable import ForaBank
-import ForaCrypto
+import VortexCrypto
 import XCTest
 
 final class Services_makeShowCVVServiceTests: XCTestCase {

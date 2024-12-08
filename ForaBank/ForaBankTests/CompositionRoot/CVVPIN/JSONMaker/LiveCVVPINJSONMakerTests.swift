@@ -9,7 +9,7 @@ import CryptoKit
 import class CVVPIN_Services.ChangePINService
 import class CVVPIN_Services.ShowCVVService
 @testable import ForaBank
-import ForaCrypto
+import VortexCrypto
 import XCTest
 
 final class LiveCVVPINJSONMakerTests: XCTestCase {
@@ -57,7 +57,7 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             publicKey: publicKey
         )
         
-        let decrypted = try ForaCrypto.Crypto.rsaDecrypt(
+        let decrypted = try VortexCrypto.Crypto.rsaDecrypt(
             data: encrypted,
             withPrivateKey: transportKeyPair.privateKey.key,
             algorithm: .rsaEncryptionPKCS1
@@ -129,8 +129,8 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
     ) {
         let logSpy = LogSpy()
         let crypto = LiveExtraLoggingCVVPINCrypto(
-            transportKey: transportKey ?? { try .init(key: ForaCrypto.Crypto.transportKey()) },
-            processingKey: processingKey ?? { try .init(key: ForaCrypto.Crypto.processingKey()) },
+            transportKey: transportKey ?? { try .init(key: VortexCrypto.Crypto.transportKey()) },
+            processingKey: processingKey ?? { try .init(key: VortexCrypto.Crypto.processingKey()) },
             log: { message,_,_ in logSpy.log(message) }
         )
         let sut = LiveCVVPINJSONMaker(crypto: crypto)

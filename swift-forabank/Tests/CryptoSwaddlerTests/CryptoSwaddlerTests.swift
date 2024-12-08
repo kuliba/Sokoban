@@ -6,7 +6,7 @@
 //
 
 import CryptoSwaddler
-import ForaCrypto
+import VortexCrypto
 import TransferPublicKey
 import XCTest
 
@@ -92,7 +92,7 @@ where OTP == CryptoSwaddlerTestCase.TestOTP,
             generateRSA4096BitKeys: generateRSA4096BitKeys,
             signEncryptOTP: signWithPadding,
             saveKeys: saveKeys,
-            x509Representation: ForaCrypto.Crypto.x509Representation(of:),
+            x509Representation: VortexCrypto.Crypto.x509Representation(of:),
             aesEncrypt128bitChunks: { data, secret in
                 
                 let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)

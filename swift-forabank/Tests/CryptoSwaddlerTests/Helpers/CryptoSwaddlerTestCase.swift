@@ -6,7 +6,7 @@
 //
 
 import CryptoKit
-import ForaCrypto
+import VortexCrypto
 import TransferPublicKey
 import XCTest
 

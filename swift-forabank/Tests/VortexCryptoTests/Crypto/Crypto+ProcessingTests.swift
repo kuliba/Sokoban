@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 25.10.2023.
 //
 
-import ForaCrypto
+import VortexCrypto
 import XCTest
 
 final class Crypto_ProcessingTests: XCTestCase {

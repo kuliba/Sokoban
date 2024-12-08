@@ -6,7 +6,7 @@
 //
 
 import CVVPIN_Services
-import ForaCrypto
+import VortexCrypto
 import Foundation
 
 final class LoggingCVVPINJSONMakerDecorator {

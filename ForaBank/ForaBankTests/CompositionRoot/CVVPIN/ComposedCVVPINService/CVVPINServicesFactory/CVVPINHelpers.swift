@@ -6,7 +6,7 @@
 //
 
 import CVVPIN_Services
-import ForaCrypto
+import VortexCrypto
 @testable import ForaBank
 
 func anyTransportKeyResult() ->
@@ -14,7 +14,7 @@ Result<LiveExtraLoggingCVVPINCrypto.TransportKey, Error> {
     
     Result {
         
-        try ForaCrypto.Crypto.generateKeyPair(keyType: .rsa, keySize: .bits4096)
+        try VortexCrypto.Crypto.generateKeyPair(keyType: .rsa, keySize: .bits4096)
     }
     .map(\.publicKey)
     .map(LiveExtraLoggingCVVPINCrypto.TransportKey.init(key:))
@@ -25,7 +25,7 @@ Result<LiveExtraLoggingCVVPINCrypto.ProcessingKey, Error> {
     
     Result {
         
-        try ForaCrypto.Crypto.generateKeyPair(
+        try VortexCrypto.Crypto.generateKeyPair(
             keyType: .rsa,
             keySize: .bits4096
         )
@@ -36,7 +36,7 @@ Result<LiveExtraLoggingCVVPINCrypto.ProcessingKey, Error> {
 
 func anyRSAKeyPair() throws -> RSADomain.KeyPair {
     
-    let (publicKey, privateKey) = try ForaCrypto.Crypto.generateKeyPair(
+    let (publicKey, privateKey) = try VortexCrypto.Crypto.generateKeyPair(
         keyType: .rsa,
         keySize: .bits4096
     )

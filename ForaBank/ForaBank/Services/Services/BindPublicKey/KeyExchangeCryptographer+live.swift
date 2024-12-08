@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 27.09.2023.
 //
 
-import ForaCrypto
+import VortexCrypto
 import Foundation
 
 extension KeyExchangeCryptographer {
@@ -20,7 +20,7 @@ extension KeyExchangeCryptographer {
     private static func generateP384KeyPair(
     ) -> P384KeyAgreementDomain.KeyPair {
         
-        ForaCrypto.Crypto.generateP384KeyPair()
+        VortexCrypto.Crypto.generateP384KeyPair()
     }
     
     private static func publicKeyData(
@@ -37,7 +37,7 @@ extension KeyExchangeCryptographer {
         _ data: Data
     ) throws -> Data {
         
-        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
+        try VortexCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
     }
     
     private static func sharedSecret(
@@ -45,8 +45,8 @@ extension KeyExchangeCryptographer {
         privateKey: PrivateKey
     ) throws -> Data {
         
-        let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
-        let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
+        let serverPublicKey = try VortexCrypto.Crypto.transportDecryptP384PublicKey(from: string)
+        let sharedSecret = try VortexCrypto.Crypto.sharedSecret(
             privateKey: privateKey,
             publicKey: serverPublicKey
         )

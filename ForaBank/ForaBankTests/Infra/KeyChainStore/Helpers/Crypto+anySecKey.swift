@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 14.10.2023.
 //
 
-import ForaCrypto
+import VortexCrypto
 import Foundation
 
 func anySecKey(

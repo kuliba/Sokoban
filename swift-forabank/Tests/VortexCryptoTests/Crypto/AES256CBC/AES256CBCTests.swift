@@ -6,7 +6,7 @@
 //
 
 import CryptoKit
-import ForaCrypto
+import VortexCrypto
 import XCTest
 
 final class AES256CBCTests: XCTestCase {

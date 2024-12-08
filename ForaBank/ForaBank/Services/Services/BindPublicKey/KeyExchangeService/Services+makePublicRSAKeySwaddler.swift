@@ -7,7 +7,7 @@
 
 import CryptoKit
 import CvvPin
-import ForaCrypto
+import VortexCrypto
 import Foundation
 import TransferPublicKey
 

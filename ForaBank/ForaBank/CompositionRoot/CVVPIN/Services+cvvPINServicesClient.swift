@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 05.11.2023.
 //
 
-import ForaCrypto
+import VortexCrypto
 import Foundation
 
 // MARK: - Lifespans
@@ -46,8 +46,8 @@ extension Services {
         let cryptoLog = { logger.log(level: $0, category: .crypto, message: $1, file: $2, line: $3) }
         
         let crypto = LiveExtraLoggingCVVPINCrypto(
-            _transportKey: ForaCrypto.Crypto.transportKey,
-            _processingKey: ForaCrypto.Crypto.processingKey,
+            _transportKey: VortexCrypto.Crypto.transportKey,
+            _processingKey: VortexCrypto.Crypto.processingKey,
             errorLog: { cryptoLog(.error, $0, $1, $2) }
         )
         let cvvPINCrypto = LoggingCVVPINCryptoDecorator(

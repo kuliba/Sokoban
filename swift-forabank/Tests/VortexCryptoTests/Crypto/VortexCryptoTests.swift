@@ -1,15 +1,15 @@
 //
-//  ForaCryptoTests.swift
+//  VortexCryptoTests.swift
 //  
 //
 //  Created by Igor Malyarov on 10.08.2023.
 //
 
 import CryptoKit
-import ForaCrypto
+import VortexCrypto
 import XCTest
 
-final class ForaCryptoTests: XCTestCase {
+final class VortexCryptoTests: XCTestCase {
     
     func test_transportPublicKey_shouldSupportRSAAlgorithmsForEncryptionAndDecryption() throws {
         

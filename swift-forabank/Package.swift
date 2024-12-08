@@ -61,7 +61,7 @@ let package = Package(
         .cvvPin,
         .cvvPIN_Services,
         .cvvPINServices,
-        .foraCrypto,
+        .vortexCrypto,
         .genericRemoteService,
         .getProcessingSessionCodeService,
         .getInfoRepeatPaymentService,
@@ -219,8 +219,8 @@ let package = Package(
         .cvvPIN_ServicesTests,
         .cvvPINServices,
         .cvvPINServicesTests,
-        .foraCrypto,
-        .foraCryptoTests,
+        .vortexCrypto,
+        .vortexCryptoTests,
         .genericRemoteService,
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
@@ -911,10 +911,10 @@ private extension Product {
         ]
     )
     
-    static let foraCrypto = library(
-        name: .foraCrypto,
+    static let vortexCrypto = library(
+        name: .vortexCrypto,
         targets: [
-            .foraCrypto,
+            .vortexCrypto,
         ]
     )
     
@@ -1983,7 +1983,7 @@ private extension Target {
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
-            .foraCrypto,
+            .vortexCrypto,
             .transferPublicKey
         ]
     )
@@ -1994,7 +1994,7 @@ private extension Target {
             .customDump,
             // internal modules
             .cryptoSwaddler,
-            .foraCrypto,
+            .vortexCrypto,
             .transferPublicKey
         ]
     )
@@ -2070,8 +2070,8 @@ private extension Target {
         path: "Tests/Services/\(String.cvvPINServicesTests)"
     )
     
-    static let foraCrypto = target(
-        name: .foraCrypto,
+    static let vortexCrypto = target(
+        name: .vortexCrypto,
         resources: [
             .copy("Resources/public.crt"),
             .copy("Resources/der.crt"),
@@ -2080,13 +2080,13 @@ private extension Target {
         ]
     )
     
-    static let foraCryptoTests = testTarget(
-        name: .foraCryptoTests,
+    static let vortexCryptoTests = testTarget(
+        name: .vortexCryptoTests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .foraCrypto,
+            .vortexCrypto,
         ]
     )
     
@@ -3561,8 +3561,8 @@ private extension Target.Dependency {
         name: .cvvPINServices
     )
     
-    static let foraCrypto = byName(
-        name: .foraCrypto
+    static let vortexCrypto = byName(
+        name: .vortexCrypto
     )
     
     static let genericRemoteService = byName(
@@ -3917,8 +3917,8 @@ private extension String {
     static let cvvPINServices = "CVVPINServices"
     static let cvvPINServicesTests = "CVVPINServicesTests"
     
-    static let foraCrypto = "ForaCrypto"
-    static let foraCryptoTests = "ForaCryptoTests"
+    static let vortexCrypto = "VortexCrypto"
+    static let vortexCryptoTests = "VortexCryptoTests"
     
     static let genericRemoteService = "GenericRemoteService"
     static let genericRemoteServiceTests = "GenericRemoteServiceTests"

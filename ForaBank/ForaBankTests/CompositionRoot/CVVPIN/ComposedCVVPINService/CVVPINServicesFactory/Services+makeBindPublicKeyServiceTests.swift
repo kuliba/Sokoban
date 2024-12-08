@@ -7,7 +7,7 @@
 
 import CVVPIN_Services
 @testable import ForaBank
-import ForaCrypto
+import VortexCrypto
 import XCTest
 
 @available(iOS 16.0.0, *)

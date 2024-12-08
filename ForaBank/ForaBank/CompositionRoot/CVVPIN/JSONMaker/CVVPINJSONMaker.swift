@@ -6,10 +6,10 @@
 //
 
 import CVVPIN_Services
-import ForaCrypto
+import VortexCrypto
 import Foundation
 
-// TODO: make generic to decouple from ForaCrypto & CVVPIN_Services
+// TODO: make generic to decouple from VortexCrypto & CVVPIN_Services
 protocol CVVPINJSONMaker {
     
     typealias ECDHPublicKey = ECDHDomain.PublicKey

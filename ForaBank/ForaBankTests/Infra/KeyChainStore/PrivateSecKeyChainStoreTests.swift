@@ -7,7 +7,7 @@
 
 import KeyChainStore
 import XCTest
-import ForaCrypto
+import VortexCrypto
 
 final class PrivateSecKeyChainStoreTests: XCTestCase {
     

@@ -6,7 +6,7 @@
 //
 
 import CryptoKit
-import ForaCrypto
+import VortexCrypto
 import Foundation
 
 struct LiveExtraLoggingCVVPINCrypto {
@@ -19,7 +19,7 @@ struct LiveExtraLoggingCVVPINCrypto {
     typealias RSAPrivateKey = RSADomain.PrivateKey
     typealias RSAKeyPair = RSADomain.KeyPair
     
-    private typealias Crypto = ForaCrypto.Crypto
+    private typealias Crypto = VortexCrypto.Crypto
     
     typealias Log = (String, StaticString, UInt) -> Void
     

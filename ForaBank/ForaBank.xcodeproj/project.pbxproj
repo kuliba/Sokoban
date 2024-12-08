@@ -1446,7 +1446,6 @@
 		2ACFD66E2C5DEDA8003F08AE /* UtilityPaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */; };
 		2ACFD6702C5DEDF9003F08AE /* SegmentedOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */; };
 		2ACFD6742C5DFBC6003F08AE /* QRScanResultMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */; };
-		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
 		2AD092952BFA30A200777EE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD092942BFA30A200777EE4 /* Assets.xcassets */; };
@@ -2863,6 +2862,8 @@
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
 		843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */; };
+		84C218E42D061E490009882F /* VortexCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 84C218E32D061E490009882F /* VortexCrypto */; };
+		84C218E62D061E600009882F /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 84C218E52D061E600009882F /* VortexTools */; };
 		A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */; };
 		A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */ = {isa = PBXBuildFile; fileRef = A50869D92767F394004C5E17 /* InternetTVSuccess.xib */; };
 		A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */; };
@@ -7246,6 +7247,7 @@
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
 				2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */,
+				84C218E42D061E490009882F /* VortexCrypto in Frameworks */,
 				2A392BD82B934B3800029790 /* PrePaymentPicker in Frameworks */,
 				83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
@@ -7254,6 +7256,7 @@
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
 				C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */,
+				84C218E62D061E600009882F /* VortexTools in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
@@ -7267,7 +7270,6 @@
 				A70BE3F72CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend in Frameworks */,
 				2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */,
 				2A4863D32BB1DF5700BBCC76 /* RemoteServices in Frameworks */,
-				2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -18661,7 +18663,6 @@
 				2A1F08522A79057500C5B11B /* GetProcessingSessionCodeService */,
 				2A1F08672A7951E600C5B11B /* GenericRemoteService */,
 				2A5190302A7E0BE80014B0B7 /* URLRequestFactory */,
-				2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */,
 				2A727A252A9381A700235EFF /* TransferPublicKey */,
 				2AFF5D282A9885210097F429 /* CryptoSwaddler */,
 				2A7AB1922AA1065400D37BD6 /* LinkableText */,
@@ -18722,6 +18723,8 @@
 				A70BE3F62CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend */,
 				A73E430F2CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend */,
 				83C6A1E82CFF43540076BC25 /* SavingsAccount */,
+				84C218E32D061E490009882F /* VortexCrypto */,
+				84C218E52D061E600009882F /* VortexTools */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -27751,10 +27754,6 @@
 			package = 2ACBA6742CE9BC7E00758D71 /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
 		};
-		2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ForaCrypto;
-		};
 		2AD0929E2BFA322300777EE4 /* AnywayPayment */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AnywayPayment;
@@ -27976,6 +27975,14 @@
 		83F775CA2CA2CE0700A05F69 /* MarketShowcase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MarketShowcase;
+		};
+		84C218E32D061E490009882F /* VortexCrypto */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VortexCrypto;
+		};
+		84C218E52D061E600009882F /* VortexTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VortexTools;
 		};
 		A70BE3F62CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend */ = {
 			isa = XCSwiftPackageProductDependency;

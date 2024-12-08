@@ -7,7 +7,7 @@
 
 import CvvPin
 import Foundation
-import ForaCrypto
+import VortexCrypto
 import GenericRemoteService
 
 extension Services {

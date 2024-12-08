@@ -8,7 +8,7 @@
 //import CryptoKit
 //import CvvPin
 //@testable import ForaBank
-//import ForaCrypto
+//import VortexCrypto
 //import TransferPublicKey
 //import XCTest
 //
@@ -42,7 +42,7 @@
 //        let (procClientSecretOTPData, clientPublicKeyRSAData) = try decryptProcClientJSON(from: json, with: sharedSecret)
 //
 //
-//        let clientSecretOTP = try ForaCrypto.Crypto.rsaDecrypt(
+//        let clientSecretOTP = try VortexCrypto.Crypto.rsaDecrypt(
 //            data: procClientSecretOTPData,
 //            withPrivateKey: privateKey,
 //            algorithm: .rsaEncryptionRaw
@@ -61,7 +61,7 @@
 //    private typealias SharedSecret = KeyTransferService<Services.TransferOTP, Services.ExchangeEventID>.SharedSecret
 //
 //    private func makeSUT(
-//        transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey,
+//        transportKey: @escaping () throws -> SecKey = VortexCrypto.Crypto.transportKey,
 //        file: StaticString = #file,
 //        line: UInt = #line
 //    ) throws -> (
@@ -89,7 +89,7 @@
 //    }
 //
 //    private func request(
-//        transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey,
+//        transportKey: @escaping () throws -> SecKey = VortexCrypto.Crypto.transportKey,
 //        otp: String = "abc123",
 //        eventID: String = "event_1",
 //        file: StaticString = #file,
@@ -155,7 +155,7 @@
 //        procClientSecretOTP: Data,
 //        clientPublicKeyRSA: Data
 //    ) {
-//        let aes256CBC = try ForaCrypto.AES256CBC(key: sharedSecret.data)
+//        let aes256CBC = try VortexCrypto.AES256CBC(key: sharedSecret.data)
 //        let decrypted = try aes256CBC.decrypt(encrypted)
 //
 //        let procClient = try JSONDecoder().decode(ProcClient.self, from: decrypted)
@@ -201,7 +201,7 @@
 //
 //    func test_transportKey() throws {
 //
-//        let key = try ForaCrypto.Crypto.transportKey()
+//        let key = try VortexCrypto.Crypto.transportKey()
 //
 //        try expectAttributes(ofPublicSecKey: key)
 //    }

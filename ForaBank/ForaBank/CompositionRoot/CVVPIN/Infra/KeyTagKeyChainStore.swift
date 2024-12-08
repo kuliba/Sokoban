@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ForaCrypto
+import VortexCrypto
 import VortexTools
 import KeyChainStore
 
@@ -43,7 +43,7 @@ where Key == SecKey {
         self.init(
             keyTag: keyTag,
             data: { try $0.rawRepresentation },
-            key: ForaCrypto.Crypto.createPrivateSecKey
+            key: VortexCrypto.Crypto.createPrivateSecKey
         )
     }
 }
@@ -58,8 +58,8 @@ where Key == RSADomain.KeyPair {
             data: { try $0.privateKey.key.rawRepresentation },
             key: { data in
                 
-                let privateKey = try ForaCrypto.Crypto.createPrivateSecKey(from: data)
-                let publicKey = try ForaCrypto.Crypto.extractPublicKey(fromPrivateKey: privateKey)
+                let privateKey = try VortexCrypto.Crypto.createPrivateSecKey(from: data)
+                let publicKey = try VortexCrypto.Crypto.extractPublicKey(fromPrivateKey: privateKey)
                 
                 return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
             }
@@ -67,7 +67,7 @@ where Key == RSADomain.KeyPair {
     }
 }
 
-private extension ForaCrypto.Crypto {
+private extension VortexCrypto.Crypto {
     
     static func createPrivateSecKey(
         from data: Data
