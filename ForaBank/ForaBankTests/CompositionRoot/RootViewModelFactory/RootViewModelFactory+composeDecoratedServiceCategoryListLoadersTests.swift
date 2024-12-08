@@ -122,7 +122,11 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+
             httpClient.complete(with: anyError())
+            self.awaitActorThreadHop()
+
+            httpClient.complete(with: anyError(), at: 1)
         }
     }
     
@@ -136,6 +140,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             self.awaitActorThreadHop()
             
             httpClient.complete(with: anyError())
+            self.awaitActorThreadHop()
+            
+            httpClient.complete(with: anyError(), at: 1)
             self.awaitActorThreadHop()
             
             httpClient.expectRequests(withQueryValueFor: "type", match: [
@@ -156,7 +163,11 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+
             httpClient.complete(with: json)
+            self.awaitActorThreadHop()
+
+            httpClient.complete(with: anyError(), at: 1)
         }
     }
     
@@ -173,6 +184,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             httpClient.complete(with: json)
             self.awaitActorThreadHop()
             
+            httpClient.complete(with: anyError(), at: 1)
+            self.awaitActorThreadHop()
+
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
                 "getOperatorsListByParam-charity",
@@ -191,7 +205,21 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+            
             httpClient.complete(with: json)
+            self.awaitActorThreadHop()
+            
+            httpClient.complete(with: anyError(), at: 1)
+            self.awaitActorThreadHop()
+            
+            httpClient.complete(with: anyError(), at: 2)
+            self.awaitActorThreadHop()
+
+            httpClient.expectRequests(withQueryValueFor: "type", match: [
+                "getServiceCategoryList",
+                "getOperatorsListByParam-housingAndCommunalService",
+                "getOperatorsListByParam-internet",
+            ])
         }
     }
     
@@ -204,11 +232,22 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+            XCTAssertNil(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self))
             
             httpClient.complete(with: json)
             self.awaitActorThreadHop()
             
-            XCTAssertEqual(localAgent.storeCallCount, 1)
+            httpClient.complete(with: anyError(), at: 1)
+            self.awaitActorThreadHop()
+            
+            httpClient.complete(with: anyError(), at: 2)
+            self.awaitActorThreadHop()
+            
+            XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self)?.map(\.type), [
+                .mobile,
+                .housingAndCommunalService,
+                .internet
+            ])
         }
     }
     
@@ -257,6 +296,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             self.awaitActorThreadHop()
             
             httpClient.complete(with: self.getOperatorsListByParamJSON(), at: 1)
+            self.awaitActorThreadHop()
+            
+            httpClient.complete(with: anyError(), at: 2)
             self.awaitActorThreadHop()
             
             XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).count, 1, "Expected to cache Operators once.")
