@@ -75,7 +75,7 @@ private extension SegmentedPaymentProviderPickerFlowView {
             footer: {
                 
                 FooterView(
-                    state: .footer(.iFora),
+                    state: .footer(.iVortex),
                     event: {
                         switch $0 {
                         case .addCompany:
@@ -85,10 +85,10 @@ private extension SegmentedPaymentProviderPickerFlowView {
                             flowModel.state.content.event(.select(.payByInstructions))
                         }
                     },
-                    config: .iFora
+                    config: .iVortex
                 )
             },
-            config: .iFora
+            config: .iVortex
         )
     }
 }

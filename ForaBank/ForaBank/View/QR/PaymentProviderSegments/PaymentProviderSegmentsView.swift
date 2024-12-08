@@ -80,7 +80,7 @@ private extension PaymentProviderSegmentsView {
             .frame(maxWidth: .infinity, alignment: .leading)
         },
         footer: { Text("Footer View here.") },
-        config: .iFora
+        config: .iVortex
     )
 }
 

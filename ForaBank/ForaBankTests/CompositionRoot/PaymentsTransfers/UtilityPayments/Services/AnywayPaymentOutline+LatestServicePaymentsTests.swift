@@ -45,7 +45,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         let outline = makeOutline(latest)
         
         XCTAssertNoDiff(outline.payload, .init(
-            puref: "iForaNKORR||18650",
+            puref: "iVortexNKORR||18650",
             title: "МУП АГО АНГАРСКИЙ ВОДОКАНАЛ",
             subtitle: nil,
             icon: "1efeda3c9130101d4d88113853b03bb5"
@@ -84,7 +84,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
             amount: 777,
             name: "МУП АГО АНГАРСКИЙ ВОДОКАНАЛ",
             md5Hash: "1efeda3c9130101d4d88113853b03bb5",
-            puref: "iForaNKORR||18650",
+            puref: "iVortexNKORR||18650",
             additionalItems: [
                 makeAdditionalItem(
                     fieldName: "1",

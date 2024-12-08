@@ -86,10 +86,10 @@ extension TransportPaymentsViewModel {
             case Purefs.avtodorGroup:
                 source = .avtodor
                 
-            case Purefs.iForaMosParking:
+            case Purefs.iVortexMosParking:
                 return .mosParking
                 
-            case Purefs.iForaGibdd:
+            case Purefs.iVortexGibdd:
                 source = .gibdd
                 
             default:
@@ -106,7 +106,7 @@ extension TransportPaymentsViewModel {
     func selectMosParkingID(id: String) {
         
         let source: Payments.Operation.Source = .makeServicePayment(
-            puref: Purefs.iForaMosParking,
+            puref: Purefs.iVortexMosParking,
             additionalList: [additional(value: id)]
         )
         select(track: .source(source))
@@ -186,7 +186,7 @@ extension TransportPaymentsViewModel {
         
         let paymentsViewModel = makePaymentsViewModel(
             .servicePayment(
-                puref: Purefs.iForaMosParking,
+                puref: Purefs.iVortexMosParking,
                 additionalList: .none,
                 amount: 0, 
                 productId: nil

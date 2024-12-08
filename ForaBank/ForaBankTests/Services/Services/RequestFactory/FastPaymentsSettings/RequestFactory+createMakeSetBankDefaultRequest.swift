@@ -26,7 +26,7 @@ final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/makeSetBankDefault"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/makeSetBankDefault"
         )
     }
     

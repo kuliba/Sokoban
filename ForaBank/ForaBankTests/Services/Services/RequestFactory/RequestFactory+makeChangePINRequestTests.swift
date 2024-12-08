@@ -37,7 +37,7 @@ final class RequestFactory_makeChangePINRequestTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://dmz-api-gate-test.innovation.ru/processing/cardInfo/v1/changePIN"
+            "https://dmz-api-gate-test.\(Config.domen)/processing/cardInfo/v1/changePIN"
         )
     }
     

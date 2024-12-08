@@ -25,7 +25,7 @@ final class OperatorDataTestHelpersTests: XCTestCase {
         let operatorGroupData = try XCTUnwrap(OperatorGroupData.fromBundle())
         let purefs = operatorGroupData.flatMap { $0.operators.map(\.code) }
         
-        XCTAssertEqual(purefs, ["iFora||Addressing", "iFora||Addressless", "iFora||ChangeOutgoing", "iFora||ReturnOutgoing", "iFora||4630", "iFora||5872", "iFora||C31", "iFora||DEMO3841", "iFora||DEMO4177", "iFora||KSK", "iFora||MOO2", "iFora||PIK", "iFora||RIZ", "iFora||TNS", "iFora||UKIRR", "iFora||ULENR", "iFora||4285", "iFora||4286", "iFora||515", "iFora||515A3", "iFora||5536", "iFora||5576", "iFora||5814", "iFora||6169", "iFora||BE6", "iFora||MM5", "iFora||RR9", "iFora||TEL", "iFora||YSC", "iFora||4811", "iFora||4990", "iFora||5173", "iFora||5300", "iFora||AVDD", "iFora||AVDТ", "iFora||MMR", "iFora||PYD", "iFora||PullMe2MeSTEP", "iFora||PullSBPSTEP", "iFora||SetBankDefSTEP", "iFora||TransferC2CSTEP", "iFora||TransferMe2MeSTEP", "iFora||TransferArdshinClientP", "iFora||TransferArmBBClientP", "iFora||TransferEvocaClientP", "iFora||TransferIDClientP", "iFora||5090", "iFora||5091", "iFora||5092", "iFora||AAA", "iFora||MMM", "iFora||MMMSTEP", "iFora||5429", "iFora||6273", "iFora||6887", "iFora||7069"])
+        XCTAssertEqual(purefs, ["iVortex||Addressing", "iVortex||Addressless", "iVortex||ChangeOutgoing", "iVortex||ReturnOutgoing", "iVortex||4630", "iVortex||5872", "iVortex||C31", "iVortex||DEMO3841", "iVortex||DEMO4177", "iVortex||KSK", "iVortex||MOO2", "iVortex||PIK", "iVortex||RIZ", "iVortex||TNS", "iVortex||UKIRR", "iVortex||ULENR", "iVortex||4285", "iVortex||4286", "iVortex||515", "iVortex||515A3", "iVortex||5536", "iVortex||5576", "iVortex||5814", "iVortex||6169", "iVortex||BE6", "iVortex||MM5", "iVortex||RR9", "iVortex||TEL", "iVortex||YSC", "iVortex||4811", "iVortex||4990", "iVortex||5173", "iVortex||5300", "iVortex||AVDD", "iVortex||AVDТ", "iVortex||MMR", "iVortex||PYD", "iVortex||PullMe2MeSTEP", "iVortex||PullSBPSTEP", "iVortex||SetBankDefSTEP", "iVortex||TransferC2CSTEP", "iVortex||TransferMe2MeSTEP", "iVortex||TransferArdshinClientP", "iVortex||TransferArmBBClientP", "iVortex||TransferEvocaClientP", "iVortex||TransferIDClientP", "iVortex||5090", "iVortex||5091", "iVortex||5092", "iVortex||AAA", "iVortex||MMM", "iVortex||MMMSTEP", "iVortex||5429", "iVortex||6273", "iVortex||6887", "iVortex||7069"])
     }
     
     typealias OperatorData = OperatorGroupData.OperatorData
@@ -34,61 +34,61 @@ final class OperatorDataTestHelpersTests: XCTestCase {
     
     func test_data_helper() throws {
         
-        let data = OperatorData.data(for: "iFora||4285")
+        let data = OperatorData.data(for: "iVortex||4285")
 
         XCTAssertEqual(data?.name, "Билайн")
-        XCTAssertEqual(data?.code, "iFora||4285")
+        XCTAssertEqual(data?.code, "iVortex||4285")
         XCTAssertEqual(data?.operatorID, "a3_NUMBER_1_2")
     }
     
-    func test_data_iFora4285() throws {
+    func test_data_iVortex4285() throws {
         
-        let data = OperatorData.iFora4285
+        let data = OperatorData.iVortex4285
         
         XCTAssertEqual(data.name, "Билайн")
-        XCTAssertEqual(data.code, "iFora||4285")
+        XCTAssertEqual(data.code, "iVortex||4285")
         XCTAssertEqual(data.operatorID, "a3_NUMBER_1_2")
     }
     
-    func test_data_iFora4286() throws {
+    func test_data_iVortex4286() throws {
         
-        let data = OperatorData.iFora4286
+        let data = OperatorData.iVortex4286
         
         XCTAssertEqual(data.name, "МТС")
-        XCTAssertEqual(data.code, "iFora||4286")
+        XCTAssertEqual(data.code, "iVortex||4286")
         XCTAssertEqual(data.operatorID, "a3_NUMBER_1_2")
     }
     
-    func test_data_iFora515A3() throws {
+    func test_data_iVortex515A3() throws {
         
-        let data = OperatorData.iFora515A3
+        let data = OperatorData.iVortex515A3
         
         XCTAssertEqual(data.name, "Yota")
-        XCTAssertEqual(data.code, "iFora||515A3")
+        XCTAssertEqual(data.code, "iVortex||515A3")
         XCTAssertEqual(data.operatorID, nil)
     }
     
     // MARK: - Strings
     
-    func test_operatorData_iFora4285() throws {
+    func test_operatorData_iVortex4285() throws {
         
-        let operatorData = try operatorData(from: .operatorData_iFora4285)
+        let operatorData = try operatorData(from: .operatorData_iVortex4285)
         
-        XCTAssertEqual(operatorData, .iFora4285)
+        XCTAssertEqual(operatorData, .iVortex4285)
     }
     
-    func test_operatorData_iFora4286() throws {
+    func test_operatorData_iVortex4286() throws {
         
-        let operatorData = try operatorData(from: .operatorData_iFora4286)
+        let operatorData = try operatorData(from: .operatorData_iVortex4286)
         
-        XCTAssertEqual(operatorData, .iFora4286)
+        XCTAssertEqual(operatorData, .iVortex4286)
     }
     
-    func test_operatorData_iFora515A3() throws {
+    func test_operatorData_iVortex515A3() throws {
         
-        let operatorData = try operatorData(from: .operatorData_iFora515A3)
+        let operatorData = try operatorData(from: .operatorData_iVortex515A3)
         
-        XCTAssertEqual(operatorData, .iFora515A3)
+        XCTAssertEqual(operatorData, .iVortex515A3)
     }
     
     // MARK: - Helpers
@@ -107,22 +107,22 @@ final class OperatorDataTestHelpersTests: XCTestCase {
 
 extension OperatorGroupData.OperatorData {
     
-    static let iFora4285:  Self = .data(for: "iFora||4285")!
-    static let iFora4286:  Self = .data(for: "iFora||4286")!
-    static let iFora515A3: Self = .data(for: "iFora||515A3")!
+    static let iVortex4285:  Self = .data(for: "iVortex||4285")!
+    static let iVortex4286:  Self = .data(for: "iVortex||4286")!
+    static let iVortex515A3: Self = .data(for: "iVortex||515A3")!
     
     // transport
-    static let iForaGibdd:       Self = .data(for: Purefs.iForaGibdd)!
-    static let iForaMosParking:  Self = .data(for: Purefs.iForaMosParking)!
-    static let iForaPodorozhnik: Self = .data(for: Purefs.iForaPodorozhnik)!
-    static let iForaStrelka:     Self = .data(for: Purefs.iForaStrelka)!
+    static let iVortexGibdd:       Self = .data(for: Purefs.iVortexGibdd)!
+    static let iVortexMosParking:  Self = .data(for: Purefs.iVortexMosParking)!
+    static let iVortexPodorozhnik: Self = .data(for: Purefs.iVortexPodorozhnik)!
+    static let iVortexStrelka:     Self = .data(for: Purefs.iVortexStrelka)!
     // backend has  changes not reflected in local files
-    // TODO: change to `.data(for: Purefs.iForaTroika)!` after local resources update
-    static let iForaTroika:      Self = .data(for: "iFora||MMR")!
+    // TODO: change to `.data(for: Purefs.iVortexTroika)!` after local resources update
+    static let iVortexTroika:      Self = .data(for: "\(Config.puref)||MMR")!
     
     // Avtodor
-    static let iForaAVDD: Self = .data(for: Purefs.avtodorContract)!
-    static let iForaAVDТ: Self = .data(for: Purefs.avtodorTransponder)!
+    static let iVortexAVDD: Self = .data(for: Purefs.avtodorContract)!
+    static let iVortexAVDТ: Self = .data(for: Purefs.avtodorTransponder)!
     
     // helper
     static func data(for code: String) -> Self? {
@@ -130,6 +130,14 @@ extension OperatorGroupData.OperatorData {
         try? OperatorGroupData
             .fromBundle()
             .flatMap { $0.operators }
-            .first { $0.code == code }
+            .first { $0.code.normalizedOperatorCode() == code.normalizedOperatorCode() }
+    }
+}
+
+private extension String {
+    
+    func normalizedOperatorCode() -> String {
+        
+        self.replacingOccurrences(of: "iVortex", with: Config.puref)
     }
 }

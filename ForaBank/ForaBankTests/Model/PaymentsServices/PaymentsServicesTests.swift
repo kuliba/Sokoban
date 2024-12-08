@@ -21,7 +21,7 @@ final class PaymentsServicesTests: XCTestCase {
     
     func test_init_internetTVPaymentsOperator() throws {
         
-        let internetTV = try XCTUnwrap(Payments.Operator(rawValue: "iFora||1051001"))
+        let internetTV = try XCTUnwrap(Payments.Operator(rawValue: "\(Config.puref)||1051001"))
         
         XCTAssertEqual(internetTV, .internetTV)
     }
@@ -71,7 +71,7 @@ final class PaymentsServicesTests: XCTestCase {
     
     func test_init_servicePaymentsOperator() throws {
         
-        let internetTV = try XCTUnwrap(Payments.Operator(rawValue: "iFora||1031001"))
+        let internetTV = try XCTUnwrap(Payments.Operator(rawValue: "\(Config.puref)||1031001"))
         
         XCTAssertEqual(internetTV, .utility)
     }
@@ -212,7 +212,7 @@ final class PaymentsServicesTests: XCTestCase {
         
         do {
             let step = try await sut.makeLocalStep(
-                puref: "iFora||111",
+                puref: "iVortex||111",
                 additionalList: nil,
                 amount: 0,
                 stepIndex: 0
@@ -501,9 +501,9 @@ final class PaymentsServicesTests: XCTestCase {
         let sut = makeSUT()
         
         let header = sut.header(
-            operatorCode: "iFora||5576",
+            operatorCode: "iVortex||5576",
             operatorValue: .test(
-                code: "iFora||5576",
+                code: "iVortex||5576",
                 name: "test",
                 parentCode: "111",
                 synonymList: ["subtitle"]
@@ -623,7 +623,7 @@ extension Model {
     func makeLocalStepForInternetTV(stepIndex: Int, isSingle: Bool = false) async throws -> Payments.Operation.Step {
         
         return try await paymentsProcessLocalStepServicesStep0(
-            operatorCode: "iFora||5576",
+            operatorCode: "iVortex||5576",
             additionalList: nil,
             amount: 0, 
             productId: nil,
@@ -635,7 +635,7 @@ extension Model {
     func makeLocalStepForServices(stepIndex: Int, isSingle: Bool = false) async throws -> Payments.Operation.Step {
         
         return try await paymentsProcessLocalStepServicesStep0(
-            operatorCode: "iFora||C31",
+            operatorCode: "iVortex||C31",
             additionalList: nil,
             amount: 0,
             productId: nil,
@@ -687,7 +687,7 @@ extension Model {
     // MARK: - InternetTV
     func parameterListForInternetTV() -> [ParameterData] {
         
-        if let operationData = dictionaryAnywayOperator(for: "iFora||5576") {
+        if let operationData = dictionaryAnywayOperator(for: "iVortex||5576") {
             return operationData.parameterList
         }
         
@@ -726,7 +726,7 @@ extension Model {
     
     func parameterListForServices() -> [ParameterData] {
         
-        if let operationData = dictionaryAnywayOperator(for: "iFora||C31") {
+        if let operationData = dictionaryAnywayOperator(for: "iVortex||C31") {
             return operationData.parameterList
         }
         
@@ -773,7 +773,7 @@ func lastPayments() -> [PaymentServiceData] {
                                   amount: 100,
                                   date: date,
                                   paymentDate: "21.12.2021 11:04:26",
-                                  puref: "iFora||4285",
+                                  puref: "iVortex||4285",
                                   type: .internet,
                                   lastPaymentName: nil)
     

@@ -26,7 +26,7 @@ where IconView == Text {
                     observe: { _ in }
                 )
                 
-                return .init(viewModel: observing, config: .iFora)
+                return .init(viewModel: observing, config: .iVortex)
             }, 
             elementFactory: .preview
         )

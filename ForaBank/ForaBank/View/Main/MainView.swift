@@ -306,7 +306,7 @@ struct MainView<NavigationOperationView: View>: View {
             OpenAccountView(viewModel: openAccountViewModel)
             
         case let .clientInform(clientInform):
-            ClientInformListView(config: .iFora, info: clientInform.client)
+            ClientInformListView(config: .iVortex, info: clientInform.client)
         }
     }
     
@@ -377,15 +377,15 @@ private extension MainView {
         
         BannerPickerSectionStateItemView(
             item: item,
-            config: .iFora,
+            config: .iVortex,
             bannerView: { item in
                 
                 let label = viewFactory.makeGeneralIconView(.image(item.imageEndpoint))
-                    .frame(Config.iFora.size)
-                    .cornerRadius(Config.iFora.cornerRadius)
+                    .frame(Config.iVortex.size)
+                    .cornerRadius(Config.iVortex.cornerRadius)
                 
                 Button { viewModel.promoAction(item) } label: { label }
-                    .frame(Config.iFora.size)
+                    .frame(Config.iVortex.size)
                     .buttonStyle(PushButtonStyle())
                     .accessibilityIdentifier("mainActionBanner")
             },
@@ -534,7 +534,7 @@ extension MainViewFactory {
                 return .init(
                     viewModel: $0,
                     map: PublishingInfo.preview(info:),
-                    config: .iFora
+                    config: .iVortex
                 )
             },
             makeInfoViews: .default,

@@ -156,7 +156,7 @@ extension Model {
             carousel: carousel,
             actions: actions,
             factory: makeImageViewFactory(),
-            config: .iFora)
+            config: .iVortex)
     }
     
     func makeCarouselWithDotsView(
@@ -168,7 +168,7 @@ extension Model {
             carousel: carousel,
             actions: actions,
             factory: makeImageViewFactory(),
-            config: .iFora)
+            config: .iVortex)
     }
     
     func makeCarouselWithTabsView(
@@ -180,7 +180,7 @@ extension Model {
             carousel: carousel,
             actions: actions,
             factory: makeImageViewFactory(),
-            config: .iFora)
+            config: .iVortex)
     }
     
     func makeImageViewFactory() -> ImageViewFactory {

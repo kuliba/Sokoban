@@ -49,9 +49,9 @@ private extension PaymentProviderListView {
     ) -> some View {
         
         FooterView(
-            state: state ? .failure(.iFora) : .footer(.iFora),
+            state: state ? .failure(.iVortex) : .footer(.iVortex),
             event: binder.flow.handleFooterEvent(_:),
-            config: .iFora
+            config: .iVortex
         )
     }
     
@@ -74,7 +74,7 @@ private extension PaymentProviderListView {
                 LastPaymentLabel(
                     amount: latest.amount.map { "\($0) ₽" } ?? "",
                     title: latest.name,
-                    config: .iFora,
+                    config: .iVortex,
                     iconView: makeIconView(md5Hash: latest.md5Hash)
                 )
                 .contentShape(Rectangle())
@@ -101,7 +101,7 @@ private extension PaymentProviderListView {
                 OperatorLabel(
                     title: provider.name,
                     subtitle: provider.inn,
-                    config: .iFora,
+                    config: .iVortex,
                     iconView: makeIconView(md5Hash: provider.md5Hash)
                 )
                 .contentShape(Rectangle())

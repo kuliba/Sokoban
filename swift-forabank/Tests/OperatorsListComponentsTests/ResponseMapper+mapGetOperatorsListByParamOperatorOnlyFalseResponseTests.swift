@@ -95,13 +95,13 @@ final class ResponseMapper_mapGetOperatorsListByParamOperatorOnlyFalseResponseTe
         ])
         
         XCTAssertNoDiff(services.map(\.puref), [
-            "iForaNKORR||55177",
-            "iForaNKORR||66659",
-            "iForaNKORR||66681",
-            "iForaNKORR||66685",
-            "iForaNKORR||66689",
-            "iForaNKORR||66691",
-            "iForaNKORR||66692"
+            "iVortexNKORR||55177",
+            "iVortexNKORR||66659",
+            "iVortexNKORR||66681",
+            "iVortexNKORR||66685",
+            "iVortexNKORR||66689",
+            "iVortexNKORR||66691",
+            "iVortexNKORR||66692"
         ])
     }
     
@@ -115,7 +115,7 @@ final class ResponseMapper_mapGetOperatorsListByParamOperatorOnlyFalseResponseTe
         ])
         
         XCTAssertNoDiff(services.map(\.puref), [
-            "iForaNKORR||42358"
+            "iVortexNKORR||42358"
         ])
     }
     
@@ -148,37 +148,37 @@ private extension String {
             "customerId": "2792",
             "serviceList": [
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "55177",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-МИРНАЯ 3"
               },
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "66659",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-БУРАШЕВСКОЕ Ш 62"
               },
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "66681",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-П ЗАВОЛЖСКИЙ"
               },
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "66685",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-СТАРТОВАЯ 27"
               },
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "66689",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-БУРАШЕВСКОЕ Ш 64"
               },
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "66691",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-МОЖАЙСКОГО 62 К.1"
               },
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "66692",
                 "descr": "КОММУНАЛЬНЫЕ УСЛУГИ-БУРАШЕВСКОЕ Ш 66"
               }
@@ -208,7 +208,7 @@ private extension String {
             "customerId": "8798",
             "serviceList": [
               {
-                "channel": "iForaNKORR",
+                "channel": "iVortexNKORR",
                 "protocol": "42358",
                 "descr": "КАПРЕМОНТ (Р/С ...00024)"
               }

@@ -1,5 +1,5 @@
 //
-//  PaymentCompletionConfig+iFora.swift
+//  PaymentCompletionConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 30.07.2024.
@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentCompletionConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         statuses: .init(
             completed: .init(
                 content: .init(
@@ -190,7 +190,7 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
                     publisher: Just(.init(systemName: $0!)).eraseToAnyPublisher()
                 )
             },
-            config: .iFora
+            config: .iVortex
         )
     }
 }

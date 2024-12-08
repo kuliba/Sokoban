@@ -152,7 +152,7 @@ private extension TemplatesListViewHostingViewController {
                     op: foundedOperator,
                     additionalList: additionalList)
                 
-                if "iFora||AVDТ;iFora||AVDD".contains(parameterList.puref ?? "-1" ) == true {
+                if "\(Config.puref)||AVDТ;\(Config.puref)||AVDD".contains(parameterList.puref ?? "-1" ) == true {
                     
                     guard let controller = AvtodorDetailsFormController.storyboardInstance() else { return }
                     controller.operatorData = latestOpsDO.op
@@ -160,7 +160,7 @@ private extension TemplatesListViewHostingViewController {
                     controller.template = template
                     navigationController?.pushViewController(controller, animated: true)
                     
-                } else if parameterList.puref == "iFora||5173" {
+                } else if parameterList.puref == "\(Config.puref)||5173" {
                     
                     guard let controller = GIBDDFineDetailsFormController.storyboardInstance() else { return }
                     controller.operatorData = latestOpsDO.op

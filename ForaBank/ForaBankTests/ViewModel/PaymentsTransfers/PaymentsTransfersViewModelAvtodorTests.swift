@@ -13,7 +13,6 @@ final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
     func test_replacingAvtodors_shouldReturnSame_onNil() {
         
         let operators: [OperatorGroupData.OperatorData] = .transport
-        
         let result = operators.replacingAvtodors(with: nil)
         
         XCTAssertNoDiff(result, operators)
@@ -22,10 +21,9 @@ final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
     func test_replacingAvtodors_shouldSubstituteAvtodorsWithProvided_onNonNil() {
         
         let operators: [OperatorGroupData.OperatorData] = .transport
+        let result = operators.replacingAvtodors(with: .iVortex4285)
         
-        let result = operators.replacingAvtodors(with: .iFora4285)
-        
-        XCTAssertNoDiff(result, [.iFora4285] + .transportWithoutAvtodor)
+        XCTAssertNoDiff(result, [.iVortex4285] + .transportWithoutAvtodor)
     }
     
     // MARK: - Helpers Tests
@@ -43,7 +41,7 @@ final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
     func test_transportOperators_shouldHaveTransportParentCode() {
         
         let operators: [OperatorGroupData.OperatorData] = .transport
-        let transportParentCode = "iFora||1051062"
+        let transportParentCode = "iVortex||1051062"
         
         XCTAssertTrue(operators.map(\.parentCode).allSatisfy({ $0 == transportParentCode }))
         XCTAssertEqual(operators.map(\.parentCode).count, 7)
@@ -53,15 +51,15 @@ final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
 extension Array where Element == OperatorGroupData.OperatorData {
     
     static let transportWithoutAvtodor: Self = [
-        .iForaGibdd,
-        .iForaMosParking,
-        .iForaPodorozhnik,
-        .iForaStrelka,
-        .iForaTroika,
+        .iVortexGibdd,
+        .iVortexMosParking,
+        .iVortexPodorozhnik,
+        .iVortexStrelka,
+        .iVortexTroika,
     ]
     static let avtodors: Self = [
-        .iForaAVDD,
-        .iForaAVDТ,
+        .iVortexAVDD,
+        .iVortexAVDТ,
     ]
     static var transport: Self { .transportWithoutAvtodor + .avtodors }
 }

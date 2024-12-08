@@ -26,7 +26,7 @@ final class RequestFactory_makeGetPINConfirmationCodeRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://dmz-api-gate-test.innovation.ru/processing/cardInfo/v1/getPINConfirmationCode?sessionId=\(sessionID.sessionIDValue)"
+            "https://dmz-api-gate-test.\(Config.domen)/processing/cardInfo/v1/getPINConfirmationCode?sessionId=\(sessionID.sessionIDValue)"
         )
     }
     

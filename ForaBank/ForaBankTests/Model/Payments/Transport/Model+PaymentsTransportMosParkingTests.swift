@@ -21,7 +21,7 @@ extension Model {
         case 0:
             
             // useless call
-            _ = try await isSingleService(Purefs.iForaMosParking)
+            _ = try await isSingleService(Purefs.iVortexMosParking)
             
             let mosParkingListData = try await getMosParkingList()
             
@@ -86,7 +86,7 @@ final class Model_PaymentsTransportMosParkingTests: XCTestCase {
         
         XCTAssertNoDiff(
             serverAgentSpy.isSingleServiceRequestsPurefs,
-            [Purefs.iForaMosParking]
+            [Purefs.iVortexMosParking]
         )
     }
     
@@ -105,7 +105,7 @@ final class Model_PaymentsTransportMosParkingTests: XCTestCase {
         
         XCTAssertNoDiff(
             serverAgentSpy.isSingleServiceRequestsPurefs,
-            [Purefs.iForaMosParking]
+            [Purefs.iVortexMosParking]
         )
     }
     
@@ -124,7 +124,7 @@ final class Model_PaymentsTransportMosParkingTests: XCTestCase {
         
         XCTAssertNoDiff(
             serverAgentSpy.isSingleServiceRequestsPurefs,
-            [Purefs.iForaMosParking]
+            [Purefs.iVortexMosParking]
         )
     }
     

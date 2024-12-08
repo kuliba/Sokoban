@@ -132,7 +132,7 @@ struct PaymentCompleteView_Previews: PreviewProvider {
                     publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
                 )
             },
-            config: .iFora
+            config: .iVortex
         )
     }
 }

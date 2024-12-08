@@ -108,7 +108,7 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
                 amount: 999,
                 name: "ПАО Калужская сбытовая компания",
                 md5Hash: "aeacabf71618e6f66aac16ed3b1922f3",
-                puref: "iFora||KSK",
+                puref: "iVortex||KSK",
                 additionalItems: [
                     makeAdditionalItem(
                         fieldName: "account",
@@ -127,7 +127,7 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
                 amount: 777,
                 name: "МУП АГО АНГАРСКИЙ ВОДОКАНАЛ",
                 md5Hash: "1efeda3c9130101d4d88113853b03bb5",
-                puref: "iForaNKORR||18650",
+                puref: "iVortexNKORR||18650",
                 additionalItems: [
                     makeAdditionalItem(
                         fieldName: "1",
@@ -156,7 +156,7 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
                 amount: 6820,
                 name: "ООО БАЙКАЛЬСКАЯ ЭНЕРГЕТИЧЕСКАЯ КОМПАНИЯ",
                 md5Hash: "1efeda3c9130101d4d88113853b03bb5",
-                puref: "iForaNKORR||18631",
+                puref: "iVortexNKORR||18631",
                 additionalItems: [
                     makeAdditionalItem(
                         fieldName: "1",
@@ -324,7 +324,7 @@ private extension String {
             "date": 1693835513315,
             "type": "service",
             "amount": 999.00,
-            "puref": "iFora||KSK",
+            "puref": "iVortex||KSK",
             "lpName": null,
             "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
             "name": "ПАО Калужская сбытовая компания",
@@ -353,7 +353,7 @@ private extension String {
             "date": 1693835513315,
             "type": "non-service",
             "amount": 999.00,
-            "puref": "iFora||KSK",
+            "puref": "iVortex||KSK",
             "lpName": null,
             "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
             "name": "ПАО Калужская сбытовая компания",
@@ -382,7 +382,7 @@ private extension String {
       "date": 1719595161000,
       "type": "service",
       "amount": 777,
-      "puref": "iForaNKORR||18650",
+      "puref": "iVortexNKORR||18650",
       "lpName": null,
       "md5hash": "1efeda3c9130101d4d88113853b03bb5",
       "name": "МУП АГО АНГАРСКИЙ ВОДОКАНАЛ",
@@ -434,7 +434,7 @@ private extension String {
       "date": 1719463473000,
       "type": "service",
       "amount": 6820,
-      "puref": "iForaNKORR||18631",
+      "puref": "iVortexNKORR||18631",
       "lpName": null,
       "md5hash": "1efeda3c9130101d4d88113853b03bb5",
       "name": "ООО БАЙКАЛЬСКАЯ ЭНЕРГЕТИЧЕСКАЯ КОМПАНИЯ",

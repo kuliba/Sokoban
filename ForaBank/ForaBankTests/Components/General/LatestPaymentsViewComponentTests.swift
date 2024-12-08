@@ -153,15 +153,15 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
 extension String {
     
-    static let direct = "iFora||MIG"
-    static let directCard = "iFora||MIG||card"
-    static let contact = "iFora||Addressless"
-    static let contactCash = "iFora||Addressing||cash"
-    static let contactAccount = "iFora||Addressing||account"
-    static let dkm = "iFora||DKM"
-    static let dkq = "iFora||DKQ"
-    static let dkr = "iFora||DKR"
-    static let pw0 = "iFora||PW0"
+    static let direct = "\(Config.puref)||MIG"
+    static let directCard = "\(Config.puref)||MIG||card"
+    static let contact = "\(Config.puref)||Addressless"
+    static let contactCash = "\(Config.puref)||Addressing||cash"
+    static let contactAccount = "\(Config.puref)||Addressing||account"
+    static let dkm = "\(Config.puref)||DKM"
+    static let dkq = "\(Config.puref)||DKQ"
+    static let dkr = "\(Config.puref)||DKR"
+    static let pw0 = "\(Config.puref)||PW0"
 }
 
 extension Array where Element == PaymentServiceData.AdditionalListData {
@@ -175,7 +175,7 @@ extension Array where Element == PaymentServiceData.AdditionalListData {
         .init(
             fieldTitle: nil,
             fieldName: "DIRECT_BANKS",
-            fieldValue: "iFora||TransferEvocaClient12",
+            fieldValue: "\(Config.puref)||TransferEvocaClient12",
             svgImage: nil),
         .init(
             fieldTitle: nil,

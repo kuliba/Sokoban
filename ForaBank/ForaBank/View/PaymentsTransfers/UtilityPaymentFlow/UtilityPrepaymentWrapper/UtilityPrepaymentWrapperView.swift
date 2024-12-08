@@ -71,9 +71,9 @@ private extension UtilityPrepaymentWrapperView {
     ) -> some View {
         
         FooterView(
-            state: isFailure ? .failure(.iFora) : .footer(.iFora),
+            state: isFailure ? .failure(.iVortex) : .footer(.iVortex),
             event: { completionEvent($0.event) },
-            config: .iFora
+            config: .iVortex
         )
     }
     
@@ -88,7 +88,7 @@ private extension UtilityPrepaymentWrapperView {
                 LastPaymentLabel(
                     amount: "\(latestPayment.amount) ₽",
                     title: latestPayment.name,
-                    config: .iFora,
+                    config: .iVortex,
                     iconView: makeIconView(latestPayment.md5Hash)
                 )
                 .contentShape(Rectangle())
@@ -107,7 +107,7 @@ private extension UtilityPrepaymentWrapperView {
                 OperatorLabel(
                     title: `operator`.title,
                     subtitle: "ИНН \(`operator`.inn)",
-                    config: .iFora,
+                    config: .iVortex,
                     iconView: makeIconView(`operator`.icon)
                 )
                 .contentShape(Rectangle())

@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersCorporateContentViewConfig+iFora.swift
+//  PaymentsTransfersCorporateContentViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 04.09.2024.
@@ -9,7 +9,7 @@ import PayHubUI
 
 extension PaymentsTransfersCorporateContentViewConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         bannerSectionHeight: 124,
         header: .init(
             text: "Платежи",

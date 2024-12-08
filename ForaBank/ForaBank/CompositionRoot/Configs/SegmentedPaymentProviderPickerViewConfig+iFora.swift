@@ -1,5 +1,5 @@
 //
-//  SegmentedPaymentProviderPickerViewConfig+iFora.swift
+//  SegmentedPaymentProviderPickerViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -7,7 +7,7 @@
 
 extension SegmentedPaymentProviderPickerViewConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         background: .mainColorsGrayLightest,
         cornerRadius: 12,
         dividerColor: .bordersDivider,

@@ -233,7 +233,7 @@ struct UserAccountView: View {
         case let .managingSubscription(subscriptionViewModel):
             ManagingSubscriptionView(
                 subscriptionViewModel: subscriptionViewModel,
-                configurator: .iFora,
+                configurator: .iVortex,
                 footerImage: Image.ic72Sbp,
                 searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard
             )
@@ -269,7 +269,7 @@ struct UserAccountView: View {
         
         FastPaymentsSettingsWrapperView(
             viewModel: route.viewModel,
-            config: .iFora
+            config: .iVortex
         )
         .navigationBar(with: .fastPayments(
             action: { viewModel.event(.dismiss(.destination)) }
@@ -305,7 +305,7 @@ struct UserAccountView: View {
 
                 ManagingSubscriptionView(
                     subscriptionViewModel: viewModel.subscriptionsViewModel(),
-                    configurator: .iFora,
+                    configurator: .iVortex,
                     footerImage: Image.ic72Sbp,
                     searchCancelAction: {
                          
@@ -448,7 +448,7 @@ private struct OTPInputWrapperView<HeaderView: View>: View {
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
                 event: viewModel.event(_:),
-                config: .iFora,
+                config: .iVortex,
                 headerView: headerView
             )
         } else {

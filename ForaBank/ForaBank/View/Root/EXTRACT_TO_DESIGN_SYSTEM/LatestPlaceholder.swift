@@ -64,6 +64,6 @@ struct LatestPlaceholder_Previews: PreviewProvider {
         opacity: Double
     ) -> some View {
         
-        LatestPlaceholder(opacity: opacity, config: .iFora)
+        LatestPlaceholder(opacity: opacity, config: .iVortex)
     }
 }

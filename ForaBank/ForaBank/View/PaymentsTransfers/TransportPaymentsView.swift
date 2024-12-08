@@ -295,7 +295,7 @@ private extension OperatorGroupData.OperatorData {
     
     static let gibdd: Self = .init(
         city: nil,
-        code: Purefs.iForaGibdd,
+        code: Purefs.iVortexGibdd,
         isGroup: true,
         logotypeList: [],
         name: "Transport",

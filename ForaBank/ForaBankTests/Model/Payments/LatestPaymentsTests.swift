@@ -77,10 +77,10 @@ final class LatestPaymentsTests: XCTestCase {
     
     enum ServiceIdentifier: String {
         
-        case fssp   = "iFora||5429"
-        case fms    = "iFora||6887"
-        case fns    = "iFora||6273"
-        case fnsUin = "iFora||7069"
+        case fssp   = "iVortex||5429"
+        case fms    = "iVortex||6887"
+        case fns    = "iVortex||6273"
+        case fnsUin = "iVortex||7069"
     }
 }
 

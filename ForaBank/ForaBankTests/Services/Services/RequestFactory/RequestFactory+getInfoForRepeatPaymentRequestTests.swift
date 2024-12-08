@@ -13,7 +13,7 @@ final class RequestFactory_getInfoForRepeatPaymentRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetURL() throws {
         
-        let url = anyURL(string: "https://pl.innovation.ru/dbo/api/v3/rest/v1/getInfoForRepeatPayment")
+        let url = anyURL(string: "https://pl.\(Config.domen)/dbo/api/v3/rest/v1/getInfoForRepeatPayment")
         let request = try createRequest(url: url)
         
         XCTAssertNoDiff(request.url, url)

@@ -18,7 +18,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeTransferPayload_shouldThrow_onEmptyParameters() throws {
         
         let parameters: [PaymentsParameterRepresentable] = []
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
@@ -30,7 +30,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeTransferPayload_shouldThrow_onMissingParameterProduct() throws {
         
         let parameters: [PaymentsParameterRepresentable] = [makeParameterAmount()]
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
@@ -42,7 +42,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeTransferPayload_shouldThrow_onMissingParameterAmount() throws {
         
         let parameters: [PaymentsParameterRepresentable] = [makeParameterProduct()]
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
@@ -70,7 +70,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let parameters: [PaymentsParameterRepresentable] = [
             makeParameterProduct(), makeParameterAmount()
         ]
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { _ in nil })
@@ -79,18 +79,18 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         }
     }
     
-    func test_makeTransferPayload_shouldCreateTransferPayload_iFora4285() throws {
+    func test_makeTransferPayload_shouldCreateTransferPayload_iVortex4285() throws {
         
         let parameters: [PaymentsParameterRepresentable] = [
             makeParameterProduct(), makeParameterAmount()
         ]
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         let transferPayload = try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         
         XCTAssertEqual(transferPayload.amount, 99.0)
         XCTAssertEqual(transferPayload.check, false)
-        XCTAssertEqual(transferPayload.puref, "iFora||4285")
+        XCTAssertEqual(transferPayload.puref, "iVortex||4285")
         XCTAssertEqual(transferPayload.currencyAmount, "RUB")
         
         XCTAssertEqual(transferPayload.payer.cardId, 10000235538)
@@ -100,22 +100,22 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(transferPayload.payer.phoneNumber, nil)
         
         XCTAssertEqual(transferPayload.additional.first?.fieldid, 1)
-        XCTAssertEqual(transferPayload.additional.first?.fieldname, "iFora||4285")
+        XCTAssertEqual(transferPayload.additional.first?.fieldname, "iVortex||4285")
         XCTAssertEqual(transferPayload.additional.first?.fieldvalue, "+7 903 999-99-99")
     }
     
-    func test_makeTransferPayload_shouldCreateTransferPayload_iFora4286() throws {
+    func test_makeTransferPayload_shouldCreateTransferPayload_iVortex4286() throws {
         
         let parameters: [PaymentsParameterRepresentable] = [
             makeParameterProduct(), makeParameterAmount()
         ]
-        let payload: [DaDataPhoneData] = [.iFora4286]
+        let payload: [DaDataPhoneData] = [.iVortex4286]
         
         let transferPayload = try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         
         XCTAssertEqual(transferPayload.amount, 99.0)
         XCTAssertEqual(transferPayload.check, false)
-        XCTAssertEqual(transferPayload.puref, "iFora||4286")
+        XCTAssertEqual(transferPayload.puref, "iVortex||4286")
         XCTAssertEqual(transferPayload.currencyAmount, "RUB")
         
         XCTAssertEqual(transferPayload.payer.cardId, 10000235538)
@@ -125,7 +125,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(transferPayload.payer.phoneNumber, nil)
         
         XCTAssertEqual(transferPayload.additional.first?.fieldid, 1)
-        XCTAssertEqual(transferPayload.additional.first?.fieldname, "iFora||4286")
+        XCTAssertEqual(transferPayload.additional.first?.fieldname, "iVortex||4286")
         XCTAssertEqual(transferPayload.additional.first?.fieldvalue, "+7 919 161-96-58")
     }
         
@@ -134,7 +134,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
     func test_makeAnywayTransfer_shouldThrow_onEmptyParameters() throws {
         
         let sut = makeSUT()
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try sut.makeAnywayTransfer([], payload)
@@ -150,7 +150,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         
         let sut = makeSUT()
         let parameters = makeParameterAmount()
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try sut.makeAnywayTransfer([parameters], payload)
@@ -166,7 +166,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         
         let sut = makeSUT()
         let parameters = makeParameterProduct()
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         XCTAssertThrowsError(
             try sut.makeAnywayTransfer([parameters], payload)
@@ -199,7 +199,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let sut = makeSUT(localAgentDataStub: [:])
         let amount = makeParameterAmount()
         let product = makeParameterProduct()
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
 
         XCTAssertThrowsError(
             try sut.makeAnywayTransfer([amount, product], payload)
@@ -211,12 +211,12 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         }
     }
     
-    func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4285_9rub() throws {
+    func test_makeAnywayTransfer_shouldCreateTransferPayload_iVortex4285_9rub() throws {
         
         let sut = makeSUT()
         let amount = makeParameterAmount(sessionIDValue: 9.0)
         let product = makeParameterProduct(sessionIDValue: 10000184510)
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         let anywayTransfer = try sut.makeAnywayTransfer([amount, product], payload)
         
@@ -229,7 +229,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         
         let anywayPayload = anywayTransfer.payload
         
-        XCTAssertEqual(anywayPayload, .iFora_4285_9rub)
+        XCTAssertEqual(anywayPayload, .iVortex_4285_9rub)
         
         XCTAssertEqual(anywayPayload?.additional, [.a3_NUMBER_1_2_903_9999999])
         XCTAssertEqual(anywayPayload?.amount, 9)
@@ -238,15 +238,15 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayPayload?.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(anywayPayload?.payer, .init(withCardId: 10000184510))
         XCTAssertEqual(anywayPayload?.phoneNumber, "+7 903 999-99-99")
-        XCTAssertEqual(anywayPayload?.puref, "iFora||4285")
+        XCTAssertEqual(anywayPayload?.puref, "iVortex||4285")
     }
     
-    func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4285_10rub() throws {
+    func test_makeAnywayTransfer_shouldCreateTransferPayload_iVortex4285_10rub() throws {
         
         let sut = makeSUT()
         let amount = makeParameterAmount(sessionIDValue: 10.0)
         let product = makeParameterProduct(sessionIDValue: 10000184510)
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         let anywayTransfer = try sut.makeAnywayTransfer([amount, product], payload)
         
@@ -259,7 +259,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         
         let anywayPayload = anywayTransfer.payload
         
-        XCTAssertEqual(anywayPayload, .iFora_4285_10rub)
+        XCTAssertEqual(anywayPayload, .iVortex_4285_10rub)
         
         XCTAssertEqual(anywayPayload?.additional, [.a3_NUMBER_1_2_903_9999999])
         XCTAssertEqual(anywayPayload?.amount, 10)
@@ -268,15 +268,15 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayPayload?.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(anywayPayload?.payer, .init(withCardId: 10000184510))
         XCTAssertEqual(anywayPayload?.phoneNumber, "+7 903 999-99-99")
-        XCTAssertEqual(anywayPayload?.puref, "iFora||4285")
+        XCTAssertEqual(anywayPayload?.puref, "iVortex||4285")
     }
     
-    func test_makeAnywayTransfer_shouldCreateTransferPayload_iFora4286() throws {
+    func test_makeAnywayTransfer_shouldCreateTransferPayload_iVortex4286() throws {
         
         let sut = makeSUT()
         let amount = makeParameterAmount(sessionIDValue: 1)
         let product = makeParameterProduct(sessionIDValue: 10000184510)
-        let payload: [DaDataPhoneData] = [.iFora4286]
+        let payload: [DaDataPhoneData] = [.iVortex4286]
 
         let anywayTransfer = try sut.makeAnywayTransfer([amount, product], payload)
         
@@ -289,13 +289,13 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         
         let anywayPayload = anywayTransfer.payload
         
-        XCTAssertEqual(anywayPayload, .iFora_4286)
+        XCTAssertEqual(anywayPayload, .iVortex_4286)
 
         XCTAssertEqual(anywayPayload?.check, false)
         XCTAssertEqual(anywayPayload?.currencyAmount, "RUB")
         XCTAssertEqual(anywayPayload?.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(anywayPayload?.phoneNumber, "+7 919 161-96-58")
-        XCTAssertEqual(anywayPayload?.puref, "iFora||4286")
+        XCTAssertEqual(anywayPayload?.puref, "iVortex||4286")
         
         XCTAssertEqual(anywayPayload?.additional, [.a3_NUMBER_1_2_919_1619658])
 
@@ -320,7 +320,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(getPhoneInfo.payload?.phoneNumbersList, ["9039999999"])
         
         let payload = try await sut.execute(command: getPhoneInfo)
-        XCTAssertEqual(payload, [.iFora4285])
+        XCTAssertEqual(payload, [.iVortex4285])
     }
     
     func test_processLocalStep0_shouldReturnPayload_9191619658() async throws {
@@ -335,7 +335,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(getPhoneInfo.payload?.phoneNumbersList, ["9191619658"])
         
         let payload = try await sut.execute(command: getPhoneInfo)
-        XCTAssertEqual(payload, [.iFora4286])
+        XCTAssertEqual(payload, [.iVortex4286])
     }
     
     func test_processLocalStep0_shouldFail_onDaData_1234567890() async throws {
@@ -369,7 +369,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         
         let sut = makeSUT()
         let parameters = makeStep0Parameters()
-        let payload: [DaDataPhoneData] = [.iFora4285]
+        let payload: [DaDataPhoneData] = [.iVortex4285]
         
         let anywayTransfer = try sut.makeAnywayTransfer(parameters, payload)
         
@@ -490,8 +490,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
             "Array<OperatorGroupData>": .operatorGroupData,
         ],
         serverAgentDataStub: [String: DaDataPhoneData] = [
-            "9039999999": .iFora4285,
-            "9191619658": .iFora4286,
+            "9039999999": .iVortex4285,
+            "9191619658": .iVortex4286,
         ],
         essenceStub: ServerAgentStub.EssenceStub = .test,
         _ counts: [ProductType : Int] = [.card: 1],

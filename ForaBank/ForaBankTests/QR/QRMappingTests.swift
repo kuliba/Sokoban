@@ -33,6 +33,6 @@ class QRMappingTests: XCTestCase {
         //TODO: GENERAL_TECHCODE
         
         //TODO: operators count
-        //TODO: iFora||4747
+        //TODO: iVortex||4747
     }
 }

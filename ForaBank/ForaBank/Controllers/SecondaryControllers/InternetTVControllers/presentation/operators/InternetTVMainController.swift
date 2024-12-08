@@ -46,9 +46,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
             break
         case InternetTVMainController.msgPerformSegue:
-            if "iFora||AVDТ;iFora||AVDD".contains(InternetTVMainViewModel.latestOp?.op.puref ?? "-1" ) == true {
+            if "\(Config.puref)||AVDТ;\(Config.puref)||AVDD".contains(InternetTVMainViewModel.latestOp?.op.puref ?? "-1" ) == true {
                 performSegue(withIdentifier: "avtodor", sender: self)
-            } else if InternetTVMainViewModel.latestOp?.op.puref == "iFora||5173" {
+            } else if InternetTVMainViewModel.latestOp?.op.puref == "\(Config.puref)||5173" {
                 performSegue(withIdentifier: "gbdd", sender: self)
             } else {
                 performSegue(withIdentifier: "input", sender: self)
@@ -389,11 +389,11 @@ extension InternetTVMainController {
         searchController.searchBar.searchTextField.endEditing(true)
         
         let item = viewModel.arrCustomOrg[indexPath.row]
-        if (item.op?.puref == "iFora||4990") {
+        if (item.op?.puref == "\(Config.puref)||4990") {
             performSegue(withIdentifier: "mosparking", sender: self)
         } else if item.puref == "avtodor" {
             performSegue(withIdentifier: "avtodor", sender: self)
-        } else if item.op?.puref == "iFora||5173" {
+        } else if item.op?.puref == "\(Config.puref)||5173" {
             performSegue(withIdentifier: "gbdd", sender: self)
         } else {
             performSegue(withIdentifier: "input", sender: self)

@@ -48,12 +48,12 @@ extension AnywayPaymentFactoryComposer {
                     state: state,
                     event: event,
                     factory: elementFactory,
-                    config: .iFora
+                    config: .iVortex
                 )
             },
             makeFooterView: { footer in
                 
-                return .init(viewModel: footer, config: .iFora)
+                return .init(viewModel: footer, config: .iVortex)
             }
         )
     }
@@ -114,9 +114,9 @@ private extension AnywayPaymentFactoryComposer {
                     )
                 },
                 makeSelectedItemLabel: SelectedOptionView.init,
-                makeToggleLabel: { .init(state: $0, config: .iFora) }
+                makeToggleLabel: { .init(state: $0, config: .iVortex) }
             ),
-            config: .iFora(title: title)
+            config: .iVortex(title: title)
         )
     }
         
@@ -141,11 +141,11 @@ private extension AnywayPaymentFactoryComposer {
         
         return .init(
             viewModel: viewModel, 
-            config: .iFora,
+            config: .iVortex,
             iconView: { self.makeIconView(.md5Hash("sms")) },
             warningView: {
                 
-                OTPWarningView(text: viewModel.state.warning, config: .iFora)
+                OTPWarningView(text: viewModel.state.warning, config: .iVortex)
             }
         )
     }

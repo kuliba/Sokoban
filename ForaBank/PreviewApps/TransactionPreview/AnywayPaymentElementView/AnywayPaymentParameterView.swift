@@ -50,7 +50,7 @@ extension AnywayPaymentParameterView {
 
 extension InputConfig {
     
-    static var iFora: Self { .preview }
+    static var iVortex: Self { .preview }
 }
 
 // MARK: - Adapters

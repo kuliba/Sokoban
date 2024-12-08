@@ -62,11 +62,11 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let json = try Data(contentsOf: url)
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000184511, cardNumber: nil, phoneNumber: nil)
         let amount: Double?  = nil
-        let parameter1 = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM")], puref: "iFora||MIG")
+        let parameter1 = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM")], puref: "iVortex||MIG")
         
-        let parameter2 = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12")], puref: "iFora||MIG")
+        let parameter2 = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iVortex||TransferEvocaClient12")], puref: "iVortex||MIG")
         
-        let parameter3 = TransferAnywayData(amount: 100.05, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12"), .init(fieldid: 3, fieldname: "RECP", fieldvalue: "+37496127188"), .init(fieldid: 4, fieldname: "##CURR", fieldvalue: "RUB")], puref: "iFora||MIG")
+        let parameter3 = TransferAnywayData(amount: 100.05, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iVortex||TransferEvocaClient12"), .init(fieldid: 3, fieldname: "RECP", fieldvalue: "+37496127188"), .init(fieldid: 4, fieldname: "##CURR", fieldvalue: "RUB")], puref: "iVortex||MIG")
         
         let paymentTemplate = PaymentTemplateData.init(groupName: "Перевод МИГ", name: "Перевод между счетами", parameterList: [parameter1, parameter2, parameter3], paymentTemplateId: 2513, productTemplate: nil, sort: 4, svgImage: .init(description: "image"), type: .newDirect)
         

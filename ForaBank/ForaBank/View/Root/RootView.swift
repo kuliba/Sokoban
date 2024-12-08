@@ -442,7 +442,7 @@ private extension RootViewFactory {
             .init(
                 viewModel: $0,
                 map: PublishingInfo.preview(info:),
-                config: .iFora
+                config: .iVortex
             )
         }
         

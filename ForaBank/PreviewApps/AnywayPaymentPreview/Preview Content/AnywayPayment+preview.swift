@@ -14,6 +14,6 @@ extension AnywayPayment {
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,
-        puref: "iFora || abc"
+        puref: "iVortex || abc"
     )
 }

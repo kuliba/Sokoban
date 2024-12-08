@@ -1,5 +1,5 @@
 //
-//  SelectorViewConfig+iFora.swift
+//  SelectorViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 15.06.2024.
@@ -9,7 +9,7 @@ import SelectorComponent
 
 extension SelectorViewConfig {
     
-    static func iFora(title: String) -> Self {
+    static func iVortex(title: String) -> Self {
         
         return .init(
             title: .init(

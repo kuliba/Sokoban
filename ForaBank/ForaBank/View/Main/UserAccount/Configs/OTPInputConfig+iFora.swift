@@ -1,5 +1,5 @@
 //
-//  OTPInputConfig+iFora.swift
+//  OTPInputConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 12.02.2024.
@@ -10,8 +10,8 @@ import UIPrimitives
 
 extension OTPInputConfig {
     
-    static let iFora: Self = .init(
-        button: .iForaConfirm,
+    static let iVortex: Self = .init(
+        button: .iVortexConfirm,
         digitModel: .init(
             digitConfig: .init(
                 textFont: .textH0B32402(),
@@ -39,7 +39,7 @@ extension OTPInputConfig {
 
 extension ButtonConfig {
     
-    static let iForaConfirm: Self = .init(
+    static let iVortexConfirm: Self = .init(
         active: .init(
             backgroundColor: .init(hex: "#FF3636"),
             text: .init(

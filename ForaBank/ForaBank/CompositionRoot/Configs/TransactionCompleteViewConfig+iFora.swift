@@ -1,5 +1,5 @@
 //
-//  TransactionCompleteViewConfig+iFora.swift
+//  TransactionCompleteViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 30.07.2024.
@@ -7,7 +7,7 @@
 
 extension TransactionCompleteViewConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         amountConfig: .init(
             textFont: .textH1Sb24322(),
             textColor: .textSecondary

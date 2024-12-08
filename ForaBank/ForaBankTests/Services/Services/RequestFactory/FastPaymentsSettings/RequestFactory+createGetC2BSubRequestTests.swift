@@ -16,7 +16,7 @@ final class RequestFactory_createGetC2BSubRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/binding/v2/getC2BSub"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/binding/v2/getC2BSub"
         )
     }
     

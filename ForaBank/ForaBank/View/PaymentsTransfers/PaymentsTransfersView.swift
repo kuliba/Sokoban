@@ -583,7 +583,7 @@ private extension PaymentsTransfersView {
             contentView: {
                 
                 FooterView(
-                    state: .failure(.iFora),
+                    state: .failure(.iVortex),
                     event: { event in
                         
                         switch event {
@@ -594,7 +594,7 @@ private extension PaymentsTransfersView {
                             break
                         }
                     },
-                    config: .iFora
+                    config: .iVortex
                 )
             },
             destinationView: operatorFailureDestinationView

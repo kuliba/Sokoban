@@ -17,7 +17,7 @@ final class RequestFactory_createGetAllLatestPaymentsV3RequestTests: XCTestCase 
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/v3/getAllLatestPayments"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/v3/getAllLatestPayments"
         )
     }
     
@@ -28,7 +28,7 @@ final class RequestFactory_createGetAllLatestPaymentsV3RequestTests: XCTestCase 
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/v3/getAllLatestPayments?isPhonePayments=true"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/v3/getAllLatestPayments?isPhonePayments=true"
         )
     }
     
@@ -39,7 +39,7 @@ final class RequestFactory_createGetAllLatestPaymentsV3RequestTests: XCTestCase 
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/v3/getAllLatestPayments?isPhonePayments=true&isCountriesPayments=true"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/v3/getAllLatestPayments?isPhonePayments=true&isCountriesPayments=true"
         )
     }
     

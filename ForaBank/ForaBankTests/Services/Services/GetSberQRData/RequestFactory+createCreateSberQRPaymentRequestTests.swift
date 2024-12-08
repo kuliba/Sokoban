@@ -17,7 +17,7 @@ final class RequestFactory_createCreateSberQRPaymentRequestTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/binding/v1/createSberQRPayment"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/binding/v1/createSberQRPayment"
         )
     }
     

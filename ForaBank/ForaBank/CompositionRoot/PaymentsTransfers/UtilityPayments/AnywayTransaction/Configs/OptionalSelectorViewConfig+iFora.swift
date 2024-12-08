@@ -1,5 +1,5 @@
 //
-//  OptionalSelectorViewConfig+iFora.swift
+//  OptionalSelectorViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 08.08.2024.
@@ -9,7 +9,7 @@ import OptionalSelectorComponent
 
 extension OptionalSelectorViewConfig {
     
-    static func iFora(title: String) -> Self {
+    static func iVortex(title: String) -> Self {
         
         return .init(
             title: .init(

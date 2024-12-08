@@ -226,8 +226,8 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
 private extension StartAnywayPaymentPayload {
     
     // Можно тестировать на прелайф
-    // "iFora||MOO2" // single amount
-    // "iFora||7602" // multi amount
+    // "iVortex||MOO2" // single amount
+    // "iVortex||7602" // multi amount
     var puref: String {
         
         switch self {

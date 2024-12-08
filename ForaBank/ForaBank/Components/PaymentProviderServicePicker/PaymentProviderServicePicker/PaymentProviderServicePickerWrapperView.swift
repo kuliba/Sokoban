@@ -72,7 +72,7 @@ private extension PaymentProviderServicePickerWrapperView {
             LabelWithIcon(
                 title: item.service.name,
                 subtitle: nil,
-                config: .iFora,
+                config: .iVortex,
                 iconView: iconView(nil)
             )
         }
@@ -90,9 +90,9 @@ private extension PaymentProviderServicePickerWrapperView {
         failureView: {
             
             FooterView(
-                state: .failure(.iFora),
+                state: .failure(.iVortex),
                 event: { print($0) },
-                config: .iFora
+                config: .iVortex
             )
         },
         iconView: { item in
@@ -102,6 +102,6 @@ private extension PaymentProviderServicePickerWrapperView {
                     Just(.init(systemName: "photo")).eraseToAnyPublisher()
             )
         },
-        config: .iFora
+        config: .iVortex
     )
 }

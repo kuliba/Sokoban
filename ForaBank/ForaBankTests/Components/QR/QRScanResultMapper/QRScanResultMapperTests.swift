@@ -301,7 +301,7 @@ final class QRScanResultMapperTests: XCTestCase {
         )
     }
     
-    private var serviceParentCode: String { "iFora||1031001" }
+    private var serviceParentCode: String { "\(Config.puref)||1031001" }
     
     private func makeMultiple(
         segment: String = anyMessage()

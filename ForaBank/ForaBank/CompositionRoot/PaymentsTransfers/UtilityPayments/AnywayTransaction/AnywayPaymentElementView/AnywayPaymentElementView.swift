@@ -72,7 +72,7 @@ private extension AnywayPaymentElementView {
         
         switch widget {
         case let .info(info):
-            AnywayInfoView(fields: info.fields, config: .iFora)
+            AnywayInfoView(fields: info.fields, config: .iVortex)
                 .paddedRoundedBackground()
             
         case let .otp(viewModel):
@@ -85,7 +85,7 @@ private extension AnywayPaymentElementView {
                 .paddedRoundedBackground()
             
         case let .product(viewModel):
-            ProductSelectWrapperView(viewModel: viewModel, config: .iFora)
+            ProductSelectWrapperView(viewModel: viewModel, config: .iVortex)
                 .paddedRoundedBackground()
         }
     }

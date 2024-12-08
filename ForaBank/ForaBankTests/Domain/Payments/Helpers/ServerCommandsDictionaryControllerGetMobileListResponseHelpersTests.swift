@@ -18,7 +18,7 @@ final class ServerCommandsDictionaryControllerGetMobileListResponseHelpersTests:
         let purefs = response.data?.mobileList.map(\.puref)
         let shortNames = response.data?.mobileList.map(\.shortName)
         
-        XCTAssertEqual(purefs, ["iFora||4285", "iFora||4286", "iFora||515A3", "iFora||5814", "iFora||5576", "iFora||6169"])
+        XCTAssertEqual(purefs, ["iVortex||4285", "iVortex||4286", "iVortex||515A3", "iVortex||5814", "iVortex||5576", "iVortex||6169"])
         XCTAssertEqual(shortNames, ["Билайн", "МТС", "Yota", "Мегафон", "ТЕЛЕ2", "Тинькофф Мобайл"])
     }
 }

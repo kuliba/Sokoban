@@ -30,7 +30,7 @@ struct InputStateWrapperView: View {
         InputView(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: .iFora,
+            config: .iVortex,
             iconView: factory.makeIconView
         )
     }

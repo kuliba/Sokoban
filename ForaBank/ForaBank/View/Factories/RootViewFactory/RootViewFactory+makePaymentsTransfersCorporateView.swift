@@ -50,7 +50,7 @@ extension RootViewFactory {
                 },
                 makeTransfersSectionView: makeTransfersSectionView
             ),
-            config: .iFora
+            config: .iVortex
         )
     }
     

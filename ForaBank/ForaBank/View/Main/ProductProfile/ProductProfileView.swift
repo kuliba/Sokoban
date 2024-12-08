@@ -127,7 +127,7 @@ struct ProductProfileView: View {
                             viewModel.event(.history(.dismiss))
                         }
                     },
-                    config: .iFora,
+                    config: .iVortex,
                     apply: { lowerDate, upperDate in
                         if let lowerDate = lowerDate,
                            let upperDate = upperDate {
@@ -159,7 +159,7 @@ struct ProductProfileView: View {
                     
                     FilterWrapperView(
                         model: filter,
-                        config: .iFora
+                        config: .iVortex
                     ) {
                         viewModel.event(.history(.filter(.period($0))))
                     } buttonsView: { hasFilter in
@@ -196,7 +196,7 @@ struct ProductProfileView: View {
                                         viewModel.event(.history(.filter(.dismissCalendar)))
                                     }
                                 },
-                                config: .iFora,
+                                config: .iVortex,
                                 apply: { lowerDate, upperDate in
                                     
                                     if let lowerDate = lowerDate,

@@ -1,5 +1,5 @@
 //
-//  SelectConfig+iFora.swift
+//  SelectConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 14.06.2024.
@@ -9,7 +9,7 @@ import PaymentComponents
 
 extension SelectConfig {
     
-    static func iFora(title: String, placeholder: String) -> Self{
+    static func iVortex(title: String, placeholder: String) -> Self{
      
         .init(
             title: title,
@@ -20,14 +20,14 @@ extension SelectConfig {
             foregroundIcon: .iconGray,
             icon: .ic24FileHash,
             isSearchable: true,
-            optionConfig: .iFora
+            optionConfig: .iVortex
         )
     }
 }
 
 extension SelectConfig.OptionConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         icon: .ic24RadioDefolt,
         foreground: .buttonSecondaryHover,
         background: .clear,

@@ -169,7 +169,7 @@ private extension RootViewFactoryComposer {
                     style: .expanded
                 )
             },
-            config: .iFora
+            config: .iVortex
         )
     }
     
@@ -194,7 +194,7 @@ private extension RootViewFactoryComposer {
         
         return .init(
             viewModel: viewModel,
-            config: .iFora,
+            config: .iVortex,
             viewFactory: makeUserAccountViewFactory()
         )
     }
@@ -714,7 +714,7 @@ private extension RootViewFactoryComposer {
                 
                 self.makeIconView($0.map { .md5Hash(.init($0)) })
             },
-            config: .iFora
+            config: .iVortex
         )
     }
     
@@ -882,7 +882,7 @@ private extension RootViewFactoryComposer {
                                 MarketShowcaseContentView(
                                     state: contentState,
                                     event: contentEvent,
-                                    config: .iFora,
+                                    config: .iVortex,
                                     factory: .init(
                                         makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
                                         makeLandingView: {

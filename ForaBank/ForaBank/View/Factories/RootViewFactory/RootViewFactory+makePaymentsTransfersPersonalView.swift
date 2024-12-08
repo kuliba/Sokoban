@@ -50,7 +50,7 @@ extension RootViewFactory {
                 },
                 makeTransfersView: makePaymentsTransfersTransfersView
             ),
-            config: .iFora
+            config: .iVortex
         )
     }
 }

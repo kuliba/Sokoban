@@ -119,7 +119,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
                 name: "АКАДО Телеком",
                 paymentDate: .init(timeIntervalSince1970: 1725603273000 / 1000),
                 paymentFlow: .standard,
-                puref: "iFora||CTV",
+                puref: "iVortex||CTV",
                 type: .internet
             ),
             makeService(
@@ -138,7 +138,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
                 name: "ПАО ТНС энерго Ярославль",
                 paymentDate: .init(timeIntervalSince1970: 1725601828000 / 1000),
                 paymentFlow: .standard,
-                puref: "iFora||TNS",
+                puref: "iVortex||TNS",
                 type: .service
             ),
         ])
@@ -155,7 +155,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             name: "ПАО Калужская сбытовая компания",
             paymentDate: .init(timeIntervalSince1970: 1725601648000 / 1000),
             paymentFlow: .standard,
-            puref: "iFora||KSK",
+            puref: "iVortex||KSK",
             type: .service
         ))
         
@@ -170,7 +170,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             name: "Автодор Платные дороги (по договору)",
             paymentDate: .init(timeIntervalSince1970: 1725346984000 / 1000),
             paymentFlow: .transport,
-            puref: "iFora||AVDD",
+            puref: "iVortex||AVDD",
             type: .transport
         ))
         
@@ -193,7 +193,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             name: "ФНС",
             paymentDate: .init(timeIntervalSince1970: 1725023735000 / 1000),
             paymentFlow: .taxAndStateServices,
-            puref: "iFora||6273",
+            puref: "iVortex||6273",
             type: .taxAndStateService
         ))
         
@@ -205,7 +205,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             detail: .sfp,
             paymentDate: .init(timeIntervalSince1970: 1724054929000 / 1000),
             phoneNumber: "0079191619658",
-            puref: "iFora||TransferC2CSTEP",
+            puref: "iVortex||TransferC2CSTEP",
             type: .phone
         ))
     }

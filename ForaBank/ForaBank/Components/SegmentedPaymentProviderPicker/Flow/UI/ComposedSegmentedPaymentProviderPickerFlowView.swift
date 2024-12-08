@@ -44,7 +44,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
         LabelWithIcon(
             title: provider.title,
             subtitle: provider.subtitle,
-            config: .iFora,
+            config: .iVortex,
             iconView: iconView(provider.icon)
         )
     }

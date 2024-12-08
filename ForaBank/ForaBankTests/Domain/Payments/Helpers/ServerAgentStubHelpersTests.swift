@@ -10,43 +10,48 @@ import XCTest
 
 final class ServerAgentStubHelpersTests: XCTestCase {
     
-    func test_essenceStub_shouldHaveMatchingFields() {
-        
-        // MARK: - iFora_4285_9rub
-        
-        XCTAssertNotEqual(
-            ServerAgentStub.Essence.iFora_4285_9rub.phoneNumber,
-            ServerAgentStub.AnywayTransferResponse.iFora_4285_9rub.phoneNumber,
-            "Expected to have nil data field for error case."
-        )
-        
-        // MARK: - iFora_4285_10rub
-        
-        XCTAssertEqual(
-            ServerAgentStub.Essence.iFora_4285_10rub.phoneNumber,
-            ServerAgentStub.AnywayTransferResponse.iFora_4285_10rub.phoneNumber
-        )
-        
-        // MARK: - iFora_4286
-        
-        XCTAssertEqual(
-            ServerAgentStub.Essence.iFora_4286.phoneNumber,
-            ServerAgentStub.AnywayTransferResponse.iFora_4286.phoneNumber
-        )
-        
-        // MARK: - iFora_515A3_1rub
+    // MARK: - test essenceStub
+    
+    func test_iVortex_4285_9rub_shouldHaveDifferentPhoneNumbers() {
         
         XCTAssertNotEqual(
-            ServerAgentStub.Essence.iFora_515A3_1rub.phoneNumber,
-            ServerAgentStub.AnywayTransferResponse.iFora_515A3_1rub.phoneNumber,
+            ServerAgentStub.Essence.iVortex_4285_9rub.phoneNumber,
+            ServerAgentStub.AnywayTransferResponse.iVortex_4285_9rub.phoneNumber,
             "Expected to have nil data field for error case."
-        )
-        
-        // MARK: - iFora_515A3_10rub
-        
-        XCTAssertEqual(
-            ServerAgentStub.Essence.iFora_515A3_10rub.phoneNumber,
-            ServerAgentStub.AnywayTransferResponse.iFora_515A3_10rub.phoneNumber
         )
     }
+
+    func test_iVortex_4285_10rub_shouldHaveMatchingPhoneNumbers() {
+        
+        XCTAssertEqual(
+            ServerAgentStub.Essence.iVortex_4285_10rub.phoneNumber,
+            ServerAgentStub.AnywayTransferResponse.iVortex_4285_10rub.phoneNumber
+        )
+    }
+
+    func test_iVortex_4286_shouldHaveMatchingPhoneNumbers() {
+        
+        XCTAssertEqual(
+            ServerAgentStub.Essence.iVortex_4286.phoneNumber,
+            ServerAgentStub.AnywayTransferResponse.iVortex_4286.phoneNumber
+        )
+    }
+
+    func test_iVortex_515A3_1rub_shouldHaveDifferentPhoneNumbers() {
+        
+        XCTAssertNotEqual(
+            ServerAgentStub.Essence.iVortex_515A3_1rub.phoneNumber,
+            ServerAgentStub.AnywayTransferResponse.iVortex_515A3_1rub.phoneNumber,
+            "Expected to have nil data field for error case."
+        )
+    }
+
+    func test_iVortex_515A3_10rub_shouldHaveMatchingPhoneNumbers() {
+        
+        XCTAssertEqual(
+            ServerAgentStub.Essence.iVortex_515A3_10rub.phoneNumber,
+            ServerAgentStub.AnywayTransferResponse.iVortex_515A3_10rub.phoneNumber
+        )
+    }
+
 }

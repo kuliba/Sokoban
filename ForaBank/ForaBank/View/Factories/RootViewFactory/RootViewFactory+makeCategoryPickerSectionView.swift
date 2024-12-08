@@ -62,7 +62,7 @@ extension RootViewFactory {
                 CategoryPickerSectionContentView(
                     state: state,
                     event: event,
-                    config: .iFora,
+                    config: .iVortex,
                     itemLabel: itemLabel
                 )
             }
@@ -88,7 +88,7 @@ extension RootViewFactory {
         
         CategoryPickerSectionStateItemLabel(
             item: item,
-            config: .iFora,
+            config: .iVortex,
             categoryIcon: categoryIcon,
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )

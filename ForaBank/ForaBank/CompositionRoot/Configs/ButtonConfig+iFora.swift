@@ -1,5 +1,5 @@
 //
-//  ButtonConfig+iFora.swift
+//  ButtonConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 12.02.2024.
@@ -9,7 +9,7 @@ import UIPrimitives
 
 extension ButtonConfig {
     
-    static let iForaFooter: Self = .init(
+    static let iVortexFooter: Self = .init(
         active: .init(
             backgroundColor: .mainColorsRed,
             text: .init(
@@ -27,7 +27,7 @@ extension ButtonConfig {
         buttonHeight: 56
     )
     
-    static let iForaMain: Self = .init(
+    static let iVortexMain: Self = .init(
         active: .init(
             backgroundColor: .mainColorsRed,
             text: .init(

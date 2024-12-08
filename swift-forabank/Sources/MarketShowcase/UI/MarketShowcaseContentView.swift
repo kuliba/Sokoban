@@ -97,7 +97,7 @@ where RefreshView == Text,
     static let preview = MarketShowcaseContentView(
         state: .init(status: .initiate),
         event: {_ in },
-        config: .iFora,
+        config: .iVortex,
         factory: .init(
             makeRefreshView: { Text("Refresh") },
             makeLandingView: { Text($0) }

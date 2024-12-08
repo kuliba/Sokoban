@@ -440,7 +440,7 @@ class MeToMeRequestController: UIViewController {
                 "payer" : ["cardId" : nil,
                            "cardNumber" : nil,
                            "accountId" : nil],
-                "puref" : "iFora||TransferC2CSTEP",
+                "puref" : "\(Config.puref)||TransferC2CSTEP",
                 "additional" :
                     [["fieldid": 1, "fieldname": "RecipientID",     "fieldvalue": viewModel.RecipientID],
                      ["fieldid": 2, "fieldname": "BankRecipientID", "fieldvalue": bankRecipientID],

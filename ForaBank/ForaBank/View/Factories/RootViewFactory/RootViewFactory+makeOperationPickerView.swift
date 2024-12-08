@@ -72,12 +72,12 @@ extension RootViewFactory {
         
         OperationPickerStateItemLabel(
             item: item,
-            config: .iFora,
+            config: .iVortex,
             placeholderView:  {
                 
                 LatestPlaceholder(
                     opacity: 1,
-                    config: OperationPickerStateItemLabelConfig.iFora.latestPlaceholder
+                    config: OperationPickerStateItemLabelConfig.iVortex.latestPlaceholder
                 )
             }
         )

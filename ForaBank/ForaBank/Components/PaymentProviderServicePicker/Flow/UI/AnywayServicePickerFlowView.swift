@@ -108,14 +108,14 @@ private extension AnywayServicePickerFlowView {
             model: flowModel.state.content,
             failureView: failureView,
             iconView: factory.makeIconView,
-            config: .iFora
+            config: .iVortex
         )
     }
     
     func failureView() -> FooterView {
         
         FooterView(
-            state: .failure(.iFora),
+            state: .failure(.iVortex),
             event: { event in
                 
                 switch event {
@@ -126,7 +126,7 @@ private extension AnywayServicePickerFlowView {
                     flowModel.event(.payByInstruction)
                 }
             },
-            config: .iFora
+            config: .iVortex
         )
     }
     

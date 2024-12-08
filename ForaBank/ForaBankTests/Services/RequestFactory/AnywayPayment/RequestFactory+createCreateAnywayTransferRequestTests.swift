@@ -17,7 +17,7 @@ final class RequestFactory_createCreateAnywayTransferRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/transfer/createAnywayTransfer"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/transfer/createAnywayTransfer"
         )
     }
     

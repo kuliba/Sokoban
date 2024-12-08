@@ -1,5 +1,5 @@
 //
-//  CarouselComponentConfig+iFora.swift
+//  CarouselComponentConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Andryusina Nataly on 30.03.2024.
@@ -10,7 +10,7 @@ import SwiftUI
 
 extension CarouselComponentConfig {
     
-    static let iForaSmall: Self = .init(
+    static let iVortexSmall: Self = .init(
         carousel: .init(
             item: .init(
                 spacing: 13,

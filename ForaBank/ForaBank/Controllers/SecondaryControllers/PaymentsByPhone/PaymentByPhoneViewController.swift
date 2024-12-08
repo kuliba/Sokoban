@@ -480,7 +480,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                 "cardNumber" : nil,
                 "accountId" : card?.productType == "ACCOUNT" ? (card?.id ?? 0) : nil
             ],
-            "puref" : "iFora||TransferC2CSTEP",
+            "puref" : "\(Config.puref)||TransferC2CSTEP",
             "additional" : [
                 [
                     "fieldid": "1",

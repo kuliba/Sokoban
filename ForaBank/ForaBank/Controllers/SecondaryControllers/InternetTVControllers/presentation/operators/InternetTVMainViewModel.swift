@@ -20,7 +20,7 @@ class InternetTVMainViewModel {
             }
         }
     }
-    var customGroups = [CustomGroup(name: "Автодор", puref: "avtodor", childPurefs: "iFora||AVDТ;iFora||AVDD", parentCode: "iFora||1051062")]
+    var customGroups = [CustomGroup(name: "Автодор", puref: "avtodor", childPurefs: "\(Config.puref)||AVDТ;\(Config.puref)||AVDD", parentCode: "\(Config.puref)||1051062")]
     var arrCustomOrg = [CustomGroup]()
 
 

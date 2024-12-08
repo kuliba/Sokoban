@@ -49,12 +49,12 @@ extension RootViewFactory {
         
         BannerPickerSectionStateItemView(
             item: item,
-            config: .iFora,
+            config: .iVortex,
             bannerView: { item in
                 
                 let label = makeGeneralIconView(.image(item.imageEndpoint))
-                    .frame(Config.iFora.size)
-                    .cornerRadius(Config.iFora.cornerRadius)
+                    .frame(Config.iVortex.size)
+                    .cornerRadius(Config.iVortex.cornerRadius)
                 
                 if isCorporate(),
                    let url = item.orderURL {

@@ -1,5 +1,5 @@
 //
-//  ProductSelectConfig+iFora.swift
+//  ProductSelectConfig+iVortex.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 21.05.2024.
@@ -10,7 +10,7 @@ import SwiftUI
 
 extension ProductSelectConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         amount: .secondary,
         card: .init(
             amount: .init(
@@ -47,7 +47,7 @@ extension ProductSelectConfig {
 
 private extension InfoComponent.InfoConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: .placeholder,
         value: .secondary
     )

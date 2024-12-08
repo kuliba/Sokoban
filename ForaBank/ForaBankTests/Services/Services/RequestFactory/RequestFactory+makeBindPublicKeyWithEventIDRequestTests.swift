@@ -34,7 +34,7 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://dmz-api-gate-test.innovation.ru/processing/registration/v1/bindPublicKeyWithEventId"
+            "https://dmz-api-gate-test.\(Config.domen)/processing/registration/v1/bindPublicKeyWithEventId"
         )
     }
     

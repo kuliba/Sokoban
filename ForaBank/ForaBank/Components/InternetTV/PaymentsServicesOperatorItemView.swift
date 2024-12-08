@@ -105,5 +105,5 @@ struct PaymentsServicesOperatorItemView_Previews: PreviewProvider {
 
 extension PaymentsServicesOperatorItemView.ViewModel {
     
-    static let sample = PaymentsServicesOperatorItemView.ViewModel(code: "iFora||116", icon: .ic40TvInternet, name: "Qwerty (Центел)", description: "7878787", region: nil, action: {_ in })
+    static let sample = PaymentsServicesOperatorItemView.ViewModel(code: "\(Config.puref)||116", icon: .ic40TvInternet, name: "Qwerty (Центел)", description: "7878787", region: nil, action: {_ in })
 }

@@ -25,7 +25,7 @@ final class RequestFactory_makeProcessPublicKeyAuthenticationRequestTests: XCTes
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://dmz-api-gate-test.innovation.ru/processing/authenticate/v1/processPublicKeyAuthenticationRequest"
+            "https://dmz-api-gate-test.\(Config.domen)/processing/authenticate/v1/processPublicKeyAuthenticationRequest"
         )
     }
     

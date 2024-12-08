@@ -1,5 +1,5 @@
 //
-//  Config+iFora.swift
+//  Config+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 12.12.2023.
@@ -11,27 +11,27 @@ import ManageSubscriptionsUI
 
 extension SberQR.Config {
     
-    static let iFora: Self = .init(
-        amount: .iFora,
+    static let iVortex: Self = .init(
+        amount: .iVortex,
         background: .init(
             color: .mainColorsGrayLightest
         ),
-        button: .iForaFooter,
-        carousel: .iForaSmall,
-        info: .iFora,
-        productSelect: .iFora
+        button: .iVortexFooter,
+        carousel: .iVortexSmall,
+        info: .iVortex,
+        productSelect: .iVortex
     )
 }
 
 extension AmountComponent.AmountConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         amount: .init(
             textFont: .textH1Sb24322(),
             textColor: .white
         ),
         backgroundColor: .mainColorsBlackMedium,
-        button: .iForaFooter,
+        button: .iVortexFooter,
         dividerColor: .bordersDivider,
         title: .init(
             textFont: .textBodySR12160(),
@@ -42,7 +42,7 @@ extension AmountComponent.AmountConfig {
 
 extension InfoComponent.InfoConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: .placeholder,
         value: .secondary
     )
@@ -50,7 +50,7 @@ extension InfoComponent.InfoConfig {
 
 extension UserAccountConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         fpsConfig: .init(
             title: .init(
                 textFont: .textH3Sb18240(),
@@ -68,7 +68,7 @@ extension UserAccountConfig {
 
 extension ProductSelectComponent.ProductSelectConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         amount: .secondary,
         card: .init(
             amount: .init(
@@ -101,7 +101,7 @@ extension ProductSelectComponent.ProductSelectConfig {
             )
         ),
         title: .secondary,
-        carouselConfig: .iForaSmall
+        carouselConfig: .iVortexSmall
     )
 }
 
@@ -109,7 +109,7 @@ import CalendarUI
 
 public extension CalendarConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: "Выберите даты или период",
         titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
         option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
@@ -133,7 +133,7 @@ public extension CalendarConfig {
 
 public extension FilterConfig {
 
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: .init(
             title: "Фильтры",
             titleConfig: .init(
@@ -221,7 +221,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                 pay: { _ in }
             ),
             map: PublishingInfo.preview,
-            config: .iFora
+            config: .iVortex
         )
     }
 }
@@ -246,7 +246,7 @@ extension Date {
 
 extension ManageSubscriptionsUI.ProductViewConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         titleFont: .textBodyMR14180(),
         titleColor: .textPlaceholder,
         nameFont: .textH4M16240(),

@@ -45,32 +45,31 @@ final class Model_PaymentsServicesTests: XCTestCase {
     
     func test_paymentsOperator_forOperatorCode_shouldReturnServiceOnMatchingCode_internetTV() throws {
         
-        let sut = makeSUT([.iFora1051001])
-        
-        let operatorr = try sut.paymentsOperator(forOperatorCode: "iFora||4285")
+        let sut = makeSUT([.iVortex1051001])
+        let operatorr = try sut.paymentsOperator(forOperatorCode: "iVortex||4285")
         
         XCTAssertNoDiff(operatorr, .internetTV)
-        XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1051001"])
+        XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iVortex||1051001"])
     }
     
     func test_paymentsOperator_forOperatorCode_shouldReturnServiceOnMatchingCode_transport() throws {
         
-        let sut = makeSUT([.iFora1051062])
+        let sut = makeSUT([.iVortex1051062])
         
-        let operatorr = try sut.paymentsOperator(forOperatorCode: "iFora||PYD")
+        let operatorr = try sut.paymentsOperator(forOperatorCode: "\(Config.puref)||PYD")
         
         XCTAssertNoDiff(operatorr, .transport)
-        XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1051062"])
+        XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["\(Config.puref)||1051062"])
     }
     
     func test_paymentsOperator_forOperatorCode_shouldReturnServiceOnMatchingCode_utility() throws {
         
-        let sut = makeSUT([.iFora1031001])
+        let sut = makeSUT([.iVortex1031001])
         
-        let operatorr = try sut.paymentsOperator(forOperatorCode: "iFora||C31")
+        let operatorr = try sut.paymentsOperator(forOperatorCode: "\(Config.puref)||C31")
         
         XCTAssertNoDiff(operatorr, .utility)
-        XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
+        XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["\(Config.puref)||1031001"])
     }
     
     // MARK: - AdditionalList
@@ -344,22 +343,22 @@ final class OperatorsLocalAgentSub: LocalAgentProtocol {
 
 extension OperatorGroupData {
     
-    static let iFora1051001: Self = .dummy(
-        code: "iFora||1051001",
+    static let iVortex1051001: Self = .dummy(
+        code: "iVortex||1051001",
         name: "Телефония, интернет, коммерческое ТВ",
-        operators: [.iFora4285]
+        operators: [.iVortex4285]
     )
     
-    static let iFora1051062: Self = .dummy(
-        code: "iFora||1051062",
+    static let iVortex1051062: Self = .dummy(
+        code: "\(Config.puref)||1051062",
         name: "Транспорт",
-        operators: [.iForaPYD]
+        operators: [.iVortexPYD]
     )
     
-    static let iFora1031001: Self = .dummy(
-        code: "iFora||1031001",
+    static let iVortex1031001: Self = .dummy(
+        code: "\(Config.puref)||1031001",
         name: "",
-        operators: [.iForaC31]
+        operators: [.iVortexC31]
     )
     
     static func superDummy(code: String = "dummy") -> Self {
@@ -393,16 +392,16 @@ extension OperatorGroupData {
 
 extension OperatorGroupData.OperatorData {
     
-    static let iForaPYD: Self = .dummy(
-        code: "iFora||PYD",
+    static let iVortexPYD: Self = .dummy(
+        code: "\(Config.puref)||PYD",
         name: "Подорожник",
-        parentCode: "iFora||1051062"
+        parentCode: "\(Config.puref)||1051062"
     )
     
-    static let iForaC31: Self = .dummy(
-        code: "iFora||C31",
+    static let iVortexC31: Self = .dummy(
+        code: "\(Config.puref)||C31",
         name: "Газпром Межрегионгаз Ярославль",
-        parentCode: "iFora||1031001"
+        parentCode: "\(Config.puref)||1031001"
     )
     
     static func dummy(

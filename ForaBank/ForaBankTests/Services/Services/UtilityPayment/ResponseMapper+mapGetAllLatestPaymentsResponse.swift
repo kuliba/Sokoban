@@ -41,7 +41,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             title: "ПАО Калужская сбытовая компания",
             amount: 999,
             md5Hash: "aeacabf71618e6f66aac16ed3b1922f3",
-            puref: "iFora||KSK"
+            puref: "iVortex||KSK"
         ))
     }
     
@@ -75,7 +75,7 @@ private extension String {
             "date": 1693835513315,
             "type": "service",
             "amount": 999.00,
-            "puref": "iFora||KSK",
+            "puref": "iVortex||KSK",
             "lpName": null,
             "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
             "name": "ПАО Калужская сбытовая компания",

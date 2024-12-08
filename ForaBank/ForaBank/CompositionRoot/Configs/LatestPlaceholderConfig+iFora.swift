@@ -1,5 +1,5 @@
 //
-//  LatestPlaceholderConfig+iFora.swift
+//  LatestPlaceholderConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 26.08.2024.
@@ -9,7 +9,7 @@ import PayHubUI
 
 extension LatestPlaceholderConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         label: .init(
             circleSize: 56,
             frame: .init(width: 80, height: 96),

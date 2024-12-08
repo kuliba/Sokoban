@@ -17,7 +17,7 @@ final class RequestFactory_createGetAllLatestPaymentsV2RequestTests: XCTestCase 
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/v2/getAllLatestPayments?isServicePayments=true"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/v2/getAllLatestPayments?isServicePayments=true"
         )
     }
     

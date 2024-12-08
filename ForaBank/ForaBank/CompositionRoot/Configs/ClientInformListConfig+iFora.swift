@@ -1,5 +1,5 @@
 //
-//  PlainClientInformBottomSheetConfig+iFora.swift
+//  PlainClientInformBottomSheetConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Nikolay Pochekuev on 14.10.2024.
@@ -9,7 +9,7 @@ import ClientInformList
 
 extension ClientInformListConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         colors: .init(
             bgIconRedLight: .bgIconRedLight
         ),

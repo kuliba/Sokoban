@@ -30,7 +30,7 @@ final class Services_getScenarioQRDataTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/binding/v3/getScenarioQRData"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/binding/v3/getScenarioQRData"
         )
     }
     

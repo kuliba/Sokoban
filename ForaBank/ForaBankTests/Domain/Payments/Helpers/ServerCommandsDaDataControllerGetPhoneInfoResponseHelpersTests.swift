@@ -21,22 +21,22 @@ final class ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests: XCTe
         XCTAssertEqual(errorResponse.data, nil)
     }
     
-    func test_dateResponse_iFora4285() {
+    func test_dateResponse_iVortex4285() {
         
-        let errorResponse = Response.data(.iFora4285)
+        let errorResponse = Response.data(.iVortex4285)
         
         XCTAssertEqual(errorResponse.statusCode, .ok)
         XCTAssertEqual(errorResponse.errorMessage, nil)
-        XCTAssertEqual(errorResponse.data, [.iFora4285])
+        XCTAssertEqual(errorResponse.data, [.iVortex4285])
     }
     
-    func test_dateResponse_iFora4286() {
+    func test_dateResponse_iVortex4286() {
         
-        let errorResponse = Response.data(.iFora4285)
+        let errorResponse = Response.data(.iVortex4285)
         
         XCTAssertEqual(errorResponse.statusCode, .ok)
         XCTAssertEqual(errorResponse.errorMessage, nil)
-        XCTAssertEqual(errorResponse.data, [.iFora4285])
+        XCTAssertEqual(errorResponse.data, [.iVortex4285])
     }
 }
 

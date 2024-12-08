@@ -1,5 +1,5 @@
 //
-//  FastPaymentsSettingsConfig+iFora.swift
+//  FastPaymentsSettingsConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 12.02.2024.
@@ -10,24 +10,24 @@ import SwiftUI
 
 extension FastPaymentsSettingsConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         accountLinking: .init(
             image: .ic24Subscriptions,
             title: .secondary
         ),
         backgroundColor: .mainColorsGrayLightest,
-        bankDefault: .iFora, 
-        carousel: .iForaSmall,
-        consentList: .iFora, 
-        deleteDefaultBank: .iFora,
-        paymentContract: .iFora,
-        productSelect: .iFora
+        bankDefault: .iVortex, 
+        carousel: .iVortexSmall,
+        consentList: .iVortex, 
+        deleteDefaultBank: .iVortex,
+        paymentContract: .iVortex,
+        productSelect: .iVortex
     )
 }
 
 extension DeleteDefaultBankConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: "Удалить банк по умолчанию",
         titleConfig: .init(textFont: .textH4M16240(), textColor: .textSecondary),
         description: "Вы можете удалить любой банк ранее установленный по умолчанию",
@@ -39,7 +39,7 @@ extension DeleteDefaultBankConfig {
 }
 extension BankDefaultConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         logo: .init(
             backgroundColor: .mainColorsRed,
             image: .init("fora logo")
@@ -56,7 +56,7 @@ extension BankDefaultConfig {
 
 extension ConsentListConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         chevron: .init(
             image: .ic24ChevronDown,
             color: .iconGray,
@@ -67,7 +67,7 @@ extension ConsentListConfig {
             backgroundColor: .bordersDivider,
             image: .ic24Search
         ),
-        expandedConsent: .iFora,
+        expandedConsent: .iVortex,
         image: .ic24Bank,
         title: .init(
             textFont: .textBodySR12160(),
@@ -78,7 +78,7 @@ extension ConsentListConfig {
 
 extension ExpandedConsentConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         apply: .init(
             backgroundColor: .mainColorsGrayLightest,
             title: .secondary
@@ -105,7 +105,7 @@ extension ExpandedConsentConfig {
 
 extension PaymentContractConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         active: .init(
             title: .secondary,
             toggleColor: .systemColorActive,

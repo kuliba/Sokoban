@@ -24,7 +24,7 @@ extension UILanding.Component.Config {
         multiMarkersText: .default,
         multiButtons: .default,
         multiTypeButtons: .default,
-        pageTitle: .iFora,
+        pageTitle: .iVortex,
         textWithIconHorizontal: .default,
         iconWithTwoTextLines: .default,
         image: .default,
@@ -163,7 +163,7 @@ extension UILanding.Multi.Texts.Config {
 
 extension UILanding.PageTitle.Config {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: .init(
             textFont: .textH3M18240(),
             textColor: .textSecondary),
@@ -534,7 +534,7 @@ extension UILanding.Multi.MarkersText.Config {
 
 extension UILanding.Carousel.CarouselBase.Config {
     
-    static let iFora: Self =  .init(
+    static let iVortex: Self =  .init(
         cornerRadius: 12,
         offset: 15,
         paddings: .init(horizontal: 16, vertical: 8),
@@ -545,7 +545,7 @@ extension UILanding.Carousel.CarouselBase.Config {
 
 extension UILanding.Carousel.CarouselWithDots.Config {
     
-    static let iFora: Self =  .init(
+    static let iVortex: Self =  .init(
         cornerRadius: 12,
         paddings: .init(horizontal: 16, vertical: 8),
         pageControls: .init(
@@ -560,7 +560,7 @@ extension UILanding.Carousel.CarouselWithDots.Config {
 
 extension UILanding.Carousel.CarouselWithTabs.Config {
     
-    static let iFora: Self =  .init(
+    static let iVortex: Self =  .init(
         category: .init(textFont: .textBodySM12160(), textColor: .textSecondary),
         cornerRadius: 12,
         offset: 15,

@@ -23,7 +23,7 @@ extension UILanding.Component.Config {
         multiMarkersText: .stickerDefault,
         multiButtons: .stickerDefault,
         multiTypeButtons: .stickerDefault,
-        pageTitle: .iFora,
+        pageTitle: .iVortex,
         textWithIconHorizontal: .stickerDefault,
         iconWithTwoTextLines: .stickerDefault,
         image: .stickerDefault,

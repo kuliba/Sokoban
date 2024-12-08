@@ -20,10 +20,10 @@ final class ServerAgentTestStubTests: XCTestCase {
         try await assertThrows(try await sut.executeCommand(command: command))
     }
     
-    //    func test_executeCommand_shouldReturnStubbedResult_iFora_4285_10rub() async throws {
+    //    func test_executeCommand_shouldReturnStubbedResult_iVortex_4285_10rub() async throws {
     //
     //        let sut: ServerAgentProtocol = ServerAgentTestStub([
-    //            .anywayTransfer(.success(.iFora_4285_10rub))
+    //            .anywayTransfer(.success(.iVortex_4285_10rub))
     //        ])
     //        let command = makeCommand()
     //

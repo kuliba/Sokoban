@@ -22,7 +22,7 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
             for: 0
         )
         
-        XCTAssertNoDiff(spy.isSingleServiceRequestsPurefs, [Purefs.iForaGibdd])
+        XCTAssertNoDiff(spy.isSingleServiceRequestsPurefs, [Purefs.iVortexGibdd])
     }
     
     func test_paymentsProcessLocalStepGibdd_shouldFailOnFailingIsSingleService_onStep0() async throws {
@@ -127,7 +127,7 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
         
         let parameter = try XCTUnwrap(step.parameters[0] as? Payments.ParameterOperator)
         XCTAssertNoDiff(parameter.id, "ru.forabank.sense.operator")
-        XCTAssertNoDiff(parameter.value, Purefs.iForaGibdd)
+        XCTAssertNoDiff(parameter.value, Purefs.iVortexGibdd)
         XCTAssertNoDiff(parameter.operator,.gibdd)
     }
     

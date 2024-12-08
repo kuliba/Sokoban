@@ -31,7 +31,7 @@ private extension SegmentedOperatorData {
     
     var isNotSberProvider: Bool {
         
-        origin.parentCode != "iFora||1031001"
+        origin.parentCode != "\(Config.puref)||1031001"
     }
 }
 

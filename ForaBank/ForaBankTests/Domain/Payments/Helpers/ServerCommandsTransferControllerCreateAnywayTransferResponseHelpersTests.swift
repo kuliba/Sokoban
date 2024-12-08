@@ -69,8 +69,8 @@ extension ServerCommands.TransferController.CreateAnywayTransfer.Response {
 
 extension TransferAnywayResponseData {
     
-    //    static let iFora4285: TransferAnywayResponseData = .init()
-    //    static let iFora4286: TransferAnywayResponseData = .init()
+    //    static let iVortex4285: TransferAnywayResponseData = .init()
+    //    static let iVortex4286: TransferAnywayResponseData = .init()
     
     static let bundled: TransferAnywayResponseData = .init(
         amount: 100,

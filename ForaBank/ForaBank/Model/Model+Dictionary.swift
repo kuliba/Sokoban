@@ -391,10 +391,10 @@ extension Model {
     
     // MARK: Operators & OperatorGroups
     
-    static let dictionaryQRAnywayOperatorCodes = ["iFora||1031001",
-                                                  "iFora||1051001",
-                                                  "iFora||1051062",
-                                                  "iFora||1331001"]
+    static let dictionaryQRAnywayOperatorCodes = ["\(Config.puref)||1031001",
+                                                  "\(Config.puref)||1051001",
+                                                  "\(Config.puref)||1051062",
+                                                  "\(Config.puref)||1331001"]
     
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         

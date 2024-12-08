@@ -16,7 +16,7 @@ import UtilityServicePrepaymentUI
 #warning("move to the call site and make private")
 /*private*/ extension FooterComponent.FooterState.Footer {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: "Нет компании в списке?",
         description: "Воспользуйтесь другими способами оплаты",
         subtitle: "Сообщите нам, и мы подключим новую организацию"
@@ -26,7 +26,7 @@ import UtilityServicePrepaymentUI
 #warning("move to the call site and make private")
 /*private*/ extension FooterComponent.FooterState.Failure {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         image: .ic24Search,
         description: "Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.."
     )
@@ -35,7 +35,7 @@ import UtilityServicePrepaymentUI
 #warning("move to the call site and make private")
 /*private*/ extension FooterComponent.FooterView.Config {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: .init(
             textFont: .textH3Sb18240(),
             textColor: .textSecondary
@@ -67,7 +67,7 @@ import UtilityServicePrepaymentUI
 #warning("move to the call site and make private")
 /*private*/ extension LastPaymentLabelConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         amount: .init(
             textFont: .textBodySR12160() ,
             textColor: .textRed
@@ -82,7 +82,7 @@ import UtilityServicePrepaymentUI
 #warning("move to the call site and make private")
 /*private*/ extension OperatorLabelConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: .init(
             textFont: .textH4M16240(),
             textColor: .textSecondary

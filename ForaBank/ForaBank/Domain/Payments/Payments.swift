@@ -1,6 +1,6 @@
 //
 //  Payments.swift
-//  Vortex
+//  BusinessInnovation
 //
 //  Created by Max Gribov on 07.02.2022.
 //
@@ -14,9 +14,18 @@ enum Payments {
 
     enum Category: String, CaseIterable {
         
-        case general = "ru.forabank.sense.payments.category.general"
-        case fast  = "ru.forabank.sense.payments.category.fast"
-        case taxes = "iFora||1331001"
+        case general
+        case fast
+        case taxes
+        
+        var rawValue: String {
+            
+            switch self {
+            case .general: return "ru.\(Config.name).sense.payments.category.general"
+            case .fast:    return "ru.\(Config.name).sense.payments.category.fast"
+            case .taxes:   return "\(Config.puref)||1331001"
+            }
+        }
 
         var services: [Service] {
             
@@ -71,36 +80,96 @@ enum Payments {
         case gibdd
     }
     
-    enum Operator: String, CaseIterable {
+    enum Operator: CaseIterable {
         
-        case sfp               = "iFora||TransferC2CSTEP"
-        case direct            = "iFora||MIG"
-        case directCard        = "iFora||MIG||card"
-        case contact           = "iFora||Addressless"
-        case contactCash       = "iFora||Addressing||cash"
-        case fssp              = "iFora||5429"
-        case fms               = "iFora||6887"
-        case fns               = "iFora||6273"
-        case fnsUin            = "iFora||7069"
-        case requisites        = "requisites"
-        case c2b               = "c2b"
-        case toAnotherCard     = "toAnotherCard"
-        case mobileConnection  = "mobileConnection"
-        case `return`          = "return"
-        case change            = "change"
-        case internetTV        = "iFora||1051001"
-        case utility           = "iFora||1031001"
-        case transport         = "iFora||1051062"
-        case avtodor           = "AVD"
-        case cardTJ            = "iFora||DKM"
-        case cardHumoUZ        = "iFora||DKQ"
-        case cardUZ            = "iFora||DKR"
-        case cardKZ            = "iFora||PW0"
+        case sfp
+        case direct
+        case directCard
+        case contact
+        case contactCash
+        case fssp
+        case fms
+        case fns
+        case fnsUin
+        case requisites
+        case c2b
+        case toAnotherCard
+        case mobileConnection
+        case `return`
+        case change
+        case internetTV
+        case utility
+        case transport
+        case avtodor
+        case cardTJ
+        case cardHumoUZ
+        case cardUZ
+        case cardKZ
+        case gibdd
+        
+        // инициализатор опциональный, потому что оператор проверяется внутри кучи guard
+//        init?(rawValue: String) {
+//            
+//            for value in Self.allCases {
+//                
+//                if value.rawValue == rawValue {
+//                    self = value
+//                    return
+//                }
+//            }
+//            return nil
+//        }
+        init?(rawValue: String) {
+            
+            let normalizedValue = rawValue
+                .replacingOccurrences(of: "iVortex", with: Config.puref)
+
+            for value in Self.allCases {
+                
+                if value.rawValue == normalizedValue {
+                    self = value
+                    
+                    return
+                }
+            }
+            
+            return nil
+        }
+        
+        var rawValue: String {
+            
+            switch self {
+            case .sfp:               return "\(Config.puref)||TransferC2CSTEP"
+            case .direct:            return "\(Config.puref)||MIG"
+            case .directCard:        return "\(Config.puref)||MIG||card"
+            case .contact:           return "\(Config.puref)||Addressless"
+            case .contactCash:       return "\(Config.puref)||Addressing||cash"
+            case .fssp:              return "\(Config.puref)||5429"
+            case .fms:               return "\(Config.puref)||6887"
+            case .fns:               return "\(Config.puref)||6273"
+            case .fnsUin:            return "\(Config.puref)||7069"
+            case .requisites:        return "requisites"
+            case .c2b:               return "c2b"
+            case .toAnotherCard:     return "toAnotherCard"
+            case .mobileConnection:  return "mobileConnection"
+            case .return:            return "return"
+            case .change:            return "change"
+            case .internetTV:        return "\(Config.puref)||1051001"
+            case .utility:           return "\(Config.puref)||1031001"
+            case .transport:         return "\(Config.puref)||1051062"
+            case .avtodor:           return "AVD"
+            case .cardTJ:            return "\(Config.puref)||DKM"
+            case .cardHumoUZ:        return "\(Config.puref)||DKQ"
+            case .cardUZ:            return "\(Config.puref)||DKR"
+            case .cardKZ:            return "\(Config.puref)||PW0"
+            case .gibdd:
 #if DEBUG || MOCK
-        case gibdd             = "iFora||4811" // test
+                return "\(Config.puref)||4811" // test
 #else
-        case gibdd             = "iFora||5173" // live
+                return "\(Config.puref)||5173" // live
 #endif
+            }
+        }
     }
     
     static var paymentsServicesOperators: [Operator] {

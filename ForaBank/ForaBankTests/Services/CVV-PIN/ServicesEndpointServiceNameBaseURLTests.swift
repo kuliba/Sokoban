@@ -29,7 +29,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://dmz-api-gate-test.innovation.ru/processing/registration/v1/bindPublicKeyWithEventId
         assertBaseURL(
             for: .bindPublicKeyWithEventId,
-            is: "https://dmz-api-gate-test.innovation.ru"
+            is: "https://dmz-api-gate-test.\(Config.domen)"
         )
     }
     
@@ -38,7 +38,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://dmz-api-gate-test.innovation.ru/processing/cardInfo/v1/changePIN
         assertBaseURL(
             for: .changePIN,
-            is: "https://dmz-api-gate-test.innovation.ru"
+            is: "https://dmz-api-gate-test.\(Config.domen)"
         )
     }
     
@@ -47,7 +47,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://dmz-api-gate-test.innovation.ru/processing/registration/v1/formSessionKey
         assertBaseURL(
             for: .formSessionKey,
-            is: "https://dmz-api-gate-test.innovation.ru"
+            is: "https://dmz-api-gate-test.\(Config.domen)"
         )
     }
     
@@ -56,7 +56,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://dmz-api-gate-test.innovation.ru/processing/cardInfo/v1/getPINConfirmationCode?sessionId=
         assertBaseURL(
             for: .getPINConfirmationCode,
-            is: "https://dmz-api-gate-test.innovation.ru"
+            is: "https://dmz-api-gate-test.\(Config.domen)"
         )
     }
     
@@ -65,7 +65,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://pl.innovation.ru/dbo/api/v3/processing/registration/v1/getProcessingSessionCode
         assertBaseURL(
             for: .getProcessingSessionCode,
-            is: "https://pl.innovation.ru/dbo/api/v3"
+            is: "https://pl.\(Config.domen)/dbo/api/v3"
         )
     }
     
@@ -74,7 +74,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://dmz-api-gate-test.innovation.ru/processing/authenticate/v1/processPublicKeyAuthenticationRequest
         assertBaseURL(
             for: .processPublicKeyAuthenticationRequest,
-            is: "https://dmz-api-gate-test.innovation.ru"
+            is: "https://dmz-api-gate-test.\(Config.domen)"
         )
     }
     
@@ -83,7 +83,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
         // https://dmz-api-gate-test.innovation.ru/processing/cardInfo/v1/showCVV
         assertBaseURL(
             for: .showCVV,
-            is: "https://dmz-api-gate-test.innovation.ru"
+            is: "https://dmz-api-gate-test.\(Config.domen)"
         )
     }
     

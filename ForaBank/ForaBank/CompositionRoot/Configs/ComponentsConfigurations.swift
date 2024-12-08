@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentComponents.CodeInputConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         icon: .ic24SmsCode,
         button: .init(active: .inactive, inactive: .inactive),
         digitModel: .init(digitConfig: .secondary, rectColor: .mainColorsWhite),
@@ -24,7 +24,7 @@ extension PaymentComponents.CodeInputConfig {
 
 extension PaymentComponents.CheckBoxConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         title: "",
         titleConfig: .init(textFont: .body, textColor: .black),
         lineWidth: 2,
@@ -35,7 +35,7 @@ extension PaymentComponents.CheckBoxConfig {
 
 extension PaymentComponents.InputPhoneConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         icon: .ic24Smartphone,
         iconForeground: .iconGray,
         placeholder: "Номер телефона",
@@ -56,7 +56,7 @@ extension PaymentComponents.InputPhoneConfig {
 
 extension PaymentComponents.InputConfig {
     
-    static func iFora(keyboard: KeyboardType, limit: Int) -> Self {
+    static func iVortex(keyboard: KeyboardType, limit: Int) -> Self {
         .init(
             titleConfig: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
             textFieldFont: .init(textFont: .textBodyMR14180(), textColor: .textSecondary),
@@ -72,7 +72,7 @@ extension PaymentComponents.InputConfig {
 
 extension PaymentComponents.FooterConfig {
     
-    static let iForaConfig: Self = .init(
+    static let iVortexConfig: Self = .init(
         title: .init(textFont: .textH3M18240(), textColor: .textSecondary),
         description: .init(textFont: .textBodyMR14200(), textColor: .textPlaceholder),
         subtitle: .init(textFont: .textBodyMR14200(), textColor: .textPlaceholder),

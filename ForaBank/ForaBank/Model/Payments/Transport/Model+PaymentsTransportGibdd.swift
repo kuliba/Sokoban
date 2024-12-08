@@ -17,7 +17,7 @@ extension Model {
         switch stepIndex {
         case 0:
             
-            if try await isSingleService(Purefs.iForaGibdd) {
+            if try await isSingleService(Purefs.iVortexGibdd) {
                 
                 throw Payments.Error.unexpectedIsSingleService
             }
@@ -27,7 +27,7 @@ extension Model {
             
             // header
             let headerParameter = transportHeader(
-                forPuref: Purefs.iForaGibdd,
+                forPuref: Purefs.iVortexGibdd,
                 title: "Штрафы ГИБДД"
             )
             

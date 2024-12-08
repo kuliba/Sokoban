@@ -68,7 +68,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         if operatorData == nil {
             operatorData = customGroup?.childsOperators[0]
         } else {
-            if operatorData?.puref != "iFora||AVDТ" {
+            if operatorData?.puref != "\(Config.puref)||AVDТ" {
                 btnContract.backgroundColor = UIColor.white
                 btnTransponder.backgroundColor = UIColor.clear
                 btnTransponder.isEnabled = false
@@ -168,7 +168,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             ob = InternetTVConfirmViewModel(type: .transport)
         }
         
-        if InternetTVMainViewModel.filter == "iFora||1051062" {
+        if InternetTVMainViewModel.filter == "\(Config.puref)||1051062" {
             ob = InternetTVConfirmViewModel(type: .transport)
         }
         

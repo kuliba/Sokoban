@@ -1,5 +1,5 @@
 //
-//  TimedOTPInputViewConfig+iFora.swift
+//  TimedOTPInputViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 15.06.2024.
@@ -9,7 +9,7 @@ import OTPInputComponent
 
 extension TimedOTPInputViewConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         otp: .init(
             textFont: .textH4M16240(),
             textColor: .textSecondary

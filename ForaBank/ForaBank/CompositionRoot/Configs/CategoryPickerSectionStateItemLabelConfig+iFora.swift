@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionStateItemLabelConfig+iFora.swift
+//  CategoryPickerSectionStateItemLabelConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 26.08.2024.
@@ -9,7 +9,7 @@ import PayHubUI
 
 extension CategoryPickerSectionStateItemLabelConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         iconBackground: .init(
             color: .mainColorsGrayLightest,
             roundedRect: .icon

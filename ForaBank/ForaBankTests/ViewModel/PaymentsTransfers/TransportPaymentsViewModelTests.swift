@@ -101,7 +101,7 @@ final class TransportPaymentsViewModelTests: XCTestCase {
         
         let sut = makeSUT(operators: [])
         
-        let puref = Purefs.iForaGibdd
+        let puref = Purefs.iVortexGibdd
         let destination = try sut.destination(for: .puref(puref))
         
         switch destination {
@@ -117,7 +117,7 @@ final class TransportPaymentsViewModelTests: XCTestCase {
         
         let sut = makeSUT(operators: [])
         
-        let puref = Purefs.iForaMosParking
+        let puref = Purefs.iVortexMosParking
         let destination = try sut.destination(for: .puref(puref))
         
         switch destination {
@@ -153,7 +153,7 @@ final class TransportPaymentsViewModelTests: XCTestCase {
         
         let sut = makeSUT(operators: [])
         
-        let puref = Purefs.iForaMosParking
+        let puref = Purefs.iVortexMosParking
         sut.select(track: .puref(puref))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -171,7 +171,7 @@ final class TransportPaymentsViewModelTests: XCTestCase {
         
         let sut = makeSUT(operators: [])
         
-        let puref = Purefs.iForaGibdd
+        let puref = Purefs.iVortexGibdd
         sut.select(track: .puref(puref))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)

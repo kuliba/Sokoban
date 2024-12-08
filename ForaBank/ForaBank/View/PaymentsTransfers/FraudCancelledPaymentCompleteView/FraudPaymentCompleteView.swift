@@ -92,7 +92,7 @@ struct FraudPaymentCompleteView_Previews: PreviewProvider {
                 icon: .init("waiting")
             ),
             action: {},
-            config: .iFora
+            config: .iVortex
         )
     }
 }

@@ -483,7 +483,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
         
-        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iForaMosParking}, detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iVortexMosParking}, detail, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Наименование получателя", value: "Паркинг")
@@ -1628,7 +1628,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payerMiddleName: "Андреевна",
             paymentOperationDetailId: 65329,
             printFormType: .transport,
-            puref: Purefs.iForaMosParking,
+            puref: Purefs.iVortexMosParking,
             requestDate: "30.06.2023 12:32:41",
             responseDate: "30.06.2023 12:33:28",
             returned: false,

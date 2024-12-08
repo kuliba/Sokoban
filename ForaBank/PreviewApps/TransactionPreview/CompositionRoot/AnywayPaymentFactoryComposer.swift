@@ -51,7 +51,7 @@ extension AnywayPaymentFactoryComposer {
             },
             makeFooterView: { state, event in
                 
-                return .init(state: state.footer, event: event, config: .iFora)
+                return .init(state: state.footer, event: event, config: .iVortex)
             }
         )
     }
@@ -107,7 +107,7 @@ private extension AnywayPaymentFactoryComposer {
             }
         )
         
-        return .init(viewModel: observing, config: .iFora)
+        return .init(viewModel: observing, config: .iVortex)
     }
     
     func makeElementFactory(

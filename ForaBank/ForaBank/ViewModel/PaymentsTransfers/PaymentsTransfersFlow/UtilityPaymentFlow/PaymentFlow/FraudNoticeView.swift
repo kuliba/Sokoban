@@ -15,13 +15,13 @@ struct FraudNoticeView: View {
     
     var body: some View {
         
-        PaymentsAntifraudView(viewModel: .iFora(from: state, event: event))
+        PaymentsAntifraudView(viewModel: .iVortex(from: state, event: event))
     }
 }
 
 private extension PaymentsAntifraudViewModel {
     
-    static func iFora(
+    static func iVortex(
         from fraud: FraudNoticePayload,
         event: @escaping (FraudEvent) -> Void
     ) -> PaymentsAntifraudViewModel {

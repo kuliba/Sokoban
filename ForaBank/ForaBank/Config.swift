@@ -9,7 +9,8 @@ import Foundation
 
 enum Config {
     
-    static let domen = "businessinnovation.ru"
+    static let domen = "forabank.ru"
+    static let puref = "iFora"
     static let name = "businessinnovation"
     static let primary = "bInnovation"
     static let telegram = "telegram"

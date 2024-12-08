@@ -27,7 +27,7 @@ private extension AnywayPayment {
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,
-        puref: .init("iFora||54321")
+        puref: .init("iVortex||54321")
     )
 }
 

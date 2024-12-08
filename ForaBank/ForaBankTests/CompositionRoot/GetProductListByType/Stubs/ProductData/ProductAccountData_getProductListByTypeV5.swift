@@ -44,7 +44,7 @@ extension ProductAccountData {
         visibility: true,
         smallDesignMd5hash: "ec5a921eec37d035b2495b5b9377ff28",
         smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-        detailedRatesUrl: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+        detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
         detailedConditionUrl: "https://www.innovation.ru/dkbo/dkbo.pdf"
     )
     
@@ -84,7 +84,7 @@ extension ProductAccountData {
         visibility: true,
         smallDesignMd5hash: "ec5a921eec37d035b2495b5b9377ff28",
         smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-        detailedRatesUrl: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+        detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
         detailedConditionUrl: "https://www.innovation.ru/dkbo/dkbo.pdf"
     )
     
@@ -124,7 +124,7 @@ extension ProductAccountData {
         visibility: true,
         smallDesignMd5hash: "ec5a921eec37d035b2495b5b9377ff28",
         smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-        detailedRatesUrl: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+        detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
         detailedConditionUrl: "https://www.innovation.ru/dkbo/dkbo.pdf"
     )
     
@@ -164,7 +164,7 @@ extension ProductAccountData {
         visibility: true,
         smallDesignMd5hash: "584b6307307375bf820181405100e0d3",
         smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-        detailedRatesUrl: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+        detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
         detailedConditionUrl: "https://www.innovation.ru/dkbo/dkbo.pdf"
     )
     
@@ -204,7 +204,7 @@ extension ProductAccountData {
         visibility: true,
         smallDesignMd5hash: "ec5a921eec37d035b2495b5b9377ff28",
         smallBackgroundDesignHash: "db289aa034c96e9762404cf162e47b47",
-        detailedRatesUrl: "https://www.innovation.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+        detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
         detailedConditionUrl: "https://www.innovation.ru/dkbo/dkbo.pdf"
     )
 }

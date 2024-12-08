@@ -195,7 +195,7 @@ private extension String {
     "payer": {
         "cardId": 10000184511
     },
-    "puref": "iForaNKORR||126733"
+    "puref": "iVortexNKORR||126733"
 }
 """
     
@@ -214,7 +214,7 @@ private extension String {
     "payer": {
         "cardId": 10000184511
     },
-    "puref": "iForaNKORR||126733"
+    "puref": "iVortexNKORR||126733"
 }
 """
     
@@ -236,7 +236,7 @@ private extension String {
     "payer": {
         "cardId": 10000184511
     },
-    "puref": "iForaNKORR||126733"
+    "puref": "iVortexNKORR||126733"
 }
 """
     
@@ -265,7 +265,7 @@ private extension String {
     "payer": {
         "cardId": 10000184511
     },
-    "puref": "iForaNKORR||126733"
+    "puref": "iVortexNKORR||126733"
 }
 """
     
@@ -299,7 +299,7 @@ private extension String {
     "payer": {
         "cardId": 10000184511
     },
-    "puref": "iForaNKORR||126733"
+    "puref": "iVortexNKORR||126733"
 }
 """
 }

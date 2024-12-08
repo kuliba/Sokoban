@@ -97,7 +97,7 @@ extension TransferAnywayData {
             currencyAmount: "RUB",
             payer: payer,
             additional: .stub(),
-            puref: "iFora||MIG"
+            puref: "iVortex||MIG"
         )
         
         return [parameter]

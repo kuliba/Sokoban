@@ -27,7 +27,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: "Москва", code: "iFora||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: "Москва", code: "iFora||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: "account", dataType: "%String", id: "a3_NUMBER_1_2", isPrint: false, isRequired: true, mask: "+7(___)-___-__-__", maxLength: 10, minLength: 0, order: 2, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: "Пример: 9051111111", title: "Номер телефона +7", type: "Input", inputFieldType: .unknown, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: SVGImageData(description: "string"), viewType: .input)], parentCode: "iFora||1011001", region: "Пермский край", synonymList: ["string"])], region: "Пермский край", synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
+        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: "Москва", code: "iVortex||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: "Москва", code: "iVortex||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: "account", dataType: "%String", id: "a3_NUMBER_1_2", isPrint: false, isRequired: true, mask: "+7(___)-___-__-__", maxLength: 10, minLength: 0, order: 2, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: "Пример: 9051111111", title: "Номер телефона +7", type: "Input", inputFieldType: .unknown, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: SVGImageData(description: "string"), viewType: .input)], parentCode: "iVortex||1011001", region: "Пермский край", synonymList: ["string"])], region: "Пермский край", synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response(statusCode: .ok, errorMessage: "string", data: anywayOperatorGroupData)
         
@@ -47,7 +47,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: nil, code: "iFora||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: nil,code: "iFora||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: nil, dataType: "%String", id: "a3_NUMBER_1_2", isPrint: nil, isRequired: true, mask: "+7(___)-___-__-__", maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: nil, title: "Номер телефона +7", type: "Input", inputFieldType: .unknown, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)], parentCode: "iFora||1011001", region: nil, synonymList: ["string"])], region: nil, synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
+        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: nil, code: "iVortex||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: nil,code: "iVortex||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: nil, dataType: "%String", id: "a3_NUMBER_1_2", isPrint: nil, isRequired: true, mask: "+7(___)-___-__-__", maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: nil, title: "Номер телефона +7", type: "Input", inputFieldType: .unknown, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)], parentCode: "iVortex||1011001", region: nil, synonymList: ["string"])], region: nil, synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
 
         let expected = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response(statusCode: .ok, errorMessage: "string", data: anywayOperatorGroupData)
         
@@ -301,7 +301,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFMSListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], id: "a3_dutyCategory_1_1", puref: "iVortex||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: json)
@@ -343,7 +343,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFSSPDebtListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFSSPDebtList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDebtList: [.init(text: "Документ", value: "20")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFSSPDebtList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDebtList: [.init(text: "Документ", value: "20")], id: "a3_dutyCategory_1_1", puref: "iVortex||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDebtList.Response.self, from: json)
@@ -385,7 +385,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFSSPDocumentListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFSSPDocumentList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDocumentList: [.init(text: "Документ", value: "20", svgImage: .init(description: "string"))], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFSSPDocumentList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDocumentList: [.init(text: "Документ", value: "20", svgImage: .init(description: "string"))], id: "a3_dutyCategory_1_1", puref: "iVortex||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: json)
@@ -427,7 +427,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFTSListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], id: "a3_dutyCategory_1_1", puref: "iVortex||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: json)
@@ -540,7 +540,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetMobileList.Response(statusCode: .ok, errorMessage: "string", data: .init(mobileList: [.init(code: "BEELINE", md5hash: "2a025e81e19ddc447cc93d27ad75ff84", providerName: "ПАО \"Вымпел-Коммуникации\"", puref: "iFora||4285", shortName: "Билайн", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetMobileList.Response(statusCode: .ok, errorMessage: "string", data: .init(mobileList: [.init(code: "BEELINE", md5hash: "2a025e81e19ddc447cc93d27ad75ff84", providerName: "ПАО \"Вымпел-Коммуникации\"", puref: "iVortex||4285", shortName: "Билайн", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetMobileList.Response.self, from: json)
@@ -654,7 +654,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let purefData = [["additionalProp1": [PaymentSystemData.PurefData(puref: "iFora||Addressless", type: "addressless")],"additionalProp2": [PaymentSystemData.PurefData(puref: "iFora||Addressless", type: "addressless")],"additionalProp3": [PaymentSystemData.PurefData(puref: "iFora||Addressless", type: "addressless")]]]
+        let purefData = [["additionalProp1": [PaymentSystemData.PurefData(puref: "iVortex||Addressless", type: "addressless")],"additionalProp2": [PaymentSystemData.PurefData(puref: "iVortex||Addressless", type: "addressless")],"additionalProp3": [PaymentSystemData.PurefData(puref: "iVortex||Addressless", type: "addressless")]]]
         let expected = ServerCommands.DictionaryController.GetPaymentSystemList.Response(statusCode: .ok, errorMessage: "string", data: .init(paymentSystemList: [.init(code: "CONTACT", md5hash: "178a385607bc45fc30bd66573d4d2c67", name: "Contact", purefList: purefData, svgImage: .init(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
@@ -709,8 +709,8 @@ class ServerCommandsDictionaryTests: XCTestCase {
                 .init(productCatalogList: [.init(name: "Карта 'Миг'",
                                                  description: ["string"],
                                                  imageEndpoint: "dict/getProductCatalogImage?image=1",
-                                                 infoURL: URL(string: "https://www.innovation.ru/")!,
-                                                 orderURL: URL(string: "https://www.innovation.ru/")!,
+                                                 infoURL: URL(string: "https://www.vortex.ru/")!,
+                                                 orderURL: URL(string: "https://www.vortex.ru/")!,
                                                  tariff: 1,
                                                  productType: 1)],
                       serial: "bea36075a58954199a6b8980549f6b69")
@@ -769,9 +769,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let conditionalLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
+        let conditionalLink = URL(string: "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        let orderLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
+        let orderLink = URL(string: "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/")!
         
         let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
         
@@ -792,9 +792,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let conditionalLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
+        let conditionalLink = URL(string: "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        let orderLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
+        let orderLink = URL(string: "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/")!
         
         let migTransferAction = BannerActionMigTransfer(countryId: "AM")
         let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "АКЦИЯ", conditions: ["Нам 30 лет!"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil), .init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: migTransferAction), .init(productName: "Переводы Турция", conditions: ["Мгновенные переводы в Турцию Комиссия 0%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "serial"), errorMessage: "string")
@@ -816,9 +816,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let conditionalLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
+        let conditionalLink = URL(string: "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        let orderLink = URL(string: "https://www.innovation.ru/private/cards/sezonnoe-predlozhenie/")!
+        let orderLink = URL(string: "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/")!
         
         let landing = BannerAction(type: .landing)
         let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: landing)], serial: "serial"), errorMessage: "string")
@@ -880,11 +880,11 @@ class ServerCommandsDictionaryTests: XCTestCase {
 
         let expected = ServerCommands.DictionaryController.GetDictionaryAnywayOperators.Response.init(statusCode: .ok, errorMessage: "string", data: .init(list: [
             .init(code: "BANK_MIG", codeUI: "CAROUSEL", dictionaryList: [
-                .init(id: "iFora||TransferEvocaClient12", name: "ЭвокаБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "1498e6b4a776464eb4e7fd845c221f06"),
-                .init(id: "iFora||TransferArdshinClient12", name: "Ардшинбанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "d5861f90100c97706a6952e0dca2e0c2"),
-                .init(id: "iFora||TransferIDClientP", name: "АйДиБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "21b6a406c583929effd620f8853c1a39"),
-                .init(id: "iFora||TransferAraratClient12", name: "АраратБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "27540fc63bd4e0e91165e4af3934f95b"),
-                .init(id: "iFora||TransferArmBBClientP", name: "АрмББ", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "a9571b421f9a680cc42564240b4b63e9")])]))
+                .init(id: "iVortex||TransferEvocaClient12", name: "ЭвокаБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "1498e6b4a776464eb4e7fd845c221f06"),
+                .init(id: "iVortex||TransferArdshinClient12", name: "Ардшинбанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "d5861f90100c97706a6952e0dca2e0c2"),
+                .init(id: "iVortex||TransferIDClientP", name: "АйДиБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "21b6a406c583929effd620f8853c1a39"),
+                .init(id: "iVortex||TransferAraratClient12", name: "АраратБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "27540fc63bd4e0e91165e4af3934f95b"),
+                .init(id: "iVortex||TransferArmBBClientP", name: "АрмББ", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "a9571b421f9a680cc42564240b4b63e9")])]))
             
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetDictionaryAnywayOperators.Response.self, from: json)

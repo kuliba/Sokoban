@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionContentViewConfig+iFora.swift
+//  CategoryPickerSectionContentViewConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 26.08.2024.
@@ -9,7 +9,7 @@ import PayHubUI
 
 extension CategoryPickerSectionContentViewConfig {
     
-    static let iFora: Self = .init(
+    static let iVortex: Self = .init(
         failure: .init(
             imageConfig: .init(
                 color: .iconGray,

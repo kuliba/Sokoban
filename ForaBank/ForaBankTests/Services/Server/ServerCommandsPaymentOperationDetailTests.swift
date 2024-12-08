@@ -101,7 +101,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       amount: 100,
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
-                                      puref: "iFora||4285",
+                                      puref: "iVortex||4285",
                                       type: .internet,
                                       lastPaymentName: nil)
         
@@ -136,7 +136,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       amount: 100,
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
-                                      puref: "iFora||4285",
+                                      puref: "iVortex||4285",
                                       type: .mobile,
                                       lastPaymentName: nil)
         
@@ -250,7 +250,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       amount: 100,
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
-                                      puref: "iFora||4285",
+                                      puref: "iVortex||4285",
                                       type: .service,
                                       lastPaymentName: nil)
         
@@ -286,7 +286,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       amount: 100,
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
-                                      puref: "iFora||4285",
+                                      puref: "iVortex||4285",
                                       type: .transport,
                                       lastPaymentName: nil)
         
@@ -384,7 +384,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        period: "2021-12-21",
                                        printFormType: .internal,
                                        provider: "ПАО \"Мобильные ТелеСистемы\"",
-                                       puref: "iFora||ContactAddressless",
+                                       puref: "iVortex||ContactAddressless",
                                        regCert: "2941881861",
                                        requestDate: "20.12.2021 13:06:05",
                                        responseDate: "20.12.2021 13:06:13",
@@ -542,7 +542,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       middleName: "Иванович",
                                       paymentDate: "21.12.2021 11:04:26",
                                       phoneNumber: "37491040486",
-                                      puref: "iFora||TransferArmBBClientP",
+                                      puref: "\(Config.puref)||TransferArmBBClientP",
                                       shortName: "Иванов И.",
                                       surName: "Иванов",
                                       type: .outside)
@@ -577,7 +577,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       middleName: nil,
                                       paymentDate: "21.12.2021 11:04:26",
                                       phoneNumber: nil,
-                                      puref: "iFora||TransferArmBBClientP",
+                                      puref: "iVortex||TransferArmBBClientP",
                                       shortName: "Иванов И.",
                                       surName: nil,
                                       type: .outside)

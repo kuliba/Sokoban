@@ -16,7 +16,7 @@ final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTest
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.innovation.ru/dbo/api/v3/rest/fastPaymentContractFindList"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/fastPaymentContractFindList"
         )
     }
     

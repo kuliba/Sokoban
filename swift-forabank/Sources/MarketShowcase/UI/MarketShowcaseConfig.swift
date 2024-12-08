@@ -14,5 +14,5 @@ public struct MarketShowcaseConfig {
 
 public extension MarketShowcaseConfig {
     
-    static let iFora: Self = .init(spinnerHeight: 48)
+    static let iVortex: Self = .init(spinnerHeight: 48)
 }

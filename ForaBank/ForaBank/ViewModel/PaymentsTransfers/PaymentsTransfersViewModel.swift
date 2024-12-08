@@ -274,7 +274,7 @@ extension Model {
         let operators = anywayOperators
             .filter { $0.parentCode == operatorValue.rawValue }
         // TODO: Remove filter after GIBDD & MosParking fix
-        // .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
+        // .filter { $0.code != Purefs.iVortexGibdd && $0.code != Purefs.iVortexMosParking  }
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
             .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
         // TODO: `replacingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType

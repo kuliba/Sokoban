@@ -1,5 +1,5 @@
 //
-//  TextInputConfig+iFora.swift
+//  TextInputConfig+iVortex.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 07.08.2024.
@@ -10,7 +10,7 @@ import TextFieldUI
 
 extension TextInputConfig {
     
-    static func iFora(
+    static func iVortex(
         keyboard: KeyboardType, 
         title: String
     ) -> Self {

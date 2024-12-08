@@ -14,44 +14,44 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
     typealias Request = AnywayTransfer.Payload
     typealias Response = AnywayTransfer.Response
     
-    // MARK: - iFora 4285 9rub
+    // MARK: - iVortex 4285 9rub
     
-    func test_createAnywayTransfer_iFora_4285_9rub_request() throws {
+    func test_createAnywayTransfer_iVortex_4285_9rub_request() throws {
         
-        let request: Request = .iFora_4285_9rub
+        let request: Request = .iVortex_4285_9rub
         
-        XCTAssertEqual(request.puref, "iFora||4285")
+        XCTAssertEqual(request.puref, "iVortex||4285")
         XCTAssertEqual(request.amount, 9)
         XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(request.phoneNumber, "9039999999")
     }
     
-    func test_createAnywayTransfer_iFora_4285_9rub_response() throws {
+    func test_createAnywayTransfer_iVortex_4285_9rub_response() throws {
         
-        let response: Response = .iFora_4285_9rub
+        let response: Response = .iVortex_4285_9rub
         
         XCTAssertEqual(response.statusCode, .serverError)
         XCTAssertEqual(response.errorMessage, "Некорректный ввод данных (проверьте сумму) (код 1001)")
         XCTAssertEqual(response.data, nil)
     }
     
-    // MARK: - iFora 4285 10rub
+    // MARK: - iVortex 4285 10rub
     
-    func test_createAnywayTransfer_iFora_4285_10rub_request() throws {
+    func test_createAnywayTransfer_iVortex_4285_10rub_request() throws {
         
-        let request: Request = .iFora_4285_10rub
+        let request: Request = .iVortex_4285_10rub
         
-        XCTAssertEqual(request.puref, "iFora||4285")
+        XCTAssertEqual(request.puref, "iVortex||4285")
         XCTAssertEqual(request.amount, 10)
         XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(request.phoneNumber, "9039999999")
     }
     
-    func test_createAnywayTransfer_iFora_4285_10rub_response() throws {
+    func test_createAnywayTransfer_iVortex_4285_10rub_response() throws {
         
-        let response: Response = .iFora_4285_10rub
+        let response: Response = .iVortex_4285_10rub
         
         XCTAssertEqual(response.statusCode, .ok)
         XCTAssertNil(response.errorMessage)
@@ -64,22 +64,22 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         XCTAssertEqual(response.data?.additionalList.last?.fieldTitle, "Сумма, руб.:")
     }
     
-    // MARK: - iFora 4286
+    // MARK: - iVortex 4286
     
-    func test_createAnywayTransfer_iFora_4286_request() throws {
+    func test_createAnywayTransfer_iVortex_4286_request() throws {
         
-        let request: Request = .iFora_4286
+        let request: Request = .iVortex_4286
         
-        XCTAssertEqual(request.puref, "iFora||4286")
+        XCTAssertEqual(request.puref, "iVortex||4286")
         XCTAssertEqual(request.amount, 1)
         XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(request.phoneNumber, "9191619658")
     }
     
-    func test_createAnywayTransfer_iFora_4286_response() throws {
+    func test_createAnywayTransfer_iVortex_4286_response() throws {
         
-        let response: Response = .iFora_4286
+        let response: Response = .iVortex_4286
         
         XCTAssertEqual(response.statusCode, .ok)
         XCTAssertNil(response.errorMessage)
@@ -92,44 +92,44 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         XCTAssertEqual(response.data?.additionalList.last?.fieldTitle, "Сумма")
     }
     
-    // MARK: - iFora 515A3 1rub
+    // MARK: - iVortex 515A3 1rub
     
-    func test_createAnywayTransfer_iFora_515A3_1rub_request() throws {
+    func test_createAnywayTransfer_iVortex_515A3_1rub_request() throws {
         
-        let request: Request = .iFora_515A3_1rub
+        let request: Request = .iVortex_515A3_1rub
         
-        XCTAssertEqual(request.puref, "iFora||515A3")
+        XCTAssertEqual(request.puref, "iVortex||515A3")
         XCTAssertEqual(request.amount, 1)
         XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_code_1_1_1")
         XCTAssertEqual(request.phoneNumber, "9999679969")
     }
     
-    func test_createAnywayTransfer_iFora_515A3_1rub_response() throws {
+    func test_createAnywayTransfer_iVortex_515A3_1rub_response() throws {
         
-        let response: Response = .iFora_515A3_1rub
+        let response: Response = .iVortex_515A3_1rub
         
         XCTAssertEqual(response.statusCode, .serverError)
         XCTAssertEqual(response.errorMessage, "Сумма платежа не соответствует требованиям Получателя (код 1001)")
         XCTAssertEqual(response.data, nil)
     }
     
-    // MARK: - iFora 515A3 10rub
+    // MARK: - iVortex 515A3 10rub
     
-    func test_createAnywayTransfer_iFora_515A3_10rub_request() throws {
+    func test_createAnywayTransfer_iVortex_515A3_10rub_request() throws {
         
-        let request: Request = .iFora_515A3_10rub
+        let request: Request = .iVortex_515A3_10rub
         
-        XCTAssertEqual(request.puref, "iFora||515A3")
+        XCTAssertEqual(request.puref, "iVortex||515A3")
         XCTAssertEqual(request.amount, 10)
         XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_code_1_1_1")
         XCTAssertEqual(request.phoneNumber, "9999679969")
     }
     
-    func test_createAnywayTransfer_iFora_515A3_10rub_response() throws {
+    func test_createAnywayTransfer_iVortex_515A3_10rub_response() throws {
         
-        let response: Response = .iFora_515A3_10rub
+        let response: Response = .iVortex_515A3_10rub
         
         XCTAssertEqual(response.statusCode, .ok)
         XCTAssertNil(response.errorMessage)

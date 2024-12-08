@@ -310,7 +310,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                       "cardNumber": nil,
                       "accountId": accountId
                      ],
-            "puref": "iFora||PaymentsC2B",
+            "puref": "\(Config.puref)||PaymentsC2B",
             "additional": [
                 [
                     "fieldid": 1,

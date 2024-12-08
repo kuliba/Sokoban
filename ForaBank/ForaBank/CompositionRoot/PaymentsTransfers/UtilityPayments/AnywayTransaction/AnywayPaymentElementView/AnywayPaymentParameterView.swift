@@ -57,7 +57,7 @@ private extension AnywayPaymentParameterView {
         
         TextInputWrapperView(
             model: model,
-            config: .iFora(
+            config: .iVortex(
                 keyboard: keyboard,
                 title: parameter.origin.title
             ),
