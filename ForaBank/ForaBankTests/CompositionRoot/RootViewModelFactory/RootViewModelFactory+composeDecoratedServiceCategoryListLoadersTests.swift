@@ -53,9 +53,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_load_shouldDeliverLocalCategoriesWithNoHTTPClientCalls() {
         
-        let (localCategories, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
-        
+        let (localCategories, categoryModelStub) = makeCategoryWithModel()
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
+
         expectLoad([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -116,9 +116,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_reload_shouldDeliverLocalCategoriesOnHTTPClientFailure() {
         
-        let (localCategories, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
-        
+        let (localCategories, categoryModelStub) = makeCategoryWithModel()
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
+
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -128,9 +128,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_reload_shouldCallForOperatorsWithTypeOfLocalCategoriesOnHTTPClientFailure() {
         
-        let (localCategories, loadStub) = makeCategoryWithModel(type: .security)
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
-        
+        let (localCategories, categoryModelStub) = makeCategoryWithModel(type: .security)
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
+
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -150,9 +150,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     func test_reload_shouldDeliverLocalOnHTTPClientWithSameSerial() {
         
         let (serial, json) = (serial(), getServiceCategoryListJSON())
-        let (localCategories, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: serial)
-        
+        let (localCategories, categoryModelStub) = makeCategoryWithModel(type: .charity)
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], serial)])
+
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -163,8 +163,8 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     func test_reload_shouldCallForOperatorsWithTypeOfLocalCategoriesOnHTTPClientWithSameSerial() {
         
         let (serial, json) = (serial(), getServiceCategoryListJSON())
-        let (localCategories, loadStub) = makeCategoryWithModel(type: .charity)
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: serial)
+        let (localCategories, categoryModelStub) = makeCategoryWithModel(type: .charity)
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], serial)])
         
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
@@ -184,8 +184,8 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_reload_shouldDeliverRemoteOnHTTPClientWithDifferentSerial() {
         
-        let (_, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
+        let (_, categoryModelStub) = makeCategoryWithModel()
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
         let (remoteCategories, json) = (categories(), getServiceCategoryListJSON())
         
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
@@ -197,8 +197,8 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_reload_shouldCacheOnHTTPClientWithDifferentSerial() {
         
-        let (_, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
+        let (_, categoryModelStub) = makeCategoryWithModel()
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
         let (remoteCategories, json) = (categories(), getServiceCategoryListJSON())
         
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
@@ -214,8 +214,8 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_reload_shouldCallForOperatorsWithStandardFlowOnHTTPClientWithDifferentSerial() {
         
-        let (_, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
+        let (_, categoryModelStub) = makeCategoryWithModel()
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
         let (remoteCategories, json) = (categories(), getServiceCategoryListJSON())
         XCTAssertNoDiff(remoteCategories.map(\.type), [.mobile, .housingAndCommunalService, .internet])
         XCTAssertNoDiff(remoteCategories.map(\.paymentFlow), [.mobile, .standard, .standard])
@@ -245,8 +245,8 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     func test_reload_shouldCacheLoadedOperators() {
         
-        let (_, loadStub) = makeCategoryWithModel()
-        let localAgent = LocalAgent(loadStub: [loadStub], serialStub: anyMessage())
+        let (_, categoryModelStub) = makeCategoryWithModel()
+        let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
         let (remoteCategories, categoriesJSON) = (categories(), getServiceCategoryListJSON())
         XCTAssertNoDiff(remoteCategories.map(\.type), [.mobile, .housingAndCommunalService, .internet])
         XCTAssertNoDiff(remoteCategories.map(\.paymentFlow), [.mobile, .standard, .standard])
@@ -277,7 +277,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     
     // MARK: - Helpers
     
-    private typealias LocalAgent = LocalAgentSpy<[CodableServiceCategory]>
+    private typealias LocalAgent = LocalAgentMock
     
     private func makeCategoryWithModel(
         type: CodableServiceCategory.CategoryType = .education
@@ -314,7 +314,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
     }
     private func expectReload(
         _ expectedCategories: [ServiceCategory]?,
-        _ localAgent: LocalAgent = .init(),
+        _ localAgent: LocalAgent,
         on action: @escaping (HTTPClientSpy, LocalAgent) -> Void,
         file: StaticString = #file,
         line: UInt = #line
