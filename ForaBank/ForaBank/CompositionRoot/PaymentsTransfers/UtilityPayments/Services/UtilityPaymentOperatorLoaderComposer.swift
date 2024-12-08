@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.05.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 
 final class UtilityPaymentOperatorLoaderComposer {

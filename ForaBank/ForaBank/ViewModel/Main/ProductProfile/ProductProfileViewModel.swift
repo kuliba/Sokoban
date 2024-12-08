@@ -8,7 +8,7 @@
 import ActivateSlider
 import CardUI
 import Combine
-import ForaTools
+import VortexTools
 import Foundation
 import OperatorsListComponents
 import PDFKit

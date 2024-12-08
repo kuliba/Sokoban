@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.10.2024.
 //
 
-import ForaTools
+import VortexTools
 @testable import ForaBank
 import SerialComponents
 import XCTest

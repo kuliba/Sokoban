@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-import ForaTools
+import VortexTools
 import PayHub
 import XCTest
 

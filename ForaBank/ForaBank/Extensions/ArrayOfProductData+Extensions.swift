@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 19.04.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 
 extension ProductData {

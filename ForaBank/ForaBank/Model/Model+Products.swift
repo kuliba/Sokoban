@@ -8,7 +8,7 @@
 import AccountInfoPanel
 import CardStatementAPI
 import CloudKit
-import ForaTools
+import VortexTools
 import Foundation
 import ServerAgent
 import GetProductListByTypeV6Service

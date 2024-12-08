@@ -9,7 +9,7 @@ import ActivateSlider
 import Banners
 import Combine
 import FooterComponent
-import ForaTools
+import VortexTools
 import InfoComponent
 import LandingUIComponent
 import PaymentSticker

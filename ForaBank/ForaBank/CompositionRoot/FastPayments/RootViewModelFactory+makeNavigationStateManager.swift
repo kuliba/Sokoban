@@ -13,7 +13,7 @@ import RemoteServices
 import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
-import ForaTools
+import VortexTools
 
 extension RootViewModelFactory {
     

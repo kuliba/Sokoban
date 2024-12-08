@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.07.2024.
 //
 
-import ForaTools
+import VortexTools
 import SwiftUI
 
 /// A composer responsible for creating an `ImageLoader` with local cache and logging functionalities.

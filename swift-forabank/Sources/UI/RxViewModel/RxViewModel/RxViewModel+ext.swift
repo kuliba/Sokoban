@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 20.01.2024.
 //
 
-import ForaTools
+import VortexTools
 
 public extension RxViewModel where State: Equatable {
     

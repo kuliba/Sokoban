@@ -4855,7 +4855,7 @@
 		2AB48E2A2BDCEA00007F493A /* MainMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMockView.swift; sourceTree = "<group>"; };
 		2AB4FA592B8F46130061CBD7 /* PaymentsTransfersEffectHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandlerTests.swift; sourceTree = "<group>"; };
 		2AB4FA5B2B8F480C0061CBD7 /* ProcessSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessSpy.swift; sourceTree = "<group>"; };
-		2AB4FA602B906DE30061CBD7 /* ForaTools.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ForaTools.xctestplan; path = TestPlans/ForaTools.xctestplan; sourceTree = SOURCE_ROOT; };
+		2AB4FA602B906DE30061CBD7 /* VortexTools.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = VortexTools.xctestplan; path = TestPlans/VortexTools.xctestplan; sourceTree = SOURCE_ROOT; };
 		2AB4FA612B9071BD0061CBD7 /* OperatorsListComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OperatorsListComponent.xctestplan; sourceTree = "<group>"; };
 		2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponentTests.swift; sourceTree = "<group>"; };
 		2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+TestHelpers.swift"; sourceTree = "<group>"; };
@@ -9944,7 +9944,7 @@
 				2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */,
 				2A392BD42B934A6800029790 /* PrePaymentPicker.xctestplan */,
 				2AB4FA612B9071BD0061CBD7 /* OperatorsListComponent.xctestplan */,
-				2AB4FA602B906DE30061CBD7 /* ForaTools.xctestplan */,
+				2AB4FA602B906DE30061CBD7 /* VortexTools.xctestplan */,
 				2A4C35B92B69256400694861 /* FastPaymentsSettingsPreview-Info.plist */,
 				833E872A2B94CA07009A01AB /* ProductProfileComponents.xctestplan */,
 				2A566EAF2B6816BB00359E05 /* CardStatementAPI.xctestplan */,

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 07.11.2024.
 //
 
-import ForaTools
+import VortexTools
 
 public struct MultipleQRResult<Operator, Provider, QRCode, QRMapping> {
     

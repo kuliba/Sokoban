@@ -11,7 +11,7 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import CombineSchedulers
 import OperatorsListComponents
-import ForaTools
+import VortexTools
 import Foundation
 import GenericRemoteService
 import LatestPaymentsBackendV2

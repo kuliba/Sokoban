@@ -8,7 +8,7 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import Combine
-import ForaTools
+import VortexTools
 import OTPInputComponent
 import PaymentComponents
 import RxViewModel

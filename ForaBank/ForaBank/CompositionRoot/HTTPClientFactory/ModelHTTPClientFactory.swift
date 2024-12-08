@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 24.06.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 
 final class ModelHTTPClientFactory {

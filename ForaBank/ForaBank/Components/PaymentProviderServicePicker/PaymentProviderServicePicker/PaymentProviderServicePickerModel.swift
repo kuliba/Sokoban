@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 24.07.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 import RxViewModel
 

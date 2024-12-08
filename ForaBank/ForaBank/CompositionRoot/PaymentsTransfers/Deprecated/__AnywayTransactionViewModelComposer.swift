@@ -7,7 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
-import ForaTools
+import VortexTools
 import Foundation
 import PaymentComponents
 

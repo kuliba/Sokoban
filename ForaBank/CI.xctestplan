@@ -244,8 +244,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ForaToolsTests",
-        "name" : "ForaToolsTests"
+        "identifier" : "VortexToolsTests",
+        "name" : "VortexToolsTests"
       }
     },
     {

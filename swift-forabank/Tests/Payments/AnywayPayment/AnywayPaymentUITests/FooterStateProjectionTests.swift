@@ -8,7 +8,7 @@
 import AmountComponent
 import AnywayPaymentUI
 import Combine
-import ForaTools
+import VortexTools
 import XCTest
 
 final class ProjectionTests: XCTestCase {

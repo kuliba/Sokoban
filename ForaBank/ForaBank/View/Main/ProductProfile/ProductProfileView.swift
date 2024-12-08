@@ -6,7 +6,7 @@
 //
 
 import ActivateSlider
-import ForaTools
+import VortexTools
 import InfoComponent
 import PinCodeUI
 import RxViewModel

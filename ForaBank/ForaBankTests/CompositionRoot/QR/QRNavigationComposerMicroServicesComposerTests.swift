@@ -6,7 +6,7 @@
 //
 
 @testable import ForaBank
-import ForaTools
+import VortexTools
 import SberQR
 import XCTest
 

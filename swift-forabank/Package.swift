@@ -102,7 +102,7 @@ let package = Package(
         // Utilities
         .remoteServices,
         // tools
-        .foraTools,
+        .vortexTools,
         // WIP: Explorations
         .userModel,
     ],
@@ -322,8 +322,8 @@ let package = Package(
         .remoteServices,
         .remoteServicesTests,
         // tools
-        .foraTools,
-        .foraToolsTests,
+        .vortexTools,
+        .vortexToolsTests,
         // WIP: Explorations
         .wipTests,
         .userModel,
@@ -1012,10 +1012,10 @@ private extension Product {
     
     // MARK: - Tools
     
-    static let foraTools = library(
-        name: .foraTools,
+    static let vortexTools = library(
+        name: .vortexTools,
         targets: [
-            .foraTools,
+            .vortexTools,
         ]
     )
 }
@@ -1159,7 +1159,7 @@ private extension Target {
             // internal modules
             .amountComponent,
             .buttonComponent,
-            .foraTools,
+            .vortexTools,
             .infoComponent,
             .paymentComponents,
             .productSelectComponent,
@@ -1260,7 +1260,7 @@ private extension Target {
         name: .landingUIComponent,
         dependencies: [
             .combineSchedulers,
-            .foraTools,
+            .vortexTools,
             .rxViewModel,
             .sharedConfigs,
             .shimmer,
@@ -1319,7 +1319,7 @@ private extension Target {
         name: .collateralLoanLandingGetConsentsBackend,
         dependencies: [
             .remoteServices,
-            .foraTools
+            .vortexTools
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingGetConsentsName)/Backend"
     )
@@ -1329,7 +1329,7 @@ private extension Target {
         dependencies: [
             .collateralLoanLandingGetConsentsBackend,
             .customDump,
-            .foraTools
+            .vortexTools
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetConsentsName)/Backend",
         resources: [
@@ -1357,7 +1357,7 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .remoteServices
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/Backend/V1"
@@ -1412,7 +1412,7 @@ private extension Target {
     static let ephemeralStores = target(
         name: .ephemeralStores,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .genericLoader,
         ],
         path: "Sources/Infra/\(String.ephemeralStores)"
@@ -1476,7 +1476,7 @@ private extension Target {
     static let serialComponents = target(
         name: .serialComponents,
         dependencies: [
-            .foraTools,
+            .vortexTools,
         ],
         path: "Sources/Infra/\(String.serialComponents)"
     )
@@ -1487,7 +1487,7 @@ private extension Target {
             .customDump,
             // internal modules
             .ephemeralStores,
-            .foraTools,
+            .vortexTools,
             .genericLoader,
             .serialComponents,
         ],
@@ -1549,7 +1549,7 @@ private extension Target {
         name: .anywayPaymentCore,
         dependencies: [
             .anywayPaymentDomain,
-            .foraTools,
+            .vortexTools,
             .remoteServices,
             .tagged,
         ],
@@ -1566,7 +1566,7 @@ private extension Target {
             .anywayPaymentBackend,
             .anywayPaymentCore,
             .anywayPaymentDomain,
-            .foraTools,
+            .vortexTools,
             .remoteServices,
             .rxViewModel,
         ],
@@ -1590,7 +1590,7 @@ private extension Target {
             // internal modules
             .anywayPaymentCore,
             .anywayPaymentDomain,
-            .foraTools,
+            .vortexTools,
             .paymentComponents,
             .rxViewModel,
             .uiPrimitives,
@@ -1606,7 +1606,7 @@ private extension Target {
             .tagged,
             // internal modules
             .anywayPaymentUI,
-            .foraTools,
+            .vortexTools,
             .remoteServices,
             .rxViewModel,
         ],
@@ -1637,7 +1637,7 @@ private extension Target {
         name: .latestPaymentsBackendV3,
         dependencies: [
             // internal modules
-            .foraTools,
+            .vortexTools,
             .remoteServices,
         ],
         path: "Sources/Payments/LatestPayments/Backend/V3"
@@ -1661,7 +1661,7 @@ private extension Target {
         name: .operatorsListBackendV0,
         dependencies: [
             // internal modules
-            .foraTools,
+            .vortexTools,
             .remoteServices,
         ],
         path: "Sources/Payments/OperatorsList/Backend/V0"
@@ -1773,7 +1773,7 @@ private extension Target {
     static let utilityPayment = target(
         name: .utilityPayment,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .prePaymentPicker,
             .tagged,
         ],
@@ -1799,7 +1799,7 @@ private extension Target {
             // external packages
             .tagged,
             // internal modules
-            .foraTools,
+            .vortexTools,
             .utilityServicePrepaymentDomain,
         ],
         path: "Sources/Payments/UtilityServicePrepayment/Core"
@@ -1810,7 +1810,7 @@ private extension Target {
             // external packages
             .tagged,
             // internal modules
-            .foraTools,
+            .vortexTools,
         ],
         path: "Sources/Payments/UtilityServicePrepayment/Domain"
     )
@@ -1820,7 +1820,7 @@ private extension Target {
             // external packages
             .tagged,
             // internal modules
-            .foraTools,
+            .vortexTools,
             .uiPrimitives,
             .utilityServicePrepaymentDomain,
         ],
@@ -1888,7 +1888,7 @@ private extension Target {
         dependencies: [
             .genericRemoteService,
             .remoteServices,
-            .foraTools,
+            .vortexTools,
             .uiPrimitives
         ],
         path: "Sources/Services/\(String.modifyC2BSubscriptionService)"
@@ -1964,7 +1964,7 @@ private extension Target {
         name: .getBannersMyProductListService,
         dependencies: [
             .remoteServices,
-            .foraTools
+            .vortexTools
         ],
         path: "Sources/Services/\(String.getBannersMyProductListService)"
     )
@@ -2166,7 +2166,7 @@ private extension Target {
     static let transferPublicKey = target(
         name: .transferPublicKey,
         dependencies: [
-            .foraTools
+            .vortexTools
         ],
         path: "Sources/Services/\(String.transferPublicKey)"
     )
@@ -2178,7 +2178,7 @@ private extension Target {
             .customDump,
             // internal modules
             .transferPublicKey,
-            .foraTools
+            .vortexTools
         ],
         path: "Tests/Services/\(String.transferPublicKeyTests)"
     )
@@ -2253,7 +2253,7 @@ private extension Target {
     static let getProductListByTypeV7Service = target(
         name: .getProductListByTypeV7Service,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .remoteServices
         ],
         path: "Sources/Services/\(String.getProductListByTypeV7Service)"
@@ -2303,7 +2303,7 @@ private extension Target {
     static let savingsServices = target(
         name: .savingsServices,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .remoteServices
         ],
         path: "Sources/Services/\(String.savingsServices)"
@@ -2315,7 +2315,7 @@ private extension Target {
             // external packages
             .customDump,
             // internal modules
-            .foraTools,
+            .vortexTools,
             .savingsServices,
         ],
         path: "Tests/Services/\(String.savingsServicesTests)"
@@ -2536,7 +2536,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
-            .foraTools,
+            .vortexTools,
             .rxViewModel,
             .sharedConfigs,
             .uiPrimitives,
@@ -2615,7 +2615,7 @@ private extension Target {
         name: .rxViewModel,
         dependencies: [
             // internal packages
-            .foraTools,
+            .vortexTools,
         ],
         path: "Sources/UI/\(String.rxViewModel)"
     )
@@ -2727,7 +2727,7 @@ private extension Target {
     static let uiPrimitives = target(
         name: .uiPrimitives,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .sharedConfigs,
             .shimmer,
         ],
@@ -2738,7 +2738,7 @@ private extension Target {
         name: .uiPrimitivesTests,
         dependencies: [
             .customDump,
-            .foraTools,
+            .vortexTools,
             .sharedConfigs,
             .uiPrimitives,
         ],
@@ -2781,7 +2781,7 @@ private extension Target {
             .tagged,
             // internal modules
             .buttonComponent,
-            .foraTools,
+            .vortexTools,
             .textFieldComponent,
             .sharedConfigs,
         ],
@@ -2795,7 +2795,7 @@ private extension Target {
             .customDump,
             // internal modules
             .amountComponent,
-            .foraTools,
+            .vortexTools,
             .textFieldComponent,
             .sharedConfigs,
         ],
@@ -3024,7 +3024,7 @@ private extension Target {
             // internal modules
             .amountComponent,
             .buttonComponent,
-            .foraTools,
+            .vortexTools,
             .paymentComponents,
             .productSelectComponent,
             .prePaymentPicker,
@@ -3051,7 +3051,7 @@ private extension Target {
     static let productSelectComponent = target(
         name: .productSelectComponent,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .sharedConfigs,
             .tagged,
             .uiPrimitives,
@@ -3076,7 +3076,7 @@ private extension Target {
     static let sharedConfigs = target(
         name: .sharedConfigs,
         dependencies: [
-            .foraTools,
+            .vortexTools,
             .tagged,
         ],
         path: "Sources/UI/Components/\(String.sharedConfigs)"
@@ -3120,7 +3120,7 @@ private extension Target {
             // internal modules
             .ephemeralStores,
             .fetcher,
-            .foraTools,
+            .vortexTools,
             .genericLoader,
             .genericRemoteService,
             .rxViewModel,
@@ -3138,19 +3138,19 @@ private extension Target {
     
     // MARK: - Tools
     
-    static let foraTools = target(
-        name: .foraTools,
+    static let vortexTools = target(
+        name: .vortexTools,
         dependencies: [
             .combineSchedulers,
             .svgKit
         ]
     )
-    static let foraToolsTests = testTarget(
-        name: .foraToolsTests,
+    static let vortexToolsTests = testTarget(
+        name: .vortexToolsTests,
         dependencies: [
             .combineSchedulers,
             .customDump,
-            .foraTools
+            .vortexTools
         ]
     )
 }
@@ -3611,8 +3611,8 @@ private extension Target.Dependency {
 
     // MARK: - Tools
     
-    static let foraTools = byName(
-        name: .foraTools
+    static let vortexTools = byName(
+        name: .vortexTools
     )
 }
 
@@ -3959,8 +3959,8 @@ private extension String {
     
     // MARK: - Tools
     
-    static let foraTools = "ForaTools"
-    static let foraToolsTests = "ForaToolsTests"
+    static let vortexTools = "VortexTools"
+    static let vortexToolsTests = "VortexToolsTests"
 }
 
 // MARK: - Third-Party Packages

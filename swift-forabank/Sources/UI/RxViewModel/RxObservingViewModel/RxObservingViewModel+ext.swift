@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 20.04.2024.
 //
 
-import ForaTools
+import VortexTools
 
 public extension RxObservingViewModel {
     

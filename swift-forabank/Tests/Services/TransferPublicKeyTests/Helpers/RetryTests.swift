@@ -7,7 +7,7 @@
 
 import TransferPublicKey
 import XCTest
-import ForaTools
+import VortexTools
 
 final class RetryTests: XCTestCase {
     

@@ -6,7 +6,7 @@
 //
 
 @testable import ForaBank
-import ForaTools
+import VortexTools
 import XCTest
 
 final class LoggingDecoratorTests: XCTestCase {
@@ -150,7 +150,7 @@ final class LoggingDecoratorTests: XCTestCase {
     private struct LoadError: Error, Equatable {}
 }
 
-extension Spy: ForaTools.Loader {
+extension Spy: VortexTools.Loader {
     
     func load(
         _ payload: Payload,

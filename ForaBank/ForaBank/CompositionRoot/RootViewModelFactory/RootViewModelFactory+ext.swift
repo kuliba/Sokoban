@@ -11,7 +11,7 @@ import CodableLanding
 import CollateralLoanLandingGetShowcaseBackend
 import Combine
 import Fetcher
-import ForaTools
+import VortexTools
 import Foundation
 import GenericRemoteService
 import LandingMapping

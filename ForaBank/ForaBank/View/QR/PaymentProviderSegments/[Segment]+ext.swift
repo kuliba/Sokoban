@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 22.07.2024.
 //
 
-import ForaTools
+import VortexTools
 
 protocol Segmentable {
     

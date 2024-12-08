@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ForaTools
+import VortexTools
 import RemoteServices
 
 public extension RequestFactory {

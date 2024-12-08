@@ -6,7 +6,7 @@
 //
 
 import AnywayPaymentDomain
-import ForaTools
+import VortexTools
 import PaymentComponents
 import SwiftUI
 

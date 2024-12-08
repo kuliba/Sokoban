@@ -6,7 +6,7 @@
 //
 
 @testable import ForaBank
-import ForaTools
+import VortexTools
 import XCTest
 
 final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase {

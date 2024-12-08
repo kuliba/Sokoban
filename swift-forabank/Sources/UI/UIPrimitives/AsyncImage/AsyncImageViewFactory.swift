@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.06.2024.
 //
 
-import ForaTools
+import VortexTools
 import SwiftUI
 
 /// A factory class for creating instances of `AsyncImageView` with different fetching strategies.

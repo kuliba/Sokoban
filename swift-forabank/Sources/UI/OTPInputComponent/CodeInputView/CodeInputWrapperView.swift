@@ -5,7 +5,7 @@
 //  Created by Дмитрий Савушкин on 23.05.2024.
 //
 
-import ForaTools
+import VortexTools
 import RxViewModel
 import SwiftUI
 

@@ -7,7 +7,7 @@
 
 import Foundation
 import ForaCrypto
-import ForaTools
+import VortexTools
 import KeyChainStore
 
 typealias KeyTagKeyChainStore<Key> = KeyChainStore<KeyTag, Key>

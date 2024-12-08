@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.10.2024.
 //
 
-import ForaTools
+import VortexTools
 
 /// A composer that manages data loading with serial-based caching mechanisms.
 /// It integrates in-memory (ephemeral) and on-disk (persistent) storage,

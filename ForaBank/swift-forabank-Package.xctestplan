@@ -92,8 +92,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "ForaToolsTests",
-        "name" : "ForaToolsTests"
+        "identifier" : "VortexToolsTests",
+        "name" : "VortexToolsTests"
       }
     },
     {

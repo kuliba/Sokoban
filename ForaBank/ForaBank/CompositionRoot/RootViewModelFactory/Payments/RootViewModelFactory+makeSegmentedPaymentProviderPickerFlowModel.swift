@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 22.11.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 
 extension RootViewModelFactory {

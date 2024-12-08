@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-import ForaTools
+import VortexTools
 import RxViewModel
 
 public typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 
 final class QRScanResultMapper {

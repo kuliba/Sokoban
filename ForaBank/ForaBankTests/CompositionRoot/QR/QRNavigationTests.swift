@@ -7,7 +7,7 @@
 
 import SberQR
 @testable import ForaBank
-import ForaTools
+import VortexTools
 import XCTest
 
 class QRNavigationTests: XCTestCase {

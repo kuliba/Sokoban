@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.06.2024.
 //
 
-import ForaTools
+import VortexTools
 import SwiftUI
 
-typealias ImageLoader = ForaTools.Loader<String, Result<(String, Image), Error>>
+typealias ImageLoader = VortexTools.Loader<String, Result<(String, Image), Error>>

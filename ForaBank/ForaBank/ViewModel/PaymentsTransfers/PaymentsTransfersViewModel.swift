@@ -6,7 +6,7 @@
 //
 
 import Combine
-import ForaTools
+import VortexTools
 import PickerWithPreviewComponent
 import SberQR
 import SwiftUI

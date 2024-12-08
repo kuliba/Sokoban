@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.06.2024.
 //
 
-import ForaTools
+import VortexTools
 
 enum UtilityPrepaymentFlowEvent<LastPayment, Operator, Service> {
     

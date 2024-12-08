@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
-import ForaTools
+import VortexTools
 
 public extension OTPInputState {
     

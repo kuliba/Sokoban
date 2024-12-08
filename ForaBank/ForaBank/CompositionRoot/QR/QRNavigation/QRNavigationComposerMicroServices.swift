@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 05.10.2024.
 //
 
-import ForaTools
+import VortexTools
 import Foundation
 import SberQR
 

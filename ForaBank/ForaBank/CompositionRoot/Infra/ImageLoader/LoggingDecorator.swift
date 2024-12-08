@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.07.2024.
 //
 
-import ForaTools
+import VortexTools
 
 /// A decorator that logs the load operations of a `Loader`.
 /// This class wraps around another `Loader` and logs the load requests and results.
@@ -31,7 +31,7 @@ final class LoggingDecorator<Payload, Response> {
 extension LoggingDecorator {
     
     /// The type of the decoratee `Loader`.
-    typealias Decoratee = ForaTools.Loader<Payload, Response>
+    typealias Decoratee = VortexTools.Loader<Payload, Response>
     
     /// The type of the log function.
     /// - Parameters:
@@ -42,7 +42,7 @@ extension LoggingDecorator {
     typealias Log = (LoggerAgentLevel, String, StaticString, UInt) -> Void
 }
 
-extension LoggingDecorator: ForaTools.Loader {
+extension LoggingDecorator: VortexTools.Loader {
     
     /// Loads the given payload and logs the request and result.
     ///

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-import ForaTools
+import VortexTools
 import SwiftUI
 import CalendarUI
 

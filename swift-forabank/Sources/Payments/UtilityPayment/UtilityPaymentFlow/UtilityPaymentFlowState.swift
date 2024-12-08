@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.03.2024.
 //
 
-import ForaTools
+import VortexTools
 
 @available(*, deprecated)
 public struct UtilityPaymentFlowState<LastPayment, Operator, Service> {
