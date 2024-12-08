@@ -109,6 +109,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         ])
         
         httpClient.complete(with: anyError())
+        
         httpClient.complete(with: anyError(), at: 1)
         awaitActorThreadHop()
         
@@ -131,6 +132,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         ])
         
         httpClient.complete(with: anyError())
+        
         httpClient.complete(with: mobileJSON(), at: 1)
         awaitActorThreadHop()
         
@@ -153,9 +155,10 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         ])
         
         httpClient.complete(with: anyError())
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         awaitActorThreadHop()
+        
         httpClient.expectRequests(withQueryValueFor: "type", match: [
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -171,15 +174,16 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         )
         
         userInitiatedScheduler.advance()
-        
         awaitActorThreadHop()
+        
         httpClient.complete(with: anyError())
+
         httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
-        
         awaitActorThreadHop()
+        
         httpClient.complete(with: anyError(), at: 2)
-        
         awaitActorThreadHop()
+        
         httpClient.expectRequests(withQueryValueFor: "type", match: [
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -214,7 +218,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         )
         let httpClient = HTTPClientSpy()
         let userInitiatedScheduler = DispatchQueue.test
-        let sut = RootViewModelFactory(
+        let factory = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
@@ -225,7 +229,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
                 main: .immediate,
                 userInitiated: userInitiatedScheduler.eraseToAnyScheduler()
             ).0
-        ).make(
+        )
+        let sut = factory.make(
             dismiss: {},
             collateralLoanLandingFlag: .active,
             paymentsTransfersFlag: .active,

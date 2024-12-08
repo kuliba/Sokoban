@@ -19,9 +19,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectLoad(nil, emptyLocalAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: anyError())
             
+            httpClient.complete(with: anyError())
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
             ])
@@ -38,9 +39,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectLoad(remoteCategories, emptyLocalAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: json)
             
+            httpClient.complete(with: json)
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
             ])
@@ -57,6 +59,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectLoad([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+            
             XCTAssertEqual(localAgent.loadCallCount, 1)
             XCTAssertEqual(localAgent.storeCallCount, 0)
             XCTAssertEqual(httpClient.callCount, 0)
@@ -73,7 +76,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             
             self.awaitActorThreadHop()
             XCTAssertEqual(localAgent.loadCallCount, 1)
+            
             httpClient.complete(with: anyError())
+            self.awaitActorThreadHop()
         }
     }
     
@@ -84,9 +89,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(nil, emptyLocalAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: anyError())
             
+            httpClient.complete(with: anyError())
             self.awaitActorThreadHop()
+            
             XCTAssertEqual(localAgent.storeCallCount, 0)
         }
     }
@@ -98,9 +104,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(nil, emptyLocalAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: anyError())
             
+            httpClient.complete(with: anyError())
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
             ])
@@ -127,9 +134,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: anyError())
             
+            httpClient.complete(with: anyError())
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
                 "getOperatorsListByParam-security",
@@ -161,9 +169,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: json)
             
+            httpClient.complete(with: json)
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
                 "getOperatorsListByParam-charity",
@@ -195,9 +204,10 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            httpClient.complete(with: json)
             
+            httpClient.complete(with: json)
             self.awaitActorThreadHop()
+            
             XCTAssertEqual(localAgent.storeCallCount, 1)
         }
     }
@@ -213,15 +223,16 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+            
             httpClient.complete(with: json)
-            
             self.awaitActorThreadHop()
+            
             httpClient.complete(with: anyError(), at: 1)
-            
             self.awaitActorThreadHop()
+            
             httpClient.complete(with: anyError(), at: 2)
-            
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
                 "getOperatorsListByParam-housingAndCommunalService",
@@ -243,15 +254,17 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+            
             httpClient.complete(with: categoriesJSON)
-            
             self.awaitActorThreadHop()
+            
             httpClient.complete(with: self.getOperatorsListByParamJSON(), at: 1)
-            
             self.awaitActorThreadHop()
+            
+            
             httpClient.complete(with: anyError(), at: 2)
-            
             self.awaitActorThreadHop()
+            
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
                 "getOperatorsListByParam-housingAndCommunalService",
