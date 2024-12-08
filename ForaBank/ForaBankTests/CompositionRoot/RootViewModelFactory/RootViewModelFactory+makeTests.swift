@@ -194,6 +194,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
     private typealias SUT = RootViewDomain.Binder
     
     private func makeSUT(
+        localAgent: LocalAgentProtocol? = nil,
         sessionState: SessionState = .inactive,
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         file: StaticString = #file,
@@ -204,9 +205,13 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         sessionAgent: SessionAgentEmptyMock,
         userInitiatedScheduler: TestSchedulerOf<DispatchQueue>
     ) {
+        let localAgent = localAgent ?? LocalAgentEmptyMock()
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
-        let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent,
+            localAgent: localAgent
+        )
         let httpClient = HTTPClientSpy()
         let userInitiatedScheduler = DispatchQueue.test
         let sut = RootViewModelFactory(

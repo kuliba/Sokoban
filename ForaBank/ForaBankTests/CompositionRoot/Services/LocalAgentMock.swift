@@ -38,13 +38,13 @@ final class LocalAgentMock: LocalAgentProtocol {
     /// Initializes the mock with a set of decodable values and their associated serials,
     /// which will be returned on subsequent `load(_:)` calls.
     ///
-    /// - Parameter values: An array of `(Decodable, String?)` tuples. Each value is keyed
-    ///                     internally by its dynamic type. If multiple values of the same
-    ///                     type appear, the last one overwrites the previous value and serial.
-    init(values: [(any Decodable, String?)] = []) {
+    /// - Parameter stubs: An array of `(Decodable, String?)` tuples. Each value is keyed
+    ///                    internally by its dynamic type. If multiple values of the same
+    ///                    type appear, the last one overwrites the previous value and serial.
+    init(stubs: [(any Decodable, String?)] = []) {
         
         self.returnValues = .init(
-            values.map { (ObjectIdentifier(type(of: $0.0)), ($0.0, $0.1)) },
+            stubs.map { (ObjectIdentifier(type(of: $0.0)), ($0.0, $0.1)) },
             uniquingKeysWith: { _, last in last }
         )
     }
@@ -116,6 +116,6 @@ extension LocalAgentMock {
     convenience init(values: [any Decodable]) {
         
         let typedValues = values.map { ($0, nil as String?) }
-        self.init(values: typedValues)
+        self.init(stubs: typedValues)
     }
 }
