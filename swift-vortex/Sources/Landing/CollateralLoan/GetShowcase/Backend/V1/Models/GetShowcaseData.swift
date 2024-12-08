@@ -1,6 +1,6 @@
 //
 //  CollateralLoanLandingGetShowcaseData.swift
-//  swift-forabank
+//  swift-vortex
 //
 //  Created by Valentin Ozerov on 07.10.2024.
 //
