@@ -1,4 +1,4 @@
-@testable import ForaBank
+@testable import Vortex
 import Foundation
 
 public extension Array where Element == ProductAccountData {

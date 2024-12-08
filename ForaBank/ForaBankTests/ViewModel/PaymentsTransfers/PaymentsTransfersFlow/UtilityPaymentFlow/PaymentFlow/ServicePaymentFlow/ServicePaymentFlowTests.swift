@@ -6,7 +6,7 @@
 //
 
 import AnywayPaymentDomain
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 class ServicePaymentFlowTests: XCTestCase {

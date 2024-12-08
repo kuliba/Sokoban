@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 16.11.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {

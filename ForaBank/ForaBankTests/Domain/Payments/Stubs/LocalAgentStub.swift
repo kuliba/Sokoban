@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 24.02.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import Foundation
 
 final class LocalAgentStub: LocalAgentProtocol {

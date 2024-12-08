@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 26.10.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import PayHub
 
 // MARK: - Equatable

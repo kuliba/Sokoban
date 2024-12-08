@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 03.09.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Model_DictionaryTests: XCTestCase {

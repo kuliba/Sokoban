@@ -6,7 +6,7 @@
 //
 
 import CvvPin
-@testable import ForaBank
+@testable import Vortex
 import URLRequestFactory
 import XCTest
 

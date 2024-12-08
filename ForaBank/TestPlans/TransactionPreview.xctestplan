@@ -19,28 +19,28 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "AnywayPaymentAdaptersTests",
         "name" : "AnywayPaymentAdaptersTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "AnywayPaymentBackendTests",
         "name" : "AnywayPaymentBackendTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "AnywayPaymentCoreTests",
         "name" : "AnywayPaymentCoreTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "AnywayPaymentUITests",
         "name" : "AnywayPaymentUITests"
       }

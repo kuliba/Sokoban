@@ -6,7 +6,7 @@
 //
 
 import VortexTools
-@testable import ForaBank
+@testable import Vortex
 import SerialComponents
 import XCTest
 

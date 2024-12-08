@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.09.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 class LoggingRemoteNanoServiceComposerAsFactoryTests: XCTestCase {

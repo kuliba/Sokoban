@@ -5,7 +5,7 @@
 //  Created by Дмитрий Савушкин on 30.07.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import RemoteServices
 import XCTest
 

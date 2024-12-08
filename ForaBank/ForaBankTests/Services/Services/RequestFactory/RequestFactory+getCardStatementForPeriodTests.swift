@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 import CardStatementAPI
 
 final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {

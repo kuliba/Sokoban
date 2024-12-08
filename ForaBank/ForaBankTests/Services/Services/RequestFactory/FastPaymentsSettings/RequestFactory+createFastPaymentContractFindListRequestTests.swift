@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.02.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RequestFactory_createFastPaymentContractFindListRequestTests: XCTestCase {

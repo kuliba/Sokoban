@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.05.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class SearchFactoryTests: XCTestCase {

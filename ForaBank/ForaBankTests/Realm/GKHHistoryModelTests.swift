@@ -7,7 +7,7 @@
 
 import XCTest
 import RealmSwift
-@testable import ForaBank
+@testable import Vortex
 
 class GKHHistoryModelTests: XCTestCase {
 

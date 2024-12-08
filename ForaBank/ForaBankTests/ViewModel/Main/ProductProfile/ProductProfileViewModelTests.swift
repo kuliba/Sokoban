@@ -5,7 +5,7 @@
 //  Created by Max Gribov on 06.06.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import PinCodeUI
 import SberQR
 import SwiftUI

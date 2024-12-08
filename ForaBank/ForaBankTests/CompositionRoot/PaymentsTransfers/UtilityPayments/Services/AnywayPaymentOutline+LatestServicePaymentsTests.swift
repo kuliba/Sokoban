@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 29.06.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import AnywayPaymentDomain
 import LatestPaymentsBackendV2
 import RemoteServices

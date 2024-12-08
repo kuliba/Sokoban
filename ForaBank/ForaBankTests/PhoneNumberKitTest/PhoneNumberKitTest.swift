@@ -7,7 +7,7 @@
 
 import XCTest
 import PhoneNumberKit
-@testable import ForaBank
+@testable import Vortex
 
 class PhoneNumberKitTest: XCTestCase {
 

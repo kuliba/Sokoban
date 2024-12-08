@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 import SwiftUI
 
 final class StringValidatorTests: XCTestCase {

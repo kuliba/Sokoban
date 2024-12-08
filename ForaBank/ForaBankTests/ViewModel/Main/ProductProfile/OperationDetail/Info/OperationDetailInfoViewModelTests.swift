@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.06.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class OperationDetailInfoViewModelTests: XCTestCase {

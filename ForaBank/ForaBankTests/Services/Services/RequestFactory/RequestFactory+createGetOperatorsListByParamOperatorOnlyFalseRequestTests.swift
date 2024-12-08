@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 16.05.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequestTests: XCTestCase {

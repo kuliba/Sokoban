@@ -11,7 +11,7 @@ import XCTest
 /// [Troubleshooting -34018 Keychain Er… | Apple Developer Forums](https://developer.apple.com/forums/thread/114456)
 /// [Error -34018 errSecMissingEntitlem… | Apple Developer Forums](https://developer.apple.com/forums/thread/64699)
 ///
-/// - Note: This is a copy of `KeyChainStoreTests` from `swift-forabank` package, needed here due to entitlements that cannot be set in Swift Package test targets running on Simulator (no problem on a Mac).
+/// - Note: This is a copy of `KeyChainStoreTests` from `swift-vortex` package, needed here due to entitlements that cannot be set in Swift Package test targets running on Simulator (no problem on a Mac).
 final class KeyChainStoreTests: XCTestCase {
     
     override func setUp() {

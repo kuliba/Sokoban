@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 21.02.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 
 extension CurrencyData {
     

@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 02.10.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import GenericRemoteService
 import XCTest
 

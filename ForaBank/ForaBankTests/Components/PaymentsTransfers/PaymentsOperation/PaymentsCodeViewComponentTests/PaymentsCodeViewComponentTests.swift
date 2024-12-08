@@ -6,7 +6,7 @@
 //
 
 import CombineSchedulers
-@testable import ForaBank
+@testable import Vortex
 @testable import TextFieldComponent
 @testable import TextFieldUI
 import XCTest

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.08.2023.
 //
 
-import ForaBank
+import Vortex
 import XCTest
 
 final class PublicTransportKeyTests: XCTestCase {

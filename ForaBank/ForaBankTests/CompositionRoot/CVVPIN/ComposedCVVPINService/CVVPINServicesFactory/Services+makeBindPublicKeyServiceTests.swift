@@ -6,7 +6,7 @@
 //
 
 import CVVPIN_Services
-@testable import ForaBank
+@testable import Vortex
 import VortexCrypto
 import XCTest
 

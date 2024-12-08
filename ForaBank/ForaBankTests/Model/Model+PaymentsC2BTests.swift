@@ -5,7 +5,7 @@
 //  Created by Дмитрий Савушкин on 18.08.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Model_PaymentsC2BTests: XCTestCase {

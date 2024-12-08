@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.10.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsTransfersPersonalTransfersTests {

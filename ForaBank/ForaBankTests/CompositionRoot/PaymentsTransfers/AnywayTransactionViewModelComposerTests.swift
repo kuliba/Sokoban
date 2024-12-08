@@ -7,7 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class AnywayTransactionViewModelComposerTests: XCTestCase {

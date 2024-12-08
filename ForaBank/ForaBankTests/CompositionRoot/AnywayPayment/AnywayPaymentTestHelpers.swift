@@ -9,7 +9,7 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import Foundation
 import RemoteServices
-@testable import ForaBank
+@testable import Vortex
 
 func makeCreateAnywayTransferResponse(
     finalStep: Bool = false,

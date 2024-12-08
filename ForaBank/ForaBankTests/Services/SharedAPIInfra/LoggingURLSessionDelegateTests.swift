@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.07.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class LoggingURLSessionDelegateTests: XCTestCase {

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.07.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 
 extension SVGImageData {
     

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 18.12.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 // TODO: move to prod after finishing up with tests after model decoupling

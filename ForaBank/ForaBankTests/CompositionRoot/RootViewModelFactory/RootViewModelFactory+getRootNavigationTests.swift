@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 26.11.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTests {

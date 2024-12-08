@@ -6,7 +6,7 @@
 //
 
 import CombineSchedulers
-@testable import ForaBank
+@testable import Vortex
 import VortexTools
 import SberQR
 import XCTest

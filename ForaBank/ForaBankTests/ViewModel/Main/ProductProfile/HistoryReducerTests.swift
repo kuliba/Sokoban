@@ -6,7 +6,7 @@
 ////
 //
 //import Foundation
-//@testable import ForaBank
+//@testable import Vortex
 //import XCTest
 //
 //final class HistoryReducerTests: XCTestCase {

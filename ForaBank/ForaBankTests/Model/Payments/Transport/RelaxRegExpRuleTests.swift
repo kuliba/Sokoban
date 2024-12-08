@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 29.06.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RelaxRegExpRuleTests: XCTestCase {

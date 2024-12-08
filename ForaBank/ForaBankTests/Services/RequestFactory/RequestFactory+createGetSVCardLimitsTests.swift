@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 05.07.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import RemoteServices
 import SVCardLimitAPI
 import XCTest

@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 27.11.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RequestFactory_createGetShowcaseRequestTests: XCTestCase {

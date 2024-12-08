@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 16.06.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import PickerWithPreviewComponent
 import XCTest
 

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 27.03.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class NanoServices_makeCreateAnywayTransferNewV2Tests: XCTestCase {

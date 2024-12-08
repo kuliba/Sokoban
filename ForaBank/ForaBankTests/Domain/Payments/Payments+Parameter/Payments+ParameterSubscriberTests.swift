@@ -5,7 +5,7 @@
 //  Created by Дмитрий Савушкин on 02.04.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Payments_ParameterSubscriberTests: XCTestCase {

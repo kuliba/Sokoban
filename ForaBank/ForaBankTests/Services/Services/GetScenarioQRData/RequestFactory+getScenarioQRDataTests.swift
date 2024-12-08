@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 26.09.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Services_getScenarioQRDataTests: XCTestCase {

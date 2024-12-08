@@ -19,7 +19,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "CollateralLoanLandingTests",
         "name" : "CollateralLoanLandingTests"
       }

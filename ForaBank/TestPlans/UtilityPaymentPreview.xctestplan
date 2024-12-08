@@ -14,14 +14,14 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "PrePaymentPickerTests",
         "name" : "PrePaymentPickerTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "UtilityPaymentTests",
         "name" : "UtilityPaymentTests"
       }

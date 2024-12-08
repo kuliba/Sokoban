@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.07.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Model_QRHelpersTests: XCTestCase {

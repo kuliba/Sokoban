@@ -14,7 +14,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "OperatorsListComponentsTests",
         "name" : "OperatorsListComponentsTests"
       }

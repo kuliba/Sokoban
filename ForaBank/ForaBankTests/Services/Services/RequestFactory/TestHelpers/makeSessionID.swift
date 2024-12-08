@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 11.10.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import Foundation
 
 func makeSessionID(

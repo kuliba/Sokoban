@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-forabank",
+    name: "swift-vortex",
     platforms: [
         .iOS(.v15),
         .macOS(.v12),

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 25.02.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class OptionSelectorViewModelTests: XCTestCase {

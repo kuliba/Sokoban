@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 15.11.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 
 extension PaymentTemplateData {
     

@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 10.09.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import RemoteServices
 import XCTest
 import GetBannerCatalogListAPI

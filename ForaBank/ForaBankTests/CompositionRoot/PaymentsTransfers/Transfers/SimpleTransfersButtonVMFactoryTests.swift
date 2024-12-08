@@ -26,7 +26,7 @@ extension SimpleTransfersButtonVMFactory: TransfersButtonVMFactory {
     }
 }
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class SimpleTransfersButtonVMFactoryTests: XCTestCase {

@@ -7,7 +7,7 @@
 
 import CVVPIN_Services
 import Fetcher
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 fileprivate typealias SUT = CVVPIN_Services.BindPublicKeyWithEventIDService

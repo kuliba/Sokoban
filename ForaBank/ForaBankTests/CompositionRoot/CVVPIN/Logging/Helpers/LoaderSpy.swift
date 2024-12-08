@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.11.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import Foundation
 
 final class LoaderSpy<Value>: Loader {

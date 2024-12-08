@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 @testable import ServerAgent
 
 class ServerAgentTests: XCTestCase {

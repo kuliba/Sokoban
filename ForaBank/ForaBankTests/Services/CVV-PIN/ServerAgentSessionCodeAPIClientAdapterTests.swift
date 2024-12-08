@@ -7,7 +7,7 @@
 
 import Combine
 import CvvPin
-@testable import ForaBank
+@testable import Vortex
 import ServerAgent
 import XCTest
 

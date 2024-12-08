@@ -6,7 +6,7 @@
 //
 
 import FastPaymentsSettings
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RequestFactory_createGetBankDefaultRequestTests: XCTestCase {

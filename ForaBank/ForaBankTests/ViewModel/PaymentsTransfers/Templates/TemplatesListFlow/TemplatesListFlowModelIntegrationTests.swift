@@ -7,7 +7,7 @@
 
 import Combine
 import CombineSchedulers
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class TemplatesListFlowModelIntegrationTests: XCTestCase {

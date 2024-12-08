@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 import Combine
 
 final class PaymentsOperationViewModelTests: XCTestCase {

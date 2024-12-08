@@ -80,7 +80,7 @@ private extension LoadServiceCategoriesComposer {
     }
 }
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class LoadServiceCategoriesComposerTests: XCTestCase {

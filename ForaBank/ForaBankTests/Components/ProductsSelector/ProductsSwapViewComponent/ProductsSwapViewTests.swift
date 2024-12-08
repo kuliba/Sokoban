@@ -4,7 +4,7 @@
 //
 //  Created by Andryusina Nataly on 18.08.2023.
 //
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class ProductsSwapViewTests: XCTestCase {

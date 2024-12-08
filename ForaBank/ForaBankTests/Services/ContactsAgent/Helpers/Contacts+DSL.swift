@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 14.11.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 extension XCTestCase {

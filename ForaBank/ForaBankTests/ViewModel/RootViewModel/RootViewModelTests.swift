@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.09.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import CombineSchedulers
 import LandingUIComponent
 import SberQR

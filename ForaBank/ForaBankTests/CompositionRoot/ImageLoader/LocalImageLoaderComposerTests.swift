@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.07.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import SwiftUI
 import XCTest
 

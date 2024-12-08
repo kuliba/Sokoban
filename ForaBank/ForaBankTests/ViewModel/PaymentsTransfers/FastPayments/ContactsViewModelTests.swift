@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import ForaBank
+@testable import Vortex
 @testable import TextFieldComponent
 import struct SwiftUI.Image
 import XCTest

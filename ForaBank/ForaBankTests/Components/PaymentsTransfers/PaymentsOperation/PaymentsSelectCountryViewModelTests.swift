@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.06.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 @testable import TextFieldComponent
 @testable import TextFieldModel
 import XCTest

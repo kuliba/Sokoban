@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 12.05.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import ServerAgent
 
 func unimplemented<T>(

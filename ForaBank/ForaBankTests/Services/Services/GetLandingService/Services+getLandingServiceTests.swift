@@ -6,7 +6,7 @@
 //
 
 import CodableLanding
-@testable import ForaBank
+@testable import Vortex
 import GenericRemoteService
 import LandingUIComponent
 import XCTest

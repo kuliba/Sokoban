@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 03.05.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 @testable import CardUI
 

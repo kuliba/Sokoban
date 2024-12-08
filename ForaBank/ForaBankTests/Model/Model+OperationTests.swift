@@ -7,7 +7,7 @@
 
 import Combine
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 
 final class Model_OperationTests: XCTestCase {
     

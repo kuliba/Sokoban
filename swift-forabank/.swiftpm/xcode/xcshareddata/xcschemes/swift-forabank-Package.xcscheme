@@ -1289,7 +1289,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/swift-forabank-Package.xctestplan"
+            reference = "container:../ForaBank/swift-vortex-Package.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

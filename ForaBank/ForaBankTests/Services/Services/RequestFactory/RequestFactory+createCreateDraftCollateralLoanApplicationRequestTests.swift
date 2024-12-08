@@ -7,7 +7,7 @@
 
 import RemoteServices
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 
 final class RequestFactory_createCreateDraftCollateralLoanApplicationRequestTests: XCTestCase {
     

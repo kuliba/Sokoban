@@ -7,7 +7,7 @@
 
 import FastPaymentsSettings
 import RemoteServices
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCase {

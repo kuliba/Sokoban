@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 18.11.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import PayHubUI
 import XCTest
 

@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 01.10.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class MarketShowcaseComposerTests: XCTestCase {

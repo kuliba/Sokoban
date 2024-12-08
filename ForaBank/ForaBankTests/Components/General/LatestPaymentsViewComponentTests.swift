@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 10.07.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import TextFieldComponent
 import XCTest
 import SwiftUI

@@ -7,7 +7,7 @@
 
 import XCTest
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 10.05.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class ContactsViewModelModeTests: XCTestCase {

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.08.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Services_getProcessingSessionCodeTests: XCTestCase {

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 07.12.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Model_isSberQRTests: XCTestCase {

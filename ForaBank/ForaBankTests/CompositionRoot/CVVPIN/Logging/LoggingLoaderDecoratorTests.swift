@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.11.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class LoggingLoaderDecoratorTests: XCTestCase {

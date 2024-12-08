@@ -14,21 +14,21 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "OTPInputComponentTests",
         "name" : "OTPInputComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "FastPaymentsSettingsTests",
         "name" : "FastPaymentsSettingsTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "UserAccountNavigationComponentTests",
         "name" : "UserAccountNavigationComponentTests"
       }

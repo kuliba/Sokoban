@@ -6,7 +6,7 @@
 //
 
 import CVVPIN_Services
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 @available(iOS 16.0.0, *)

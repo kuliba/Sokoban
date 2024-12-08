@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Model_PaymentsTransportAvtodorTests: XCTestCase {

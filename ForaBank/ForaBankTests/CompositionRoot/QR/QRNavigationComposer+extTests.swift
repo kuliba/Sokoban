@@ -36,7 +36,7 @@ extension QRNavigationComposer {
     }
 }
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class QRNavigationComposer_extTests: QRNavigationTests {

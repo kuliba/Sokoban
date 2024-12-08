@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 09.08.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 //final class Crypto_AESTests: XCTestCase {

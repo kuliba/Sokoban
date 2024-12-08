@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 29.11.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 import CollateralLoanLandingGetCollateralLandingBackend
 import RemoteServices

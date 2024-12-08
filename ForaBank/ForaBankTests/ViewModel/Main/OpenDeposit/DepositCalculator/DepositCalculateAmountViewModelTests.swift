@@ -5,7 +5,7 @@
 //  Created by Andrew Kurdin on 18.06.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class DepositCalculateAmountViewModelTests: XCTestCase {

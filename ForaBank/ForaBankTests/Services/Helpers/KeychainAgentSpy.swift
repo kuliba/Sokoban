@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import ForaBank
+@testable import Vortex
 
 final class KeychainAgentSpy: KeychainAgentProtocol {
     

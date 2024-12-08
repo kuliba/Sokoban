@@ -8,7 +8,7 @@
 import Foundation
 
 import XCTest
-@testable import ForaBank
+@testable import Vortex
 
 final class DocumentItemModelTests: XCTestCase {
     

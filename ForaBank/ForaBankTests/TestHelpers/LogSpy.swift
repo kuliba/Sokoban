@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 12.11.2023.
 //
 
-@testable import ForaBank
+@testable import Vortex
 
 final class LogSpy {
     

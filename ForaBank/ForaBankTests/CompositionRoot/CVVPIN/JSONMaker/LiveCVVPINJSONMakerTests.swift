@@ -8,7 +8,7 @@
 import CryptoKit
 import class CVVPIN_Services.ChangePINService
 import class CVVPIN_Services.ShowCVVService
-@testable import ForaBank
+@testable import Vortex
 import VortexCrypto
 import XCTest
 

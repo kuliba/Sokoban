@@ -6,7 +6,7 @@
 //
 
 import KeyChainStore
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 /// [Troubleshooting -34018 Keychain Er… | Apple Developer Forums](https://developer.apple.com/forums/thread/114456)
