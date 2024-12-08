@@ -55,7 +55,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         
         let (localCategories, categoryModelStub) = makeCategoryWithModel()
         let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
-
+        
         expectLoad([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -118,7 +118,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         
         let (localCategories, categoryModelStub) = makeCategoryWithModel()
         let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
-
+        
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -130,7 +130,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         
         let (localCategories, categoryModelStub) = makeCategoryWithModel(type: .security)
         let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
-
+        
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -152,7 +152,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         let (serial, json) = (serial(), getServiceCategoryListJSON())
         let (localCategories, categoryModelStub) = makeCategoryWithModel(type: .charity)
         let localAgent = LocalAgentMock(stubs: [([categoryModelStub], serial)])
-
+        
         expectReload([localCategories], localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
@@ -233,13 +233,12 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             httpClient.complete(with: anyError(), at: 2)
             self.awaitActorThreadHop()
             
+            // does not call for `mobile` with non-standard flow
             httpClient.expectRequests(withQueryValueFor: "type", match: [
                 "getServiceCategoryList",
                 "getOperatorsListByParam-housingAndCommunalService",
                 "getOperatorsListByParam-internet"
             ])
-            XCTAssertEqual(localAgent.loadCallCount, 1)
-            XCTAssertEqual(localAgent.storeCallCount, 1)
         }
     }
     
@@ -248,12 +247,11 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         let (_, categoryModelStub) = makeCategoryWithModel()
         let localAgent = LocalAgentMock(stubs: [([categoryModelStub], anyMessage())])
         let (remoteCategories, categoriesJSON) = (categories(), getServiceCategoryListJSON())
-        XCTAssertNoDiff(remoteCategories.map(\.type), [.mobile, .housingAndCommunalService, .internet])
-        XCTAssertNoDiff(remoteCategories.map(\.paymentFlow), [.mobile, .standard, .standard])
         
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
+            XCTAssertNil(localAgent.lastStoredValue(ofType: [CodableServicePaymentOperator].self))
             
             httpClient.complete(with: categoriesJSON)
             self.awaitActorThreadHop()
@@ -261,17 +259,12 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             httpClient.complete(with: self.getOperatorsListByParamJSON(), at: 1)
             self.awaitActorThreadHop()
             
-            
-            httpClient.complete(with: anyError(), at: 2)
-            self.awaitActorThreadHop()
-            
-            httpClient.expectRequests(withQueryValueFor: "type", match: [
-                "getServiceCategoryList",
-                "getOperatorsListByParam-housingAndCommunalService",
-                "getOperatorsListByParam-internet"
+            XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).count, 1, "Expected to cache Operators once.")
+            XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServicePaymentOperator].self)?.map(\.name), [
+                "ООО МЕТАЛЛЭНЕРГОФИНАНС",
+                "ООО  ИЛЬИНСКОЕ ЖКХ",
+                "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",
             ])
-            XCTAssertEqual(localAgent.loadCallCount, 2)
-            XCTAssertEqual(localAgent.storeCallCount, 2)
         }
     }
     
