@@ -167,6 +167,32 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldCacheLoadedServiceCategoriesOnSuccess() throws {
+        
+        let localAgent = LocalAgentMock(values: [])
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            localAgent: localAgent,
+            sessionState: active()
+        )
+        XCTAssertNil(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self))
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        
+        httpClient.complete(with: anyError())
+        
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        awaitActorThreadHop()
+
+        XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServiceCategory].self).count, 1, "Expected to cache ServiceCategories once.")
+        XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self)?.map(\.type), [
+            .mobile,
+            .housingAndCommunalService,
+            .internet,
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     func test_shouldRequestNextTypeOperators() throws {
         
         let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
