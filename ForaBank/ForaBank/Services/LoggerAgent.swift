@@ -11,7 +11,7 @@ import OSLog
 class LoggerAgent: LoggerAgentProtocol {
     
     static let shared = LoggerAgent()
-    static let subsystem = "ru.forabank.sense"
+    static let subsystem = "ru.\(Config.name).sense"
     
     private let modelLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.model.rawValue)
     private let uiLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.ui.rawValue)

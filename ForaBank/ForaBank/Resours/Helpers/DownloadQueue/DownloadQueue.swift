@@ -11,7 +11,7 @@ import RealmSwift
 final class DownloadQueue {
     
     private let serialsStorage = DownloadQueueSerialsStorage()
-    private let queue = DispatchQueue(label: "ru.forabank.sense.DownloadQueue", qos: .utility, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "ru.\(Config.name).sense.DownloadQueue", qos: .utility, attributes: .concurrent)
     private let semaphore = DispatchSemaphore(value: 1)
 
     func download() {

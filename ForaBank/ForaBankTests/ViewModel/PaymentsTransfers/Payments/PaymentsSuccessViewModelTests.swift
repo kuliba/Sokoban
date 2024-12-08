@@ -122,11 +122,11 @@ extension PaymentsSuccessViewModelTests {
         let sut = makeSUT(with: success)
         
         XCTAssertEqual(sut.parameters.map(\.id),
-                       ["ru.forabank.sense.success.mode",
-                        "ru.forabank.sense.success.status",
-                        "ru.forabank.sense.success.title",
-                        "ru.forabank.sense.success.optionButtons",
-                        "ru.forabank.sense.success.actionButton"])
+                       ["ru.vortex.sense.success.mode",
+                        "ru.vortex.sense.success.status",
+                        "ru.vortex.sense.success.title",
+                        "ru.vortex.sense.success.optionButtons",
+                        "ru.vortex.sense.success.actionButton"])
     }
     
     func test_initWithSuccessModeNormalParam_normalMode() {

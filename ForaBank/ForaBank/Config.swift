@@ -11,7 +11,7 @@ enum Config {
     
     static let domen = "forabank.ru"
     static let puref = "iFora"
-    static let name = "businessinnovation"
+    static let name = "vortex"
     static let primary = "bInnovation"
     static let telegram = "telegram"
     

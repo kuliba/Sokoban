@@ -178,7 +178,7 @@ class Model {
     
     // private
     private var bindings: Set<AnyCancellable>
-    private let queue = DispatchQueue(label: "ru.forabank.sense.model", qos: .userInitiated, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "ru.\(Config.name).sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         
         guard case .active(_, let credentials) = sessionAgent.sessionState.value else {
@@ -317,7 +317,7 @@ class Model {
         )
 
         // keychain agent
-        let keychainAgent = ValetKeychainAgent(valetName: "ru.forabank.sense.valet")
+        let keychainAgent = ValetKeychainAgent(valetName: "ru.\(Config.name).sense.valet")
         
         // settings agent
         let settingsAgent = UserDefaultsSettingsAgent()

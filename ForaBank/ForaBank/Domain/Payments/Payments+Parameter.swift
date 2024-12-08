@@ -69,96 +69,178 @@ extension Payments.Parameter {
     
     enum Identifier: String {
         
-        case category                        = "ru.forabank.sense.category"
-        case service                         = "ru.forabank.sense.service"
-        case `operator`                      = "ru.forabank.sense.operator"
-        case header                          = "ru.forabank.sense.header"
-        case product                         = "ru.forabank.sense.product"
-        case amount                          = "ru.forabank.sense.amount"
-        case code                            = "ru.forabank.sense.code"
-        case fee                             = "ru.forabank.sense.fee"
-        case `continue`                      = "ru.forabank.sense.continue"
-        case mock                            = "ru.forabank.sense.mock"
-        case subscribe                       = "ru.forabank.sense.subscribe"
-        case productTemplate                 = "ru.forabank.sense.productTemplate"
-        case productTemplateName             = "ru.forabank.sense.productTemplateName"
+        case amount,
+             category,
+             code,
+             `continue`,
+             countryBank,
+             countryBankSearch,
+             countryCity,
+             countryCitySearch,
+             countryCurrencyAmount,
+             countryCurrencyFilter,
+             countryDeliveryCurrency,
+             countryDeliveryCurrencyDirect,
+             countryDividend,
+             countryDropDownList,
+             countryFamilyName,
+             countryGivenName,
+             countryId,
+             countryMiddleName,
+             countryOffer,
+             countryOperationId,
+             countryPayee,
+             countryPayeeAmount,
+             countrybPhone,
+             countryPhone,
+             countryReturnAmount,
+             countryReturnName,
+             countryReturnNumber,
+             countrySelect,
+             countryTransferNumber,
+             c2bIsAmountComplete,
+             c2bQrcId,
+             fee,
+             header,
+             mobileConnectionAmount,
+             mobileConnectionOperatorLogo,
+             mobileConnectionPhone,
+             mosParking,
+             mock,
+             `operator`,
+             p1,
+             paymentSystem,
+             paymentsServiceAmount,
+             paymentsServiceOperatorLogo,
+             product,
+             productTemplate,
+             productTemplateName,
+             requisitsAccountNumber,
+             requisitsAmount,
+             requisitsBankBic,
+             requisitsCheckBox,
+             requisitsCompanyName,
+             requisitsCompanyNameHelper,
+             requisitsInn,
+             requisitsKpp,
+             requisitsMessage,
+             requisitsName,
+             requisitsType,
+             service,
+             sfpAmount,
+             sfpAntifraud,
+             sfpBank,
+             sfpMessage,
+             sfpPhone,
+             sftRecipient,
+             subscribe,
+             successActionButton,
+             successAdditionalButtons,
+             successAmount,
+             successCloseButton,
+             successLogo,
+             successMode,
+             successOptionButtons,
+             successOperationDetailID,
+             successOptions,
+             successRepeatButton,
+             successService,
+             successStatus,
+             successSubscriptionToken,
+             successTitle,
+             successTransferNumber,
+             trnPickupPoint
         
-        case successStatus = "ru.forabank.sense.success.status"
-        case successOptionButtons = "ru.forabank.sense.success.optionButtons"
-        case successMode = "ru.forabank.sense.success.mode"
-        case successOperationDetailID = "ru.forabank.sense.success.operationDetailID"
-        case successTitle = "ru.forabank.sense.success.title"
-        case successAmount = "ru.forabank.sense.success.amount"
-        case successActionButton = "ru.forabank.sense.success.actionButton"
-        case successCloseButton = "ru.forabank.sense.success.closeButton"
-        case successRepeatButton = "ru.forabank.sense.success.repeatButton"
-        case successLogo = "ru.forabank.sense.success.successLogo"
-        case successAdditionalButtons = "ru.forabank.sense.success.successAdditionalButtons"
-        case successTransferNumber = "ru.forabank.sense.success.successTransferNumber"
-        case successOptions = "ru.forabank.sense.success.successOptions"
-        case successService = "ru.forabank.sense.success.successService"
-        case successSubscriptionToken = "ru.forabank.sense.success.successSubscriptionToken"
-
-        case sfpPhone       = "RecipientID"
-        case sfpBank        = "BankRecipientID"
-        case sftRecipient   = "RecipientNm"
-        case sfpAmount      = "SumSTrs"
-        case sfpMessage     = "Ustrd"
-        case sfpAntifraud   = "AFResponse"
-        
-        case requisitsBankBic                = "requisitsBankBic"
-        case requisitsAccountNumber          = "requisitsAccountNumber"
-        case requisitsName                   = "requisitsName"
-        case requisitsMessage                = "requisitsMessage"
-        case requisitsAmount                 = "requisitsAmount"
-        case requisitsInn                    = "requisitsInn"
-        case requisitsKpp                    = "requisitsKpp"
-        case requisitsCompanyName            = "requisitsCompanyName"
-        case requisitsCompanyNameHelper      = "requisitsCompanyName_Helper"
-        case requisitsCheckBox               = "requisitsCheckBox"
-        case requisitsType                   = "requisitsType"
-        
-        case countryPhone                    = "RECP"
-        case countrybPhone                   = "bPhone"
-        case countryBank                     = "DIRECT_BANKS"
-        case countrySelect                   = "trnPickupPoint"
-        case countryDropDownList             = "countryDropDownList"
-        case countryCurrencyAmount           = "countryCurrencyAmount"
-        case countryPayeeAmount              = "countryPayeeAmount"
-        case countryTransferNumber           = "countryTransferNumber"
-        case countryPayee                    = "countryPayee"
-        case countryDeliveryCurrency         = "CURR"
-        case countryDeliveryCurrencyDirect   = "##CURR"
-        case countryOffer                    = "countryOferta"
-        case countryDividend                 = "countryDividend"
-        case countryCitySearch               = "search#3#"
-        case countryBankSearch               = "search#5#"
-        case countryId                       = "bCountryId"
-        case countryCity                     = "bCityId"
-        case trnPickupPoint                  = "trnPickupPointId"
-        case countryCurrencyFilter           = "countryCurrencyFilter"
-        case countryFamilyName               = "bSurName"
-        case countryGivenName                = "bName"
-        case countryMiddleName               = "bLastName"
-        case paymentSystem                   = "paymentSystem"
-        
-        case countryReturnNumber             = "countryReturnNumber"
-        case countryReturnAmount             = "countryReturnAmount"
-        case countryReturnName               = "countryReturnName"
-        case countryOperationId              = "countryOperationId"
-        
-        case c2bQrcId                        = "qrcId"
-        case c2bIsAmountComplete             = "c2bIsAmountComplete"
-        
-        case mobileConnectionPhone           = "MobileConnectionPhone"
-        case mobileConnectionAmount          = "MobileConnectionAmount"
-        case mobileConnectionOperatorLogo    = "MobileConnectionOperatorLogo"
-        
-        case paymentsServiceOperatorLogo     = "paymentsServiceOperatorLogo"
-        case paymentsServiceAmount           = "paymentsServiceAmount"
-
-        case p1                              = "P1"
-        case mosParking                      = "MosParking"
+        var rawValue: String {
+            
+            switch self {
+                
+            case .amount: return "ru.\(Config.name).sense.amount"
+            case .category: return "ru.\(Config.name).sense.category"
+            case .code: return "ru.\(Config.name).sense.code"
+            case .continue: return "ru.\(Config.name).sense.continue"
+            case .fee: return "ru.\(Config.name).sense.fee"
+            case .header: return "ru.\(Config.name).sense.header"
+            case .mock: return "ru.\(Config.name).sense.mock"
+            case .operator: return "ru.\(Config.name).sense.operator"
+            case .product: return "ru.\(Config.name).sense.product"
+            case .productTemplate: return "ru.\(Config.name).sense.productTemplate"
+            case .productTemplateName: return "ru.\(Config.name).sense.productTemplateName"
+            case .service: return "ru.\(Config.name).sense.service"
+            case .subscribe: return "ru.\(Config.name).sense.subscribe"
+            case .successActionButton: return "ru.\(Config.name).sense.success.actionButton"
+            case .successAdditionalButtons: return "ru.\(Config.name).sense.success.successAdditionalButtons"
+            case .successAmount: return "ru.\(Config.name).sense.success.amount"
+            case .successCloseButton: return "ru.\(Config.name).sense.success.closeButton"
+            case .successLogo: return "ru.\(Config.name).sense.success.successLogo"
+            case .successMode: return "ru.\(Config.name).sense.success.mode"
+            case .successOptionButtons: return "ru.\(Config.name).sense.success.optionButtons"
+            case .successOperationDetailID: return "ru.\(Config.name).sense.success.operationDetailID"
+            case .successOptions: return "ru.\(Config.name).sense.success.successOptions"
+            case .successRepeatButton: return "ru.\(Config.name).sense.success.repeatButton"
+            case .successService: return "ru.\(Config.name).sense.success.successService"
+            case .successStatus: return "ru.\(Config.name).sense.success.status"
+            case .successSubscriptionToken: return "ru.\(Config.name).sense.success.successSubscriptionToken"
+            case .successTitle: return "ru.\(Config.name).sense.success.title"
+            case .successTransferNumber: return "ru.\(Config.name).sense.success.successTransferNumber"
+                
+            case .sfpAmount: return "SumSTrs"
+            case .sfpAntifraud: return "AFResponse"
+            case .sfpBank: return "BankRecipientID"
+            case .sfpMessage: return "Ustrd"
+            case .sfpPhone: return "RecipientID"
+            case .sftRecipient: return "RecipientNm"
+                
+            case .requisitsAccountNumber: return "requisitsAccountNumber"
+            case .requisitsAmount: return "requisitsAmount"
+            case .requisitsBankBic: return "requisitsBankBic"
+            case .requisitsCheckBox: return "requisitsCheckBox"
+            case .requisitsCompanyName: return "requisitsCompanyName"
+            case .requisitsCompanyNameHelper: return "requisitsCompanyName_Helper"
+            case .requisitsInn: return "requisitsInn"
+            case .requisitsKpp: return "requisitsKpp"
+            case .requisitsMessage: return "requisitsMessage"
+            case .requisitsName: return "requisitsName"
+            case .requisitsType: return "requisitsType"
+                
+            case .countryBank: return "DIRECT_BANKS"
+            case .countryBankSearch: return "search#5#"
+            case .mosParking: return "MosParking"
+            case .p1: return "P1"
+            case .paymentSystem: return "paymentSystem"
+            case .trnPickupPoint: return "trnPickupPointId"
+            case .countryCity: return "bCityId"
+            case .countryCitySearch: return "search#3#"
+            case .countryCurrencyAmount: return "countryCurrencyAmount"
+            case .countryCurrencyFilter: return "countryCurrencyFilter"
+            case .countryDeliveryCurrency: return "CURR"
+            case .countryDeliveryCurrencyDirect: return "##CURR"
+            case .countryDividend: return "countryDividend"
+            case .countryDropDownList: return "countryDropDownList"
+            case .countryFamilyName: return "bSurName"
+            case .countryGivenName: return "bName"
+            case .countryId: return "bCountryId"
+            case .countryMiddleName: return "bLastName"
+            case .countryOffer: return "countryOferta"
+            case .countryOperationId: return "countryOperationId"
+            case .countryPayee: return "countryPayee"
+            case .countryPayeeAmount: return "countryPayeeAmount"
+            case .countrybPhone: return "bPhone"
+            case .countryPhone: return "RECP"
+            case .countryReturnAmount: return "countryReturnAmount"
+            case .countryReturnName: return "countryReturnName"
+            case .countryReturnNumber: return "countryReturnNumber"
+            case .countrySelect: return "trnPickupPoint"
+            case .countryTransferNumber: return "countryTransferNumber"
+            case .c2bIsAmountComplete: return "c2bIsAmountComplete"
+            case .c2bQrcId: return "qrcId"
+            case .mobileConnectionAmount: return "MobileConnectionAmount"
+            case .mobileConnectionOperatorLogo: return "MobileConnectionOperatorLogo"
+            case .mobileConnectionPhone: return "MobileConnectionPhone"
+            case .paymentsServiceAmount: return "paymentsServiceAmount"
+            case .paymentsServiceOperatorLogo: return "paymentsServiceOperatorLogo"
+            }
+        }
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)

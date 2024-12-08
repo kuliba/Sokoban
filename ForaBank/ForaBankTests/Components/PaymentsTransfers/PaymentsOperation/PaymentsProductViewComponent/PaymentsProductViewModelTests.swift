@@ -245,7 +245,7 @@ final class PaymentsProductViewModelTests: XCTestCase {
     ) -> PaymentsParameterViewModel.Value {
         
         .init(
-            id: "ru.forabank.sense.product",
+            id: "ru.vortex.sense.product",
             last: last,
             current: current
         )

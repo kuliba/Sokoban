@@ -775,7 +775,7 @@ final class Model_AbroadTests: XCTestCase {
             XCTAssertFalse(model.products.value.isEmpty)
             XCTAssertNoDiff(operation.parametersIds, [
                 "countryDropDownList",
-                "ru.forabank.sense.product"
+                "ru.vortex.sense.product"
             ])
             XCTAssertNoDiff(step.parameters.count, step.infoParameters.count)
             XCTAssertNoDiff(step.infoParameters, [
@@ -955,12 +955,12 @@ final class Model_AbroadTests: XCTestCase {
             XCTAssertFalse(model.products.value.isEmpty)
             XCTAssertNoDiff(operation.parametersIds, [
                 "countryDropDownList",
-                "ru.forabank.sense.product"
+                "ru.vortex.sense.product"
             ])
             XCTAssertNoDiff(step.parameters.count, step.infoParameters.count)
             XCTAssertNoDiff(step.infoParameters, [
                 .init(
-                    .init(id: "ru.forabank.sense.fee", value: "321 ₽"),
+                    .init(id: "ru.vortex.sense.fee", value: "321 ₽"),
                     icon: .local("ic24PercentCommission"),
                     title: "Комиссия",
                     lineLimit: nil,
@@ -972,7 +972,7 @@ final class Model_AbroadTests: XCTestCase {
                 step.front,
                 .init(
                     visible: [
-                        "ru.forabank.sense.fee"
+                        "ru.vortex.sense.fee"
                     ],
                     isCompleted: false
                 )
@@ -1006,7 +1006,7 @@ final class Model_AbroadTests: XCTestCase {
             XCTAssertNoDiff(step.codeParameters.map(\.equatableView), [
                 .init(
                     parameter: .init(
-                        id: "ru.forabank.sense.code",
+                        id: "ru.vortex.sense.code",
                         value: nil
                     ),
                     title: "Введите код из СМС",
@@ -1021,7 +1021,7 @@ final class Model_AbroadTests: XCTestCase {
                 step.front,
                 .init(
                     visible: [
-                        "ru.forabank.sense.code"
+                        "ru.vortex.sense.code"
                     ],
                     isCompleted: false
                 )

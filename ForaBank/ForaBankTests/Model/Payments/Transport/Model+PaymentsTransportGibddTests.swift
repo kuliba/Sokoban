@@ -85,7 +85,7 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
                 parameters: [],
                 for: 0
             ),
-            error: Payments.Error.unableCreateRepresentable("ru.forabank.sense.product")
+            error: Payments.Error.unableCreateRepresentable("ru.vortex.sense.product")
         )
     }
     
@@ -104,9 +104,9 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
         )
         
         XCTAssertNoDiff(step.parameters.map(\.id), [
-            "ru.forabank.sense.operator",
-            "ru.forabank.sense.header",
-            "ru.forabank.sense.product",
+            "ru.vortex.sense.operator",
+            "ru.vortex.sense.header",
+            "ru.vortex.sense.product",
             "a3_SearchType_1_1"
         ])
     }
@@ -126,7 +126,7 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
         )
         
         let parameter = try XCTUnwrap(step.parameters[0] as? Payments.ParameterOperator)
-        XCTAssertNoDiff(parameter.id, "ru.forabank.sense.operator")
+        XCTAssertNoDiff(parameter.id, "ru.vortex.sense.operator")
         XCTAssertNoDiff(parameter.value, Purefs.iVortexGibdd)
         XCTAssertNoDiff(parameter.operator,.gibdd)
     }
@@ -146,8 +146,8 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
         )
         
         let parameter = try XCTUnwrap(step.parameters[1] as? Payments.ParameterHeader)
-        XCTAssertNoDiff(parameter.id, "ru.forabank.sense.header")
-        XCTAssertNoDiff(parameter.value, "ru.forabank.sense.header")
+        XCTAssertNoDiff(parameter.id, "ru.vortex.sense.header")
+        XCTAssertNoDiff(parameter.value, "ru.vortex.sense.header")
         XCTAssertNoDiff(parameter.title, "Штрафы ГИБДД")
         XCTAssertNoDiff(parameter.subtitle, nil)
         XCTAssertNoDiff(parameter.style, .normal)
@@ -169,7 +169,7 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
         )
         
         let parameter = try XCTUnwrap(step.parameters[2] as? Payments.ParameterProduct)
-        XCTAssertNoDiff(parameter.id, "ru.forabank.sense.product")
+        XCTAssertNoDiff(parameter.id, "ru.vortex.sense.product")
         XCTAssertNoDiff(parameter.value, "0")
         XCTAssertNoDiff(parameter.title, "Счет списания")
         XCTAssertNoDiff(parameter.isEditable, true)
@@ -211,7 +211,7 @@ final class Model_PaymentsTransportGibddTests: XCTestCase {
         )
         
         XCTAssertNoDiff(step.front.visible, [
-            "ru.forabank.sense.header",
+            "ru.vortex.sense.header",
             "a3_SearchType_1_1"
         ])
         XCTAssertNoDiff(step.front.isCompleted, true)

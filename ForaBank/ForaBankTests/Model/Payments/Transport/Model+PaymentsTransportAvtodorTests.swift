@@ -100,7 +100,7 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
                 parameters: parameters,
                 for: 0
             ),
-            error: Payments.Error.unableCreateRepresentable("ru.forabank.sense.product")
+            error: Payments.Error.unableCreateRepresentable("ru.vortex.sense.product")
         )
     }
     
@@ -120,20 +120,20 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
         )
         
         XCTAssertNoDiff(step.parameters.map(\.id), [
-            "ru.forabank.sense.header",
-            "ru.forabank.sense.product",
-            "ru.forabank.sense.operator"
+            "ru.vortex.sense.header",
+            "ru.vortex.sense.product",
+            "ru.vortex.sense.operator"
         ])
         
         XCTAssertNoDiff(step.front.visible, [
-            "ru.forabank.sense.header",
-            "ru.forabank.sense.operator"
+            "ru.vortex.sense.header",
+            "ru.vortex.sense.operator"
         ])
         XCTAssertNoDiff(step.front.isCompleted, true)
         
         XCTAssertNoDiff(step.back.stage, .local)
         XCTAssertNoDiff(step.back.required, [
-            "ru.forabank.sense.operator"
+            "ru.vortex.sense.operator"
         ])
         XCTAssertNoDiff(step.back.processed, nil)
         
@@ -212,7 +212,7 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
                 parameters: parameters,
                 for: 1
             ),
-            error: Payments.Error.missingValueForParameter("ru.forabank.sense.operator")
+            error: Payments.Error.missingValueForParameter("ru.vortex.sense.operator")
         )
         
         XCTAssertNil(try? parameters.parameter(forIdentifier: .operator).value)
@@ -228,7 +228,7 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
                 parameters: parameters,
                 for: 1
             ),
-            error: Payments.Error.missingValueForParameter("ru.forabank.sense.operator")
+            error: Payments.Error.missingValueForParameter("ru.vortex.sense.operator")
         )
         
         let parameter = try parameters.parameter(forIdentifier: .operator)
@@ -422,13 +422,13 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
             for: 2
         )
         
-        XCTAssertNoDiff(step.parameters.map(\.id), ["ru.forabank.sense.amount"])
+        XCTAssertNoDiff(step.parameters.map(\.id), ["ru.vortex.sense.amount"])
         
-        XCTAssertNoDiff(step.front.visible, ["ru.forabank.sense.amount"])
+        XCTAssertNoDiff(step.front.visible, ["ru.vortex.sense.amount"])
         XCTAssertNoDiff(step.front.isCompleted, false)
         
         XCTAssertNoDiff(step.back.stage, .remote(.start))
-        XCTAssertNoDiff(step.back.required, ["ru.forabank.sense.amount"])
+        XCTAssertNoDiff(step.back.required, ["ru.vortex.sense.amount"])
         XCTAssertNoDiff(step.back.processed, nil)
     }
         

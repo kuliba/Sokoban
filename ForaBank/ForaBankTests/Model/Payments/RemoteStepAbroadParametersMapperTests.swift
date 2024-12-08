@@ -472,7 +472,7 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
             
             XCTAssertNoDiff(parameters.infoParameters, [
                 .init(
-                    .init(id: "ru.forabank.sense.fee", value: "321.0"),
+                    .init(id: "ru.vortex.sense.fee", value: "321.0"),
                     icon: .local("ic24PercentCommission"),
                     title: "Комиссия",
                     lineLimit: nil,
@@ -494,7 +494,7 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
             XCTAssertNoDiff(parameters.codeParameters.map(\.equatableView), [
                 .init(
                     parameter: .init(
-                        id: "ru.forabank.sense.code",
+                        id: "ru.vortex.sense.code",
                         value: nil
                     ),
                     title: "Введите код из СМС",
