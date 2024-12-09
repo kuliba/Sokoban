@@ -991,6 +991,7 @@
 		2A6894152D070BC400160429 /* RootViewFactory+operatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */; };
 		2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */; };
 		2A68941A2D07263200160429 /* ServiceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */; };
+		2A68941C2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6A6A342CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */; };
 		2A6A6A362CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */; };
@@ -4537,6 +4538,7 @@
 		2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+operatorFailureView.swift"; sourceTree = "<group>"; };
 		2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureDomain.swift; sourceTree = "<group>"; };
 		2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureView.swift; sourceTree = "<group>"; };
+		2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+serviceCategoryFailureView.swift"; sourceTree = "<group>"; };
 		2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimedOTPInputViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionMicroServicesComposerNanoServices.swift; sourceTree = "<group>"; };
 		2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposer.swift; sourceTree = "<group>"; };
@@ -12047,6 +12049,7 @@
 			children = (
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
 				2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */,
+				2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
 				2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */,
 				2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */,
@@ -21553,6 +21556,7 @@
 				77DD55CC29F1565500756451 /* NSDecimalNumbel+Extensions.swift in Sources */,
 				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
+				2A68941C2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift in Sources */,
 				77BE9A33290AC231006046B1 /* PaymentsSectionViewModel.swift in Sources */,
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */,

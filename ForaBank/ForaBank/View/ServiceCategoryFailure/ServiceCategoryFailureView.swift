@@ -20,7 +20,7 @@ struct ServiceCategoryFailureView<DestinationView: View>: View {
             
             contentView()
                 .navigationDestination(
-                    destination: state.navigation,
+                    destination: state.destination,
                     dismiss: { event(.dismiss) },
                     content: destinationView
                 )
@@ -56,7 +56,26 @@ extension ServiceCategoryFailureView {
     }
 }
 
-extension ServiceCategoryFailureDomain.Navigation: Identifiable {
+extension ServiceCategoryFailureDomain.FlowDomain.State {
+    
+    var destination: Destination? {
+        
+        switch navigation {
+        case .none, .scanQR:
+            return nil
+            
+        case let .detailPayment(paymentsViewModel):
+            return .detailPayment(paymentsViewModel)
+        }
+    }
+    
+    enum Destination {
+        
+        case detailPayment(PaymentsViewModel)
+    }
+}
+
+extension ServiceCategoryFailureDomain.Destination: Identifiable {
     
     var id: ID {
         

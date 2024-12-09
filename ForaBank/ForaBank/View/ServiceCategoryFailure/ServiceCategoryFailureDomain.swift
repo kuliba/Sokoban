@@ -20,7 +20,7 @@ extension ServiceCategoryFailureDomain {
     
     // MARK: - Content
     
-    typealias Content = ()
+    typealias Content = ServiceCategory.CategoryType
     
     // MARK: - Flow
     
@@ -30,12 +30,14 @@ extension ServiceCategoryFailureDomain {
     enum Select: Equatable {
         
         case detailPayment
+        case scanQR
     }
     
     enum Navigation {
         
         case detailPayment(PaymentsViewModel)
+        case scanQR
     }
     
-    typealias Destination = Navigation
+    typealias Destination = FlowDomain.State.Destination
 }
