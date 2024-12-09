@@ -1,5 +1,5 @@
 //
-//  ToggleView.swift
+//  TogglePreview.swift
 //
 //
 //  Created by Valentin Ozerov on 09.12.2024.
@@ -10,7 +10,7 @@ import SharedConfigs
 
 // MARK: - Previews
 
-struct PreviewToggle: View {
+struct TogglePreview: View {
     
     @State private(set) var isOn = false
     
@@ -23,5 +23,5 @@ struct PreviewToggle: View {
 
 #Preview {
     
-    PreviewToggle()
+    TogglePreview()
 }

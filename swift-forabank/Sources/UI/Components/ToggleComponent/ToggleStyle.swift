@@ -8,11 +8,15 @@
 import SwiftUI
 import UIPrimitives
 
-struct ToggleComponentStyle: ToggleStyle {
+public struct ToggleComponentStyle: ToggleStyle {
     
-    let config: ToggleConfig
+    public let config: ToggleConfig
     
-    func makeBody(configuration: Configuration) -> some View {
+    public init(config: ToggleConfig) {
+        self.config = config
+    }
+    
+    public func makeBody(configuration: Configuration) -> some View {
         
         let offset = (config.size.width - (config.size.height - config.padding * 2) - config.padding * 2) / 2.0
         
