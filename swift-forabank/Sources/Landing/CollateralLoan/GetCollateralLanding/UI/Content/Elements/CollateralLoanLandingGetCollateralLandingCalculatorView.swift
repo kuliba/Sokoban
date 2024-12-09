@@ -44,6 +44,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
                 calculatorBottomSectionView(config: config)
             }
         }
+        .frame(height: config.calculator.root.layouts.height)
         .padding(.leading, config.paddings.outerLeading)
         .padding(.trailing, config.paddings.outerTrailing)
         .padding(.top, config.spacing)
@@ -329,4 +330,17 @@ extension CollateralLoanLandingGetCollateralLandingCalculatorView {
     
     typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
     typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+}
+
+// MARK: - Previews
+
+struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        CollateralLoanLandingGetCollateralLandingCalculatorView(
+            config: .default,
+            theme: .gray
+        )
+    }
 }

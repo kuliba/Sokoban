@@ -59,6 +59,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             
             public struct Layouts {
                 
+                public let height: CGFloat
                 public let contentLeadingPadding: CGFloat
                 public let contentTrailingPadding: CGFloat
                 public let middleSectionSpacing: CGFloat
@@ -68,6 +69,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                 public let chevronOffsetY: CGFloat
                 
                 public init(
+                    height: CGFloat,
                     contentLeadingPadding: CGFloat,
                     contentTrailingPadding: CGFloat,
                     middleSectionSpacing: CGFloat,
@@ -76,6 +78,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                     bottomPanelCornerRadius: CGFloat,
                     chevronOffsetY: CGFloat
                 ) {
+                    self.height = height
                     self.contentLeadingPadding = contentLeadingPadding
                     self.contentTrailingPadding = contentTrailingPadding
                     self.middleSectionSpacing = middleSectionSpacing
@@ -255,6 +258,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig.Calculator {
     static let `default` = Self(
         root: .init(
             layouts: .init(
+                height: 468,
                 contentLeadingPadding: 16,
                 contentTrailingPadding: 22,
                 middleSectionSpacing: 11,
