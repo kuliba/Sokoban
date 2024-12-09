@@ -99,6 +99,7 @@ let package = Package(
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
+        .toggleComponent,
         // Utilities
         .remoteServices,
         // tools
@@ -307,6 +308,7 @@ let package = Package(
         .selectComponentTests,
         .selectorComponent,
         .selectorComponentTests,
+        .toggleComponent,
         .inputPhoneComponent,
         .inputComponent,
         .inputComponentTests,
@@ -709,6 +711,13 @@ private extension Product {
         targets: [
             .optionalSelectorComponent,
             .selectorComponent,
+        ]
+    )
+    
+    static let toggleComponent = library(
+        name: .toggleComponent,
+        targets: [
+            .toggleComponent
         ]
     )
     
@@ -2925,6 +2934,14 @@ private extension Target {
         path: "Tests/UI/Components/\(String.selectorComponentTests)"
     )
     
+    static let toggleComponent = target(
+        name: .toggleComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.toggleComponent)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -3389,6 +3406,10 @@ private extension Target.Dependency {
         name: .selectorComponent
     )
     
+    static let toggleComponent = byName(
+        name: .toggleComponent
+    )
+    
     static let inputPhoneComponent = byName(
         name: .inputPhoneComponent
     )
@@ -3794,6 +3815,8 @@ private extension String {
     
     static let selectorComponent = "SelectorComponent"
     static let selectorComponentTests = "SelectorComponentTests"
+    
+    static let toggleComponent = "ToggleComponent"
     
     static let inputComponent = "InputComponent"
     static let inputComponentTests = "InputComponentTests"
