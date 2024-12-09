@@ -176,6 +176,8 @@ extension RootViewModelFactory {
         latest: Latest,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
+        let anywayFlowComposer = makeAnywayFlowComposer()
+        
         initiateAnywayPayment(.latest(latest.latest)) {
             
             switch $0 {
@@ -189,7 +191,9 @@ extension RootViewModelFactory {
                 }
                 
             case let .success(transaction):
-                completion(.payment(()))
+                completion(.payment(.success(.anywayPayment(
+                    anywayFlowComposer.compose(transaction: transaction)
+                ))))
             }
         }
     }
@@ -210,7 +214,38 @@ extension RootViewModelFactory {
         provider: PaymentProviderPickerDomain.Provider,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
-        completion(.payment(()))
+        let anywayFlowComposer = makeAnywayFlowComposer()
+        
+        processSelection(select: .operator(.init(provider))) {
+            
+            switch $0 {
+            case let .failure(failure):
+                switch failure {
+                case let .operatorFailure(utilityPaymentOperator):
+                    completion(.payment(.failure(.operatorFailure(utilityPaymentOperator))))
+                    
+                case let .serviceFailure(serviceFailure):
+                    switch serviceFailure {
+                    case .connectivityError:
+                        completion(.payment(.failure(.serviceFailure(.connectivityError))))
+                        
+                    case let .serverError(message):
+                        completion(.payment(.failure(.serviceFailure(.serverError(message)))))
+                    }
+                }
+                
+            case let .success(success):
+                switch success {
+                case let .services(multi, for: utilityPaymentOperator):
+                    completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
+                    
+                case let .startPayment(transaction):
+                    completion(.payment(.success(.anywayPayment(
+                        anywayFlowComposer.compose(transaction: transaction)
+                    ))))
+                }
+            }
+        }
     }
 }
 
@@ -251,5 +286,19 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
         return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", additionalItems: [])
+    }
+}
+
+private extension UtilityPaymentOperator {
+    
+    init(_ provider: PaymentProviderPickerDomain.Provider) {
+        
+        self.init(
+            id: provider.id,
+            inn: provider.inn,
+            title: provider.name,
+            icon: provider.md5Hash,
+            type: provider.type
+        )
     }
 }
