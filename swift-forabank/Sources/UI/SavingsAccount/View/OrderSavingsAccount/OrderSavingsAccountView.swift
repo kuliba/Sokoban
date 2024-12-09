@@ -558,7 +558,6 @@ struct LandingUIView_Previews: PreviewProvider {
 // TODO: move to main target
 
 import RxViewModel
-import ToggleComponent
 
 struct OrderSavingsAccountWrapperView: View {
     
