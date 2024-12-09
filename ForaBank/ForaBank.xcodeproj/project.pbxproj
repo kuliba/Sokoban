@@ -992,6 +992,8 @@
 		2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */; };
 		2A68941A2D07263200160429 /* ServiceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */; };
 		2A68941C2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */; };
+		2A68941E2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941D2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift */; };
+		2A6894202D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941F2D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6A6A342CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */; };
 		2A6A6A362CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */; };
@@ -4539,6 +4541,8 @@
 		2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureDomain.swift; sourceTree = "<group>"; };
 		2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureView.swift; sourceTree = "<group>"; };
 		2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+serviceCategoryFailureView.swift"; sourceTree = "<group>"; };
+		2A68941D2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeServiceCategoryFailure.swift"; sourceTree = "<group>"; };
+		2A68941F2D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift; sourceTree = "<group>"; };
 		2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimedOTPInputViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionMicroServicesComposerNanoServices.swift; sourceTree = "<group>"; };
 		2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposer.swift; sourceTree = "<group>"; };
@@ -8969,6 +8973,7 @@
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2ADB21CF2CF8392700B37234 /* RootViewModelFactory+initiateStandardPaymentFlow.swift */,
 				2A366E672CFF966A006D1FB8 /* RootViewModelFactory+makePaymentProviderPicker.swift */,
+				2A68941D2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift */,
 				2A366E6F2D00910A006D1FB8 /* RootViewModelFactory+processSelection.swift */,
 				2A366E692CFF9906006D1FB8 /* RootViewModelFactory+makeSearch.swift */,
 				2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */,
@@ -10655,6 +10660,7 @@
 				2A07B9B82CFDABF800A3399E /* GetNotAuthorizedZoneClientInformDataResponse+alertsTests.swift */,
 				2A07B9BA2CFDB0B100A3399E /* RootViewModelFactory+updateAlertsTests.swift */,
 				2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */,
+				2A68941F2D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 			);
 			path = RootViewModelFactory;
@@ -20688,6 +20694,7 @@
 				83E45EAC2D0089F900158F64 /* SavingsAccountWrapperView.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
+				2A68941E2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */,
 				77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */,
 				2A01F93C2AE50F340064F15B /* ComposedCVVPINService+ShowCVVClient.swift in Sources */,
 				8391092A2C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift in Sources */,
@@ -22500,6 +22507,7 @@
 				2AB1979F2B2469ED00F0F87B /* SberQRTestHelpers.swift in Sources */,
 				2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */,
 				2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */,
+				2A6894202D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift in Sources */,
 				2A624C042C345E6A002ABA24 /* SberOperator+precedesTests.swift in Sources */,
 				2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */,
 				C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */,

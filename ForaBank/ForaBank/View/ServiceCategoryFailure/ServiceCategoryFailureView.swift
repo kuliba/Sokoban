@@ -64,8 +64,8 @@ extension ServiceCategoryFailureDomain.FlowDomain.State {
         case .none, .scanQR:
             return nil
             
-        case let .detailPayment(paymentsViewModel):
-            return .detailPayment(paymentsViewModel)
+        case let .detailPayment(node):
+            return .detailPayment(node.model)
         }
     }
     

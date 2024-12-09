@@ -27,6 +27,8 @@ extension ServiceCategoryFailureDomain {
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
+    typealias Notify = FlowDomain.Notify
+    
     enum Select: Equatable {
         
         case detailPayment
@@ -35,7 +37,7 @@ extension ServiceCategoryFailureDomain {
     
     enum Navigation {
         
-        case detailPayment(PaymentsViewModel)
+        case detailPayment(Node<PaymentsViewModel>)
         case scanQR
     }
     
