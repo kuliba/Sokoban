@@ -40,7 +40,7 @@ final class CodableServicePaymentOperator_matchesTests: CodableServicePaymentOpe
             ),
             makePayload(
                 for: .digitalWallets,
-                searchText: "123"
+                searchText: "1@23"
             )
         )
     }
@@ -68,7 +68,7 @@ final class CodableServicePaymentOperator_matchesTests: CodableServicePaymentOpe
             ),
             makePayload(
                 for: .digitalWallets,
-                searchText: "123"
+                searchText: "1@23"
             )
         )
     }
