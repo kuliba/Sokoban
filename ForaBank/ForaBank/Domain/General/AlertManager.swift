@@ -27,8 +27,6 @@ final class NotAuthorizedAlertManager {
     private let subject: CurrentValueSubject<ClientInformAlerts?, Never>
     private let isUpdateAllowedSubject = CurrentValueSubject<Bool, Never>(true)
 
-    var updatePermissionPublisher: AnyPublisher<Bool, Never> { isUpdateAllowedSubject.eraseToAnyPublisher() }
-
     init(
         alerts: ClientInformAlerts? = nil
     ) {
@@ -43,6 +41,11 @@ extension NotAuthorizedAlertManager: AlertManager {
         subject
             .map { $0 }
             .eraseToAnyPublisher()
+    }
+
+    var updatePermissionPublisher: AnyPublisher<Bool, Never> { 
+        
+        isUpdateAllowedSubject.eraseToAnyPublisher()
     }
 
     func setUpdatePermission(_ shouldUpdate: Bool) {
