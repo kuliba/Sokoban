@@ -83,15 +83,34 @@ public struct ClientInformListView: View {
     
     private func contentStack() -> some View {
         
-        VStack(alignment: .center, spacing: config.sizes.spacing) {
-                        
-            switch info {
-            case .single(let singleInfo):
-                singleInfoView(singleInfo)
+        Group {
+
+            if contentHeight < maxHeight {
                 
-            case .multiple(let multipleInfo):
-                multipleInfoView(multipleInfo)
+                LazyVStack(alignment: .center, spacing: config.sizes.spacing) {
+                    
+                    stackContent()
+                }
+            } else {
+                
+                VStack(alignment: .center, spacing: config.sizes.spacing) {
+                    
+                    stackContent()
+                }
             }
+        }
+        .padding(.bottom, contentHeight < maxHeight ? config.paddings.bottom : .zero)
+    }
+
+    @ViewBuilder
+    private func stackContent() -> some View {
+        
+        switch info {
+        case .single(let singleInfo):
+            singleInfoView(singleInfo)
+            
+        case .multiple(let multipleInfo):
+            multipleInfoView(multipleInfo)
         }
     }
 
@@ -110,7 +129,6 @@ public struct ClientInformListView: View {
                 .foregroundColor(config.titleConfig.textColor)
                 .padding(.horizontal, config.paddings.horizontal)
         }
-        .padding(.bottom, config.paddings.bottom)
         .frame(maxWidth: .infinity)
     }
 
