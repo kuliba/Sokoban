@@ -6,6 +6,19 @@
 //
 
 import RemoteServices
+import Combine
+
+extension RootViewModelFactory {
+    
+    func updateClientInfromAlerts() -> AnyCancellable {
+        
+        model.sessionState
+            .map(\.isActive)
+            .filter { $0 }
+            .combineLatest( model.clientInformAlertManager.updatePermissionPublisher.filter { $0 })
+            .sink { [weak self] _, _ in self?.updateAlerts() }
+    }
+}
 
 extension RootViewModelFactory {
     
