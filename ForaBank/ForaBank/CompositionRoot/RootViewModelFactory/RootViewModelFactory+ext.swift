@@ -297,7 +297,7 @@ extension RootViewModelFactory {
         let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
-                loadBanners: { $0([]) }
+                loadBanners: loadBannersList
             )
         )
         
@@ -318,9 +318,8 @@ extension RootViewModelFactory {
                 guard let paymentsTransfersBannerPicker = paymentsTransfersCorporate.content.bannerPicker.bannerBinder
                 else { return }
                 
-                /*paymentsTransfersBannerPicker.content.event(.loaded($0))
-                mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))*/
-                _ = $0
+                paymentsTransfersBannerPicker.content.event(.loaded($0))
+                mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }
         
