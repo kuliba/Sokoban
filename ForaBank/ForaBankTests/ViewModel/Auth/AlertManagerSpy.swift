@@ -13,6 +13,8 @@ final class AlertManagerSpy {
     typealias Alert = ClientInformAlerts
     
     private let subject = PassthroughSubject<Alert?, Never>()
+    private let isUpdateAllowedSubject = CurrentValueSubject<Bool, Never>(true)
+
     private(set) var dismissCount = 0
     private(set) var updates = [Alert]()
     
@@ -20,6 +22,14 @@ final class AlertManagerSpy {
 }
 
 extension AlertManagerSpy: AlertManager {
+    
+    var updatePermissionPublisher: AnyPublisher<Bool, Never> {
+        isUpdateAllowedSubject.eraseToAnyPublisher()
+    }
+    
+    func setUpdatePermission(_ shouldUpdate: Bool) {
+        isUpdateAllowedSubject.send(shouldUpdate)
+    }
     
     var alertPublisher: AnyPublisher<Alert?, Never> {
         
