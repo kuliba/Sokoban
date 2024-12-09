@@ -11,12 +11,12 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeServiceCategoryFailure(
-        categoryType: ServiceCategory.CategoryType
+        category: ServiceCategory
     ) -> ServiceCategoryFailureDomain.Binder {
         
         compose(
             getNavigation: getNavigation,
-            content: categoryType,
+            content: category,
             witnesses: .init(
                 emitting: { _ in Empty() },
                 dismissing: { _ in {} }

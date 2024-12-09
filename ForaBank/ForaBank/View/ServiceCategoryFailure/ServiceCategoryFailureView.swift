@@ -19,10 +19,18 @@ struct ServiceCategoryFailureView<DestinationView: View>: View {
         RxWrapperView(model: binder.flow) { state, event in
             
             contentView()
+                .frame(maxHeight: .infinity)
                 .navigationDestination(
                     destination: state.destination,
                     dismiss: { event(.dismiss) },
                     content: destinationView
+                )
+                .navigationBarWithBack(
+                    title: binder.content.name,
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner(
+                        action: { binder.flow.event(.select(.scanQR)) }
+                    )
                 )
         }
     }

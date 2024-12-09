@@ -20,7 +20,7 @@ extension ServiceCategoryFailureDomain {
     
     // MARK: - Content
     
-    typealias Content = ServiceCategory.CategoryType
+    typealias Content = ServiceCategory
     
     // MARK: - Flow
     

@@ -18,13 +18,6 @@ extension ViewComponents {
             binder: binder,
             destinationView: destinationView
         )
-        .navigationBarWithBack(
-            title: binder.content.name,
-            dismiss: { binder.flow.event(.dismiss) },
-            rightItem: .barcodeScanner(
-                action: { binder.flow.event(.select(.scanQR)) }
-            )
-        )
     }
     
     @ViewBuilder
