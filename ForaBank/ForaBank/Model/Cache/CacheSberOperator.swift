@@ -113,7 +113,7 @@ extension String {
     }
 }
 
-private extension Character {
+/*private*/ extension Character {
     
     /// Determine the custom priority of the character.
     func characterSortPriority() -> Int {
