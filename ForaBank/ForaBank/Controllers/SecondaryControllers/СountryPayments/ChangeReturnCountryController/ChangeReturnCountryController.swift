@@ -24,36 +24,36 @@ class ChangeReturnCountryController: UIViewController {
         }
     }
     
-    var numberTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    var numberTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Номер перевода",
             image: UIImage(named: "hash")!,
             isEditable: false))
     
-    var fullNameField = ForaInput(
-        viewModel: ForaInputModel(
+    var fullNameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "ФИО получателя",
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: false))
     
-    var surnameField = ForaInput(
-        viewModel: ForaInputModel(
+    var surnameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Фамилия",
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: true))
     
-    var nameField = ForaInput(
-        viewModel: ForaInputModel(
+    var nameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Имя",
             isEditable: true))
     
-    var secondNameField = ForaInput(
-        viewModel: ForaInputModel(
+    var secondNameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Отчество",
             isEditable: true))
     
-    var summTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    var summTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сумма перевода",
             image: UIImage(named: "coins")!,
             isEditable: false))

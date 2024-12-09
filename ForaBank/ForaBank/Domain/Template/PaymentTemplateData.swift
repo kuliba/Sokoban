@@ -159,13 +159,13 @@ extension PaymentTemplateData {
         return phoneData
     }
     
-    var foraBankId: String? {
+    var vortexID: String? {
         
         guard let transfer,
               transfer.payeeInternal?.phoneNumber != nil
         else { return nil }
         
-        return BankID.foraBankID.rawValue
+        return BankID.vortexID.rawValue
     }
     
     var payerProductId: Int? {

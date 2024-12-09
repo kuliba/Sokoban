@@ -34,7 +34,7 @@ struct PaymentsView: View {
             switch viewModel.content {
             case .loading:
                 //TODO: load image from StyleGuide
-                SpinnerRefreshView(icon: Image("Logo Fora Bank"))
+                SpinnerRefreshView(icon: Image("Logo Vortex"))
                     .zIndex(0)
                 
             case let .service(serviceViewModel):

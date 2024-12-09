@@ -52,51 +52,51 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     var bottomView = BottomInputView()
     
-    var bikBankField = ForaInput(
-        viewModel: ForaInputModel(
+    var bikBankField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Бик банка получателя",
             image: #imageLiteral(resourceName: "bikbank"),
             type: .number,
             showChooseButton: true))
     
-    var accountNumber = ForaInput(
-        viewModel: ForaInputModel(
+    var accountNumber = VortexInput(
+        viewModel: VortexInputModel(
             title: "Номер счета получателя",
             image: #imageLiteral(resourceName: "accountIcon"),
             type: .number))
     
-    var fioField = ForaInput(
-        viewModel: ForaInputModel(
+    var fioField = VortexInput(
+        viewModel: VortexInputModel(
             title: "ФИО получателя",
             image: #imageLiteral(resourceName: "person"),
             showChooseButton: true))
     
-    var nameField = ForaInput(
-        viewModel: ForaInputModel(
+    var nameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Имя"))
     
-    var surField = ForaInput(
-        viewModel: ForaInputModel(
+    var surField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Отчество"))
     
-    var commentField = ForaInput(
-        viewModel: ForaInputModel(
+    var commentField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Назначение платежа",
             image: #imageLiteral(resourceName: "comment"),
             errorText: "Укажите дополнительную информацию. Не менее 25 символов"))
     
-    var innField = ForaInput(
-        viewModel: ForaInputModel(
+    var innField = VortexInput(
+        viewModel: VortexInputModel(
             title: "ИНН получателя",
             type: .number))
     
-    var nameCompanyField = ForaInput(
-        viewModel: ForaInputModel(
+    var nameCompanyField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Наименование получателя",
             errorText: "Укажите название организации"))
     
-    var kppField = ForaInput(
-        viewModel: ForaInputModel(
+    var kppField = VortexInput(
+        viewModel: VortexInputModel(
             title: "КПП получателя",
             type: .number,
             errorText: "Необязательное поле"))
@@ -504,7 +504,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     }
     
     func hideShowFields() {
-        let model = ForaInputModel(
+        let model = VortexInputModel(
             title: "Фамилия",
             image: #imageLiteral(resourceName: "person"),
             showChooseButton: true)
@@ -512,7 +512,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         //            self.fioField.placeHolder.text = "Фамилия"
         nameField.isHidden.toggle()
         if nameField.isHidden == true {
-            let model = ForaInputModel(
+            let model = VortexInputModel(
                 title: "ФИО получателя",
                 image: #imageLiteral(resourceName: "person"),
                 showChooseButton: true)

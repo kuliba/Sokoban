@@ -21,23 +21,23 @@ extension MicroServices.Facade {
     ) {
         let createContract = adaptedLoggingFetch(
             mapPayload: { .create($0) },
-            ForaRequestFactory.createCreateFastPaymentContractRequest,
+            VortexRequestFactory.createCreateFastPaymentContractRequest,
             FastResponseMapper.mapCreateFastPaymentContractResponse
         )
         
         let getContract = adaptedLoggingFetch(
-            ForaRequestFactory.createFastPaymentContractFindListRequest,
+            VortexRequestFactory.createFastPaymentContractFindListRequest,
             FastResponseMapper.mapFastPaymentContractFindListResponse
         )
         
         let getConsent = adaptedLoggingFetch(
-            ForaRequestFactory.createGetClientConsentMe2MePullRequest,
+            VortexRequestFactory.createGetClientConsentMe2MePullRequest,
             FastResponseMapper.mapGetClientConsentMe2MePullResponse
         )
         
         let updateContract = adaptedLoggingFetch(
             mapPayload: { .create($0) },
-            ForaRequestFactory.createUpdateFastPaymentContractRequest,
+            VortexRequestFactory.createUpdateFastPaymentContractRequest,
             FastResponseMapper.mapUpdateFastPaymentContractResponse
         )
         
@@ -51,7 +51,7 @@ extension MicroServices.Facade {
             updateFastContractFetch: updateContract
         )
         
-        typealias ForaRequestFactory = Vortex.RequestFactory
+        typealias VortexRequestFactory = Vortex.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, RemoteServices.ResponseMapper.MappingError>
         

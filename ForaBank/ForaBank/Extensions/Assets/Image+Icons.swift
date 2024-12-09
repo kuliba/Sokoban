@@ -23,7 +23,7 @@ public extension Image {
     static var ic12EyeOff: Image { Image(#function) }
     static var ic12Lock: Image { Image(#function) }
     static var ic12Lockandeyeoff: Image { Image(#function) }
-    static var ic12LogoForaColor: Image { Image(#function) }
+    static var ic12LogoVortexColor: Image { Image(#function) }
     static var ic12Navigation: Image { Image(#function) }
     static var ic12Percent: Image { Image(#function) }
     static var ic12Shield: Image { Image(#function) }
@@ -217,7 +217,7 @@ public extension Image {
     static var ic16Lock: Image { Image(#function) }
     static var ic16LogIn: Image { Image(#function) }
     static var ic16LogOut: Image { Image(#function) }
-    static var ic16LogoForaOneColor: Image { Image(#function) }
+    static var ic16LogoVortexOneColor: Image { Image(#function) }
     static var ic16Mail: Image { Image(#function) }
     static var ic16MainCardGrey: Image { Image(#function) }
     static var ic16MainCardGreyFixed2: Image { Image(#function) }
@@ -383,7 +383,7 @@ public extension Image {
     static var ic16ZoomIn: Image { Image(#function) }
     static var ic16ZoomOut: Image { Image(#function) }
     static var ic18Check: Image { Image(#function) }
-    static var ic20ForaNy: Image { Image(#function) }
+    static var ic20VortexNy: Image { Image(#function) }
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
@@ -605,10 +605,10 @@ public extension Image {
     static var ic24Lock: Image { Image(#function) }
     static var ic24LogIn: Image { Image(#function) }
     static var ic24LogOut: Image { Image(#function) }
-    static var ic24LogoForaColor: Image { Image(#function) }
-    static var ic24LogoForaLine: Image { Image(#function) }
-    static var ic24LogoForaWhiteElipse: Image { Image(#function) }
-    static var ic24LogoForaOneColor: Image { Image(#function) }
+    static var ic24LogoVortexColor: Image { Image(#function) }
+    static var ic24LogoVortexLine: Image { Image(#function) }
+    static var ic24LogoVortexWhiteElipse: Image { Image(#function) }
+    static var ic24LogoVortexOneColor: Image { Image(#function) }
     static var ic24Mail: Image { Image(#function) }
     static var ic24Male: Image { Image(#function) }
     static var ic24Map: Image { Image(#function) }
@@ -811,7 +811,7 @@ public extension Image {
     static var ic32GreySimple: Image { Image(#function) }
     static var ic32Image: Image { Image(#function) }
     static var ic32Location: Image { Image(#function) }
-    static var ic32LogoForaLine: Image { Image(#function) }
+    static var ic32LogoVortexLine: Image { Image(#function) }
     static var ic32Office: Image { Image(#function) }
     static var ic32Sbp: Image { Image(#function) }
     static var ic32SbpLine: Image { Image(#function) }
@@ -883,7 +883,7 @@ public extension Image {
     static var ic56Sbp: Image { Image(#function) }
     static var ic64TouchId: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
-    static var ic64ForaColor: Image { Image(#function) }
+    static var ic64VortexColor: Image { Image(#function) }
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }

@@ -889,7 +889,7 @@ extension Payments.ParameterSuccessLogo {
             return nil
         }
         
-        return bankId == BankID.foraBankID.rawValue ? nil : .init(icon: .sfp)
+        return bankId == BankID.vortexID.rawValue ? nil : .init(icon: .sfp)
     }
 }
 

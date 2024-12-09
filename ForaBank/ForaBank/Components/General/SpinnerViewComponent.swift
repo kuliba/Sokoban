@@ -17,7 +17,7 @@ extension SpinnerView {
         let icon: Image
         
         //TODO: load icon from StyleGuide
-        init(icon: Image = .init("Logo Fora Bank")) {
+        init(icon: Image = .init("Logo Vortex")) {
             
             self.icon = icon
         }

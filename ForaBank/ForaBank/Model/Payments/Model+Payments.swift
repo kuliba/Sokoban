@@ -1079,7 +1079,7 @@ extension Model {
         
         switch operation.service {
         case .sfp:
-            let response = try await paymentsTransferSFPProcessFora(parameters: operation.parameters, process: process)
+            let response = try await paymentsTransferSFPProcessVortex(parameters: operation.parameters, process: process)
             let success = try Payments.Success(with: response, operation: operation, amountFormatter: amountFormatted(amount:productID:style:))
             return success
             
@@ -1370,7 +1370,7 @@ extension Model {
                         return template.phoneNumber
                         
                     case Payments.Operation.Parameter.Identifier.sfpBank.rawValue:
-                        return template.foraBankId
+                        return template.vortexID
                         
                     case Payments.Operation.Parameter.Identifier.sfpMessage.rawValue:
                         return payload.last?.comment

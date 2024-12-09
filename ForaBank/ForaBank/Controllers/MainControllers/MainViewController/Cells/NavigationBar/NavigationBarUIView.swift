@@ -21,7 +21,7 @@ class NavigationBarUIView: UIView {
     @IBOutlet weak var searchIconWidth: NSLayoutConstraint!
     @IBOutlet weak var searchIconHeight: NSLayoutConstraint!
     
-    @IBOutlet weak var foraAvatarImageView: UIImageView!
+    @IBOutlet weak var vortexAvatarImageView: UIImageView!
     
     @IBAction func trailingLeftButtonTapped(_ sender: Any) {
         trailingLeftAction?()

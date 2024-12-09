@@ -18,7 +18,7 @@ enum DeepLinkType {
         
         switch url.absoluteString {
         case let c2bUrlString where c2bUrlString.contains("sbpay"):
-            let tokenIntent = url.absoluteString.replacingOccurrences(of: "bank\(BankID.foraBankID.rawValue)://sbpay/tokenIntent/", with: "")
+            let tokenIntent = url.absoluteString.replacingOccurrences(of: "bank\(BankID.vortexID.rawValue)://sbpay/tokenIntent/", with: "")
             self = .sbpPay(tokenIntent)
         
         case let c2bUrlString where c2bUrlString.contains("qr.nspk.ru"):

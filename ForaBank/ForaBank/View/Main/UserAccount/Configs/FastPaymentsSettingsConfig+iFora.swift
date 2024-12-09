@@ -42,7 +42,7 @@ extension BankDefaultConfig {
     static let iVortex: Self = .init(
         logo: .init(
             backgroundColor: .mainColorsRed,
-            image: .init("fora logo")
+            image: .init("vortex logo")
         ),
         title: .secondary,
         toggleConfig: .init(

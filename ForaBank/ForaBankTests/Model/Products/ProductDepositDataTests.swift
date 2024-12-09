@@ -141,7 +141,7 @@ class ProductDepositDataTests: XCTestCase {
         XCTAssertEqual(deposit.isCanClosedDeposit, true)
     }
     
-    func test_deposits_shouldDepositType_onForahit() {
+    func test_deposits_shouldDepositType_onVortexhit() {
         
         // given
         let endDateNf = false
@@ -154,7 +154,7 @@ class ProductDepositDataTests: XCTestCase {
                                           demandDeposit: demandDeposit)
         
         // then
-        XCTAssertEqual(deposit.depositType, .forahit)
+        XCTAssertEqual(deposit.depositType, .vortex)
     }
     
     //MARK: test availableTransferType
@@ -261,7 +261,7 @@ class ProductDepositDataTests: XCTestCase {
         XCTAssertEqual(transferType, .interest(0))
     }
     
-    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDate_ValueNil() {
+    func test_interestDeposit_shouldAvailableTransferType_VortexHit_onEndDate_ValueNil() {
         
         // given
         let endDateNf = false
@@ -280,7 +280,7 @@ class ProductDepositDataTests: XCTestCase {
         XCTAssertEqual(transferType, .remains)
     }
     
-    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDateExpired_withPercents() {
+    func test_interestDeposit_shouldAvailableTransferType_VortexHit_onEndDateExpired_withPercents() {
         
         // given
         let endDateNf = false
@@ -299,7 +299,7 @@ class ProductDepositDataTests: XCTestCase {
         XCTAssertEqual(transferType, .interest(sumPayPrc))
     }
     
-    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDateNorExpired_withPercents() {
+    func test_interestDeposit_shouldAvailableTransferType_VortexHit_onEndDateNorExpired_withPercents() {
         
         // given
         let endDateNf = false
@@ -318,7 +318,7 @@ class ProductDepositDataTests: XCTestCase {
         XCTAssertEqual(transferType, .interest(0))
     }
     
-    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDateNotExpired_withPercents() {
+    func test_interestDeposit_shouldAvailableTransferType_VortexHit_onEndDateNotExpired_withPercents() {
         
         // given
         let endDateNf = false

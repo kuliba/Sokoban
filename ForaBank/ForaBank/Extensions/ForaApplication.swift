@@ -1,5 +1,5 @@
 //
-//  ForaApplication.swift
+//  VortexApplication.swift
 //  Vortex
 //
 //  Created by Max Gribov on 22.04.2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ForaApplication: UIApplication {
+class VortexApplication: UIApplication {
     
     var didTouchEvent: (() -> Void)?
     

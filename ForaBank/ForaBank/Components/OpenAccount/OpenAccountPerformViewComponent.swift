@@ -69,7 +69,7 @@ extension OpenAccountPerformView {
 
         init(model: Model,
              item: OpenAccountItemViewModel,
-             spinnerIcon: Image = .init("Logo Fora Bank"),
+             spinnerIcon: Image = .init("Logo Vortex"),
              currency: Currency,
              style: OpenAccountViewModel.Style,
              closeAction: @escaping () -> Void = {}) {

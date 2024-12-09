@@ -1,13 +1,13 @@
 //
-//  ForaInputModel.swift
-//  ForaInputFactory
+//  VortexInputModel.swift
+//  VortexInputFactory
 //
 //  Created by Mikhail on 27.05.2021.
 //
 
 import UIKit
 
-/// Модель для управлением ForaInputView.
+/// Модель для управлением VortexInputView.
 class C2BDetailsInputViewModel {
     var title: String
     var image: UIImage?

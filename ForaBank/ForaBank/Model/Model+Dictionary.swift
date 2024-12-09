@@ -386,7 +386,7 @@ extension Model {
     
     func isForaBank(bankId: BankData.ID) -> Bool {
         
-        bankId == BankID.foraBankID.rawValue
+        bankId == BankID.vortexID.rawValue
     }
     
     // MARK: Operators & OperatorGroups

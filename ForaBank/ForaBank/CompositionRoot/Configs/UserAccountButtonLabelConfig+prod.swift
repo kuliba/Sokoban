@@ -16,7 +16,7 @@ extension UserAccountButtonLabelConfig {
         logo: .init(
             color: .iconWhite,
             frame: .init(width: 20, height: 20),
-            image: .ic12LogoForaColor,
+            image: .ic12LogoVortexColor,
             offset: .init(width: 18, height: -14)
         ),
         name: .init(

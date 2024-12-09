@@ -33,7 +33,7 @@ class PaymentByPhoneViewModel {
     }
     
     var isSbp: Bool {
-        if bankId == BankID.foraBankID.rawValue {
+        if bankId == BankID.vortexID.rawValue {
             return false
         } else {
             return true
@@ -95,7 +95,7 @@ class PaymentByPhoneViewModel {
     internal init(insideByPhone template: PaymentTemplateData, closeAction: @escaping () -> Void ) {
         self.template = template
         self.phoneNumber = template.phoneNumber
-        self.bankId = template.foraBankId ?? ""
+        self.bankId = template.vortexID ?? ""
         self.amount = template.amount
         self.closeAction = closeAction
     }

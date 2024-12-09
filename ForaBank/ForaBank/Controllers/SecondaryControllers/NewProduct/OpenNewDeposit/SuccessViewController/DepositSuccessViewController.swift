@@ -24,20 +24,20 @@ class DepositSuccessViewController: UIViewController {
             setupData(with: model)
         }
     }
-    var termField = ForaInput(
-        viewModel: ForaInputModel(
+    var termField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Срок вклада",
             image: #imageLiteral(resourceName: "date"),
             isEditable: false))
     
-    var closeField = ForaInput(
-        viewModel: ForaInputModel(
+    var closeField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Дата закрытия",
             image: #imageLiteral(resourceName: "date"),
             isEditable: false))
     
-    var incomeField = ForaInput(
-        viewModel: ForaInputModel(
+    var incomeField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сумма вклада",
             image: #imageLiteral(resourceName: "Frame 579"),
             isEditable: false))

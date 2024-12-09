@@ -120,7 +120,7 @@ extension AuthLoginViewModel {
         
         guard updateVersion() == true else { return nil }
         
-        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreVortex)
     }
     
     func clientInformAlertButtonTapped(
@@ -474,7 +474,7 @@ extension AuthLoginViewModel {
         
         private var bindings = Set<AnyCancellable>()
         
-        internal init(icon: Image = .ic32LogoForaLine, scanButton: ScanButtonViewModel, textField: TextFieldMaskableView.ViewModel, nextButton: NextButtonViewModel? = nil, subTitle: String = "Введите номер вашей карты или счета", state: State = .editing) {
+        internal init(icon: Image = .ic32LogoVortexLine, scanButton: ScanButtonViewModel, textField: TextFieldMaskableView.ViewModel, nextButton: NextButtonViewModel? = nil, subTitle: String = "Введите номер вашей карты или счета", state: State = .editing) {
             
             self.icon = icon
             self.scanButton = scanButton
@@ -598,5 +598,5 @@ extension AuthLoginViewModel {
 
 extension String {
     
-    static let appStoreFora = "https://apps.apple.com/ru/app/%D1%84%D0%BE%D1%80%D0%B0-%D0%B1%D0%B0%D0%BD%D0%BA/id1434684472"
+    static let appStoreVortex = "https://apps.apple.com/ru/app/%D1%84%D0%BE%D1%80%D0%B0-%D0%B1%D0%B0%D0%BD%D0%BA/id1434684472"
 }

@@ -26,16 +26,16 @@ class MeToMeViewController: UIViewController {
     }
     var cardFromField: CardChooseView
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
-    var bankField = ForaInput(
-        viewModel: ForaInputModel(
+    var bankField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Из банка",
             image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: true,
             showChooseButton: true)
     )
     var bankListView = FullBankInfoListView()
-    var commentView = ForaInput(
-        viewModel: ForaInputModel(
+    var commentView = VortexInput(
+        viewModel: VortexInputModel(
             title: "Комментарий",
             image: #imageLiteral(resourceName: "comment"))
     )

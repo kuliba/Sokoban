@@ -135,9 +135,9 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }
     
-    func test_foraBankID_isCorrect() {
+    func test_vortexID_isCorrect() {
         
-        XCTAssertEqual(BankID.foraBankID.rawValue, "100000000217")
+        XCTAssertEqual(BankID.vortexID.rawValue, "100000000217")
     }
     
     func test_getHeaderIconForOperation_sfpVortex_returnsNil() {
@@ -165,14 +165,14 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNil(PPIcon.init(parameters: [])?.equatable)
     }
     
-    func test_getHeaderIconForParameters_sfpBankNotFora_returnsSbpIcon() {
+    func test_getHeaderIconForParameters_sfpBankNotVortex_returnsSbpIcon() {
         
         XCTAssertEqual(PPIcon(parameters: makeParameter())?.equatable, .testSBPIcon)
     }
     
-    func test_getHeaderIconForParameters_sfpBankIsFora_returnsNil() {
+    func test_getHeaderIconForParameters_sfpBankIsVortex_returnsNil() {
         
-        XCTAssertNil(PPIcon.init(parameters: makeParameter(.foraBankID)))
+        XCTAssertNil(PPIcon.init(parameters: makeParameter(.vortexID)))
     }
     
     func test_getHeaderIconForParameters_sfpBankWithEmptyVal_returnsSbpIcon() {
@@ -182,18 +182,18 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
         
-        XCTAssertEqual(PPIcon.init(parameters: makeParametersWithFora())?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon.init(parameters: makeParametersWithVortex())?.equatable, .testSBPIcon)
     }
     
     // Success View
     
-    func test_sfpLogo_sfpOperation_foraBank_returnsNil() {
-        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue)))
+    func test_sfpLogo_sfpOperation_vortex_returnsNil() {
+        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.vortexID.rawValue)))
     }
 
-    func test_sfpLogo_sfpOperation_foraBankIdInSource_nonVortexIdInParameters_returnsNil() {
+    func test_sfpLogo_sfpOperation_vortexIDInSource_nonVortexIdInParameters_returnsNil() {
         let operation = Payments.Operation.sfpOperation(
-            bankId: BankID.foraBankID.rawValue,
+            bankId: BankID.vortexID.rawValue,
             parameters: [
                 Payments.ParameterInput.makePPInput(id: "id1", value: "otherBankId")
             ]
@@ -201,9 +201,9 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNil(PPLogo.sfpLogo(with: operation))
     }
     
-    func test_sfpLogo_sfpOperation_nonVortexIdInSource_foraBankIdInParameters_returnsNil() {
+    func test_sfpLogo_sfpOperation_nonVortexIdInSource_vortexIDInParameters_returnsNil() {
         
-        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", parameters: [Payments.ParameterInput.makePPInput(value: BankID.foraBankID.rawValue)])))
+        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", parameters: [Payments.ParameterInput.makePPInput(value: BankID.vortexID.rawValue)])))
     }
 
     func test_sfpLogo_sfpOperation_notVortex_returnsSfpIcon() {
@@ -452,7 +452,7 @@ final class Model_PaymensSFPTests: XCTestCase {
             operation: .sfpOperation(),
             parameters: [
                 Payments.ParameterAmount.makePPAmount(),
-                Payments.ParameterSelectBank.getTestParametersWithFora()
+                Payments.ParameterSelectBank.getTestParametersWithVortex()
             ])
         
         XCTAssertEqual(result.validator.maxAmount, 60000.13)
@@ -486,7 +486,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let sut = makeSUT()
 
         let parameters: [PaymentsParameterRepresentable] = [
-            Payments.ParameterSelectBank.getTestParametersWithFora(),
+            Payments.ParameterSelectBank.getTestParametersWithVortex(),
             Payments.ParameterMock(id: Payments.Parameter.Identifier.code.rawValue, value: Payments.Parameter.Identifier.mock.rawValue, placement: .feed)
         ]
         
@@ -507,14 +507,14 @@ final class Model_PaymensSFPTests: XCTestCase {
 
     func test_paymentsProcessDependencyReducerSFP_headerCase_withoutCodeParameter_returnsExpectedParameterHeader() {
        
-        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: .foraBankID, amount: nil, productId: nil))
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: .vortexID, amount: nil, productId: nil))
         let sut = makeSUT()
         
         do {
             let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
                 operation: operation,
                 parameterId: Payments.Parameter.Identifier.header.rawValue,
-                parameters: [Payments.ParameterSelectBank.getTestParametersWithFora()]
+                parameters: [Payments.ParameterSelectBank.getTestParametersWithVortex()]
             ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
 
             XCTAssertEqual(result.title, operation.service.name)
@@ -590,7 +590,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         )
     }
     
-    private func makeSPFSource(bankID: String = .foraBankID) -> Payments.Operation.Source {
+    private func makeSPFSource(bankID: String = .vortexID) -> Payments.Operation.Source {
         
         return .sfp(phone: "123", bankId: bankID, amount: nil, productId: nil)
     }
@@ -598,14 +598,14 @@ final class Model_PaymensSFPTests: XCTestCase {
     private func makeParameter(_ value: String? = nil) -> [PaymentsParameterRepresentable] {
         
         let value = value ?? .testParamaterValue
-        return [Payments.ParameterSelectBank.getTestParametersWithFora(value: value)]
+        return [Payments.ParameterSelectBank.getTestParametersWithVortex(value: value)]
     }
     
     
-    private func makeParametersWithFora() -> [PaymentsParameterRepresentable] {
+    private func makeParametersWithVortex() -> [PaymentsParameterRepresentable] {
         
-        let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithFora()
-        let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithFora(
+        let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithVortex()
+        let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithVortex(
             bankID: "bankId",
             value: "value",
             name: "name"
@@ -671,7 +671,7 @@ private extension Payments.ParameterHeader.Icon {
 
 private extension String {
     
-    static let foraBankID = BankID.foraBankID.rawValue
+    static let vortexID = BankID.vortexID.rawValue
     static let testParamaterValue = "1crt88888881"
 }
 
@@ -682,11 +682,11 @@ private extension Payments.ParameterHeader.Icon {
 
 private extension Payments.ParameterSelectBank {
     
-    static func getTestParametersWithFora(
+    static func getTestParametersWithVortex(
         bankID: String = "BankRecipientID",
         value: String = "1crt88888881",
         name: String = "ФОРА-БАНК",
-        optionID: String = .foraBankID
+        optionID: String = .vortexID
     ) -> PaymentsParameterRepresentable {
         
         Payments.ParameterSelectBank(

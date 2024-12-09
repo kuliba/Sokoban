@@ -31,7 +31,7 @@ class SbpPayViewModel: ObservableObject {
     struct FooterViewModel {
         
         let descriptionButton = #"Нажимая кнопку "Подключить", вы соглашаетесь с условиями обслуживания Банка и СБПэй"#
-        let spinnerIcon: Image = .init("Logo Fora Bank")
+        let spinnerIcon: Image = .init("Logo Vortex")
         let state: State
         
         enum State {

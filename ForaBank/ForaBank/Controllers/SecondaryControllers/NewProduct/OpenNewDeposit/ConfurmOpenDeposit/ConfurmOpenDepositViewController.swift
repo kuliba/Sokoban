@@ -86,27 +86,27 @@
         }
         var moneyFormatter: SumTextInputFormatter?
         
-        var nameField = ForaInput(
-            viewModel: ForaInputModel(
+        var nameField = VortexInput(
+            viewModel: VortexInputModel(
                 title: "Наименование вклада",
                 image: UIImage(named: "depositIcon")!,
                 isEditable: false))
         
-        var termField = ForaInput(
-            viewModel: ForaInputModel(
+        var termField = VortexInput(
+            viewModel: VortexInputModel(
                 title: "Срок вклада",
                 image: #imageLiteral(resourceName: "date"),
                 isEditable: false,
                 showChooseButton: true))
         
-        var rateField = ForaInput(
-            viewModel: ForaInputModel(
+        var rateField = VortexInput(
+            viewModel: VortexInputModel(
                 title: "Процентная ставка",
                 image: #imageLiteral(resourceName: "PercentDeposit"),
                 isEditable: false))
         
-        var incomeField = ForaInput(
-            viewModel: ForaInputModel(
+        var incomeField = VortexInput(
+            viewModel: VortexInputModel(
                 title: "Ваш потенциальный доход",
                 image: #imageLiteral(resourceName: "Frame 579"),
                 isEditable: false,
@@ -116,8 +116,8 @@
         
         var cardListView = CardsScrollView(onlyMy: false)
         
-        var smsCodeField = ForaInput(
-            viewModel: ForaInputModel(
+        var smsCodeField = VortexInput(
+            viewModel: VortexInputModel(
                 title: "Введите код из СМС",
                 image: UIImage(named: "message-square")!,
                 type: .smsCode))

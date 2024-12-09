@@ -13,33 +13,33 @@ class InternetTVConfirmViewController: UIViewController {
     }
     var otpCode: String = ""
     
-    var phoneField = ForaInput(
-        viewModel: ForaInputModel(
+    var phoneField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Номер телефона получателя",
             image: #imageLiteral(resourceName: "Phone"),
             type: .phone,
             isEditable: false))
     
-    var nameField = ForaInput(
-        viewModel: ForaInputModel(
+    var nameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "ФИО получателя",
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: false))
     
-    var bankField = ForaInput(
-        viewModel: ForaInputModel(
+    var bankField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Банк получателя",
             image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: false))
     
-    var countryField = ForaInput(
-        viewModel: ForaInputModel(
+    var countryField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Страна",
             image: UIImage(named: "map-pin")!,
             isEditable: false))
     
-    var numberTransactionField = ForaInput(
-        viewModel: ForaInputModel(
+    var numberTransactionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Номер перевода",
             image: UIImage(named: "hash")!,
             isEditable: false))
@@ -47,31 +47,31 @@ class InternetTVConfirmViewController: UIViewController {
     var cardFromField = CardChooseView()
     var cardToField = CardChooseView()
     
-    var sumTransactionField = ForaInput(
-        viewModel: ForaInputModel(
+    var sumTransactionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сумма перевода",
             image: UIImage(named: "coins")!,
             isEditable: false))
     
-    var taxTransactionField = ForaInput(
-        viewModel: ForaInputModel(
+    var taxTransactionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
             isEditable: false))
     
-    var currTransactionField = ForaInput(
-        viewModel: ForaInputModel(
+    var currTransactionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сумма зачисления в валюте",
             isEditable: false))
     
-    var currencyTransactionField = ForaInput(
-        viewModel: ForaInputModel(
+    var currencyTransactionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Способ выплаты",
             image: #imageLiteral(resourceName: "Frame 579"),
             isEditable: false))
     
-    var smsCodeField = ForaInput(
-        viewModel: ForaInputModel(
+    var smsCodeField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Введите код из СМС",
             image: UIImage(named: "message-square")!,
             type: .smsCode))

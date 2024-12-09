@@ -53,7 +53,7 @@ private extension View {
         
         if shouldShowSpinner {
             
-            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+            SpinnerRefreshView(icon: .init("Logo Vortex"))
         }
     }
 }

@@ -25,8 +25,8 @@ class AccountStatementController: UIViewController {
     var startDate: Date?
     var endDate: Date?
     
-    var dateField = ForaInput(
-        viewModel: ForaInputModel(
+    var dateField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Выберите период",
             image: #imageLiteral(resourceName: "date"),
             isEditable: false,

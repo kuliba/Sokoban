@@ -49,7 +49,7 @@ struct SpinnerRefreshView: View {
 struct SpinnerRefreshViewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
-        SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+        SpinnerRefreshView(icon: .init("Logo Vortex"))
             .previewLayout(.sizeThatFits)
             .padding()
     }

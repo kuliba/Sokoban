@@ -52,8 +52,8 @@ final class PaymentsTemplateDataTests: XCTestCase {
             parameterList: transferData)
         
         XCTAssertEqual(
-            template.foraBankId,
-            BankID.foraBankID.rawValue)
+            template.vortexID,
+            BankID.vortexID.rawValue)
     }
     
     func test_paymentsTemplate_typeInside_shouldReturnPhoneBankIdNil() throws {
@@ -65,7 +65,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             parameterList: transferData
         )
         
-        let insideByPhoneBankId = template.foraBankId
+        let insideByPhoneBankId = template.vortexID
         
         XCTAssertNil(insideByPhoneBankId)
     }

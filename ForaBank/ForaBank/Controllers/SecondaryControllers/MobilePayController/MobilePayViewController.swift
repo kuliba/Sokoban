@@ -17,8 +17,8 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     var recipiendId = String()
     var phoneNumber: String?
     var regEx = ""
-    var phoneField = ForaInput(
-        viewModel: ForaInputModel(
+    var phoneField = VortexInput(
+        viewModel: VortexInputModel(
             title: "По номеру телефона",
             image: UIImage(named: "smartphonegray")!,
             showChooseButton: true)

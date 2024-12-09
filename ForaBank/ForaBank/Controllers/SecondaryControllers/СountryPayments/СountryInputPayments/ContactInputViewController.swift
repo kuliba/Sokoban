@@ -1,6 +1,6 @@
 //
 //  ContactInputViewController.swift
-//  ForaInputFactory
+//  VortexInputFactory
 //
 //  Created by Mikhail on 27.05.2021.
 //
@@ -39,7 +39,7 @@ class ContactInputViewController: UIViewController {
     }
     var needShowSwitchView: Bool = false {
         didSet {
-            foraSwitchView.isHidden = needShowSwitchView ? false : true
+            vortexSwitchView.isHidden = needShowSwitchView ? false : true
         }
     }
     
@@ -69,21 +69,21 @@ class ContactInputViewController: UIViewController {
         }
     }
     
-    var foraSwitchView = ForaSwitchView()
+    var vortexSwitchView = VortexSwitchView()
     
-    var surnameField = ForaInput(
-        viewModel: ForaInputModel(
+    var surnameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Фамилия получателя",
             image: #imageLiteral(resourceName: "accountImage"),
             errorText: "Фамилия указана не верно"))
     
-    var nameField = ForaInput(
-        viewModel: ForaInputModel(
+    var nameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Имя получателя",
             errorText: "Имя указана не верно"))
     
-    var secondNameField = ForaInput(
-        viewModel: ForaInputModel(
+    var secondNameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Отчество получателя (если есть)"))
     
     var phoneField = PhoneNumberView(
@@ -93,8 +93,8 @@ class ContactInputViewController: UIViewController {
             type: .phone,
             showChooseButton: true))
     
-    var bankField = ForaInput(
-        viewModel: ForaInputModel(
+    var bankField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Банк получателя",
             image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: false,
@@ -153,9 +153,9 @@ class ContactInputViewController: UIViewController {
                     
                 }
                 
-                self.foraSwitchView.bankByPhoneSwitch.isOn = false
-                self.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                self.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                self.vortexSwitchView.bankByPhoneSwitch.isOn = false
+                self.vortexSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                self.vortexSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 
                 if let surName = model.additional.first(where: { $0.fieldname == "bName" })?.fieldvalue {
                     self.surnameField.text = surName
@@ -333,7 +333,7 @@ class ContactInputViewController: UIViewController {
             }
         }
         
-        foraSwitchView.switchIsChanged = { [weak self] (switchView) in
+        vortexSwitchView.switchIsChanged = { [weak self] (switchView) in
             self?.clearAllFields()
             self?.typeOfPay = switchView.isOn ? .mig : .contact
             self?.configure(with: self?.country, byPhone: switchView.isOn)

@@ -11,7 +11,7 @@ extension View {
     
     func loader(
         isLoading: Bool,
-        icon: Image = .init("Logo Fora Bank")
+        icon: Image = .init("Logo Vortex")
     ) -> some View {
         
         self.modifier(LoaderWrapper(

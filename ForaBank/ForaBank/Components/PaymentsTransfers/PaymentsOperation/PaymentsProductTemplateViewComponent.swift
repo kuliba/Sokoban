@@ -746,7 +746,7 @@ extension PaymentsProductTemplateView {
                                     
                                     HStack(spacing: 4) {
                                     
-                                        Image.ic24LogoForaOneColor
+                                        Image.ic24LogoVortexOneColor
                                         .resizable()
                                         .frame(width: 17, height: 16)
                                         
@@ -1018,7 +1018,7 @@ extension PaymentsProductTemplateView.ProductTemplateView {
                                 .foregroundColor(.bordersDivider)
                                 .frame(width: 32, height: 22)
                     
-                            Image.ic24LogoForaOneColor
+                            Image.ic24LogoVortexOneColor
                                 .resizable()
                                 .foregroundColor(.mainColorsGray)
                                 .frame(width: 8, height: 7)

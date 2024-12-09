@@ -1,6 +1,6 @@
 //
 //  NotificationService.swift
-//  ForaPushServiceExtension
+//  VortexPushServiceExtension
 //
 //  Created by Роман Воробьев on 03.05.2022.
 //
@@ -11,7 +11,7 @@ final class NotificationService: UNNotificationServiceExtension {
     
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
-    let defaults = UserDefaults(suiteName: "group.com.isimplelab.isimplemobile.forabank")
+    let defaults = UserDefaults(suiteName: "group.com.isimplelab.isimplemobile.vortex")
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)

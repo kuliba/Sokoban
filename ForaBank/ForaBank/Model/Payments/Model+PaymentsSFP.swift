@@ -252,7 +252,7 @@ extension Model {
         }
     }
     
-    // process remote confirm step for payment to Fora clint
+    // process remote confirm step for payment to Vortex clint
     func paymentsProcessRemoteStepSFP(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
         
         var parameters = [PaymentsParameterRepresentable]()

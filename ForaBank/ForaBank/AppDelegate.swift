@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         // send user interaction events to session agent
-        if let vortexApplication = application as? ForaApplication {
+        if let vortexApplication = application as? VortexApplication {
             
             vortexApplication.didTouchEvent = {
                 

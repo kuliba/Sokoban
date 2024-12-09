@@ -3293,8 +3293,8 @@
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
 		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
 		EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDA563AF26F881D60093F0C8 /* BanksView.xib */; };
-		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
-		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
+		EDAA99AF2673AB9200435484 /* VortexSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* VortexSwitchView.swift */; };
+		EDAA99B12673ABF200435484 /* VortexSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* VortexSwitchView.xib */; };
 		EDB02AE22816E9C6005F64B5 /* AccountCellDefaultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE12816E9C6005F64B5 /* AccountCellDefaultViewModel.swift */; };
 		EDB02AE42816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE32816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift */; };
 		EDB02AE62816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE52816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift */; };
@@ -3339,9 +3339,9 @@
 		EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655726679C74007E6030 /* SmsCodeView.swift */; };
 		EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */; };
 		EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */; };
-		EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB1655D2667A55F007E6030 /* ForaInput.xib */; };
-		EDB165602667A569007E6030 /* ForaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655F2667A569007E6030 /* ForaInput.swift */; };
-		EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165612667A571007E6030 /* ForaInputModel.swift */; };
+		EDB1655E2667A55F007E6030 /* VortexInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB1655D2667A55F007E6030 /* VortexInput.xib */; };
+		EDB165602667A569007E6030 /* VortexInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655F2667A569007E6030 /* VortexInput.swift */; };
+		EDB165622667A571007E6030 /* VortexInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165612667A571007E6030 /* VortexInputModel.swift */; };
 		EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfirmViewController.swift */; };
 		EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165642667A741007E6030 /* ContactInputViewController.swift */; };
 		EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */; };
@@ -6758,8 +6758,8 @@
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
 		EDA563AF26F881D60093F0C8 /* BanksView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BanksView.xib; sourceTree = "<group>"; };
-		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
-		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
+		EDAA99AE2673AB9200435484 /* VortexSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VortexSwitchView.swift; sourceTree = "<group>"; };
+		EDAA99B02673ABF200435484 /* VortexSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VortexSwitchView.xib; sourceTree = "<group>"; };
 		EDB02AE12816E9C6005F64B5 /* AccountCellDefaultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCellDefaultViewModel.swift; sourceTree = "<group>"; };
 		EDB02AE32816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCellFullButtonViewComponent.swift; sourceTree = "<group>"; };
 		EDB02AE52816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCellSwitchViewComponent.swift; sourceTree = "<group>"; };
@@ -6811,9 +6811,9 @@
 		EDB1655726679C74007E6030 /* SmsCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeView.swift; sourceTree = "<group>"; };
 		EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodeVerificationViewController UI.swift"; sourceTree = "<group>"; };
 		EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginCardEntryViewController UI.swift"; sourceTree = "<group>"; };
-		EDB1655D2667A55F007E6030 /* ForaInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForaInput.xib; sourceTree = "<group>"; };
-		EDB1655F2667A569007E6030 /* ForaInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInput.swift; sourceTree = "<group>"; };
-		EDB165612667A571007E6030 /* ForaInputModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInputModel.swift; sourceTree = "<group>"; };
+		EDB1655D2667A55F007E6030 /* VortexInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VortexInput.xib; sourceTree = "<group>"; };
+		EDB1655F2667A569007E6030 /* VortexInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VortexInput.swift; sourceTree = "<group>"; };
+		EDB165612667A571007E6030 /* VortexInputModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VortexInputModel.swift; sourceTree = "<group>"; };
 		EDB165632667A741007E6030 /* ContactConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfirmViewController.swift; sourceTree = "<group>"; };
 		EDB165642667A741007E6030 /* ContactInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInputViewController.swift; sourceTree = "<group>"; };
 		EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
@@ -16679,20 +16679,20 @@
 			path = CardScannerController;
 			sourceTree = "<group>";
 		};
-		ED4FC5F0266B8AA60092B4AB /* ForaInputView */ = {
+		ED4FC5F0266B8AA60092B4AB /* VortexInputView */ = {
 			isa = PBXGroup;
 			children = (
 				ED4FC5F2266B8ADE0092B4AB /* ViewModel */,
 				ED4FC5F1266B8AD00092B4AB /* Xib */,
-				EDB1655F2667A569007E6030 /* ForaInput.swift */,
+				EDB1655F2667A569007E6030 /* VortexInput.swift */,
 			);
-			path = ForaInputView;
+			path = VortexInputView;
 			sourceTree = "<group>";
 		};
 		ED4FC5F1266B8AD00092B4AB /* Xib */ = {
 			isa = PBXGroup;
 			children = (
-				EDB1655D2667A55F007E6030 /* ForaInput.xib */,
+				EDB1655D2667A55F007E6030 /* VortexInput.xib */,
 			);
 			path = Xib;
 			sourceTree = "<group>";
@@ -16700,7 +16700,7 @@
 		ED4FC5F2266B8ADE0092B4AB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				EDB165612667A571007E6030 /* ForaInputModel.swift */,
+				EDB165612667A571007E6030 /* VortexInputModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -17175,7 +17175,7 @@
 				ED3A966F2690FAB400252857 /* BankListView */,
 				0B6081FE268DDD0800FDB8AD /* CustomCardView */,
 				ED39EC8A268B4EF000158E46 /* CardChooseView */,
-				ED4FC5F0266B8AA60092B4AB /* ForaInputView */,
+				ED4FC5F0266B8AA60092B4AB /* VortexInputView */,
 				ED51D66C2688B25D005FD655 /* SeparatorView */,
 				EDC3419F26864BF100FFFEF8 /* BottomInputView */,
 				ED4B5440270344DE00C87A1A /* CardsScrollView */,
@@ -17189,8 +17189,8 @@
 		EDAA99AD2673AB7700435484 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
-				EDAA99B02673ABF200435484 /* ForaSwitchView.xib */,
-				EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */,
+				EDAA99B02673ABF200435484 /* VortexSwitchView.xib */,
+				EDAA99AE2673AB9200435484 /* VortexSwitchView.swift */,
 			);
 			path = Switch;
 			sourceTree = "<group>";
@@ -19254,7 +19254,7 @@
 				2A3E03AA2B74C6B000A4494D /* updateFastPaymentContractD3.json in Resources */,
 				0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */,
 				EDDFE3B62756D54800F57C71 /* CalculatorDepositCollectionViewCell.xib in Resources */,
-				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
+				EDAA99B12673ABF200435484 /* VortexSwitchView.xib in Resources */,
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */,
@@ -19277,7 +19277,7 @@
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				2A3E03A52B74C6B000A4494D /* getClientConsentMe2MePullB2.json in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
-				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
+				EDB1655E2667A55F007E6030 /* VortexInput.xib in Resources */,
 				2A3E039F2B74C6AF00A4494D /* getFullBankInfoListK3.json in Resources */,
 				2A3E03B62B74C6B000A4494D /* getBankDefaultC2.json in Resources */,
 				6876D10427F53EC0000240CC /* MoreButtonCollectionViewCell.xib in Resources */,
@@ -20275,7 +20275,7 @@
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
 				C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */,
 				C139D9182AFCB175008B5F5E /* MainViewModelSamples.swift in Sources */,
-				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
+				EDB165602667A569007E6030 /* VortexInput.swift in Sources */,
 				2A9499222B73E13000C67F05 /* UserAccountEffectHandler.swift in Sources */,
 				68A07C43281AAE0000797A54 /* DepositProductsHostingViewController.swift in Sources */,
 				68EACA55289142E100B27B50 /* DeepLinkType.swift in Sources */,
@@ -20398,7 +20398,7 @@
 				77517F9D27A86321005CFB77 /* TransferResponseBaseData.swift in Sources */,
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
 				835D0DF32BEA576300FFE90B /* Services+makeUnblockCardServices.swift in Sources */,
-				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
+				EDAA99AF2673AB9200435484 /* VortexSwitchView.swift in Sources */,
 				77138CE729C0C12C005EDE8F /* PaymentsSuccessTextViewComponent.swift in Sources */,
 				2A5190342A7E108A0014B0B7 /* RequestFactory+makeSecretRequest.swift in Sources */,
 				C19738E72AF3970100101B1B /* _StickerDictionary.swift in Sources */,
@@ -21766,7 +21766,7 @@
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				2A92EA682C667853001452E7 /* TemplatesListFlowEffectHandler.swift in Sources */,
 				A78AC1D82CEBA67600154B88 /* RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift in Sources */,
-				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
+				EDB165622667A571007E6030 /* VortexInputModel.swift in Sources */,
 				77EC58EE27723A5A0054D75C /* Model+Templates.swift in Sources */,
 				ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */,
 				ECCA5B502CFDFC250034A64A /* RemoteDomainOf.swift in Sources */,

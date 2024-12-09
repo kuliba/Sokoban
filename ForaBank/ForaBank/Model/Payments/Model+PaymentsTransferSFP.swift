@@ -50,7 +50,7 @@ extension Model {
         }
     }
     
-    func paymentsTransferSFPProcessFora(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter]) async throws -> TransferResponseData {
+    func paymentsTransferSFPProcessVortex(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter]) async throws -> TransferResponseData {
         
         guard let token = token else {
             throw Payments.Error.notAuthorized

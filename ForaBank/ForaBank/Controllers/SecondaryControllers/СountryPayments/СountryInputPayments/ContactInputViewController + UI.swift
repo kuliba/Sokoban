@@ -27,10 +27,10 @@ extension ContactInputViewController {
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
 //        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
-//        view.addSubview(foraSwitchView)
+//        view.addSubview(vortexSwitchView)
         
         
-//        foraSwitchView.heightAnchor.constraint(equalToConstant: heightSwitchView).isActive = true
+//        vortexSwitchView.heightAnchor.constraint(equalToConstant: heightSwitchView).isActive = true
         
         //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
         // let scroll
@@ -38,7 +38,7 @@ extension ContactInputViewController {
         //  view1.addSubview(stackView)
         // scroll add view1
         
-        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, bankListView, cardFromField, cardListView])
+        stackView = UIStackView(arrangedSubviews: [vortexSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, bankListView, cardFromField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -119,9 +119,9 @@ extension ContactInputViewController {
             self.surnameField.isHidden = byPhone ? true : false
             self.nameField.isHidden = byPhone ? true : false
             self.secondNameField.isHidden = byPhone ? true : false
-            self.foraSwitchView.bankByPhoneSwitch.isOn = byPhone ? true : false
-            self.foraSwitchView.bankByPhoneSwitch.layer.borderColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            self.foraSwitchView.bankByPhoneSwitch.thumbTintColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            self.vortexSwitchView.bankByPhoneSwitch.isOn = byPhone ? true : false
+            self.vortexSwitchView.bankByPhoneSwitch.layer.borderColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            self.vortexSwitchView.bankByPhoneSwitch.thumbTintColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             self.stackView.layoutIfNeeded()
         }
         

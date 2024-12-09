@@ -956,7 +956,7 @@ extension PaymentsSelectCountryView.ViewModel {
 
 extension PaymentsSelectCountryView.ViewModel.ListViewModel {
     
-    static let itemsViewModelSample = PaymentsSelectCountryView.ViewModel.ListViewModel(items: [.init(id: "", icon: .icon(Image.ic64ForaColor), name: "Фора-банк", subtitle: "0445283290", action: {_ in })], filteredItems: [])
+    static let itemsViewModelSample = PaymentsSelectCountryView.ViewModel.ListViewModel(items: [.init(id: "", icon: .icon(Image.ic64VortexColor), name: "Фора-банк", subtitle: "0445283290", action: {_ in })], filteredItems: [])
 }
 
 extension PaymentsSelectCountryView.ViewModel.SelectedItemViewModel {

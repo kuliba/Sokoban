@@ -79,24 +79,24 @@ extension FastPaymentsSettingsOTPServices {
     ) {
         typealias ServiceFailure = OTPInputComponent.ServiceFailure
         
-        typealias ForaRequestFactory = Vortex.RequestFactory
+        typealias VortexRequestFactory = Vortex.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         
         let initiateOTP = adaptedLoggingFetch(
-            ForaRequestFactory.createPrepareDeleteDefaultBankRequest,
+            VortexRequestFactory.createPrepareDeleteDefaultBankRequest,
             FastResponseMapper.mapPrepareDeleteBankDefaultResponse(_:_:),
             mapError: OTPInputComponent.ServiceFailure.init(error:)
         )
         
         let submitOTP: OTPFieldEffectHandler.SubmitOTP = adaptedLoggingFetch(
             mapPayload: { .init($0.rawValue) },
-            ForaRequestFactory.createMakeDeleteBankDefaultRequest(payload:),
+            VortexRequestFactory.createMakeDeleteBankDefaultRequest(payload:),
             FastResponseMapper.mapMakeDeleteBankDefaultResponse(_:_:),
             mapError: ServiceFailure.init(error:)
         )
         
         let prepareSetBankDefault = adaptedLoggingFetch(
-            ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            VortexRequestFactory.createPrepareSetBankDefaultRequest,
             FastResponseMapper.mapPrepareSetBankDefaultResponse,
             mapError: FastPaymentsSettings.ServiceFailure.init(error:)
         )
@@ -175,13 +175,13 @@ private extension LoggingRemoteNanoServiceComposer {
     
     typealias ServiceFailure = OTPInputComponent.ServiceFailure
     
-    typealias ForaRequestFactory = Vortex.RequestFactory
+    typealias VortexRequestFactory = Vortex.RequestFactory
     typealias FastResponseMapper = RemoteServices.ResponseMapper
     
     func composeFastInitiateOTP() -> CountdownEffectHandler.InitiateOTP {
         
         let initiateOTP = self.compose(
-            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            createRequest: VortexRequestFactory.createPrepareSetBankDefaultRequest,
             mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
             mapError: OTPInputComponent.ServiceFailure.init(error:)
         )
@@ -192,7 +192,7 @@ private extension LoggingRemoteNanoServiceComposer {
     func composeFastSubmitOTP() -> OTPFieldEffectHandler.SubmitOTP {
         
         let submitOTP = self.compose(
-            createRequest: ForaRequestFactory.createMakeSetBankDefaultRequest,
+            createRequest: VortexRequestFactory.createMakeSetBankDefaultRequest,
             mapResponse: FastResponseMapper.mapMakeSetBankDefaultResponse,
             mapError: ServiceFailure.init(error:)
         )
@@ -203,7 +203,7 @@ private extension LoggingRemoteNanoServiceComposer {
     func composeFastSetBankDefault() -> UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault {
         
         let prepareSetBankDefault = self.compose(
-            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            createRequest: VortexRequestFactory.createPrepareSetBankDefaultRequest,
             mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
             mapError: FastPaymentsSettings.ServiceFailure.init(error:)
         )

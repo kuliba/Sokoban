@@ -701,7 +701,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
             case .loading:
                 
-                paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
+                paymentsAmount.transferButton = .loading(icon: .init("Logo Vortex"), iconSize: .init(width: 40, height: 40))
             }
         }
         else {

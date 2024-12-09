@@ -83,7 +83,7 @@ struct AmountView: View {
                 
             case .loading:
                 SpinnerRefreshView(
-                    icon: .init("Logo Fora Bank"),
+                    icon: .init("Logo Vortex"),
                     iconSize: .init(width: 32, height: 32)
                 )
             }

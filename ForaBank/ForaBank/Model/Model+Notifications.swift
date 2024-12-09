@@ -96,7 +96,7 @@ extension Model {
     }
     
     func handleNotificationTransitionClearBadges() {
-        UserDefaults(suiteName: "group.com.isimplelab.isimplemobile.forabank")?.set(0, forKey: "badgesCount")
+        UserDefaults(suiteName: "group.com.isimplelab.isimplemobile.vortex")?.set(0, forKey: "badgesCount")
         //UI API called
         DispatchQueue.main.async {
             UIApplication.shared.applicationIconBadgeNumber = 0

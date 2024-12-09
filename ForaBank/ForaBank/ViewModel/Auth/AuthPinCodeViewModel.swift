@@ -672,7 +672,7 @@ extension AuthPinCodeViewModel {
         
         guard updateVersion() != nil else { return nil }
         
-        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreFora)
+        return URL(string: clientInformAlerts?.updateAlert?.link ?? String.appStoreVortex)
     }
     
     func clientInformAlertButtonTapped(

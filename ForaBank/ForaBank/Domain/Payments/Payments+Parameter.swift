@@ -1254,7 +1254,7 @@ extension Payments {
                 
                 switch source {
                     
-                    case .sfp(_, BankID.foraBankID.rawValue, _, _):
+                    case .sfp(_, BankID.vortexID.rawValue, _, _):
                         return nil
                     
                     default:
@@ -1265,7 +1265,7 @@ extension Payments {
             init?(parameters: [PaymentsParameterRepresentable]) {
                 
                 guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
-                      bankParameterValue != BankID.foraBankID.rawValue
+                      bankParameterValue != BankID.vortexID.rawValue
                 else { return nil }
                 self = .sbpIcon
             }

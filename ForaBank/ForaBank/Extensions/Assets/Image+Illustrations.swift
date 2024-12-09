@@ -15,7 +15,7 @@ private class BundleProvider {
 }
 
 public extension Image {
-    static var imgDepositForaHit: Image { Image(#function) }
+    static var imgDepositVortexHit: Image { Image(#function) }
     static var imgLendingSubscription: Image { Image(#function) }
     static var imgMainBanner1: Image { Image(#function) }
     static var imgMainBanner2: Image { Image(#function) }

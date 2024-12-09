@@ -84,7 +84,7 @@ struct CloseAccountSpinnerView: View {
                 .opacity(0.3)
                 .edgesIgnoringSafeArea(.all)
             
-            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+            SpinnerRefreshView(icon: .init("Logo Vortex"))
         }
     }
 }

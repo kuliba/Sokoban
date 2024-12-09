@@ -1,6 +1,6 @@
 //
-//  ForaInput.swift
-//  ForaInputFactory
+//  VortexInput.swift
+//  VortexInputFactory
 //
 //  Created by Mikhail on 27.05.2021.
 //

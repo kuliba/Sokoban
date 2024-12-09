@@ -24,8 +24,8 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK: - Views
-    var phoneField = ForaInput(
-        viewModel: ForaInputModel(
+    var phoneField = VortexInput(
+        viewModel: VortexInputModel(
             title: "По номеру телефона",
             image: UIImage(named: "smartphonegray")!,
             showChooseButton: true)
@@ -33,8 +33,8 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     var cardField = CardChooseView()
     
-    var bankPayeer = ForaInput(
-        viewModel: ForaInputModel(
+    var bankPayeer = VortexInput(
+        viewModel: VortexInputModel(
             title: "Банк получателя",
             image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: false,
@@ -43,43 +43,43 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     var bankListView = BankListView()
     
-    var nameField = ForaInput(
-        viewModel: ForaInputModel(
+    var nameField = VortexInput(
+        viewModel: VortexInputModel(
             title: "ФИО получателя",
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: true)
     )
     
-    var numberTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    var numberTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Номер перевода",
             image: UIImage(named: "hash")!,
             isEditable: false)
     )
     
-    var summTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    var summTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сумма перевода",
             image: UIImage(named: "coins")!,
             isEditable: true)
     )
     
-    var commentField = ForaInput(
-        viewModel: ForaInputModel(
+    var commentField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сообщение получателю",
             image: #imageLiteral(resourceName: "message"),
             isEditable: true)
     )
     
-    var taxTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    var taxTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
             isEditable: false)
     )
     
-    var smsCodeField = ForaInput(
-        viewModel: ForaInputModel(
+    var smsCodeField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Введите код из СМС",
             image: UIImage(named: "message-square")!,
             type: .smsCode)

@@ -18,21 +18,21 @@ class DateChooseView: UIView {
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit(viewModel: ForaInputModel(title: ""))
+        commonInit(viewModel: VortexInputModel(title: ""))
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit(viewModel: ForaInputModel(title: ""))
+        commonInit(viewModel: VortexInputModel(title: ""))
     }
     
-    required init(frame: CGRect = .zero, viewModel: ForaInputModel) {
+    required init(frame: CGRect = .zero, viewModel: VortexInputModel) {
         super.init(frame: frame)
         commonInit(viewModel: viewModel)
     }
 
     
-    func commonInit(viewModel: ForaInputModel) {
+    func commonInit(viewModel: VortexInputModel) {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.translatesAutoresizingMaskIntoConstraints = false

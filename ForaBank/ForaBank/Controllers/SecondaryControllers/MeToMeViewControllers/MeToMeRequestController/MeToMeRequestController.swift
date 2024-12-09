@@ -59,8 +59,8 @@ class MeToMeRequestController: UIViewController {
         return label
     }()
     
-    lazy var bankField = ForaInput(
-        viewModel: ForaInputModel(
+    lazy var bankField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Банк",
             image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: false))
@@ -77,14 +77,14 @@ class MeToMeRequestController: UIViewController {
         return cardField
     }()
     
-    lazy var summTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    lazy var summTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Сумма перевода",
             image: UIImage(named: "coins")!,
             isEditable: false))
     
-    lazy var taxTransctionField = ForaInput(
-        viewModel: ForaInputModel(
+    lazy var taxTransctionField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
             isEditable: false))

@@ -351,7 +351,7 @@ struct PrintFormView: View {
                 }
                 
             case .loading:
-                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                SpinnerRefreshView(icon: .init("Logo Vortex"))
                 
             case .failed:
                 Text("Не удалось загрузить документ")

@@ -25,7 +25,7 @@ extension ClientInformListConfig.Strings {
     
     static let preview: Self = .init(
         titlePlaceholder: "Информация",
-        foraBankLink: "https://www.innovation.ru"
+        vortexLink: "https://www.innovation.ru"
     )
 }
 

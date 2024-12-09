@@ -330,7 +330,7 @@ class MainViewController: UIViewController {
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false
-        searchBar.foraAvatarImageView.isHidden = false
+        searchBar.vortexAvatarImageView.isHidden = false
         searchBar.searchIconWidth.constant = 40
         searchBar.searchIconHeight.constant = 40
         self.searchBar.searchIcon.layer.cornerRadius = 20

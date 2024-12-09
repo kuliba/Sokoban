@@ -162,7 +162,7 @@ let validJson = """
             "documents": [{
                 "title": "Общие условия потребительского кредита «Залоговый",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             }, {
                 "title": "Заявление-анкета на получение потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
@@ -170,15 +170,15 @@ let validJson = """
             }, {
                 "title": "Требования к заемщику",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Fora_Zalogovyi_.doc"
+                "link": "https://www.test.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Vortex_Zalogovyi_.doc"
             }, {
                 "title": "Необходимые документы для оформления потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             }, {
                 "title": "Список документов по залогу (недвижимость)",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Vortex_Zalogovyi_.docx"
             }, {
                 "title": "Условия договора потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
@@ -344,7 +344,7 @@ let noSerialJson = """
             "documents": [{
                 "title": "Общие условия потребительского кредита «Залоговый",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             }, {
                 "title": "Заявление-анкета на получение потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
@@ -352,15 +352,15 @@ let noSerialJson = """
             }, {
                 "title": "Требования к заемщику",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Fora_Zalogovyi_.doc"
+                "link": "https://www.test.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Vortex_Zalogovyi_.doc"
             }, {
                 "title": "Необходимые документы для оформления потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             }, {
                 "title": "Список документов по залогу (недвижимость)",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",
-                "link": "https://www.test.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Fora_Zalogovyi_.docx"
+                "link": "https://www.test.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Vortex_Zalogovyi_.docx"
             }, {
                 "title": "Условия договора потребительского кредита",
                 "icon": "4c6e32a2f66f18484394c3520e9e2c25",

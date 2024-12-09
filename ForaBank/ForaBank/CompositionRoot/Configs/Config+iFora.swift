@@ -94,7 +94,7 @@ extension ProductSelectComponent.ProductSelectConfig {
         missingSelected: .init(
             backgroundColor: .bordersDivider,
             foregroundColor: .iconBlackMedium,
-            image: .init("foralogo"),
+            image: .init("vortexlogo"),
             title: .init(
                 textFont: .textH4M16240(),
                 textColor: .textPlaceholder

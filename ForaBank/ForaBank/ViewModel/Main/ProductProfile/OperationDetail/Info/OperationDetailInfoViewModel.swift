@@ -89,8 +89,8 @@ final class OperationDetailInfoViewModel: Identifiable {
     ) {
         self.model = model
         let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date)
-        let foraBankName = "Фора Банк"
-        let foraBankIcon = Image("foraContactImage", bundle: nil)
+        let vortexName = "Фора Банк"
+        let vortexIcon = Image("vortexContactImage", bundle: nil)
         
         guard let currency = model.dictionaryCurrency(for: statement.currencyCodeNumeric)?.code else {
             return nil
@@ -255,8 +255,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                 value: statement.merchant))
             cells.append(BankCellViewModel(
                 title: "Банк получателя",
-                icon:  foraBankIcon,
-                name: foraBankName))
+                icon:  vortexIcon,
+                name: vortexName))
             
             if let amountCell = Self.amountCell(
                 with: model,

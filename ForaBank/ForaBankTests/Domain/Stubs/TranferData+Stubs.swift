@@ -15,7 +15,7 @@ extension TransferGeneralData.PayeeExternal {
         kpp: String = "773301001",
         accountNumber: String = "40702810238170103538",
         bankBIC: String = "044525225",
-        name: String = "ForaService"
+        name: String = "VortexService"
     ) -> TransferGeneralData.PayeeExternal {
         
             return .init(

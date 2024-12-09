@@ -62,7 +62,7 @@ enum BankType: String, CaseIterable {
 
 extension BankID {
     
-  static let foraBankID: Self = .init("100000000217")
+  static let vortexID: Self = .init("100000000217")
 }
 
 typealias BankID = Tagged<_BankID, String>

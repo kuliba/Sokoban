@@ -224,7 +224,7 @@ struct OperationProcessView: View {
             
             switch operation.state {
             case .process:
-                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                SpinnerRefreshView(icon: .init("Logo Vortex Bank"))
                 
             case .userInteraction:
                 

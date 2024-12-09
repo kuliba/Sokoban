@@ -19,15 +19,15 @@ class ResultAccountStatementController: UIViewController {
         }
     }
     
-    var dateField = ForaInput(
-        viewModel: ForaInputModel(
+    var dateField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Время заказа документа",
             image: #imageLiteral(resourceName: "date"),
             isEditable: false,
             showChooseButton: false))
     
-    var periodField = ForaInput(
-        viewModel: ForaInputModel(
+    var periodField = VortexInput(
+        viewModel: VortexInputModel(
             title: "Период",
             image: #imageLiteral(resourceName: "date"),
             isEditable: false,

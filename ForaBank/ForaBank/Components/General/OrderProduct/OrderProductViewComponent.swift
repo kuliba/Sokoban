@@ -497,7 +497,7 @@ extension OrderProductView.ViewModel {
         @Published var state: State
         
         let title = "Отправить"
-        let icon = Image("Logo Fora Bank")
+        let icon = Image("Logo Vortex")
         
         lazy var onAction: () -> Void = { [weak self] in
             self?.action.send(OrderProductAction.Send.Button.Tap())

@@ -41,7 +41,7 @@ extension ChatViewModel {
                              .email(mail: "vortex-digital@vortex.ru")
                             ],
                             [.whatsapp(url: "https://api.whatsapp.com/send/?phone=%2B79257756555&text&app_absent=0"),
-                             .telegram(url: "https://telegram.me/forabank_bot")
+                             .telegram(url: "https://telegram.me/vortex_bot")
 //                             ,
 //                             .viber(url: "i don't know")
                            ]]

@@ -88,7 +88,7 @@ final class ModelSuccessTests: XCTestCase {
         let sut = makeSUT(
             template: templateWithParameterList(
                 with: TransferGeneralData.generalStub(
-                    payeeExternal: .stub(name: "ForaService"),
+                    payeeExternal: .stub(name: "VortexService"),
                     amount: 10
                 )
             ),
@@ -274,7 +274,7 @@ final class ModelSuccessTests: XCTestCase {
                 value: "40702810238170103538"),
             Payments.ParameterMock(
                 id: Payments.Parameter.Identifier.requisitsName.rawValue,
-                value: "ForaService"),
+                value: "VortexService"),
             Payments.ParameterMock(
                 id: Payments.Parameter.Identifier.requisitsBankBic.rawValue,
                 value: "044525225"),

@@ -58,7 +58,7 @@ extension Model {
                 
                 let result = try await serverAgent.executeCommand(command: serverCommand)
                 
-                if result.check { //this is ForaCard
+                if result.check { //this is VortexCard
                 
                     //ProductTemplateName Parameter
                     let productTemplateNameParameterId = Payments.Parameter.Identifier.productTemplateName.rawValue

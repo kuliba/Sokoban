@@ -45,7 +45,7 @@ class CurrencyWalletViewModel: ObservableObject {
     
     let backButton: NavigationButtonViewModel
     let title = "Обмен валют"
-    let icon: Image = .init("Logo Fora Bank")
+    let icon: Image = .init("Logo Vortex")
     
     var verticalPadding: CGFloat {
         

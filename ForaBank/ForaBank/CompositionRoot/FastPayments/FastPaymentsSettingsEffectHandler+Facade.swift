@@ -11,7 +11,7 @@ import RemoteServices
 
 extension FastPaymentsSettingsEffectHandler {
     
-    typealias ForaRequestFactory = Vortex.RequestFactory
+    typealias VortexRequestFactory = Vortex.RequestFactory
     
     typealias FastResponseMapper = RemoteServices.ResponseMapper
     typealias FastRequestFactory = RemoteServices.RequestFactory
@@ -26,7 +26,7 @@ extension FastPaymentsSettingsEffectHandler {
         
         let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = NanoServices.adaptedLoggingFetch(
             createRequest: {
-                try ForaRequestFactory.createChangeClientConsentMe2MePullRequest($0.map { .init($0.rawValue) })
+                try VortexRequestFactory.createChangeClientConsentMe2MePullRequest($0.map { .init($0.rawValue) })
             },
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapChangeClientConsentMe2MePullResponse,
@@ -48,7 +48,7 @@ extension FastPaymentsSettingsEffectHandler {
         )
         
         let getC2BSub = NanoServices.adaptedLoggingFetch(
-            createRequest: ForaRequestFactory.createGetC2BSubRequest,
+            createRequest: VortexRequestFactory.createGetC2BSubRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapGetC2BSubResponseResponse,
             mapOutput: { $0.getC2BSubResponse(getProducts()) },
@@ -57,7 +57,7 @@ extension FastPaymentsSettingsEffectHandler {
         )
         
         let prepareDeleteDefaultBank = NanoServices.adaptedLoggingFetch(
-            createRequest: ForaRequestFactory.createPrepareDeleteDefaultBankRequest,
+            createRequest: VortexRequestFactory.createPrepareDeleteDefaultBankRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse(_:_:),
             mapError: ServiceFailure.init(error:),
@@ -65,7 +65,7 @@ extension FastPaymentsSettingsEffectHandler {
         )
         
         let prepareSetBankDefault = NanoServices.adaptedLoggingFetch(
-            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            createRequest: VortexRequestFactory.createPrepareSetBankDefaultRequest,
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
             mapError: ServiceFailure.init(error:),
@@ -75,7 +75,7 @@ extension FastPaymentsSettingsEffectHandler {
         let updateProduct: FastPaymentsSettingsEffectHandler.UpdateProduct = NanoServices.adaptedLoggingFetch(
             createRequest: {
                 
-                try ForaRequestFactory.createUpdateFastPaymentContractRequest($0.payload)
+                try VortexRequestFactory.createUpdateFastPaymentContractRequest($0.payload)
             },
             httpClient: httpClient,
             mapResponse: FastResponseMapper.mapUpdateFastPaymentContractResponse,

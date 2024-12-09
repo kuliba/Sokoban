@@ -224,6 +224,6 @@ extension ProductDepositData {
         
         case multi = 10000001870
         case birjevoy = 10000003655
-        case forahit = 10000003792
+        case vortex = 10000003792
     }
 }

@@ -26,7 +26,7 @@ class DefaultBankView: UIView {
         commonInit()
     }
     
-    required init(frame: CGRect = .zero, viewModel: ForaInputModel) {
+    required init(frame: CGRect = .zero, viewModel: VortexInputModel) {
         super.init(frame: frame)
         commonInit()
     }

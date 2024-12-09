@@ -35,7 +35,7 @@ extension ProductSelectConfig {
         missingSelected: .init(
             backgroundColor: .gray,
             foregroundColor: .gray,
-            image: .init("foralogo"),
+            image: .init("vortexlogo"),
             title: .init(
                 textFont: .headline,
                 textColor: .secondary

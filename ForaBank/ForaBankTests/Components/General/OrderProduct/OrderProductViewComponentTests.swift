@@ -169,7 +169,7 @@ final class OrderProductViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.sendButton.style, .gray)
         XCTAssertEqual(sut.sendButton.state, .button)
         XCTAssertEqual(sut.sendButton.title, "Отправить")
-        XCTAssertEqual(sut.sendButton.icon, .init("Logo Fora Bank"))
+        XCTAssertEqual(sut.sendButton.icon, .init("Logo Vortex"))
         XCTAssertEqual(sut.sendButton.color, .mainColorsGrayMedium)
         XCTAssertEqual(sut.sendButton.isDisabled, true)
 
@@ -179,7 +179,7 @@ final class OrderProductViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.sendButton.style, .gray)
         XCTAssertEqual(sut.sendButton.state, .button)
         XCTAssertEqual(sut.sendButton.title, "Отправить")
-        XCTAssertEqual(sut.sendButton.icon, .init("Logo Fora Bank"))
+        XCTAssertEqual(sut.sendButton.icon, .init("Logo Vortex"))
         XCTAssertEqual(sut.sendButton.color, .mainColorsGrayMedium)
         XCTAssertEqual(sut.sendButton.isDisabled, true)
     }

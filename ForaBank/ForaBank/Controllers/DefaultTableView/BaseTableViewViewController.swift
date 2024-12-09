@@ -126,9 +126,9 @@ class BaseTableViewViewController: UITableViewController {
             if model.firstName != nil, model.middleName != nil, model.surName != nil, model.phoneNumber != nil {
                 vc.typeOfPay = .contact
                 //            vc.configure(with: model.country, byPhone: false)
-                vc.foraSwitchView.bankByPhoneSwitch.isOn = false
-                vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                vc.vortexSwitchView.bankByPhoneSwitch.isOn = false
+                vc.vortexSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                vc.vortexSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 vc.nameField.text = model.firstName!
                 vc.surnameField.text = model.surName!
                 vc.secondNameField.text = model.middleName!

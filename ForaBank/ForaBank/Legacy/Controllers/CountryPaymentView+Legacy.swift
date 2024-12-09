@@ -172,9 +172,9 @@ struct CountryPaymentView: UIViewControllerRepresentable {
         case let .turkeyWithOutAddress(turkeyWithOutAddress):
             
             vc.typeOfPay = .contact
-            vc.foraSwitchView.bankByPhoneSwitch.isOn = false
-            vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.vortexSwitchView.bankByPhoneSwitch.isOn = false
+            vc.vortexSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.vortexSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             vc.nameField.text = turkeyWithOutAddress.firstName
             vc.surnameField.text = turkeyWithOutAddress.surName
             vc.secondNameField.text = turkeyWithOutAddress.middleName
@@ -184,9 +184,9 @@ struct CountryPaymentView: UIViewControllerRepresentable {
         case let .address(adressViewModel):
             
             vc.typeOfPay = .contact
-            vc.foraSwitchView.bankByPhoneSwitch.isOn = false
-            vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.vortexSwitchView.bankByPhoneSwitch.isOn = false
+            vc.vortexSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.vortexSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             vc.configure(with: viewModel.country, byPhone: false)
             vc.nameField.text = adressViewModel.firstName
             vc.surnameField.text = adressViewModel.surName

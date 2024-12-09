@@ -884,7 +884,7 @@ private extension RootViewFactoryComposer {
                                     event: contentEvent,
                                     config: .iVortex,
                                     factory: .init(
-                                        makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+                                        makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Vortex")) },
                                         makeLandingView: {
                                             self.makeLandingView(contentEvent, flowEvent, $0, orderCard, payment)
                                         }
