@@ -6,8 +6,8 @@
 //
 
 import Foundation
-
 import SwiftUI
+import ToggleComponent
 
 struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
     
@@ -68,7 +68,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Toggle("", isOn: $toggleIsOn)
-                    .toggleStyle(CalculatorToggleStyle(viewConfig: config))
+                    .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }
             .padding(.bottom, config.salary.bottomPadding)
@@ -329,29 +329,4 @@ extension CollateralLoanLandingGetCollateralLandingCalculatorView {
     
     typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
     typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
-}
-
-private struct CalculatorToggleStyle: ToggleStyle {
-    
-    let viewConfig: CollateralLoanLandingGetCollateralLandingViewConfig.Calculator
-    
-    func makeBody(configuration: Configuration) -> some View {
-    
-        RoundedRectangle(cornerRadius: 16, style: .circular)
-            .stroke(style: .init(lineWidth: 2))
-            .fill(viewConfig.salary.toggleColor)
-            .frame(width: 51, height: 31)
-            .overlay(
-                Circle()
-                    .fill(viewConfig.salary.toggleColor)
-                    .shadow(radius: 1, x: 0, y: 1)
-                    .padding(4)
-                    .offset(x: configuration.isOn ? 10 : -10)
-            )
-            .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.1)) {
-                    configuration.isOn.toggle()
-                }
-            }
-    }
 }

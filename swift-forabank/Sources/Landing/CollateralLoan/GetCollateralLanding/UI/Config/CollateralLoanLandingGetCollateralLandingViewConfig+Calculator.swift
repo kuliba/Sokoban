@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SharedConfigs
 
 extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
@@ -141,7 +142,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             public let trailingPadding: CGFloat
             public let bottomPadding: CGFloat
             public let toggleTrailingPadding: CGFloat
-            public let toggleColor: Color
+            public let toggle: ToggleConfig
             
             public init(
                 text: String,
@@ -150,7 +151,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                 trailingPadding: CGFloat,
                 bottomPadding: CGFloat,
                 toggleTrailingPadding: CGFloat,
-                toggleColor: Color
+                toggle: ToggleConfig
             ) {
                 self.text = text
                 self.font = font
@@ -158,7 +159,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                 self.trailingPadding = trailingPadding
                 self.bottomPadding = bottomPadding
                 self.toggleTrailingPadding = toggleTrailingPadding
-                self.toggleColor = toggleColor
+                self.toggle = toggle
             }
         }
         
@@ -286,7 +287,12 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig.Calculator {
             trailingPadding: 17,
             bottomPadding: 18,
             toggleTrailingPadding: 22,
-            toggleColor: .buttonPrimaryDisabled
+            toggle: .init(
+                colors: .init(
+                    on: .green,
+                    off: .textPlaceholder
+                )
+            )
         ),
         period: .init(titleText: "Срок кредита"),
         percent: .init(titleText: "Процентная ставка"),

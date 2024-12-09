@@ -1384,7 +1384,9 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
-            .uiPrimitives
+            .uiPrimitives,
+            .toggleComponent,
+            .sharedConfigs
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
     )
