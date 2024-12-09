@@ -36,4 +36,6 @@ extension ServiceCategoryFailureDomain {
         
         case detailPayment(PaymentsViewModel)
     }
+    
+    typealias Destination = Navigation
 }

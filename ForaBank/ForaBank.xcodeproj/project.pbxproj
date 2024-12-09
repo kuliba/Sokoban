@@ -990,6 +990,7 @@
 		2A6889BD2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */; };
 		2A6894152D070BC400160429 /* RootViewFactory+operatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */; };
 		2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */; };
+		2A68941A2D07263200160429 /* ServiceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6A6A342CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */; };
 		2A6A6A362CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */; };
@@ -4535,6 +4536,7 @@
 		2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentOutline+LatestServicePaymentsTests.swift"; sourceTree = "<group>"; };
 		2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+operatorFailureView.swift"; sourceTree = "<group>"; };
 		2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureDomain.swift; sourceTree = "<group>"; };
+		2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureView.swift; sourceTree = "<group>"; };
 		2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimedOTPInputViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionMicroServicesComposerNanoServices.swift; sourceTree = "<group>"; };
 		2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposer.swift; sourceTree = "<group>"; };
@@ -10443,6 +10445,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */,
+				2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */,
 			);
 			path = ServiceCategoryFailure;
 			sourceTree = "<group>";
@@ -20610,6 +20613,7 @@
 				ED5A122D285CC21000621E26 /* AnotherCardView+Legacy.swift in Sources */,
 				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,
 				503F073C28252CBA00E84A77 /* DepositCapitalizationViewModel.swift in Sources */,
+				2A68941A2D07263200160429 /* ServiceCategoryFailureView.swift in Sources */,
 				8353CD552B57AF72005F7D1A /* Services+getCardStatementService.swift in Sources */,
 				2A3F1B252A49895100D8FE55 /* MosParkingPickerData.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
