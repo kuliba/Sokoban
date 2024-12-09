@@ -40,7 +40,7 @@ struct PreviewTopUpToggle: View {
     var body: some View {
         
         Toggle("", isOn: $isShowingProducts)
-            .toggleStyle(TopUpToggleStyle(config: .preview))
+            .toggleStyle(TopUpToggleStyle(config: .toggleConfigPreview))
     }
 }
 
