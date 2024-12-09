@@ -48,11 +48,10 @@ final class StandardPaymentAcceptanceTests: AcceptanceTests {
         line: UInt = #line
     ) {
         XCTAssertNoDiff(httpClient.requests.map(\.url?.lastPathComponent), [
-            "getBannerCatalogList",
             "getAllLatestPayments"
         ], file: file, line: line)
         
-        httpClient.complete(with: anyError(), at: 1)
+        httpClient.complete(with: anyError())
     }
     
     @available(iOS 16.0, *)

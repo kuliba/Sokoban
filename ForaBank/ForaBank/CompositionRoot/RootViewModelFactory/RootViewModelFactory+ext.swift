@@ -311,7 +311,7 @@ extension RootViewModelFactory {
         )
         
         // call and notify bannerPicker
-        bindings.saveAndRun {
+        performOrWaitForActive {
             
             loadBannersList {
                 
