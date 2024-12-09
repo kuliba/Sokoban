@@ -9,15 +9,15 @@ import SwiftUI
 
 public struct ToggleConfig {
     
-    let size: CGSize
-    let padding: CGFloat
-    let lineWidth: CGFloat
-    let colors: Colors
+    public let size: CGSize
+    public let padding: CGFloat
+    public let lineWidth: CGFloat
+    public let colors: Colors
     
     public struct Colors {
         
-        let on: Color
-        let off: Color
+        public let on: Color
+        public let off: Color
         
         public init(on: Color, off: Color) {
             self.on = on

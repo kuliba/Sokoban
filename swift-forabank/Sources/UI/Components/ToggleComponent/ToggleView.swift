@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SharedConfigs
 
 public struct ToggleView: View {
 
