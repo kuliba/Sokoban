@@ -121,10 +121,10 @@ public struct ClientInformListView: View {
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
             
-            let linkableText = singleInfo.url != nil ? 
-            "\(singleInfo.text) \(singleInfo.url!)" : singleInfo.text
+            let linkableText = singleInfo.label.url != nil ? 
+            "\(singleInfo.text) \(singleInfo.label.url!)" : singleInfo.text
             
-            Text(linkableText)
+            Text(.init(linkableText))
                 .font(config.textConfig.textFont)
                 .foregroundColor(config.titleConfig.textColor)
                 .padding(.horizontal, config.paddings.horizontal)
@@ -149,6 +149,7 @@ public struct ClientInformListView: View {
                     ClientInformRowView(
                         logo: item.image,
                         text: item.title,
+                        url: item.url,
                         config: config
                     )
                 }
