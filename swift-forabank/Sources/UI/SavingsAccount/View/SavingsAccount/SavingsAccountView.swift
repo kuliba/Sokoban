@@ -165,7 +165,7 @@ public struct SavingsAccountView: View {
             
             state.questions.title.map { text in
                 
-                VStack {
+                VStack(spacing: 0) {
                     
                     text.text(withConfig: config.list.title)
                         .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal, vertical: config.paddings.list.vertical))

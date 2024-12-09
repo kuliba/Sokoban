@@ -30,7 +30,7 @@ extension SavingsAccountConfig {
         paddings: .init(
             negativeBottomPadding: 60,
             vertical: 16,
-            list: .init(horizontal: 16, vertical: 16)),
+            list: .init(horizontal: 16, vertical: 12)),
         spacing: 16,
         questionHeight: 64
     )

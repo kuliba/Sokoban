@@ -462,7 +462,7 @@ final class ContactsBanksSectionViewModelTests: XCTestCase {
         
     func test_bankID_shouldReturnIDsList() {
         
-        let model = Model.emptyMock
+        let model = Model.mockWithEmptyExcept()
         model.paymentsByPhone.value.append(
             element: .init(
                 bankId: "1",

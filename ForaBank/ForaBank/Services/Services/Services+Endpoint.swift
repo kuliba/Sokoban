@@ -20,6 +20,7 @@ extension Services {
             case binding
             case dict
             case collateralLoanLanding
+            case savingsAccount
             case processing(Processing)
             case rest
             case transfer
@@ -35,6 +36,9 @@ extension Services {
 
                 case .collateralLoanLanding:
                     return "rest/v1/pages/collateral"
+                    
+                case .savingsAccount:
+                    return "rest/pages"
                     
                 case let .processing(processing):
                     return "processing/\(processing.rawValue)"
@@ -102,6 +106,7 @@ extension Services {
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
+            case getSavingLanding
             case getSberQRData
             case getScenarioQRData
             case getServiceCategoryList
@@ -235,6 +240,12 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
+    static let getSavingLandingRequest: Self = .init(
+        pathPrefix: .savingsAccount,
+        version: .none,
+        serviceName: .getSavingLanding
+    )
+
     static let createStickerPayment: Self = .init(
         pathPrefix: .binding,
         version: .v1,
