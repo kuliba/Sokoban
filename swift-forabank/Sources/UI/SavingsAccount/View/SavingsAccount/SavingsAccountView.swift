@@ -164,7 +164,7 @@ public struct SavingsAccountView: View {
 
         DropDownTextListView(
             config: config.dropDownTextListConfig,
-            list: state.questions.DropDownTextList
+            list: state.questions.dropDownTextList
         )
     }
     
