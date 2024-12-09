@@ -2630,7 +2630,6 @@
 		8328ABF52C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */; };
 		8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */; };
 		8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */; };
-		8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */; };
 		832F2D4D2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */; };
 		832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */; };
 		832F2D532BC9570200221360 /* BottomSheetReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D522BC9570200221360 /* BottomSheetReducer.swift */; };
@@ -2862,6 +2861,7 @@
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
 		843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */; };
+		849055BD2D072AFA003250BF /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */; };
 		84CA1BE52D06BAB50097BB93 /* VortexCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE42D06BAB50097BB93 /* VortexCrypto */; };
 		84CA1BE72D06BABA0097BB93 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE62D06BABA0097BB93 /* VortexTools */; };
 		84CA1BE82D06BAC10097BB93 /* VortexPushServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A515682C2821B927000D4455 /* VortexPushServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -22135,6 +22135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				849055BD2D072AFA003250BF /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
 				2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */,
 				2AA619572C16D04C00043997 /* anyMessage.swift in Sources */,
 				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
@@ -22311,7 +22312,6 @@
 				2A89A11E2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift in Sources */,
 				2AF5299E2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift in Sources */,
 				2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */,
-				8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
 				2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */,
 				2A94AAEA2C8ECCA0003B4FB1 /* LoggingRemoteNanoServiceComposerTests.swift in Sources */,
@@ -22748,7 +22748,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberNumericTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -22788,7 +22788,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberNumericTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -22827,7 +22827,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberNumericTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -22866,7 +22866,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberNumericTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23062,7 +23062,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23102,7 +23102,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23141,7 +23141,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23180,7 +23180,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.C2BSubscriptionUIPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2BSubscriptionUIPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23215,7 +23215,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23250,7 +23250,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23285,7 +23285,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23320,7 +23320,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23355,7 +23355,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23390,7 +23390,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23425,7 +23425,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberQRPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.SberQRPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23778,7 +23778,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23818,7 +23818,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23857,7 +23857,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23896,7 +23896,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23935,7 +23935,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -23975,7 +23975,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24014,7 +24014,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24053,7 +24053,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.OTPInputComponentPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.OTPInputComponentPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24092,7 +24092,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24132,7 +24132,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24171,7 +24171,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24210,7 +24210,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.DecimalTextFieldPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.DecimalTextFieldPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24226,7 +24226,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.preview.PhoneNumberTextViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.preview.PhoneNumberTextViewPreview;
 				PRODUCT_NAME = PhoneNumberTextViewPreview;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24245,7 +24245,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.TextFieldViewVithBindingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.TextFieldViewVithBindingPreview;
 				PRODUCT_NAME = TextFieldViewVithBindingPreview;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24592,7 +24592,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 9.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.preview.PhoneNumberTextViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.preview.PhoneNumberTextViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24627,7 +24627,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 9.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.preview.PhoneNumberTextViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.preview.PhoneNumberTextViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24662,7 +24662,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 9.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.preview.PhoneNumberTextViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.preview.PhoneNumberTextViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -24701,7 +24701,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.RefreshableScrollViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.RefreshableScrollViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -24737,7 +24737,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.RefreshableScrollViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.RefreshableScrollViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -24772,7 +24772,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.RefreshableScrollViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.RefreshableScrollViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -24807,7 +24807,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.RefreshableScrollViewPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.RefreshableScrollViewPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -25082,7 +25082,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
-				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				INFOPLIST_FILE = VortexTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -25109,13 +25109,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				INFOPLIST_FILE = VortexUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.VortexUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25124,7 +25124,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = ForaBank;
+				TEST_TARGET_NAME = Vortex;
 			};
 			name = Mock;
 		};
@@ -25184,7 +25184,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25219,7 +25219,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25254,7 +25254,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25289,7 +25289,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25328,7 +25328,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25368,7 +25368,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25407,7 +25407,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25446,7 +25446,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CardGuardianPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CardGuardianPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25551,7 +25551,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CollateralLoanLandingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CollateralLoanLandingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -25587,7 +25587,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CollateralLoanLandingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CollateralLoanLandingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -25622,7 +25622,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CollateralLoanLandingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CollateralLoanLandingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -25657,7 +25657,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CollateralLoanLandingPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CollateralLoanLandingPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -25769,7 +25769,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
-				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				INFOPLIST_FILE = VortexTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -25796,13 +25796,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				INFOPLIST_FILE = VortexUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.VortexUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25810,7 +25810,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = ForaBank;
+				TEST_TARGET_NAME = Vortex;
 			};
 			name = Preprod;
 		};
@@ -25870,7 +25870,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25905,7 +25905,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25940,7 +25940,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -25975,7 +25975,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.PreviewPrototypes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26386,7 +26386,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26423,7 +26423,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26460,7 +26460,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26497,7 +26497,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.StickerPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26535,7 +26535,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CarouselPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CarouselPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26574,7 +26574,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CarouselPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CarouselPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26612,7 +26612,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CarouselPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CarouselPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26650,7 +26650,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.CarouselPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.CarouselPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26867,7 +26867,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
-				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				INFOPLIST_FILE = VortexTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -26894,7 +26894,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
-				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				INFOPLIST_FILE = VortexTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -26921,13 +26921,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				INFOPLIST_FILE = VortexUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.VortexUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26936,7 +26936,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = ForaBank;
+				TEST_TARGET_NAME = Vortex;
 			};
 			name = Debug;
 		};
@@ -26948,13 +26948,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				INFOPLIST_FILE = VortexUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.VortexUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -26962,7 +26962,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = ForaBank;
+				TEST_TARGET_NAME = Vortex;
 			};
 			name = Release;
 		};

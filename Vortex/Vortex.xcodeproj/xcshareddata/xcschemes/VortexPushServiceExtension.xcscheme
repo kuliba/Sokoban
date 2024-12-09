@@ -59,7 +59,7 @@
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
          runnableDebuggingMode = "1"
-         BundleIdentifier = "ru.forabank.sense"
+         BundleIdentifier = "ru.vortex.sense"
          RemotePath = "/var/containers/Bundle/Application/7A6E338C-E0E0-4CCC-B861-58CF10584ACB/ForaBank.app">
       </RemoteRunnable>
       <MacroExpansion>
