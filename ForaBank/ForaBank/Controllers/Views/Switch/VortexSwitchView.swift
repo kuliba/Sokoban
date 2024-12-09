@@ -1,5 +1,5 @@
 //
-//  ForaSwitchView.swift
+//  VortexSwitchView.swift
 //  Vortex
 //
 //  Created by Mikhail on 11.06.2021.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ForaSwitchView: UIView {
+class VortexSwitchView: UIView {
     
     //MARK: - Property
-    let kContentXibName = "ForaSwitchView"
+    let kContentXibName = "VortexSwitchView"
     var switchIsChanged: ((UISwitch) -> Void)?
     
     @IBOutlet weak var phoneImage: UIImageView!
@@ -21,21 +21,21 @@ class ForaSwitchView: UIView {
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit(viewModel: ForaInputModel(title: ""))
+        commonInit(viewModel: VortexInputModel(title: ""))
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit(viewModel: ForaInputModel(title: ""))
+        commonInit(viewModel: VortexInputModel(title: ""))
     }
     
-    required init(frame: CGRect = .zero, viewModel: ForaInputModel) {
+    required init(frame: CGRect = .zero, viewModel: VortexInputModel) {
         super.init(frame: frame)
         commonInit(viewModel: viewModel)
     }
 
     
-    func commonInit(viewModel: ForaInputModel) {
+    func commonInit(viewModel: VortexInputModel) {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 64).isActive = true

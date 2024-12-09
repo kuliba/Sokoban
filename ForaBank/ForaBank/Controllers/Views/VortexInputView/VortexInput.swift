@@ -1,18 +1,18 @@
 //
-//  ForaInput.swift
-//  ForaInputFactory
+//  VortexInput.swift
+//  VortexInputFactory
 //
 //  Created by Mikhail on 27.05.2021.
 //
 
 import UIKit
 
-class ForaInput: UIView {
+class VortexInput: UIView {
     
     //MARK: - Property
-    let kContentXibName = "ForaInput"
+    let kContentXibName = "VortexInput"
     
-    var viewModel: ForaInputModel! {
+    var viewModel: VortexInputModel! {
         didSet {
             guard let viewModel = viewModel else { return }
             if !viewModel.isEditable {
@@ -74,21 +74,21 @@ class ForaInput: UIView {
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit(viewModel: ForaInputModel())
+        commonInit(viewModel: VortexInputModel())
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit(viewModel: ForaInputModel())
+        commonInit(viewModel: VortexInputModel())
     }
     
-    required init(frame: CGRect = .zero, viewModel: ForaInputModel) {
+    required init(frame: CGRect = .zero, viewModel: VortexInputModel) {
         super.init(frame: frame)
         commonInit(viewModel: viewModel)
     }
 
     
-    func commonInit(viewModel: ForaInputModel) {
+    func commonInit(viewModel: VortexInputModel) {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.viewModel = viewModel
@@ -105,20 +105,20 @@ class ForaInput: UIView {
     //MARK: - Helpers
     private func configure() {
         imageView.image = viewModel.image
-        imageView.accessibilityIdentifier = "ForaInputIcon"
+        imageView.accessibilityIdentifier = "VortexInputIcon"
         balanceLabel.isHidden = true
         textField.placeholder = viewModel.title
-        placeHolder.accessibilityIdentifier = "ForaInputTitle"
+        placeHolder.accessibilityIdentifier = "VortexInputTitle"
         textField.keyboardType = viewModel.fieldType.keyboardType
         textField.isUserInteractionEnabled = viewModel.isEditable
         textField.clearButtonMode = viewModel.needCleanButton ? .unlessEditing : .never
-        textField.accessibilityIdentifier = "ForaInputText"
+        textField.accessibilityIdentifier = "VortexInputText"
         rubButton.isHidden = !viewModel.showCurrencyButton
         usdButton.isHidden = true //!viewModel.showCurrencyButton
         chooseButton.isHidden = !viewModel.showChooseButton
-        chooseButton.accessibilityIdentifier = "ForaInputChooseButton"
+        chooseButton.accessibilityIdentifier = "VortexInputChooseButton"
         errorLabel.text = viewModel.errorText
-        errorLabel.accessibilityIdentifier = "ForaInputErrorText"
+        errorLabel.accessibilityIdentifier = "VortexInputErrorText"
         errorLabel.isHidden = !viewModel.needValidate
         errorLabel.alpha = 0
         bottomLabel.isHidden = !viewModel.showBottomLabel
@@ -238,7 +238,7 @@ class ForaInput: UIView {
 }
 
 //MARK: - UITextFieldDelegate
-extension ForaInput: UITextFieldDelegate {
+extension VortexInput: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if viewModel.needValidate {
             UIView.animate(withDuration: TimeInterval(0.2)) {

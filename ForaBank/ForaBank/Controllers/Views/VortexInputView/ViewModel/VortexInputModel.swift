@@ -1,14 +1,14 @@
 //
-//  ForaInputModel.swift
-//  ForaInputFactory
+//  VortexInputModel.swift
+//  VortexInputFactory
 //
 //  Created by Mikhail on 27.05.2021.
 //
 
 import UIKit
 
-/// Модель для управлением ForaInputView.
-class ForaInputModel {
+/// Модель для управлением VortexInputView.
+class VortexInputModel {
     var title: String
     var image: UIImage?
     var text: String {
@@ -28,7 +28,7 @@ class ForaInputModel {
     var isEditable: Bool
     var activeCurrency: ButtonСurrency? 
     var cardModel: GetProductListDatum?
-    /// Инициализирует `ForaInputModel` заданными данными
+    /// Инициализирует `VortexInputModel` заданными данными
     ///
     /// - Parameters:
     ///   - title: Обязательный параметр, это Имя в `Placeholder`.
