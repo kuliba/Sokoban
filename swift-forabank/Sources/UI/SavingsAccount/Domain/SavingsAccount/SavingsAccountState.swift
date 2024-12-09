@@ -86,7 +86,7 @@ public struct SavingsAccountState: Equatable {
 
 extension SavingsAccountState.Questions {
     
-    var DropDownTextList: DropDownTextList {
+    var dropDownTextList: DropDownTextList {
         
         .init(
             title: title,
