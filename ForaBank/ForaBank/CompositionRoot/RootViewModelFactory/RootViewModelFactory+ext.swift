@@ -210,15 +210,6 @@ extension RootViewModelFactory {
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
-        let ptfmComposer = PaymentsTransfersFlowManagerComposer(
-            model: model,
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        
-        let makePaymentsTransfersFlowManager = ptfmComposer.compose
-        
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
             return .fullScreen(.cardGuardian($0))
         }
