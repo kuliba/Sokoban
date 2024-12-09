@@ -48,7 +48,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     
     // MARK: - Helpers
     
-    private typealias SUT = ForaBank.PaymentsTransfersPersonalDomain.Binder
+    private typealias SUT = Vortex.PaymentsTransfersPersonalDomain.Binder
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>

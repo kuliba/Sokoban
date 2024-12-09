@@ -70,7 +70,7 @@ final class RootViewModelFactory_makePaymentsNodeTests: RootViewModelFactoryTest
     
     // MARK: - Helpers
     
-    private typealias Node = ForaBank.Node<PaymentsViewModel>
+    private typealias Node = Vortex.Node<PaymentsViewModel>
     private typealias CloseSpy = CallSpy<SUT.PaymentsViewModelEvent, Void>
     
     private func makeSUT(

@@ -36,7 +36,7 @@ final class LoadServiceCategoriesComposer {
         )
         
         self.getServiceCategoryList = nanoServiceComposer.compose(
-            createRequest: ForaBank.RequestFactory.createGetServiceCategoryListRequest,
+            createRequest: Vortex.RequestFactory.createGetServiceCategoryListRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse,
             mapError: ServiceFailure.init
         )

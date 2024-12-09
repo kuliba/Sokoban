@@ -48,7 +48,7 @@ final class RequestFactory_createChangeSVCardLimitTests: XCTestCase {
         payload: ChangeSVCardLimitPayload = .init(cardId: 1, limit: .init(name: "limit", value: 10))
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createChangeSVCardLimitRequest(payload: payload)
+        try Vortex.RequestFactory.createChangeSVCardLimitRequest(payload: payload)
     }
     
     private struct _ChangeSVCardLimitPayload: Decodable {

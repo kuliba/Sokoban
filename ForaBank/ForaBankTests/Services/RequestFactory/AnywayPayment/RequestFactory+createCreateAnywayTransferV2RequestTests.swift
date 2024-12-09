@@ -74,7 +74,7 @@ final class RequestFactory_createCreateAnywayTransferV2RequestTests: XCTestCase 
         payload: CreateAnywayTransferResponsePayload = makePayload()
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createCreateAnywayTransferV2Request(payload)
+        try Vortex.RequestFactory.createCreateAnywayTransferV2Request(payload)
     }
     
     private func makeFields() -> (Int, String, String) {

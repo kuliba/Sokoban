@@ -230,7 +230,7 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
             storeStub: storeStub,
             serialStub: serialStub
         )
-        let model: ForaBank.Model = .mockWithEmptyExcept(
+        let model: Vortex.Model = .mockWithEmptyExcept(
             localAgent: localAgent
         )
         let (sut, httpClient, _) = makeSUT(model: model)

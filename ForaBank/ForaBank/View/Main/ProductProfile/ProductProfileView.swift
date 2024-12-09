@@ -466,7 +466,7 @@ struct ProductProfileView: View {
                         if let phone = infoPayment.parameterList.last?.payeeInternal?.phoneNumber,
                            let amount = infoPayment.parameterList.last?.amount?.description {
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
-                                self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: ForaBank.BankID.foraBankID.digits, amount: amount, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
+                                self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: Vortex.BankID.foraBankID.digits, amount: amount, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
                                     self.viewModel.link = nil
                                 }))
                             }

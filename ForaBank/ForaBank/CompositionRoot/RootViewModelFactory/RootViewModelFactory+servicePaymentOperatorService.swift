@@ -10,7 +10,7 @@ import RemoteServices
 
 extension RootViewModelFactory {
     
-    typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
+    typealias GetOperatorsListByParamPayload = Vortex.RequestFactory.GetOperatorsListByParamPayload
     typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
     
     @inlinable
@@ -19,7 +19,7 @@ extension RootViewModelFactory {
         completion: @escaping ([GetOperatorsListByParamPayload]) -> Void
     ) {
         let composed = batchServiceComposer.compose(
-            makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
+            makeRequest: Vortex.RequestFactory.getOperatorsListByParam,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
             toModel: [CodableServicePaymentOperator].init(providers:)
         )
@@ -32,7 +32,7 @@ extension RootViewModelFactory {
     }
 }
 
-extension ForaBank.RequestFactory.GetOperatorsListByParamPayload {
+extension Vortex.RequestFactory.GetOperatorsListByParamPayload {
     
     var hasStandardFlow: Bool {
         

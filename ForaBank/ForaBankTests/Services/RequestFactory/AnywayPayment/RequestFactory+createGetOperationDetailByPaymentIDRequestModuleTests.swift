@@ -45,7 +45,7 @@ final class RequestFactory_createGetOperationDetailByPaymentIDRequestModuleTests
         payload: RemoteServices.RequestFactory.OperationDetailID = 87654
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequestModule(payload)
+        try Vortex.RequestFactory.createGetOperationDetailByPaymentIDRequestModule(payload)
     }
     
     private struct DetailID: Decodable {

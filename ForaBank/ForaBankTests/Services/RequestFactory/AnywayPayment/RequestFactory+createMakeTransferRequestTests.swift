@@ -45,7 +45,7 @@ final class RequestFactory_createMakeTransferRequestTests: XCTestCase {
         payload: RemoteServices.RequestFactory.VerificationCode = .init(UUID().uuidString)
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createMakeTransferRequest(payload)
+        try Vortex.RequestFactory.createMakeTransferRequest(payload)
     }
     
     private struct Code: Decodable {

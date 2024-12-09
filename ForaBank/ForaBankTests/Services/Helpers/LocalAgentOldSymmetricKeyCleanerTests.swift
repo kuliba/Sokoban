@@ -140,14 +140,14 @@ final class SettingsAgentSpy: SettingsAgentProtocol {
         self.storred = storred
     }
     
-    func store<Setting>(_ setting: Setting, type: ForaBank.SettingType) throws where Setting : Decodable, Setting : Encodable {
+    func store<Setting>(_ setting: Setting, type: Vortex.SettingType) throws where Setting : Decodable, Setting : Encodable {
         
         storeAttempts.append(type)
         let data = try JSONEncoder().encode(setting)
         storred = (data, type)
     }
     
-    func load<Setting>(type: ForaBank.SettingType) throws -> Setting where Setting : Decodable, Setting : Encodable {
+    func load<Setting>(type: Vortex.SettingType) throws -> Setting where Setting : Decodable, Setting : Encodable {
         
         loadAttempts.append(type)
         guard let (data, storredType) = storred else {
@@ -161,7 +161,7 @@ final class SettingsAgentSpy: SettingsAgentProtocol {
         return try JSONDecoder().decode(Setting.self, from: data)
     }
     
-    func clear(type: ForaBank.SettingType) {
+    func clear(type: Vortex.SettingType) {
         
         clearAttempts.append(type)
         guard let (_, storredType) = storred, storredType == type else {

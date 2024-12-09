@@ -51,7 +51,7 @@ extension MicroServices.Facade {
             updateFastContractFetch: updateContract
         )
         
-        typealias ForaRequestFactory = ForaBank.RequestFactory
+        typealias ForaRequestFactory = Vortex.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, RemoteServices.ResponseMapper.MappingError>
         

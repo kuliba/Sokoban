@@ -140,12 +140,12 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertEqual(BankID.foraBankID.rawValue, "100000000217")
     }
     
-    func test_getHeaderIconForOperation_sfpForaBank_returnsNil() {
+    func test_getHeaderIconForOperation_sfpVortex_returnsNil() {
         
         XCTAssertNil(PPIcon.init(source: makeSPFSource()))
     }
     
-    func test_getHeaderIconForOperation_sfpNonForaBank_returnsSbpIcon() {
+    func test_getHeaderIconForOperation_sfpNonVortex_returnsSbpIcon() {
         
         XCTAssertEqual(PPIcon.init(source: makeSPFSource(bankID: "123123123"))?.equatable, .testSBPIcon)
     }
@@ -191,7 +191,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue)))
     }
 
-    func test_sfpLogo_sfpOperation_foraBankIdInSource_nonForaBankIdInParameters_returnsNil() {
+    func test_sfpLogo_sfpOperation_foraBankIdInSource_nonVortexIdInParameters_returnsNil() {
         let operation = Payments.Operation.sfpOperation(
             bankId: BankID.foraBankID.rawValue,
             parameters: [
@@ -201,17 +201,17 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNil(PPLogo.sfpLogo(with: operation))
     }
     
-    func test_sfpLogo_sfpOperation_nonForaBankIdInSource_foraBankIdInParameters_returnsNil() {
+    func test_sfpLogo_sfpOperation_nonVortexIdInSource_foraBankIdInParameters_returnsNil() {
         
         XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", parameters: [Payments.ParameterInput.makePPInput(value: BankID.foraBankID.rawValue)])))
     }
 
-    func test_sfpLogo_sfpOperation_notForaBank_returnsSfpIcon() {
+    func test_sfpLogo_sfpOperation_notVortex_returnsSfpIcon() {
         
         XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, nil)
     }
 
-    func test_sfpLogo_sfpOperation_nonForaBankIdInSource_nonForaBankIdInParameters_returnsSfpIcon() {
+    func test_sfpLogo_sfpOperation_nonVortexIdInSource_nonVortexIdInParameters_returnsSfpIcon() {
         
         let operation = Payments.Operation.sfpOperation(
             bankId: "otherBankId",
@@ -220,7 +220,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
     }
     
-    func test_sfpLogo_sfpOperation_notForaBankIdInParameters_returnsSfpIcon() {
+    func test_sfpLogo_sfpOperation_notVortexIdInParameters_returnsSfpIcon() {
         
         let operation = Payments.Operation.sfpOperation(
             bankId: "otherBankId",
@@ -445,7 +445,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertEqual(result.currencySymbol, "₽")
     }
     
-    func test_paymentsProcessDependencyReducerSFP_amountCase_withForaBank_returnsUpdatedAmountParameter() throws {
+    func test_paymentsProcessDependencyReducerSFP_amountCase_withVortex_returnsUpdatedAmountParameter() throws {
         
         let result = try getAmountParameter(
             makeSUT(),

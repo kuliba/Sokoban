@@ -23,7 +23,7 @@ final class KeychainAgentSpy: KeychainAgentProtocol {
         self.keyValueType = keyValueType
     }
     
-    func store<Value>(_ value: Value, type: ForaBank.KeychainValueType) throws where Value : Decodable, Value : Encodable {
+    func store<Value>(_ value: Value, type: Vortex.KeychainValueType) throws where Value : Decodable, Value : Encodable {
         
         storeAttemptsTypes.append(type)
         guard type == keyValueType, let keyValue = value as? Data else {
@@ -33,7 +33,7 @@ final class KeychainAgentSpy: KeychainAgentProtocol {
         storedKeyData = keyValue
     }
     
-    func load<Value>(type: ForaBank.KeychainValueType) throws -> Value where Value : Decodable, Value : Encodable {
+    func load<Value>(type: Vortex.KeychainValueType) throws -> Value where Value : Decodable, Value : Encodable {
         
         loadAttemptsTypes.append(type)
         guard type == keyValueType, let storedKeyData else {
@@ -43,7 +43,7 @@ final class KeychainAgentSpy: KeychainAgentProtocol {
         return storedKeyData as! Value
     }
     
-    func clear(type: ForaBank.KeychainValueType) throws {
+    func clear(type: Vortex.KeychainValueType) throws {
         
         clearAttemptsTypes.append(type)
         guard keyValueType == type else {
@@ -53,7 +53,7 @@ final class KeychainAgentSpy: KeychainAgentProtocol {
         storedKeyData = nil
     }
     
-    func isStoredString(values: [ForaBank.KeychainValueType]) -> Bool {
+    func isStoredString(values: [Vortex.KeychainValueType]) -> Bool {
         
         isStorredAttemptsTypes.append(values)
         guard values.count == 1, values.contains(keyValueType), storedKeyData != nil else {

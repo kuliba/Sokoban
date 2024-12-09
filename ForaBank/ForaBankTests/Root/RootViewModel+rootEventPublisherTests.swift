@@ -180,7 +180,7 @@ private extension RootViewModel {
     }
     
     func paymentsTransfersCorporateSelect(
-        _ select: ForaBank.PaymentsTransfersCorporateDomain.Select,
+        _ select: Vortex.PaymentsTransfersCorporateDomain.Select,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -195,7 +195,7 @@ private extension RootViewModel {
     }
     
     func paymentsTransfersPersonalSelect(
-        _ select: ForaBank.PaymentsTransfersPersonalDomain.Select,
+        _ select: Vortex.PaymentsTransfersPersonalDomain.Select,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -212,7 +212,7 @@ private extension RootViewModel {
     func operationPicker(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> ForaBank.OperationPickerDomain.Binder? {
+    ) -> Vortex.OperationPickerDomain.Binder? {
         
         let switcher = switcher(file: file, line: line)
         switch switcher?.state {
@@ -233,7 +233,7 @@ private extension RootViewModel {
     }
     
     func operationPickerContentSelect(
-        _ select: ForaBank.OperationPickerDomain.Select,
+        _ select: Vortex.OperationPickerDomain.Select,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {

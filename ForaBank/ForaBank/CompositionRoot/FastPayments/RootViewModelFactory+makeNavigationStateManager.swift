@@ -29,8 +29,8 @@ extension RootViewModelFactory {
         let duration = settings.otpDuration
         let length = settings.otpLength
         
-        let fpsReducer = ForaBank.UserAccountNavigationFPSReducer()
-        let otpReducer = ForaBank.UserAccountNavigationOTPReducer()
+        let fpsReducer = Vortex.UserAccountNavigationFPSReducer()
+        let otpReducer = Vortex.UserAccountNavigationOTPReducer()
         
         let codeObserver = NotificationCenter.default
             .observe(

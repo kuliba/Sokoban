@@ -47,7 +47,7 @@ final class RequestFactory_makeGetPINConfirmationCodeRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        with sessionID: ForaBank.SessionID = makeSessionID()
+        with sessionID: Vortex.SessionID = makeSessionID()
     ) throws -> URLRequest {
         
         let request = try RequestFactory.makeGetPINConfirmationCodeRequest(sessionID: sessionID)

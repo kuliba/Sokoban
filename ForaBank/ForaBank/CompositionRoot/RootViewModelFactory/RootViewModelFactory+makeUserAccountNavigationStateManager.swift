@@ -79,7 +79,7 @@ extension FastPaymentsSettingsOTPServices {
     ) {
         typealias ServiceFailure = OTPInputComponent.ServiceFailure
         
-        typealias ForaRequestFactory = ForaBank.RequestFactory
+        typealias ForaRequestFactory = Vortex.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         
         let initiateOTP = adaptedLoggingFetch(
@@ -175,7 +175,7 @@ private extension LoggingRemoteNanoServiceComposer {
     
     typealias ServiceFailure = OTPInputComponent.ServiceFailure
     
-    typealias ForaRequestFactory = ForaBank.RequestFactory
+    typealias ForaRequestFactory = Vortex.RequestFactory
     typealias FastResponseMapper = RemoteServices.ResponseMapper
     
     func composeFastInitiateOTP() -> CountdownEffectHandler.InitiateOTP {

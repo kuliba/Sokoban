@@ -82,7 +82,7 @@ private extension UtilityPaymentNanoServicesComposer {
     ) {
         struct MappingError: Error {}
 
-        let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
+        let fetch = Vortex.NanoServices.adaptedLoggingFetch(
             createRequest: RequestFactory.createGetAllLatestPaymentsV2Request(_:),
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestServicePaymentsResponse(_:_:),
@@ -110,7 +110,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
+        let createAnywayTransferNew = Vortex.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
         let adapted = FetchAdapter(
             fetch: createAnywayTransferNew,
             mapResult: StartAnywayPaymentResult.init(result:)
@@ -135,7 +135,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ `operator`: Operator,
         _ completion: @escaping NanoServices.GetServicesForCompletion
     ) {
-        let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
+        let fetch = Vortex.NanoServices.adaptedLoggingFetch(
             createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,

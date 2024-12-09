@@ -66,7 +66,7 @@ final class RequestFactory_makeShowCVVRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        _ sessionID: ForaBank.SessionID = makeSessionID(),
+        _ sessionID: Vortex.SessionID = makeSessionID(),
         _ data: Data = .init("any data".utf8)
     ) throws -> URLRequest {
         

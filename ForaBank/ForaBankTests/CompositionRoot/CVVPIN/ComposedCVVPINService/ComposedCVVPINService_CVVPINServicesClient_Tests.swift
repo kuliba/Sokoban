@@ -762,7 +762,7 @@ private extension ActivateCVVPINClient.ActivateResult {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         
-        init(_ error: ForaBank.ActivateCVVPINError) {
+        init(_ error: Vortex.ActivateCVVPINError) {
             
             switch error {
             case let .server(statusCode: statusCode, errorMessage: errorMessage):
@@ -802,7 +802,7 @@ private extension ActivateCVVPINClient.ConfirmationResult {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         
-        init(_ error: ForaBank.ConfirmationCodeError) {
+        init(_ error: Vortex.ConfirmationCodeError) {
             
             switch error {
             case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
@@ -845,7 +845,7 @@ private extension ChangePINClient.CheckFunctionalityResult {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         
-        init(_ error: ForaBank.CheckCVVPINFunctionalityError) {
+        init(_ error: Vortex.CheckCVVPINFunctionalityError) {
             
             switch error {
             case .activationFailure:
@@ -885,7 +885,7 @@ private extension ChangePINClient.GetPINConfirmationCodeResult {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         
-        init(_ error: ForaBank.GetPINConfirmationCodeError) {
+        init(_ error: Vortex.GetPINConfirmationCodeError) {
             
             switch error {
             case .activationFailure:
@@ -930,7 +930,7 @@ private extension ChangePINClient.ChangePINResult {
         case serviceFailure
         case weakPIN(statusCode: Int, errorMessage: String)
         
-        init(_ error: ForaBank.ChangePINError) {
+        init(_ error: Vortex.ChangePINError) {
             
             switch error {
             case .activationFailure:
@@ -977,7 +977,7 @@ private extension ShowCVVClient.ShowCVVResult {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         
-        init(_ error: ForaBank.ShowCVVError) {
+        init(_ error: Vortex.ShowCVVError) {
             
             switch error {
             case .activationFailure:

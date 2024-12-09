@@ -11,7 +11,7 @@ import RemoteServices
 
 extension FastPaymentsSettingsEffectHandler {
     
-    typealias ForaRequestFactory = ForaBank.RequestFactory
+    typealias ForaRequestFactory = Vortex.RequestFactory
     
     typealias FastResponseMapper = RemoteServices.ResponseMapper
     typealias FastRequestFactory = RemoteServices.RequestFactory

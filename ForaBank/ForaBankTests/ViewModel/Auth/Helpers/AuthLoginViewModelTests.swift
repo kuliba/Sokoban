@@ -127,7 +127,7 @@ class AuthLoginViewModelTests: XCTestCase {
         private(set) var listAction = 0
 
         func makeCardLandingViewModel(
-            _ type: ForaBank.AbroadType,
+            _ type: Vortex.AbroadType,
             config: LandingUIComponent.UILanding.Component.Config,
             landingActions: @escaping (LandingUIComponent.LandingEvent.Card) -> () -> Void
         ) -> LandingUIComponent.LandingWrapperViewModel {

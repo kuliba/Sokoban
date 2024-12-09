@@ -9,7 +9,7 @@ import AnywayPaymentBackend
 import Foundation
 import RemoteServices
 
-extension ForaBank.RequestFactory {
+extension Vortex.RequestFactory {
     
     static func createGetOperationDetailByPaymentIDRequestModule(
         _ payload: RemoteServices.RequestFactory.OperationDetailID

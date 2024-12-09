@@ -144,7 +144,7 @@ private typealias SUT = Model
 //        
 //        sut.loadOperators(payload) { receivedResult in
 //            
-//            ForaBankTests.assert(receivedResult, expectedResult, file: file, line: line)
+//            VortexTests.assert(receivedResult, expectedResult, file: file, line: line)
 //            
 //            exp.fulfill()
 //        }
@@ -163,7 +163,7 @@ private typealias SUT = Model
 //        
 //        sut.loadOperators(payload) { receivedResult in
 //            
-//            ForaBankTests.assert(receivedResult, expectedResult, file: file, line: line)
+//            VortexTests.assert(receivedResult, expectedResult, file: file, line: line)
 //            
 //            exp.fulfill()
 //        }

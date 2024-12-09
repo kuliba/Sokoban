@@ -10,7 +10,7 @@
   ],
   "defaultOptions" : {
     "targetForVariableExpansion" : {
-      "containerPath" : "container:ForaBank.xcodeproj",
+      "containerPath" : "container:Vortex.xcodeproj",
       "identifier" : "2AD0928D2BFA30A100777EE4",
       "name" : "TransactionPreview"
     },

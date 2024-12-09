@@ -234,7 +234,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         serial: String?
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: serial)
+        try Vortex.RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
     
     private func mobileJSON() -> Data {

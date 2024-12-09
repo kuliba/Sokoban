@@ -163,7 +163,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
         return nil
     }
     
-    private var _printFormType: ForaBank.PrintFormType {
+    private var _printFormType: Vortex.PrintFormType {
         
         switch printFormType {
         case .addressing_cash:           return .addressing_cash

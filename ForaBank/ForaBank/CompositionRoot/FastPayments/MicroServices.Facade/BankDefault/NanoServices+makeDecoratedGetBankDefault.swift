@@ -35,7 +35,7 @@ extension NanoServices {
         }
         
         let getBankDefault = adaptedLoggingFetch(
-            createRequest: ForaBank.RequestFactory.createGetBankDefaultRequest,
+            createRequest: Vortex.RequestFactory.createGetBankDefaultRequest,
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapGetBankDefaultResponse,
             mapError: ServiceFailure.init(error:),

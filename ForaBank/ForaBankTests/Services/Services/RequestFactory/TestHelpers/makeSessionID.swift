@@ -10,7 +10,7 @@ import Foundation
 
 func makeSessionID(
     _ value: String = UUID().uuidString
-) -> ForaBank.SessionID {
+) -> Vortex.SessionID {
     
     .init(sessionIDValue: value)
 }

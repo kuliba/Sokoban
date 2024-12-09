@@ -58,6 +58,6 @@ final class RequestFactory_createGetPaymentTemplateListRequestV3Tests: XCTestCas
         serial: String? = nil
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetPaymentTemplateListRequestV3(serial: serial)
+        try Vortex.RequestFactory.createGetPaymentTemplateListRequestV3(serial: serial)
     }
 }

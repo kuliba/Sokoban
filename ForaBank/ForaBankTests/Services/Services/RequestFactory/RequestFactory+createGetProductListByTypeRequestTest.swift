@@ -48,6 +48,6 @@ final class RequestFactory_createGetProductListByTypeRequestTests: XCTestCase {
         timeout: TimeInterval = 0
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetProductListByTypeRequest(payload, timeout)
+        try Vortex.RequestFactory.createGetProductListByTypeRequest(payload, timeout)
     }
 }

@@ -286,12 +286,12 @@ extension ProductSelectorView.ViewModel {
         
         convenience init(_ model: Model, productData: ProductData, context: Context) {
             
-            let name = ForaBank.ProductViewModel.name(
+            let name = Vortex.ProductViewModel.name(
                 product: productData,
                 style: .main,
                 creditProductName: .cardTitle
             )
-            let balance = ForaBank.ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
+            let balance = Vortex.ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
             
             var paymentSystemImage: Image?
             

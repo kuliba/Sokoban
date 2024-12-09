@@ -18,7 +18,7 @@ extension LoggingRemoteNanoServiceComposer {
         
         composeSerialResultLoad(
             createRequest: RequestFactory.createGetServiceCategoryListRequest,
-            mapResponse: ForaBank.ResponseMapper.mapGetServiceCategoryListResponse
+            mapResponse: Vortex.ResponseMapper.mapGetServiceCategoryListResponse
         )
     }
 }

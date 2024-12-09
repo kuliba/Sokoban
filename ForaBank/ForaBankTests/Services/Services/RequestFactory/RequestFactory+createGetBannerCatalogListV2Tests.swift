@@ -49,6 +49,6 @@ final class RequestFactory_createGetBannerCatalogListV2RequestTests: XCTestCase 
         timeout: TimeInterval = 0
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetBannerCatalogListV2Request(serial, timeout)
+        try Vortex.RequestFactory.createGetBannerCatalogListV2Request(serial, timeout)
     }
 }

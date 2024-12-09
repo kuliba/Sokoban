@@ -9,7 +9,7 @@ import PaymentTemplateBackendV3
 import Foundation
 import RemoteServices
 
-extension ForaBank.RequestFactory {
+extension Vortex.RequestFactory {
     
     static func createGetPaymentTemplateListRequestV3(
         serial: String?

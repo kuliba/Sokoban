@@ -38,8 +38,8 @@ import XCTest
 //        
 //        let (publicTransportKeyData, publicKeyEncryptedData) = try testData()
 //        
-//        let iv = ForaBank.AES256.randomIv()
-//        let aes = try ForaBank.AES256(key: publicTransportKeyData, iv: iv)
+//        let iv = Vortex.AES256.randomIv()
+//        let aes = try Vortex.AES256(key: publicTransportKeyData, iv: iv)
 //        
 //        let decrypted = try aes.decrypt(publicKeyEncryptedData)
 //    }

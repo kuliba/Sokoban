@@ -124,7 +124,7 @@ extension Services {
     struct ChangePINSession {
         
         let otpEventID: ChangePINService.OTPEventID
-        let sessionID: ForaBank.SessionID
+        let sessionID: Vortex.SessionID
         let sessionKey: SessionKey
         let rsaPrivateKey: RSADomain.PrivateKey
     }

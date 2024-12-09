@@ -188,7 +188,7 @@ final class SerialLoaderComposer_extTests: XCTestCase {
     private typealias SUT = SerialComponents.SerialLoaderComposer<Serial, Value, Model>
     private typealias StampedModel = SerialStamped<Serial, [Model]>
     private typealias StampedValue = SerialStamped<Serial, [Value]>
-    private typealias LocalAgentSpy = ForaBankTests.LocalAgentSpy<StampedModel>
+    private typealias LocalAgentSpy = VortexTests.LocalAgentSpy<StampedModel>
     private typealias RemoteLoadSpy = Spy<Serial?, StampedValue, Error>
     
     private func makeSUT(

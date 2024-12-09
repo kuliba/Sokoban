@@ -9,7 +9,7 @@ import ServiceCategoriesBackendV0
 import Foundation
 import RemoteServices
 
-extension ForaBank.RequestFactory {
+extension Vortex.RequestFactory {
     
     static func createGetServiceCategoryListRequest(
         serial: String?

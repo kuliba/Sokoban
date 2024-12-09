@@ -46,7 +46,7 @@ final class RequestFactory_createGetSVCardLimitsTests: XCTestCase {
         payload: GetSVCardLimitsPayload = .init(cardId: 1)
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetSVCardLimitsRequest(payload: payload)
+        try Vortex.RequestFactory.createGetSVCardLimitsRequest(payload: payload)
     }
     
     private struct SVCardLimitsPayload: Decodable {

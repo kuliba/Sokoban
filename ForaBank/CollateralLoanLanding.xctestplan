@@ -11,9 +11,9 @@
   "defaultOptions" : {
     "codeCoverage" : false,
     "targetForVariableExpansion" : {
-      "containerPath" : "container:ForaBank.xcodeproj",
+      "containerPath" : "container:Vortex.xcodeproj",
       "identifier" : "EDB1437C265FDA410028EF5A",
-      "name" : "ForaBank"
+      "name" : "Vortex"
     }
   },
   "testTargets" : [

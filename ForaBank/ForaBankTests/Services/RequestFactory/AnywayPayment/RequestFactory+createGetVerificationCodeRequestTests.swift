@@ -37,6 +37,6 @@ final class RequestFactory_createGetVerificationCodeRequestTests: XCTestCase {
     
     private func createRequest() throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetVerificationCodeRequest()
+        try Vortex.RequestFactory.createGetVerificationCodeRequest()
     }
 }

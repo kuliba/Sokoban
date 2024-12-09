@@ -10,9 +10,9 @@
   ],
   "defaultOptions" : {
     "targetForVariableExpansion" : {
-      "containerPath" : "container:ForaBank.xcodeproj",
+      "containerPath" : "container:Vortex.xcodeproj",
       "identifier" : "EDB1437C265FDA410028EF5A",
-      "name" : "ForaBank"
+      "name" : "Vortex"
     },
     "testExecutionOrdering" : "random"
   },
@@ -215,9 +215,9 @@
     },
     {
       "target" : {
-        "containerPath" : "container:ForaBank.xcodeproj",
+        "containerPath" : "container:Vortex.xcodeproj",
         "identifier" : "EDB14392265FDA430028EF5A",
-        "name" : "ForaBankTests"
+        "name" : "VortexTests"
       }
     },
     {

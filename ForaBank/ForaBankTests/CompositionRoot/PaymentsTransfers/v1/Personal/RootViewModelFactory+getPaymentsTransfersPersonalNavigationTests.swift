@@ -59,7 +59,7 @@ final class RootViewModelFactory_getPaymentsTransfersPersonalNavigationTests: Ro
     
     // MARK: - Helpers
     
-    private typealias Domain = ForaBank.PaymentsTransfersPersonalDomain
+    private typealias Domain = Vortex.PaymentsTransfersPersonalDomain
     
     private func expect(
         sut: SUT? = nil,

@@ -10,7 +10,7 @@
   ],
   "defaultOptions" : {
     "targetForVariableExpansion" : {
-      "containerPath" : "container:ForaBank.xcodeproj",
+      "containerPath" : "container:Vortex.xcodeproj",
       "identifier" : "2A30B0942CCE2BA4006697E1",
       "name" : "QRNavigationPreview"
     },
@@ -33,7 +33,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:ForaBank.xcodeproj",
+        "containerPath" : "container:Vortex.xcodeproj",
         "identifier" : "2A3A64BB2CDA907D007C0587",
         "name" : "QRNavigationPreviewTests"
       }

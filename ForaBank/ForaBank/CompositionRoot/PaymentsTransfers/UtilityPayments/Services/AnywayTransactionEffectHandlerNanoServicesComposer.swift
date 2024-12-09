@@ -50,7 +50,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     func getVerificationCode(
         _ completion: @escaping NanoServices.GetVerificationCodeCompletion
     ) {
-        let createRequest = ForaBank.RequestFactory.createGetVerificationCodeRequest
+        let createRequest = Vortex.RequestFactory.createGetVerificationCodeRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
         
         let service = LoggingRemoteServiceDecorator(
@@ -98,7 +98,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     func initiatePayment() -> InitiatePayment {
         
 #warning("add logging")
-        let process = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
+        let process = Vortex.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
         
         return { digest, completion in
             
@@ -118,7 +118,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
     func getDetails() -> GetDetails {
         
-        let createRequest = ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequest
+        let createRequest = Vortex.RequestFactory.createGetOperationDetailByPaymentIDRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         
         let service = LoggingRemoteServiceDecorator(
@@ -146,7 +146,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
     func makeTransfer() -> MakeTransfer {
         
-        let createRequest = ForaBank.RequestFactory.createMakeTransferV2Request
+        let createRequest = Vortex.RequestFactory.createMakeTransferV2Request
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
         
         let service = LoggingRemoteServiceDecorator(
@@ -174,7 +174,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
     func processPayment() -> ProcessPayment {
         
-        let process = ForaBank.NanoServices.makeCreateAnywayTransferV2(httpClient, infoNetworkLog)
+        let process = Vortex.NanoServices.makeCreateAnywayTransferV2(httpClient, infoNetworkLog)
         
         return { digest, completion in
             
@@ -312,7 +312,7 @@ private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
 
 private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
     
-    var status: ForaBank.DocumentStatus {
+    var status: Vortex.DocumentStatus {
         
         switch documentStatus {
         case .complete:   return .completed

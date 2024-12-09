@@ -9,7 +9,7 @@ import AnywayPaymentBackend
 import Foundation
 import RemoteServices
 
-extension ForaBank.RequestFactory {
+extension Vortex.RequestFactory {
     
     static func createMakeTransferRequest(
         _ payload: RemoteServices.RequestFactory.VerificationCode

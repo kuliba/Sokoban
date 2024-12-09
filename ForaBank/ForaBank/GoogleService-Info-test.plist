@@ -13,11 +13,11 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>ru.forabank.sense</string>
+	<string>ru.vortex.sense</string>
 	<key>PROJECT_ID</key>
-	<string>mbc-forabank</string>
+	<string>mbc-vortex</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mbc-forabank.appspot.com</string>
+	<string>mbc-vortex.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>GOOGLE_APP_ID</key>
 	<string>1:399866612200:ios:66e49af43a687728397c5d</string>
 	<key>DATABASE_URL</key>
-	<string>https://mbc-forabank.firebaseio.com</string>
+	<string>https://mbc-vortex.firebaseio.com</string>
 </dict>
 </plist>

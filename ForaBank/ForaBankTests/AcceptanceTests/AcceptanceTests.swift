@@ -33,7 +33,7 @@ class AcceptanceTests: QRNavigationTests {
         private let window = UIWindow()
         
         private let rootComposer: ModelRootComposer
-        private let binder: ForaBank.RootViewDomain.Binder
+        private let binder: Vortex.RootViewDomain.Binder
         private let rootViewFactory: RootViewFactory
         
         private func root() throws -> RootViewHostingViewController {

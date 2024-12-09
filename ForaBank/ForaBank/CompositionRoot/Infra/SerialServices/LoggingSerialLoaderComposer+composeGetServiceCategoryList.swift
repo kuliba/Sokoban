@@ -17,7 +17,7 @@ extension LoggingSerialLoaderComposer {
         
         return compose(
             createRequest: RequestFactory.createGetServiceCategoryListRequest,
-            mapResponse: ForaBank.ResponseMapper.mapGetServiceCategoryListResponse,
+            mapResponse: Vortex.ResponseMapper.mapGetServiceCategoryListResponse,
             fromModel: { $0.serviceCategory },
             toModel: { $0.codable }
         )
@@ -26,7 +26,7 @@ extension LoggingSerialLoaderComposer {
 
 // MARK: - Adapters
 
-/*private*/ extension ForaBank.ResponseMapper {
+/*private*/ extension Vortex.ResponseMapper {
     
     static func mapGetServiceCategoryListResponse(
         data: Data,
