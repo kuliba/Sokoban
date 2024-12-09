@@ -2696,7 +2696,6 @@ private extension Target {
             // internal packages
             .sharedConfigs,
             .uiPrimitives,
-            .rxViewModel,
             .linkableText,
             .amountComponent,
             .paymentComponents
