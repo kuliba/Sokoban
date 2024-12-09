@@ -14,9 +14,9 @@ public struct ToggleView: View {
     
     private let config: ToggleConfig
     
-    public init(@Binding isOn: Bool, config: ToggleConfig) {
+    public init(isOn: Binding<Bool>, config: ToggleConfig) {
         
-        self._isOn = _isOn
+        self._isOn = isOn
         self.config = config
     }
     
