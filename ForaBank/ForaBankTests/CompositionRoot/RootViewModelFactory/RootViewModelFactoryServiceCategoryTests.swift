@@ -139,6 +139,13 @@ private extension String {
         "atributeList": [
           {
             "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+            "juridicalName": "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",
+            "customerId": "12604",
+            "serviceList": [],
+            "inn": "1657251193"
+          },
+          {
+            "md5hash": "1efeda3c9130101d4d88113853b03bb5",
             "juridicalName": "ООО  ИЛЬИНСКОЕ ЖКХ",
             "customerId": "17651",
             "serviceList": [],
@@ -150,13 +157,6 @@ private extension String {
             "customerId": "21121",
             "serviceList": [],
             "inn": "4217039402"
-          },
-          {
-            "md5hash": "1efeda3c9130101d4d88113853b03bb5",
-            "juridicalName": "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",
-            "customerId": "12604",
-            "serviceList": [],
-            "inn": "1657251193"
           }
         ]
       }

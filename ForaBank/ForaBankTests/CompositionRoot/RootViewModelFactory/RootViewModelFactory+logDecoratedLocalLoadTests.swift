@@ -9,25 +9,46 @@
 import PayHubUI
 import XCTest
 
-final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactoryLocalLoadTests {
     
-    func test_init_shouldNotCallLogger() {
+    func test_init_shouldNotCallLoggerForMissingValue() {
         
-        let (_, logger) = makeSUT()
+        let (_, logger) = makeSUT(stub: nil)
+        
+        XCTAssertEqual(logger.callCount, 0)
+    }
+    
+    func test_init_shouldNotCallLoggerForEmpty() {
+        
+        let (_, logger) = makeSUT(stub: [])
+        
+        XCTAssertEqual(logger.callCount, 0)
+    }
+    
+    func test_init_shouldNotCallLoggerForOne() {
+        
+        let (_, logger) = makeSUT(stub: [makeValue()])
+        
+        XCTAssertEqual(logger.callCount, 0)
+    }
+    
+    func test_init_shouldNotCallLoggerForTwo() {
+        
+        let (_, logger) = makeSUT(stub: [makeValue(), makeValue()])
         
         XCTAssertEqual(logger.callCount, 0)
     }
     
     func test_logDecoratedLocalLoad_shouldDeliverNilForMissingValue() {
         
-        let (load, _) = makeSUT(loadStub: nil)
+        let (load, _) = makeSUT(stub: nil)
         
         XCTAssertNil(load())
     }
     
     func test_logDecoratedLocalLoad_shouldDeliverMessageForMissingValue() {
         
-        let (load, logger) = makeSUT(loadStub: nil)
+        let (load, logger) = makeSUT(stub: nil)
         
         _ = load()
         
@@ -38,14 +59,14 @@ final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactor
     
     func test_logDecoratedLocalLoad_shouldDeliverEmptyForEmptyValue() {
         
-        let (load, _) = makeSUT(loadStub: [])
+        let (load, _) = makeSUT(stub: [])
         
         XCTAssertNoDiff(load(), [])
     }
     
     func test_logDecoratedLocalLoad_shouldDeliverMessageForEmptyValue() {
         
-        let (load, logger) = makeSUT(loadStub: [])
+        let (load, logger) = makeSUT(stub: [])
         
         _ = load()
         
@@ -57,7 +78,7 @@ final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactor
     func test_logDecoratedLocalLoad_shouldDeliverOneValueForValueOfOne() {
         
         let value = makeValue()
-        let (load, _) = makeSUT(loadStub: [value])
+        let (load, _) = makeSUT(stub: [value])
         
         XCTAssertNoDiff(load(), [value])
     }
@@ -65,19 +86,19 @@ final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactor
     func test_logDecoratedLocalLoad_shouldDeliverMessageForValueOfOne() {
         
         let value = makeValue()
-        let (load, logger) = makeSUT(loadStub: [value])
+        let (load, logger) = makeSUT(stub: [value])
         
         _ = load()
         
         XCTAssertNoDiff(logger.events, [
-            message("Loaded \(1) item(s) of type Array<Value>.")
+            message("Loaded 1 item(s) of type Array<Value>.")
         ])
     }
     
     func test_logDecoratedLocalLoad_shouldDeliverTwoValuesForValueOfTwo() {
         
         let (value1, value2) = (makeValue(), makeValue())
-        let (load, _) = makeSUT(loadStub: [value1, value2])
+        let (load, _) = makeSUT(stub: [value1, value2])
         
         XCTAssertNoDiff(load(), [value1, value2])
     }
@@ -85,22 +106,21 @@ final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactor
     func test_logDecoratedLocalLoad_shouldDeliverMessageForValueOfTwo() {
         
         let (value1, value2) = (makeValue(), makeValue())
-        let (load, logger) = makeSUT(loadStub: [value1, value2])
+        let (load, logger) = makeSUT(stub: [value1, value2])
         
         _ = load()
         
         XCTAssertNoDiff(logger.events, [
-            message("Loaded \(2) item(s) of type Array<Value>.")
+            message("Loaded 2 item(s) of type Array<Value>.")
         ])
     }
     
     // MARK: - Helpers
     
-    private typealias LocalAgent = LocalAgentSpy<[Value]>
     private typealias Load = () -> [Value]?
     
     private func makeSUT(
-        loadStub: [Value]? = nil,
+        stub loadStub: [Value]? = nil,
         model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
@@ -108,32 +128,10 @@ final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactor
         load: Load,
         logger: LoggerSpy
     ) {
-        let localAgent = LocalAgent(loadStub: loadStub)
-        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
-        let (sut, _, logger) = makeSUT(model: model)
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(logger, file: file, line: line)
+        let (sut, logger) = super.makeSUT(loadStub: loadStub, model: model, file: file, line: line)
         
         let load = { sut.logDecoratedLocalLoad(type: [Value].self) }
         
         return (load, logger)
-    }
-    
-    private func message(_ message: String) -> LoggerSpy.Event {
-        
-        return .init(level: .debug, category: .cache, message: message)
-    }
-    
-    private struct Value: Equatable, Decodable {
-        
-        let value: String
-    }
-    
-    private func makeValue(
-        _ value: String = anyMessage()
-    ) -> Value {
-        
-        return .init(value: value)
     }
 }

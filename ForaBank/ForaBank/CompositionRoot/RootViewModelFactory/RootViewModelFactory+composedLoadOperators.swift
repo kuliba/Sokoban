@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 07.12.2024.
 //
 
+import ForaTools
+
 extension RootViewModelFactory {
     
     func composedLoadOperators(
@@ -27,10 +29,9 @@ extension RootViewModelFactory {
             
             guard let self else { return }
             
-            let operators: [CachingSberOperator] = logDecoratedLocalLoad() ?? []
-            let page = operators.pageOfOperators(for: payload)
-            debugLog(pageCount: page.count, of: operators.count)
-            completion(page)
+            // sorting is performed at cache phase
+            let page = loadPage(of: [CachingSberOperator].self, for: payload) ?? []
+            completion(page.map(UtilityPaymentOperator.init(codable:)))
         }
     }
 }
@@ -58,38 +59,16 @@ struct LoadOperatorsPayload: Equatable {
     let pageSize: Int
 }
 
-// MARK: - Mapping
+// MARK: - Helpers
 
-// TODO: - add tests
-extension Array where Element == CachingSberOperator {
+extension CachingSberOperator: Identifiable {}
+
+extension CachingSberOperator: FilterableItem {
     
-    /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
-    func pageOfOperators(
-        for payload: LoadOperatorsPayload
-    ) -> [UtilityPaymentOperator] {
+    func matches(_ payload: LoadOperatorsPayload) -> Bool {
         
-        // sorting is performed at cache phase
-        return self
-            .search(searchText: payload.searchText)
-            .page(startingAfter: payload.operatorID, pageSize: payload.pageSize)
-            .map(UtilityPaymentOperator.init(with:))
+        contains(payload.searchText)
     }
-}
-
-// MARK: - Search
-
-//TODO: complete search and add tests
-extension Array where Element == CachingSberOperator {
-    
-    func search(searchText: String) -> [Element] {
-        
-        guard !searchText.isEmpty else { return self }
-        
-        return filter { $0.contains(searchText) }
-    }
-}
-
-extension CachingSberOperator {
     
     func contains(_ searchText: String) -> Bool {
         
@@ -100,22 +79,23 @@ extension CachingSberOperator {
     }
 }
 
-// MARK: - Page
-
-extension CachingSberOperator: Identifiable {}
+extension LoadOperatorsPayload: PageQuery {
+    
+    var id: String? { operatorID }
+}
 
 // MARK: - Adapters
 
 private extension UtilityPaymentOperator {
     
-    init(with sberOperator: CachingSberOperator) {
+    init(codable: CachingSberOperator) {
         
         self.init(
-            id: sberOperator.id,
-            inn: sberOperator.inn,
-            title: sberOperator.title,
-            icon: sberOperator.md5Hash,
-            type: sberOperator.type
+            id: codable.id,
+            inn: codable.inn,
+            title: codable.title,
+            icon: codable.md5Hash,
+            type: codable.type
         )
     }
 }
