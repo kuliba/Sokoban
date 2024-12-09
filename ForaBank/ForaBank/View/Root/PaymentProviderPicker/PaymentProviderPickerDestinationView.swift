@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct PaymentProviderPickerDestinationView: View {
     
@@ -48,9 +49,17 @@ private extension PaymentProviderPickerDestinationView {
             switch failure {
             case let .operatorFailure(utilityPaymentOperator):
                 components.operatorFailureView(
-                    operatorFailure: .init(content: utilityPaymentOperator), 
+                    operatorFailure: .init(content: utilityPaymentOperator),
                     payByInstructions: detailPayment,
                     dismissDestination: dismiss
+                )
+                .frame(maxHeight: .infinity)
+                .navigationBarWithAsyncIcon(
+                    title: utilityPaymentOperator.title,
+                    subtitle: "ИНН \(utilityPaymentOperator.inn)",
+                    dismiss: dismiss,
+                    icon: makeMD5HashIconView(utilityPaymentOperator.icon),
+                    style: .large
                 )
                 
             case let .serviceFailure(serviceFailure):
@@ -76,5 +85,12 @@ private extension PaymentProviderPickerDestinationView {
                     )
             }
         }
+    }
+    
+    private func makeMD5HashIconView(
+        _ icon: String?
+    ) -> UIPrimitives.AsyncImage {
+        
+        makeIconView(icon.map { .md5Hash(.init($0)) })
     }
 }
