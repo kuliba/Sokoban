@@ -384,7 +384,7 @@ extension Model {
         return bankList.value
     }
     
-    func isForaBank(bankId: BankData.ID) -> Bool {
+    func isVortex(bankId: BankData.ID) -> Bool {
         
         bankId == BankID.vortexID.rawValue
     }

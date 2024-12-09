@@ -170,16 +170,16 @@ extension Model {
                 maxAmount = product.balance?.precised(2)
             }
             
-            var isForaBankValue: Bool? = nil
+            var isVortexValue: Bool? = nil
             
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
                let bankParameterValue = bankParameter.value {
                 
-                isForaBankValue = isForaBank(bankId: bankParameterValue)
+                isVortexValue = isVortex(bankId: bankParameterValue)
             }
             
-            let updatedAmountParameter = amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount, isForaBank: isForaBankValue)
+            let updatedAmountParameter = amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount, isVortex: isVortexValue)
             
             guard updatedAmountParameter.currencySymbol != amountParameter.currencySymbol || updatedAmountParameter.validator != amountParameter.validator || updatedAmountParameter.info != amountParameter.info else {
                 return nil
@@ -212,7 +212,7 @@ extension Model {
                 return nil
             }
             
-            if isForaBank(bankId: bankParameterValue) == true {
+            if isVortex(bankId: bankParameterValue) == true {
                 
                 return messageParameter.updated(isEditable: false)
                 
@@ -242,7 +242,7 @@ extension Model {
             return nil
         }
         
-        if isForaBank(bankId: bankParameterValue) == true, phoneParameterValue.digits == clientPhone.digits {
+        if isVortex(bankId: bankParameterValue) == true, phoneParameterValue.digits == clientPhone.digits {
             
             return .remote(.start)
             
@@ -404,9 +404,9 @@ extension Model {
 
 extension Payments.ParameterAmount {
     
-    func updated(currencySymbol: String, maxAmount: Double?, isForaBank: Bool?) -> Payments.ParameterAmount {
+    func updated(currencySymbol: String, maxAmount: Double?, isVortex: Bool?) -> Payments.ParameterAmount {
         
-        if isForaBank == true {
+        if isVortex == true {
             
             return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Без комиссии", .name("ic24Info"), .feeInfo))
             

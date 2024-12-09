@@ -23,7 +23,7 @@ extension Model {
             throw Payments.Error.notAuthorized
         }
         
-        if isForaBank(bankId: bankParameterValue) == true {
+        if isVortex(bankId: bankParameterValue) == true {
             
             let payer = try paymentsTransferSFPPayer(parameters)
             let amount = try paymentsTransferSFPAmount(parameters)
