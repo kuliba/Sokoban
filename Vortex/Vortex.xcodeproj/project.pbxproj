@@ -2861,7 +2861,6 @@
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
 		843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */; };
-		849055BD2D072AFA003250BF /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */; };
 		849055BF2D07599A003250BF /* Payments+ParameterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849055BE2D07599A003250BF /* Payments+ParameterTests.swift */; };
 		84CA1BE52D06BAB50097BB93 /* VortexCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE42D06BAB50097BB93 /* VortexCrypto */; };
 		84CA1BE72D06BABA0097BB93 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE62D06BABA0097BB93 /* VortexTools */; };
@@ -22139,7 +22138,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				849055BF2D07599A003250BF /* Payments+ParameterTests.swift in Sources */,
-				849055BD2D072AFA003250BF /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
 				2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */,
 				2AA619572C16D04C00043997 /* anyMessage.swift in Sources */,
 				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
