@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct TopUpToggleStyle: ToggleStyle {
     
@@ -33,13 +34,13 @@ struct TopUpToggleStyle: ToggleStyle {
     }
 }
 
-struct PreviewToggle: View {
+struct PreviewTopUpToggle: View {
     
-    @State private(set) var isOn = false
+    @State private(set) var isShowingProducts = false
     
     var body: some View {
         
-        Toggle("", isOn: $isOn)
+        Toggle("", isOn: $isShowingProducts)
             .toggleStyle(TopUpToggleStyle(config: .preview))
     }
 }

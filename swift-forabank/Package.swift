@@ -2937,6 +2937,7 @@ private extension Target {
     static let toggleComponent = target(
         name: .toggleComponent,
         dependencies: [
+            .uiPrimitives,
             .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.toggleComponent)"

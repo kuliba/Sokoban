@@ -12,8 +12,8 @@ public struct ToggleView: View {
     @Binding private var isOn: Bool
     var disabled: Bool
 
-    public init(isOn: Bool, disabled: Bool) {
-        self.isOn = isOn
+    public init(@Binding isOn: Bool, disabled: Bool) {
+        self._isOn = _isOn
         self.disabled = disabled
     }
     
@@ -27,11 +27,18 @@ public struct ToggleView: View {
 
 // MARK: - Previews
 
-#Preview {
-    NavigationView {
-
-        @State var isOn = false
-        ToggleView(isOn: $isOn, disabled: false)
+struct PreviewToggle: View {
+    
+    @State private(set) var isOn = false
+    
+    var body: some View {
+        
+        Toggle("", isOn: $isOn)
+            .toggleStyle(ToggleComponentStyle(config: .preview))
     }
-    .navigationViewStyle(.stack)
+}
+
+#Preview {
+    
+    PreviewToggle()
 }

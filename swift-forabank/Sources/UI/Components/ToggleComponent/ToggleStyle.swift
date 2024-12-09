@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct ToggleComponentStyle: ToggleStyle {
     
@@ -13,7 +14,7 @@ struct ToggleComponentStyle: ToggleStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         
-        let offset: CGFloat = (config.size.width - (config.size.height - config.padding * 2) - config.padding * 2) / 2.0
+        let offset = (config.size.width - (config.size.height - config.padding * 2) - config.padding * 2) / 2.0
         
         RoundedRectangle(cornerRadius: config.size.height, style: .circular)
             .stroke(style: .init(lineWidth: config.lineWidth))
