@@ -434,8 +434,13 @@ extension RootViewModelFactory {
         model.sessionState
             .map(\.isActive)
             .filter { $0 }
-            .removeDuplicates()
-            .sink { [weak self] _ in self?.updateAlerts() }
+            .combineLatest(model.clientInformAlertManager.updatePermissionPublisher)
+            .sink { [weak self] _, updatePermission in
+                
+                if updatePermission {
+                    self?.updateAlerts()
+                }
+            }
             .store(in: &bindings)
         
         let rootViewModel = make(

@@ -548,8 +548,18 @@ class Model {
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Request")
-                    handleAuthSessionStartRequest()
                     
+                    sessionState
+                        .sink { [weak self] sessionState in
+                            
+                            switch sessionState {
+                            case .active: return
+                                
+                            default: self?.handleAuthSessionStartRequest()
+                            }
+                        }
+                        .store(in: &bindings)
+                
                 case let payload as ModelAction.Auth.Session.Start.Response:
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Start.Response")
                     
