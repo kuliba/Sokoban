@@ -1,11 +1,11 @@
 //
 //  Payments+ParameterTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Дмитрий Савушкин on 03.06.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class Payments_ParameterTests: XCTestCase {
@@ -14,19 +14,19 @@ final class Payments_ParameterTests: XCTestCase {
 
         let systemIdentifiers = Payments.Parameter.systemIdentifiers.map({ $0.rawValue })
         XCTAssertEqual(systemIdentifiers, [
-            "ru.forabank.sense.category",
-            "ru.forabank.sense.service",
-            "ru.forabank.sense.operator",
-            "ru.forabank.sense.header",
-            "ru.forabank.sense.product",
-            "ru.forabank.sense.amount",
-            "ru.forabank.sense.code",
-            "ru.forabank.sense.fee",
-            "ru.forabank.sense.continue",
-            "ru.forabank.sense.mock",
-            "ru.forabank.sense.subscribe",
-            "ru.forabank.sense.productTemplate",
-            "ru.forabank.sense.productTemplateName"
+            "ru.vortex.sense.category",
+            "ru.vortex.sense.service",
+            "ru.vortex.sense.operator",
+            "ru.vortex.sense.header",
+            "ru.vortex.sense.product",
+            "ru.vortex.sense.amount",
+            "ru.vortex.sense.code",
+            "ru.vortex.sense.fee",
+            "ru.vortex.sense.continue",
+            "ru.vortex.sense.mock",
+            "ru.vortex.sense.subscribe",
+            "ru.vortex.sense.productTemplate",
+            "ru.vortex.sense.productTemplateName"
         ])
     }
 }

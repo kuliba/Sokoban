@@ -2862,6 +2862,7 @@
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
 		843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */; };
 		849055BD2D072AFA003250BF /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */; };
+		849055BF2D07599A003250BF /* Payments+ParameterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849055BE2D07599A003250BF /* Payments+ParameterTests.swift */; };
 		84CA1BE52D06BAB50097BB93 /* VortexCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE42D06BAB50097BB93 /* VortexCrypto */; };
 		84CA1BE72D06BABA0097BB93 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE62D06BABA0097BB93 /* VortexTools */; };
 		84CA1BE82D06BAC10097BB93 /* VortexPushServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A515682C2821B927000D4455 /* VortexPushServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -6350,6 +6351,7 @@
 		841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBannerInProductListData.swift; sourceTree = "<group>"; };
 		8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccountViewModelTests.swift; sourceTree = "<group>"; };
 		843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCalculateAmountViewModelTests.swift; sourceTree = "<group>"; };
+		849055BE2D07599A003250BF /* Payments+ParameterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+ParameterTests.swift"; sourceTree = "<group>"; };
 		A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessView.swift; sourceTree = "<group>"; };
 		A50869D92767F394004C5E17 /* InternetTVSuccess.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetTVSuccess.xib; sourceTree = "<group>"; };
 		A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSourceView.swift; sourceTree = "<group>"; };
@@ -14088,6 +14090,7 @@
 				2AA5556F2A3E603B00B13D47 /* Model+PaymentsTests.swift */,
 				77F6A8712A2E43BF003BDE07 /* Taxes */,
 				77CCEA6528EF034000C62215 /* PaymentsStepTests.swift */,
+				849055BE2D07599A003250BF /* Payments+ParameterTests.swift */,
 				7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */,
 				77D73EE529094D7A00A956A3 /* PaymentsProcessTests.swift */,
 				77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */,
@@ -22135,6 +22138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				849055BF2D07599A003250BF /* Payments+ParameterTests.swift in Sources */,
 				849055BD2D072AFA003250BF /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
 				2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */,
 				2AA619572C16D04C00043997 /* anyMessage.swift in Sources */,
