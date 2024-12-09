@@ -22,7 +22,10 @@ public extension ResponseMapper {
         _ data: AnywayOperatorGroupData
     ) -> [SberOperator] {
         
-        return data.operatorList.flatMap(\.sberOperators)
+        let operators = data.sberOperators
+        print("network", "sberOperators count", operators.count)
+        
+        return operators
     }
 }
 
@@ -54,27 +57,42 @@ private extension ResponseMapper {
     }
 }
 
+private extension ResponseMapper.AnywayOperatorGroupData {
+    
+    var sberOperators: [SberOperator] {
+        
+        operatorList.flatMap(\.sberOperators)
+    }
+}
+
 private extension ResponseMapper.AnywayOperatorGroupData.Operator {
     
     var sberOperators: [SberOperator] {
         
-        atributeList.compactMap { (attribute) -> SberOperator? in
-            
-            guard let id = attribute.customerId,
-                  !id.isEmpty,
-                  let inn = attribute.inn,
-                  !inn.isEmpty,
-                  let title = attribute.juridicalName,
-                  !title.isEmpty
-            else { return nil }
-            
-            return .init(
-                id: id,
-                inn: inn,
-                md5Hash: attribute.md5hash,
-                title: title,
-                type: type
-            )
-        }
+        atributeList.compactMap { $0.sberOperator(type: type) }
+    }
+}
+
+private extension ResponseMapper.AnywayOperatorGroupData.Operator.OperatorData {
+    
+    func sberOperator(
+        type: String
+    ) -> SberOperator? {
+        
+        guard let id = customerId,
+              !id.isEmpty,
+              let inn = inn,
+              !inn.isEmpty,
+              let title = juridicalName,
+              !title.isEmpty
+        else { return nil }
+        
+        return .init(
+            id: id,
+            inn: inn,
+            md5Hash: md5hash,
+            title: title,
+            type: type
+        )
     }
 }

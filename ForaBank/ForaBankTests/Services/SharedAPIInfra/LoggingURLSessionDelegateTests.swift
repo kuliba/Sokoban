@@ -88,13 +88,18 @@ final class LoggingURLSessionDelegateTests: XCTestCase {
 
 final class LoggerSpy: LoggerAgentProtocol {
     
-    typealias Event = (level: LoggerAgentLevel, category: LoggerAgentCategory, message: String)
+    struct Event: Equatable {
+        
+        let level: LoggerAgentLevel
+        let category: LoggerAgentCategory
+        let message: String
+    }
     
     private(set) var events = [Event]()
     var callCount: Int { events.count }
     
     func log(level: LoggerAgentLevel, category: LoggerAgentCategory, message: String, file: StaticString, line: UInt) {
         
-        events.append((level, category, message))
+        events.append(.init(level: level, category: category, message: message))
     }
 }

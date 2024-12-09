@@ -10,18 +10,18 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class RootViewModelFactory_makeTests: XCTestCase {
+final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryTests {
     
     func test_shouldNotCallHTTPClientOnInactiveSessionState() {
         
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: .inactive
         )
         XCTAssertEqual(httpClient.callCount, 0)
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         XCTAssertNoDiff(httpClient.callCount, 0)
         XCTAssertNotNil(sut)
@@ -29,13 +29,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClientOnActiveSessionState() {
         
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         XCTAssertGreaterThan(httpClient.callCount, 0)
         XCTAssertNotNil(sut)
@@ -43,13 +43,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClientOnSessionStateChangeToActive() {
         
-        let (sut, httpClient, sessionAgent, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, sessionAgent, userInitiatedScheduler) = makeSUT(
             sessionState: .inactive
         )
         XCTAssertEqual(httpClient.callCount, 0)
         
         sessionAgent.sessionState.value = active()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
         
         XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
@@ -59,13 +59,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSession() throws {
         
         let request = try createGetServiceCategoryListRequest(serial: nil)
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         XCTAssert(httpClient.requests.contains(request))
         XCTAssertNotNil(sut)
@@ -82,35 +82,110 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
-        let (sut, _,_, backgroundScheduler) = makeSUT(
+        let (sut, _,_, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         let initialState = try sut.content.categoryPickerContent().state
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
-        XCTAssertNotNil(sut)
     }
     
-    func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
+    func test_shouldChangeCategoryPickerStateOnHTTPFailure() throws {
         
-        let (sut, httpClient, _, backgroundScheduler) = makeSUT(
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
             sessionState: active()
         )
         
-        backgroundScheduler.advance()
+        userInitiatedScheduler.advance()
         awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
         
-        httpClient.complete(with: success())
-        httpClient.complete(with: success(), at: 1)
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: anyError(), at: 1)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
+        XCTAssertNoDiff(state.elements, [])
+    }
+    
+    func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
+        
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            sessionState: active()
+        )
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+        
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: mobileJSON(), at: 1)
+        awaitActorThreadHop()
+        
+        let state = try sut.content.categoryPickerContent().state
+        XCTAssertNoDiff(state.isLoading, false)
+        XCTAssertNoDiff(state.elements.map(\.type), [.mobile])
+    }
+    
+    func test_shouldRequestOperatorsAfterCategories() throws {
+        
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            sessionState: active()
+        )
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+        
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+            "getOperatorsListByParam-housingAndCommunalService"
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldRequestNextTypeOperators() throws {
+        
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            sessionState: active()
+        )
+        
+        userInitiatedScheduler.advance()
+        
+        awaitActorThreadHop()
+        httpClient.complete(with: anyError())
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        
+        awaitActorThreadHop()
+        httpClient.complete(with: anyError(), at: 2)
+        
+        awaitActorThreadHop()
+        httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+            "getOperatorsListByParam-housingAndCommunalService",
+            "getOperatorsListByParam-internet"
+        ])
         XCTAssertNotNil(sut)
     }
     
@@ -127,13 +202,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         sut: SUT,
         httpClient: HTTPClientSpy,
         sessionAgent: SessionAgentEmptyMock,
-        backgroundScheduler: TestSchedulerOf<DispatchQueue>
+        userInitiatedScheduler: TestSchedulerOf<DispatchQueue>
     ) {
-        let httpClient = HTTPClientSpy()
-        let backgroundScheduler = DispatchQueue.test
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
+        let httpClient = HTTPClientSpy()
+        let userInitiatedScheduler = DispatchQueue.test
         let sut = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
@@ -143,7 +218,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             scanner: QRScannerViewModelSpy(),
             schedulers: .test(
                 main: .immediate,
-                background: backgroundScheduler.eraseToAnyScheduler()
+                userInitiated: userInitiatedScheduler.eraseToAnyScheduler()
             ).0
         ).make(
             dismiss: {},
@@ -152,7 +227,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             savingsAccountFlag: .active
         )
         
-        return (sut, httpClient, sessionAgent, backgroundScheduler)
+        return (sut, httpClient, sessionAgent, userInitiatedScheduler)
     }
     
     private func createGetServiceCategoryListRequest(
@@ -162,41 +237,9 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
     
-    private func success(
-    ) -> Result<(Data, HTTPURLResponse), any Error> {
+    private func mobileJSON() -> Data {
         
-        return .success((validData(), anyHTTPURLResponse()))
-    }
-    
-    private func validData(
-    ) -> Data {
-        
-        return .init(validJSON().utf8)
-    }
-    
-    private func validJSON(
-    ) -> String {
-        
-        return """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": {
-        "serial": "abc",
-        "categoryGroupList": [
-            {
-                "type": "mobile",
-                "name": "Мобильная связь",
-                "ord": 20,
-                "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
-                "paymentFlow": "MOBILE",
-                "latestPaymentsCategory": "isMobilePayments",
-                "search": false
-            }
-        ]
-    }
-}
-"""
+        return .init(String.mobileJSON.utf8)
     }
     
     private func active() -> SessionState {
@@ -242,4 +285,30 @@ private extension RootViewModel {
         
         return personal
     }
+}
+
+// MARK: - DSL
+
+extension String {
+    
+    static let mobileJSON = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "abc",
+        "categoryGroupList": [
+            {
+                "type": "mobile",
+                "name": "Мобильная связь",
+                "ord": 20,
+                "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
+                "paymentFlow": "MOBILE",
+                "latestPaymentsCategory": "isMobilePayments",
+                "search": false
+            }
+        ]
+    }
+}
+"""
 }

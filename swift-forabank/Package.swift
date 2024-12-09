@@ -97,6 +97,7 @@ let package = Package(
         .userAccountNavigationComponent,
         // UI Components
         .carouselComponent,
+        .dropDownTextListComponent,
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
@@ -302,6 +303,7 @@ let package = Package(
         .buttonComponent,
         .infoComponent,
         .checkBoxComponent,
+        .dropDownTextListComponent,
         .footerComponent,
         .nameComponent,
         .optionalSelectorComponent,
@@ -680,6 +682,11 @@ private extension Product {
         ]
     )
     
+    static let dropDownTextListComponent = library(
+        name: .dropDownTextListComponent,
+        targets: [.dropDownTextListComponent]
+    )
+
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -700,7 +707,7 @@ private extension Product {
             .sharedConfigs,
         ]
     )
-    
+        
     static let productProfileComponents = library(
         name: .productProfileComponents,
         targets: [
@@ -2860,6 +2867,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.checkBoxComponent)"
     )
     
+    static let dropDownTextListComponent = target(
+        name: .dropDownTextListComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.dropDownTextListComponent)"
+    )
+    
     static let footerComponent = target(
         name: .footerComponent,
         dependencies: [
@@ -3403,6 +3418,10 @@ private extension Target.Dependency {
         name: .checkBoxComponent
     )
     
+    static let dropDownTextListComponent = byName(
+        name: .dropDownTextListComponent
+    )
+    
     static let footerComponent = byName(
         name: .footerComponent
     )
@@ -3819,6 +3838,8 @@ private extension String {
     static let infoComponent = "InfoComponent"
     
     static let checkBoxComponent = "CheckBoxComponent"
+
+    static let dropDownTextListComponent = "DropDownTextListComponent"
     
     static let footerComponent = "FooterComponent"
     
