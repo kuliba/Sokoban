@@ -102,7 +102,6 @@ final class RootViewModelFactory_logDecoratedLocalLoadTests: RootViewModelFactor
     private func makeSUT(
         loadStub: [Value]? = nil,
         model: Model = .mockWithEmptyExcept(),
-        schedulers: Schedulers = .immediate,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

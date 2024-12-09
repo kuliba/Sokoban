@@ -682,6 +682,11 @@ extension AuthPinCodeViewModel {
         model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
     }
+    
+    func dismissAll() {
+        
+        model.clientInformAlertManager.dismissAll()
+    }
 }
 
 //MARK: - Types
