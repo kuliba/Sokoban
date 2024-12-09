@@ -10,18 +10,19 @@ import SwiftUI
 public struct ToggleView: View {
 
     @Binding private var isOn: Bool
-    var disabled: Bool
-
-    public init(@Binding isOn: Bool, disabled: Bool) {
+    
+    private let config: ToggleConfig
+    
+    public init(@Binding isOn: Bool, config: ToggleConfig) {
+        
         self._isOn = _isOn
-        self.disabled = disabled
+        self.config = config
     }
     
     public var body: some View {
         
         Toggle("", isOn: $isOn)
             .toggleStyle(ToggleComponentStyle(config: .preview))
-            .disabled(disabled)
     }
 }
 
