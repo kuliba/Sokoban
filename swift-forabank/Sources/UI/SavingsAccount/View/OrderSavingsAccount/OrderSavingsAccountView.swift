@@ -9,6 +9,7 @@ import LinkableText
 import PaymentComponents
 import SharedConfigs
 import SwiftUI
+import ToggleComponent
 
 struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
 where AmountInfo: View,
@@ -357,7 +358,7 @@ where AmountInfo: View,
                 
             }
             Toggle("", isOn: $isShowingProducts)
-                .toggleStyle(TopUpToggleStyle(config: config.topUp.toggle))
+                .toggleStyle(ToggleComponentStyle(config: config.topUp.toggle))
                 .disabled(state.isShowingOTP)
         }
     }
@@ -557,6 +558,7 @@ struct LandingUIView_Previews: PreviewProvider {
 // TODO: move to main target
 
 import RxViewModel
+import ToggleComponent
 
 struct OrderSavingsAccountWrapperView: View {
     

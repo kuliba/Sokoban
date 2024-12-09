@@ -2648,6 +2648,7 @@ private extension Target {
             .linkableText,
             .paymentComponents,
             .sharedConfigs,
+            .toggleComponent,
             .uiPrimitives,
         ],
         path: "Sources/UI/\(String.savingsAccount)"
