@@ -1,13 +1,13 @@
 //
-//  TopUpToggleStyle.swift
-//  
+//  ToggleStyle.swift
 //
-//  Created by Andryusina Nataly on 26.11.2024.
+//
+//  Created by Valentin Ozerov on 09.12.2024.
 //
 
 import SwiftUI
 
-struct TopUpToggleStyle: ToggleStyle {
+struct ToggleComponentStyle: ToggleStyle {
     
     let config: ToggleConfig
     
@@ -31,20 +31,4 @@ struct TopUpToggleStyle: ToggleStyle {
             }
             .frame(config.size)
     }
-}
-
-struct PreviewToggle: View {
-    
-    @State private(set) var isOn = false
-    
-    var body: some View {
-        
-        Toggle("", isOn: $isOn)
-            .toggleStyle(TopUpToggleStyle(config: .preview))
-    }
-}
-
-#Preview {
-    
-    PreviewTopUpToggle()
 }
