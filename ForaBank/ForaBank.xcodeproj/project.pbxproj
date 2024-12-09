@@ -989,6 +989,7 @@
 		2A6826CD2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826CC2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift */; };
 		2A6889BD2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */; };
 		2A6894152D070BC400160429 /* RootViewFactory+operatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */; };
+		2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6A6A342CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */; };
 		2A6A6A362CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */; };
@@ -4533,6 +4534,7 @@
 		2A6889B82C2F481B001FF1F2 /* LatestPayments.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LatestPayments.xctestplan; sourceTree = "<group>"; };
 		2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentOutline+LatestServicePaymentsTests.swift"; sourceTree = "<group>"; };
 		2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+operatorFailureView.swift"; sourceTree = "<group>"; };
+		2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureDomain.swift; sourceTree = "<group>"; };
 		2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimedOTPInputViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionMicroServicesComposerNanoServices.swift; sourceTree = "<group>"; };
 		2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposer.swift; sourceTree = "<group>"; };
@@ -10437,6 +10439,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		2A6894162D07250300160429 /* ServiceCategoryFailure */ = {
+			isa = PBXGroup;
+			children = (
+				2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */,
+			);
+			path = ServiceCategoryFailure;
+			sourceTree = "<group>";
+		};
 		2A6A6A322CAADE7E006D6044 /* CategoryPickerSection */ = {
 			isa = PBXGroup;
 			children = (
@@ -14624,6 +14634,7 @@
 				2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */,
 				2AFA3B142CB78DC10019AFBA /* Refreshable.swift */,
 				2ACBA67C2CE9E99A00758D71 /* ElementIDs.swift */,
+				2A6894162D07250300160429 /* ServiceCategoryFailure */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -21955,6 +21966,7 @@
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
 				2A33941D2CBEDA8D000C6459 /* LocalAgentWrapper.swift in Sources */,
+				2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */,
 				503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */,
 				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,
 				2AB63F382B26F8060086B5EB /* SberQRServices.swift in Sources */,
