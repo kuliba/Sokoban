@@ -7,19 +7,19 @@
 
 extension RootViewModelFactory {
     
-#warning("duplication - see UtilityPaymentOperatorLoaderComposer")
-    
     @inlinable
     func loadCachedOperators(
         payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
         completion: @escaping ([PaymentServiceOperator]) -> Void
     ) {
-        schedulers.background.schedule { [weak self] in
+        schedulers.userInitiated.schedule { [weak self] in
             
             guard let self else { return }
             
             let operators: [CodableServicePaymentOperator] = logDecoratedLocalLoad() ?? []
-            completion(operators.pageOfOperators(for: payload))
+            let page = operators.pageOfOperators(for: payload)
+            debugLog(pageCount: page.count, of: operators.count)
+            completion(page)
         }
     }
     
@@ -57,8 +57,6 @@ extension Array where Element == CodableServicePaymentOperator {
             .map(PaymentServiceOperator.init(codable:))
     }
 }
-
-// MARK: - Helpers
 
 extension CodableServicePaymentOperator {
     

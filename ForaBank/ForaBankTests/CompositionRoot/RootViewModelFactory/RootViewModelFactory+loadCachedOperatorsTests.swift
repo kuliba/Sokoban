@@ -115,17 +115,6 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         return .init(afterOperatorID: id, for: type, searchText: searchText, pageSize: pageSize)
     }
     
-    private func makePaymentServiceOperator(
-        id: String = anyMessage(),
-        inn: String = anyMessage(),
-        md5Hash: String? = anyMessage(),
-        name: String = anyMessage(),
-        type: String = anyMessage()
-    ) -> PaymentServiceOperator {
-        
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
-    }
-    
     private func codable(
         _ `operator`: PaymentServiceOperator,
         sortedOrder: Int = .random(in: 1...100)
