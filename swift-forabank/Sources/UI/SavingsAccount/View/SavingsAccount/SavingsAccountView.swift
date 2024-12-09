@@ -163,8 +163,8 @@ public struct SavingsAccountView: View {
     private func questionsView() -> some View {
 
         DropDownTextListView(
-            config: config.map(),
-            list: state.questions.map()
+            config: config.dropDownTextListConfig,
+            list: state.questions.DropDownTextList
         )
     }
     

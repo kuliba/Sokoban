@@ -86,13 +86,13 @@ public struct SavingsAccountState: Equatable {
 
 extension SavingsAccountState.Questions {
     
-    func map() -> DropDownTextList {
+    var DropDownTextList: DropDownTextList {
         
         .init(
             title: title,
             items: questions.map { 
             
-                DropDownTextList.Item(
+                .init(
                     title: $0.question,
                     subTitle: $0.answer
                 )

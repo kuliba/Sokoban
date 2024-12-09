@@ -113,7 +113,7 @@ public struct SavingsAccountConfig {
 
 extension SavingsAccountConfig {
     
-    func map() -> DropDownTextListConfig {
+    var dropDownTextListConfig: DropDownTextListConfig {
         
         .init(
             cornerRadius: cornerRadius,
