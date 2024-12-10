@@ -16,15 +16,9 @@ extension RootViewModelFactory {
     }
     
     func composedLoadOperators(
-        payload: UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>,
+        payload: LoadOperatorsPayload,
         completion: @escaping ([UtilityPaymentOperator]) -> Void
     ) {
-        let payload = LoadOperatorsPayload(
-            operatorID: payload.operatorID,
-            searchText: payload.searchText,
-            pageSize: settings.pageSize
-        )
-        
         schedulers.userInitiated.schedule { [weak self] in
             
             guard let self else { return }
@@ -36,23 +30,6 @@ extension RootViewModelFactory {
     }
 }
 
-struct UtilityPaymentOperatorLoaderComposerPayload<Operator: Identifiable>: Equatable {
-    
-    let operatorID: Operator.ID?
-    let searchText: String
-    let pageSize: Int
-    
-    init(
-        operatorID: Operator.ID? = nil,
-        searchText: String = "",
-        pageSize: Int
-    ) {
-        self.operatorID = operatorID
-        self.searchText = searchText
-        self.pageSize = pageSize
-    }
-}
-
 // MARK: - Load Operators
 
 struct LoadOperatorsPayload: Equatable {
@@ -60,6 +37,16 @@ struct LoadOperatorsPayload: Equatable {
     let operatorID: String?
     let searchText: String
     let pageSize: Int
+    
+    init(
+        operatorID: String? = nil,
+        searchText: String = "",
+        pageSize: Int
+    ) {
+        self.operatorID = operatorID
+        self.searchText = searchText
+        self.pageSize = pageSize
+    }
 }
 
 // MARK: - Helpers

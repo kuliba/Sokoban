@@ -46,7 +46,7 @@ final class PaymentsTransfersFlowManagerComposer {
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
         
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>, @escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperators = (LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
 }
 
 extension PaymentsTransfersFlowManagerComposer {
@@ -249,7 +249,10 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
-            loadOperators: loadOperators
+            loadOperators: { payload, completion in
+                
+                self.loadOperators(.init(operatorID: payload.operatorID, searchText: payload.searchText, pageSize: payload.pageSize), completion)
+            }
         )
         let microComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: settings.pageSize,
@@ -272,7 +275,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        let payload = UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>(
+        let payload = LoadOperatorsPayload(
             operatorID: payload.operatorID,
             searchText: payload.searchText,
             pageSize: settings.pageSize
@@ -280,8 +283,6 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         loadOperators(payload, completion)
     }
-    
-    typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
 }
 
 // MARK: - Adapters
