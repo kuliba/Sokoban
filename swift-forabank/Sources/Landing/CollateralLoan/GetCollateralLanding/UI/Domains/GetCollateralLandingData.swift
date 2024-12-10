@@ -5,6 +5,8 @@
 //  Created by Valentin Ozerov on 13.11.2024.
 //
 
+import DropDownTextListComponent
+
 public struct GetCollateralLandingProduct: Equatable {
     
     public let theme: Theme
@@ -222,3 +224,14 @@ extension GetCollateralLandingProduct.Theme {
 }
 
 extension GetCollateralLandingProduct.FrequentlyAskedQuestion: Hashable {}
+
+extension GetCollateralLandingProduct {
+    
+    var dropDownTextList: DropDownTextList {
+        
+        .init(
+            title: "Часто задаваемые вопросы",
+            items: frequentlyAskedQuestions.map { .init(title: $0.question, subTitle: $0.answer) }
+        )
+    }
+}

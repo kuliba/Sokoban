@@ -17,12 +17,14 @@ extension CollateralLoanLandingGetCollateralLandingViewFactory {
         let headerView = makeHeaderView(with: product)
         let conditionsView = makeConditionsView(with: product)
         let calculatorView = makeCalculatorView(with: product)
+        let frequentlyAskedQuestionsView = makeFrequentlyAskedQuestionsView(with: product)
         
         return .init(
             backgroundImage: product.marketing.image,
             headerView: headerView,
             conditionsView: conditionsView,
             calculatorView: calculatorView,
+            frequentlyAskedQuestionsView: frequentlyAskedQuestionsView,
             config: .default,
             theme: product.theme.map()
         )

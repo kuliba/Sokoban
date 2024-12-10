@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DropDownTextListComponent
 
 public struct CollateralLoanLandingGetCollateralLandingViewConfig {
     
@@ -18,7 +19,7 @@ public struct CollateralLoanLandingGetCollateralLandingViewConfig {
     public let header: Header
     public let conditions: Conditions
     public let calculator: Calculator
-    public let frequentlyAskedQuestion: FrequentlyAskedQuestion
+    public let frequentlyAskedQuestions: DropDownTextListConfig
     public let documents: Documents
     public let footer: Footer
         
@@ -31,7 +32,7 @@ public struct CollateralLoanLandingGetCollateralLandingViewConfig {
         header: Header,
         conditions: Conditions,
         calculator: Calculator,
-        frequentlyAskedQuestion: FrequentlyAskedQuestion,
+        frequentlyAskedQuestions: DropDownTextListConfig,
         documents: Documents,
         footer: Footer
     ) {
@@ -43,7 +44,7 @@ public struct CollateralLoanLandingGetCollateralLandingViewConfig {
         self.header = header
         self.conditions = conditions
         self.calculator = calculator
-        self.frequentlyAskedQuestion = frequentlyAskedQuestion
+        self.frequentlyAskedQuestions = frequentlyAskedQuestions
         self.documents = documents
         self.footer = footer
     }
@@ -107,7 +108,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
         header: .default,
         conditions: .default,
         calculator: .default,
-        frequentlyAskedQuestion: .init(),
+        frequentlyAskedQuestions: .default,
         documents: .init(),
         footer: .init()
     )

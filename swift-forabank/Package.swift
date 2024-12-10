@@ -1386,6 +1386,7 @@ private extension Target {
         dependencies: [
             .sharedConfigs,
             .toggleComponent,
+            .dropDownTextListComponent,
             .uiPrimitives
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
