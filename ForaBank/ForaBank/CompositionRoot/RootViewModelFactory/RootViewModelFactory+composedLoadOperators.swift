@@ -74,7 +74,7 @@ extension CachingSberOperator: FilterableItem {
         
         guard !searchText.isEmpty else { return true }
         
-        return title.localizedCaseInsensitiveContains(searchText)
+        return name.localizedCaseInsensitiveContains(searchText)
         || inn.localizedCaseInsensitiveContains(searchText)
     }
 }
@@ -93,7 +93,7 @@ private extension UtilityPaymentOperator {
         self.init(
             id: codable.id,
             inn: codable.inn,
-            title: codable.title,
+            title: codable.name,
             icon: codable.md5Hash,
             type: codable.type
         )
