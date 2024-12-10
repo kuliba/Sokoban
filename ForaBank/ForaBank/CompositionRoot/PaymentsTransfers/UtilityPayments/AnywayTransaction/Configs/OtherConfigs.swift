@@ -28,7 +28,7 @@ import UtilityServicePrepaymentUI
     
     static let iFora: Self = .init(
         image: .ic24Search,
-        description: "Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.."
+        description: "Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты."
     )
 }
 

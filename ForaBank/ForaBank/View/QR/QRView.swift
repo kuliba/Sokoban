@@ -218,7 +218,7 @@ struct QRCenterRectangleView: View {
             
             RoundedRectangle(cornerRadius: 16)
                 .fill(.black)
-                .frame(width: qrCenterRect - 25, height: qrCenterRect - 25, alignment: .center)
+                .frame(width: max(0, qrCenterRect - 25), height: max(0, qrCenterRect - 25), alignment: .center)
                 .blendMode(.destinationOut)
                 .padding(10)
         }
