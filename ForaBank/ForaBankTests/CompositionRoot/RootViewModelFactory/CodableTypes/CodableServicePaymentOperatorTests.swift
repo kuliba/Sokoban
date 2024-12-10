@@ -39,6 +39,6 @@ class CodableServicePaymentOperatorTests: XCTestCase {
         _ codable: CodableServicePaymentOperator
     ) -> PaymentServiceOperator {
         
-        return .init(id: codable.id, inn: codable.inn, md5Hash: codable.md5Hash, name: codable.name, type: codable.type)
+        return .init(id: codable.id, inn: codable.inn, icon: codable.md5Hash, name: codable.name, type: codable.type)
     }
 }

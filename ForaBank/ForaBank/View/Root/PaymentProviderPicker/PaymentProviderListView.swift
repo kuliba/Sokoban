@@ -102,7 +102,7 @@ private extension PaymentProviderListView {
                     title: provider.name,
                     subtitle: provider.inn,
                     config: .iFora,
-                    iconView: makeIconView(md5Hash: provider.md5Hash)
+                    iconView: makeIconView(md5Hash: provider.icon)
                 )
                 .contentShape(Rectangle())
             }

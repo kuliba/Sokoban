@@ -76,7 +76,7 @@ private extension PaymentServiceOperator {
         self.init(
             id: codable.id,
             inn: codable.inn,
-            md5Hash: codable.md5Hash,
+            icon: codable.md5Hash,
             name: codable.name,
             type: codable.type
         )

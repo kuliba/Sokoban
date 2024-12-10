@@ -120,7 +120,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         sortedOrder: Int = .random(in: 1...100)
     ) -> CodableServicePaymentOperator {
         
-        return .init(id: `operator`.id, inn: `operator`.inn, md5Hash: `operator`.md5Hash, name: `operator`.name, type: `operator`.type, sortedOrder: sortedOrder)
+        return .init(id: `operator`.id, inn: `operator`.inn, md5Hash: `operator`.icon, name: `operator`.name, type: `operator`.type, sortedOrder: sortedOrder)
     }
     
     private func makeOperatorWithModel(

@@ -9,7 +9,7 @@ struct PaymentServiceOperator: Equatable, Identifiable {
     
     let id: String
     let inn: String
-    let md5Hash: String?
+    let icon: String?
     let name: String
     let type: String
 }
@@ -20,18 +20,17 @@ extension PaymentServiceOperator {
     
     var utilityPaymentOperator: UtilityPaymentProvider {
         
-        return .init(id: id, icon: md5Hash, inn: inn, title: name, type: type)
+        return .init(id: id, icon: icon, inn: inn, title: name, type: type)
     }
 }
 
 extension UtilityPaymentProvider {
     
-    var md5Hash: String? { icon }
     var name: String { title }
     var subtitle: String { inn }
     
     var paymentServiceOperator: PaymentServiceOperator {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
+        return .init(id: id, inn: inn, icon: icon, name: name, type: type)
     }
 }
