@@ -289,7 +289,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     }
 }
 
-private extension UtilityPaymentOperator {
+private extension UtilityPaymentProvider {
     
     init(_ provider: PaymentProviderPickerDomain.Provider) {
         

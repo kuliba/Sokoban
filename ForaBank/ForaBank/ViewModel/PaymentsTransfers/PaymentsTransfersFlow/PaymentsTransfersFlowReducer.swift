@@ -71,8 +71,8 @@ extension PaymentsTransfersFlowReducer {
     }
     
     typealias State = PaymentsTransfersViewModel.Route
-    typealias Event = PaymentsTransfersFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
-    typealias Effect = PaymentsTransfersFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    typealias Event = PaymentsTransfersFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
 }
 
 private extension PaymentsTransfersFlowReducer {
@@ -121,8 +121,8 @@ private extension PaymentsTransfersFlowReducer {
         return (state, effect)
     }
     
-    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
-    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
+    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
     
     private func reduce(
         _ state: inout State,
@@ -325,7 +325,7 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
     
     private func reduce(
         _ state: State,
@@ -533,7 +533,7 @@ private extension PaymentsTransfersFlowEffect {
 
 private extension PaymentsTransfersViewModel.Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentBinder>
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentProvider, UtilityService, UtilityPrepaymentBinder>
     
     var merchantIcon: String? {
         
@@ -575,7 +575,7 @@ private extension PaymentsTransfersViewModel.Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentProvider>
     
     private var operatorFailure: OperatorFailure? {
         
@@ -594,7 +594,7 @@ private extension PaymentsTransfersViewModel.Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentProvider, UtilityService>
     
     private var servicePicker: ServicePickerState? {
         

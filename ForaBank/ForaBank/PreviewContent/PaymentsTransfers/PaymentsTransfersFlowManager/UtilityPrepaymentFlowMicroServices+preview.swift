@@ -7,7 +7,7 @@
 
 extension UtilityPrepaymentFlowMicroServices
 where LastPayment == UtilityPaymentLastPayment,
-      Operator == UtilityPaymentOperator,
+      Operator == UtilityPaymentProvider,
       Service == UtilityService {
     
     static var preview: Self {

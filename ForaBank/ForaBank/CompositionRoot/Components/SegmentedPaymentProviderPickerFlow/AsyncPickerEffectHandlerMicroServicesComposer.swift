@@ -126,7 +126,7 @@ private extension StartPaymentResult {
 
 private extension SegmentedProvider {
     
-    var `operator`: UtilityPaymentOperator {
+    var `operator`: UtilityPaymentProvider {
         
         return .init(
             id: origin.id, 

@@ -52,7 +52,7 @@ extension RequestFactory {
     
     // TODO: combine with above, improve API (strong types for type & operatorID)
     static func createGetOperatorsListByParamOperatorOnlyFalseRequest(
-        `operator`: UtilityPaymentOperator
+        `operator`: UtilityPaymentProvider
     ) throws -> URLRequest {
         
         guard !`operator`.id.isEmpty else {

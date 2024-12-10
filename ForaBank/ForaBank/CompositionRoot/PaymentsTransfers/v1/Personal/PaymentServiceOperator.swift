@@ -18,13 +18,13 @@ struct PaymentServiceOperator: Equatable, Identifiable {
 
 extension PaymentServiceOperator {
     
-    var utilityPaymentOperator: UtilityPaymentOperator {
+    var utilityPaymentOperator: UtilityPaymentProvider {
         
         return .init(id: id, icon: md5Hash, inn: inn, title: name, type: type)
     }
 }
 
-extension UtilityPaymentOperator {
+extension UtilityPaymentProvider {
     
     var md5Hash: String? { icon }
     var name: String { title }

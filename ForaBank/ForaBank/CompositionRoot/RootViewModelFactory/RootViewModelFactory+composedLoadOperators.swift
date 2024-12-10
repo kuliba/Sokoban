@@ -10,14 +10,14 @@ import ForaTools
 extension RootViewModelFactory {
     
     func composedLoadOperators(
-        completion: @escaping ([UtilityPaymentOperator]) -> Void
+        completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
         composedLoadOperators(payload: .init(pageSize: settings.pageSize), completion: completion)
     }
     
     func composedLoadOperators(
         payload: LoadOperatorsPayload,
-        completion: @escaping ([UtilityPaymentOperator]) -> Void
+        completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
         schedulers.userInitiated.schedule { [weak self] in
             
@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             
             // sorting is performed at cache phase
             let page = loadPage(of: [CachingSberOperator].self, for: payload) ?? []
-            completion(page.map(UtilityPaymentOperator.init(codable:)))
+            completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
     }
 }
@@ -76,7 +76,7 @@ extension LoadOperatorsPayload: PageQuery {
 
 // MARK: - Adapters
 
-private extension UtilityPaymentOperator {
+private extension UtilityPaymentProvider {
     
     init(codable: CachingSberOperator) {
         

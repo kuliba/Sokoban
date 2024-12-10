@@ -129,7 +129,7 @@ extension PaymentsTransfersViewModel {
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
 }
 
@@ -502,7 +502,7 @@ extension PaymentsTransfersViewModel {
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
 
         typealias MixedOperators = MultiElementArray<OperatorProvider<SegmentedOperatorData, SegmentedProvider>>
-        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentBinder>
+        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentProvider, UtilityService, UtilityPrepaymentBinder>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {

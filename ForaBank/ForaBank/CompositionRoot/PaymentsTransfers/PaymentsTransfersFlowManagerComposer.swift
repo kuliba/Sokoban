@@ -76,7 +76,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias FlowManager = PaymentsTransfersFlowManager
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel

@@ -1134,7 +1134,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         title: String = anyMessage(),
         icon: String? = nil,
         type: String = anyMessage()
-    ) -> UtilityPaymentOperator {
+    ) -> UtilityPaymentProvider {
         
         .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }

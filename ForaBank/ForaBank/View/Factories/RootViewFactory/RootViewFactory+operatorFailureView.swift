@@ -12,7 +12,7 @@ extension ViewComponents {
     
     // TODO: - consider grouping, incl. a separate factory(?)
     func operatorFailureView(
-        operatorFailure: SberOperatorFailureFlowState<UtilityPaymentOperator>,
+        operatorFailure: SberOperatorFailureFlowState<UtilityPaymentProvider>,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
@@ -44,7 +44,7 @@ extension ViewComponents {
     
     @ViewBuilder
     func operatorFailureDestinationView(
-        destination: SberOperatorFailureFlowState<UtilityPaymentOperator>.Destination
+        destination: SberOperatorFailureFlowState<UtilityPaymentProvider>.Destination
     ) -> some View {
         
         switch destination {
