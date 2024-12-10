@@ -101,7 +101,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         sendUpdatePermission(alertManager, shouldUpdate: false)
         
-        XCTAssertNoDiff(spy.values, [false])
+        XCTAssertNoDiff(spy.values, [true, false])
     }
     
     func test_alertManager_shouldReturnTrueOnUpdatePermissionTrue() {
@@ -114,7 +114,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         
         sendUpdatePermission(alertManager, shouldUpdate: true)
         
-        XCTAssertNoDiff(spy.values, [true])
+        XCTAssertNoDiff(spy.values, [true, true])
     }
     
     func test_clientInform_shouldShowClientInformAlertWithMessage() {
