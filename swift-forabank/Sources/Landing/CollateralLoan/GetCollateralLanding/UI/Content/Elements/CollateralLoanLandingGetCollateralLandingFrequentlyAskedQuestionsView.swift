@@ -26,6 +26,9 @@ struct CollateralLoanLandingGetCollateralLandingFrequentlyAskedQuestionsView: Vi
             config: config.frequentlyAskedQuestions,
             list: product.dropDownTextList
         )
+        .padding(.top, config.paddings.outerTop)
+        .padding(.leading, config.paddings.outerLeading)
+        .padding(.trailing, config.paddings.outerTrailing)
     }
 }
 

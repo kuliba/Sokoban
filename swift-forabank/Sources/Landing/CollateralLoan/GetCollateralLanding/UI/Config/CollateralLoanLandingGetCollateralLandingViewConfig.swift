@@ -63,15 +63,18 @@ public struct CollateralLoanLandingGetCollateralLandingViewConfig {
         let outerLeading: CGFloat
         let outerTrailing: CGFloat
         let outerBottom: CGFloat
+        let outerTop: CGFloat
         
         public init(
             outerLeading: CGFloat,
             outerTrailing: CGFloat,
-            outerBottom: CGFloat
+            outerBottom: CGFloat,
+            outerTop: CGFloat
         ) {
             self.outerLeading = outerLeading
             self.outerTrailing = outerTrailing
             self.outerBottom = outerBottom
+            self.outerTop = outerTop
         }
     }
         
@@ -101,7 +104,8 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
         paddings: .init(
             outerLeading: 16,
             outerTrailing: 15,
-            outerBottom: 20
+            outerBottom: 20,
+            outerTop: 16
         ),
         spacing: 16,
         cornerRadius: 12,
