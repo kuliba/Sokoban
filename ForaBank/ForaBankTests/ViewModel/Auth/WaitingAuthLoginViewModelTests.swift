@@ -91,30 +91,28 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     // MARK: - Events: clientInform
     
-    func test_clientInform_shouldUpdateCliemtInformAlertsIfPermissionIsAllowed() {
+    func test_UpdatePermission_shouldUpdatePublishedValueAndReturnFalse() {
         
-        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert(
-            informAlerts: [makeInformAlertItem()],
-            updateAlert: makeUpdateAlertItem()
-        )
-        var bindings = Set<AnyCancellable>()
+        let alertManager = NotAuthorizedAlertManager()
+        let updatePermission = alertManager.updatePermissionPublisher
+
+        XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
         
-        XCTAssertNoDiff(spy.values, [])
+        sendUpdatePermission(alertManager, shouldUpdate: false)
         
-        alertManager.setUpdatePermission(true)
+        XCTAssertNoDiff(ValueSpy(updatePermission).values, [false])
+    }
+    
+    func test_UpdatePermission_shouldUpdatePublishedValueAndReturnTrue() {
         
-        alertManager.updatePermissionPublisher
-            .sink { [weak self] shouldUpdate in
-                
-                if shouldUpdate {
-                    self?.send(alertManager, alerts: alert)
-                }
-            }
-            .store(in: &bindings)
+        let alertManager = NotAuthorizedAlertManager()
+        let updatePermission = alertManager.updatePermissionPublisher
+
+        XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
         
-        XCTAssertNoDiff(spy.values, [alert])
+        sendUpdatePermission(alertManager, shouldUpdate: true)
+        
+        XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
     }
     
     func test_clientInform_shouldNotUpdateCliemtInformAlertsIfPermissionIsNotAllowed() {
@@ -802,6 +800,15 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
+    private func sendUpdatePermission(
+        _ alertManager: NotAuthorizedAlertManager,
+        shouldUpdate: Bool,
+        timeout: TimeInterval = 0.05
+    ) {
+        alertManager.setUpdatePermission(shouldUpdate)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+
     private func makeInformAlertItem(
         informTitle: String = anyMessage(),
         informText: String = anyMessage()
