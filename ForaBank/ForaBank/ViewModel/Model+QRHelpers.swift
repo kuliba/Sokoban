@@ -82,7 +82,7 @@ extension Model {
         
         // TODO: replace with loader with fallback to remote
         // TODO: expensive! make async with QOS
-        localAgent.load(type: [CachingSberOperator].self)?
+        localAgent.load(type: [CodableServicePaymentOperator].self)?
             .filter { $0.inn == inn }
             .map(SegmentedPaymentProvider.init)
     }
@@ -105,7 +105,7 @@ private extension SegmentedPaymentProvider {
         )
     }
     
-    init(with `operator`: CachingSberOperator) {
+    init(with `operator`: CodableServicePaymentOperator) {
         
         // TODO: add `segment` property to `CachingSberOperator`
         let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service

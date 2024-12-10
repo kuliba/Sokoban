@@ -40,26 +40,6 @@ extension RootViewModelFactory {
     }
 }
 
-// MARK: - Helpers
-
-extension CodableServicePaymentOperator: FilterableItem {
-    
-    func matches(
-        _ payload: LoadOperatorsPayload
-    ) -> Bool {
-        
-        type == payload.categoryType.name && contains(payload.searchText)
-    }
-    
-    func contains(_ searchText: String) -> Bool {
-        
-        guard !searchText.isEmpty else { return true }
-        
-        return name.localizedCaseInsensitiveContains(searchText)
-        || inn.localizedCaseInsensitiveContains(searchText)
-    }
-}
-
 // MARK: - Adapters
 
 private extension UtilityPaymentProvider {

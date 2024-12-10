@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             // sorting is performed at cache phase
-            let page = loadPage(of: [CachingSberOperator].self, for: payload) ?? []
+            let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
             completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
     }
@@ -55,13 +55,11 @@ struct LoadOperatorsPayload: Equatable {
 
 // MARK: - Helpers
 
-extension CachingSberOperator: Identifiable {}
-
-extension CachingSberOperator: FilterableItem {
+extension CodableServicePaymentOperator: FilterableItem {
     
     func matches(_ payload: LoadOperatorsPayload) -> Bool {
         
-        contains(payload.searchText)
+        categoryType == payload.categoryType && contains(payload.searchText)
     }
     
     func contains(_ searchText: String) -> Bool {
@@ -82,11 +80,11 @@ extension LoadOperatorsPayload: PageQuery {
 
 private extension UtilityPaymentProvider {
     
-    init(codable: CachingSberOperator) {
+    init(codable: CodableServicePaymentOperator) {
         
         self.init(
             id: codable.id,
-            icon: codable.md5Hash, 
+            icon: codable.md5Hash,
             inn: codable.inn,
             title: codable.name,
             type: codable.type
@@ -95,6 +93,14 @@ private extension UtilityPaymentProvider {
 }
 
 extension UtilityPaymentProvider {
+    
+    var categoryType: ServiceCategory.CategoryType {
+        
+        return .init(string: type) ?? .housingAndCommunalService
+    }
+}
+
+extension CodableServicePaymentOperator {
     
     var categoryType: ServiceCategory.CategoryType {
         
