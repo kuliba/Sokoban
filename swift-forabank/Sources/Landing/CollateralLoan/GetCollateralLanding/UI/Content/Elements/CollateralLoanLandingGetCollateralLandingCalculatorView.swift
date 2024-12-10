@@ -224,12 +224,23 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.top, 2)
             
-            // TODO: Need to customize
-            Slider(value: $sliderCurrentValue, in: (0...20))
-                .padding(.leading, config.root.layouts.contentLeadingPadding)
-                .padding(.trailing, config.root.layouts.contentTrailingPadding)
-                .padding(.bottom, config.desiredAmount.sliderBottomPadding)
+            sliderView(config: config)
         }
+    }
+    
+    private func sliderView(config: Config.Calculator) -> some View {
+        
+        SliderView(
+            value: $sliderCurrentValue,
+            maximumValue: config.salary.sliderMaximumValue,
+            minTrackColor: UIColor(config.salary.minTrackColor),
+            maxTrackColor: UIColor(config.salary.maxTrackColor),
+            thumbDiameter: config.salary.thumbDiameter,
+            trackHeight: config.salary.trackHeight
+        )
+        .padding(.leading, config.root.layouts.contentLeadingPadding)
+        .padding(.trailing, config.root.layouts.contentTrailingPadding)
+        .padding(.bottom, config.desiredAmount.sliderBottomPadding)
     }
     
     private func chevron(config: Config.Calculator) -> some View {
