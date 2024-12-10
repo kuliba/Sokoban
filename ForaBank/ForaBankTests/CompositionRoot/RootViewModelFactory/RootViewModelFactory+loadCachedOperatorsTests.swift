@@ -82,7 +82,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
     // MARK: - Helpers
     
     private typealias LocalAgent = LocalAgentSpy<[CodableServicePaymentOperator]>
-    private typealias Payload = UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload
+    private typealias Payload = LoadOperatorsPayload
     private typealias CategoryType = ServiceCategory.CategoryType
     
     private func makeSUT(
@@ -112,7 +112,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         pageSize: Int = 3
     ) -> Payload {
         
-        return .init(afterOperatorID: id, for: type, searchText: searchText, pageSize: pageSize)
+        return .init(categoryType: type, operatorID: id, searchText: searchText, pageSize: pageSize)
     }
     
     private func codable(
