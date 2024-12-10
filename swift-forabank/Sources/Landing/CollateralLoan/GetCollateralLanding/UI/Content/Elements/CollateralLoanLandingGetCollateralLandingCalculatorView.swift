@@ -232,11 +232,11 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
         
         SliderView(
             value: $sliderCurrentValue,
-            maximumValue: config.salary.sliderMaximumValue,
-            minTrackColor: UIColor(config.salary.minTrackColor),
-            maxTrackColor: UIColor(config.salary.maxTrackColor),
-            thumbDiameter: config.salary.thumbDiameter,
-            trackHeight: config.salary.trackHeight
+            maximumValue: config.salary.slider.maximumValue,
+            minTrackColor: UIColor(config.salary.slider.minTrackColor),
+            maxTrackColor: UIColor(config.salary.slider.maxTrackColor),
+            thumbDiameter: config.salary.slider.thumbDiameter,
+            trackHeight: config.salary.slider.trackHeight
         )
         .padding(.leading, config.root.layouts.contentLeadingPadding)
         .padding(.trailing, config.root.layouts.contentTrailingPadding)

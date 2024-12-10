@@ -146,11 +146,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             public let bottomPadding: CGFloat
             public let toggleTrailingPadding: CGFloat
             public let toggle: ToggleConfig
-            public let minTrackColor: Color
-            public let maxTrackColor: Color
-            public let thumbDiameter: CGFloat
-            public let trackHeight: CGFloat
-            public let sliderMaximumValue: Float
+            public let slider: Slider
             
             public init(
                 text: String,
@@ -160,11 +156,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                 bottomPadding: CGFloat,
                 toggleTrailingPadding: CGFloat,
                 toggle: ToggleConfig,
-                minTrackColor: Color,
-                maxTrackColor: Color,
-                thumbDiameter: CGFloat,
-                trackHeight: CGFloat,
-                sliderMaximumValue: Float
+                slider: Slider
             ) {
                 self.text = text
                 self.font = font
@@ -173,11 +165,30 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                 self.bottomPadding = bottomPadding
                 self.toggleTrailingPadding = toggleTrailingPadding
                 self.toggle = toggle
+                self.slider = slider
+            }
+        }
+        
+        public struct Slider {
+            
+            public let minTrackColor: Color
+            public let maxTrackColor: Color
+            public let thumbDiameter: CGFloat
+            public let trackHeight: CGFloat
+            public let maximumValue: Float
+            
+            public init(
+                minTrackColor: Color,
+                maxTrackColor: Color,
+                thumbDiameter: CGFloat,
+                trackHeight: CGFloat,
+                maximumValue: Float
+            ) {
                 self.minTrackColor = minTrackColor
                 self.maxTrackColor = maxTrackColor
                 self.thumbDiameter = thumbDiameter
                 self.trackHeight = trackHeight
-                self.sliderMaximumValue = sliderMaximumValue
+                self.maximumValue = maximumValue
             }
         }
         
@@ -312,11 +323,13 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig.Calculator {
                     off: .textPlaceholder
                 )
             ),
-            minTrackColor: .red,
-            maxTrackColor: .textPlaceholder,
-            thumbDiameter: 20,
-            trackHeight: 2,
-            sliderMaximumValue: 20.0
+            slider: .init(
+                minTrackColor: .red,
+                maxTrackColor: .textPlaceholder,
+                thumbDiameter: 20,
+                trackHeight: 2,
+                maximumValue: 20.0
+            )
         ),
         period: .init(titleText: "Срок кредита"),
         percent: .init(titleText: "Процентная ставка"),

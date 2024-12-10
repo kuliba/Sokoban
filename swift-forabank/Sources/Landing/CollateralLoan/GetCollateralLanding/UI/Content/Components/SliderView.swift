@@ -78,6 +78,7 @@ final class CalculatorSlider: UISlider {
     }
     
     override func trackRect(forBounds bounds: CGRect) -> CGRect {
+        
         var result = super.trackRect(forBounds: bounds)
         result.origin.x = 0
         result.size.width = bounds.size.width
@@ -92,7 +93,11 @@ extension UIImage {
         
         let lineWidth: CGFloat = 2
         
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: diameter + lineWidth, height: diameter + lineWidth), false, 0)
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: diameter + lineWidth, height: diameter + lineWidth),
+            false,
+            0
+        )
         let ctx = UIGraphicsGetCurrentContext()!
         ctx.saveGState()
         
