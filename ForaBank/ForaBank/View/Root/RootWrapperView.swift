@@ -51,6 +51,9 @@ private extension RootWrapperView {
     ) -> some View {
         
         switch destination {
+        case let .makeStandardPaymentFailure(binder):
+            viewFactory.components.serviceCategoryFailureView(binder: binder)
+            
         case let .standardPayment(picker):
             standardPaymentView(picker)
             
@@ -141,8 +144,19 @@ extension RootViewNavigation {
         
         switch self {
             // TODO: make alert
-        case .failure:
-            return nil
+        case let .failure(failure):
+            switch failure {
+            case let .makeStandardPaymentFailure(binder):
+                return .makeStandardPaymentFailure(binder)
+
+            case .makeUserAccountFailure:
+                #warning("ADD ALERT")
+                return nil
+                
+            case .missingCategoryOfType://(<#T##ServiceCategory.CategoryType#>):
+                #warning("ADD ALERT(?)")
+                return nil
+            }
             
         case .outside:
             return nil
@@ -163,6 +177,7 @@ extension RootViewNavigation {
     
     enum Destination {
         
+        case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case templates(TemplatesNode)
         case userAccount(UserAccountViewModel)
@@ -182,13 +197,8 @@ extension RootViewNavigation {
         case let .scanQR(node):
             return .scanQR(node.model)
             
-        case .standardPayment:
-            return nil
-            
-        case .templates:
-            return nil
-            
-        case .userAccount:
+            // cases listed for explicit exhaustivity
+        case .standardPayment, .templates, .userAccount:
             return nil
         }
     }
@@ -204,6 +214,9 @@ extension RootViewNavigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case .makeStandardPaymentFailure:
+            return .makeStandardPaymentFailure
+            
         case let .standardPayment(picker):
             return .standardPayment(.init(picker))
             
@@ -217,6 +230,7 @@ extension RootViewNavigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case makeStandardPaymentFailure
         case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
         case userAccount(ObjectIdentifier)

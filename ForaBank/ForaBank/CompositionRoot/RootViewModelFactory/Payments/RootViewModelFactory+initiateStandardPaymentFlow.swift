@@ -15,13 +15,20 @@ extension RootViewModelFactory {
         loadCategory(type: type) {
             
             guard let category = $0
-            else { return completion(.failure(.missingCategoryOfType(type))) }
+            else {
+
+                self.logger.log(level: .error, category: .cache, message: "Missing category \(type).", file: #file, line: #line)
+                return completion(.failure(.missingCategoryOfType(type)))
+            }
             
             self.makePaymentProviderPicker(for: category) {
                 
                 switch $0 {
                 case .failure:
-                    completion(.failure(.makeStandardPaymentFailure))
+                    let binder = self.makeServiceCategoryFailure(
+                        category: category
+                    )
+                    completion(.failure(.makeStandardPaymentFailure(binder)))
                     
                 case let .success(binder):
                     completion(.success(binder))
@@ -34,7 +41,7 @@ extension RootViewModelFactory {
     
     enum StandardPaymentFailure: Error {
         
-        case makeStandardPaymentFailure
+        case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case missingCategoryOfType(ServiceCategory.CategoryType)
     }
 }

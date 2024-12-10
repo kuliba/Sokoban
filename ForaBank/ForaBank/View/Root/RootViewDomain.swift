@@ -45,9 +45,9 @@ enum RootViewNavigation {
     case templates(TemplatesNode)
     case userAccount(UserAccountViewModel)
     
-    enum Failure: Equatable {
+    enum Failure {
         
-        case makeStandardPaymentFailure
+        case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case makeUserAccountFailure
         case missingCategoryOfType(ServiceCategory.CategoryType)
     }
