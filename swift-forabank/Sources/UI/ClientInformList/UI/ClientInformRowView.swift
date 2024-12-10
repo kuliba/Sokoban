@@ -11,15 +11,18 @@ struct ClientInformRowView: View {
     
     let logo: Image?
     let text: String
+    let url: URL?
     let config: ClientInformListConfig
     
     init(
         logo: Image? = nil,
         text: String,
+        url: URL?,
         config: ClientInformListConfig
     ) {
         self.logo = logo
         self.text = text
+        self.url = url
         self.config = config
     }
     
@@ -34,9 +37,13 @@ struct ClientInformRowView: View {
                     .frame(width: config.sizes.rowIconSize, height: config.sizes.rowIconSize)
             }
             
-            Text(text)
+            let linkableText = url != nil ?
+            "\(text) \(url!)" : text
+            
+            Text(.init(linkableText))
                 .font(config.textConfig.textFont)
-                .foregroundColor(config.textConfig.textColor)
+                .foregroundColor(config.titleConfig.textColor)
+                .padding(.horizontal, config.paddings.horizontal)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

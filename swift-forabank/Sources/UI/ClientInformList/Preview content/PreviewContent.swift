@@ -34,17 +34,20 @@ extension ClientInformListDataState {
 //    static let preview: Self = ClientInformListDataState.single(.init(label: .init(image: .clock, title: "Urgent Info"), text: "please drop your phone! Alarm!"))
 
     static let preview: Self = ClientInformListDataState.multiple(.init(
-        title: Label(image: .infoCircle, title: "Информация"),
+        title: Label(image: .infoCircle, title: "Информация", url: nil),
         items: [
-            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
-            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
-            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
-            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
-            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
-            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
-            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
-            Label(image: .infoCircle, title: "Информация на главном портале обновилась"),
-            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00")
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil)
         ]
     ))
 }

@@ -31,10 +31,10 @@ extension ClientInformListDataState {
             self = .single(.init(
                 label: .init(
                     image: item.image,
-                    title: item.title
+                    title: item.title,
+                    url: item.url
                 ),
-                text: item.text,
-                url: item.url
+                text: item.text
             ))
             
         default:
@@ -42,7 +42,7 @@ extension ClientInformListDataState {
                 title: infoLabel,
                 items: array.map {
                     
-                    return .init(image: $0.image, title: $0.text)
+                    return .init(image: $0.image, title: $0.text, url: $0.url)
                 }
             ))
         }
