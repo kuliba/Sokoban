@@ -817,7 +817,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                         icon: icon,
                         inn: inn,
                         title: title,
-                        segment: segment
+                        type: segment
                     ),
                     segment: segment
                 ),

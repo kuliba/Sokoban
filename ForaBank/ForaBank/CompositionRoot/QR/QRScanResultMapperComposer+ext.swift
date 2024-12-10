@@ -99,7 +99,7 @@ private extension SegmentedProvider {
                 icon: cached.md5Hash,
                 inn: cached.inn,
                 title: cached.name,
-                segment: segment.apearance.title
+                type: segment.apearance.title
             ),
             segment: segment.apearance.title
         )
