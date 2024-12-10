@@ -729,7 +729,7 @@ private extension ClientInformListDataState {
             
             return .single(.init(
                 
-                label: .init(image: single.label.image, title: single.label.title, url: single.url),
+                label: .init(image: single.label.image, title: single.label.title, url: single.label.url),
                 text: single.text
             ))
             
