@@ -83,15 +83,34 @@ public struct ClientInformListView: View {
     
     private func contentStack() -> some View {
         
-        VStack(alignment: .center, spacing: config.sizes.spacing) {
-                        
-            switch info {
-            case .single(let singleInfo):
-                singleInfoView(singleInfo)
+        Group {
+
+            if contentHeight < maxHeight {
                 
-            case .multiple(let multipleInfo):
-                multipleInfoView(multipleInfo)
+                LazyVStack(alignment: .center, spacing: config.sizes.spacing) {
+                    
+                    stackContent()
+                }
+            } else {
+                
+                VStack(alignment: .center, spacing: config.sizes.spacing) {
+                    
+                    stackContent()
+                }
             }
+        }
+        .padding(.bottom, contentHeight < maxHeight ? config.paddings.bottom : .zero)
+    }
+
+    @ViewBuilder
+    private func stackContent() -> some View {
+        
+        switch info {
+        case .single(let singleInfo):
+            singleInfoView(singleInfo)
+            
+        case .multiple(let multipleInfo):
+            multipleInfoView(multipleInfo)
         }
     }
 
@@ -102,15 +121,14 @@ public struct ClientInformListView: View {
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
             
-            let linkableText = singleInfo.url != nil ? 
-            "\(singleInfo.text) \(singleInfo.url!)" : singleInfo.text
+            let linkableText = singleInfo.label.url != nil ? 
+            "\(singleInfo.text) \(singleInfo.label.url!)" : singleInfo.text
             
-            Text(linkableText)
+            Text(.init(linkableText))
                 .font(config.textConfig.textFont)
                 .foregroundColor(config.titleConfig.textColor)
                 .padding(.horizontal, config.paddings.horizontal)
         }
-        .padding(.bottom, config.paddings.bottom)
         .frame(maxWidth: .infinity)
     }
 
@@ -131,6 +149,7 @@ public struct ClientInformListView: View {
                     ClientInformRowView(
                         logo: item.image,
                         text: item.title,
+                        url: item.url,
                         config: config
                     )
                 }
