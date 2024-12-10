@@ -91,6 +91,32 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     // MARK: - Events: clientInform
     
+    func test_alertManager_shouldReturnFalseOnUpdatePermissionFalse() {
+        
+        let alertManager = NotAuthorizedAlertManager()
+        let updatePermission = alertManager.updatePermissionPublisher
+        let spy = ValueSpy(updatePermission)
+
+        XCTAssertNoDiff(spy.values, [true])
+        
+        sendUpdatePermission(alertManager, shouldUpdate: false)
+        
+        XCTAssertNoDiff(spy.values, [true, false])
+    }
+    
+    func test_alertManager_shouldReturnTrueOnUpdatePermissionTrue() {
+        
+        let alertManager = NotAuthorizedAlertManager()
+        let updatePermission = alertManager.updatePermissionPublisher
+        let spy = ValueSpy(updatePermission)
+
+        XCTAssertNoDiff(spy.values, [true])
+        
+        sendUpdatePermission(alertManager, shouldUpdate: true)
+        
+        XCTAssertNoDiff(spy.values, [true, true])
+    }
+    
     func test_clientInform_shouldShowClientInformAlertWithMessage() {
         
         let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
@@ -750,6 +776,15 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
+    private func sendUpdatePermission(
+        _ alertManager: NotAuthorizedAlertManager,
+        shouldUpdate: Bool,
+        timeout: TimeInterval = 0.05
+    ) {
+        alertManager.setUpdatePermission(shouldUpdate)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+
     private func makeInformAlertItem(
         informTitle: String = anyMessage(),
         informText: String = anyMessage()
