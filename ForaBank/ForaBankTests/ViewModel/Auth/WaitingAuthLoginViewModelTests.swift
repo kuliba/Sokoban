@@ -91,28 +91,30 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     // MARK: - Events: clientInform
     
-    func test_UpdatePermission_shouldUpdatePublishedValueAndReturnFalse() {
+    func test_clientInform_shouldReturnFalseOnUpdatePermissionFalse() {
         
         let alertManager = NotAuthorizedAlertManager()
         let updatePermission = alertManager.updatePermissionPublisher
+        let spy = ValueSpy(updatePermission)
 
-        XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
+        XCTAssertNoDiff(spy.values, [true])
         
         sendUpdatePermission(alertManager, shouldUpdate: false)
         
-        XCTAssertNoDiff(ValueSpy(updatePermission).values, [false])
+        XCTAssertNoDiff(spy.values, [false])
     }
     
-    func test_UpdatePermission_shouldUpdatePublishedValueAndReturnTrue() {
+    func test_clientInform_shouldReturnTrueOnUpdatePermissionTrue() {
         
         let alertManager = NotAuthorizedAlertManager()
         let updatePermission = alertManager.updatePermissionPublisher
+        let spy = ValueSpy(updatePermission)
 
-        XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
+        XCTAssertNoDiff(spy.values, [true])
         
         sendUpdatePermission(alertManager, shouldUpdate: true)
         
-        XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
+        XCTAssertNoDiff(spy.values, [true])
     }
     
     func test_clientInform_shouldShowClientInformAlertWithMessage() {
