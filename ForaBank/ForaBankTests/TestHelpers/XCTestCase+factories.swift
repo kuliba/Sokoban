@@ -48,10 +48,10 @@ extension XCTestCase {
         id: String = anyMessage(),
         inn: String = anyMessage(),
         icon: String? = anyMessage(),
-        name: String = anyMessage(),
+        title: String = anyMessage(),
         type: String = anyMessage()
-    ) -> PaymentServiceOperator {
+    ) -> UtilityPaymentProvider {
         
-        return .init(id: id, inn: inn, icon: icon, name: name, type: type)
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
 }

@@ -10,7 +10,7 @@ import XCTest
 
 class CodableServicePaymentOperatorTests: XCTestCase {
     
-    typealias Payload = UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
+    typealias Payload = UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload
     typealias CategoryType = ServiceCategory.CategoryType
     
     func makePayload(
@@ -37,8 +37,8 @@ class CodableServicePaymentOperatorTests: XCTestCase {
     
     func makeOperator(
         _ codable: CodableServicePaymentOperator
-    ) -> PaymentServiceOperator {
+    ) -> UtilityPaymentProvider {
         
-        return .init(id: codable.id, inn: codable.inn, icon: codable.md5Hash, name: codable.name, type: codable.type)
+        return .init(id: codable.id, icon: codable.md5Hash, inn: codable.inn, title: codable.name, type: codable.type)
     }
 }

@@ -82,7 +82,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
     // MARK: - Helpers
     
     private typealias LocalAgent = LocalAgentSpy<[CodableServicePaymentOperator]>
-    private typealias Payload = UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
+    private typealias Payload = UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload
     private typealias CategoryType = ServiceCategory.CategoryType
     
     private func makeSUT(
@@ -116,7 +116,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
     }
     
     private func codable(
-        _ `operator`: PaymentServiceOperator,
+        _ `operator`: UtilityPaymentProvider,
         sortedOrder: Int = .random(in: 1...100)
     ) -> CodableServicePaymentOperator {
         
@@ -126,7 +126,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
     private func makeOperatorWithModel(
         type: ServiceCategory.CategoryType = .repaymentLoansAndAccounts,
         sortedOrder: Int = .random(in: 1...100)
-    ) -> (PaymentServiceOperator, CodableServicePaymentOperator) {
+    ) -> (UtilityPaymentProvider, CodableServicePaymentOperator) {
         
         let `operator` = makePaymentServiceOperator(type: type.name)
         
@@ -137,7 +137,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         sut: SUT? = nil,
         withLoadStub loadStub: [CodableServicePaymentOperator]?,
         payload: Payload,
-        toDeliver expectedValue: [PaymentServiceOperator],
+        toDeliver expectedValue: [UtilityPaymentProvider],
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
         line: UInt = #line
@@ -154,4 +154,9 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         
         wait(for: [exp], timeout: timeout)
     }
+}
+
+extension UtilityPaymentProvider {
+    
+    var name: String { title }
 }

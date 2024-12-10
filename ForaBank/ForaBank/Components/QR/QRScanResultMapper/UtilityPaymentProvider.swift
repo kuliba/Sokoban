@@ -13,3 +13,8 @@ struct UtilityPaymentProvider: Equatable, Identifiable {
     let title: String
     let type: String
 }
+
+extension UtilityPaymentProvider {
+    
+    var subtitle: String { inn }
+}

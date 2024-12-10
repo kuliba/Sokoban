@@ -38,7 +38,7 @@ extension PaymentProviderPickerDomain {
     
     typealias DetailPayment = ClosePaymentsViewModelWrapper
     typealias Payment = ProcessSelectionResult
-    typealias Provider = PaymentServiceOperator
+    typealias Provider = UtilityPaymentProvider
     typealias Service = Void
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void

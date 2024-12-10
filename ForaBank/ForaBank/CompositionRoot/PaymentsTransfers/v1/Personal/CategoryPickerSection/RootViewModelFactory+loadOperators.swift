@@ -11,8 +11,8 @@ extension RootViewModelFactory {
     
     @inlinable
     func loadCachedOperators(
-        payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
-        completion: @escaping ([PaymentServiceOperator]) -> Void
+        payload: UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload,
+        completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
         schedulers.userInitiated.schedule { [weak self] in
             
@@ -20,14 +20,14 @@ extension RootViewModelFactory {
             
             // sorting is performed at cache phase
             let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
-            completion(page.map(PaymentServiceOperator.init(codable:)))
+            completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
     }
     
     @inlinable
     func loadOperatorsForCategory(
         category: ServiceCategory,
-        completion: @escaping (Result<[PaymentServiceOperator], Error>) -> Void
+        completion: @escaping (Result<[UtilityPaymentProvider], Error>) -> Void
     ) {
         loadCachedOperators(
             payload: .init(
@@ -47,7 +47,7 @@ extension RootViewModelFactory {
 extension CodableServicePaymentOperator: FilterableItem {
     
     func matches(
-        _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
+        _ payload: UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload
     ) -> Bool {
         
         type == payload.categoryType.name && contains(payload.searchText)
@@ -62,22 +62,22 @@ extension CodableServicePaymentOperator: FilterableItem {
     }
 }
 
-extension UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload: PageQuery {
+extension UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload: PageQuery {
     
     var id: String? { operatorID }
 }
 
 // MARK: - Adapters
 
-private extension PaymentServiceOperator {
+private extension UtilityPaymentProvider {
     
     init(codable: CodableServicePaymentOperator) {
         
         self.init(
             id: codable.id,
-            inn: codable.inn,
             icon: codable.md5Hash,
-            name: codable.name,
+            inn: codable.inn,
+            title: codable.name,
             type: codable.type
         )
     }

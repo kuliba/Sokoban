@@ -46,7 +46,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping ([ServicePickerItem]) -> Void
     ) {
-        nanoServices.getServicesFor(payload.provider.operator) {
+        nanoServices.getServicesFor(payload.provider.origin) {
             
             let services = (try? $0.get()) ?? []
             completion(services.map {
@@ -63,7 +63,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         _ completion: @escaping (PaymentProviderServicePickerResult) -> Void
     ) {
         self.nanoServices.startAnywayPayment(
-            .service(item.service, for: payload.provider.operator)
+            .service(item.service, for: payload.provider.origin)
         ) {
             switch StartPaymentResult(result: $0) {
             case let .failure(failure):
@@ -121,19 +121,5 @@ private extension StartPaymentResult {
         case let .startPayment(startPaymentResponse):
             self = .success(startPaymentResponse)
         }
-    }
-}
-
-private extension SegmentedProvider {
-    
-    var `operator`: UtilityPaymentProvider {
-        
-        return .init(
-            id: origin.id, 
-            icon: origin.icon, 
-            inn: origin.inn,
-            title: origin.title,
-            type: origin.type
-        )
     }
 }
