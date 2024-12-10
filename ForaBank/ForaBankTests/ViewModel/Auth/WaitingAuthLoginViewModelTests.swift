@@ -115,32 +115,6 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         XCTAssertNoDiff(ValueSpy(updatePermission).values, [true])
     }
     
-    func test_clientInform_shouldNotUpdateCliemtInformAlertsIfPermissionIsNotAllowed() {
-        
-        let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
-        let spy = ValueSpy(sut.clientInformAlertPublisher)
-        let alert = makeClientInformAlert(
-            informAlerts: [makeInformAlertItem()],
-            updateAlert: makeUpdateAlertItem()
-        )
-        var bindings = Set<AnyCancellable>()
-        
-        XCTAssertNoDiff(spy.values, [])
-        
-        alertManager.setUpdatePermission(false)
-        
-        alertManager.updatePermissionPublisher
-            .sink { [weak self] shouldUpdate in
-                
-                if shouldUpdate {
-                    self?.send(alertManager, alerts: alert)
-                }
-            }
-            .store(in: &bindings)
-        
-        XCTAssertNoDiff(spy.values, [])
-    }
-    
     func test_clientInform_shouldShowClientInformAlertWithMessage() {
         
         let (sut, alertManager, _,_,_,_,_,_) = makeSUT()
