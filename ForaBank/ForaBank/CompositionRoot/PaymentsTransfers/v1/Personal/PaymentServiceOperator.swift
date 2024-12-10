@@ -20,7 +20,7 @@ extension PaymentServiceOperator {
     
     var utilityPaymentOperator: UtilityPaymentOperator {
         
-        return .init(id: id, inn: inn, title: name, icon: md5Hash, type: type)
+        return .init(id: id, icon: md5Hash, inn: inn, title: name, type: type)
     }
 }
 

@@ -295,9 +295,9 @@ private extension UtilityPaymentOperator {
         
         self.init(
             id: provider.id,
+            icon: provider.md5Hash,
             inn: provider.inn,
             title: provider.name,
-            icon: provider.md5Hash,
             type: provider.type
         )
     }

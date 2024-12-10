@@ -791,7 +791,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         return .oneOf(
             .init(name: name, puref: puref),
-            .init(id: id, inn: inn, title: title, icon: icon, type: type)
+            .init(id: id, icon: icon, inn: inn, title: title, type: type)
         )
     }
     
@@ -886,7 +886,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         return .single(
             .init(name: name, puref: puref),
-            .init(id: id, inn: inn, title: title, icon: icon, type: type)
+            .init(id: id, icon: icon, inn: inn, title: title, type: type)
         )
     }
     

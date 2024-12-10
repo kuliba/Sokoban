@@ -82,9 +82,9 @@ private extension UtilityPaymentOperator {
         
         self.init(
             id: codable.id,
+            icon: codable.md5Hash, 
             inn: codable.inn,
             title: codable.name,
-            icon: codable.md5Hash,
             type: codable.type
         )
     }
