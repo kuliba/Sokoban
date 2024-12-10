@@ -146,7 +146,7 @@ private extension UtilityPaymentNanoServicesComposer {
         
         let mapped = MapPayloadDecorator(
             decoratee: fetch,
-            mapPayload: { (`operator`: Operator) in return `operator`.id }
+            mapPayload: { (`operator`: Operator) in return `operator` }
         )
         
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }

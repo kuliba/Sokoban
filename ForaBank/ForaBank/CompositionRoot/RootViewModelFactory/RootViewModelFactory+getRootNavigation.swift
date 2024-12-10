@@ -157,8 +157,8 @@ private extension RootViewNavigation.Failure {
     init(_ failure: RootViewModelFactory.StandardPaymentFailure) {
         
         switch failure {
-        case .makeStandardPaymentFailure:
-            self = .makeStandardPaymentFailure
+        case let .makeStandardPaymentFailure(binder):
+            self = .makeStandardPaymentFailure(binder)
             
         case let .missingCategoryOfType(categoryType):
             self = .missingCategoryOfType(categoryType)

@@ -197,7 +197,16 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         switch navigation {
         case let .failure(failure):
-            return .failure(failure)
+            switch failure {
+            case let .makeStandardPaymentFailure(binder):
+                return .failure(.makeStandardPaymentFailure(.init(binder)))
+                
+            case .makeUserAccountFailure:
+                return .failure(.makeUserAccountFailure)
+                
+            case let .missingCategoryOfType(type):
+                return .failure(.missingCategoryOfType(type))
+            }
             
         case let .outside(outside):
             return .outside(outside)
@@ -218,12 +227,19 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     
     private enum EquatableNavigation: Equatable {
         
-        case failure(RootViewNavigation.Failure)
+        case failure(Failure)
         case outside(RootViewOutside)
         case scanQR
         case standardPayment
         case templates
         case userAccount
+        
+        enum Failure: Equatable {
+            
+            case makeStandardPaymentFailure(ObjectIdentifier)
+            case makeUserAccountFailure
+            case missingCategoryOfType(ServiceCategory.CategoryType)
+        }
     }
     
     private func expect(

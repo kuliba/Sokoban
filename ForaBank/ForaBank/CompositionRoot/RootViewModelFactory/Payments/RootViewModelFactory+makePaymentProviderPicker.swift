@@ -51,7 +51,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            loadLatest: { getLatestPayments([category.name], $0) },
+            loadLatest: { getLatestPayments([category.type.name], $0) },
             loadOperators: {
                 
                 self.loadOperatorsForCategory(category: category, completion: $0)
