@@ -1402,7 +1402,9 @@ private extension Target {
         name: .orderCardLandingBackendTests,
         dependencies: [
             .orderCardLandingBackend,
-            .customDump
+            .customDump,
+            .uiPrimitives,
+            .foraTools
         ],
         path: "Tests/Landing/\(String.orderCardLandingBackendTests)"
     )
