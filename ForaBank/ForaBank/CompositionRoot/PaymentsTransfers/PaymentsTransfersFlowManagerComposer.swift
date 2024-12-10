@@ -195,7 +195,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     private func loadOperators(
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        loadOperators(.init(), completion)
+        loadOperators(.init(pageSize: settings.pageSize), completion)
     }
     
     private func makeLegacyViewModel(
@@ -274,7 +274,8 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) {
         let payload = UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>(
             operatorID: payload.operatorID,
-            searchText: payload.searchText
+            searchText: payload.searchText,
+            pageSize: settings.pageSize
         )
         
         loadOperators(payload, completion)

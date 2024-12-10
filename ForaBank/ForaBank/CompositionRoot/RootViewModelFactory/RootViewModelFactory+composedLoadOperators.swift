@@ -12,7 +12,7 @@ extension RootViewModelFactory {
     func composedLoadOperators(
         completion: @escaping ([UtilityPaymentOperator]) -> Void
     ) {
-        composedLoadOperators(payload: .init(), completion: completion)
+        composedLoadOperators(payload: .init(pageSize: settings.pageSize), completion: completion)
     }
     
     func composedLoadOperators(
@@ -40,13 +40,16 @@ struct UtilityPaymentOperatorLoaderComposerPayload<Operator: Identifiable>: Equa
     
     let operatorID: Operator.ID?
     let searchText: String
+    let pageSize: Int
     
     init(
         operatorID: Operator.ID? = nil,
-        searchText: String = ""
+        searchText: String = "",
+        pageSize: Int
     ) {
         self.operatorID = operatorID
         self.searchText = searchText
+        self.pageSize = pageSize
     }
 }
 
