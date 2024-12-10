@@ -23,57 +23,62 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
     
     func test_decorated_shouldCallDecoratee() {
         
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, _,_, decorated) = makeDecorated()
         
         decorated { _ in }
         
         XCTAssertNoDiff(decoratee.callCount, 1)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldNotCallDecorationOnDecorateeNilResult() {
         
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: { decoratee.complete(with: nil) })
         
         XCTAssertEqual(decoration.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverNilOnDecorateeNilResult() {
         
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, nil) },
             on: { decoratee.complete(with: nil) }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldNotCallDecorationOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: { decoratee.complete(with: []) })
         
         XCTAssertEqual(decoration.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverEmptyOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, []) },
             on: { decoratee.complete(with: []) }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallDecorationWithOneOnDecorateeResultWithOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: {
             
@@ -82,12 +87,13 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         })
         
         XCTAssertNoDiff(decoration.payloads, [[category]])
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverOneOnDecorateeResultOfOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -98,12 +104,13 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
                 decoration.complete(with: [])
             }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallDecorationWithTwoOnDecorateeResultWithTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: {
             
@@ -112,12 +119,13 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         })
         
         XCTAssertNoDiff(decoration.payloads, [[category1, category2]])
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverTwoOnDecorateeResultOfTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, decoration,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration,_, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -128,11 +136,12 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
                 decoration.complete(with: [])
             }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldNotCallLoggerOnEmptyDecorationResult() {
         
-        let (_,_, decoratee, _, logger, decorated) = makeDecorated()
+        let (sut,_, decoratee, _, logger, decorated) = makeDecorated()
         
         call(decorated, on: {
             
@@ -141,13 +150,14 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         })
         
         XCTAssertEqual(logger.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallLoggerWithOneOnDecorationResultOfOne() throws {
         
         let categoryName = anyMessage()
         let category = makeServiceCategory(name: categoryName)
-        let (_,_, decoratee, decoration, logger, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, logger, decorated) = makeDecorated()
         
         call(decorated, on: {
             
@@ -159,6 +169,7 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         XCTAssertNoDiff(logger.events.map(\.category), [.network])
         
         try singleMessage(logger, contains: categoryName)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallLoggerWithTwoOnDecorationResultOfTwo() throws {
@@ -166,7 +177,7 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         let (categoryName1, categoryName2) = (anyMessage(), anyMessage())
         let category1 = makeServiceCategory(name: categoryName1)
         let category2 = makeServiceCategory(name: categoryName2)
-        let (_,_, decoratee, decoration, logger, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, logger, decorated) = makeDecorated()
         
         call(decorated, on: {
             
@@ -179,6 +190,7 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         
         try singleMessage(logger, contains: categoryName1)
         try singleMessage(logger, contains: categoryName2)
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - Helpers
