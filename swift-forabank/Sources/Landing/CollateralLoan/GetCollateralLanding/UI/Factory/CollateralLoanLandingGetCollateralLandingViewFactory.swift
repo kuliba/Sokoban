@@ -18,6 +18,7 @@ extension CollateralLoanLandingGetCollateralLandingViewFactory {
         let conditionsView = makeConditionsView(with: product)
         let calculatorView = makeCalculatorView(with: product)
         let frequentlyAskedQuestionsView = makeFrequentlyAskedQuestionsView(with: product)
+        let documentsView = makeDocumentsView(with: product)
         
         return .init(
             backgroundImage: product.marketing.image,
@@ -25,6 +26,7 @@ extension CollateralLoanLandingGetCollateralLandingViewFactory {
             conditionsView: conditionsView,
             calculatorView: calculatorView,
             frequentlyAskedQuestionsView: frequentlyAskedQuestionsView,
+            documentsView: documentsView,
             config: .default,
             theme: product.theme.map()
         )

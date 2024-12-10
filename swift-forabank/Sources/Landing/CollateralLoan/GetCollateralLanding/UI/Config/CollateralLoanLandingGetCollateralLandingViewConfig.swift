@@ -113,7 +113,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
         conditions: .default,
         calculator: .default,
         frequentlyAskedQuestions: .default,
-        documents: .init(),
+        documents: .default,
         footer: .init()
     )
 }
@@ -127,4 +127,5 @@ extension Color {
     static let buttonPrimaryDisabled: Self = .init(red: 0.83, green: 0.83, blue: 0.83)
     static let divider: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
     static let bottomPanelBackground: Self = .init(red: 0.16, green: 0.16, blue: 0.16)
+    static let faqDivider: Self = .init(red: 0.83, green: 0.83, blue: 0.83)
 }

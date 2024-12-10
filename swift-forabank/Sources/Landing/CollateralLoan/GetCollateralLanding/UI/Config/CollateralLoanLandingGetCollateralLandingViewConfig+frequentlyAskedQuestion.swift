@@ -19,7 +19,7 @@ extension DropDownTextListConfig {
             verticalPadding: 12
         ),
         colors: .init(
-            divider: .gray,
+            divider: .faqDivider,
             background: .grayLightest
         ),
         fonts: .init(
