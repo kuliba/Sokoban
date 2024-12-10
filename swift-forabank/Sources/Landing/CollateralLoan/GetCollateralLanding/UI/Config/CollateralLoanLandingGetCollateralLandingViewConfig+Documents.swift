@@ -42,12 +42,10 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             
             public let layouts: Layouts
             public let fonts: Fonts
-            public let colors: Colors
             
-            public init(layouts: Layouts, fonts: Fonts, colors: Colors) {
+            public init(layouts: Layouts, fonts: Fonts) {
                 self.layouts = layouts
                 self.fonts = fonts
-                self.colors = colors
             }
             
             public struct Layouts {
@@ -81,10 +79,6 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                     self.title = title
                 }
             }
-            
-            public struct Colors {
-                
-            }
         }
     }
 }
@@ -108,8 +102,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig.Documents {
             ),
             fonts: .init(
                 title: .init(Font.system(size: 14))
-            ),
-            colors: .init()
+            )
         )
     )
 }
