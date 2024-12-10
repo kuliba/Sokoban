@@ -803,6 +803,7 @@
 		2A49221A2ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */; };
 		2A49221C2ABC6ABA00880784 /* Services+bindKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */; };
 		2A49BA8E2D08796300E4BBE2 /* DelayingRemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A49BA8D2D08796300E4BBE2 /* DelayingRemoteNanoServiceFactory.swift */; };
+		2A49BA902D08BDA600E4BBE2 /* QRParameterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A49BA8F2D08BDA600E4BBE2 /* QRParameterTests.swift */; };
 		2A4A19EC2AF4D9AD00F66EDF /* ComposedCVVPINServiceLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceLogTests.swift */; };
 		2A4A19EE2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19ED2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift */; };
 		2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */; };
@@ -4329,6 +4330,7 @@
 		2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecoratedRequestCreator.swift; sourceTree = "<group>"; };
 		2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+bindKeyService.swift"; sourceTree = "<group>"; };
 		2A49BA8D2D08796300E4BBE2 /* DelayingRemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayingRemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
+		2A49BA8F2D08BDA600E4BBE2 /* QRParameterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRParameterTests.swift; sourceTree = "<group>"; };
 		2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceLogTests.swift; sourceTree = "<group>"; };
 		2A4A19ED2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesTestHelpers.swift; sourceTree = "<group>"; };
 		2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINService_CVVPINServicesClient_Tests.swift; sourceTree = "<group>"; };
@@ -8721,6 +8723,7 @@
 			isa = PBXGroup;
 			children = (
 				2A248F542C68911400082814 /* AnywayPaymentSourceParserTests.swift */,
+				2A49BA8F2D08BDA600E4BBE2 /* QRParameterTests.swift */,
 			);
 			path = AnywayPaymentSourceParser;
 			sourceTree = "<group>";
@@ -22215,6 +22218,7 @@
 				2AA258612CEB2B800038642C /* RootViewModel_Tests.swift in Sources */,
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				830DC3792BCFE1370095AB39 /* Model+allProductTests.swift in Sources */,
+				2A49BA902D08BDA600E4BBE2 /* QRParameterTests.swift in Sources */,
 				2AB4FA5A2B8F46130061CBD7 /* PaymentsTransfersEffectHandlerTests.swift in Sources */,
 				0CAB7B532A45DE99001B8C93 /* Model+PaymentTemplates.swift in Sources */,
 				77D0386E2988488600FBE5AB /* ServerCommandsC2BSubscriptionTests.swift in Sources */,

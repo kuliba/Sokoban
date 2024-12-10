@@ -7,11 +7,27 @@
 
 import Foundation
 
-struct QRParameter: Codable, Equatable {
+struct QRParameter: Equatable {
     
     let parameter: Kind
     let keys: [String]
     let type: ValueType
+}
+
+extension QRParameter: Codable {
+    
+    init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.parameter = try container.decode(Kind.self, forKey: .parameter)
+        let rawKeys = try container.decode([String].self, forKey: .keys)
+        self.keys = rawKeys.map { $0.lowercased() }
+        self.type = try container.decode(ValueType.self, forKey: .type)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case parameter, keys, type
+    }
 }
 
 //MARK: - Types
