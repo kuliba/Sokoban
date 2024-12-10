@@ -525,7 +525,7 @@ private extension PaymentsTransfersView {
             let operatorIconView = viewFactory.makeIconView(
                 operatorFailure.content.icon.map { .md5Hash(.init($0)) }
             )
-            operatorFailureView(
+            viewFactory.components.operatorFailureView(
                 operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
                 dismissDestination: { event(.prepayment(.dismiss(.operatorFailureDestination))) }
@@ -570,48 +570,7 @@ private extension PaymentsTransfersView {
                 )
         }
     }
-    
-    func operatorFailureView(
-        operatorFailure: OperatorFailure,
-        payByInstructions: @escaping () -> Void,
-        dismissDestination: @escaping () -> Void
-    ) -> some View {
-        
-        SberOperatorFailureFlowView(
-            state: operatorFailure,
-            event: dismissDestination,
-            contentView: {
-                
-                FooterView(
-                    state: .failure(.iFora),
-                    event: { event in
-                        
-                        switch event {
-                        case .payByInstruction:
-                            payByInstructions()
-                            
-                        case .addCompany:
-                            break
-                        }
-                    },
-                    config: .iFora
-                )
-            },
-            destinationView: operatorFailureDestinationView
-        )
-    }
-    
-    @ViewBuilder
-    func operatorFailureDestinationView(
-        destination: OperatorFailure.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .payByInstructions(paymentsViewModel):
-            payByInstructionsView(paymentsViewModel)
-        }
-    }
-    
+            
     @ViewBuilder
     func paymentFlowView(
         state: UtilityServicePaymentFlowState,

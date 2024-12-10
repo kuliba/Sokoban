@@ -988,6 +988,12 @@
 		2A6826CB2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826CA2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */; };
 		2A6826CD2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826CC2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift */; };
 		2A6889BD2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */; };
+		2A6894152D070BC400160429 /* RootViewFactory+operatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */; };
+		2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */; };
+		2A68941A2D07263200160429 /* ServiceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */; };
+		2A68941C2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */; };
+		2A68941E2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941D2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift */; };
+		2A6894202D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68941F2D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6A6A342CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */; };
 		2A6A6A362CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */; };
@@ -4531,6 +4537,12 @@
 		2A6826CC2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateNanoServices.swift; sourceTree = "<group>"; };
 		2A6889B82C2F481B001FF1F2 /* LatestPayments.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LatestPayments.xctestplan; sourceTree = "<group>"; };
 		2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentOutline+LatestServicePaymentsTests.swift"; sourceTree = "<group>"; };
+		2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+operatorFailureView.swift"; sourceTree = "<group>"; };
+		2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureDomain.swift; sourceTree = "<group>"; };
+		2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryFailureView.swift; sourceTree = "<group>"; };
+		2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+serviceCategoryFailureView.swift"; sourceTree = "<group>"; };
+		2A68941D2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeServiceCategoryFailure.swift"; sourceTree = "<group>"; };
+		2A68941F2D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift; sourceTree = "<group>"; };
 		2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimedOTPInputViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A6A6A332CAADE8B006D6044 /* CategoryPickerSectionMicroServicesComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionMicroServicesComposerNanoServices.swift; sourceTree = "<group>"; };
 		2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposer.swift; sourceTree = "<group>"; };
@@ -8961,6 +8973,7 @@
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2ADB21CF2CF8392700B37234 /* RootViewModelFactory+initiateStandardPaymentFlow.swift */,
 				2A366E672CFF966A006D1FB8 /* RootViewModelFactory+makePaymentProviderPicker.swift */,
+				2A68941D2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift */,
 				2A366E6F2D00910A006D1FB8 /* RootViewModelFactory+processSelection.swift */,
 				2A366E692CFF9906006D1FB8 /* RootViewModelFactory+makeSearch.swift */,
 				2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */,
@@ -10435,6 +10448,15 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		2A6894162D07250300160429 /* ServiceCategoryFailure */ = {
+			isa = PBXGroup;
+			children = (
+				2A6894172D07251B00160429 /* ServiceCategoryFailureDomain.swift */,
+				2A6894192D07263200160429 /* ServiceCategoryFailureView.swift */,
+			);
+			path = ServiceCategoryFailure;
+			sourceTree = "<group>";
+		};
 		2A6A6A322CAADE7E006D6044 /* CategoryPickerSection */ = {
 			isa = PBXGroup;
 			children = (
@@ -10638,6 +10660,7 @@
 				2A07B9B82CFDABF800A3399E /* GetNotAuthorizedZoneClientInformDataResponse+alertsTests.swift */,
 				2A07B9BA2CFDB0B100A3399E /* RootViewModelFactory+updateAlertsTests.swift */,
 				2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */,
+				2A68941F2D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 			);
 			path = RootViewModelFactory;
@@ -12031,6 +12054,8 @@
 			isa = PBXGroup;
 			children = (
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
+				2A6894142D070BC400160429 /* RootViewFactory+operatorFailureView.swift */,
+				2A68941B2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
 				2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */,
 				2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */,
@@ -14621,6 +14646,7 @@
 				2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */,
 				2AFA3B142CB78DC10019AFBA /* Refreshable.swift */,
 				2ACBA67C2CE9E99A00758D71 /* ElementIDs.swift */,
+				2A6894162D07250300160429 /* ServiceCategoryFailure */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -20596,6 +20622,7 @@
 				ED5A122D285CC21000621E26 /* AnotherCardView+Legacy.swift in Sources */,
 				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,
 				503F073C28252CBA00E84A77 /* DepositCapitalizationViewModel.swift in Sources */,
+				2A68941A2D07263200160429 /* ServiceCategoryFailureView.swift in Sources */,
 				8353CD552B57AF72005F7D1A /* Services+getCardStatementService.swift in Sources */,
 				2A3F1B252A49895100D8FE55 /* MosParkingPickerData.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
@@ -20667,6 +20694,7 @@
 				83E45EAC2D0089F900158F64 /* SavingsAccountWrapperView.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
+				2A68941E2D072F8300160429 /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */,
 				77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */,
 				2A01F93C2AE50F340064F15B /* ComposedCVVPINService+ShowCVVClient.swift in Sources */,
 				8391092A2C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift in Sources */,
@@ -21189,6 +21217,7 @@
 				833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */,
 				2ADF317F2CA3536600F1668B /* PaymentServiceOperator.swift in Sources */,
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
+				2A6894152D070BC400160429 /* RootViewFactory+operatorFailureView.swift in Sources */,
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
 				2A213D3E2C1C52B6008800FD /* SelectWrapperView.swift in Sources */,
 				0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */,
@@ -21534,6 +21563,7 @@
 				77DD55CC29F1565500756451 /* NSDecimalNumbel+Extensions.swift in Sources */,
 				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
+				2A68941C2D07291200160429 /* ViewComponents+serviceCategoryFailureView.swift in Sources */,
 				77BE9A33290AC231006046B1 /* PaymentsSectionViewModel.swift in Sources */,
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */,
@@ -21951,6 +21981,7 @@
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
 				2A33941D2CBEDA8D000C6459 /* LocalAgentWrapper.swift in Sources */,
+				2A6894182D07251B00160429 /* ServiceCategoryFailureDomain.swift in Sources */,
 				503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */,
 				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,
 				2AB63F382B26F8060086B5EB /* SberQRServices.swift in Sources */,
@@ -22476,6 +22507,7 @@
 				2AB1979F2B2469ED00F0F87B /* SberQRTestHelpers.swift in Sources */,
 				2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */,
 				2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */,
+				2A6894202D07312800160429 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift in Sources */,
 				2A624C042C345E6A002ABA24 /* SberOperator+precedesTests.swift in Sources */,
 				2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */,
 				C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */,
