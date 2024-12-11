@@ -627,17 +627,22 @@ extension RootViewModel.PaymentsModel: Resetable {
 extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     
     var hasDestination: AnyPublisher<Bool, Never> {
-        
-        switch state {
-        case .none:
-            return Empty().eraseToAnyPublisher()
-            
-        case let .corporate(corporate):
-            return corporate.hasDestination
-            
-        case let .personal(personal):
-            return personal.hasDestination
-        }
+                
+        $state
+            .flatMap {
+                
+                switch $0 {
+                case .none:
+                    return Just(false).eraseToAnyPublisher()
+                    
+                case let .corporate(corporate):
+                    return corporate.hasDestination
+                    
+                case let .personal(personal):
+                    return personal.hasDestination
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }
 
@@ -656,14 +661,16 @@ extension PaymentsTransfersPersonalDomain.Binder {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
+        let transferPicker = content.transfers.hasDestination
         let flowHasDestination = Just(false)
         
-        return Publishers.CombineLatest3(
+        return Publishers.CombineLatest4(
             categoryPicker,
             operationPicker,
+            transferPicker,
             flowHasDestination
         )
-        .map { $0 || $1 || $2 }
+        .map { $0 || $1 || $2 || $3 }
         .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
@@ -698,6 +705,14 @@ private extension OperationPickerDomain.Binder {
     var hasDestination: AnyPublisher<Bool, Never> {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension PayHubUI.TransfersPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        transfersBinder?.flow.$state.map(\.hasDestination).eraseToAnyPublisher() ?? Empty().eraseToAnyPublisher()
     }
 }
 
