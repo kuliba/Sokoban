@@ -38,14 +38,8 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case contacts(Payments.Operation.Source)
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
-        case qr(QR)
+        case scanQR
         case successMeToMe(Node<PaymentsSuccessViewModel>)
-        
-        enum QR: Equatable {
-            
-            case result(QRModelResult)
-            case scan
-        }
     }
     
     typealias NavigationResult = Result<Navigation, NavigationFailure>
@@ -56,7 +50,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
-        case scanQR(Node<QRScannerModel>)
+        case scanQR
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
