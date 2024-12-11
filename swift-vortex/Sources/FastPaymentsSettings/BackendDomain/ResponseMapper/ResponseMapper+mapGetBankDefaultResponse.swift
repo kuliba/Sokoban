@@ -22,7 +22,7 @@ public extension ResponseMapper {
         _ data: _Data
     ) throws -> BankDefault {
         
-        .init(data.isInnovation)
+        .init(data.foraBank)
     }
 }
 
@@ -30,6 +30,6 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let isInnovation: Bool
+        let foraBank: Bool
     }
 }

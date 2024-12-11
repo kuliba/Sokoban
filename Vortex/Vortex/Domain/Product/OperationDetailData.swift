@@ -23,7 +23,7 @@ struct OperationDetailData: Codable, Hashable {
     let division: String?
     let driverLicense: String?
     let externalTransferType: ExternalTransferType?
-    let isHome: Bool?
+    let isForaBank: Bool?
     let isTrafficPoliceService: Bool
     let memberId: String?
     let operation: String?
@@ -187,7 +187,7 @@ struct OperationDetailData: Codable, Hashable {
         let account: String?
         let transferEnum: TransferEnum?
         let externalTransferType: ExternalTransferType?
-        let isHome: Bool?
+        let isForaBank: Bool?
         let transferReference: String?
         let payerSurName: String?
         let payerFirstName: String
@@ -249,7 +249,7 @@ struct OperationDetailData: Codable, Hashable {
         case division
         case driverLicense
         case externalTransferType
-        case isHome
+        case isForaBank
         case isTrafficPoliceService
         case memberId
         case operation
@@ -326,7 +326,7 @@ extension OperationDetailData {
         
         let date = dateFormatter.string(from: Date())
         
-        return .init(oktmo: nil, account: nil, accountTitle: nil, amount: amount, billDate: nil, billNumber: nil, claimId: UUID().uuidString, comment: "Перевод с конверсией денежных средств между счетами Клиента", countryName: nil, currencyAmount: productFrom.currency, dateForDetail: date, division: nil, driverLicense: nil, externalTransferType: nil, isHome: nil, isTrafficPoliceService: false, memberId: nil, operation: "Перевод денежных средств между счетами Клиента с конверсией по курсу банка", payeeAccountId: productTo.id, payeeAccountNumber: productTo.accountNumber, payeeAmount: productTo.balanceValue, payeeBankBIC: nil, payeeBankCorrAccount: nil, payeeBankName: productTo.displayName, payeeCardId: nil, payeeCardNumber: productTo.number, payeeCurrency: productTo.currency, payeeFirstName: nil, payeeFullName: productTo.productName, payeeINN: nil, payeeKPP: nil, payeeMiddleName: nil, payeePhone: nil, payeeSurName: nil, payerAccountId: productFrom.id, payerAccountNumber: productFrom.accountNumber ?? "", payerAddress: "", payerAmount: amount, payerCardId: productFrom.id, payerCardNumber: productFrom.number, payerCurrency: productFrom.currency, payerDocument: nil, payerFee: 0, payerFirstName: productFrom.displayName, payerFullName: productFrom.productName, payerINN: nil, payerMiddleName: productFrom.displayName, payerPhone: nil, payerSurName: nil, paymentOperationDetailId: paymentOperationDetailId, paymentTemplateId: nil, period: nil, printFormType: .internal, provider: nil, puref: nil, regCert: nil, requestDate: date, responseDate: date, returned: nil, transferDate: date, transferEnum: transferEnum, transferNumber: nil, transferReference: nil, cursivePayerAmount: nil, cursivePayeeAmount: nil, cursiveAmount: nil, serviceSelect: nil, serviceName: nil, merchantSubName: nil, merchantIcon: nil, operationStatus: nil, shopLink: nil, payeeCheckAccount: nil, depositNumber: nil, depositDateOpen: nil, currencyRate: nil, mcc: nil, printData: nil, paymentMethod: nil)
+        return .init(oktmo: nil, account: nil, accountTitle: nil, amount: amount, billDate: nil, billNumber: nil, claimId: UUID().uuidString, comment: "Перевод с конверсией денежных средств между счетами Клиента", countryName: nil, currencyAmount: productFrom.currency, dateForDetail: date, division: nil, driverLicense: nil, externalTransferType: nil, isForaBank: nil, isTrafficPoliceService: false, memberId: nil, operation: "Перевод денежных средств между счетами Клиента с конверсией по курсу банка", payeeAccountId: productTo.id, payeeAccountNumber: productTo.accountNumber, payeeAmount: productTo.balanceValue, payeeBankBIC: nil, payeeBankCorrAccount: nil, payeeBankName: productTo.displayName, payeeCardId: nil, payeeCardNumber: productTo.number, payeeCurrency: productTo.currency, payeeFirstName: nil, payeeFullName: productTo.productName, payeeINN: nil, payeeKPP: nil, payeeMiddleName: nil, payeePhone: nil, payeeSurName: nil, payerAccountId: productFrom.id, payerAccountNumber: productFrom.accountNumber ?? "", payerAddress: "", payerAmount: amount, payerCardId: productFrom.id, payerCardNumber: productFrom.number, payerCurrency: productFrom.currency, payerDocument: nil, payerFee: 0, payerFirstName: productFrom.displayName, payerFullName: productFrom.productName, payerINN: nil, payerMiddleName: productFrom.displayName, payerPhone: nil, payerSurName: nil, paymentOperationDetailId: paymentOperationDetailId, paymentTemplateId: nil, period: nil, printFormType: .internal, provider: nil, puref: nil, regCert: nil, requestDate: date, responseDate: date, returned: nil, transferDate: date, transferEnum: transferEnum, transferNumber: nil, transferReference: nil, cursivePayerAmount: nil, cursivePayeeAmount: nil, cursiveAmount: nil, serviceSelect: nil, serviceName: nil, merchantSubName: nil, merchantIcon: nil, operationStatus: nil, shopLink: nil, payeeCheckAccount: nil, depositNumber: nil, depositDateOpen: nil, currencyRate: nil, mcc: nil, printData: nil, paymentMethod: nil)
     }
 }
 
@@ -519,7 +519,7 @@ extension OperationDetailData {
             division: nil,
             driverLicense: nil,
             externalTransferType: .individual,
-            isHome: false,
+            isForaBank: false,
             isTrafficPoliceService: false,
             memberId: nil,
             operation: nil,

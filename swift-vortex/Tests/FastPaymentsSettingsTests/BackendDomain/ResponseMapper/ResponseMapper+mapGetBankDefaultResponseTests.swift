@@ -120,7 +120,7 @@ private let jsonString_c1 = """
   "statusCode": 0,
   "errorMessage": null,
   "data": {
-    "isInnovation": true
+    "foraBank": true
   }
 }
 """
@@ -130,7 +130,7 @@ private let jsonString_c2 = """
   "statusCode": 0,
   "errorMessage": null,
   "data": {
-    "isInnovation": false
+    "foraBank": false
   }
 }
 """

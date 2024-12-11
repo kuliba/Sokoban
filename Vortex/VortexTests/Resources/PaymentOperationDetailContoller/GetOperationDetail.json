@@ -14,7 +14,7 @@
     "division": "123456",
     "driverLicense": "2213616660",
     "externalTransferType": "ENTITY",
-    "isHome": true,
+    "isForaBank": true,
     "isTrafficPoliceService": false,
     "memberId": "EVOCA",
     "operation": "Перевод юридическому лицу в сторонний банк",

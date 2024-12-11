@@ -194,7 +194,7 @@ private extension String {
     "account": null,
     "transferEnum": "SBER_QR_PAYMENT",
     "externalTransferType": null,
-    "isHome": null,
+    "isForaBank": null,
     "transferReference": null,
     "payerSurName": null,
     "payerFirstName": "Игорь",
