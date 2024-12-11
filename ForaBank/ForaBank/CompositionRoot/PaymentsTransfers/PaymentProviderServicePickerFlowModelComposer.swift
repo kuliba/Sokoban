@@ -13,23 +13,24 @@ import Foundation
 final class PaymentProviderServicePickerFlowModelComposer {
     
     private let factory: Factory
-    private let microServices: MicroServices
+    private let makeMicroServices: MakeMicroServices
     private let model: Model
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         factory: Factory,
-        microServices: MicroServices,
+        makeMicroServices: @escaping MakeMicroServices,
         model: Model,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.factory = factory
-        self.microServices = microServices
+        self.makeMicroServices = makeMicroServices
         self.model = model
         self.scheduler = scheduler
     }
     
     typealias Factory = PaymentProviderServicePickerFlowModelFactory
+    typealias MakeMicroServices = () -> MicroServices
     typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>
 }
 
@@ -70,6 +71,8 @@ extension PaymentProviderServicePickerFlowModelComposer {
     ) -> PaymentProviderServicePickerModel {
         
         let reducer = PickerReducer()
+        
+        let microServices = makeMicroServices()
         let effectHandler = PickerEffectHandler(microServices: microServices)
         
         return .init(

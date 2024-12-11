@@ -47,11 +47,11 @@ extension XCTestCase {
     func makePaymentServiceOperator(
         id: String = anyMessage(),
         inn: String = anyMessage(),
-        md5Hash: String? = anyMessage(),
-        name: String = anyMessage(),
+        icon: String? = anyMessage(),
+        title: String = anyMessage(),
         type: String = anyMessage()
-    ) -> PaymentServiceOperator {
+    ) -> UtilityPaymentProvider {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
 }

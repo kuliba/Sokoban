@@ -122,7 +122,7 @@ final class Model_QRHelpersTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = Model
-    private typealias CachingOperator = CachingSberOperator
+    private typealias CachingOperator = CodableServicePaymentOperator
     
     private func makeSUT(
         operators: [CachingOperator]?,
@@ -143,12 +143,12 @@ final class Model_QRHelpersTests: XCTestCase {
         id: String = anyMessage(),
         inn: String = anyMessage(),
         md5Hash: String? = anyMessage(),
-        title: String = anyMessage(),
+        name: String = anyMessage(),
         type: String = anyMessage(),
         sortedOrder: Int = 0
     ) -> CachingOperator {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, title: title, type: type, sortedOrder: sortedOrder)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type, sortedOrder: sortedOrder)
     }
     
     private func makeCachingOperators(

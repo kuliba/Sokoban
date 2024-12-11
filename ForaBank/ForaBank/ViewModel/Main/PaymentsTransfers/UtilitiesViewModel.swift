@@ -27,7 +27,7 @@ final class UtilitiesViewModel: ObservableObject {
     // MARK: - types
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias State = PrePaymentOptionsState<LastPayment, Operator>
     
     struct Payload {}

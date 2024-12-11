@@ -83,7 +83,7 @@ private extension PaymentProviderListView {
     }
     
     func makeOperatorView(
-        `operator`: PaymentServiceOperator
+        `operator`: UtilityPaymentProvider
     ) -> some View {
         
         makeOperatorView(provider: `operator`, event: binder.flow.selectProvider(_:))
@@ -99,10 +99,10 @@ private extension PaymentProviderListView {
             label: {
                 
                 OperatorLabel(
-                    title: provider.name,
+                    title: provider.title,
                     subtitle: provider.inn,
                     config: .iFora,
-                    iconView: makeIconView(md5Hash: provider.md5Hash)
+                    iconView: makeIconView(md5Hash: provider.icon)
                 )
                 .contentShape(Rectangle())
             }

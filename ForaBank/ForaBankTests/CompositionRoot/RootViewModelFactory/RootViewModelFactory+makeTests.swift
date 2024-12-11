@@ -224,9 +224,9 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             sessionState: active(),
             schedulers: .immediate
         )
-        XCTAssert(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).isEmpty)
         
         awaitActorThreadHop()
+        XCTAssert(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).isEmpty)
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
@@ -278,8 +278,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
         awaitActorThreadHop()
         
-        httpClient.complete(with: anyError(), at: 3)
-        awaitActorThreadHop()
+        httpClient.complete(with: anyError(), at: 2)
+        userInitiatedScheduler.advance(to: .init(.now().advanced(by: RootViewModelFactorySettings.prod.batchDelay.timeInterval)))
         
         httpClient.expectRequests(withQueryValueFor: "type", match: [
             "getBannerCatalogList",

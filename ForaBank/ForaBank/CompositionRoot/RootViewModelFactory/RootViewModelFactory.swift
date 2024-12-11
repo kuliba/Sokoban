@@ -31,7 +31,10 @@ final class RootViewModelFactory {
     let schedulers: Schedulers
     
     // reusable components & factories
+    
     let asyncLocalAgent: LocalAgentAsyncWrapper
+    /// - Warning: `batchServiceComposer` uses **delayed** process
+    /// to protect calls from being discarded on quick succession
     let batchServiceComposer: SerialCachingRemoteBatchServiceComposer
     let loggingSerialLoaderComposer: LoggingSerialLoaderComposer
     let nanoServiceComposer: LoggingRemoteNanoServiceComposer
@@ -57,20 +60,26 @@ final class RootViewModelFactory {
         
         // reusable components & factories
         
-        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
-        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
-            httpClient: httpClient,
-            logger: logger
-        )
-        
         self.asyncLocalAgent = .init(
             agent: model.localAgent,
             interactiveScheduler: schedulers.interactive,
             backgroundScheduler: schedulers.background
         )
         
+        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: logger
+        )
+        
+        let delayingRemoteNanoServiceFactory = DelayingRemoteNanoServiceFactory(
+            delay: settings.batchDelay,
+            factory: nanoServiceComposer,
+            scheduler: schedulers.userInitiated
+        )
+        
         self.batchServiceComposer = .init(
-            nanoServiceFactory: nanoServiceComposer,
+            nanoServiceFactory: delayingRemoteNanoServiceFactory,
             updateMaker: asyncLocalAgent
         )
         

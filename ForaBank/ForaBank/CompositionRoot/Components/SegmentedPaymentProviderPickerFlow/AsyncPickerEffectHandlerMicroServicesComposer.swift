@@ -15,19 +15,19 @@ final class AsyncPickerEffectHandlerMicroServicesComposer {
     
     private let composer: AnywayTransactionComposer
     private let model: Model
-    private let nanoServices: NanoServices
+    private let makeNanoServices: MakeNanoServices
     
     init(
         composer: AnywayTransactionComposer,
         model: Model,
-        nanoServices: NanoServices
+        makeNanoServices: @escaping MakeNanoServices
     ) {
         self.composer = composer
         self.model = model
-        self.nanoServices = nanoServices
+        self.makeNanoServices = makeNanoServices
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices
+    typealias MakeNanoServices = (ServiceCategory.CategoryType) -> UtilityPaymentNanoServices
 }
 
 extension AsyncPickerEffectHandlerMicroServicesComposer {
@@ -46,14 +46,16 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping ([ServicePickerItem]) -> Void
     ) {
-        nanoServices.getServicesFor(payload.provider.operator) {
+        let nanoServices = makeNanoServices(.init(string: payload.provider.segment) ?? .housingAndCommunalService)
+        
+        nanoServices.getServicesFor(payload.provider.origin) {
             
             let services = (try? $0.get()) ?? []
             completion(services.map {
                 
                 return .init(service: $0, isOneOf: services.count > 1)
             })
-            _ = self.nanoServices
+            _ = nanoServices
         }
     }
     
@@ -62,8 +64,10 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping (PaymentProviderServicePickerResult) -> Void
     ) {
-        self.nanoServices.startAnywayPayment(
-            .service(item.service, for: payload.provider.operator)
+        let nanoServices = makeNanoServices(.init(string: payload.provider.segment) ?? .housingAndCommunalService)
+
+        nanoServices.startAnywayPayment(
+            .service(item.service, for: payload.provider.origin)
         ) {
             switch StartPaymentResult(result: $0) {
             case let .failure(failure):
@@ -77,6 +81,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
                 
                 completion(.success(transaction))
             }
+            _ = nanoServices
         }
     }
 }
@@ -121,15 +126,5 @@ private extension StartPaymentResult {
         case let .startPayment(startPaymentResponse):
             self = .success(startPaymentResponse)
         }
-    }
-}
-
-private extension SegmentedProvider {
-    
-    var `operator`: UtilityPaymentOperator {
-        
-        return .init(
-            id: origin.id, inn: origin.inn, title: origin.title, icon: origin.icon, type: origin.segment
-        )
     }
 }

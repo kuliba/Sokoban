@@ -65,7 +65,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentBinder
@@ -203,9 +203,9 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     typealias UtilityPrepaymentPayload = UtilityPrepaymentEvent.Initiated.UtilityPrepaymentPayload
     
-    typealias UtilityPrepaymentSuccessReducer = PrepaymentSuccessPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
-    typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
-    typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
+    typealias UtilityPrepaymentSuccessReducer = PrepaymentSuccessPickerReducer<UtilityPaymentLastPayment, UtilityPaymentProvider>
+    typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentProvider>
+    typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentProvider>
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {

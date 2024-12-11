@@ -12,17 +12,23 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
     
     func test_createRequest_shouldThrowOnEmptyOperatorID() throws {
         
-        try XCTAssertThrowsError( createRequest(""))
+        try XCTAssertThrowsError(createRequest(
+            makeUtilityPaymentOperator(id: "")
+        ))
     }
     
     func test_createRequest_shouldSetRequestURL() throws {
         
         let operatorID = UUID().uuidString
-        let request = try createRequest(operatorID)
+        let type = UUID().uuidString
+        let request = try createRequest(makeUtilityPaymentOperator(
+            id: operatorID,
+            type: type
+        ))
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getOperatorsListByParam?customerId=\(operatorID)&operatorOnly=false&type=housingAndCommunalService"
+            "https://pl.forabank.ru/dbo/api/v3/dict/getOperatorsListByParam?customerId=\(operatorID)&operatorOnly=false&type=\(type)"
         )
     }
     
@@ -43,9 +49,25 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
     // MARK: - Helpers
     
     private func createRequest(
-        _ operatorID: String = UUID().uuidString
+        _ `operator`: UtilityPaymentProvider? = nil
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(operatorID: operatorID)
+        try RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(
+            operator: `operator` ?? makeUtilityPaymentOperator()
+        )
+    }
+}
+
+extension XCTestCase {
+    
+    func makeUtilityPaymentOperator(
+        id: String = anyMessage(),
+        inn: String = anyMessage(),
+        title: String = anyMessage(),
+        icon: String? = anyMessage(),
+        type: String = anyMessage()
+    ) -> UtilityPaymentProvider {
+        
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
 }

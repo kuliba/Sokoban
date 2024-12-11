@@ -16,7 +16,7 @@ extension PaymentProviderServicePickerPayload {
                 icon: nil,
                 inn: "01234556789",
                 title: "Some Provider",
-                segment: "Services"
+                type: "Services"
             ),
             segment: "Services"
         ),

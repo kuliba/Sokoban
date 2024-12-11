@@ -234,17 +234,16 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            loadOperators: { $0([]) } // not used for servicePickerComposer
+            loadOperators: { $1([]) } // not used for servicePickerComposer
         )
-        let utilityNanoServices = utilityNanoServicesComposer.compose()
         let asyncPickerComposer = AsyncPickerEffectHandlerMicroServicesComposer(
             composer: transactionComposer,
             model: model,
-            nanoServices: utilityNanoServices
+            makeNanoServices: utilityNanoServicesComposer.compose
         )
         let servicePickerComposer = PaymentProviderServicePickerFlowModelComposer(
             factory: servicePickerFlowModelFactory,
-            microServices: asyncPickerComposer.compose(),
+            makeMicroServices: asyncPickerComposer.compose,
             model: model,
             scheduler: schedulers.main
         )
@@ -540,7 +539,7 @@ typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewMod
 extension ProductProfileViewModel {
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager

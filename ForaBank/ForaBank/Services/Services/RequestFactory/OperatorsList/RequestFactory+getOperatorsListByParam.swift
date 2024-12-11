@@ -52,18 +52,18 @@ extension RequestFactory {
     
     // TODO: combine with above, improve API (strong types for type & operatorID)
     static func createGetOperatorsListByParamOperatorOnlyFalseRequest(
-        operatorID: String
+        `operator`: UtilityPaymentProvider
     ) throws -> URLRequest {
         
-        guard !operatorID.isEmpty else {
+        guard !`operator`.id.isEmpty else {
             struct EmptyOperatorIDError: Error {}
             throw EmptyOperatorIDError()
         }
         
         let parameters: [(String, String)] = [
-            ("customerId", operatorID),
+            ("customerId", `operator`.id),
             ("operatorOnly", "false"),
-            ("type", "housingAndCommunalService")
+            ("type", `operator`.type)
         ]
         
         let endpoint = Services.Endpoint.getOperatorsListByParam

@@ -31,7 +31,7 @@ extension RootViewModelFactory {
                 
                 guard let categoryPicker else {
                     
-                    return self.logger.log(level: .error, category: .payments, message: "Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
+                    return self.logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
                 }
                 
                 categoryPicker.content.event(.loaded(categories ?? []))

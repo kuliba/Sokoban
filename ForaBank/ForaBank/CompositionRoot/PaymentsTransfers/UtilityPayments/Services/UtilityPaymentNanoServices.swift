@@ -94,6 +94,6 @@ extension UtilityPaymentNanoServices {
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
 }

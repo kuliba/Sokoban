@@ -525,7 +525,7 @@ private extension PaymentsTransfersView {
             let operatorIconView = viewFactory.makeIconView(
                 operatorFailure.content.icon.map { .md5Hash(.init($0)) }
             )
-            operatorFailureView(
+            viewFactory.components.operatorFailureView(
                 operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
                 dismissDestination: { event(.prepayment(.dismiss(.operatorFailureDestination))) }
@@ -570,48 +570,7 @@ private extension PaymentsTransfersView {
                 )
         }
     }
-    
-    func operatorFailureView(
-        operatorFailure: OperatorFailure,
-        payByInstructions: @escaping () -> Void,
-        dismissDestination: @escaping () -> Void
-    ) -> some View {
-        
-        SberOperatorFailureFlowView(
-            state: operatorFailure,
-            event: dismissDestination,
-            contentView: {
-                
-                FooterView(
-                    state: .failure(.iFora),
-                    event: { event in
-                        
-                        switch event {
-                        case .payByInstruction:
-                            payByInstructions()
-                            
-                        case .addCompany:
-                            break
-                        }
-                    },
-                    config: .iFora
-                )
-            },
-            destinationView: operatorFailureDestinationView
-        )
-    }
-    
-    @ViewBuilder
-    func operatorFailureDestinationView(
-        destination: OperatorFailure.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .payByInstructions(paymentsViewModel):
-            payByInstructionsView(paymentsViewModel)
-        }
-    }
-    
+            
     @ViewBuilder
     func paymentFlowView(
         state: UtilityServicePaymentFlowState,
@@ -800,7 +759,7 @@ private extension PaymentsTransfersView {
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentBinder
@@ -809,9 +768,9 @@ private extension PaymentsTransfersView {
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
-    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentProvider>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentProvider, Service>
 }
 
 extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {
@@ -1007,7 +966,7 @@ extension PaymentsTransfersView {
 
 private extension UtilityPrepaymentCompletionEvent {
     
-    var flowEvent: UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService> {
+    var flowEvent: UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService> {
         
         switch self {
         case .addCompany:
