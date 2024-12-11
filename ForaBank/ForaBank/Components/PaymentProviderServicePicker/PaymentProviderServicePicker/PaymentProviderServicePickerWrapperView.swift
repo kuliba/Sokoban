@@ -83,9 +83,7 @@ private extension PaymentProviderServicePickerWrapperView {
         _ icon: String?
     ) -> IconDomain.IconView {
         
-        guard let icon else { return iconView(nil) }
-        
-        return iconView(.md5Hash(.init(icon)))
+        iconView(icon.map { .md5Hash(.init($0)) })
     }
 }
 
