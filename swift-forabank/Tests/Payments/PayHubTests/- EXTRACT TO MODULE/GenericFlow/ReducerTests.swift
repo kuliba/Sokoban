@@ -58,7 +58,7 @@ final class FlowReducerTests: FlowTests {
         let select = makeSelect()
         
         assert(
-            makeState(isLoading: true, navigation: makeNavigation()),
+            makeState(isLoading: true, navigation: nil),
             event: .select(select)
         ) {
             $0.isLoading = true
