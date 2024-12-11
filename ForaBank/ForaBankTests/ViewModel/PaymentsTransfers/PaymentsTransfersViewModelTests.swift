@@ -1150,10 +1150,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeService(
         name: String = UUID().uuidString,
-        _ puref: String = UUID().uuidString
+        _ puref: String = UUID().uuidString,
+        _ icon: String? = nil
     ) -> UtilityService {
         
-        .init(name: name, puref: puref)
+        .init(icon: icon, name: name, puref: puref)
     }
     
     private func makePaymentDetails(

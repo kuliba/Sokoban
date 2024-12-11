@@ -275,7 +275,7 @@ typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayP
     
     var service: UtilityService {
         
-        .init(name: name, puref: puref)
+        .init(icon: icon, name: name, puref: puref)
     }
 }
 

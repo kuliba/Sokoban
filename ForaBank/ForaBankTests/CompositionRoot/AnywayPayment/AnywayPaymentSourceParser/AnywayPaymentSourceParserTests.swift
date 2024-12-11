@@ -790,7 +790,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     ) -> AnywayPaymentSourceParser.Source {
         
         return .oneOf(
-            .init(name: name, puref: puref),
+            .init(icon: icon, name: name, puref: puref),
             .init(id: id, icon: icon, inn: inn, title: title, type: type)
         )
     }
@@ -809,7 +809,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     ) -> AnywayPaymentSourceParser.Source {
         
         return .picked(
-            .init(service: .init(name: name, puref: puref), isOneOf: isOneOf),
+            .init(service: .init(icon: icon, name: name, puref: puref), isOneOf: isOneOf),
             .init(
                 provider: .init(
                     origin: .init(
@@ -885,7 +885,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     ) -> AnywayPaymentSourceParser.Source {
         
         return .single(
-            .init(name: name, puref: puref),
+            .init(icon: icon, name: name, puref: puref),
             .init(id: id, icon: icon, inn: inn, title: title, type: type)
         )
     }
