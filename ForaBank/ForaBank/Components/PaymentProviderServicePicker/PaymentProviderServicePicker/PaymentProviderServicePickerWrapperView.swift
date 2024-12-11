@@ -73,7 +73,7 @@ private extension PaymentProviderServicePickerWrapperView {
                 title: item.service.name,
                 subtitle: nil,
                 config: .iFora,
-                iconView: iconView(nil)
+                iconView: iconView(.md5Hash(.init(item.service.icon ?? "")))
             )
         }
         .buttonStyle(.plain)

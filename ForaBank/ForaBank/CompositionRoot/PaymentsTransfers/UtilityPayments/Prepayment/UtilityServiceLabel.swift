@@ -36,7 +36,7 @@ struct UtilityServiceLabel<IconView: View>: View {
 
 #Preview {
     UtilityServiceLabel(
-        service: .init(name: "Utility Service", puref: "preview||123"),
+        service: .init(icon: nil, name: "Utility Service", puref: "preview||123"),
         iconView: Text("..")
     )
 }
