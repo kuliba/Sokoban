@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModifier {
+public struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModifier {
     
     @Binding var item: Item?
     
@@ -16,7 +16,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
     
     @State private var isUserInteractionEnabled: Bool = true
     
-    init(
+    public init(
         item: Binding<Item?>,
         animationSpeed: Double,
         @ViewBuilder sheetContent: @escaping (Item) -> SheetContent
@@ -34,7 +34,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
         )
     }
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         
         content
             .transaction({ $0.disablesAnimations = false })

@@ -1277,6 +1277,7 @@ private extension Target {
     static let landingUIComponent = target(
         name: .landingUIComponent,
         dependencies: [
+            .bottomSheetComponent,
             .combineSchedulers,
             .foraTools,
             .rxViewModel,
@@ -3300,6 +3301,10 @@ private extension Target.Dependency {
     
     static let accountInfoPanel = byName(
         name: .accountInfoPanel
+    )
+    
+    static let bottomSheetComponent = byName(
+        name: .bottomSheetComponent
     )
     
     static let calendarUI = byName(
