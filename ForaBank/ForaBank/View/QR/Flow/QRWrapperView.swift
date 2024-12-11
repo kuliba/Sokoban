@@ -32,6 +32,7 @@ struct QRWrapperView: View {
 struct QRWrapperViewFactory {
     
     let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+    let makeIconView: MakeIconView
     let makeOperatorView: MakeOperatorView
     let makePaymentsView: MakePaymentsView
     let makeQRFailedWrapperView: MakeQRFailedWrapperView
@@ -77,12 +78,36 @@ private extension QRWrapperView {
             
         case let .providerServicePicker(picker):
             factory.makeAnywayServicePickerFlowView(picker)
+                .navigationBarWithAsyncIcon(
+                    title: picker.title,
+                    subtitle: picker.subtitle,
+                    dismiss: { picker.event(.dismiss) },
+                    icon: factory.makeIconView(picker.icon)
+                )
                 .accessibilityIdentifier(ElementIDs.providerServicePicker.rawValue)
             
         case let .sberQR(sberQRConfirm):
             factory.makeSberQRConfirmPaymentView(sberQRConfirm)
                 .accessibilityIdentifier(ElementIDs.sberQRConfirm.rawValue)
         }
+    }
+}
+
+private extension AnywayServicePickerFlowModel {
+    
+    var title: String {
+        
+        state.content.state.payload.provider.origin.title
+    }
+    
+    var subtitle: String? {
+        
+        state.content.state.payload.provider.origin.inn
+    }
+    
+    var icon: IconDomain.Icon? {
+        
+        state.content.state.payload.provider.origin.icon.map { .md5Hash(.init($0)) }
     }
 }
 
