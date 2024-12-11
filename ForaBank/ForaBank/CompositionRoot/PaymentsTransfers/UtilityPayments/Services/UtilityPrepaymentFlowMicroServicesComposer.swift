@@ -37,7 +37,7 @@ final class UtilityPrepaymentFlowMicroServicesComposer {
     typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
 }
 
@@ -268,7 +268,7 @@ private extension AnywayPaymentOutline.Payload {
     
     init(
         puref: String,
-        `operator`: UtilityPaymentOperator
+        `operator`: UtilityPaymentProvider
     ) {
         self.init(
             puref: puref,
@@ -279,7 +279,7 @@ private extension AnywayPaymentOutline.Payload {
     }
 }
 
-private extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure where Operator == UtilityPaymentOperator{
+private extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure where Operator == UtilityPaymentProvider{
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure

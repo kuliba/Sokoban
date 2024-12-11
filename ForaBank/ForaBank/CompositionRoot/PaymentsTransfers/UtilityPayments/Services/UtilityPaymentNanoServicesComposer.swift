@@ -38,7 +38,7 @@ final class UtilityPaymentNanoServicesComposer {
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
 }
 

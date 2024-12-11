@@ -46,7 +46,7 @@ final class PaymentsTransfersFlowManagerComposer {
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
         
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>, @escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperators = (LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
 }
 
 extension PaymentsTransfersFlowManagerComposer {
@@ -76,7 +76,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias FlowManager = PaymentsTransfersFlowManager
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
@@ -195,7 +195,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     private func loadOperators(
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        loadOperators(.init(), completion)
+        loadOperators(.init(pageSize: settings.pageSize), completion)
     }
     
     private func makeLegacyViewModel(
@@ -249,7 +249,10 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
-            loadOperators: loadOperators
+            loadOperators: { payload, completion in
+                
+                self.loadOperators(.init(operatorID: payload.operatorID, searchText: payload.searchText, pageSize: payload.pageSize), completion)
+            }
         )
         let microComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: settings.pageSize,
@@ -272,15 +275,14 @@ private extension PaymentsTransfersFlowManagerComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        let payload = UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>(
+        let payload = LoadOperatorsPayload(
             operatorID: payload.operatorID,
-            searchText: payload.searchText
+            searchText: payload.searchText,
+            pageSize: settings.pageSize
         )
         
         loadOperators(payload, completion)
     }
-    
-    typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
 }
 
 // MARK: - Adapters

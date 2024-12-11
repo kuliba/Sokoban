@@ -49,7 +49,7 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
     // MARK: - Helpers
     
     private func createRequest(
-        _ `operator`: UtilityPaymentOperator? = nil
+        _ `operator`: UtilityPaymentProvider? = nil
     ) throws -> URLRequest {
         
         try RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(
@@ -66,8 +66,8 @@ extension XCTestCase {
         title: String = anyMessage(),
         icon: String? = anyMessage(),
         type: String = anyMessage()
-    ) -> UtilityPaymentOperator {
+    ) -> UtilityPaymentProvider {
         
-        return .init(id: id, inn: inn, title: title, icon: icon, type: type)
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
 }

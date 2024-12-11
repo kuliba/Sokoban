@@ -98,8 +98,8 @@ private extension SegmentedProvider {
                 id: cached.id,
                 icon: cached.md5Hash,
                 inn: cached.inn,
-                title: cached.title,
-                segment: segment.apearance.title
+                title: cached.name,
+                type: segment.apearance.title
             ),
             segment: segment.apearance.title
         )

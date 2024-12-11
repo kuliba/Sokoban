@@ -10,43 +10,23 @@ import ForaTools
 extension RootViewModelFactory {
     
     func composedLoadOperators(
-        completion: @escaping ([UtilityPaymentOperator]) -> Void
+        completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
-        composedLoadOperators(payload: .init(), completion: completion)
+        composedLoadOperators(payload: .init(pageSize: settings.pageSize), completion: completion)
     }
     
     func composedLoadOperators(
-        payload: UtilityPaymentOperatorLoaderComposerPayload<UtilityPaymentOperator>,
-        completion: @escaping ([UtilityPaymentOperator]) -> Void
+        payload: LoadOperatorsPayload,
+        completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
-        let payload = LoadOperatorsPayload(
-            operatorID: payload.operatorID,
-            searchText: payload.searchText,
-            pageSize: settings.pageSize
-        )
-        
         schedulers.userInitiated.schedule { [weak self] in
             
             guard let self else { return }
             
             // sorting is performed at cache phase
             let page = loadPage(of: [CachingSberOperator].self, for: payload) ?? []
-            completion(page.map(UtilityPaymentOperator.init(codable:)))
+            completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
-    }
-}
-
-struct UtilityPaymentOperatorLoaderComposerPayload<Operator: Identifiable>: Equatable {
-    
-    let operatorID: Operator.ID?
-    let searchText: String
-    
-    init(
-        operatorID: Operator.ID? = nil,
-        searchText: String = ""
-    ) {
-        self.operatorID = operatorID
-        self.searchText = searchText
     }
 }
 
@@ -57,6 +37,16 @@ struct LoadOperatorsPayload: Equatable {
     let operatorID: String?
     let searchText: String
     let pageSize: Int
+    
+    init(
+        operatorID: String? = nil,
+        searchText: String = "",
+        pageSize: Int
+    ) {
+        self.operatorID = operatorID
+        self.searchText = searchText
+        self.pageSize = pageSize
+    }
 }
 
 // MARK: - Helpers
@@ -74,7 +64,7 @@ extension CachingSberOperator: FilterableItem {
         
         guard !searchText.isEmpty else { return true }
         
-        return title.localizedCaseInsensitiveContains(searchText)
+        return name.localizedCaseInsensitiveContains(searchText)
         || inn.localizedCaseInsensitiveContains(searchText)
     }
 }
@@ -86,15 +76,15 @@ extension LoadOperatorsPayload: PageQuery {
 
 // MARK: - Adapters
 
-private extension UtilityPaymentOperator {
+private extension UtilityPaymentProvider {
     
     init(codable: CachingSberOperator) {
         
         self.init(
             id: codable.id,
+            icon: codable.md5Hash, 
             inn: codable.inn,
-            title: codable.title,
-            icon: codable.md5Hash,
+            title: codable.name,
             type: codable.type
         )
     }

@@ -11,7 +11,7 @@ import OperatorsListComponents
 
 extension PaymentsTransfersFlowEffectHandler
 where LastPayment == UtilityPaymentLastPayment,
-      Operator == UtilityPaymentOperator,
+      Operator == UtilityPaymentProvider,
       Service == UtilityService {
     
     static func preview(

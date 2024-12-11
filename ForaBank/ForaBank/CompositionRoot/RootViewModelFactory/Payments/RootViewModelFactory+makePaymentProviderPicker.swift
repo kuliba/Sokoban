@@ -64,7 +64,7 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, UtilityPaymentProvider, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
     
     @inlinable
     func makePaymentProviderPicker(
@@ -81,7 +81,7 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, PaymentServiceOperator>
+    typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, UtilityPaymentProvider>
     
     // MARK: - Content
     
@@ -216,7 +216,7 @@ extension RootViewModelFactory {
     ) {
         let anywayFlowComposer = makeAnywayFlowComposer()
         
-        processSelection(select: .operator(.init(provider))) {
+        processSelection(select: .operator(provider)) {
             
             switch $0 {
             case let .failure(failure):
@@ -286,19 +286,5 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
         return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", additionalItems: [])
-    }
-}
-
-private extension UtilityPaymentOperator {
-    
-    init(_ provider: PaymentProviderPickerDomain.Provider) {
-        
-        self.init(
-            id: provider.id,
-            inn: provider.inn,
-            title: provider.name,
-            icon: provider.md5Hash,
-            type: provider.type
-        )
     }
 }

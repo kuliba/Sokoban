@@ -114,7 +114,7 @@ private extension SegmentedPaymentProvider {
             id: `operator`.id,
             icon: `operator`.md5Hash,
             inn: `operator`.inn,
-            title: `operator`.title,
+            title: `operator`.name,
             segment: segment.apearance.title
         )
     }

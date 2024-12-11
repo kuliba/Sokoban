@@ -7,8 +7,8 @@
 
 extension RootViewModelFactory {
     
-    typealias PrepaymentSelect = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.Select
-    typealias ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.ProcessSelectionResult
+    typealias PrepaymentSelect = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.Select
+    typealias ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.ProcessSelectionResult
     
     @inlinable
     func processSelection(
