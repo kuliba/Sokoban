@@ -236,7 +236,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withEmptyPlatform)
 
-        XCTAssertNoDiff(mapped.list.first?.update?.platform, "")
+        XCTAssertNoDiff(mapped.list.first?.update?.platform, nil)
     }
     
     func test_map_withEmptyVersion_shouldDeliverValidVersion() throws {
