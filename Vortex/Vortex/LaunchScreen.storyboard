@@ -73,6 +73,6 @@
     </scenes>
     <resources>
         <image name="BackgroundLine" width="375" height="812"/>
-        <image name="NewLogoVortex" width="64" height="64"/>
+        <image name="NewLogoVortex" width="1024" height="1024"/>
     </resources>
 </document>
