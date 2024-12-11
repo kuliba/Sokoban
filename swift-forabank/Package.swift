@@ -94,6 +94,7 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         // UI Components
+        .bottomSheetComponent,
         .carouselComponent,
         .dropDownTextListComponent,
         .paymentComponents,
@@ -318,6 +319,7 @@ let package = Package(
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
+        .bottomSheetComponent,
         .carouselComponent,
         .carouselComponentTests,
         // Utilities
@@ -522,7 +524,7 @@ private extension Product {
             .productDetailsUI
         ]
     )
-    
+        
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -657,6 +659,13 @@ private extension Product {
     )
 
     // MARK: - UI Components
+    
+    static let bottomSheetComponent = library(
+        name: .bottomSheetComponent,
+        targets: [
+            .bottomSheetComponent
+        ]
+    )
     
     static let carouselComponent = library(
         name: .carouselComponent,
@@ -3019,6 +3028,14 @@ private extension Target {
         path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )
     
+    static let bottomSheetComponent = target(
+        name: .bottomSheetComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.bottomSheetComponent)"
+    )
+
     static let carouselComponent = target(
         name: .carouselComponent,
         dependencies: [
@@ -3797,6 +3814,8 @@ private extension String {
     
     static let amountComponent = "AmountComponent"
     static let amountComponentTests = "AmountComponentTests"
+    
+    static let bottomSheetComponent = "BottomSheetComponent"
     
     static let buttonComponent = "ButtonComponent"
     
