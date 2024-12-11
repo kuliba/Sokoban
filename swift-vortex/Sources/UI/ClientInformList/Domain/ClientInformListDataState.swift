@@ -16,13 +16,11 @@ public enum ClientInformListDataState {
         
         public let label: Label<String>
         public let text: String
-        public let url: URL?
         
-        public init(label: Label<String>, text: String, url: URL?) {
+        public init(label: Label<String>, text: String) {
             
             self.label = label
             self.text = text
-            self.url = url
         }
     }
     
@@ -42,15 +40,18 @@ public enum ClientInformListDataState {
         public let id: UUID
         public let image: Image?
         public let title: Title
+        public let url: URL?
         
         public init(
             id: UUID = .init(),
             image: Image?,
-            title: Title
+            title: Title,
+            url: URL? = nil
         ) {
             self.id = id
             self.image = image
             self.title = title
+            self.url = url
         }
     }
 }

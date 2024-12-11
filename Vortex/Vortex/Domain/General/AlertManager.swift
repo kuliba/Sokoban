@@ -13,6 +13,8 @@ protocol AlertManager<Alert> {
     associatedtype Alert
     
     var alertPublisher: AnyPublisher<Alert?, Never> { get }
+    var updatePermissionPublisher: AnyPublisher<Bool, Never> { get }
+    func setUpdatePermission(_ shouldUpdate: Bool)
     func dismiss()
     func dismissAll()
     func update(alerts: ClientInformAlerts)
@@ -23,7 +25,8 @@ final class NotAuthorizedAlertManager {
     typealias Alert = ClientInformAlerts
     
     private let subject: CurrentValueSubject<ClientInformAlerts?, Never>
-    
+    private let isUpdateAllowedSubject = CurrentValueSubject<Bool, Never>(true)
+
     init(
         alerts: ClientInformAlerts? = nil
     ) {
@@ -38,6 +41,16 @@ extension NotAuthorizedAlertManager: AlertManager {
         subject
             .map { $0 }
             .eraseToAnyPublisher()
+    }
+
+    var updatePermissionPublisher: AnyPublisher<Bool, Never> { 
+        
+        isUpdateAllowedSubject.eraseToAnyPublisher()
+    }
+
+    func setUpdatePermission(_ shouldUpdate: Bool) {
+       
+        isUpdateAllowedSubject.send(shouldUpdate)
     }
     
     func dismiss() {

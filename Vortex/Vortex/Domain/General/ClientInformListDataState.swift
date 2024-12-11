@@ -51,15 +51,18 @@ enum ClientInformListDataState {
         let id: UUID
         let image: Image?
         let title: Title
-        
+        let url: URL?
+
         init(
             id: UUID = .init(),
             image: Image?,
-            title: Title
+            title: Title,
+            url: URL? = nil
         ) {
             self.id = id
             self.image = image
             self.title = title
+            self.url = url
         }
     }
 }

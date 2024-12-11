@@ -548,8 +548,18 @@ class Model {
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Request")
-                    handleAuthSessionStartRequest()
                     
+                    sessionState
+                        .sink { [weak self] sessionState in
+                            
+                            switch sessionState {
+                            case .active: return
+                                
+                            default: self?.handleAuthSessionStartRequest()
+                            }
+                        }
+                        .store(in: &bindings)
+                
                 case let payload as ModelAction.Auth.Session.Start.Response:
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Start.Response")
                     
@@ -565,7 +575,16 @@ class Model {
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Timeout.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Timeout.Response(result: payload.result))
-                 
+                    
+                    auth
+                        .sink { [weak self] authState in
+                            
+                            if authState == .unlockRequired {
+                                self?.clientInformAlertManager.setUpdatePermission(true)
+                            }
+                        }
+                        .store(in: &bindings)
+                    
                 case _ as ModelAction.Auth.Session.Terminate:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Terminate")
                     

@@ -729,9 +729,8 @@ private extension ClientInformListDataState {
             
             return .single(.init(
                 
-                label: .init(image: single.label.image, title: single.label.title),
-                text: single.text, 
-                url: single.url
+                label: .init(image: single.label.image, title: single.label.title, url: single.label.url),
+                text: single.text
             ))
             
         case let .multiple(multiple):
@@ -741,7 +740,7 @@ private extension ClientInformListDataState {
                 title: .init(image: multiple.title.image, title: multiple.title.title),
                 items: multiple.items.map {
                     
-                    return .init(id: $0.id, image: $0.image, title: $0.title)
+                    return .init(id: $0.id, image: $0.image, title: $0.title, url: $0.url)
                 }
             ))
         }

@@ -42,7 +42,8 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformData {
         
         guard let authBlocking = data.authBlocking,
               let title = data.title,
-              let text = data.text 
+              let text = data.text,
+              data.update?.platform == "iOS"
         else { return nil }
         
         self.init(

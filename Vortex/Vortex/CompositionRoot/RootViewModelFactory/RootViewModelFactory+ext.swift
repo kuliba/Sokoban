@@ -430,12 +430,8 @@ extension RootViewModelFactory {
         .store(in: &bindings)
         
         func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
-        
-        model.sessionState
-            .map(\.isActive)
-            .filter { $0 }
-            .removeDuplicates()
-            .sink { [weak self] _ in self?.updateAlerts() }
+       
+        updateClientInfromAlerts()
             .store(in: &bindings)
         
         let rootViewModel = make(

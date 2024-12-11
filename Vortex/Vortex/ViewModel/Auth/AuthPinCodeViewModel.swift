@@ -284,6 +284,8 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Login.Request, type: .pin, restartSession: true")
                         model.action.send(ModelAction.Auth.Login.Request(type: .pin, restartSession: true))
+                
+                        model.clientInformAlertManager.setUpdatePermission(false)
                         
                     case .failure:
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.SetDeviceSettings.Response: failure")
@@ -306,6 +308,8 @@ class AuthPinCodeViewModel: ObservableObject {
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                     rootActions.spinner.hide()
                     
+                    model.clientInformAlertManager.setUpdatePermission(false)
+
                     switch payload {
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.Login.Response: failure, message: \(message)")
@@ -652,6 +656,7 @@ class AuthPinCodeViewModel: ObservableObject {
     
     deinit {
         
+        model.clientInformAlertManager.setUpdatePermission(true)
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
 }
