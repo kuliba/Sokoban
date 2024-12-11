@@ -46,7 +46,6 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformData {
         else { return nil }
         
         if let update = data.update,
-           update.platform != nil,
            update.platform != "iOS" {
             return nil
         }
