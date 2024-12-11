@@ -136,7 +136,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         anotherCard.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeAnotherCard_shouldCallNotifyWithDelayOnScanQR() {
@@ -146,16 +146,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         anotherCard.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(799))
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(800))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .dismiss,
-            .select(.qr(.scan))
-        ])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeAnotherCard_shouldCallNotifyWithDelayOnContactAbroad() {
@@ -274,7 +271,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         detail.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeDetail_shouldCallNotifyWithDelayOnScanQR() {
@@ -284,16 +281,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         detail.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(799))
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(800))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .dismiss,
-            .select(.qr(.scan))
-        ])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeDetail_shouldCallNotifyWithDelayOnContactAbroad() {
@@ -346,7 +340,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         latest.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeLatest_shouldCallNotifyWithDelayOnScanQR() throws {
@@ -358,16 +352,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         latest.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(799))
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(800))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .dismiss,
-            .select(.qr(.scan))
-        ])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeLatest_shouldCallNotifyWithDelayOnContactAbroad() throws {
@@ -478,67 +469,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
-    // MARK: - makeScanQR
-    
-    func test_makeScanQR_shouldCallMakeQRModel() {
-        
-        let (_, nanoServices, _,_, makeQRModel) = makeSUT()
-        
-        _ = nanoServices.makeScanQR { _ in }
-        
-        XCTAssertEqual(makeQRModel.callCount, 1)
-    }
-    
-    func test_makeScanQR_shouldDeliverScanQR() {
-        
-        let qrModel = makeQRModel()
-        let (_, nanoServices, _,_,_) = makeSUT(qrModel: qrModel)
-        
-        let scanQR = nanoServices.makeScanQR { _ in }
-        
-        XCTAssert(scanQR.model === qrModel)
-    }
-    
-    func test_makeScanQR_shouldNotCallNotify() {
-        
-        let (_, nanoServices, _, spy, _) = makeSUT()
-        
-        _ = nanoServices.makeScanQR(spy.call(payload:))
-        
-        XCTAssertEqual(spy.callCount, 0)
-    }
-    
-    func test_makeScanQR_shouldCallNotifyWithDelayWithDismissOnQRCancelled() {
-        
-        let (_, nanoServices, scheduler, spy, _) = makeSUT()
-        let scanQR = nanoServices.makeScanQR(spy.call(payload:))
-        
-        scanQR.model.event(.cancel)
-        
-        scheduler.advance(by: .milliseconds(99))
-        XCTAssertNoDiff(spy.equatablePayloads, [])
-        
-        scheduler.advance(by: .milliseconds(1))
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
-    }
-    
-    func test_makeScanQR_shouldCallNotifyWithDelayWithQRResultOnQRResult() {
-        
-        let qrResult = QRModelResult.unknown
-        let (_, nanoServices, scheduler, spy, _) = makeSUT()
-        let scanQR = nanoServices.makeScanQR(spy.call(payload:))
-        
-        scanQR.model.event(.qrResult(qrResult))
-        
-        scheduler.advance(by: .milliseconds(99))
-        XCTAssertNoDiff(spy.equatablePayloads, [])
-        
-        scheduler.advance(by: .milliseconds(1))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .select(.qr(.result(qrResult)))
-        ])
-    }
-    
     // MARK: - makeSource
     
     func test_makeSource_shouldCallNotifyWithDismissOnScanQR() {
@@ -548,7 +478,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         source.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeSource_shouldCallNotifyWithDelayOnScanQR() {
@@ -558,16 +488,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         source.scanQR()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(799))
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
         
         scheduler.advance(by: .milliseconds(800))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .dismiss,
-            .select(.qr(.scan))
-        ])
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.scanQR)])
     }
     
     func test_makeSource_shouldCallNotifyWithDelayOnContactAbroad() {
