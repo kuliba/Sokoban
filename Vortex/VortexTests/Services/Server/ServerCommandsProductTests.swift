@@ -247,7 +247,7 @@ class ServerCommandsProductTests: XCTestCase {
         date: Date = .date,
         name: String = "ВСФ",
         status: ProductData.Status = .notBlocked,
-        branch: String = "АКБ \"ФОРА-БАНК\" (АО)",
+        branch: String = "АКБ \"ИННОВАЦИИ БИЗНЕСА\" (АО)",
         miniStatement: [ProductCardData.PaymentDataItem]? = [.dataItem],
         externalId: Int? = 10000788533
     ) -> ProductCardData {
@@ -281,7 +281,7 @@ class ServerCommandsProductTests: XCTestCase {
         balanceRub: Double? = 1000123,
         additionalField: String? = "Зарплатная",
         customName: String? = "Моя карта",
-        branch: String? = "АКБ \"ФОРА-БАНК\" (АО)",
+        branch: String? = "АКБ \"ИННОВАЦИИ БИЗНЕСА\" (АО)",
         miniStatement: [ProductCardData.PaymentDataItem]? = [.dataItem]
     ) -> ProductAccountData {
         

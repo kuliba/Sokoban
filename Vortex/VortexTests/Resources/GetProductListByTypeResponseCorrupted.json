@@ -12,7 +12,7 @@
                 "currency": "RUB",
                 "productType": "CARD",
                 "productName": "VISA REWARDS R-5",
-                "branch": "АКБ \"ФОРА-БАНК\" (АО)",
+                "branch": "АКБ \"ИННОВАЦИИ БИЗНЕСА\" (АО)",
                 "ownerID": 10001639855,
                 "accountNumber": "40817810000000000001",
                 "cardID": 10001639855,
@@ -60,7 +60,7 @@
                 "currency": "RUB",
                 "productType": "CARD",
                 "productName": "VISA REWARDS R-5",
-                "branch": "АКБ \"ФОРА-БАНК\" (АО)",
+                "branch": "АКБ \"ИННОВАЦИИ БИЗНЕСА\" (АО)",
                 "ownerID": 10001639855,
                 "accountNumber": "40817810000000000001",
                 "allowDebit": true,
@@ -130,7 +130,7 @@
                 "name": "ВСФ",
                 "dateOpen": 1648512000000,
                 "status": "NOT_BLOCKED",
-                "branchName": "АКБ \"ФОРА-БАНК\" (АО)",
+                "branchName": "АКБ \"ИННОВАЦИИ БИЗНЕСА\" (АО)",
                 "miniStatement": [
                         {
                             "account": "string",
@@ -175,7 +175,7 @@
                 "name": "ВСФ",
                 "dateOpen": 1648512000000,
                 "status": "NOT_BLOCKED",
-                "branchName": "АКБ \"ФОРА-БАНК\" (АО)",
+                "branchName": "АКБ \"ИННОВАЦИИ БИЗНЕСА\" (АО)",
                 "miniStatement": [
                         {
                             "account": "string",

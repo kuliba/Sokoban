@@ -78,7 +78,7 @@ where PrimaryEvent == UserAccountNavigation.Event,
         
         .default(
             title: "Внимание",
-            message: "Фора-банк будет выбран банком по умолчанию",
+            message: "ИННОВАЦИИ БИЗНЕСА будет выбран банком по умолчанию",
             primaryEvent: event,
             secondaryEvent: secondaryEvent
         )

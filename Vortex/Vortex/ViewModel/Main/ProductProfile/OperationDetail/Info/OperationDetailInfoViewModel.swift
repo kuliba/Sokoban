@@ -89,7 +89,7 @@ final class OperationDetailInfoViewModel: Identifiable {
     ) {
         self.model = model
         let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date)
-        let vortexName = "Фора Банк"
+        let vortexName = "Инновации Бизнеса"
         let vortexIcon = Image("vortexContactImage", bundle: nil)
         
         guard let currency = model.dictionaryCurrency(for: statement.currencyCodeNumeric)?.code else {

@@ -68,7 +68,7 @@
             }, {
                 "id": "recipientBank",
                 "type": "INFO",
-                "value": "ФОРА-БАНК",
+                "value": "ИННОВАЦИИ БИЗНЕСА",
                 "title": "Банк получателя",
                 "icon": {
                     "type": "REMOTE",

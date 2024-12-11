@@ -170,7 +170,7 @@ extension GetCollateralLandingProduct {
         ],
         documents: [
             .init(
-                title: "Общие условия потребительского кредита «Фора-Залоговый",
+                title: "Общие условия потребительского кредита «Инновации-Залоговый",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
                 link: "https://www.vortex.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             ),
@@ -426,7 +426,7 @@ extension GetCollateralLandingProduct {
         ],
         documents: [
             .init(
-                title: "Общие условия потребительского кредита «Фора-Залоговый",
+                title: "Общие условия потребительского кредита «Инновации-Залоговый",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
                 link: "https://www.vortex.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             ),

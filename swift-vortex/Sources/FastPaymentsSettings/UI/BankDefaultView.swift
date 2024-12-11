@@ -44,7 +44,7 @@ struct BankDefaultView: View {
         VStack(alignment: .leading, spacing: 4) {
             
             "Банк по умолчанию".text(withConfig: config.subtitle)
-            "Фора-банк".text(withConfig: config.title)
+            "ИННОВАЦИИ БИЗНЕСА".text(withConfig: config.title)
         }
     }
     

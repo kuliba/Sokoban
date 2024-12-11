@@ -53,7 +53,7 @@ extension String {
         case .additionalSelf, .additionalOther:
             return "Выписку может заказать владелец основной карты и счета"
         case .additionalCorporate, .individualBusinessman, .corporate:
-            return "Заказать выписку можно в приложении «Фора Бизнес»"
+            return "Заказать выписку можно в приложении «Инновации Бизнес»"
         default:
             return nil
         }

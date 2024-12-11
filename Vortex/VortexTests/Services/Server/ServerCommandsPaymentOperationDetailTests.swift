@@ -63,7 +63,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 
         let data = PaymentGeneralData(amount: "10000.00",
                                       bankId: BankID.vortexID.rawValue,
-                                      bankName: "ФОРА-БАНК",
+                                      bankName: "ИННОВАЦИИ БИЗНЕСА",
                                       date: date,
                                       paymentDate: "26.05.2022 16:09:11",
                                       phoneNumber: "9636124249",

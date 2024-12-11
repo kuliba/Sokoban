@@ -73,7 +73,7 @@ extension ProductResponse {
                         expireDate: "09/26",
                         holderName: "CHALIKYAN GEVORG",
                         product: "VISA REWARDS R-5",
-                        branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                        branch: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                         paymentSystemName: "VISA",
                         paymentSystemImageMd5Hash: "d7516b59941d5acd06df25a64ea32660"
                     )
@@ -132,7 +132,7 @@ extension ProductResponse {
                         expireDate: "09/26",
                         holderName: "CHALIKYAN GEVORG",
                         product: "VISA REWARDS R-5",
-                        branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                        branch: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                         paymentSystemName: "VISA",
                         paymentSystemImageMd5Hash: "d7516b59941d5acd06df25a64ea32660"
                     )
@@ -191,7 +191,7 @@ extension ProductResponse {
                         expireDate: "11/28",
                         holderName: "GEVORG CHALIKYAN",
                         product: "MIR ADVANCED R-5",
-                        branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                        branch: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                         paymentSystemName: "MIR",
                         paymentSystemImageMd5Hash: "268b81ab6ff15601ccb77c9023f43544"
                     )
@@ -250,7 +250,7 @@ extension ProductResponse {
                         expireDate: "11/28",
                         holderName: "GEVORG CHALIKYAN",
                         product: "VISA PLATINUM R-5",
-                        branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                        branch: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                         paymentSystemName: "VISA",
                         paymentSystemImageMd5Hash: "d7516b59941d5acd06df25a64ea32660"
                     )
@@ -309,7 +309,7 @@ extension ProductResponse {
                         expireDate: "02/27",
                         holderName: "ANNA SOLOVеVA",
                         product: "MIR ADVANCED R-5",
-                        branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                        branch: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                         paymentSystemName: "MIR",
                         paymentSystemImageMd5Hash: "268b81ab6ff15601ccb77c9023f43544"
                     )

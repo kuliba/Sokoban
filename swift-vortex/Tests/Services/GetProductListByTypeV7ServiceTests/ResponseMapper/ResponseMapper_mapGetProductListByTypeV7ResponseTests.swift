@@ -290,7 +290,7 @@ extension ResponseMapper.GetProductListByTypeV7Data.UniqueProperties {
                 externalID: 10002053887,
                 dateOpen: 1596402000000,
                 status: .notBlocked,
-                branchName: #"АКБ "ФОРА-БАНК" (АО)"#,
+                branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                 detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                 detailedConditionUrl: "https://www.vortex.ru/dkbo/dkbo.pdf",
                 isSavingAccount: true,
@@ -355,7 +355,7 @@ extension ResponseMapper.GetProductListByTypeV7Data.UniqueProperties {
                 expireDate: "09/26",
                 holderName: "CHALIKYAN GEVORG",
                 product: "VISA REWARDS R-5",
-                branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                branch: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
                 paymentSystemName: "VISA",
                 paymentSystemImageMd5Hash: "d7516b59941d5acd06df25a64ea32660"
             )

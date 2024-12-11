@@ -35,7 +35,7 @@ struct SendMailView: UIViewControllerRepresentable {
         let mailVC = MFMailComposeViewController()
         mailVC.mailComposeDelegate = context.coordinator
         mailVC.setToRecipients([mailAddress])
-        mailVC.setSubject("ФОРА-ОНЛАЙН")
+        mailVC.setSubject("ИННОВАЦИИ-ОНЛАЙН")
         mailVC.setMessageBody("", isHTML: false)
         
         return mailVC

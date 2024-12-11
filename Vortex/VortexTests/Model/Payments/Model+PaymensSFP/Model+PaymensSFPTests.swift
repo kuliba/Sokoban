@@ -685,7 +685,7 @@ private extension Payments.ParameterSelectBank {
     static func getTestParametersWithVortex(
         bankID: String = "BankRecipientID",
         value: String = "1crt88888881",
-        name: String = "ФОРА-БАНК",
+        name: String = "ИННОВАЦИИ БИЗНЕСА",
         optionID: String = .vortexID
     ) -> PaymentsParameterRepresentable {
         

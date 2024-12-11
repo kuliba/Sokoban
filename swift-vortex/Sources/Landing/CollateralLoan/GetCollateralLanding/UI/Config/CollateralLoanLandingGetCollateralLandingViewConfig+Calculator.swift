@@ -280,7 +280,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig.Calculator {
             bottomPadding: 12
         ),
         salary: .init(
-            text: "Я получаю зарплату на счет в Фора-Банке",
+            text: "Я получаю зарплату на счет в Инновациях-Бизнеса",
             font: .init(Font.system(size: 14), foreground: .white),
             leadingPadding: 16,
             trailingPadding: 17,

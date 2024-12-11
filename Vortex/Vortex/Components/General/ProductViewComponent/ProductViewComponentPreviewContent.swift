@@ -131,7 +131,7 @@ extension ProductViewModel {
         id: 6,
         header: .make(),
         cardInfo: .init(
-            name: "Classic\nФОРА-Премиум",
+            name: "Classic\nИННОВАЦИИ-Премиум",
             owner: "Иванов",
             cvvTitle: .cvvTitle,
             cardWiggle: false,

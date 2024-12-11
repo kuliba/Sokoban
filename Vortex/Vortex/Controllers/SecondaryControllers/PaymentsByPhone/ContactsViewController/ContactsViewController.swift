@@ -511,8 +511,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     }
                 }
                 item.bankNameLabel.isHidden = false
-                if lastPhonePayment[indexPath.item].bankName == "ФОРА-БАНК"{
-                    item.bankNameLabel.text = "Фора-Банк"
+                if lastPhonePayment[indexPath.item].bankName == "ИННОВАЦИИ БИЗНЕСА"{
+                    item.bankNameLabel.text = "Инновации-Бизнеса"
                 } else {
                     item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
                 }

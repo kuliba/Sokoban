@@ -353,9 +353,9 @@ extension UILanding.List.DropDownTexts.Config {
 extension UILanding.List.DropDownTexts {
     
     static let defaultDropDownTextsDataList: UILanding.List.DropDownTexts = .init(title: "Questions", list: [
-        .init(title: "Как можно отправить перевод?", description: "В мобильном приложении Фора-Банка нажмите на баннер с переводами в Армению «МИГ» на главном экране."),
-        .init(title: "2 Как можно отправить перевод?", description: "2 В мобильном приложении Фора-Банка нажмите на баннер с переводами в Армению «МИГ» на главном экране"),
-        .init(title: "3 Как можно отправить перевод?", description: "3 В мобильном приложении Фора-Банка нажмите на баннер с переводами в Армению «МИГ» на главном экране"),
+        .init(title: "Как можно отправить перевод?", description: "В мобильном приложении Инноваций-Бизнеса нажмите на баннер с переводами в Армению «МИГ» на главном экране."),
+        .init(title: "2 Как можно отправить перевод?", description: "2 В мобильном приложении Инноваций-Бизнеса нажмите на баннер с переводами в Армению «МИГ» на главном экране"),
+        .init(title: "3 Как можно отправить перевод?", description: "3 В мобильном приложении Инноваций-Бизнеса нажмите на баннер с переводами в Армению «МИГ» на главном экране"),
     ])
 }
 
@@ -593,7 +593,7 @@ extension UILanding.Spacing.Config {
 // MARK: - MarkersText Model
 extension UILanding.Multi.MarkersText {
     
-    static let defaultModel1: UILanding.Multi.MarkersText = .init(backgroundColor: "WHITE", style: "PADDINGWITHCORNERS", list: ["Валюты счета: ₽/$/€;", "Соверши свой первый перевод в Армению в приложении Фора-Банка*", "Получи кешбэк до 1 000 ₽*"])
+    static let defaultModel1: UILanding.Multi.MarkersText = .init(backgroundColor: "WHITE", style: "PADDINGWITHCORNERS", list: ["Валюты счета: ₽/$/€;", "Соверши свой первый перевод в Армению в приложении Инноваций-Бизнеса*", "Получи кешбэк до 1 000 ₽*"])
     
     static let defaultModel2: UILanding.Multi.MarkersText = .init(backgroundColor: "GREY", style: "PADDING", list: ["Валюты счета: ₽/$/€;", "Кешбэк: до 20% у партнеров; 7% сезонный; 2% - канцтовары; 1,2% - остальные покупки, до 20 000 ₽/мес", "Кредитный лимит до 1 500 000 ₽, ставка от 17% годовых"])
     

@@ -512,7 +512,7 @@ private extension ProductCardData {
         expireDate: String = "09/26",
         holderName: String = "CHALIKYAN GEVORG",
         product: String = "VISA REWARDS R-5",
-        branch: String = #"АКБ "ФОРА-БАНК" (АО)"#,
+        branch: String = #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
         miniStatement: [PaymentDataItem]? = nil,
         paymentSystemName: String = "VISA",
         paymentSystemImage: SVGImageData = SVGImageData(description: "d7516b59941d5acd06df25a64ea32660"),
