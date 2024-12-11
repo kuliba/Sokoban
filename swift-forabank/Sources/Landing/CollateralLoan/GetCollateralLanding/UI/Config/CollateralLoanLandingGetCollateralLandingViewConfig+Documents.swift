@@ -9,26 +9,26 @@ import SwiftUI
 
 extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
-    public struct Documents {
+    struct Documents {
         
-        public let background: Color
-        public let topPadding: CGFloat
-        public let header: Header
-        public let list: List
+        let background: Color
+        let topPadding: CGFloat
+        let header: Header
+        let list: List
         
-        public init(background: Color, topPadding: CGFloat, header: Header, list: List) {
+        init(background: Color, topPadding: CGFloat, header: Header, list: List) {
             self.background = background
             self.topPadding = topPadding
             self.header = header
             self.list = list
         }
         
-        public struct Header {
+        struct Header {
             
-            public let text: String
-            public let headerFont: FontConfig
+            let text: String
+            let headerFont: FontConfig
 
-            public init(
+            init(
                 text: String,
                 headerFont: FontConfig
             ) {
@@ -38,25 +38,25 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             }
         }
         
-        public struct List {
+        struct List {
             
-            public let layouts: Layouts
-            public let fonts: Fonts
+            let layouts: Layouts
+            let fonts: Fonts
             
-            public init(layouts: Layouts, fonts: Fonts) {
+            init(layouts: Layouts, fonts: Fonts) {
                 self.layouts = layouts
                 self.fonts = fonts
             }
             
-            public struct Layouts {
+            struct Layouts {
                 
-                public let horizontalPadding: CGFloat
-                public let topPadding: CGFloat
-                public let bottomPadding: CGFloat
-                public let spacing: CGFloat
-                public let iconTrailingPadding: CGFloat
+                let horizontalPadding: CGFloat
+                let topPadding: CGFloat
+                let bottomPadding: CGFloat
+                let spacing: CGFloat
+                let iconTrailingPadding: CGFloat
                 
-                public init(
+                init(
                     horizontalPadding: CGFloat,
                     topPadding: CGFloat,
                     bottomPadding: CGFloat,
@@ -71,11 +71,11 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
                 }
             }
             
-            public struct Fonts {
+            struct Fonts {
                 
-                public let title: FontConfig
+                let title: FontConfig
                 
-                public init(title: FontConfig) {
+                init(title: FontConfig) {
                     self.title = title
                 }
             }

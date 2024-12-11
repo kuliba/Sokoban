@@ -10,15 +10,15 @@ import SwiftUI
 
 extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
-    public struct Footer {
+    struct Footer {
         
-        public let text: String
-        public let font: FontConfig
-        public let foreground: Color
-        public let background: Color
-        public let layouts: Layouts
+        let text: String
+        let font: FontConfig
+        let foreground: Color
+        let background: Color
+        let layouts: Layouts
         
-        public init(
+        init(
             text: String,
             font: FontConfig,
             foreground: Color,
@@ -32,26 +32,26 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             self.layouts = layouts
         }
         
-        public struct Layouts {
+        struct Layouts {
             
-            public let height: CGFloat
-            public let cornerRadius: CGFloat
-            public let paddings: Paddings
+            let height: CGFloat
+            let cornerRadius: CGFloat
+            let paddings: Paddings
             
-            public init(height: CGFloat, cornerRadius: CGFloat, paddings: Paddings) {
+            init(height: CGFloat, cornerRadius: CGFloat, paddings: Paddings) {
                 self.height = height
                 self.cornerRadius = cornerRadius
                 self.paddings = paddings
             }
             
-            public struct Paddings {
+            struct Paddings {
                     
-                public let leading: CGFloat
-                public let trailing: CGFloat
-                public let top: CGFloat
-                public let bottom: CGFloat
+                let leading: CGFloat
+                let trailing: CGFloat
+                let top: CGFloat
+                let bottom: CGFloat
                 
-                public init(
+                init(
                     leading: CGFloat,
                     trailing: CGFloat,
                     top: CGFloat,

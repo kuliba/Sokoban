@@ -10,13 +10,13 @@ import SwiftUI
 
 extension CollateralLoanLandingGetCollateralLandingViewConfig {
     
-    public struct Header {
+    struct Header {
         
-        public let height: CGFloat
-        public let labelTag: LabelTag
-        public let params: Params
+        let height: CGFloat
+        let labelTag: LabelTag
+        let params: Params
         
-        public init(
+        init(
             height: CGFloat,
             labelTag: LabelTag,
             params: Params
@@ -26,40 +26,40 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
             self.params = params
         }
         
-        public struct LabelTag {
+        struct LabelTag {
 
-            public let layouts: Layouts
-            public let fonts: Fonts
+            let layouts: Layouts
+            let fonts: Fonts
 
-            public init(layouts: Layouts, fonts: Fonts) {
+            init(layouts: Layouts, fonts: Fonts) {
                 self.layouts = layouts
                 self.fonts = fonts
             }
             
-            public struct Layouts {
+            struct Layouts {
                 
-                public let cornerSize: CGFloat
-                public let topOuterPadding: CGFloat
-                public let leadingOuterPadding: CGFloat
-                public let horizontalInnerPadding: CGFloat
-                public let verticalInnerPadding: CGFloat
-                public let rotationDegrees: CGFloat
+                let cornerSize: CGFloat
+                let topOuterPadding: CGFloat
+                let leadingOuterPadding: CGFloat
+                let horizontalInnerPadding: CGFloat
+                let verticalInnerPadding: CGFloat
+                let rotationDegrees: CGFloat
             }
             
-            public struct Fonts {
+            struct Fonts {
                 
-                public let fontConfig: FontConfig
+                let fontConfig: FontConfig
             }
         }
         
-        public struct Params {
+        struct Params {
             
-            public let fontConfig: FontConfig
-            public let spacing: CGFloat
-            public let leadingPadding: CGFloat
-            public let topPadding: CGFloat
+            let fontConfig: FontConfig
+            let spacing: CGFloat
+            let leadingPadding: CGFloat
+            let topPadding: CGFloat
             
-            public init(
+            init(
                 fontConfig: FontConfig,
                 spacing: CGFloat,
                 leadingPadding: CGFloat,

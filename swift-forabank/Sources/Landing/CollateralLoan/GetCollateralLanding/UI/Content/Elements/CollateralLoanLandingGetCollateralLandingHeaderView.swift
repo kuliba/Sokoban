@@ -8,7 +8,7 @@
 import SwiftUI
 import UIPrimitives
 
-public struct CollateralLoanLandingGetCollateralLandingHeaderView: View {
+struct CollateralLoanLandingGetCollateralLandingHeaderView: View {
     
     private let config: Config
     
@@ -23,7 +23,7 @@ public struct CollateralLoanLandingGetCollateralLandingHeaderView: View {
     }
 }
 
-public extension CollateralLoanLandingGetCollateralLandingHeaderView {
+extension CollateralLoanLandingGetCollateralLandingHeaderView {
     
     typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
 }

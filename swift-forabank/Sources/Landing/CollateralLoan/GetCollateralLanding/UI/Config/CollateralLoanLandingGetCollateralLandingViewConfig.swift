@@ -8,22 +8,22 @@
 import SwiftUI
 import DropDownTextListComponent
 
-public struct CollateralLoanLandingGetCollateralLandingViewConfig {
+struct CollateralLoanLandingGetCollateralLandingViewConfig {
     
-    public let fonts: Fonts
-    public let backgroundImageHeight: CGFloat
-    public let paddings: Paddings
-    public let spacing: CGFloat
-    public let cornerRadius: CGFloat
+    let fonts: Fonts
+    let backgroundImageHeight: CGFloat
+    let paddings: Paddings
+    let spacing: CGFloat
+    let cornerRadius: CGFloat
     
-    public let header: Header
-    public let conditions: Conditions
-    public let calculator: Calculator
-    public let frequentlyAskedQuestions: DropDownTextListConfig
-    public let documents: Documents
-    public let footer: Footer
+    let header: Header
+    let conditions: Conditions
+    let calculator: Calculator
+    let frequentlyAskedQuestions: DropDownTextListConfig
+    let documents: Documents
+    let footer: Footer
         
-    public init(
+    init(
         fonts: Fonts,
         backgroundImageHeight: CGFloat,
         paddings: Paddings,
@@ -49,23 +49,23 @@ public struct CollateralLoanLandingGetCollateralLandingViewConfig {
         self.footer = footer
     }
     
-    public struct Fonts {
+    struct Fonts {
         
-        public let body: FontConfig
+        let body: FontConfig
         
-        public init(body: FontConfig) {
+        init(body: FontConfig) {
             self.body = body
         }
     }
     
-    public struct Paddings {
+    struct Paddings {
         
         let outerLeading: CGFloat
         let outerTrailing: CGFloat
         let outerBottom: CGFloat
         let outerTop: CGFloat
         
-        public init(
+        init(
             outerLeading: CGFloat,
             outerTrailing: CGFloat,
             outerBottom: CGFloat,
@@ -78,13 +78,13 @@ public struct CollateralLoanLandingGetCollateralLandingViewConfig {
         }
     }
         
-    public struct FontConfig {
+    struct FontConfig {
         
-        public let font: Font
-        public let foreground: Color
-        public let background: Color
+        let font: Font
+        let foreground: Color
+        let background: Color
         
-        public init(
+        init(
             _ font: Font,
             foreground: Color = .black,
             background: Color = .white
