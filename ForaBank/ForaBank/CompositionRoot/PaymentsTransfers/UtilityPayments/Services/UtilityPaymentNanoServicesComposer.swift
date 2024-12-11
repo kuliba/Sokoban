@@ -35,7 +35,7 @@ final class UtilityPaymentNanoServicesComposer {
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperators = (ServiceCategory.CategoryType, @escaping LoadOperatorsCompletion) -> Void
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentProvider
@@ -44,11 +44,16 @@ final class UtilityPaymentNanoServicesComposer {
 
 extension UtilityPaymentNanoServicesComposer {
     
-    func compose() -> NanoServices {
+    func compose(
+        categoryType: ServiceCategory.CategoryType
+    ) -> NanoServices {
         
         return .init(
             getAllLatestPayments: getAllLatestPayments,
-            getOperatorsListByParam: getOperatorsListByParam,
+            getOperatorsListByParam: { [weak self] completion in
+             
+                self?.getOperatorsListByParam(categoryType, completion)
+            },
             getServicesFor: getServicesFor,
             startAnywayPayment: startAnywayPayment
         )
@@ -64,9 +69,10 @@ private extension UtilityPaymentNanoServicesComposer {
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
     func getOperatorsListByParam(
+        _ categoryType: ServiceCategory.CategoryType,
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        loadOperators(completion)
+        loadOperators(categoryType, completion)
     }
 }
 

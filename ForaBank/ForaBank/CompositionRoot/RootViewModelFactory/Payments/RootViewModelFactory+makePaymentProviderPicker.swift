@@ -216,7 +216,7 @@ extension RootViewModelFactory {
     ) {
         let anywayFlowComposer = makeAnywayFlowComposer()
         
-        processSelection(select: .operator(provider)) {
+        processSelection(select: (.operator(provider), .init(string: provider.type) ?? .housingAndCommunalService)) {
             
             switch $0 {
             case let .failure(failure):

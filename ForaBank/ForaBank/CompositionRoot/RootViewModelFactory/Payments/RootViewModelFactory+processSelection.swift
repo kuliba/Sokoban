@@ -12,14 +12,14 @@ extension RootViewModelFactory {
     
     @inlinable
     func processSelection(
-        select: PrepaymentSelect,
+        select: (PrepaymentSelect, ServiceCategory.CategoryType),
         completion: @escaping (ProcessSelectionResult) -> Void
     ) {
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             model: model,
             httpClient: httpClient,
             log: logger.log(level:category:message:file:line:),
-            loadOperators: { $0([]) } // not used in this case of ...!!!!!!!
+            loadOperators: { $1([]) } // not used in this case of ...!!!!!!!
         )
         let composer = AnywayTransactionComposer(
             model: model,
@@ -30,7 +30,7 @@ extension RootViewModelFactory {
         )
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             composer: composer,
-            nanoServices: nanoComposer.compose(),
+            nanoServices: nanoComposer.compose(categoryType: select.1),
             makeLegacyPaymentsServicesViewModel: {
                 
                 // also not used
@@ -40,6 +40,6 @@ extension RootViewModelFactory {
         
         let processSelection = microComposer.compose().processSelection
         
-        processSelection(select) { completion($0); _ = microComposer }
+        processSelection(select.0) { completion($0); _ = microComposer }
     }
 }
