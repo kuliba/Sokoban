@@ -79,7 +79,7 @@ private extension Model {
         with inn: String
     ) -> [SegmentedProvider]? {
         
-        localAgent.load(type: [CachingSberOperator].self)?
+        localAgent.load(type: [CodableServicePaymentOperator].self)?
             .filter { $0.inn == inn }
             .map(SegmentedProvider.init)
     }
@@ -88,7 +88,7 @@ private extension Model {
 private extension SegmentedProvider {
     
     init(
-        with cached: CachingSberOperator
+        with cached: CodableServicePaymentOperator
     ) {
         // TODO: add `segment` property to `CachingSberOperator`
         let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service

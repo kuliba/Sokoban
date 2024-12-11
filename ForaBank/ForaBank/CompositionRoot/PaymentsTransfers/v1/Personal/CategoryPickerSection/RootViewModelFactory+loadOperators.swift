@@ -11,7 +11,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func loadCachedOperators(
-        payload: UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload,
+        payload: LoadOperatorsPayload,
         completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
         schedulers.userInitiated.schedule { [weak self] in
@@ -31,40 +31,13 @@ extension RootViewModelFactory {
     ) {
         loadCachedOperators(
             payload: .init(
-                afterOperatorID: nil,
-                for: category.type,
-                searchText: "",
+                categoryType: category.type,
                 pageSize: settings.pageSize
             )
         ) {
             completion(.success($0))
         }
     }
-}
-
-// MARK: - Helpers
-
-extension CodableServicePaymentOperator: FilterableItem {
-    
-    func matches(
-        _ payload: UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload
-    ) -> Bool {
-        
-        type == payload.categoryType.name && contains(payload.searchText)
-    }
-    
-    func contains(_ searchText: String) -> Bool {
-        
-        guard !searchText.isEmpty else { return true }
-        
-        return name.localizedCaseInsensitiveContains(searchText)
-        || inn.localizedCaseInsensitiveContains(searchText)
-    }
-}
-
-extension UtilityPrepaymentNanoServices<UtilityPaymentProvider>.LoadOperatorsPayload: PageQuery {
-    
-    var id: String? { operatorID }
 }
 
 // MARK: - Adapters

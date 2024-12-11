@@ -10,9 +10,10 @@ import ForaTools
 extension RootViewModelFactory {
     
     func composedLoadOperators(
+        categoryType: ServiceCategory.CategoryType,
         completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
-        composedLoadOperators(payload: .init(pageSize: settings.pageSize), completion: completion)
+        composedLoadOperators(payload: .init(categoryType: categoryType, pageSize: settings.pageSize), completion: completion)
     }
     
     func composedLoadOperators(
@@ -24,7 +25,7 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             // sorting is performed at cache phase
-            let page = loadPage(of: [CachingSberOperator].self, for: payload) ?? []
+            let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
             completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
     }
@@ -34,15 +35,18 @@ extension RootViewModelFactory {
 
 struct LoadOperatorsPayload: Equatable {
     
+    let categoryType: ServiceCategory.CategoryType
     let operatorID: String?
     let searchText: String
     let pageSize: Int
     
     init(
+        categoryType: ServiceCategory.CategoryType,
         operatorID: String? = nil,
         searchText: String = "",
         pageSize: Int
     ) {
+        self.categoryType = categoryType
         self.operatorID = operatorID
         self.searchText = searchText
         self.pageSize = pageSize
@@ -51,13 +55,11 @@ struct LoadOperatorsPayload: Equatable {
 
 // MARK: - Helpers
 
-extension CachingSberOperator: Identifiable {}
-
-extension CachingSberOperator: FilterableItem {
+extension CodableServicePaymentOperator: FilterableItem {
     
     func matches(_ payload: LoadOperatorsPayload) -> Bool {
         
-        contains(payload.searchText)
+        categoryType == payload.categoryType && contains(payload.searchText)
     }
     
     func contains(_ searchText: String) -> Bool {
@@ -78,14 +80,67 @@ extension LoadOperatorsPayload: PageQuery {
 
 private extension UtilityPaymentProvider {
     
-    init(codable: CachingSberOperator) {
+    init(codable: CodableServicePaymentOperator) {
         
         self.init(
             id: codable.id,
-            icon: codable.md5Hash, 
+            icon: codable.md5Hash,
             inn: codable.inn,
             title: codable.name,
             type: codable.type
         )
+    }
+}
+
+extension UtilityPaymentProvider {
+    
+    var categoryType: ServiceCategory.CategoryType {
+        
+        return .init(string: type) ?? .housingAndCommunalService
+    }
+}
+
+extension CodableServicePaymentOperator {
+    
+    var categoryType: ServiceCategory.CategoryType {
+        
+        return .init(string: type) ?? .housingAndCommunalService
+    }
+}
+
+extension ServiceCategory.CategoryType {
+    
+    init?(string: String) {
+        
+        switch string {
+        case "charity":
+            self = .charity
+        case "digitalWallets":
+            self = .digitalWallets
+        case "education":
+            self = .education
+        case "housingAndCommunalService":
+            self = .housingAndCommunalService
+        case "internet":
+            self = .internet
+        case "mobile":
+            self = .mobile
+        case "networkMarketing":
+            self = .networkMarketing
+        case "qr":
+            self = .qr
+        case "repaymentLoansAndAccounts":
+            self = .repaymentLoansAndAccounts
+        case "security":
+            self = .security
+        case "socialAndGames":
+            self = .socialAndGames
+        case "taxAndStateService":
+            self = .taxAndStateService
+        case "transport":
+            self = .transport
+        default:
+            return nil
+        }
     }
 }

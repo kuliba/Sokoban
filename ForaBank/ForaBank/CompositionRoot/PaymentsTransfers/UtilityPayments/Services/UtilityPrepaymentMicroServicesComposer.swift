@@ -10,7 +10,8 @@ import UtilityServicePrepaymentDomain
 import ForaTools
 
 final class UtilityPrepaymentMicroServicesComposer<Operator>
-where Operator: Identifiable {
+where Operator: Identifiable,
+      Operator.ID == String {
     
     private let pageSize: Int
     private let nanoServices: NanoServices
@@ -46,7 +47,7 @@ extension UtilityPrepaymentMicroServicesComposer {
 
 private extension UtilityPrepaymentMicroServicesComposer {
     
-    typealias Load = (NanoServices.LoadOperatorsPayload, @escaping ([Operator]) -> Void) -> Void
+    typealias Load = (LoadOperatorsPayload, @escaping ([Operator]) -> Void) -> Void
     
     func makePaginate(
         for categoryType: ServiceCategory.CategoryType,
@@ -57,9 +58,9 @@ private extension UtilityPrepaymentMicroServicesComposer {
             
             let throttler = ThrottleDecorator(delay: 0.3)
             
-            let payload = Payload(
-                afterOperatorID: payload.operatorID,
-                for: categoryType,
+            let payload = LoadOperatorsPayload(
+                categoryType: categoryType,
+                operatorID: payload.operatorID,
                 searchText: payload.searchText,
                 pageSize: self.pageSize
             )
@@ -77,9 +78,9 @@ private extension UtilityPrepaymentMicroServicesComposer {
             
             let debouncer = DebounceDecorator(delay: 0.3)
             
-            let payload = Payload(
-                afterOperatorID: nil,
-                for: categoryType,
+            let payload = LoadOperatorsPayload(
+                categoryType: categoryType,
+                operatorID: nil,
                 searchText: searchText,
                 pageSize: self.pageSize
             )
@@ -88,6 +89,5 @@ private extension UtilityPrepaymentMicroServicesComposer {
         }
     }
     
-    typealias Payload = NanoServices.LoadOperatorsPayload
-    typealias DuplicatesRemover = RemoveDuplicatesDecorator<Payload, [Operator]>
+    typealias DuplicatesRemover = RemoveDuplicatesDecorator<LoadOperatorsPayload, [Operator]>
 }

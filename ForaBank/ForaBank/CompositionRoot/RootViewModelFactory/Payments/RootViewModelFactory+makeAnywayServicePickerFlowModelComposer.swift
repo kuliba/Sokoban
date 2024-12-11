@@ -28,7 +28,7 @@ extension RootViewModelFactory {
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
             composer: transactionComposer,
             model: model,
-            nanoServices: pickerNanoServicesComposer.compose()
+            makeNanoServices: pickerNanoServicesComposer.compose
         )
         
         return .init(

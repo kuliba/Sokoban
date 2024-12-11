@@ -31,29 +31,19 @@ extension Model {
 
 // MARK: - Cache
 
-struct CachingSberOperator: Codable, Equatable {
-    
-    let id: String
-    let inn: String
-    let md5Hash: String?
-    let name: String
-    let type: String
-    let sortedOrder: Int
-}
-
 private extension Array where Element == SberOperator {
     
     /// Sort and map.
     /// - Warning: Expensive operation.
-    func makeCache() -> [CachingSberOperator] {
+    func makeCache() -> [CodableServicePaymentOperator] {
         
         self.sorted { $0.precedes($1) }
             .enumerated()
-            .map(CachingSberOperator.init(_:_:))
+            .map(CodableServicePaymentOperator.init(_:_:))
     }
 }
 
-private extension CachingSberOperator {
+private extension CodableServicePaymentOperator {
     
     init(_ index: Int, _ sberOperator: SberOperator) {
         
