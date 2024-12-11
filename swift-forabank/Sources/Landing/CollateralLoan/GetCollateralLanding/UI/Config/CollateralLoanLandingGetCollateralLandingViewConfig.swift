@@ -114,7 +114,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
         calculator: .default,
         frequentlyAskedQuestions: .default,
         documents: .default,
-        footer: .init()
+        footer: .default
     )
 }
 

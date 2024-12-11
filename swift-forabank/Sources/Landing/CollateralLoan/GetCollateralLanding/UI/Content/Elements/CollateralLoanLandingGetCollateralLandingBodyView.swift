@@ -15,6 +15,7 @@ struct CollateralLoanLandingGetCollateralLandingBodyView: View {
     let calculatorView: CalculatorView
     let frequentlyAskedQuestionsView: FrequentlyAskedQuestionsView?
     let documentsView: DocumentsView?
+    let footerView: FooterView
     let config: Config
     let theme: Theme
     
@@ -74,6 +75,8 @@ private extension CollateralLoanLandingGetCollateralLandingBodyView {
             if let documentsView {
                 documentsView
             }
+            
+            footerView
         }
         .background(Color.clear)
         .frame(maxHeight: .infinity, alignment: .top)
@@ -89,7 +92,8 @@ extension CollateralLoanLandingGetCollateralLandingBodyView {
     typealias CalculatorView = CollateralLoanLandingGetCollateralLandingCalculatorView
     typealias FrequentlyAskedQuestionsView = CollateralLoanLandingGetCollateralLandingFrequentlyAskedQuestionsView
     typealias DocumentsView = CollateralLoanLandingGetCollateralLandingDocumentsView
-    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+    typealias FooterView = CollateralLoanLandingGetCollateralLandingFooterView
+typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
 }
 
 // MARK: - Previews
