@@ -44,7 +44,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             division: data.division,
             driverLicense: data.driverLicense,
             externalTransferType: .init(data.externalTransferType),
-            isForaBank: data.isForaBank,
+            isHome: data.isHome,
             isTrafficPoliceService: data.isTrafficPoliceService,
             mcc: data.MCC,
             memberID: data.memberId,
@@ -249,7 +249,7 @@ private extension ResponseMapper {
         let division: String?
         let driverLicense: String?
         let externalTransferType: String?
-        let isForaBank: Bool?
+        let isHome: Bool?
         let isTrafficPoliceService: Bool
         let MCC: String?
         let memberId: String?

@@ -71,7 +71,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             division: division,
             driverLicense: driverLicense,
             externalTransferType: _externalTransferType,
-            isForaBank: isForaBank,
+            isHome: isHome,
             isTrafficPoliceService: isTrafficPoliceService,
             memberId: memberID,
             operation: operation,
