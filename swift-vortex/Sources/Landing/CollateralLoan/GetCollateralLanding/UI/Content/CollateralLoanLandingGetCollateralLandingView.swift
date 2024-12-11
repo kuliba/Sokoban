@@ -172,42 +172,42 @@ extension GetCollateralLandingProduct {
             .init(
                 title: "Общие условия потребительского кредита «Фора-Залоговый",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
+                link: "https://www.vortex.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             ),
             .init(
                 title: "Заявление-анкета на получение потребительского кредита",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
+                link: "https://www.vortex.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
             ),
             .init(
                 title: "Требования к заемщику",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Vortex_Zalogovyi_.doc"
+                link: "https://www.vortex.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Vortex_Zalogovyi_.doc"
             ),
             .init(
                 title: "Необходимые документы для оформления потребительского кредита",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
+                link: "https://www.vortex.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             ),
             .init(
                 title: "Список документов по залогу (недвижимость)",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Vortex_Zalogovyi_.docx"
+                link: "https://www.vortex.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Vortex_Zalogovyi_.docx"
             ),
             .init(
                 title: "Условия договора потребительского кредита",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
+                link: "https://www.vortex.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
             )
         ],
         consents: [
             .init(
                 name: "Согласие 1",
-                link: "https://www.www.vortex.ru/"
+                link: "https://www.vortex.ru/"
             ),
             .init(
                 name: "Согласие 2",
-                link: "https://www.www.vortex.ru/"
+                link: "https://www.vortex.ru/"
             )
         ],
         cities: [
@@ -428,42 +428,42 @@ extension GetCollateralLandingProduct {
             .init(
                 title: "Общие условия потребительского кредита «Фора-Залоговый",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
+                link: "https://www.vortex.ru/upload/iblock/d67/9rzpifz1bge1i4o19lkemdhipa9qe5ka/Obshchie-usloviya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             ),
             .init(
                 title: "Заявление-анкета на получение потребительского кредита",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
+                link: "https://www.vortex.ru/upload/iblock/6d6/s12sqm6nam4snqcv3kzol9n4lesnxn7e/Zayavlenie_Anketa.doc"
             ),
             .init(
                 title: "Требования к заемщику",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Vortex_Zalogovyi_.doc"
+                link: "https://www.vortex.ru/upload/iblock/2a0/j6146tbcv7pl537r3q0mpak5nlqkbq1w/Trebovaniya-k-Zaemshchiku-po-programme-Potrebitelskogo-kreditovaniya-Vortex_Zalogovyi_.doc"
             ),
             .init(
                 title: "Необходимые документы для оформления потребительского кредита",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
+                link: "https://www.vortex.ru/upload/iblock/851/b037f9qkn44k4xpirgywro47xz1cq09i/Neobkhodimyi_-dokumenty-dlya-oformleniya-Potrebitelskogo-kredita-Vortex_Zalogovyi_.docx"
             ),
             .init(
                 title: "Список документов по залогу (недвижимость)",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Vortex_Zalogovyi_.docx"
+                link: "https://www.vortex.ru/upload/iblock/ac9/b20ixpqsk2bj5i9yobnobvagb06g33lj/Spisok-dokumentov-po-zalogu-_nedvizhimost_-Vortex_Zalogovyi_.docx"
             ),
             .init(
                 title: "Условия договора потребительского кредита",
                 icon: "4c6e32a2f66f18484394c3520e9e2c25",
-                link: "https://www.www.vortex.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
+                link: "https://www.vortex.ru/upload/iblock/e45/fq1nlaqlozhvjoo12qp4orcjrhsippea/OBSHCHIE-USLOVIYA-POTREBITELSKOGO-KREDITOVANIYA.pdf"
             )
         ],
         consents: [
             .init(
                 name: "Согласие 1",
-                link: "https://www.www.vortex.ru/"
+                link: "https://www.vortex.ru/"
             ),
             .init(
                 name: "Согласие 2",
-                link: "https://www.www.vortex.ru/"
+                link: "https://www.vortex.ru/"
             )
         ],
         cities: [

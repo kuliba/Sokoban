@@ -15,7 +15,7 @@ extension ClientInformListConfig {
         ),
         strings: .init(
             titlePlaceholder: "Информация",
-            vortexLink: "https://www.www.vortex.ru"
+            vortexLink: "https://www.vortex.ru"
         ),
         titleConfig: .init(
             textFont: .textH3Sb18240(),
