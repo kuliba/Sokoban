@@ -46,7 +46,7 @@ extension ProductResponse {
                         externalID: 10002053887,
                         dateOpen: 1596402000000,
                         status: .notBlocked,
-                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
+                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)"#,
                         detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                         detailedConditionUrl: "https://www.vortex.ru/dkbo/dkbo.pdf"
                     )
@@ -93,7 +93,7 @@ extension ProductResponse {
                         externalID: 10002053887,
                         dateOpen: 1706475600000,
                         status: .blockedCredit,
-                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
+                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)"#,
                         detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                         detailedConditionUrl: "https://www.vortex.ru/dkbo/dkbo.pdf"
                     )
@@ -140,7 +140,7 @@ extension ProductResponse {
                         externalID: 10002053887,
                         dateOpen: 1707253200000,
                         status: .notBlocked,
-                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
+                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)"#,
                         detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                         detailedConditionUrl: "https://www.vortex.ru/dkbo/dkbo.pdf"
                     )
@@ -187,7 +187,7 @@ extension ProductResponse {
                         externalID: 10002053887,
                         dateOpen: 1702501200000,
                         status: .blockedCredit,
-                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
+                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)"#,
                         detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                         detailedConditionUrl: "https://www.vortex.ru/dkbo/dkbo.pdf"
                     )
@@ -234,7 +234,7 @@ extension ProductResponse {
                         externalID: 10002053887,
                         dateOpen: 1701291600000,
                         status: .blockedCredit,
-                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)" #,
+                        branchName: #"АКБ "ИННОВАЦИИ-БИЗНЕСА" (АО)"#,
                         detailedRatesUrl: "https://www.vortex.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
                         detailedConditionUrl: "https://www.vortex.ru/dkbo/dkbo.pdf"
                     )
