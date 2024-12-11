@@ -46,6 +46,12 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
+        func performOrWaitForAuthorized(
+            _ work: @escaping () -> Void
+        ) {
+            bindings.insert(model.performOrWaitForAuthorized(work))
+        }
+        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
@@ -411,7 +417,7 @@ extension RootViewModelFactory {
             }
         }
         
-        model.performOrWaitForAuthorized {
+        performOrWaitForAuthorized {
             
                 createGetAuthorizedZoneClientInformData {
                     
@@ -427,7 +433,6 @@ extension RootViewModelFactory {
                     _ = createGetAuthorizedZoneClientInformData
                 }
         }
-        .store(in: &bindings)
         
         func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
        
