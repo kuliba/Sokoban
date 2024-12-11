@@ -278,7 +278,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
         awaitActorThreadHop()
         
-        httpClient.complete(with: anyError(), at: 2)
+        httpClient.complete(with: anyError(), at: 3)
         userInitiatedScheduler.advance(to: .init(.now().advanced(by: RootViewModelFactorySettings.prod.batchDelay.timeInterval)))
         
         httpClient.expectRequests(withQueryValueFor: "type", match: [
