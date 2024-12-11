@@ -23,14 +23,11 @@ extension RootViewModelFactory {
         
         let getBannerListLoader = AnyLoader { completion in
             
-            self.schedulers.background.delay(for: .seconds(2)) {
+            localBannerListLoader.serial {
                 
-                localBannerListLoader.serial {
+                getBannerList(($0, 120)) {
                     
-                    getBannerList(($0, 120)) {
-                        
-                        completion($0)
-                    }
+                    completion($0)
                 }
             }
         }
