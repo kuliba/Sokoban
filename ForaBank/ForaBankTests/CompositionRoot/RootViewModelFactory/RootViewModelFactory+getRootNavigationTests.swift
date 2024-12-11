@@ -146,6 +146,22 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         }
     }
     
+    func test_standardPayment_shouldNotifyWithScanQROnQR() throws {
+        
+        let (sut, httpClient, _) = try makeSUT(
+            model: .withServiceCategoryAndOperator(ofType: .internet)
+        )
+        
+        expect(
+            sut: sut,
+            .standardPayment(.internet),
+            toNotifyWith: [.select(.scanQR)],
+            on: { $0.standardPaymentFlow?.event(.select(.qr)) }
+        ) {
+            httpClient.complete(with: anyError())
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias NotifyEvent = RootViewDomain.FlowDomain.NotifyEvent
@@ -271,6 +287,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         _ select: RootViewSelect,
         toNotifyWith expectedNotifyEvents: [NotifyEvent],
         on assert: @escaping (RootViewNavigation) -> Void,
+        action: () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -286,9 +303,66 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             exp.fulfill()
         }
         
+        action()
+        
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(notifySpy.payloads, expectedNotifyEvents, "Expected \(expectedNotifyEvents), but got \(notifySpy.payloads) instead.", file: file, line: line)
+    }
+}
+
+// MARK: - DSL
+
+extension RootViewNavigation {
+    
+    var scanQR: QRScannerModel? {
+        
+        guard case let .scanQR(node) = self else { return nil }
+        return node.model.content
+    }
+    
+    var standardPaymentFlow: PaymentProviderPickerDomain.Flow? {
+        
+        guard case let .standardPayment(node) = self else { return nil }
+        return node.model.flow
+    }
+    
+    var templates: TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>? {
+        
+        guard case let .templates(node) = self else { return nil }
+        return node.model
+    }
+    
+    var userAccount: UserAccountViewModel? {
+        
+        guard case let .userAccount(userAccount) = self else { return nil }
+        return userAccount
+    }
+}
+
+extension UserAccountViewModel {
+    
+    func close() {
+        
+        navigationBar.backButton?.action()
+    }
+}
+
+extension NavigationBarView.ViewModel {
+    
+    var backButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
+        
+        leftItems
+            .compactMap(\.asBackButton)
+            .first
+    }
+}
+
+private extension NavigationBarView.ViewModel.ItemViewModel {
+    
+    var asBackButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
+        
+        self as? NavigationBarView.ViewModel.BackButtonItemViewModel
     }
 }
 
@@ -342,29 +416,6 @@ extension XCTestCase {
             inn: inn,
             customName: customName
         )
-    }
-}
-
-// MARK: - DSL
-
-extension RootViewNavigation {
-    
-    var scanQR: QRScannerModel? {
-        
-        guard case let .scanQR(node) = self else { return nil }
-        return node.model.content
-    }
-    
-    var templates: TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>? {
-        
-        guard case let .templates(node) = self else { return nil }
-        return node.model
-    }
-    
-    var userAccount: UserAccountViewModel? {
-        
-        guard case let .userAccount(userAccount) = self else { return nil }
-        return userAccount
     }
 }
 
@@ -447,31 +498,5 @@ extension Model {
             hasSearch: hasSearch,
             type: type
         )
-    }
-}
-
-extension UserAccountViewModel {
-    
-    func close() {
-        
-        navigationBar.backButton?.action()
-    }
-}
-
-extension NavigationBarView.ViewModel {
-    
-    var backButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
-        
-        leftItems
-            .compactMap(\.asBackButton)
-            .first
-    }
-}
-
-private extension NavigationBarView.ViewModel.ItemViewModel {
-    
-    var asBackButton: NavigationBarView.ViewModel.BackButtonItemViewModel? {
-        
-        self as? NavigationBarView.ViewModel.BackButtonItemViewModel
     }
 }

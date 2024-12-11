@@ -119,15 +119,35 @@ extension RootViewModelFactory {
                 case let .success(binder):
                     completion(.standardPayment(.init(
                         model: binder,
-                        cancellables: []
+                        cancellable: bind(binder)
                     )))
                 }
             }
+        }
+        
+        func bind(
+            _ binder: PaymentProviderPickerDomain.Binder
+        ) -> AnyCancellable {
+            
+            return binder.flow.$state
+                .compactMap(\.rootEvent)
+                .sink { notify(.select($0)) }
         }
     }
 }
 
 // MARK: - Adapters
+
+private extension PaymentProviderPickerDomain.FlowDomain.State {
+    
+    var rootEvent: RootEvent? {
+        
+        switch navigation {
+        case .outside(.qr): return .scanQR
+        default:            return nil
+        }
+    }
+}
 
 private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
     
