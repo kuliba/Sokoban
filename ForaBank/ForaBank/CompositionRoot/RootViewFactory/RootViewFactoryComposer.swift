@@ -51,6 +51,7 @@ extension RootViewFactoryComposer {
         let generalImageCache = model.generalImageCache()
         
         return .init(
+            clearCache: clearCache,
             isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
@@ -103,6 +104,11 @@ extension RootViewFactoryComposer {
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView
         )
+    }
+    
+    private func clearCache() {
+        
+        try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
     }
 }
 
