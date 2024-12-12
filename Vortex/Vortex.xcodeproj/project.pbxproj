@@ -3138,9 +3138,8 @@
 		EC554A422CC92919002A8C3A /* RootViewModelFactory+logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */; };
 		EC554A442CC9291E002A8C3A /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */; };
 		EC5994412CA5B0820050CA05 /* GetClientInformDataServices in Frameworks */ = {isa = PBXBuildFile; productRef = EC5994402CA5B0820050CA05 /* GetClientInformDataServices */; };
-		EC9711232CC6418900C4537D /* ClientInformListConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711222CC6418900C4537D /* ClientInformListConfig+iVortex.swift */; };
 		EC5A2D202D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5A2D1F2D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift */; };
-		EC9711232CC6418900C4537D /* ClientInformListConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711222CC6418900C4537D /* ClientInformListConfig+iFora.swift */; };
+		EC9711232CC6418900C4537D /* ClientInformListConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711222CC6418900C4537D /* ClientInformListConfig+iVortex.swift */; };
 		EC9711252CC6457D00C4537D /* ClientInformZoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */; };
 		EC9711292CC6471800C4537D /* ClientInformListDataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711282CC6471800C4537D /* ClientInformListDataState.swift */; };
 		ECA4BD102CF775F300896CDC /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA4BD0F2CF775F300896CDC /* AlertManager.swift */; };
@@ -25059,7 +25058,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -25146,7 +25145,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -25476,7 +25475,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -25509,7 +25508,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -25747,7 +25746,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -25832,7 +25831,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -26808,7 +26807,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -26845,7 +26844,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
