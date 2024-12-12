@@ -72,7 +72,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldSetNavigationToOutsidePayments() {
         
-        assert(makeState(navigation: .alert(makeBackendFailure())), event: .goToPayments) {
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .select(.goToPayments)) {
             
             $0.navigation = .outside(.payments)
         }
@@ -80,7 +80,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldNotDeliverEffect() {
         
-        assert(makeState(navigation: .alert(makeBackendFailure())), event: .goToPayments, delivers: nil)
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .select(.goToPayments), delivers: nil)
     }
     
     // MARK: - destination

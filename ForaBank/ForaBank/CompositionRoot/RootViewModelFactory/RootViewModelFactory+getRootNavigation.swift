@@ -143,8 +143,9 @@ private extension PaymentProviderPickerDomain.FlowDomain.State {
     var rootEvent: RootEvent? {
         
         switch navigation {
-        case .outside(.qr): return .scanQR
-        default:            return nil
+        case .outside(.qr):   return .scanQR
+        case .outside(.main): return .outside(.tab(.main))
+        default:               return nil
         }
     }
 }

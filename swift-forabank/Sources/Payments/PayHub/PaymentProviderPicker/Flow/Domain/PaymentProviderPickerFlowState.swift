@@ -33,7 +33,7 @@ public extension PaymentProviderPickerFlowState.Navigation {
     
     enum Outside: Equatable {
         
-        case back, chat, payments, qr
+        case back, chat, main, payments, qr
     }
 }
 
