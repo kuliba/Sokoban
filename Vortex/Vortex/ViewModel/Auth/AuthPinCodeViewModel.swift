@@ -123,9 +123,14 @@ class AuthPinCodeViewModel: ObservableObject {
     func bind() {
         
         model.clientInformAlertManager.alertPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { self.clientInformAlerts = $0 }
+            .receive(on: DispatchQueue.global(qos: .background))
+            .sink { [weak self] alerts in
+                DispatchQueue.main.async {
+                    self?.clientInformAlerts = alerts
+                }
+            }
             .store(in: &bindings)
+       
 
         model.action
             .receive(on: DispatchQueue.main)
