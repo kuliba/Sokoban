@@ -75,6 +75,10 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         switch destination {
         case let .payments(node):
             viewFactory.makePaymentsView(node.model.paymentsViewModel)
+            
+        case let .successMeToMe(successMeToMeViewModel):
+            viewFactory.makePaymentsSuccessView(successMeToMeViewModel)
+                .navigationBarHidden(true)
         }
     }
     
@@ -123,7 +127,10 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
             case let .payments(payments):
                 return .payments(payments)
                 
-            case .contacts, .meToMe, .paymentsViewModel, .scanQR, .successMeToMe:
+            case let .successMeToMe(node):
+                return .successMeToMe(node.model)
+                
+            case .contacts, .meToMe, .paymentsViewModel, .scanQR:
                 return nil
             }
         }
@@ -156,6 +163,7 @@ extension PaymentsTransfersPersonalTransfersDomain {
     enum Destination {
         
         case payments(Node<ClosePaymentsViewModelWrapper>)
+        case successMeToMe(PaymentsSuccessViewModel)
     }
     
     enum Sheet {
@@ -187,12 +195,16 @@ extension PaymentsTransfersPersonalTransfersDomain.Destination: Identifiable {
         switch self {
         case let .payments(node):
             return .payments(.init(node.model))
+            
+        case let .successMeToMe(model):
+            return .successMeToMe(.init(model))
         }
     }
     
     enum ID: Hashable {
         
         case payments(ObjectIdentifier)
+        case successMeToMe(ObjectIdentifier)
     }
 }
 
