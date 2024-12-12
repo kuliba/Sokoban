@@ -21,28 +21,9 @@ extension RootViewModelFactory {
         )
         let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformListDataState?) -> Void) in
             
-            _createGetAuthorizedZoneClientInformData(()) { result in
+            _createGetAuthorizedZoneClientInformData(()) {
                 
-                switch result {
-                case .failure:
-                    completion(nil)
-                    
-                case let .success(response):
-                    
-                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData.init($0) }
-                  
-                    list.count == 1 && list.first != nil ?
-                    completion(.init(list,
-                            infoLabel: .init(
-                                image: list.first?.image,
-                                title: list.first?.title ?? "Информация"))
-                    )
-                    : completion(.init(list,
-                            infoLabel: .init(
-                                image: nil,
-                                title: "Информация"))
-                    )
-                }
+                completion($0.list)
                 
                 _ = _createGetAuthorizedZoneClientInformData
             }
@@ -63,5 +44,28 @@ extension RootViewModelFactory {
         }
         
         func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
+    }
+}
+
+// MARK: Adapters
+
+extension Result where Success ==  RemoteServices.ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
+    
+    var list: ClientInformListDataState? {
+        
+        try? self.map(\.list).get()
+    }
+}
+
+private extension RemoteServices.ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
+        
+    var list: ClientInformListDataState? {
+        
+        let list = self.list.compactMap { GetAuthorizedZoneClientInformData.init($0) }
+
+        return .init(list,
+                infoLabel: .init(
+                    image: list.first?.image,
+                    title: list.first?.title ?? "Информация"))
     }
 }
