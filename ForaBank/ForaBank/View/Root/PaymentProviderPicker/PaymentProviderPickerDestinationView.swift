@@ -72,10 +72,10 @@ private extension PaymentProviderPickerDestinationView {
                 // components.makeAnywayServicePickerFlowView(<#T##AnywayServicePickerFlowModel#>)
                 Text("TBD: destination view \(String(describing: milti))")
                 
-            case let .anywayPayment(anywayPayment):
-                let payload = anywayPayment.state.content.state.transaction.context.outline.payload
+            case let .anywayPayment(node):
+                let payload = node.model.state.content.state.transaction.context.outline.payload
                 
-                components.makeAnywayFlowView(anywayPayment)
+                components.makeAnywayFlowView(node.model)
                     .navigationBarWithAsyncIcon(
                         title: payload.title,
                         subtitle: payload.subtitle,

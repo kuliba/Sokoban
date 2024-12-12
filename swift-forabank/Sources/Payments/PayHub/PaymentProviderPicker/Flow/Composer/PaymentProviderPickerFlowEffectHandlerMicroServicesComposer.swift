@@ -33,6 +33,7 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     typealias Destination = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
     typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Destination, Latest, Provider>
+    typealias NotifyEvent = MicroServices.NotifyEvent
 }
 
 // MARK: - initiatePayment
@@ -41,6 +42,7 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     func initiatePayment(
         latest: Latest,
+        notify: @escaping (NotifyEvent) -> Void,
         completion: @escaping (Destination) -> Void
     ) {
         nanoServices.initiatePayment(.latest(latest)) {
@@ -76,6 +78,7 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     func processProvider(
         provider: Provider,
+        notify: @escaping (NotifyEvent) -> Void,
         completion: @escaping (Destination) -> Void
     ) {
         nanoServices.getServiceCategoryList(provider) { [weak self] in

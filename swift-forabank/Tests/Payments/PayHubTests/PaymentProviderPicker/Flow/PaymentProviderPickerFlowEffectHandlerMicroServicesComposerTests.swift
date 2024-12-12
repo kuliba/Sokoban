@@ -18,7 +18,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let latest = makeLatest()
         let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
-        sut.initiatePayment(latest) { _ in }
+        sut.initiatePayment(latest, { _ in }) { _ in }
         
         XCTAssertNoDiff(initiatePayment.payloads, [.latest(latest)])
     }
@@ -74,7 +74,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let provider = makeProvider()
         let (sut, _,_, getServiceCategoryList, _,_) = makeSUT()
         
-        sut.processProvider(provider) { _ in }
+        sut.processProvider(provider, { _ in }) { _ in }
         
         XCTAssertNoDiff(getServiceCategoryList.payloads, [provider])
     }
@@ -84,7 +84,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let services = makeServices()
         let (sut, _,_, getServiceCategoryList, makeServicePicker, _) = makeSUT()
         
-        sut.processProvider(makeProvider()) { _ in }
+        sut.processProvider(makeProvider(), { _ in }) { _ in }
         getServiceCategoryList.complete(with: .success(services.elements))
         
         XCTAssertNoDiff(makeServicePicker.payloads, [services])
@@ -133,7 +133,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let service = makeService()
         let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
-        sut.processProvider(makeProvider()) { _ in }
+        sut.processProvider(makeProvider(), { _ in }) { _ in }
         getServiceCategoryList.complete(with: .success([service]))
         
         XCTAssertNoDiff(initiatePayment.payloads, [.service(service)])
@@ -171,7 +171,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let exp = expectation(description: "completion should not be called")
         exp.isInverted = true
         
-        sut?.processProvider(makeProvider()) { _ in exp.fulfill() }
+        sut?.processProvider(makeProvider(), { _ in }) { _ in exp.fulfill() }
         sut = nil
         getServiceCategoryList.complete(with: .failure(anyError()))
         
@@ -182,6 +182,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
     private typealias SUT = Composer.MicroServices
+    private typealias Notify = SUT.Notify
     private typealias NanoServices = Composer.NanoServices
     private typealias GetServiceCategoryListSpy = Spy<Provider, Result<[Service], Error>>
     private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest, Service>, NanoServices.InitiatePaymentResult>
@@ -233,11 +234,11 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         line: UInt = #line
     ) where Response: Equatable {
         
-        expect({ _, completion in sut(completion) }, with: (), toDeliver: expectedResponses, on: action, file: file, line: line)
+        expect({ _, _, completion in sut(completion) }, with: (), toDeliver: expectedResponses, on: action, file: file, line: line)
     }
     
     private func expect<Payload, Response>(
-        _ sut: @escaping (Payload, @escaping (Response) -> Void) -> Void,
+        _ sut: @escaping (Payload, @escaping Notify, @escaping (Response) -> Void) -> Void,
         with payload: Payload,
         toDeliver expectedResponses: Response...,
         on action: @escaping () -> Void = {},
@@ -249,7 +250,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     }
     
     private func expect<Payload, Response>(
-        _ sut: @escaping (Payload, @escaping (Response) -> Void) -> Void,
+        _ sut: @escaping (Payload, @escaping Notify, @escaping (Response) -> Void) -> Void,
         with payload: Payload,
         toDeliver expectedResponses: [Response],
         on action: @escaping () -> Void = {},
@@ -261,7 +262,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         exp.expectedFulfillmentCount = expectedResponses.count
         var receivedResponses = [Response]()
         
-        sut(payload) {
+        sut(payload, { _ in }) {
             
             receivedResponses.append($0)
             exp.fulfill()

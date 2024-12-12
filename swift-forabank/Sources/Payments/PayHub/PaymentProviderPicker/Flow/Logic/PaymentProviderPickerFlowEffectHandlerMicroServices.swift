@@ -24,10 +24,13 @@ public struct PaymentProviderPickerFlowEffectHandlerMicroServices<Destination, L
 
 public extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     
+    typealias NotifyEvent = PaymentProviderPickerFlowEvent<Destination, Latest, Provider>
+    typealias Notify = (NotifyEvent) -> Void
+    
     typealias InitiatePaymentCompletion = (Destination) -> Void
-    typealias InitiatePayment = (Latest, @escaping InitiatePaymentCompletion) -> Void
+    typealias InitiatePayment = (Latest, @escaping Notify, @escaping InitiatePaymentCompletion) -> Void
     
     typealias MakeDetailPayment = (@escaping (Destination) -> Void) -> Void
     
-    typealias ProcessProvider = (Provider, @escaping (Destination) -> Void) -> Void
+    typealias ProcessProvider = (Provider, @escaping Notify, @escaping (Destination) -> Void) -> Void
 }
