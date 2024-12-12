@@ -126,6 +126,7 @@ extension RootViewFactory {
             binder: binder,
             factory: .init(
                 makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
+                makeIconView: makeIconView,
                 makeOperatorView: InternetTVDetailsView.init,
                 makePaymentsView: components.makePaymentsView,
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,

@@ -208,12 +208,27 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
     var eventPublisher: EventPublisher {
         
         flow.$state
-            .compactMap { _ in return nil }
+            .compactMap(\.select)
+            .handleEvents(receiveOutput: {
+                
+                print($0)
+            })
             .eraseToAnyPublisher()
     }
     
     func dismiss() {
         
         flow.event(.dismiss)
+    }
+}
+
+private extension PaymentsTransfersPersonalTransfersDomain.FlowDomain.State {
+    
+    var select: PaymentsTransfersPersonalSelect? {
+        
+        switch navigation {
+        case .success(.scanQR):         return .scanQR
+        case .none, .failure, .success: return nil
+        }
     }
 }
