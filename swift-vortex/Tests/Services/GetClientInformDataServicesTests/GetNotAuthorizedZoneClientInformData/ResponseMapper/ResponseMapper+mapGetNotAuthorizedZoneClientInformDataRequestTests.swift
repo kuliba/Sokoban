@@ -190,13 +190,6 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         XCTAssertNoDiff(mapped.list.map(\.update?.type), [nil, "ACTION"])
     }
     
-    func test_map_shouldHandleOptionalPlatformInUpdate() throws {
-        
-        let mapped = try mapResult(.withNilPlatformInOne)
-        
-        XCTAssertNoDiff(mapped.list.map(\.update?.platform), [nil, "iOS"])
-    }
-    
     func test_map_shouldHandleOptionalVersionInUpdate() throws {
         
         let mapped = try mapResult(.withNilVersionInOne)
@@ -236,7 +229,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withEmptyPlatform)
 
-        XCTAssertNoDiff(mapped.list.first?.update?.platform, "")
+        XCTAssertNoDiff(mapped.list.first?.update?.platform, nil)
     }
     
     func test_map_withEmptyVersion_shouldDeliverValidVersion() throws {
@@ -348,7 +341,6 @@ private extension Data {
     static let withNilTextInOne: Data = String.withNilTextInOne.json
     static let withNilUpdateInOne: Data = String.withNilUpdateInOne.json
     static let withNilActionInOne: Data = String.withNilActionInOne.json
-    static let withNilPlatformInOne: Data = String.withNilPlatformInOne.json
     static let withNilVersionInOne: Data = String.withNilVersionInOne.json
     static let withNilLinkInOne: Data = String.withNilLinkInOne.json
 }
@@ -896,40 +888,6 @@ private extension String {
                 "update": {
                     "action": null,
                     "platform": "iOS",
-                    "version": "VERSION",
-                    "link": "LINK"
-                }
-            },
-            {
-                "authBlocking": false,
-                "title": "TITLE",
-                "text": "TEXT",
-                "update": {
-                    "action": "ACTION",
-                    "platform": "iOS",
-                    "version": "VERSION",
-                    "link": "LINK"
-                }
-            }
-        ]
-    }
-}
-"""
-    
-    static let withNilPlatformInOne = """
-{
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": {
-        "serial": "1bebd140bc2660211fbba306105479ae",
-        "notAuthorized": [
-            {
-                "authBlocking": false,
-                "title": "TITLE",
-                "text": "TEXT",
-                "update": {
-                    "action": "ACTION",
-                    "platform": null,
                     "version": "VERSION",
                     "link": "LINK"
                 }
