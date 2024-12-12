@@ -219,19 +219,11 @@ extension RootViewModelFactory {
                 }
                 
             case let .success(transaction):
-                
-                // TODO: add helpers
-                
-                let flowModel = anywayFlowComposer.compose(transaction: transaction)
-                let cancellable = flowModel.$state.compactMap(\.outside)
-                    .sink { notify($0) }
-                
-                completion(.payment(.success(
-                    .anywayPayment(.init(
-                        model: flowModel,
-                        cancellable: cancellable
-                    ))
-                )))
+                completion(self.makeCompletion(
+                    anywayFlowComposer: anywayFlowComposer,
+                    transaction: transaction,
+                    notify: notify)
+                )
             }
         }
     }
@@ -279,22 +271,32 @@ extension RootViewModelFactory {
                     completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
                     
                 case let .startPayment(transaction):
-                    
-                    // TODO: add helpers
-
-                    let flowModel = anywayFlowComposer.compose(transaction: transaction)
-                    let cancellable = flowModel.$state.compactMap(\.outside)
-                        .sink { notify($0) }
-                    
-                    completion(.payment(.success(
-                        .anywayPayment(.init(
-                            model: flowModel,
-                            cancellable: cancellable
-                        ))
-                    )))
+                    completion(self.makeCompletion(
+                        anywayFlowComposer: anywayFlowComposer,
+                        transaction: transaction,
+                        notify: notify)
+                    )
                 }
             }
         }
+    }
+    
+    func makeCompletion(
+        anywayFlowComposer: AnywayFlowComposer,
+        transaction: AnywayTransactionState.Transaction,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void
+    ) -> (PaymentProviderPickerDomain.Navigation) {
+        
+        let flowModel = anywayFlowComposer.compose(transaction: transaction)
+        let cancellable = flowModel.$state.compactMap(\.outside)
+            .sink { notify($0) }
+        
+        return .payment(.success(
+            .anywayPayment(.init(
+                model: flowModel,
+                cancellable: cancellable
+            ))
+        ))
     }
 }
 
