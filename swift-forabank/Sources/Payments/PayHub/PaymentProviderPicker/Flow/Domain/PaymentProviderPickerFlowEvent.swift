@@ -10,7 +10,7 @@ public enum PaymentProviderPickerFlowEvent<Destination, Latest, Provider> {
     case alert(BackendFailure)
     case destination(Destination)
     case dismiss
-    case goToPayments
+    case goToPayments //
     case select(Select)
 }
 
@@ -20,6 +20,7 @@ public extension PaymentProviderPickerFlowEvent {
         
         case back
         case chat
+        case main
         case detailPayment
         case latest(Latest)
         case provider(Provider)

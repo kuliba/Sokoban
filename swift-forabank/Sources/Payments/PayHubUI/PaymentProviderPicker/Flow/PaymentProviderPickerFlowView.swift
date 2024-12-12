@@ -245,7 +245,7 @@ struct PaymentProviderPickerFlowDemoView: View {
         
         let reducer = PaymentProviderPickerFlowReducer<PreviewDestination, PreviewLatest, PreviewPaymentProvider>()
         let effectHandler = PaymentProviderPickerFlowEffectHandler<PreviewDestination, PreviewLatest, PreviewPaymentProvider>(microServices: .init(
-            initiatePayment: { _, completion in
+            initiatePayment: { _,_, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     
@@ -253,7 +253,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                 }
             },
             makeDetailPayment: { $0(.detailPayment(.init())) },
-            processProvider: { _, completion in
+            processProvider: { _,_, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     

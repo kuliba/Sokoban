@@ -50,7 +50,7 @@ extension PaymentProviderPickerDomain {
     enum ProcessSelectionSuccess {
         
         case services(MultiElementArray<UtilityService>, for: UtilityPaymentProvider)
-        case anywayPayment(AnywayFlowModel)
+        case anywayPayment(Node<AnywayFlowModel>)
     }
     
     enum ProcessSelectionFailure: Error {

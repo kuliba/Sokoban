@@ -157,9 +157,37 @@ extension RootViewModelFactory {
         let flowReducer = PaymentProviderPickerDomain.FlowReducer()
         let flowEffectHandler = PaymentProviderPickerDomain.FlowEffectHandler(
             microServices: .init(
-                initiatePayment: initiateAnywayPayment,
+                initiatePayment: { latest, notify, completion in
+                    
+                    self.initiateAnywayPayment(
+                        latest: latest,
+                        notify: { event in
+                            switch event {
+                            case .main:
+                                notify(.select(.main))
+                                
+                            case .payments:
+                                notify(.goToPayments)
+                            }
+                        },
+                        completion: completion)
+                },
                 makeDetailPayment: makeDetailPayment,
-                processProvider: processProvider
+                processProvider: { provider, notify, completion in
+                    
+                    self.processProvider(
+                        provider: provider,
+                        notify: { event in
+                            switch event {
+                            case .main:
+                                notify(.select(.main))
+                                
+                            case .payments:
+                                notify(.goToPayments)
+                            }
+                        },
+                        completion: completion)
+                }
             )
         )
         
@@ -174,6 +202,7 @@ extension RootViewModelFactory {
     @inlinable
     func initiateAnywayPayment(
         latest: Latest,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
         let anywayFlowComposer = makeAnywayFlowComposer()
@@ -191,9 +220,19 @@ extension RootViewModelFactory {
                 }
                 
             case let .success(transaction):
-                completion(.payment(.success(.anywayPayment(
-                    anywayFlowComposer.compose(transaction: transaction)
-                ))))
+                
+                // TODO: add helpers
+                
+                let flowModel = anywayFlowComposer.compose(transaction: transaction)
+                let cancellable = flowModel.$state.compactMap(\.outside)
+                    .sink { notify($0) }
+                
+                completion(.payment(.success(
+                    .anywayPayment(.init(
+                        model: flowModel,
+                        cancellable: cancellable
+                    ))
+                )))
             }
         }
     }
@@ -212,6 +251,7 @@ extension RootViewModelFactory {
     @inlinable
     func processProvider(
         provider: PaymentProviderPickerDomain.Provider,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
         let anywayFlowComposer = makeAnywayFlowComposer()
@@ -240,9 +280,19 @@ extension RootViewModelFactory {
                     completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
                     
                 case let .startPayment(transaction):
-                    completion(.payment(.success(.anywayPayment(
-                        anywayFlowComposer.compose(transaction: transaction)
-                    ))))
+                    
+                    // TODO: add helpers
+
+                    let flowModel = anywayFlowComposer.compose(transaction: transaction)
+                    let cancellable = flowModel.$state.compactMap(\.outside)
+                        .sink { notify($0) }
+                    
+                    completion(.payment(.success(
+                        .anywayPayment(.init(
+                            model: flowModel,
+                            cancellable: cancellable
+                        ))
+                    )))
                 }
             }
         }

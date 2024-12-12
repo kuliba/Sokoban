@@ -75,6 +75,9 @@ private extension PaymentProviderPickerFlowReducer {
             
         case .qr:
             state.navigation = .outside(.qr)
+            
+        case .main:
+            state.navigation = .outside(.main)
         }
     }
 }
