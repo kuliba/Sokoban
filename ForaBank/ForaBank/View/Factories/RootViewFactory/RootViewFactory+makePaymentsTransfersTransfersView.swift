@@ -52,7 +52,8 @@ private extension RootViewFactory {
         return .init(
             makeContactsView: components.makeContactsView,
             makePaymentsMeToMeView: components.makePaymentsMeToMeView,
-            makePaymentsView: components.makePaymentsView
+            makePaymentsView: components.makePaymentsView,
+            makePaymentsSuccessView: components.makePaymentsSuccessView
         )
     }
 }
