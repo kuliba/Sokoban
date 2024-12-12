@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makeAuthorizedZoneClientInform.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Nikolay Pochekuev on 11.12.2024.
 //
