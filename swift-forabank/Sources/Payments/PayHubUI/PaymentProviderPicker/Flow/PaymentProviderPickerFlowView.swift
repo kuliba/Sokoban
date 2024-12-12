@@ -71,7 +71,7 @@ private extension PaymentProviderPickerFlowView {
         backendFailure: BackendFailure
     ) -> Alert {
         
-        return backendFailure.alert { event(.goToPayments) }
+        return backendFailure.alert { event(.select(.goToPayments)) }
     }
 }
 

@@ -652,9 +652,7 @@ private extension RootViewFactoryComposer {
                             return .init(hasExpired: $0.hasExpired)
                         }
                     ),
-                    goToMain: {
-                        flowModel.event(.goTo(.main))
-                    })
+                    goToMain: { flowModel.event(.goTo(.main)) })
             }
         )
     }

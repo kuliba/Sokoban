@@ -29,10 +29,7 @@ public extension PaymentProviderPickerFlowReducer {
             
         case .dismiss:
             state.navigation = nil
-            
-        case .goToPayments:
-            state.navigation = .outside(.payments)
-            
+                        
         case let .select(select):
             self.select(&state, &effect, with: select)
         }
@@ -78,6 +75,9 @@ private extension PaymentProviderPickerFlowReducer {
             
         case .main:
             state.navigation = .outside(.main)
+            
+        case .goToPayments:
+            state.navigation = .outside(.payments)
         }
     }
 }

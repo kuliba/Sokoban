@@ -167,7 +167,7 @@ extension RootViewModelFactory {
                                 notify(.select(.main))
                                 
                             case .payments:
-                                notify(.goToPayments)
+                                notify(.select(.goToPayments))
                             }
                         },
                         completion: completion)
@@ -183,8 +183,7 @@ extension RootViewModelFactory {
                                 notify(.select(.main))
                                 
                             case .payments:
-                                notify(.goToPayments)
-                            }
+                                notify(.select(.goToPayments))                            }
                         },
                         completion: completion)
                 }
