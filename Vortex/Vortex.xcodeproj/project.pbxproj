@@ -3110,6 +3110,7 @@
 		C1F8315129DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */; };
 		C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F5FD294A50B800FE5703 /* HintView.swift */; };
 		C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F600294A53B600FE5703 /* HintViewModel.swift */; };
+		C1FA311F2D0AEA38003BDE5A /* GoogleService-InfoVortex.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1FA311E2D0AEA38003BDE5A /* GoogleService-InfoVortex.plist */; };
 		C1FB087E2C0FC1B400137907 /* CalendarUI in Frameworks */ = {isa = PBXBuildFile; productRef = C1FB087D2C0FC1B400137907 /* CalendarUI */; };
 		D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */ = {isa = PBXBuildFile; productRef = D41D73F92BA25C47002C0688 /* GetProductListByTypeService */; };
 		D45C68A92BAC6685008F8B35 /* GetProductListByType_Account_Response.json in Resources */ = {isa = PBXBuildFile; fileRef = D45C68A52BAC6684008F8B35 /* GetProductListByType_Account_Response.json */; };
@@ -6585,6 +6586,7 @@
 		C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PaymentsTemplateListGenericResponse.json; sourceTree = "<group>"; };
 		C1F8F5FD294A50B800FE5703 /* HintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintView.swift; sourceTree = "<group>"; };
 		C1F8F600294A53B600FE5703 /* HintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintViewModel.swift; sourceTree = "<group>"; };
+		C1FA311E2D0AEA38003BDE5A /* GoogleService-InfoVortex.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-InfoVortex.plist"; sourceTree = "<group>"; };
 		C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Font+Assets.swift"; sourceTree = "<group>"; };
 		C8BDBA5E8E5B98668466191C /* Color+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Color+Assets.swift"; sourceTree = "<group>"; };
 		D45C68A52BAC6684008F8B35 /* GetProductListByType_Account_Response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductListByType_Account_Response.json; sourceTree = "<group>"; };
@@ -17286,6 +17288,7 @@
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */,
 				68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */,
+				C1FA311E2D0AEA38003BDE5A /* GoogleService-InfoVortex.plist */,
 				ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */,
 				EDB1438E265FDA420028EF5A /* Info.plist */,
 				0B22AEAF26CEB80100B11E7F /* Keyboard.swift */,
@@ -19225,6 +19228,7 @@
 				EDDC5922288FE56C00C08D06 /* PhoneNumberView.xib in Resources */,
 				2A3E03A42B74C6B000A4494D /* changeClientConsentMe2MePullH1.json in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
+				C1FA311F2D0AEA38003BDE5A /* GoogleService-InfoVortex.plist in Resources */,
 				2A3E03B32B74C6B000A4494D /* getClientConsentMe2MePullB4.json in Resources */,
 				2A3E03A82B74C6B000A4494D /* prepareSetBankDefaultF1.json in Resources */,
 				2A3E03AB2B74C6B000A4494D /* updateFastPaymentContractD2.json in Resources */,

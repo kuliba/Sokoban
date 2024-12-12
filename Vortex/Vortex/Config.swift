@@ -20,9 +20,9 @@ enum Config {
     static let googleServiceInfoFileName: String = {
         
         #if DEBUG || MOCK
-            "GoogleService-Info-test"
+            "GoogleService-InfoVortex"
         #else
-            "GoogleService-Info"
+            "GoogleService-InfoVortex"
         #endif
     }()
     
