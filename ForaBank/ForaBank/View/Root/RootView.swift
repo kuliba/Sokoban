@@ -447,6 +447,7 @@ private extension RootViewFactory {
         }
         
         return .init(
+            clearCache: {},
             isCorporate: { false },
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
