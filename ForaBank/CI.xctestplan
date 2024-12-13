@@ -552,13 +552,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "СlientInformListTests",
-        "name" : "СlientInformListTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "GetProductListByTypeV7ServiceTests",
         "name" : "GetProductListByTypeV7ServiceTests"
       }
@@ -568,13 +561,6 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CollateralLoanLandingSaveConsentsBackendTests",
         "name" : "CollateralLoanLandingSaveConsentsBackendTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ClientInformListTests",
-        "name" : "ClientInformListTests"
       }
     },
     {
@@ -638,6 +624,13 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "SavingsAccountTests",
         "name" : "SavingsAccountTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
       }
     }
   ],
