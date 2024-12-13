@@ -81,12 +81,7 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(
-            microServices: .init(
-                getNavigation: {
-                    
-                    getNavigation.process(($0, $1), completion: $2)
-                }
-            ),
+            getNavigation: getNavigation.process,
             scheduler: .immediate
         )
         

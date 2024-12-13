@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class FlowEffectHandlerTests: FlowTests {
+final class FlowEffectHandlerWithMicroservicesTests: FlowTests {
     
     // MARK: - init
     
@@ -29,7 +29,7 @@ final class FlowEffectHandlerTests: FlowTests {
         
         sut.handleEffect(.select(select)) { _ in }
         
-        XCTAssertNoDiff(getNavigation.payloads.map(\.0), [select])
+        XCTAssertNoDiff(getNavigation.payloads, [select])
     }
     
     func test_getNavigation_shouldDeliverNavigation() {
@@ -48,7 +48,7 @@ final class FlowEffectHandlerTests: FlowTests {
     // MARK: - Helpers
     
     private typealias SUT = FlowEffectHandler<Select, Navigation>
-    private typealias GetNavigationSpy = Spy<(Select, SUT.Notify), Navigation>
+    private typealias GetNavigationSpy = Spy<Select, Navigation>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -59,7 +59,9 @@ final class FlowEffectHandlerTests: FlowTests {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(
-            getNavigation: getNavigation.process,
+            microServices: .init(
+                getNavigation: getNavigation.process
+            ),
             scheduler: .immediate
         )
         
