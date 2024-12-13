@@ -606,7 +606,7 @@ extension RootViewModel.PaymentsModel: Resetable {
             
         case let .v1(paymentsTransfersSwitcher):
 #warning("unimplemented")
-            break
+            paymentsTransfersSwitcher.dismiss()
         }
     }
     

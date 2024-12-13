@@ -478,15 +478,18 @@ private extension RootViewDomain.Flow {
         let outside = $state.compactMap(\.outside)
             .debounce(for: .milliseconds(500), scheduler: scheduler)
             .receive(on: scheduler)
-            .sink { [weak content] in
+            .sink { [weak content, weak self] in
                 
-                guard let content else { return }
+                guard let content, let self else { return }
                 
                 switch $0 {
                 case let .productProfile(productID):
                     content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
                     
                 case let .tab(tab):
+                    content.rootActions.dismissAll()
+                    event(.dismiss)
+                    
                     switch tab {
                     case .main:
                         content.selected = .main

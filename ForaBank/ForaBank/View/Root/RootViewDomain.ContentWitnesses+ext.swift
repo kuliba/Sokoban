@@ -45,7 +45,7 @@ private extension MainViewModel {
     }
 }
 
-private extension RootViewModel.PaymentsModel {
+extension RootViewModel.PaymentsModel {
     
     func dismiss() {
         
@@ -59,7 +59,7 @@ private extension RootViewModel.PaymentsModel {
     }
 }
 
-private extension PaymentsTransfersSwitcherProtocol {
+extension PaymentsTransfersSwitcherProtocol {
     
     func dismiss() {
         
@@ -83,6 +83,7 @@ private extension PaymentsTransfersSwitcher {
             
         case let .personal(personal):
             personal.flow.event(.dismiss)
+            personal.content.dismiss()
             
         case .none:
             return
