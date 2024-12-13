@@ -1730,6 +1730,8 @@ private extension Target {
     static let payHub = target(
         name: .payHub,
         dependencies: [
+            // external packages
+            .combineSchedulers,
             // internal modules
             .rxViewModel,
         ],
@@ -1739,6 +1741,7 @@ private extension Target {
         name: .payHubTests,
         dependencies: [
             // external packages
+            .combineSchedulers,
             .customDump,
             // internal modules
             .payHub,

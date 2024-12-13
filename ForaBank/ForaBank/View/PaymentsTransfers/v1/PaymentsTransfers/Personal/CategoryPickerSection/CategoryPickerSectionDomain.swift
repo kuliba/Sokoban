@@ -14,7 +14,7 @@ enum CategoryPickerSectionDomain {
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
-    typealias Composer = PayHubUI.BinderComposer<Content, Select, Navigation>
+    typealias Composer = PayHub.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -23,7 +23,7 @@ enum CategoryPickerSectionDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
         

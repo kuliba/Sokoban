@@ -6,7 +6,7 @@
 //
 
 @testable import ForaBank
-import PayHubUI
+import PayHub
 import XCTest
 
 class RootViewModelFactoryTests: QRNavigationTests {
@@ -14,7 +14,7 @@ class RootViewModelFactoryTests: QRNavigationTests {
     typealias SUT = RootViewModelFactory
     
     func makeSUT(
-        scanResult: QRModelResult = .unknown,
+        scanResult: ForaBank.QRModelResult = .unknown,
         model: Model = .mockWithEmptyExcept(),
         scanner: QRScannerViewModel = QRScannerViewModelSpy(),
         schedulers: Schedulers = .immediate,

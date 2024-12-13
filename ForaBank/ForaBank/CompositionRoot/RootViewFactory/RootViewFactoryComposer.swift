@@ -13,8 +13,9 @@ import InfoComponent
 import LandingUIComponent
 import LoadableResourceComponent
 import MarketShowcase
-import PaymentComponents
+import PayHub
 import PayHubUI
+import PaymentComponents
 import PDFKit
 import SberQR
 import SwiftUI

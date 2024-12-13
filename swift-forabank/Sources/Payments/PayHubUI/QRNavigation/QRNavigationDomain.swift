@@ -13,7 +13,7 @@ public enum QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Opera
 
 public extension QRNavigationDomain {
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     enum Select {
