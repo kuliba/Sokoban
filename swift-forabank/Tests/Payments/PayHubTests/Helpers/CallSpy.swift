@@ -8,11 +8,11 @@
 final class CallSpy<Payload, Response> {
     
     private(set) var payloads = [Payload]()
-    private let response: Response
+    private var stubs: [Response]
     
-    init(response: Response) {
+    init(stubs: [Response] = []) {
         
-        self.response = response
+        self.stubs = stubs
     }
 }
 
@@ -23,7 +23,7 @@ extension CallSpy {
     func call(payload: Payload) -> Response {
         
         payloads.append(payload)
-        return response
+        return stubs.removeFirst()
     }
 }
 
@@ -39,7 +39,7 @@ extension CallSpy where Response == Void {
     
     convenience init() {
         
-        self.init(response: ())
+        self.init(stubs: [()])
     }
 }
 
@@ -49,5 +49,25 @@ extension CallSpy {
     where Payload == (A, B) {
         
         self.call(payload: (a, b))
+    }
+    
+    func call<A, B, C>(_ a: A, _ b: B, _ c: C) -> Response
+    where Payload == (A, B, C) {
+        
+        self.call(payload: (a, b, c))
+    }
+}
+
+extension CallSpy where Response == Result<Void, Error> {
+    
+    func call(payload: Payload) throws -> Void {
+        
+        return try call(payload: payload).get()
+    }
+    
+    func call<A, B>(_ a: A, _ b: B) throws -> Void
+    where Payload == (A, B) {
+        
+        return try self.call(payload: (a, b))
     }
 }

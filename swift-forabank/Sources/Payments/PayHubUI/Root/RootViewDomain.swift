@@ -47,7 +47,7 @@ public extension RootViewDomain {
         }
     }
     
-    typealias ContentWitnesses = PayHubUI.ContentWitnesses<Content, Select>
+    typealias ContentWitnesses = PayHub.ContentWitnesses<Content, Select>
     
     // MARK: - Content
     
@@ -55,7 +55,7 @@ public extension RootViewDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void

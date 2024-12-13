@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import PayHub
 
 public final class BinderComposer<Content, Select, Navigation> {
     

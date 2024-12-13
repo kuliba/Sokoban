@@ -32,6 +32,7 @@ typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     
+    let clearCache: () -> Void
     let isCorporate: () -> Bool
     let makeActivateSliderView: MakeActivateSliderView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory

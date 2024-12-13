@@ -64,6 +64,7 @@ final class Tests: XCTestCase {
     
     private func makeSUT(
         for dueTime: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(300),
+        stubs: [Void] = [(), ()],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -74,7 +75,7 @@ final class Tests: XCTestCase {
     ) {
         let scheduler = DispatchQueue.test
         let subject = Subject()
-        let spy = TextSpy()
+        let spy = TextSpy(stubs: stubs)
         
         let sut = subject
             .debounce(for: dueTime, scheduler: scheduler)

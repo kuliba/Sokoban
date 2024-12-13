@@ -6,7 +6,6 @@
 //
 
 import PayHub
-import PayHubUI
 
 /// A namespace.
 enum ServiceCategoryFailureDomain {}
@@ -16,7 +15,7 @@ extension ServiceCategoryFailureDomain {
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = PayHubUI.BinderComposer
+    typealias BinderComposer = PayHub.BinderComposer
     
     // MARK: - Content
     
@@ -24,7 +23,7 @@ extension ServiceCategoryFailureDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = FlowDomain.Notify

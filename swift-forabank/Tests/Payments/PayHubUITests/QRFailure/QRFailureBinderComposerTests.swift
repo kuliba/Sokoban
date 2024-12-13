@@ -6,6 +6,7 @@
 //
 
 import CombineSchedulers
+import PayHub
 import PayHubUI
 import XCTest
 

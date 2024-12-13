@@ -7,7 +7,7 @@
 
 import Combine
 import CombineSchedulers
-import PayHubUI
+import PayHub
 import XCTest
 
 final class ContentFlowBindingFactoryTests: XCTestCase {

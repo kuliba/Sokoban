@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHub
 import PayHubUI
 
 final class RootViewModelFactory {
