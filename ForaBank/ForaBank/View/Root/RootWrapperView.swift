@@ -54,6 +54,9 @@ private extension RootWrapperView {
         case let .makeStandardPaymentFailure(binder):
             viewFactory.components.serviceCategoryFailureView(binder: binder)
             
+        case let .productProfile(id):
+            Text("productProfile \(id)")
+            
         case let .standardPayment(picker):
             standardPaymentView(picker)
             
@@ -159,8 +162,14 @@ extension RootViewNavigation {
                 return nil
             }
             
-        case .outside:
-            return nil
+        case let .outside(outside):
+            switch outside {
+            case let .productProfile(id):
+                return .productProfile(id)
+                
+            case .tab:
+                return nil
+            }
             
         case .scanQR:
             return nil
@@ -179,6 +188,7 @@ extension RootViewNavigation {
     enum Destination {
         
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
+        case productProfile(Int)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case templates(TemplatesNode)
         case userAccount(UserAccountViewModel)
@@ -218,6 +228,9 @@ extension RootViewNavigation.Destination: Identifiable {
         case .makeStandardPaymentFailure:
             return .makeStandardPaymentFailure
             
+        case let .productProfile(id):
+            return .productProfile(id)
+            
         case let .standardPayment(picker):
             return .standardPayment(.init(picker))
             
@@ -232,6 +245,7 @@ extension RootViewNavigation.Destination: Identifiable {
     enum ID: Hashable {
         
         case makeStandardPaymentFailure
+        case productProfile(Int)
         case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
         case userAccount(ObjectIdentifier)

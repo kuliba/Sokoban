@@ -6364,7 +6364,6 @@
 		83E45EC72D01CA4200158F64 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowView.swift; sourceTree = "<group>"; };
 		83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemRule.swift; sourceTree = "<group>"; };
 		83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesData.swift; sourceTree = "<group>"; };
-		83EB7CC82C8A004E0058F417 /* ItemsWithSerial+BannersData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ItemsWithSerial+BannersData.swift"; sourceTree = "<group>"; };
 		83EB7CCA2C8B187B0058F417 /* ServiceItemsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceItemsLoader.swift; sourceTree = "<group>"; };
 		83ECC1C22CC63D0D0029D916 /* MarketShowcaseToRootViewModelBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseToRootViewModelBinder.swift; sourceTree = "<group>"; };
 		83F5AD452CB8FD5A0076CC0D /* LandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingServices.swift; sourceTree = "<group>"; };
@@ -10628,7 +10627,6 @@
 				2AA09D642CFA25050062415C /* RootViewModelFactory+makeFastPaymentsFactory.swift */,
 				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
 				2A49BA8D2D08796300E4BBE2 /* DelayingRemoteNanoServiceFactory.swift */,
-				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
 				2A72ACC92CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift */,
 				2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */,
 				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
@@ -15577,7 +15575,6 @@
 		838C09102C8B52F100E894AC /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				83EB7CC82C8A004E0058F417 /* ItemsWithSerial+BannersData.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";

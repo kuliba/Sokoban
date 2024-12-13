@@ -17,7 +17,13 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .outside(outside):
-            completion(.outside(outside))
+            switch outside {
+            case let .productProfile(id):
+                completion(.outside(.productProfile(id)))
+                
+            case let .tab(tab):
+                completion(.outside(.tab(tab)))
+            }
             
         case .scanQR:
             makeScanQR()
