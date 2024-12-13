@@ -32,7 +32,7 @@ struct RootView: View {
             
             GeometryReader { geo in
                 
-                TabView(selection: $viewModel.selected) {
+                TabView(selection: $viewModel.selected.animation(.easeOut)) {
                     
                     mainViewTab(viewModel.tabsViewModel.mainViewModel)
                     paymentsViewTab(viewModel.tabsViewModel.paymentsModel)

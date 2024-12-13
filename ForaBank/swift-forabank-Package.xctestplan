@@ -540,13 +540,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "СlientInformListTests",
-        "name" : "СlientInformListTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "GetProductListByTypeV7ServiceTests",
         "name" : "GetProductListByTypeV7ServiceTests"
       }
@@ -619,6 +612,13 @@
         "containerPath" : "container:",
         "identifier" : "SavingsAccountTests",
         "name" : "SavingsAccountTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
       }
     }
   ],

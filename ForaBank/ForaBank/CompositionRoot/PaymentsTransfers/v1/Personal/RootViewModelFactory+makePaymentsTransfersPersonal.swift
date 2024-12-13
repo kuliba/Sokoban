@@ -63,9 +63,9 @@ private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect,
 
 // MARK: - Content
 
-private extension PaymentsTransfersPersonalDomain.Content {
+extension PaymentsTransfersPersonalDomain.Content {
     
-    var eventPublisher: EventPublisher {
+    fileprivate var eventPublisher: EventPublisher {
         
         Publishers.Merge3(
             categoryPicker.eventPublisher,
