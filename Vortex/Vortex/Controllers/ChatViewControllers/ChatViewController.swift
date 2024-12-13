@@ -143,7 +143,7 @@ class ChatViewController: UIViewController, MFMailComposeViewControllerDelegate 
     }
     
     @objc func openTG(){
-        UIApplication.shared.openURL(NSURL(string: "https://telegram.me/vortex_bot")! as URL)
+        UIApplication.shared.openURL(NSURL(string: "https://telegram.me/\(Config.telegram)")! as URL)
 
     }
     

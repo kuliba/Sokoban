@@ -13,7 +13,8 @@ enum Config {
     static let puref = "iFora"
     static let name = "vortex"
     static let primary = "bInnovation"
-    static let telegram = "telegram"
+    static let telegram = "forabank_bot"
+    static let email = "vortex-digital@vortex.ru"
     
     // "group.com.isimplelab.isimplemobile.\(Config.name)" TODO
     /// used in `AppDelegate`
