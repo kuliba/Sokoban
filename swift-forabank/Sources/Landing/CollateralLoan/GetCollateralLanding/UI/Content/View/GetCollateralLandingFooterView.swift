@@ -10,7 +10,7 @@ import SwiftUI
 struct GetCollateralLandingFooterView: View {
     
     let config: Config.Footer
-    let product: Product
+    let state: GetCollateralLandingState
     let action: Action
 
     var body: some View {
@@ -48,7 +48,7 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
         
         GetCollateralLandingFooterView(
             config: .default,
-            product: .carStub,
+            state: .init(product: .carStub),
             action: {}
         )
     }

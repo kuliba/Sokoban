@@ -10,7 +10,8 @@ import SwiftUI
 struct GetCollateralLandingDocumentsView: View {
 
     let config: Config
-    let product: Product
+    let state: GetCollateralLandingState
+    let makeIconView: Factory.MakeIconView
     
     var body: some View {
         
@@ -48,9 +49,13 @@ struct GetCollateralLandingDocumentsView: View {
 
             VStack {
                 
-                ForEach(product.documents, id: \.title) {
+                ForEach(state.product.documents, id: \.title) {
                     
-                    documentView($0, config: config)
+                    GetCollateralLandingDocumentView(
+                        document: $0,
+                        config: config,
+                        makeIconView: makeIconView
+                    )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
                 .padding(.bottom, config.list.layouts.spacing)
@@ -59,33 +64,15 @@ struct GetCollateralLandingDocumentsView: View {
             .padding(.top, config.list.layouts.topPadding)
             .padding(.bottom, config.list.layouts.bottomPadding)
         }
-    }
-    
-    private func documentView(_ document: Document, config: Config.Documents) -> some View {
-        
-        HStack(spacing: 0) {
-            
-            Image(systemName: "document")
-                .padding(.trailing, config.list.layouts.iconTrailingPadding)
-            
-            document.title.text(
-                withConfig: .init(
-                    textFont: config.list.fonts.title.font,
-                    textColor: config.list.fonts.title.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .fixedSize(horizontal: false, vertical: true)
-        }
-    }
+    }    
 }
 
 extension GetCollateralLandingDocumentsView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias Document = GetCollateralLandingProduct.Document
     typealias Product = GetCollateralLandingProduct
+    typealias Factory = GetCollateralLandingFactory
 }
 
 // MARK: - Previews
@@ -96,10 +83,12 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
         
         GetCollateralLandingDocumentsView(
             config: .default,
-            product: carStub
+            state: .init(product: .carStub),
+            makeIconView: Factory.preview.makeIconView
         )
     }
     
     static let carStub = GetCollateralLandingProduct.carStub
     static let realEstateData = GetCollateralLandingProduct.realEstateStub
+    typealias Factory = GetCollateralLandingFactory
 }

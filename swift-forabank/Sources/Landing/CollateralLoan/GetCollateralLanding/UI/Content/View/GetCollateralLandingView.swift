@@ -5,8 +5,9 @@
 //  Created by Valentin Ozerov on 12.12.2024.
 //
 
-import SwiftUI
 import BottomSheetComponent
+import Combine
+import SwiftUI
 
 public struct GetCollateralLandingView: View {
     
@@ -54,11 +55,7 @@ public struct GetCollateralLandingView: View {
         
         VStack {
             
-            // TODO: Need to realized
-            // Image(backgroundImage)
-            
-            // simulacrum
-            Color.teal
+            factory.makeImageView(state.product.marketing.image)
                 .frame(height: factory.config.backgroundImageHeight)
             
             Spacer()
@@ -76,24 +73,31 @@ public struct GetCollateralLandingView: View {
             
             state.product.conditions.nilIfEmpty.map { _ in
                 
-                ConditionsView(config: factory.config, product: state.product)
+                ConditionsView(
+                    config: factory.config,
+                    state: state,
+                    makeIconView: factory.makeIconView
+                )
             }
             
-            CalculatorView(config: factory.config, product: state.product)
+            CalculatorView(config: factory.config, state: state)
             
             state.product.faq.nilIfEmpty.map { _ in
 
-                FaqView(config: factory.config, product: state.product)
+                FaqView(config: factory.config, state: state)
             }
 
             state.product.documents.nilIfEmpty.map { _ in
 
-                DocumentsView(config: factory.config, product: state.product)
+                DocumentsView(
+                    config: factory.config,
+                    state: state,
+                    makeIconView: factory.makeIconView)
             }
             
             FooterView(
                 config: factory.config.footer,
-                product: state.product,
+                state: state,
                 action: { event(.createDraftApplication) }
             )
         }
@@ -127,7 +131,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(product: .carStub),
             event: { _ in },
-            factory: factory
+            factory: Factory.preview
         )
         .previewDisplayName("Product with calculator")
 
@@ -136,7 +140,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(bottomSheet: periodBottomSheet, product: .carStub),
             event: { _ in },
-            factory: factory
+            factory: Factory.preview
         )
         .previewDisplayName("Product period selector")
         
@@ -145,13 +149,13 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(bottomSheet: collateralBottomSheet, product: .carStub),
             event: { _ in },
-            factory: factory
+            factory: Factory.preview
         )
         .previewDisplayName("Product collateral selector")
     }
 
     static let carStub = GetCollateralLandingProduct.carStub
-    static let factory = GetCollateralLandingFactory()
 
     typealias State = GetCollateralLandingState
+    typealias Factory = GetCollateralLandingFactory
 }

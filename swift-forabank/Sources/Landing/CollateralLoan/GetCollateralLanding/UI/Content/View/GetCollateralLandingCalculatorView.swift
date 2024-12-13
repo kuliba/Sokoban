@@ -16,16 +16,8 @@ struct GetCollateralLandingCalculatorView: View {
     @State private var sliderCurrentValue = 6.0
     
     let config: Config
-    let product: GetCollateralLandingProduct
+    let state: GetCollateralLandingState
 
-    init(
-        config: Config,
-        product: GetCollateralLandingProduct
-    ) {
-        self.config = config
-        self.product = product
-    }
-    
     var body: some View {
         
         calculatorView
@@ -353,7 +345,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
         
         GetCollateralLandingCalculatorView(
             config: .default,
-            product: .carStub
+            state: .init(product: .carStub)
         )
     }
 }

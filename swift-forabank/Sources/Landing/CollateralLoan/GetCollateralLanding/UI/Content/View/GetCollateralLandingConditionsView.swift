@@ -5,12 +5,15 @@
 //  Created by Valentin Ozerov on 15.11.2024.
 //
 
+import Combine
 import SwiftUI
+import UIPrimitives
 
 struct GetCollateralLandingConditionsView: View {
     
     let config: Config
-    let product: Product
+    let state: GetCollateralLandingState
+    let makeIconView: Factory.MakeIconView
     
     var body: some View {
         
@@ -47,9 +50,13 @@ struct GetCollateralLandingConditionsView: View {
 
             VStack {
                 
-                ForEach(product.conditions, id: \.title) {
+                ForEach(state.product.conditions, id: \.title) {
                     
-                    conditionView($0, config: config)
+                    GetCollateralLandingConditionView(
+                        condition: $0,
+                        config: config,
+                        makeIconView: makeIconView
+                    )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
                 .padding(.bottom, config.list.layouts.spacing)
@@ -109,4 +116,22 @@ extension GetCollateralLandingConditionsView {
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
     typealias Condition = GetCollateralLandingProduct.Condition
+    typealias Factory = GetCollateralLandingFactory
+}
+
+// MARK: - Previews
+
+struct GetCollateralLandingConditionsView_Previews: PreviewProvider {
+
+    static var previews: some View {
+
+            GetCollateralLandingConditionsView(
+                config: .default,
+                state: .init(product: .carStub),
+                makeIconView: Factory.preview.makeIconView
+            )
+            .frame(height: 100)
+    }
+
+    typealias Factory = GetCollateralLandingFactory
 }

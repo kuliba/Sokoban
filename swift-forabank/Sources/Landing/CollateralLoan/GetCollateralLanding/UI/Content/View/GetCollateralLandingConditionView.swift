@@ -1,0 +1,85 @@
+//
+//  GetCollateralLandingConditionView.swift
+//
+//
+//  Created by Valentin Ozerov on 13.12.2024.
+//
+
+import Combine
+import SwiftUI
+
+struct GetCollateralLandingConditionView: View{
+
+    let condition: Condition
+    let config: Config
+    let makeIconView: Factory.MakeIconView
+
+    var body: some View {
+        
+        
+        HStack(spacing: 0) {
+            
+            VStack {
+                
+                makeIconView(condition.icon)
+                    .frame(
+                        width: config.list.layouts.iconSize.width,
+                        height: config.list.layouts.iconSize.height
+                    )
+                    .padding(.trailing, config.list.layouts.iconTrailingPadding)
+
+                Spacer()
+            }
+            
+            VStack(spacing: 0) {
+                
+                condition.title.text(
+                    withConfig: .init(
+                        textFont: config.list.fonts.title.font,
+                        textColor: config.list.fonts.title.foreground
+                    )
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                condition.subTitle.text(
+                    withConfig: .init(
+                        textFont: config.list.fonts.subTitle.font,
+                        textColor: config.list.fonts.subTitle.foreground
+                    )
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, config.list.layouts.subTitleTopPadding)
+                
+                Spacer()
+            }
+        }
+    }
+}
+
+extension GetCollateralLandingConditionView {
+    
+    typealias Config = GetCollateralLandingConfig.Conditions
+    typealias Theme = GetCollateralLandingTheme
+    typealias Product = GetCollateralLandingProduct
+    typealias Condition = GetCollateralLandingProduct.Condition
+    typealias Factory = GetCollateralLandingFactory
+}
+
+// MARK: - Previews
+
+struct GetCollateralLandingConditionView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        GetCollateralLandingConditionView(
+            condition: GetCollateralLandingProduct.carStub.conditions.first!,
+            config: .default,
+            makeIconView: Factory.preview.makeIconView
+        )
+        .padding(.top, 300)
+        .padding(.horizontal, 16)
+    }
+    
+    typealias Factory = GetCollateralLandingFactory
+}
