@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.10.2024.
 //
 
+import PayHub
 import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
@@ -14,7 +15,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     typealias Binder = PlainPickerBinder<Select, NavigationResult>
     typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, NavigationResult>
+    typealias FlowDomain = PayHub.FlowDomain<Select, NavigationResult>
     
     // MARK: - Content
     

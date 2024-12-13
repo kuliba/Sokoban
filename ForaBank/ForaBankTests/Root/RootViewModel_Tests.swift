@@ -6,7 +6,7 @@
 //
 
 @testable import ForaBank
-import PayHubUI
+import PayHub
 import XCTest
 
 class RootViewModel_Tests: XCTestCase {

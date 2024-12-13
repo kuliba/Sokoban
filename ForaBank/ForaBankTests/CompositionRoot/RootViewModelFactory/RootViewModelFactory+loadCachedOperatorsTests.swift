@@ -6,7 +6,7 @@
 //
 
 @testable import ForaBank
-import PayHubUI
+import PayHub
 import XCTest
 
 final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryTests {

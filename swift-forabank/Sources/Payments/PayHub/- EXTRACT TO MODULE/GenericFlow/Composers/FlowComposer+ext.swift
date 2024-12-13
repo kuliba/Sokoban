@@ -7,7 +7,6 @@
 
 import CombineSchedulers
 import Foundation
-import PayHub
 
 public extension FlowComposer {
     

@@ -8,7 +8,7 @@
 import Combine
 import CombineSchedulers
 @testable import ForaBank
-import PayHubUI
+import PayHub
 import XCTest
 
 final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryTests {

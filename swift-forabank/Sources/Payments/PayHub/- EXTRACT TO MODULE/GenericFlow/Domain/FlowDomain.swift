@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 28.09.2024.
 //
 
-import PayHub
 import RxViewModel
 
 /// A namespace.

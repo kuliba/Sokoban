@@ -6,7 +6,7 @@
 //
 
 import Combine
-import PayHubUI
+import PayHub
 import XCTest
 
 final class ContentWitnesses_mergeTests: XCTestCase {
