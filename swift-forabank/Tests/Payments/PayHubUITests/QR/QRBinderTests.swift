@@ -193,6 +193,9 @@ class QRBinderTests: XCTestCase {
         case .dismiss:
             return .dismiss
             
+        case let .isLoading(isLoading):
+            return .isLoading(isLoading)
+            
         case let .select(select):
             switch select {
             case .outside(.chat):
@@ -213,6 +216,7 @@ class QRBinderTests: XCTestCase {
     enum EquatableNotifyEvent: Equatable {
         
         case dismiss
+        case isLoading(Bool)
         case outside(Outside)
         case qrResult(QRResult)
         

@@ -61,6 +61,9 @@ public extension FlowEffectHandler {
             case .dismiss:
                 dispatch(.dismiss)
                 
+            case let .isLoading(isLoading):
+                dispatch(.isLoading(isLoading))
+                
             case let .select(select):
                 dispatch(.select(select))
             }

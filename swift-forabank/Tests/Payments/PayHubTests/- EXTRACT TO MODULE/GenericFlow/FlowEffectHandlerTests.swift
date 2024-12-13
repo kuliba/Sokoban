@@ -29,7 +29,7 @@ final class FlowEffectHandlerTests: FlowTests {
         
         sut.handleEffect(.select(select)) { _ in }
         
-        XCTAssertEqual(getNavigation.payloads, [select])
+        XCTAssertNoDiff(getNavigation.payloads, [select])
     }
     
     func test_getNavigation_shouldDeliverNavigation() {
