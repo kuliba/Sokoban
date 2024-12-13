@@ -19,14 +19,13 @@ struct BottomSheetContentView: View {
         ScrollView(.vertical) {
 
             VStack(spacing: 8) {
-                ForEach(items) {
-                    
-                    itemView($0)
-                }
+                
+                ForEach(items, content: itemView)
             }
             
             Spacer()
         }
+        .disabled(items.count < 6)
         .frame(height: height)
     }
     

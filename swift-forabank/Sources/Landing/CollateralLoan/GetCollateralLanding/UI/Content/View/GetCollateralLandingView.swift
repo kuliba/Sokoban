@@ -13,16 +13,11 @@ public struct GetCollateralLandingView: View {
     let state: State
     let event: (Event) -> Void
     let factory: Factory
-    var bottomSheet: Binding<State.BottomSheet?> {
-        
-    .init(
-        get: { state.bottomSheet },
-        set: { if $0 == nil { event(.closeBottomSheet) } })
-    }
     
     public var body: some View {
         
         ScrollView {
+            
             ZStack {
                 
                 backgroundImageView
@@ -31,32 +26,40 @@ public struct GetCollateralLandingView: View {
             .background(state.product.getCollateralLandingTheme.backgroundColor)
         }
         .ignoresSafeArea()
-        .bottomSheet(item: bottomSheet, content: {
-            
-            switch $0.sheetType {
-            case let .periods(period):
-                BottomSheetContentView(items: period.map(\.bottomSheetItem)) {
-                    event(.selectCollateral($0))
-                }
-            case let .collaterals(collateral):
-                BottomSheetContentView(items: collateral.map(\.bottomSheetItem)) {
-                    event(.selectCollateral($0))
-                }
-            }
-        })
+        .bottomSheet(item: bottomSheetItem, content: bottomSheet)
     }
     
+    private func bottomSheet(_ bottomSheet: State.BottomSheet) -> some View {
+        
+        switch bottomSheet.sheetType {
+        case let .periods(period):
+            BottomSheetContentView(items: period.map(\.bottomSheetItem)) {
+                event(.selectCollateral($0))
+            }
+        case let .collaterals(collateral):
+            BottomSheetContentView(items: collateral.map(\.bottomSheetItem)) {
+                event(.selectCollateral($0))
+            }
+        }
+    }
+    
+    private var bottomSheetItem: Binding<State.BottomSheet?> {
+        
+    .init(
+        get: { state.bottomSheet },
+        set: { if $0 == nil { event(.closeBottomSheet) } })
+    }
+
     var backgroundImageView: some View {
         
         VStack {
+            
             // TODO: Need to realized
             // Image(backgroundImage)
             
             // simulacrum
-            if #available(iOS 15.0, *) {
-                Color.teal
-                    .frame(height: factory.config.backgroundImageHeight)
-            }
+            Color.teal
+                .frame(height: factory.config.backgroundImageHeight)
             
             Spacer()
         }
