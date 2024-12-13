@@ -664,13 +664,12 @@ extension PaymentsTransfersPersonalDomain.Binder {
         let transferPicker = content.transfers.hasDestination
         let flowHasDestination = Just(false)
         
-        return Publishers.CombineLatest4(
+        return Publishers.Merge4(
             categoryPicker,
             operationPicker,
             transferPicker,
             flowHasDestination
         )
-        .map { $0 || $1 || $2 || $3 }
         .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
