@@ -45,7 +45,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
-    private var auithBinding: AnyCancellable?
+    private var authBinding: AnyCancellable?
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
@@ -104,7 +104,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
         
-        auithBinding = model.auth
+        authBinding = model.auth
             .receive(on: mainScheduler)
             .sink { [unowned self] auth in
                 
