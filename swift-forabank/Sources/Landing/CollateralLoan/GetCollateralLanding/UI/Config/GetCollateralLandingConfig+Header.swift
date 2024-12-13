@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingViewConfig+Header.swift
+//  GetCollateralLandingConfig+Header.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig {
+extension GetCollateralLandingConfig {
     
     struct Header {
         
@@ -74,7 +74,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig.Header {
+extension GetCollateralLandingConfig.Header {
     
     static let `default` = Self(
         height: 642,

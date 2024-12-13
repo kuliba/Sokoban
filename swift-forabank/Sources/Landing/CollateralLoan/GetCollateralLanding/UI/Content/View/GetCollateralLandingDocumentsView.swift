@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingDocumentsView.swift
+//  GetCollateralLandingDocumentsView.swift
 //
 //
 //  Created by Valentin Ozerov on 10.12.2024.
@@ -7,17 +7,10 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetCollateralLandingDocumentsView: View {
+struct GetCollateralLandingDocumentsView: View {
 
-    private let config: Config
-    private let theme: Theme
-    private let documents: [Document]
-    
-    init(config: Config, theme: Theme, documents: [Document]) {
-        self.config = config
-        self.theme = theme
-        self.documents = documents
-    }
+    let config: Config
+    let product: Product
     
     var body: some View {
         
@@ -55,7 +48,7 @@ struct CollateralLoanLandingGetCollateralLandingDocumentsView: View {
 
             VStack {
                 
-                ForEach(documents, id: \.title) {
+                ForEach(product.documents, id: \.title) {
                     
                     documentView($0, config: config)
                 }
@@ -87,26 +80,26 @@ struct CollateralLoanLandingGetCollateralLandingDocumentsView: View {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingDocumentsView {
+extension GetCollateralLandingDocumentsView {
     
-    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
-    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+    typealias Config = GetCollateralLandingConfig
+    typealias Theme = GetCollateralLandingTheme
     typealias Document = GetCollateralLandingProduct.Document
+    typealias Product = GetCollateralLandingProduct
 }
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetCollateralLandingDocumentsView_Previews: PreviewProvider {
+struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CollateralLoanLandingGetCollateralLandingDocumentsView(
+        GetCollateralLandingDocumentsView(
             config: .default,
-            theme: .gray,
-            documents: cardData.documents
+            product: carStub
         )
     }
     
-    static let cardData = GetCollateralLandingProduct.cardStub
+    static let carStub = GetCollateralLandingProduct.carStub
     static let realEstateData = GetCollateralLandingProduct.realEstateStub
 }

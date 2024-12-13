@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingCalculatorView.swift
+//  GetCollateralLandingCalculatorView.swift
 //
 //
 //  Created by Valentin Ozerov on 19.11.2024.
@@ -9,19 +9,21 @@ import Foundation
 import SwiftUI
 import ToggleComponent
 
-struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
+struct GetCollateralLandingCalculatorView: View {
     
     // TODO: Replace on real data
     @State private var toggleIsOn = false
     @State private var sliderCurrentValue = 6.0
     
-    private let config: Config
-    private let theme: Theme
-    
-    init(config: Config, theme: Theme) {
-        
+    let config: Config
+    let product: GetCollateralLandingProduct
+
+    init(
+        config: Config,
+        product: GetCollateralLandingProduct
+    ) {
         self.config = config
-        self.theme = theme
+        self.product = product
     }
     
     var body: some View {
@@ -337,10 +339,10 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView: View {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingCalculatorView {
+extension GetCollateralLandingCalculatorView {
     
-    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
-    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+    typealias Config = GetCollateralLandingConfig
+    typealias Theme = GetCollateralLandingTheme
 }
 
 // MARK: - Previews
@@ -349,9 +351,9 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
     
     static var previews: some View {
         
-        CollateralLoanLandingGetCollateralLandingCalculatorView(
+        GetCollateralLandingCalculatorView(
             config: .default,
-            theme: .gray
+            product: .carStub
         )
     }
 }

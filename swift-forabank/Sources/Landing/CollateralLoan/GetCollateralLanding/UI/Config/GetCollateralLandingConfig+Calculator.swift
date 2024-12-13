@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingViewConfig+Calculator.swift
+//  GetCollateralLandingConfig+Calculator.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import SharedConfigs
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig {
+extension GetCollateralLandingConfig {
     
     struct Calculator {
         
@@ -279,7 +279,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig.Calculator {
+extension GetCollateralLandingConfig.Calculator {
  
     static let `default` = Self(
         root: .init(

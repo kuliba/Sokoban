@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingTheme.swift
+//  GetCollateralLandingTheme.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetCollateralLandingTheme {
+public struct GetCollateralLandingTheme {
 
     public let foregroundColor: Color
     public let backgroundColor: Color
@@ -19,4 +19,4 @@ public struct CollateralLoanLandingGetCollateralLandingTheme {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingTheme: Equatable {}
+extension GetCollateralLandingTheme: Equatable {}

@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingViewConfig+Footer.swift
+//  GetCollateralLandingConfig+Footer.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig {
+extension GetCollateralLandingConfig {
     
     struct Footer {
         
@@ -67,7 +67,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig.Footer {
+extension GetCollateralLandingConfig.Footer {
     
     static let `default` = Self(
         text: "Оформить заявку",

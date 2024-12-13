@@ -1,40 +1,271 @@
 //
-//  CollateralLoanLandingGetCollateralLandingView.swift
+//  GetCollateralLandingData.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
 //
 
-import SwiftUI
+import Foundation
+import DropDownTextListComponent
 
-struct CollateralLoanLandingGetCollateralLandingView: View {
+public struct GetCollateralLandingProduct: Equatable {
     
-    private let content: Content
-    private let factory: Factory
+    public let theme: Theme
+    public let name: String
+    public let marketing: Marketing
+    public let conditions: [Condition]
+    public let calc: Calc
+    public let faq: [Faq]
+    public let documents: [Document]
+    public let consents: [Consent]
+    public let cities: [String]
+    public let icons: Icons
     
-    init(
-        content: Content,
-        factory: Factory
+    public init(
+        theme: Theme,
+        name: String,
+        marketing: Marketing,
+        conditions: [Condition],
+        calc: Calc,
+        faq: [Faq],
+        documents: [Document],
+        consents: [Consent],
+        cities: [String],
+        icons: Icons
     ) {
-        self.content = content
-        self.factory = factory
+        self.theme = theme
+        self.name = name
+        self.marketing = marketing
+        self.conditions = conditions
+        self.calc = calc
+        self.faq = faq
+        self.documents = documents
+        self.consents = consents
+        self.cities = cities
+        self.icons = icons
     }
     
-    var body: some View {
+    public enum Theme: String {
         
-        factory.makeView(content.product)
+        case gray
+        case white
+        case unknown
     }
-}
-
-extension CollateralLoanLandingGetCollateralLandingView {
     
-    typealias Content = CollateralLoanLandingGetCollateralLandingContent
-    typealias Factory = CollateralLoanLandingGetCollateralLandingViewFactory
+    public struct Marketing: Equatable {
+        
+        public let labelTag: String
+        public let image: String
+        public let params: [String]
+        
+        public init(
+            labelTag: String,
+            image: String,
+            params: [String]
+        ) {
+            self.labelTag = labelTag
+            self.image = image
+            self.params = params
+        }
+    }
+    
+    public struct Condition: Equatable {
+        
+        public let icon: String
+        public let title: String
+        public let subTitle: String
+        
+        public init(icon: String, title: String, subTitle: String) {
+            self.icon = icon
+            self.title = title
+            self.subTitle = subTitle
+        }
+    }
+    
+    public struct Calc: Equatable {
+        
+        public let amount: Amount
+        public let collaterals: [Collateral]
+        public let rates: [Rate]
+        
+        public init(amount: Amount, collaterals: [Collateral], rates: [Rate]) {
+            self.amount = amount
+            self.collaterals = collaterals
+            self.rates = rates
+        }
+        
+        public struct Amount: Equatable {
+            
+            public let minIntValue: UInt
+            public let maxIntValue: UInt
+            public let maxStringValue: String
+            
+            public init(
+                minIntValue: UInt,
+                maxIntValue: UInt,
+                maxStringValue: String
+            ) {
+                self.minIntValue = minIntValue
+                self.maxIntValue = maxIntValue
+                self.maxStringValue = maxStringValue
+            }
+        }
+        
+        public struct Collateral: Equatable {
+            
+            public let icon: String
+            public let name: String
+            public let type: String
+            
+            public init(icon: String, name: String, type: String) {
+                
+                self.icon = icon
+                self.name = name
+                self.type = type
+            }
+        }
+        
+        public struct Rate: Equatable {
+            
+            public let rateBase: Double
+            public let ratePayrollClient: Double
+            public let termMonth: UInt
+            public let termStringValue: String
+            
+            public init(
+                rateBase: Double,
+                ratePayrollClient: Double,
+                termMonth: UInt,
+                termStringValue: String
+            ) {
+                self.rateBase = rateBase
+                self.ratePayrollClient = ratePayrollClient
+                self.termMonth = termMonth
+                self.termStringValue = termStringValue
+            }
+        }
+    }
+    
+    public struct Faq: Equatable {
+        
+        public let question: String
+        public let answer: String
+        
+        public init(question: String, answer: String) {
+            
+            self.question = question
+            self.answer = answer
+        }
+    }
+    
+    public struct Document: Equatable, Identifiable {
+        
+        public var id = UUID()
+        public let title: String
+        public let icon: String?
+        public let link: String
+        
+        public init(title: String, icon: String?, link: String) {
+            
+            self.title = title
+            self.icon = icon
+            self.link = link
+        }
+    }
+    
+    public struct Consent: Equatable {
+        
+        public let name: String
+        public let link: String
+        
+        public init(name: String, link: String) {
+            
+            self.name = name
+            self.link = link
+        }
+    }
+    
+    public struct Icons: Equatable {
+        
+        public let productName: String
+        public let amount: String
+        public let term: String
+        public let rate: String
+        public let city: String
+        
+        public init(
+            productName: String,
+            amount: String,
+            term: String,
+            rate: String,
+            city: String
+        ) {
+            self.productName = productName
+            self.amount = amount
+            self.term = term
+            self.rate = rate
+            self.city = city
+        }
+    }
 }
 
 extension GetCollateralLandingProduct {
     
-    static let cardStub = Self(
+    public var getCollateralLandingTheme: GetCollateralLandingTheme {
+
+        switch self.theme {
+
+        case .white:
+            return .white
+        case .gray:
+            return .gray
+        default:
+            return .white
+        }
+    }
+}
+
+extension GetCollateralLandingProduct.Faq: Hashable {}
+
+extension GetCollateralLandingProduct {
+    
+    var dropDownTextList: DropDownTextList {
+        
+        .init(
+            title: "Часто задаваемые вопросы",
+            items: faq.map { .init(title: $0.question, subTitle: $0.answer) }
+        )
+    }
+}
+
+extension GetCollateralLandingProduct.Calc.Rate {
+    
+    var bottomSheetItem: GetCollateralLandingState.BottomSheet.Item {
+        
+        .init(
+            id: String(termMonth),
+            icon: nil,
+            title: termStringValue
+        )
+    }
+}
+
+extension GetCollateralLandingProduct.Calc.Collateral {
+    
+    var bottomSheetItem: GetCollateralLandingState.BottomSheet.Item {
+        
+        .init(
+            id: type,
+            icon: icon,
+            title: name
+        )
+    }
+}
+
+// For preview only
+extension GetCollateralLandingProduct {
+    
+    static let carStub = Self(
         theme: .unknown,
         name: "Кредит под залог транспорта",
         marketing: .init(
@@ -69,7 +300,7 @@ extension GetCollateralLandingProduct {
                 maxIntValue: 15000000,
                 maxStringValue: "До 15 млн. ₽"
             ),
-            collateral: [
+            collaterals: [
                 .init(
                     icon: "0e74ec16a34028c0b963b8ddfa934240",
                     name: "Автомобиль",
@@ -138,7 +369,7 @@ extension GetCollateralLandingProduct {
                 ),
             ]
         ),
-        frequentlyAskedQuestions: [
+        faq: [
             .init(
                 question: "какой кредит выгоднее оформить залоговый или взять несколько потребительских кредитов без обязательного подтверждения целевого использования и оформления залога?",
                 answer: "при наличии, имущества которое можно передать в залог банку конечно выгоднее оформить залоговый кредит по таким кредитам процентная ставка будет значительно меньше, а срок и сумма кредита всегда больше чем у без залогового потребительского кредита."
@@ -297,7 +528,7 @@ extension GetCollateralLandingProduct {
                 maxIntValue: 15000000,
                 maxStringValue: "До 15 млн. ₽"
             ),
-            collateral: [
+            collaterals: [
                 .init(
                     icon: "864514356fd3192601f1e82feb04f123",
                     name: "Квартира",
@@ -394,7 +625,7 @@ extension GetCollateralLandingProduct {
                 ),
             ]
         ),
-        frequentlyAskedQuestions: [
+        faq: [
             .init(
                 question: "какой кредит выгоднее оформить залоговый или взять несколько потребительских кредитов без обязательного подтверждения целевого использования и оформления залога?",
                 answer: "при наличии, имущества которое можно передать в залог банку конечно выгоднее оформить залоговый кредит по таким кредитам процентная ставка будет значительно меньше, а срок и сумма кредита всегда больше чем у без залогового потребительского кредита."

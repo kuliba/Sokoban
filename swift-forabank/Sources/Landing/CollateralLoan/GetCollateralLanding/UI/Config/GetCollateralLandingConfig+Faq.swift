@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingViewConfig+frequentlyAskedQuestions.swift
+//  GetCollateralLandingConfig+fag.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.

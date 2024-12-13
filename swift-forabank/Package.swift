@@ -1394,11 +1394,12 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
+            .bottomSheetComponent,
+            .dropDownTextListComponent,
+            .rxViewModel,
             .sharedConfigs,
             .toggleComponent,
-            .dropDownTextListComponent,
-            .uiPrimitives
-        ],
+            .uiPrimitives        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
     )
     

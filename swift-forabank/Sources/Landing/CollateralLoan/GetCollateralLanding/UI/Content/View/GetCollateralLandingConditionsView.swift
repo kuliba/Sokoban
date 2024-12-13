@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingConditionsView.swift
+//  GetCollateralLandingConditionsView.swift
 //
 //
 //  Created by Valentin Ozerov on 15.11.2024.
@@ -7,17 +7,10 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetCollateralLandingConditionsView: View {
+struct GetCollateralLandingConditionsView: View {
     
-    private let config: Config
-    private let theme: Theme
-    private let conditions: [Condition]
-    
-    init(config: Config, theme: Theme, conditions: [Condition]) {
-        self.config = config
-        self.theme = theme
-        self.conditions = conditions
-    }
+    let config: Config
+    let product: Product
     
     var body: some View {
         
@@ -54,7 +47,7 @@ struct CollateralLoanLandingGetCollateralLandingConditionsView: View {
 
             VStack {
                 
-                ForEach(conditions, id: \.title) {
+                ForEach(product.conditions, id: \.title) {
                     
                     conditionView($0, config: config)
                 }
@@ -110,9 +103,10 @@ struct CollateralLoanLandingGetCollateralLandingConditionsView: View {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingConditionsView {
+extension GetCollateralLandingConditionsView {
     
-    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
-    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+    typealias Config = GetCollateralLandingConfig
+    typealias Theme = GetCollateralLandingTheme
+    typealias Product = GetCollateralLandingProduct
     typealias Condition = GetCollateralLandingProduct.Condition
 }

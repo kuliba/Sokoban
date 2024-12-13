@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingViewConfig+Documents.swift
+//  GetCollateralLandingConfig+Documents.swift
 //
 //
 //  Created by Valentin Ozerov on 20.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig {
+extension GetCollateralLandingConfig {
     
     struct Documents {
         
@@ -83,7 +83,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig.Documents {
+extension GetCollateralLandingConfig.Documents {
     
     static let `default` = Self(
         background: .grayLightest,

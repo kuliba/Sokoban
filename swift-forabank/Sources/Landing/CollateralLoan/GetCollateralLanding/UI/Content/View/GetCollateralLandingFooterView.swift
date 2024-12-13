@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingFooterView.swift
+//  GetCollateralLandingFooterView.swift
 //
 //
 //  Created by Valentin Ozerov on 11.12.2024.
@@ -7,18 +7,11 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetCollateralLandingFooterView: View {
+struct GetCollateralLandingFooterView: View {
     
-    private let config: Config.Footer
-    private let theme: Theme
-    private let action: Action
-    
-    init(config: Config, theme: Theme, action: @escaping Action) {
-        
-        self.config = config.footer
-        self.theme = theme
-        self.action = action
-    }
+    let config: Config.Footer
+    let product: Product
+    let action: Action
 
     var body: some View {
         
@@ -39,22 +32,23 @@ struct CollateralLoanLandingGetCollateralLandingFooterView: View {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingFooterView {
+extension GetCollateralLandingFooterView {
     
-    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
-    typealias Theme = CollateralLoanLandingGetCollateralLandingTheme
+    typealias Config = GetCollateralLandingConfig
+    typealias Theme = GetCollateralLandingTheme
+    typealias Product = GetCollateralLandingProduct
     typealias Action = () -> Void
 }
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetCollateralLandingFooterView_Previews: PreviewProvider {
+struct GetCollateralLandingFooterView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CollateralLoanLandingGetCollateralLandingFooterView(
+        GetCollateralLandingFooterView(
             config: .default,
-            theme: .gray,
+            product: .carStub,
             action: {}
         )
     }

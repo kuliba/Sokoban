@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingHeaderView.swift
+//  GetCollateralLandingHeaderView.swift
 //
 //
 //  Created by Valentin Ozerov on 14.11.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIPrimitives
 
-struct CollateralLoanLandingGetCollateralLandingHeaderView: View {
+struct GetCollateralLandingHeaderView: View {
     
     private let config: Config
     
@@ -23,7 +23,7 @@ struct CollateralLoanLandingGetCollateralLandingHeaderView: View {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingHeaderView {
+extension GetCollateralLandingHeaderView {
     
-    typealias Config = CollateralLoanLandingGetCollateralLandingViewConfig
+    typealias Config = GetCollateralLandingConfig
 }

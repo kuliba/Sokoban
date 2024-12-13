@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingViewConfig.swift
+//  GetCollateralLandingConfig.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
@@ -8,47 +8,20 @@
 import SwiftUI
 import DropDownTextListComponent
 
-struct CollateralLoanLandingGetCollateralLandingViewConfig {
+struct GetCollateralLandingConfig {
     
     let fonts: Fonts
     let backgroundImageHeight: CGFloat
     let paddings: Paddings
     let spacing: CGFloat
     let cornerRadius: CGFloat
-    
     let header: Header
     let conditions: Conditions
     let calculator: Calculator
-    let frequentlyAskedQuestions: DropDownTextListConfig
+    let faq: DropDownTextListConfig
     let documents: Documents
     let footer: Footer
         
-    init(
-        fonts: Fonts,
-        backgroundImageHeight: CGFloat,
-        paddings: Paddings,
-        spacing: CGFloat,
-        cornerRadius: CGFloat,
-        header: Header,
-        conditions: Conditions,
-        calculator: Calculator,
-        frequentlyAskedQuestions: DropDownTextListConfig,
-        documents: Documents,
-        footer: Footer
-    ) {
-        self.fonts = fonts
-        self.backgroundImageHeight = backgroundImageHeight
-        self.paddings = paddings
-        self.spacing = spacing
-        self.cornerRadius = cornerRadius
-        self.header = header
-        self.conditions = conditions
-        self.calculator = calculator
-        self.frequentlyAskedQuestions = frequentlyAskedQuestions
-        self.documents = documents
-        self.footer = footer
-    }
-    
     struct Fonts {
         
         let body: FontConfig
@@ -96,7 +69,7 @@ struct CollateralLoanLandingGetCollateralLandingViewConfig {
     }
 }
 
-extension CollateralLoanLandingGetCollateralLandingViewConfig {
+extension GetCollateralLandingConfig {
 
     static let `default` = Self(
         fonts: .init(body: FontConfig(Font.system(size: 14))),
@@ -112,7 +85,7 @@ extension CollateralLoanLandingGetCollateralLandingViewConfig {
         header: .default,
         conditions: .default,
         calculator: .default,
-        frequentlyAskedQuestions: .default,
+        faq: .default,
         documents: .default,
         footer: .default
     )
