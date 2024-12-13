@@ -661,7 +661,6 @@ class AuthPinCodeViewModel: ObservableObject {
     
     deinit {
         
-        model.clientInformAlertManager.setUpdatePermission(true)
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
 }
