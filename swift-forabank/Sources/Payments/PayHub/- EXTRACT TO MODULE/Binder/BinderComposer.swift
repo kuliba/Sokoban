@@ -42,10 +42,7 @@ public extension BinderComposer {
         initialState: Domain.FlowDomain.State = .init()
     ) -> Domain.Binder {
         
-        let factory = ContentFlowBindingFactory(
-            delay: delay,
-            scheduler: schedulers.interactive
-        )
+        let factory = ContentFlowBindingFactory()
         
         let flowComposer = Domain.FlowDomain.Composer(
             delay: delay,
