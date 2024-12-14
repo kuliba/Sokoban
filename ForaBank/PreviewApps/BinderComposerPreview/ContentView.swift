@@ -11,7 +11,9 @@ import UIPrimitives
 
 struct ContentView: View {
     
-    let binder: RootDomain.Binder
+    @State private var delay: Delay = .ms200
+    
+    private var binder: RootDomain.Binder { .default(delay: delay.value) }
     
     var body: some View {
         
@@ -19,38 +21,81 @@ struct ContentView: View {
             
             RootFlowView(state: state, event: event) {
                 
-                VStack(spacing: 32) {
-                    
-                    Text("Change `delay` in `static Binder.default(delay:schedulers:)` to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.")
-                    
-                    Button("Destination") { event(.select(.destination)) }
-                    Button("Sheet") { event(.select(.sheet)) }
-                }
-                .padding(.horizontal)
-                .navigationDestination(
-                    destination: state.navigation?.destination,
-                    dismiss: { event(.dismiss) },
-                    content: destinationView(destination:)
-                )
-                .sheet(
-                    modal: state.navigation?.sheet,
-                    dismiss: { event(.dismiss) },
-                    content: sheetView
-                )
-                .onChange(of: state.navigation?.destination?.id) {
-                    
-                    print("destination:", $0.map { $0 } ?? "nil")
-                }
-                .onChange(of: state.navigation?.sheet?.id) {
-                    
-                    print("sheet:", $0.map { $0 } ?? "nil")
-                }
+                contentView(event: event)
+                    .navigationDestination(
+                        destination: state.navigation?.destination,
+                        dismiss: { event(.dismiss) },
+                        content: destinationView(destination:)
+                    )
+                    .sheet(
+                        modal: state.navigation?.sheet,
+                        dismiss: { event(.dismiss) },
+                        content: sheetView
+                    )
+                    .onChange(of: state.navigation?.destination?.id) {
+                        
+                        print("destination:", $0.map { $0 } ?? "nil")
+                    }
+                    .onChange(of: state.navigation?.sheet?.id) {
+                        
+                        print("sheet:", $0.map { $0 } ?? "nil")
+                    }
             }
         }
     }
 }
 
 private extension ContentView {
+    
+    func contentView(
+        event: @escaping (RootDomain.FlowDomain.Event) -> Void
+    ) -> some View {
+        
+        VStack(spacing: 32) {
+            
+            Text("Start flow with either `Destination` or `Sheet`. See how moving from Sheet to Destination on tapping `Next` briefly shows destination and dismisses it is delay is small.")
+            
+            HStack {
+                
+                button("Destination") { event(.select(.destination)) }
+                button("Sheet") { event(.select(.sheet)) }
+            }
+            
+            Divider()
+            
+            picker()
+            note()
+        }
+        .padding(.horizontal)
+    }
+    
+    private func button(
+        _ title: String,
+        _ action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(title, action: action)
+            .frame(maxWidth: .infinity)
+    }
+    
+    func picker() -> some View {
+        
+        Picker("Delay", systemImage: "clock", selection: $delay) {
+            
+            ForEach(Delay.allCases, id: \.self) {
+                
+                Text("\($0.rawValue) ms")
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+    
+    func note() -> some View {
+        
+        Text("Change `delay` in `static Binder.default(delay:schedulers:)` to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.")
+            .foregroundColor(.secondary)
+            .font(.subheadline)
+    }
     
     @ViewBuilder
     func destinationView(
@@ -72,6 +117,14 @@ private extension ContentView {
         case let .content(content):
             DestinationView(model: content)
         }
+    }
+    
+    enum Delay: Int, CaseIterable {
+        
+        case ms200 = 200
+        case ms500 = 500
+        
+        var value: RootDomain.BinderComposer.Delay { .milliseconds(rawValue) }
     }
 }
 
