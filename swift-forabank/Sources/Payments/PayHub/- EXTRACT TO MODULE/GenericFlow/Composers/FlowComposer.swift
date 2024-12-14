@@ -16,7 +16,7 @@ public final class FlowComposer<Select, Navigation> {
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
-        delay: Delay = .milliseconds(100),
+        delay: Delay = .milliseconds(500),
         getNavigation: @escaping GetNavigation,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>

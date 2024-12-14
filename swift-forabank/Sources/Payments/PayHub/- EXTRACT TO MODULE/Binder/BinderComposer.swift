@@ -16,7 +16,7 @@ public final class BinderComposer<Content, Select, Navigation> {
     private let witnesses: Witnesses
     
     public init(
-        delay: Delay = .milliseconds(100),
+        delay: Delay = .milliseconds(500),
         getNavigation: @escaping GetNavigation,
         makeContent: @escaping MakeContent,
         schedulers: Schedulers = .init(),
