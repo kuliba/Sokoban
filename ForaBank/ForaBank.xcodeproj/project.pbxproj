@@ -1225,6 +1225,8 @@
 		2A9C79622D0D5BA2004479B0 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9C79612D0D5BA2004479B0 /* UIPrimitives */; };
 		2A9C796C2D0D71F5004479B0 /* BinderComposerPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C796B2D0D71F5004479B0 /* BinderComposerPreviewTests.swift */; };
 		2A9C79762D0D7322004479B0 /* RootDomain.Binder+default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C79752D0D7322004479B0 /* RootDomain.Binder+default.swift */; };
+		2A9C797A2D0D7418004479B0 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C79782D0D7417004479B0 /* ValueSpy.swift */; };
+		2A9C797B2D0D7418004479B0 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C79792D0D7417004479B0 /* XCTestCase+MemoryLeakTracking.swift */; };
 		2A9CB0812BEFC2CB00DA5EF3 /* UtilityServicePrepayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */; };
 		2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */; };
 		2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */; };
@@ -4793,6 +4795,8 @@
 		2A9C796B2D0D71F5004479B0 /* BinderComposerPreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewTests.swift; sourceTree = "<group>"; };
 		2A9C79742D0D7243004479B0 /* BinderComposerPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = BinderComposerPreview.xctestplan; sourceTree = "<group>"; };
 		2A9C79752D0D7322004479B0 /* RootDomain.Binder+default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootDomain.Binder+default.swift"; sourceTree = "<group>"; };
+		2A9C79782D0D7417004479B0 /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
+		2A9C79792D0D7417004479B0 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
 		2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcher.swift; sourceTree = "<group>"; };
@@ -11316,8 +11320,18 @@
 			isa = PBXGroup;
 			children = (
 				2A9C796B2D0D71F5004479B0 /* BinderComposerPreviewTests.swift */,
+				2A9C79772D0D73F1004479B0 /* Helpers */,
 			);
 			path = BinderComposerPreviewTests;
+			sourceTree = "<group>";
+		};
+		2A9C79772D0D73F1004479B0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2A9C79782D0D7417004479B0 /* ValueSpy.swift */,
+				2A9C79792D0D7417004479B0 /* XCTestCase+MemoryLeakTracking.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		2A9D79E02C81877C00A17677 /* Personal */ = {
@@ -20084,7 +20098,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A9C797A2D0D7418004479B0 /* ValueSpy.swift in Sources */,
 				2A9C796C2D0D71F5004479B0 /* BinderComposerPreviewTests.swift in Sources */,
+				2A9C797B2D0D7418004479B0 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
