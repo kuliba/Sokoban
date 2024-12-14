@@ -21,19 +21,30 @@ struct ContentView: View {
                 
                 VStack(spacing: 32) {
                     
+                    Text("Change `delay` in `static Binder.default(delay:schedulers:)` to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.")
+                    
                     Button("Destination") { event(.select(.destination)) }
                     Button("Sheet") { event(.select(.sheet)) }
                 }
+                .padding(.horizontal)
                 .navigationDestination(
                     destination: state.navigation?.destination,
                     dismiss: { event(.dismiss) },
-                    content: destinationView
+                    content: destinationView(destination:)
                 )
                 .sheet(
                     modal: state.navigation?.sheet,
                     dismiss: { event(.dismiss) },
                     content: sheetView
                 )
+                .onChange(of: state.navigation?.destination?.id) {
+                    
+                    print("destination:", $0.map { $0 } ?? "nil")
+                }
+                .onChange(of: state.navigation?.sheet?.id) {
+                    
+                    print("sheet:", $0.map { $0 } ?? "nil")
+                }
             }
         }
     }
