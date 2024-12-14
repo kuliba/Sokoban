@@ -6,11 +6,14 @@
 //
 
 import Combine
+import PayHub
 import PayHubUI
 
 extension RootDomain.Binder {
     
-    static let `default`: RootDomain.Binder = {
+    static func `default`(
+        schedulers: Schedulers = .init()
+    ) -> RootDomain.Binder {
         
         let composer = RootDomain.BinderComposer(
             elements: RootDomain.Select.allCases,
@@ -56,11 +59,12 @@ extension RootDomain.Binder {
                     
                     return [close, next]
                 }
-            }
+            },
+            schedulers: schedulers
         )
         
         return composer.compose()
-    }()
+    }
 }
 
 private extension DestinationDomain.Element {

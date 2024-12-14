@@ -16,7 +16,7 @@ struct BinderComposerPreviewApp: App {
             
             NavigationView {
                 
-                ContentView(binder: .default)
+                ContentView(binder: .default())
             }
         }
     }

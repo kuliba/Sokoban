@@ -6,6 +6,7 @@
 //
 
 @testable import BinderComposerPreview
+import PayHub
 import XCTest
 
 final class BinderComposerPreviewTests: XCTestCase {
@@ -27,6 +28,7 @@ final class BinderComposerPreviewTests: XCTestCase {
     private typealias SheetSpy = ValueSpy<EquatableSheet?>
     
     private func makeSUT(
+        schedulers: Schedulers = .init(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -34,7 +36,7 @@ final class BinderComposerPreviewTests: XCTestCase {
         destinationSpy: DestinationSpy,
         sheetSpy: SheetSpy
     ) {
-        let sut = SUT.default
+        let sut = SUT.default(schedulers: schedulers)
         let navigationPublisher = sut.flow.$state.map(\.navigation)
         let destinationSpy = DestinationSpy(navigationPublisher.map { $0?.destination.map(self.equatable)})
         let sheetSpy = SheetSpy(navigationPublisher.map { $0?.sheet.map(self.equatable)})
