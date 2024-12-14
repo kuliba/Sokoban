@@ -12,11 +12,13 @@ import PayHubUI
 extension RootDomain.Binder {
     
     static func `default`(
+        delay: RootDomain.BinderComposer.Delay = .milliseconds(500),
         schedulers: Schedulers = .init()
     ) -> RootDomain.Binder {
         
         let composer = RootDomain.BinderComposer(
-            elements: RootDomain.Select.allCases,
+            elements: RootDomain.Select.allCases, 
+            delay: delay,
             getNavigation: { select, notify, completion in
                 
                 
