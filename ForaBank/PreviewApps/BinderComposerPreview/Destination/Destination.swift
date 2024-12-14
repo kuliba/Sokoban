@@ -15,7 +15,7 @@ extension DestinationDomain {
     typealias Content = PlainPickerContent<Element>
     typealias Composer = PlainPickerComposer<Element>
     
-    enum Element: Equatable {
+    enum Element: Equatable, CaseIterable {
         
         case close
         case next
