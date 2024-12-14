@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "F1770860-CA8D-4CED-8FF2-C2DEB46859AE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "2A9C793F2D0D452B004479B0",
+      "name" : "BinderComposerPreview"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:ForaBank.xcodeproj",
+        "identifier" : "2A9C79682D0D71F5004479B0",
+        "name" : "BinderComposerPreviewTests"
+      }
+    }
+  ],
+  "version" : 1
+}
