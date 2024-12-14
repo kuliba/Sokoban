@@ -5,31 +5,89 @@
 //  Created by Igor Malyarov on 14.12.2024.
 //
 
+@testable import BinderComposerPreview
 import XCTest
 
 final class BinderComposerPreviewTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    func test_init_shouldSetToNil() {
+        
+        let (sut, destinationSpy, sheetSpy) = makeSUT()
+        
+        XCTAssertEqual(destinationSpy.values, [nil])
+        XCTAssertEqual(sheetSpy.values, [nil])
+        XCTAssertNotNil(sut)
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = RootDomain.Binder
+    private typealias NavigationSpy = ValueSpy<EquatableNavigation?>
+    private typealias DestinationSpy = ValueSpy<EquatableDestination?>
+    private typealias SheetSpy = ValueSpy<EquatableSheet?>
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        destinationSpy: DestinationSpy,
+        sheetSpy: SheetSpy
+    ) {
+        let sut = SUT.default
+        let navigationPublisher = sut.flow.$state.map(\.navigation)
+        let destinationSpy = DestinationSpy(navigationPublisher.map { $0?.destination.map(self.equatable)})
+        let sheetSpy = SheetSpy(navigationPublisher.map { $0?.sheet.map(self.equatable)})
+        
+        // TODO: - fix memory leaks
+        // trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(destinationSpy, file: file, line: line)
+        trackForMemoryLeaks(sheetSpy, file: file, line: line)
+        
+        return (sut, destinationSpy, sheetSpy)
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
+    
+    private func equatable(
+        _ navigation: RootDomain.Navigation
+    ) -> EquatableNavigation {
+        
+        switch navigation {
+        case .destination: return .destination
+        case .sheet:       return .sheet
         }
     }
-
+    
+    private enum EquatableNavigation {
+        
+        case destination
+        case sheet
+    }
+    
+    private func equatable(
+        _ navigation: RootDomain.Navigation.Destination
+    ) -> EquatableDestination {
+        
+        switch navigation {
+        case .content: return .content
+        }
+    }
+    
+    private enum EquatableDestination {
+        
+        case content
+    }
+    
+    private func equatable(
+        _ sheet: RootDomain.Navigation.Sheet
+    ) -> EquatableSheet {
+        
+        switch sheet {
+        case .content: return .content
+        }
+    }
+    
+    private enum EquatableSheet {
+        
+        case content
+    }
 }

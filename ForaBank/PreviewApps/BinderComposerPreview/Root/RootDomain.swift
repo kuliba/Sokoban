@@ -9,7 +9,9 @@ import PayHub
 import PayHubUI
 
 /// A namespace.
-enum RootDomain {
+enum RootDomain {}
+
+extension RootDomain {
     
     // MARK: - Binder
     
