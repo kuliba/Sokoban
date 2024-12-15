@@ -22,7 +22,10 @@ extension CategoryPickerSectionContentViewConfig {
             textConfig: .init(
                 text: "Мы не смогли загрузить данные.\nПопробуйте позже.",
                 alignment: .center,
-                config: .secondary
+                config: .init(
+                    textFont: .textH4R16240(),
+                    textColor: .textPlaceholder
+                )
             )
         ),
         headerHeight: 24,

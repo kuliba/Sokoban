@@ -42,7 +42,7 @@ extension RootViewFactory {
                     event: $1,
                     factory: .init(
                         makeAlert: makeAlert(binder: binder),
-                        makeContentView: { makeContentView(binder) },
+                        makeContentView: { makeContentView(binder.content) },
                         makeDestinationView: makeDestinationView
                     )
                 )
@@ -52,11 +52,11 @@ extension RootViewFactory {
     }
     
     private func makeContentView(
-        _ binder: CategoryPickerSectionDomain.Binder
+        _ content: CategoryPickerSectionDomain.Content
     ) -> some View {
         
         RxWrapperView(
-            model: binder.content,
+            model: content,
             makeContentView: { state, event in
                 
                 CategoryPickerSectionContentView(
