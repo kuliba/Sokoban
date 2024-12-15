@@ -445,10 +445,11 @@ extension RootViewModelFactory {
         )
         
         let composer = RootViewDomain.BinderComposer(
+            delay: settings.delay * 3,
             bindings: bindings,
             dismiss: dismiss,
             getNavigation: getRootNavigation,
-            bindOutside: { $1.bindOutside(to: $0, on: self.schedulers.main) },
+            bindOutside: { $1.bindOutside(to: $0) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
@@ -471,20 +472,17 @@ extension SavingsAccountDomain.ContentState {
 private extension RootViewDomain.Flow {
     
     func bindOutside(
-        to content: RootViewDomain.Content,
-        on scheduler: AnySchedulerOfDispatchQueue
+        to content: RootViewDomain.Content
     ) -> Set<AnyCancellable> {
         
         let outside = $state.compactMap(\.outside)
-            .debounce(for: .milliseconds(500), scheduler: scheduler)
-            .receive(on: scheduler)
             .sink { [weak content, weak self] in
                 
                 guard let content, let self else { return }
                 
                 switch $0 {
                 case let .productProfile(productID):
-                    content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                    break // content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
                     
                 case let .tab(tab):
                     content.rootActions.dismissAll()

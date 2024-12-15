@@ -12,6 +12,7 @@ import PayHub
 
 public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Navigation> {
     
+    private let delay: Delay
     private let bindings: Set<AnyCancellable>
     private let dismiss: () -> Void
     private let getNavigation: RootDomain.GetNavigation
@@ -21,6 +22,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
     private let witnesses: RootDomain.Witnesses
     
     public init(
+        delay: Delay = .milliseconds(500),
         bindings: Set<AnyCancellable>,
         dismiss: @escaping () -> Void,
         getNavigation: @escaping RootDomain.GetNavigation,
@@ -28,6 +30,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
         schedulers: Schedulers = .init(),
         witnesses: RootDomain.Witnesses
     ) {
+        self.delay = delay
         self.bindings = bindings
         self.dismiss = dismiss
         self.getNavigation = getNavigation
@@ -36,6 +39,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
         self.witnesses = witnesses
     }
     
+    public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     public typealias RootDomain = RootViewDomain<RootViewModel, DismissAll, Select, Navigation>
     public typealias BindOutside = (RootDomain.Content, RootDomain.Flow) -> Set<AnyCancellable>
 }
@@ -47,6 +51,7 @@ public extension RootViewBinderComposer {
     ) -> RootDomain.Binder {
         
         let flowComposer = RootDomain.FlowDomain.Composer(
+            delay: delay,
             getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
