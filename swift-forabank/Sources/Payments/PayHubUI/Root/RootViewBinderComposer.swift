@@ -21,7 +21,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
     private let schedulers: Schedulers
     private let witnesses: RootDomain.Witnesses
     
-    /// `delay` is needed to handle back-pressure.
+    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
     public init(
         bindings: Set<AnyCancellable>,
         delay: Delay,

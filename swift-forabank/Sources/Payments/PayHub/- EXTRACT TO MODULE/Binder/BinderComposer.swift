@@ -15,7 +15,7 @@ public final class BinderComposer<Content, Select, Navigation> {
     private let schedulers: Schedulers
     private let witnesses: Witnesses
     
-    /// `delay` is needed to handle back-pressure.
+    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
     public init(
         delay: Delay,
         getNavigation: @escaping GetNavigation,

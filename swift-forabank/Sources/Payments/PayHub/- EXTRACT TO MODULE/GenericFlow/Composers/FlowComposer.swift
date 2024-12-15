@@ -15,7 +15,7 @@ public final class FlowComposer<Select, Navigation> {
     private let scheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
-    /// `delay` is needed to handle back-pressure.
+    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
     public init(
         delay: Delay,
         getNavigation: @escaping GetNavigation,
