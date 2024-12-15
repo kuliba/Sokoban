@@ -1,5 +1,5 @@
 //
-//  FlowEffectHandlerWithNotifyTests.swift
+//  FlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class FlowEffectHandlerWithNotifyTests: FlowTests {
+final class FlowEffectHandlerTests: FlowTests {
     
     // MARK: - init
     
@@ -32,27 +32,6 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
         XCTAssertNoDiff(getNavigation.payloads.map(\.0), [select])
     }
     
-    func test_getNavigation_shouldDeliverEventViaNotify() throws {
-        
-        let select = makeSelect()
-        let (sut, getNavigation) = makeSUT()
-        var events = [SUT.Event]()
-        sut.handleEffect(.select(makeSelect())) { events.append($0)}
-        let notify = try XCTUnwrap(getNavigation.payloads.map(\.1).first)
-        
-        notify(.dismiss)
-        notify(.isLoading(true))
-        notify(.select(select))
-        notify(.isLoading(false))
-        
-        XCTAssertNoDiff(events, [
-            .dismiss,
-            .isLoading(true),
-            .select(select),
-            .isLoading(false),
-        ])
-    }
-    
     func test_getNavigation_shouldDeliverNavigation() {
         
         let navigation = makeNavigation()
@@ -69,8 +48,7 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
     // MARK: - Helpers
     
     private typealias SUT = FlowEffectHandler<Select, Navigation>
-    private typealias Notify = SUT.MicroServices.Notify
-    private typealias GetNavigationSpy = Spy<(Select, Notify), Navigation>
+    private typealias GetNavigationSpy = Spy<(Select, SUT.Notify), Navigation>
     
     private func makeSUT(
         file: StaticString = #file,

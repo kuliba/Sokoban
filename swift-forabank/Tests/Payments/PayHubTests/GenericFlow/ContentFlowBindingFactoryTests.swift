@@ -15,57 +15,39 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     func test_contentSelect_shouldCallFlowWithSelect() {
         
         let select = makeSelect()
-        let (sut, scheduler) = makeSUT(delay: .milliseconds(200))
-        let (content, flow, cancellables) = bindSelect(sut, scheduler)
+        let sut = makeSUT()
+        let (content, flow, cancellables) = bindSelect(sut)
         
         content.send(select)
         
-        XCTAssertNoDiff(flow.payloads, [])
-        
-        scheduler.advance(by: .milliseconds(199))
-        XCTAssertNoDiff(flow.payloads, [])
-        
-        scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(flow.payloads, [select])
-        
         XCTAssertNotNil(cancellables)
     }
     
     func test_flowNavigation_shouldCallContentOnlyWhenNavigationFlipsFromNonNilToNil() {
         
-        let (sut, scheduler) = makeSUT(delay: .milliseconds(200))
-        let (content, flow, cancellables) = bindNavigation(sut, scheduler)
+        let sut = makeSUT()
+        let (content, flow, cancellables) = bindNavigation(sut)
         
         flow.send(nil)
         
-        scheduler.advance(by: .milliseconds(200))
         XCTAssertEqual(content.callCount, 0)
         
         flow.send(nil)
         
-        scheduler.advance(by: .milliseconds(200))
         XCTAssertEqual(content.callCount, 0)
         
         flow.send(makeNavigation())
         
-        scheduler.advance(by: .milliseconds(200))
         XCTAssertEqual(content.callCount, 0)
         
         flow.send(nil)
         
-        XCTAssertEqual(content.callCount, 0)
-        
-        scheduler.advance(by: .milliseconds(199))
-        XCTAssertEqual(content.callCount, 0)
-        
-        scheduler.advance(by: .milliseconds(1))
         XCTAssertEqual(content.callCount, 1)
         
         flow.send(nil)
         
-        scheduler.advance(by: .milliseconds(200))
-        XCTAssertEqual(content.callCount, 1)
-        
+        XCTAssertEqual(content.callCount, 1)        
         XCTAssertNotNil(cancellables)
     }
     
@@ -78,28 +60,19 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     private typealias FlowSpy = CallSpy<Select, Void>
     
     private func makeSUT(
-        delay: SUT.Delay,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (
-        sut: SUT,
-        scheduler: TestSchedulerOf<DispatchQueue>
-    ) {
-        let scheduler = DispatchQueue.test
-        let sut = SUT(
-            delay: delay,
-            scheduler: scheduler.eraseToAnyScheduler()
-        )
+    ) -> SUT {
+
+        let sut = SUT()
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(scheduler, file: file, line: line)
         
-        return (sut, scheduler)
+        return sut
     }
     
     private func bindSelect(
-        _ sut: SUT,
-        _ scheduler: TestSchedulerOf<DispatchQueue>
+        _ sut: SUT
     ) -> (
         content: Content,
         flow: FlowSpy,
@@ -118,8 +91,7 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     }
     
     private func bindNavigation(
-        _ sut: SUT,
-        _ scheduler: TestSchedulerOf<DispatchQueue>
+        _ sut: SUT
     ) -> (
         content: ContentSpy,
         flow: Flow,

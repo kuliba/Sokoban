@@ -29,6 +29,24 @@ final class FlowReducerTests: FlowTests {
         )
     }
     
+    // MARK: - isLoading
+    
+    func test_receive_shouldSetIsLoadingToFalseOnIsLoadingFalse() {
+        
+        assert(makeState(isLoading: true, navigation:  makeNavigation()), event: .isLoading(false)) {
+            
+            $0.isLoading = false
+        }
+    }
+    
+    func test_receive_shouldSetIsLoadingToTrueOnIsLoadingTrue() {
+        
+        assert(makeState(isLoading: false, navigation:  makeNavigation()), event: .isLoading(true)) {
+            
+            $0.isLoading = true
+        }
+    }
+    
     // MARK: - receive
     
     func test_receive_shouldSetIsLoadingToFalseSetDestinationToCategory() {

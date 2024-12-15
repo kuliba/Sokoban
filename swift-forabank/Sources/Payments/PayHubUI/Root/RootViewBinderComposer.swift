@@ -67,7 +67,7 @@ private extension RootViewBinderComposer {
         flow: RootDomain.Flow
     ) -> Set<AnyCancellable> {
         
-        let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
+        let factory = ContentFlowBindingFactory()
         let bind = factory.bind(with: .init(
             contentEmitting: witnesses.content.emitting,
             contentDismissing: witnesses.content.dismissing,

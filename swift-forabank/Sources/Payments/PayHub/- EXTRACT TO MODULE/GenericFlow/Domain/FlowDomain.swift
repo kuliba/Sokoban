@@ -19,9 +19,10 @@ public extension FlowDomain {
     typealias NotifyEvent = FlowEvent<Select, Never>
     typealias Notify = (NotifyEvent) -> Void
     
+    typealias GetNavigation = EffectHandler.GetNavigation
+    
     typealias Reducer = FlowReducer<Select, Navigation>
     typealias EffectHandler = FlowEffectHandler<Select, Navigation>
-    typealias MicroServices = FlowEffectHandlerMicroServices<Select, Navigation>
     
     typealias Flow = RxViewModel<State, Event, Effect>
     typealias Composer = FlowComposer<Select, Navigation>

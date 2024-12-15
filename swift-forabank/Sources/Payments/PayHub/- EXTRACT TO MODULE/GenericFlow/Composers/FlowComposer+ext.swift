@@ -10,17 +10,20 @@ import Foundation
 
 public extension FlowComposer {
     
+    @available(*, deprecated, message: "Use designated initializer with `getNavigation` closure for brevity and clarity.")
     convenience init(
         delay: Delay = .milliseconds(100),
-        getNavigation: @escaping MicroServices.GetNavigation,
+        microServices: MicroServices,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.init(
             delay: delay,
-            microServices: .init(getNavigation: getNavigation),
+            getNavigation: microServices.getNavigation,
             scheduler: scheduler,
             interactiveScheduler: interactiveScheduler
         )
     }
+    
+    typealias MicroServices = FlowEffectHandlerMicroServices<Select, Navigation>
 }
