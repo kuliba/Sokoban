@@ -445,8 +445,8 @@ extension RootViewModelFactory {
         )
         
         let composer = RootViewDomain.BinderComposer(
-            delay: settings.delay * 3,
             bindings: bindings,
+            delay: settings.delay,
             dismiss: dismiss,
             getNavigation: getRootNavigation,
             bindOutside: { $1.bindOutside(to: $0) },

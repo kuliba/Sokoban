@@ -15,8 +15,9 @@ public final class BinderComposer<Content, Select, Navigation> {
     private let schedulers: Schedulers
     private let witnesses: Witnesses
     
+    /// `delay` is needed to handle back-pressure.
     public init(
-        delay: Delay = .milliseconds(500),
+        delay: Delay,
         getNavigation: @escaping GetNavigation,
         makeContent: @escaping MakeContent,
         schedulers: Schedulers = .init(),

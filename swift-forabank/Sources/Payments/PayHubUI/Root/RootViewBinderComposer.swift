@@ -12,8 +12,8 @@ import PayHub
 
 public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Navigation> {
     
-    private let delay: Delay
     private let bindings: Set<AnyCancellable>
+    private let delay: Delay
     private let dismiss: () -> Void
     private let getNavigation: RootDomain.GetNavigation
     // TODO: - move to witness
@@ -21,9 +21,10 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
     private let schedulers: Schedulers
     private let witnesses: RootDomain.Witnesses
     
+    /// `delay` is needed to handle back-pressure.
     public init(
-        delay: Delay = .milliseconds(500),
         bindings: Set<AnyCancellable>,
+        delay: Delay,
         dismiss: @escaping () -> Void,
         getNavigation: @escaping RootDomain.GetNavigation,
         bindOutside: @escaping BindOutside,
