@@ -14,7 +14,7 @@ public final class FlowEffectHandler<Select, Navigation> {
     private let getNavigation: GetNavigation
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
-    /// - Warning:`Delay` is necessary to handle back-pressure. Keep until `RxViewModel` fix.
+    /// - Warning: `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set. Keep until `RxViewModel` fix.
     public init(
         delay: Delay = .milliseconds(100),
         getNavigation: @escaping GetNavigation,
