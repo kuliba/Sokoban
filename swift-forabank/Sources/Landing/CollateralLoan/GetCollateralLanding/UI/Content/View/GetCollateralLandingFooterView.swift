@@ -11,11 +11,11 @@ struct GetCollateralLandingFooterView: View {
     
     let config: Config.Footer
     let state: GetCollateralLandingState
-    let action: Action
+    let event: (Event) -> Void
 
     var body: some View {
         
-        Button(action: action) {
+        Button(action: { event(.createDraftApplication) }) {
             
             Text(config.text)
                 .frame(maxWidth: .infinity)
@@ -37,7 +37,7 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias Action = () -> Void
+    typealias Event = GetCollateralLandingEvent
 }
 
 // MARK: - Previews
@@ -49,7 +49,7 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
         GetCollateralLandingFooterView(
             config: .default,
             state: .init(product: .carStub),
-            action: {}
+            event: { print($0) }
         )
     }
 }

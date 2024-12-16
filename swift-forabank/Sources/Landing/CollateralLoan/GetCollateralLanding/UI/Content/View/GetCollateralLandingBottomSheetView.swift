@@ -57,7 +57,7 @@ struct GetCollateralLandingBottomSheetView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: cellHeight)
         .onTapGesture {
-            
+        
             selected = item
             
             if let termMonth = item.termMonth {
@@ -235,7 +235,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
             items: periodItems,
             config: .default,
             makeIconView: Factory.preview.makeIconView,
-            event: { _ in },
+            event: { print($0) },
             selected: periodItems[1]
         )
         .previewDisplayName("Product period selector")
@@ -244,7 +244,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
             items: collateralItems,
             config: .default,
             makeIconView: Factory.preview.makeIconView,
-            event: { _ in }
+            event: { print($0) }
         )
         .previewDisplayName("Product collateral selector")
     }
