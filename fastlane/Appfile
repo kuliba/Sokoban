@@ -1,4 +1,4 @@
-app_identifier("ru.forabank.sense") # The bundle identifier of your app
+app_identifier("ru.vortex.sense") # The bundle identifier of your app
 apple_id("dbs@inn4b.ru") # Your Apple email address
 
 
