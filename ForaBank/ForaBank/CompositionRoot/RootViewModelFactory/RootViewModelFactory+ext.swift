@@ -45,6 +45,12 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
+        func runOnEachNextActiveSession(
+            _ work: @escaping () -> Void
+        ) {
+            bindings.insert(self.runOnEachNextActiveSession(work))
+        }
+        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
@@ -282,6 +288,8 @@ extension RootViewModelFactory {
         )
         
         let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+        
+        runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if paymentsTransfersFlag.isActive {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
