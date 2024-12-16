@@ -43,14 +43,16 @@ public struct ClientInformListView: View {
                                                value: -$0.frame(in: .named("scroll")).origin.y)
                     })
                     .onPreferenceChange(ContentHeightKey.self) { value in
-                        
+
+                        guard value != 0 else { return }
+
                         withAnimation(Animation.linear(duration: 0.3)) {
                             
                             isShowNavBar = value > config.sizes.navBarHeight + config.sizes.navBarHeight
                         }
                         shouldScroll = contentHeight > maxHeight
                     }
-                    .readSize { contentHeight = $0.height }
+                    .readSize { contentHeight = $0 }
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
@@ -192,14 +194,6 @@ public struct ClientInformListView: View {
             .font(config.textConfig.textFont)
             .foregroundColor(config.textConfig.textColor)
     }
-    
-    private struct ContentHeightKey: PreferenceKey {
-
-        static var defaultValue: CGFloat = 0
-        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-            value += nextValue()
-        }
-    }
 }
 
 public extension ClientInformListView {
@@ -222,25 +216,27 @@ struct PlainClientInformView_Previews: PreviewProvider {
 
 public extension View {
     
-    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+    func readSize(onChange: @escaping (CGFloat) -> Void) -> some View {
         
         background(
             
             GeometryReader { geometry in
                 
                 Color.clear
-                    .preference(key: SizePreferenceKey.self,
-                                value: geometry.size)
+                    .preference(key: ContentHeightKey.self,
+                                value: geometry.size.height)
             }
         )
-        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+        .onPreferenceChange(ContentHeightKey.self, perform: onChange)
     }
 }
 
-private struct SizePreferenceKey: PreferenceKey {
-    
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
+private struct ContentHeightKey: PreferenceKey {
+
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { 
+        value += nextValue()
+    }
 }
 
 private extension ClientInformListView {
