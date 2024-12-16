@@ -16,20 +16,18 @@ struct DestinationView: View {
         
         RxWrapperView(model: model) { state, event in
             
-            ZStack(alignment: .topTrailing) {
-                
-                Button {
-                    event(.select(.close))
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
+            Button("Next") { event(.select(.next)) }
+                .font(.headline.bold())
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .toolbar {
+                    
+                    Button {
+                        event(.select(.close))
+                    } label: {
+                        Label("Close", systemImage: "xmark.circle.fill")
+                    }
+                    .foregroundColor(.secondary.opacity(0.7))
                 }
-                .foregroundColor(.secondary.opacity(0.5))
-                .padding()
-                
-                Button("Next") { event(.select(.next)) }
-                    .font(.headline.bold())
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
         }
     }
 }

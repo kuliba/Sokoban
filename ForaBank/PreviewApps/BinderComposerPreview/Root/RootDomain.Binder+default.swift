@@ -11,12 +11,12 @@ import PayHubUI
 
 extension RootDomain.Binder {
     
-    /// - Note: - Change `delay`to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.
+    /// - Note: - Change `delay`to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok without toolbar, but needs more with toolbar..
     static func `default`(
-        delay: RootDomain.BinderComposer.Delay = .milliseconds(500),
+        delay: RootDomain.BinderComposer.Delay,
         schedulers: Schedulers = .init()
     ) -> RootDomain.Binder {
-        
+        print(delay)
         let composer = RootDomain.BinderComposer(
             elements: RootDomain.Select.allCases, 
             delay: delay,

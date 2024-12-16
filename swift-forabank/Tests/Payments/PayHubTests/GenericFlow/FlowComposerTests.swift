@@ -97,6 +97,7 @@ final class FlowComposerTests: XCTestCase {
     private typealias GetNavigationSpy = Spy<(Select, Notify), Navigation>
     
     private func makeSUT(
+        delay: SUT.Delay = .milliseconds(100),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -105,6 +106,7 @@ final class FlowComposerTests: XCTestCase {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(
+            delay: delay,
             getNavigation:  {
                 
                 getNavigation.process(($0, $1), completion: $2)

@@ -11,7 +11,6 @@ typealias RootViewDomain = PayHubUI.RootViewDomain<RootViewModel, RootViewModelA
 
 extension RootViewDomain {
     
-    typealias Outside = RootViewOutside
     typealias Select = RootViewSelect
     typealias Navigation = RootViewNavigation
 }
@@ -23,17 +22,17 @@ enum RootViewSelect: Equatable {
     case userAccount
     case standardPayment(ServiceCategory.CategoryType)
     case templates
+    
+    enum RootViewOutside: Equatable {
+        
+        case productProfile(ProductData.ID)
+        case tab(RootViewTab)
+    }
 }
 
-enum RootViewOutside: Equatable {
+enum RootViewTab: Equatable {
     
-    case productProfile(ProductData.ID)
-    case tab(Tab)
-    
-    enum Tab: Equatable {
-        
-        case main, payments
-    }
+    case main, payments
 }
 
 enum RootViewNavigation {
@@ -47,9 +46,16 @@ enum RootViewNavigation {
     
     enum Failure {
         
+        case makeProductProfileFailure(ProductData.ID)
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case makeUserAccountFailure
         case missingCategoryOfType(ServiceCategory.CategoryType)
+    }
+    
+    enum RootViewOutside {
+        
+        case productProfile(ProductProfileViewModel)
+        case tab(RootViewTab)
     }
     
     typealias Templates = PaymentsTransfersFactory.Templates

@@ -9,15 +9,28 @@ import Combine
 
 extension RootViewModelFactory {
     
+    typealias MakeProductProfileByID = (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel?
+    
     @inlinable
     func getRootNavigation(
+        makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
         notify: @escaping RootViewDomain.Notify,
         completion: @escaping (RootViewNavigation) -> Void
     ) {
         switch select {
         case let .outside(outside):
-            completion(.outside(outside))
+            switch outside {
+            case let .productProfile(id):
+                if let profile = makeProductProfileByID(id, { notify(.dismiss) }) {
+                    completion(.outside(.productProfile(profile)))
+                } else {
+                    completion(.failure(.makeProductProfileFailure(id)))
+                }
+                
+            case let .tab(tab):
+                completion(.outside(.tab(tab)))
+            }
             
         case .scanQR:
             makeScanQR()
@@ -158,8 +171,8 @@ private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel
         case .none:
             return nil
             
-        case let .productID(productID):
-            return .select(.outside(.productProfile(productID)))
+        case let .productID(productModel):
+            return .select(.outside(.productProfile(productModel)))
             
         case let .tab(tab):
             switch tab {

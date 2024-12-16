@@ -9,16 +9,23 @@
 import XCTest
 
 final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTests {
-    
+          
     // MARK: - outside
     
     func test_outside_productProfile_shouldDeliverOutsideProductProfile() {
         
-        let productID = makeProductID()
+        let product = anyProduct(id: .random(in: 1...9), productType: .card)
         
-        expect(.outside(.productProfile(productID)), toDeliver: .outside(.productProfile(productID)))
+        expect(.outside(.productProfile(product.id)), product, toDeliver: .outside(.productProfile(product.id)))
     }
     
+    func test_outside_productProfile_shouldDeliverFailureOnMissingProduct() {
+         
+        let product = anyProduct(id: .random(in: 1...9), productType: .card)
+
+        expect(.outside(.productProfile(product.id)), toDeliver: .failure(.makeProductProfileFailure(product.id)))
+    }
+
     func test_outside_tab_main_shouldDeliverOutsideTabMain() {
         
         expect(.outside(.tab(.main)), toDeliver: .outside(.tab(.main)))
@@ -222,10 +229,19 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
                 
             case let .missingCategoryOfType(type):
                 return .failure(.missingCategoryOfType(type))
+                
+            case let .makeProductProfileFailure(productID):
+                return .failure(.makeProductProfileFailure(productID))
             }
             
         case let .outside(outside):
-            return .outside(outside)
+            switch outside {
+            case let .productProfile(profile):
+                return .outside(.productProfile(profile.product.activeProductId))
+                
+            case let .tab(tab):
+                return .outside(.tab(tab))
+            }
             
         case .scanQR:
             return .scanQR
@@ -244,7 +260,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     private enum EquatableNavigation: Equatable {
         
         case failure(Failure)
-        case outside(RootViewOutside)
+        case outside(EquatableRootViewOutside)
         case scanQR
         case standardPayment
         case templates
@@ -252,24 +268,46 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         enum Failure: Equatable {
             
+            case makeProductProfileFailure(ProductData.ID)
             case makeStandardPaymentFailure(ObjectIdentifier)
             case makeUserAccountFailure
             case missingCategoryOfType(ServiceCategory.CategoryType)
+        }
+        
+        enum EquatableRootViewOutside: Equatable {
+            
+            case productProfile(ProductData.ID)
+            case tab(RootViewTab)
         }
     }
     
     private func expect(
         sut: SUT? = nil,
         _ select: RootViewSelect,
+        _ product: ProductData? = nil,
         toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(file: file, line: line).sut
+        
+        let model: Model = {
+            let model = Model.mockWithEmptyExcept()
+            
+            guard let product else { return model }
+            
+            model.products.value[.card] = [product]
+            
+            return model
+        }()
+        
+        let sut = sut ?? makeSUT(model: model, file: file, line: line).sut
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
+            makeProductProfileByID: { productID,_  in
+                return makeProductProfileViewModel(productID, model)
+            },
             select: select,
             notify: { _ in }
         ) {
@@ -296,6 +334,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
+            makeProductProfileByID: {_,_  in nil },
             select: select,
             notify: notifySpy.call
         ) {
@@ -308,6 +347,36 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(notifySpy.payloads, expectedNotifyEvents, "Expected \(expectedNotifyEvents), but got \(notifySpy.payloads) instead.", file: file, line: line)
+    }
+    
+    private func makeProductProfileViewModel(
+        _ productID: ProductData.ID,
+        _ model: Model
+    ) -> ProductProfileViewModel? {
+           
+        guard let product: ProductProfileCardView.ViewModel = .init(model, productData: .stub(productId: productID)) else { return nil }
+        
+        return ProductProfileViewModel(
+            navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
+            product: product,
+            buttons: .sample,
+            detail: .sample,
+            history: nil,
+            fastPaymentsFactory: .legacy,
+            makePaymentsTransfersFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
+            sberQRServices: .empty(),
+            productProfileServices: .preview,
+            qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview,
+            operationDetailFactory: .preview,
+            productNavigationStateManager: .preview,
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            filterHistoryRequest: { _,_,_,_ in },
+            productProfileViewModelFactory: .preview,
+            filterState: .preview,
+            rootView: ""
+        )
     }
 }
 

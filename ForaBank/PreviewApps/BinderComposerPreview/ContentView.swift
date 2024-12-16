@@ -11,7 +11,7 @@ import UIPrimitives
 
 struct ContentView: View {
     
-    @State private var delay: Delay = .ms200
+    @State private var delay: Delay = .ms800
     
     private var binder: RootDomain.Binder { .default(delay: delay.value) }
     
@@ -92,7 +92,7 @@ private extension ContentView {
     
     func note() -> some View {
         
-        Text("Change `delay` in `static Binder.default(delay:schedulers:)` to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.")
+        Text("Change `delay` in `static Binder.default(delay:schedulers:)` to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 600 ms is ok if toolbar is present.")
             .foregroundColor(.secondary)
             .font(.subheadline)
     }
@@ -115,14 +115,19 @@ private extension ContentView {
         
         switch sheet {
         case let .content(content):
-            DestinationView(model: content)
+            NavigationView {
+                
+                DestinationView(model: content)
+            }
         }
     }
     
     enum Delay: Int, CaseIterable {
         
         case ms200 = 200
-        case ms500 = 500
+        case ms400 = 400
+        case ms600 = 600
+        case ms800 = 800
         
         var value: RootDomain.BinderComposer.Delay { .milliseconds(rawValue) }
     }

@@ -12,6 +12,14 @@ final class FlowReducerTests: FlowTests {
     
     // MARK: - dismiss
     
+    func test_dismiss_shouldSetNavigationToNil() {
+        
+        assert(makeState(isLoading: true, navigation: makeNavigation()), event: .dismiss) {
+            
+            $0.navigation = nil
+        }
+    }
+    
     func test_dismiss_shouldResetDestination() {
         
         assert(makeState(navigation: makeNavigation()), event: .dismiss) {

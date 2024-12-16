@@ -45,6 +45,12 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
+        func runOnEachNextActiveSession(
+            _ work: @escaping () -> Void
+        ) {
+            bindings.insert(self.runOnEachNextActiveSession(work))
+        }
+        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
@@ -276,12 +282,28 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
+        let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
+            
+            guard let self,
+                    let product = model.product(productId: id)
+            else { return nil }
+            
+            return makeProductProfileViewModel(
+                product,
+                "",
+                .defaultFilterComponents(product: product),
+                dismiss
+            )
+        }
+        
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
         
         let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+        
+        runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if paymentsTransfersFlag.isActive {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
@@ -446,9 +468,18 @@ extension RootViewModelFactory {
         
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
+            delay: settings.delay * 2,
             dismiss: dismiss,
-            getNavigation: getRootNavigation,
-            bindOutside: { $1.bindOutside(to: $0, on: self.schedulers.main) },
+            getNavigation: { [weak self] select, notify, completion in
+                
+                self?.getRootNavigation(
+                    makeProductProfileByID: makeProductProfileByID,
+                    select: select,
+                    notify: notify,
+                    completion: completion
+                )
+            },
+            bindOutside: { $1.bindOutside(to: $0) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
@@ -471,20 +502,17 @@ extension SavingsAccountDomain.ContentState {
 private extension RootViewDomain.Flow {
     
     func bindOutside(
-        to content: RootViewDomain.Content,
-        on scheduler: AnySchedulerOfDispatchQueue
+        to content: RootViewDomain.Content
     ) -> Set<AnyCancellable> {
         
         let outside = $state.compactMap(\.outside)
-            .debounce(for: .milliseconds(500), scheduler: scheduler)
-            .receive(on: scheduler)
             .sink { [weak content, weak self] in
                 
                 guard let content, let self else { return }
                 
                 switch $0 {
-                case let .productProfile(productID):
-                    content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                case .productProfile:
+                    break
                     
                 case let .tab(tab):
                     content.rootActions.dismissAll()
@@ -506,7 +534,7 @@ private extension RootViewDomain.Flow {
 
 private extension FlowState<RootViewNavigation> {
     
-    var outside: RootViewOutside? {
+    var outside: RootViewDomain.Navigation.RootViewOutside? {
         
         guard case let .outside(outside) = navigation else { return nil }
         

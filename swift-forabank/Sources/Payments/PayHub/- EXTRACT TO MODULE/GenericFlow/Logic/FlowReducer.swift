@@ -20,7 +20,6 @@ public extension FlowReducer {
         var state = state
         var effect: Effect?
         
-        
         switch event {
         case .dismiss:
             state.navigation = nil

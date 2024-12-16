@@ -72,6 +72,37 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSessionAgain() throws {
+        
+        let (sut, httpClient, sessionAgent, userInitiatedScheduler) = makeSUT()
+        sessionAgent.activate()
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        userInitiatedScheduler.advance()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+
+        sessionAgent.deactivate()
+        sessionAgent.activate()
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+            "getServiceCategoryList",
+        ])
+        
+        XCTAssertNotNil(sut)
+    }
+    
     func test_shouldSetCategoryPickerStateToLoading() throws {
         
         let (sut, _,_,_) = makeSUT()
