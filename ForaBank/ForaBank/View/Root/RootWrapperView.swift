@@ -33,7 +33,7 @@ struct RootWrapperView: View {
                     )
                     .navigationDestination(
                         destination: state.navigation?.destination,
-                        // dismiss managed by flow, not SwiftUI
+                        dismiss: { event(.dismiss) },
                         content: destinationContent
                     )
             }
