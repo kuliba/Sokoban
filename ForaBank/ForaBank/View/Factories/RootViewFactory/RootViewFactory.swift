@@ -108,14 +108,15 @@ struct ProductProfileViewFactory {
 extension ProductProfileViewFactory {
     
     static let preview: Self = .init(
-        makeActivateSliderView: { _,_,_ in             ActivateSliderStateWrapperView(
-            payload: 1,
-            viewModel: .init(
-                initialState: .initialState,
-                reduce: CardActivateReducer.reduceForPreview(),
-                handleEffect: CardActivateEffectHandler.handleEffectActivateSuccess()),
-            config: .default
-        )},
+        makeActivateSliderView: { _,_,_ in
+            ActivateSliderStateWrapperView(
+                payload: 1,
+                viewModel: .init(
+                    initialState: .initialState,
+                    reduce: CardActivateReducer.reduceForPreview(),
+                    handleEffect: CardActivateEffectHandler.handleEffectActivateSuccess()),
+                config: .default
+            )},
         makeHistoryButton: { _,_,_,_ in nil},
         makeRepeatButtonView: { _ in nil }
     )
