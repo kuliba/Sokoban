@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "4472FA6B-7AA6-4311-8F99-85675E6C4569",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}
