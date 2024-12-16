@@ -19,7 +19,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         expect(.outside(.productProfile(product.id)), product, toDeliver: .outside(.productProfile(product.id)))
     }
     
-    func test_outside_productProfile_shouldDeliverOutsideProductProfile1() {
+    func test_outside_productProfile_shouldDeliverFailureOnMissingProduct() {
          
         let product = anyProduct(id: .random(in: 1...9), productType: .card)
 
@@ -353,10 +353,12 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         _ productID: ProductData.ID,
         _ model: Model
     ) -> ProductProfileViewModel? {
-                
+           
+        guard let product: ProductProfileCardView.ViewModel = .init(model, productData: .stub(productId: productID)) else { return nil }
+        
         return ProductProfileViewModel(
             navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
-            product: .init(model, productData: .stub(productId: productID)) ?? .sample,
+            product: product,
             buttons: .sample,
             detail: .sample,
             history: nil,
