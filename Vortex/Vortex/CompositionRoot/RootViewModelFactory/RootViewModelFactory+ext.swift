@@ -216,15 +216,6 @@ extension RootViewModelFactory {
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
-        let ptfmComposer = PaymentsTransfersFlowManagerComposer(
-            model: model,
-            httpClient: httpClient,
-            log: logger.log,
-            scheduler: schedulers.main
-        )
-        
-        let makePaymentsTransfersFlowManager = ptfmComposer.compose
-        
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
             return .fullScreen(.cardGuardian($0))
         }
@@ -298,31 +289,12 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
         
-        let paymentsTransfersPersonalNanoServices = composePaymentsTransfersPersonalNanoServices()
-        
-        let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            nanoServices: paymentsTransfersPersonalNanoServices
-        )
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
         
         if paymentsTransfersFlag.isActive {
-            
-            performOrWaitForActive {
-                
-                paymentsTransfersPersonalNanoServices.reloadCategories { [weak paymentsTransfersPersonal] categories in
-                    
-                    // notify categoryPicker
-                    let categoryPicker = paymentsTransfersPersonal?.content.categoryPicker.sectionBinder
-                    
-                    guard let categoryPicker else {
-                        
-                        return self.logger.log(level: .info, category: .payments, message: "Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
-                    }
-                    
-                    categoryPicker.content.event(.loaded(categories ?? []))
-                    
-                    self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-                }
-            }
+            performOrWaitForActive(loadCategoriesAndNotifyPicker)
+        } else {
+            model.handleDictionaryAnywayOperatorsRequest(nil)
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()

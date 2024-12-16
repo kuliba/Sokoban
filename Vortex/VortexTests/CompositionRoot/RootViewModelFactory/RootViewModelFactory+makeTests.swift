@@ -8,6 +8,7 @@
 import Combine
 import CombineSchedulers
 @testable import Vortex
+import PayHubUI
 import XCTest
 
 final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryTests {
@@ -109,6 +110,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         ])
         
         httpClient.complete(with: anyError())
+        
         httpClient.complete(with: anyError(), at: 1)
         awaitActorThreadHop()
         
@@ -131,6 +133,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         ])
         
         httpClient.complete(with: anyError())
+        
         httpClient.complete(with: mobileJSON(), at: 1)
         awaitActorThreadHop()
         
@@ -153,15 +156,111 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         ])
         
         httpClient.complete(with: anyError())
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         awaitActorThreadHop()
+        
         httpClient.expectRequests(withQueryValueFor: "type", match: [
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getOperatorsListByParam-housingAndCommunalService"
         ])
         XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldCacheLoadedServiceCategoriesOnSuccess() throws {
+        
+        let localAgent = LocalAgentMock(values: [])
+        let (sut, httpClient, _, userInitiatedScheduler) = makeSUT(
+            localAgent: localAgent,
+            sessionState: active()
+        )
+        XCTAssertNil(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self))
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        
+        httpClient.complete(with: anyError())
+        
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        awaitActorThreadHop()
+        
+        XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServiceCategory].self).count, 1, "Expected to cache ServiceCategories once.")
+        XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self)?.map(\.type), [
+            .mobile,
+            .housingAndCommunalService,
+            .internet,
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldCallHTTPClient() throws {
+        
+        let localAgent = LocalAgentMock(values: [])
+        let (_, httpClient, _,_) = makeSUT(
+            localAgent: localAgent,
+            sessionState: active(),
+            schedulers: .immediate
+        )
+        
+        awaitActorThreadHop()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+    }
+    
+    func test_shouldCacheLoadedOperatorsOnSuccess() throws {
+        
+        let localAgent = LocalAgentMock(values: [])
+        let (_, httpClient, _,_) = makeSUT(
+            localAgent: localAgent,
+            sessionState: active(),
+            schedulers: .immediate
+        )
+        XCTAssert(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).isEmpty)
+        
+        awaitActorThreadHop()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+        
+        try httpClient.complete(with: anyError(), for: authRequest())
+        try httpClient.complete(with: getServiceCategoryListJSON(), for: categoriesRequest())
+        try httpClient.complete(with: anyError(), for: bannersRequest())
+        
+        awaitActorThreadHop()
+        
+        // getOperatorsListByParam-housingAndCommunalService
+        httpClient.complete(with: getOperatorsListByParamJSON(), at: 4)
+        awaitActorThreadHop()
+        
+        // getOperatorsListByParam-internet
+        httpClient.complete(with: anyError(), at: 5)
+        awaitActorThreadHop()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getOperatorsListByParam-housingAndCommunalService",
+            "getOperatorsListByParam-internet",
+            "getServiceCategoryList",
+        ])
+        
+        XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).count, 1, "Expected to cache Operators once.")
+        XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServicePaymentOperator].self)?.map(\.name), [
+            "ООО МЕТАЛЛЭНЕРГОФИНАНС",
+            "ООО  ИЛЬИНСКОЕ ЖКХ",
+            "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",
+        ])
     }
     
     func test_shouldRequestNextTypeOperators() throws {
@@ -171,15 +270,16 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         )
         
         userInitiatedScheduler.advance()
-        
         awaitActorThreadHop()
+        
         httpClient.complete(with: anyError())
+        
         httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
-        
         awaitActorThreadHop()
+        
         httpClient.complete(with: anyError(), at: 2)
-        
         awaitActorThreadHop()
+        
         httpClient.expectRequests(withQueryValueFor: "type", match: [
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -191,11 +291,13 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
     
     // MARK: - Helpers
     
-    private typealias SUT = RootViewDomain.Binder
+    private typealias SUT = Vortex.RootViewDomain.Binder
     
     private func makeSUT(
+        localAgent: LocalAgentProtocol? = nil,
         sessionState: SessionState = .inactive,
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
+        schedulers: Schedulers? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -204,23 +306,28 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         sessionAgent: SessionAgentEmptyMock,
         userInitiatedScheduler: TestSchedulerOf<DispatchQueue>
     ) {
+        let localAgent = localAgent ?? LocalAgentEmptyMock()
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
-        let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent,
+            localAgent: localAgent
+        )
         let httpClient = HTTPClientSpy()
         let userInitiatedScheduler = DispatchQueue.test
-        let sut = RootViewModelFactory(
+        let factory = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
             mapScanResult: mapScanResult,
             resolveQR: { _ in .unknown },
             scanner: QRScannerViewModelSpy(),
-            schedulers: .test(
+            schedulers: schedulers ?? .test(
                 main: .immediate,
                 userInitiated: userInitiatedScheduler.eraseToAnyScheduler()
             ).0
-        ).make(
+        )
+        let sut = factory.make(
             dismiss: {},
             collateralLoanLandingFlag: .active,
             paymentsTransfersFlag: .active,
@@ -252,6 +359,25 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             )
         )
     }
+    
+    private func authRequest() -> URLRequest {
+        
+        RequestFactory.createGetNotAuthorizedZoneClientInformDataRequest()
+    }
+    
+    private func bannersRequest(
+        serial: String? = nil
+    ) throws -> URLRequest {
+        
+        try RequestFactory.createGetBannerCatalogListV2Request(serial)
+    }
+    
+    private func categoriesRequest(
+        serial: String? = nil
+    ) throws -> URLRequest {
+        
+        try RequestFactory.createGetServiceCategoryListRequest(serial: serial)
+    }
 }
 
 // MARK: - DSL
@@ -272,12 +398,12 @@ private extension RootViewModel {
     func personal(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> PaymentsTransfersPersonalDomain.Binder {
+    ) throws -> Vortex.PaymentsTransfersPersonalDomain.Binder {
         
         try XCTUnwrap(personal, "Expected to have v1", file: file, line: line)
     }
     
-    private var personal: PaymentsTransfersPersonalDomain.Binder? {
+    private var personal: Vortex.PaymentsTransfersPersonalDomain.Binder? {
         
         guard case let .v1(switcher as PaymentsTransfersSwitcher) = tabsViewModel.paymentsModel,
               case let .personal(personal) = switcher.state

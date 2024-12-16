@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, renamed: "LocalAgentMock", message: "Use `LocalAgentMock`.")
 final class LocalAgentSpy<Value>: LocalAgentProtocol {
     
     private(set) var storeCallCount = 0

@@ -84,7 +84,11 @@ extension SerialCachingRemoteBatchServiceComposer {
             decoratee: perform,
             save: update
         )
-        let batcher = Batcher(perform: decorator.decorated)
+        let batcher = Batcher(perform: { parameter, completion in
+            
+            // TODO: - find a better way without capturing decorator
+            decorator.decorated(parameter) { completion($0); _ = decorator }
+        })
         
         return batcher.process
     }

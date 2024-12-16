@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.09.2024.
 //
 
+import VortexTools
 import PayHub
 import PayHubUI
 
@@ -33,14 +34,37 @@ extension PaymentProviderPickerDomain {
     typealias FlowReducer = FlowDomain.Reducer
     typealias FlowEffectHandler = FlowDomain.EffectHandler
     
+    typealias Navigation = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    
     typealias DetailPayment = ClosePaymentsViewModelWrapper
-    typealias Payment = Void
+    typealias Payment = ProcessSelectionResult
     typealias Provider = PaymentServiceOperator
     typealias Service = Void
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void
     
-    typealias Navigation = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    typealias _ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.ProcessSelectionResult
+    
+    typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
+    
+    enum ProcessSelectionSuccess {
+        
+        case services(MultiElementArray<UtilityService>, for: UtilityPaymentOperator)
+        case anywayPayment(AnywayFlowModel)
+    }
+    
+    enum ProcessSelectionFailure: Error {
+        
+        case operatorFailure(UtilityPaymentOperator)
+        case serviceFailure(ServiceFailure)
+        
+#warning("extract…")
+        enum ServiceFailure: Error, Hashable {
+            
+            case connectivityError
+            case serverError(String)
+        }
+    }
 }
 
 // MARK: - ProviderList

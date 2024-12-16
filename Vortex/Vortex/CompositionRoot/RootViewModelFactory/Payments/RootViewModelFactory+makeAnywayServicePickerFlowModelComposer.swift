@@ -15,20 +15,15 @@ extension RootViewModelFactory {
     ) -> AnywayServicePickerFlowModelComposer {
         
         let anywayFlowComposer = makeAnywayFlowComposer()
-        let loaderComposer = UtilityPaymentOperatorLoaderComposer(
-            model: model,
-            pageSize: settings.pageSize
-        )
         let transactionComposer = AnywayTransactionComposer(
             model: model,
             validator: .init()
         )
-        let loadOperators = loaderComposer.loadOperators(completion:)
         let pickerNanoServicesComposer = UtilityPaymentNanoServicesComposer(
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            loadOperators: loadOperators
+            loadOperators: composedLoadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
             composer: transactionComposer,
@@ -42,16 +37,5 @@ extension RootViewModelFactory {
             model: model,
             scheduler: schedulers.main
         )
-    }
-}
-
-extension UtilityPaymentOperatorLoaderComposer {
-    
-    func loadOperators(
-        completion: @escaping ([UtilityPaymentOperator]) -> Void
-    ) {
-        let load = compose()
-        
-        load(.init()) { completion($0); _ = load }
     }
 }

@@ -552,13 +552,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-vortex",
-        "identifier" : "СlientInformListTests",
-        "name" : "СlientInformListTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "GetProductListByTypeV7ServiceTests",
         "name" : "GetProductListByTypeV7ServiceTests"
       }
@@ -568,13 +561,6 @@
         "containerPath" : "container:..\/swift-vortex",
         "identifier" : "CollateralLoanLandingSaveConsentsBackendTests",
         "name" : "CollateralLoanLandingSaveConsentsBackendTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ClientInformListTests",
-        "name" : "ClientInformListTests"
       }
     },
     {
@@ -638,6 +624,13 @@
         "containerPath" : "container:..\/swift-vortex",
         "identifier" : "SavingsAccountTests",
         "name" : "SavingsAccountTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
       }
     }
   ],
