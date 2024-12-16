@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct BinderComposerPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            NavigationView {
+                
+                ContentView()
+            }
         }
     }
 }
