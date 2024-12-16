@@ -26,8 +26,6 @@ struct GetCollateralLandingBottomSheetView: View {
                 
                 ForEach(items, content: itemView)
             }
-            
-            Spacer()
         }
         .disabled(items.count < config.layouts.scrollThreshold)
         .frame(height: height)
