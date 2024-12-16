@@ -26,7 +26,7 @@ extension RootViewModelFactorySettings {
     static let prod: Self = .init(
         categoryPickerPlaceholderCount: 6,
         batchDelay: .milliseconds(500),
-        delay: .milliseconds(100),
+        delay: .milliseconds(500),
         fraudDelay: 120,
         observeLast: 10,
         operationPickerPlaceholderCount: 4,
