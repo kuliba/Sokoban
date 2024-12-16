@@ -53,7 +53,7 @@ struct GetCollateralLandingDocumentsView: View {
                     
                     GetCollateralLandingDocumentView(
                         document: $0,
-                        config: config,
+                        config: config.list,
                         makeIconView: makeIconView
                     )
                 }

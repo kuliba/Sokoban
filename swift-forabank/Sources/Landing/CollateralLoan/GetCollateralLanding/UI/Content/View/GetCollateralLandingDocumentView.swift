@@ -11,7 +11,7 @@ import SwiftUI
 struct GetCollateralLandingDocumentView: View {
     
     let document: Document
-    let config: Config.Documents
+    let config: Config.Documents.List
     let makeIconView: Factory.MakeIconView
 
     var body: some View {
@@ -21,13 +21,13 @@ struct GetCollateralLandingDocumentView: View {
             document.icon.map {
                 makeIconView($0)
                     .frame(width: 20, height: 20)
-                    .padding(.trailing, config.list.layouts.iconTrailingPadding)
+                    .padding(.trailing, config.layouts.iconTrailingPadding)
             }
             
             document.title.text(
                 withConfig: .init(
-                    textFont: config.list.fonts.title.font,
-                    textColor: config.list.fonts.title.foreground
+                    textFont: config.fonts.title.font,
+                    textColor: config.fonts.title.foreground
                 )
             )
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -51,7 +51,7 @@ struct GetCollateralLandingDocumentView_Previews: PreviewProvider {
         
         GetCollateralLandingDocumentView(
             document: Product.carStub.documents.first!,
-            config: .default,
+            config: Config.Documents.default.list,
             makeIconView: Factory.preview.makeIconView
         )
         .padding(.top, 300)
@@ -60,4 +60,5 @@ struct GetCollateralLandingDocumentView_Previews: PreviewProvider {
 
     typealias Factory = GetCollateralLandingFactory
     typealias Product = GetCollateralLandingProduct
+    typealias Config = GetCollateralLandingConfig
 }
