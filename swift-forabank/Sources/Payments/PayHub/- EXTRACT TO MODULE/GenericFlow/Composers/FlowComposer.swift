@@ -11,25 +11,25 @@ import Foundation
 public final class FlowComposer<Select, Navigation> {
     
     private let delay: Delay
-    private let microServices: MicroServices
+    private let getNavigation: GetNavigation
     private let scheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
         delay: Delay = .milliseconds(100),
-        microServices: MicroServices,
+        getNavigation: @escaping GetNavigation,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.delay = delay
-        self.microServices = microServices
+        self.getNavigation = getNavigation
         self.scheduler = scheduler
         self.interactiveScheduler = interactiveScheduler
     }
     
     public typealias Domain = FlowDomain<Select, Navigation>
-    public typealias MicroServices = Domain.MicroServices
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+    public typealias GetNavigation = Domain.GetNavigation
 }
 
 public extension FlowComposer {
@@ -41,7 +41,7 @@ public extension FlowComposer {
         let reducer = Domain.Reducer()
         let effectHandler = Domain.EffectHandler(
             delay: delay,
-            microServices: microServices,
+            getNavigation: getNavigation,
             scheduler: interactiveScheduler
         )
         
