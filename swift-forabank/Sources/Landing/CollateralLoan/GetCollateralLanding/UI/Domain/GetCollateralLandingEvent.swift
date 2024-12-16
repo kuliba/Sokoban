@@ -10,7 +10,7 @@ public enum GetCollateralLandingEvent: Equatable {
     case toggleIHaveSalaryInCompany(Bool)
     case selectMonthPeriod(UInt)
     case selectCollateral(String)
-    case changeDesiredAmount(Int)
+    case changeDesiredAmount(UInt)
     case createDraftApplication
     case closeBottomSheet
 }

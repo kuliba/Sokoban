@@ -34,12 +34,28 @@ public struct GetCollateralLandingView: View {
         
         switch bottomSheet.sheetType {
         case let .periods(period):
-            BottomSheetContentView(items: period.map(\.bottomSheetItem)) {
-                event(.selectCollateral($0))
+            return BottomSheetView(
+                items: period.map(\.bottomSheetItem),
+                config: factory.config.bottomSheet,
+                makeIconView: factory.makeIconView
+            ) {
+                switch $0 {
+                case .selectMonthPeriod(let termMonth):
+                    event(.selectMonthPeriod(termMonth))
+                default: break
+                }
             }
         case let .collaterals(collateral):
-            BottomSheetContentView(items: collateral.map(\.bottomSheetItem)) {
-                event(.selectCollateral($0))
+            return BottomSheetView(
+                items: collateral.map(\.bottomSheetItem),
+                config: factory.config.bottomSheet,
+                makeIconView: factory.makeIconView
+            ) {
+                switch $0 {
+                case .selectCollateral(let collateral):
+                    event(.selectCollateral(collateral))
+                default: break
+                }
             }
         }
     }
@@ -116,6 +132,7 @@ extension GetCollateralLandingView {
     typealias FaqView = GetCollateralLandingFaqView
     typealias DocumentsView = GetCollateralLandingDocumentsView
     typealias FooterView = GetCollateralLandingFooterView
+    typealias BottomSheetView = GetCollateralLandingBottomSheetView
     
     typealias Factory = GetCollateralLandingFactory
     typealias State = GetCollateralLandingState
