@@ -15,6 +15,36 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersPersonal(
+    ) -> (PaymentsTransfersPersonalDomain.Binder, () -> Void) {
+        
+        let nanoServices = composePaymentsTransfersPersonalNanoServices()
+        
+        let personal = makePaymentsTransfersPersonal(
+            nanoServices: nanoServices
+        )
+        
+        let loadCategoriesAndNotifyPicker = {
+            
+            nanoServices.reloadCategories { [weak personal] categories in
+                
+                let categoryPicker = personal?.content.categoryPicker.sectionBinder
+                
+                guard let categoryPicker else {
+                    
+                    return self.logger.log(level: .error, category: .payments, message: "Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
+                }
+                
+                categoryPicker.content.event(.loaded(categories ?? []))
+                
+                self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
+            }
+        }
+        
+        return (personal, loadCategoriesAndNotifyPicker)
+    }
+    
+    @inlinable
+    func makePaymentsTransfersPersonal(
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonalDomain.Binder {
         

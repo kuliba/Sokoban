@@ -1,20 +1,26 @@
 //
-//  RootViewModelFactory+loadOperators.swift
+//  RootViewModelFactory+loadCachedOperators.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 22.11.2024.
 //
 
+import VortexTools
+
 extension RootViewModelFactory {
     
     @inlinable
-    func loadOperators(
+    func loadCachedOperators(
         payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
         completion: @escaping ([PaymentServiceOperator]) -> Void
     ) {
-        schedulers.background.schedule { [weak self] in
+        schedulers.userInitiated.schedule { [weak self] in
             
-            self?.model.loadOperators(payload, completion)
+            guard let self else { return }
+            
+            // sorting is performed at cache phase
+            let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
+            completion(page.map(PaymentServiceOperator.init(codable:)))
         }
     }
     
@@ -23,7 +29,7 @@ extension RootViewModelFactory {
         category: ServiceCategory,
         completion: @escaping (Result<[PaymentServiceOperator], Error>) -> Void
     ) {
-        loadOperators(
+        loadCachedOperators(
             payload: .init(
                 afterOperatorID: nil,
                 for: category.type,
@@ -38,53 +44,7 @@ extension RootViewModelFactory {
 
 // MARK: - Helpers
 
-#warning("duplication - see UtilityPaymentOperatorLoaderComposer")
-
-private extension Model {
-    
-    func loadOperators(
-        _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
-        _ completion: @escaping LoadOperatorsCompletion
-    ) {
-        let log = LoggerAgent().log
-        let cacheLog = { log(.debug, .cache, $0, $1, $2) }
-        
-        if let operators = localAgent.load(type: [CodableServicePaymentOperator].self) {
-            cacheLog("Total Operators count \(operators.count)", #file, #line)
-            
-            let page = operators.operators(for: payload)
-            cacheLog("Operators page count \(page.count) for \(payload.categoryType.name)", #file, #line)
-            
-            completion(page)
-        } else {
-            cacheLog("No more Operators", #file, #line)
-            completion([])
-        }
-    }
-    
-    typealias LoadOperatorsCompletion = ([PaymentServiceOperator]) -> Void
-}
-
-// TODO: - add tests
-extension Array where Element == CodableServicePaymentOperator {
-    
-    /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
-    func operators(
-        for payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
-    ) -> [PaymentServiceOperator] {
-        
-        // sorting is performed at cache phase
-        return self
-            .filter { $0.matches(payload) }
-            .page(startingAfter: payload.operatorID, pageSize: payload.pageSize)
-            .map(PaymentServiceOperator.init(codable:))
-    }
-}
-
-// MARK: - Search
-
-// TODO: - add tests
-extension CodableServicePaymentOperator {
+extension CodableServicePaymentOperator: FilterableItem {
     
     func matches(
         _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
@@ -101,6 +61,13 @@ extension CodableServicePaymentOperator {
         || inn.localizedCaseInsensitiveContains(searchText)
     }
 }
+
+extension UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload: PageQuery {
+    
+    var id: String? { operatorID }
+}
+
+// MARK: - Adapters
 
 private extension PaymentServiceOperator {
     

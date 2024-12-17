@@ -72,8 +72,10 @@ private extension PaymentProviderPickerView {
     ) -> some View {
         
         PaymentProviderPickerDestinationView(
+            dismiss: { binder.flow.event(.dismiss) },
             destination: destination,
-            components: components
+            components: components, 
+            makeIconView: makeIconView
         )
     }
 }

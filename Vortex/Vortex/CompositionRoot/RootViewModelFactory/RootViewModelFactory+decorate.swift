@@ -33,9 +33,9 @@ extension RootViewModelFactory {
                             
                             log(.error, .network, "Fail to load categories named: \(failedCategories.map(\.name)).", #fileID, #line)
                         }
+                        
+                        completion(categories)
                     }
-                    
-                    completion(categories)
                 }
             }
         }
