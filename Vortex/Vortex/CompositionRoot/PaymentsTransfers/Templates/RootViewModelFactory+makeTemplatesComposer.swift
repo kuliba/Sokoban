@@ -20,7 +20,10 @@ extension RootViewModelFactory {
             return { _ in nil }
             
         case .inactive:
-            return makeTemplates
+            return { [weak self] in
+                
+                self?.makeTemplates(paymentsTransfersFlag, closeAction: $0)
+            }
         }
     }
 }
@@ -31,11 +34,12 @@ extension RootViewModelFactory {
 
     @inlinable
     func makeTemplates(
+        _ paymentsTransfersFlag: PaymentsTransfersFlag,
         closeAction: @escaping () -> Void
     ) -> Templates {
         
         let templatesComposer = makeTemplatesComposer(
-            paymentsTransfersFlag: .active
+            paymentsTransfersFlag: paymentsTransfersFlag
         )
         
         return templatesComposer.compose(dismiss: closeAction)
