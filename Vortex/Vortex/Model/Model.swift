@@ -575,16 +575,7 @@ class Model {
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Timeout.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Timeout.Response(result: payload.result))
-                    
-                    auth
-                        .sink { [weak self] authState in
-                            
-                            if authState == .unlockRequired {
-                                self?.clientInformAlertManager.setUpdatePermission(true)
-                            }
-                        }
-                        .store(in: &bindings)
-                    
+
                 case _ as ModelAction.Auth.Session.Terminate:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Terminate")
                     
