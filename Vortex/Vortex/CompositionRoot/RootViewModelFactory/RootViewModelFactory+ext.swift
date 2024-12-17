@@ -389,7 +389,7 @@ extension RootViewModelFactory {
            self?.updateAuthorizedClientInform()
         }
         
-        updateClientInfromAlerts()
+        updateClientInformAlerts()
             .store(in: &bindings)
         
         let rootViewModel = make(
