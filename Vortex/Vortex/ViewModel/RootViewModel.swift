@@ -169,6 +169,7 @@ class RootViewModel: ObservableObject, Resetable {
                         guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
 
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
+                        self.model.clientAuthorizationState.value.authorized = nil
                     }
                 }
             }
