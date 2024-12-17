@@ -40,7 +40,6 @@ where LatestView: View,
             case let .latest(latest):
                 latestView(latest)
                     .frame(config.latestPlaceholder.label.frame)
-                    .border(.red)
                 
             case .templates:
                 selectableLabel(config.templates)

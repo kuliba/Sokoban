@@ -75,8 +75,7 @@ extension RootViewFactory {
             config: .iFora,
             latestView: { latest in
                 
-                Image(systemName: "l.circle")
-                    .resizable()
+                LatestPaymentButtonLabelView(latest: latest, config: .prod())
             },
             placeholderView:  {
                 
@@ -94,14 +93,66 @@ extension RootViewFactory {
     ) -> some View {
         
         switch destination {
+        case .exchangeFailure:
+            EmptyView()
+            
         case let .exchange(currencyWalletViewModel):
             components.makeCurrencyWalletView(currencyWalletViewModel)
             
         case let .latest(latest):
             Text("TBD: destination " + String(describing: latest))
-            
-        case let .status(operationPickerFlowStatus):
-            EmptyView()
         }
+    }
+}
+
+extension LatestPaymentButtonLabelView {
+    
+    init(
+        latest: Latest,
+        config: LatestPaymentButtonLabelConfig
+    ) {
+        self.init(label: latest.label, config: config)
+    }
+}
+
+private extension Latest {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        switch self {
+        case let .service(service):
+            return service.label
+            
+        case let .withPhone(withPhone):
+            return withPhone.label
+        }
+    }
+}
+
+// LatestPaymentsViewComponent.swift:204
+
+private extension Latest.Service {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        return .init(
+            amount: amount.map(String.init), 
+            avatar: .text(name ?? lpName ?? ""),
+            description: "",
+            topIcon: nil
+        )
+    }
+}
+
+private extension Latest.WithPhone {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        return .init(
+            amount: amount.map(String.init),
+            avatar: .text(name ?? ""),
+            description: "",
+            topIcon: nil
+        )
     }
 }

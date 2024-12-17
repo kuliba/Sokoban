@@ -16,16 +16,16 @@ extension OperationPickerDomain {
 
 enum OperationPickerNavigation {
     
+    case exchangeFailure
     case exchange(CurrencyWalletViewModel)
     case latest(LatestFlowStub)
-    case status(OperationPickerFlowStatus)
+    case outside(Outside)
     case templates
-}
-
-enum OperationPickerFlowStatus: Equatable {
     
-    case main
-    case exchangeFailure
+    enum Outside: Equatable {
+        
+        case main
+    }
 }
 
 final class LatestFlowStub {
