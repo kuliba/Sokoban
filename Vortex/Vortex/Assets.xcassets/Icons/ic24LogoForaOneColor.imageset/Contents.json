@@ -1,0 +1,15 @@
+{
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
+  "images" : [
+    {
+      "filename" : "ic24LogoForaOneColor.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

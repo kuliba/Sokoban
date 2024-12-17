@@ -1,6 +1,6 @@
 //
 //  RemoteImageLoaderComposer.swift
-//  Vortex
+//  ForaBank
 //
 //  Created by Igor Malyarov on 01.07.2024.
 //

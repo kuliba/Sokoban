@@ -23,7 +23,7 @@ public extension OperationPickerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     

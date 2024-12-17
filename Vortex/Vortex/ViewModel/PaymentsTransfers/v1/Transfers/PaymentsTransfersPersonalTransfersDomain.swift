@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.10.2024.
 //
 
+import PayHub
 import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
@@ -14,7 +15,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     typealias Binder = PlainPickerBinder<Select, NavigationResult>
     typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, NavigationResult>
+    typealias FlowDomain = PayHub.FlowDomain<Select, NavigationResult>
     
     // MARK: - Content
     
@@ -38,14 +39,8 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case contacts(Payments.Operation.Source)
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
-        case qr(QR)
+        case scanQR
         case successMeToMe(Node<PaymentsSuccessViewModel>)
-        
-        enum QR: Equatable {
-            
-            case result(QRModelResult)
-            case scan
-        }
     }
     
     typealias NavigationResult = Result<Navigation, NavigationFailure>
@@ -56,7 +51,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
-        case scanQR(Node<QRScannerModel>)
+        case scanQR
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     

@@ -6,7 +6,7 @@
 //
 
 @testable import Vortex
-import PayHubUI
+import PayHub
 import ViewInspector
 import XCTest
 
@@ -46,7 +46,7 @@ class AcceptanceTests: QRNavigationTests {
             httpClient: any HTTPClient = HTTPClientSpy(),
             dismiss: @escaping () -> Void = {},
             model: Model = .mockWithEmptyExcept(),
-            scanResult: QRModelResult = .unknown,
+            scanResult: Vortex.QRModelResult = .unknown,
             scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
             schedulers: Schedulers = .immediate
         ) {

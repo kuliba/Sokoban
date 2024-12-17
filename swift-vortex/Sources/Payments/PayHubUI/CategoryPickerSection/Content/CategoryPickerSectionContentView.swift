@@ -35,16 +35,17 @@ where ItemLabel: View,
     
     public var body: some View {
         
-        if state.isLoadingFailed {
+        VStack(spacing: config.spacing) {
             
-            failureView(config: config.failure)
+            headerTitle()
+                .frame(height: config.headerHeight)
             
-        } else {
-            
-            VStack(spacing: config.spacing) {
+            if state.isLoadingFailed {
                 
-                headerTitle()
-                    .frame(height: config.headerHeight)
+                failureView(config: config.failure)
+                    .padding(.top, config.spacing)
+                
+            } else {
                 
                 ScrollView(showsIndicators: false) {
                     

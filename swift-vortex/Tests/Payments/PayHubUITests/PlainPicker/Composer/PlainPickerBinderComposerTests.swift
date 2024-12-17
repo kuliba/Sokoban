@@ -12,6 +12,29 @@ import XCTest
 
 final class PlainPickerBinderComposerTests: PlainPickerTests {
     
+    func test_shouldSetEmptyContentElementsOnEmpty() {
+        
+        let (sut, _,_) = makeSUT(elements: [])
+        
+        XCTAssertEqual(sut.content.state.elements, [])
+    }
+    
+    func test_shouldSetOneContentElementOnOne() {
+        
+        let elements = [makeElement()]
+        let (sut, _,_) = makeSUT(elements: elements)
+        
+        XCTAssertNoDiff(sut.content.state.elements, elements)
+    }
+    
+    func test_shouldSetTwoContentElementOnTwo() {
+        
+        let elements = [makeElement(), makeElement()]
+        let (sut, _,_) = makeSUT(elements: elements)
+        
+        XCTAssertNoDiff(sut.content.state.elements, elements)
+    }
+    
     // MARK - content to flow
     
     func test_shouldNotCallMakeNavigationWithPayloadOnNilContentSelect() {

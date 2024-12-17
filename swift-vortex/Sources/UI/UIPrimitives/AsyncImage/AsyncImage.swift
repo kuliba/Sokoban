@@ -29,6 +29,7 @@ public struct AsyncImage: View {
         
         modify(image)
             .onReceive(publisher) { self.image = $0 }
+            .animation(.easeInOut, value: image)
     }
 }
 

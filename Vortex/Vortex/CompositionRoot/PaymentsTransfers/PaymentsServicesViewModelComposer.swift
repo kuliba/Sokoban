@@ -48,5 +48,5 @@ extension PaymentsServicesViewModelComposer {
     }
     
     typealias Payload = PrepaymentEffect.LegacyPaymentPayload
-    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
 }

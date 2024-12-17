@@ -125,7 +125,7 @@ private extension AnywayTransactionComposer {
         update: AnywayPaymentUpdate,
         product: AnywayPaymentOutline.Product,
         service: UtilityService,
-        operator: UtilityPaymentOperator
+        operator: UtilityPaymentProvider
     ) -> AnywayTransactionState.Transaction? {
         
         let outline = AnywayPaymentOutline(
@@ -153,7 +153,7 @@ private extension AnywayTransactionComposer {
         update: AnywayPaymentUpdate,
         product: AnywayPaymentOutline.Product,
         puref: String,
-        operator: UtilityPaymentOperator
+        operator: UtilityPaymentProvider
     ) -> AnywayTransactionState.Transaction? {
         
         let outline = AnywayPaymentOutline(
@@ -321,7 +321,7 @@ extension AnywayPaymentOutline {
     }
     
     init(
-        operator: UtilityPaymentOperator,
+        operator: UtilityPaymentProvider,
         puref: String,
         product: AnywayPaymentOutline.Product
     ) {

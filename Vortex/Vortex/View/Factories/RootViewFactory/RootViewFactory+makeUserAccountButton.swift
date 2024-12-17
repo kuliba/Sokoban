@@ -15,7 +15,15 @@ extension RootViewFactory {
         
         ToolbarItem(placement: .topBarLeading) {
             
+            #if RELEASE
             makeUserAccountButton(action: action)
+            #else
+            makeUserAccountButton(action: action)
+                .contextMenu {
+                    
+                    Button("Clear segmented operators cache", action: clearCache)
+                }
+            #endif
         }
     }
     

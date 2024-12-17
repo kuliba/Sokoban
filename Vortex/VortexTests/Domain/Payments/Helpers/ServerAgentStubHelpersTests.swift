@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.02.2023.
 //
 
+
 @testable import Vortex
 import XCTest
 
@@ -53,5 +54,4 @@ final class ServerAgentStubHelpersTests: XCTestCase {
             ServerAgentStub.AnywayTransferResponse.iVortex_515A3_10rub.phoneNumber
         )
     }
-
 }

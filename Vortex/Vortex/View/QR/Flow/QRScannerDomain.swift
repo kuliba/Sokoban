@@ -6,7 +6,6 @@
 //
 
 import PayHub
-import PayHubUI
 import SberQR
 
 /// A namespace.
@@ -17,7 +16,7 @@ extension QRScannerDomain {
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = PayHubUI.BinderComposer<Content, Select, Navigation>
+    typealias BinderComposer = PayHub.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -25,7 +24,7 @@ extension QRScannerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias NotifyEvent = FlowDomain.NotifyEvent

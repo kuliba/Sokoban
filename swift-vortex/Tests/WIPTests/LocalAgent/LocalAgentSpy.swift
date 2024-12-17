@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 10.09.2024.
 //
 
+@testable import Vortex
 import Foundation
 
-@available(*, deprecated, renamed: "LocalAgentMock", message: "Use `LocalAgentMock`.")
 final class LocalAgentSpy<Value>: LocalAgentProtocol {
     
     private(set) var storeCallCount = 0

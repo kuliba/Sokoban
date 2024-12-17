@@ -1,7 +1,11 @@
 {
   "images" : [
     {
+<<<<<<< HEAD
       "filename" : "tabBar-main.svg",
+=======
+      "filename" : "NewLogoVortex.svg",
+>>>>>>> trunk2_tryMerge_5
       "idiom" : "universal",
       "scale" : "1x"
     },

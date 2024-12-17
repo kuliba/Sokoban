@@ -15,7 +15,7 @@ public extension PaymentsTransfersPersonalDomain {
     
     // MARK: - Binder
     
-    typealias BinderDomain = PayHubUI.BinderDomain<Content, Select, Navigation>
+    typealias BinderDomain = PayHub.BinderDomain<Content, Select, Navigation>
     typealias Binder = BinderDomain.Binder
     typealias Composer = BinderDomain.BinderComposer
     

@@ -10,4 +10,5 @@ struct PaymentsTransfersPersonalTransfersFlowViewFactory {
     let makeContactsView: MakeContactsView
     let makePaymentsMeToMeView: MakePaymentsMeToMeView
     let makePaymentsView: MakePaymentsView
+    let makePaymentsSuccessView: MakePaymentsSuccessView
 }

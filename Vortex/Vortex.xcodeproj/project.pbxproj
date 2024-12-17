@@ -1735,8 +1735,6 @@
 		2AFF32032D02D460006DD60C /* HTTPClientSpy+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32022D02D460006DD60C /* HTTPClientSpy+ext.swift */; };
 		2AFF32052D030F18006DD60C /* RootViewModelFactory+logDecoratedLocalLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32042D030F18006DD60C /* RootViewModelFactory+logDecoratedLocalLoadTests.swift */; };
 		2AFF32072D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32062D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift */; };
-		2AFF32092D0328BB006DD60C /* RootViewModelFactory+loadOperatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadOperatorsTests.swift */; };
-		2AFF320B2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF320A2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift */; };
 		2AFF32092D0328BB006DD60C /* RootViewModelFactory+loadCachedOperatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadCachedOperatorsTests.swift */; };
 		2AFF320B2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF320A2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift */; };
 		2AFF320D2D0353D5006DD60C /* ArrayOfCodableServicePaymentOperator+pageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF320C2D0353D5006DD60C /* ArrayOfCodableServicePaymentOperator+pageTests.swift */; };
@@ -2876,9 +2874,11 @@
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
 		843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */; };
+		847321072D11A6740009C721 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 847321062D11A6740009C721 /* VortexTools */; };
+		8473210A2D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */; };
+		8473210B2D11B5C00009C721 /* composeLoadablePickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847321092D11B5C00009C721 /* composeLoadablePickerModel.swift */; };
 		849055BF2D07599A003250BF /* Payments+ParameterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849055BE2D07599A003250BF /* Payments+ParameterTests.swift */; };
 		84CA1BE52D06BAB50097BB93 /* VortexCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE42D06BAB50097BB93 /* VortexCrypto */; };
-		84CA1BE72D06BABA0097BB93 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 84CA1BE62D06BABA0097BB93 /* VortexTools */; };
 		84CA1BE82D06BAC10097BB93 /* VortexPushServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A515682C2821B927000D4455 /* VortexPushServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */; };
 		A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */ = {isa = PBXBuildFile; fileRef = A50869D92767F394004C5E17 /* InternetTVSuccess.xib */; };
@@ -5254,8 +5254,6 @@
 		2AFF32022D02D460006DD60C /* HTTPClientSpy+ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HTTPClientSpy+ext.swift"; sourceTree = "<group>"; };
 		2AFF32042D030F18006DD60C /* RootViewModelFactory+logDecoratedLocalLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logDecoratedLocalLoadTests.swift"; sourceTree = "<group>"; };
 		2AFF32062D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logDecoratedLocalLoad.swift"; sourceTree = "<group>"; };
-		2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadOperatorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadOperatorsTests.swift"; sourceTree = "<group>"; };
-		2AFF320A2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodableServicePaymentOperator+matchesTests.swift"; sourceTree = "<group>"; };
 		2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadCachedOperatorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadCachedOperatorsTests.swift"; sourceTree = "<group>"; };
 		2AFF320A2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodableServicePaymentOperator+matchesTests.swift"; sourceTree = "<group>"; };
 		2AFF320C2D0353D5006DD60C /* ArrayOfCodableServicePaymentOperator+pageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArrayOfCodableServicePaymentOperator+pageTests.swift"; sourceTree = "<group>"; };
@@ -6382,6 +6380,8 @@
 		841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBannerInProductListData.swift; sourceTree = "<group>"; };
 		8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccountViewModelTests.swift; sourceTree = "<group>"; };
 		843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCalculateAmountViewModelTests.swift; sourceTree = "<group>"; };
+		847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelayingRemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
+		847321092D11B5C00009C721 /* composeLoadablePickerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = composeLoadablePickerModel.swift; sourceTree = "<group>"; };
 		849055BE2D07599A003250BF /* Payments+ParameterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+ParameterTests.swift"; sourceTree = "<group>"; };
 		A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessView.swift; sourceTree = "<group>"; };
 		A50869D92767F394004C5E17 /* InternetTVSuccess.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetTVSuccess.xib; sourceTree = "<group>"; };
@@ -7291,7 +7291,7 @@
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
 				C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */,
-				84CA1BE72D06BABA0097BB93 /* VortexTools in Frameworks */,
+				847321072D11A6740009C721 /* VortexTools in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
@@ -10597,6 +10597,8 @@
 		2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */ = {
 			isa = PBXGroup;
 			children = (
+				847321092D11B5C00009C721 /* composeLoadablePickerModel.swift */,
+				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
 				EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */,
 				EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */,
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
@@ -10635,7 +10637,6 @@
 				2A85775D2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift */,
 				2ACD49A42D05CF6F003CDD05 /* RootViewModelFactory+batchOperatorsTests.swift */,
 				2AFF32042D030F18006DD60C /* RootViewModelFactory+logDecoratedLocalLoadTests.swift */,
-				2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadOperatorsTests.swift */,
 				2AFF320A2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift */,
 				2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */,
 				2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */,
@@ -10682,7 +10683,6 @@
 		2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */ = {
 			isa = PBXGroup;
 			children = (
-				2AFF320A2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift */,
 				2A72ACCD2CC6ED2E00B8BF5B /* ArrayOfCodableServicePaymentOperatorTests.swift */,
 				2AFF320C2D0353D5006DD60C /* ArrayOfCodableServicePaymentOperator+pageTests.swift */,
 				2AFF320E2D0372E3006DD60C /* CodableServicePaymentOperatorTests.swift */,
@@ -18777,7 +18777,7 @@
 				A73E430F2CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend */,
 				83C6A1E82CFF43540076BC25 /* SavingsAccount */,
 				84CA1BE42D06BAB50097BB93 /* VortexCrypto */,
-				84CA1BE62D06BABA0097BB93 /* VortexTools */,
+				847321062D11A6740009C721 /* VortexTools */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -20828,6 +20828,7 @@
 				2AECBC2C2BEBA9A3000B0C0E /* UtilityPaymentFlowEvent.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				5065D9CB28F2BC5000529884 /* PaymentsSuccessViewModel.swift in Sources */,
+				8473210A2D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift in Sources */,
 				77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */,
@@ -22099,6 +22100,7 @@
 				2A89A5182CCD84D30070131F /* RootViewModelFactorySettings.swift in Sources */,
 				2AF720312C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift in Sources */,
 				2AA09D552CF9AD400062415C /* RootViewFactory+transportPaymentsView.swift in Sources */,
+				8473210B2D11B5C00009C721 /* composeLoadablePickerModel.swift in Sources */,
 				0BDCF0082749A56300AAA1C3 /* ExtensionGKHInputRequest.swift in Sources */,
 				2A49221A2ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift in Sources */,
 				A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */,
@@ -28044,13 +28046,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MarketShowcase;
 		};
+		847321062D11A6740009C721 /* VortexTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VortexTools;
+		};
 		84CA1BE42D06BAB50097BB93 /* VortexCrypto */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = VortexCrypto;
-		};
-		84CA1BE62D06BABA0097BB93 /* VortexTools */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = VortexTools;
 		};
 		A70BE3F62CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend */ = {
 			isa = XCSwiftPackageProductDependency;

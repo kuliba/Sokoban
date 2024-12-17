@@ -105,7 +105,7 @@ class QRNavigationTests: XCTestCase {
                 icon: nil,
                 inn: anyMessage(),
                 title: anyMessage(),
-                segment: anyMessage()
+                type: anyMessage()
             ),
             segment: anyMessage()
         ))
@@ -162,10 +162,10 @@ class QRNavigationTests: XCTestCase {
         icon: String? = nil,
         inn: String = anyMessage(),
         title: String = anyMessage(),
-        segment: String = anyMessage()
+        type: String = anyMessage()
     ) -> UtilityPaymentProvider {
         
-        return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
     
     func makeQR(

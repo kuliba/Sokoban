@@ -6,7 +6,7 @@
 //
 
 import Combine
-import PayHubUI
+import PayHub
 
 extension ModelRootComposer {
     
