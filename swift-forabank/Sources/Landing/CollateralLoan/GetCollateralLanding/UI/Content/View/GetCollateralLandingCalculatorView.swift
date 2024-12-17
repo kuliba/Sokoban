@@ -12,13 +12,7 @@ import ToggleComponent
 struct GetCollateralLandingCalculatorView: View {
     
     @State private var toggleIsOn = false
-    @State private var sliderCurrentValue: Double = 6.0 {
-        
-        didSet {
-
-            event(.changeDesiredAmount(UInt(sliderCurrentValue)))
-        }
-    }
+    @State private var sliderCurrentValue: Double = 6.0
     
     let config: Config
     let event: (Event) -> Void
@@ -244,6 +238,10 @@ struct GetCollateralLandingCalculatorView: View {
             thumbDiameter: config.salary.slider.thumbDiameter,
             trackHeight: config.salary.slider.trackHeight
         )
+        .onChange(of: sliderCurrentValue, perform: {
+            
+            event(.changeDesiredAmount(UInt($0)))
+        })
         .padding(.leading, config.root.layouts.contentLeadingPadding)
         .padding(.trailing, config.root.layouts.contentTrailingPadding)
         .padding(.bottom, config.desiredAmount.sliderBottomPadding)
