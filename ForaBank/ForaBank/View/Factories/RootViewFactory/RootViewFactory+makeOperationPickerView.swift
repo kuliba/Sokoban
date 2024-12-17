@@ -59,20 +59,25 @@ extension RootViewFactory {
                     state: state,
                     event: event,
                     config: .prod,
-                    itemLabel: itemLabel
+                    itemLabel: operationPickerItemLabel
                 )
             }
         )
         .onFirstAppear { content.event(.load) }
     }
     
-    private func itemLabel(
+    private func operationPickerItemLabel(
         item: OperationPickerState.Item
     ) -> some View {
         
         OperationPickerStateItemLabel(
             item: item,
             config: .iFora,
+            latestView: { latest in
+                
+                Image(systemName: "l.circle")
+                    .resizable()
+            },
             placeholderView:  {
                 
                 LatestPlaceholder(
