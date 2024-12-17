@@ -139,6 +139,8 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
+                    model.clientInformAlertManager.setUpdatePermission(true)
+                    
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
