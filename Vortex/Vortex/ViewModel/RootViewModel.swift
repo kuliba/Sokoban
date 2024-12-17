@@ -166,9 +166,10 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     delay(for: .milliseconds(600)) { [unowned self] in
                         
-                        guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
+                        guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
 
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
+                        self.model.clientAuthorizationState.value.authorized = nil
                     }
                 }
             }
