@@ -4312,7 +4312,7 @@
 		2A3EB71B29B1098C002A1309 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2A3F1B152A47763000D8FE55 /* MosParkingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingView.swift; sourceTree = "<group>"; };
 		2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapperTests.swift; sourceTree = "<group>"; };
-		2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ForaBank-SELECTED_TESTS.xctestplan"; sourceTree = "<group>"; };
+		2A3F1B1F2A49844800D8FE55 /* Vortex-SELECTED_TESTS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Vortex-SELECTED_TESTS.xctestplan"; sourceTree = "<group>"; };
 		2A3F1B222A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapper.swift; sourceTree = "<group>"; };
 		2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerData.swift; sourceTree = "<group>"; };
 		2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerDataMapper.swift; sourceTree = "<group>"; };
@@ -4660,7 +4660,7 @@
 		2A7688D02AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingLoaderDecorator+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A7688D22AF3914C00045293 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithInMemoryStoreTests.swift; sourceTree = "<group>"; };
-		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
+		2A77671829E93E060096013A /* swift-vortex */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-vortex"; path = "../swift-vortex"; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
@@ -17413,13 +17413,13 @@
 			children = (
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A87FCCA2B9310E4008257ED /* swift-forabank-Package.xctestplan */,
-				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
+				2A3F1B1F2A49844800D8FE55 /* Vortex-SELECTED_TESTS.xctestplan */,
 				2AFED98B2C104166008F2F95 /* Settings.bundle */,
 				2A566EA62B67C08200359E05 /* TestPlans */,
-				2A77671829E93E060096013A /* swift-forabank */,
-				EDB1437F265FDA410028EF5A /* ForaBank */,
-				EDB14396265FDA430028EF5A /* ForaBankTests */,
-				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
+				2A77671829E93E060096013A /* swift-vortex */,
+				EDB1437F265FDA410028EF5A /* Vortex */,
+				EDB14396265FDA430028EF5A /* VortexTests */,
+				EDB143A1265FDA430028EF5A /* VortexUITests */,
 				A515682D2821B927000D4455 /* ForaPushServiceExtension */,
 				2AE5972529F9182B0083F138 /* PreviewApps */,
 				EDB1437E265FDA410028EF5A /* Products */,
@@ -17465,7 +17465,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		EDB1437F265FDA410028EF5A /* ForaBank */ = {
+		EDB1437F265FDA410028EF5A /* Vortex */ = {
 			isa = PBXGroup;
 			children = (
 				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
@@ -17504,10 +17504,10 @@
 				0B22AEAF26CEB80100B11E7F /* Keyboard.swift */,
 				A5F15C0A27495F7B00DC91DA /* GlobalModule.swift */,
 			);
-			path = ForaBank;
+			path = Vortex;
 			sourceTree = "<group>";
 		};
-		EDB14396265FDA430028EF5A /* ForaBankTests */ = {
+		EDB14396265FDA430028EF5A /* VortexTests */ = {
 			isa = PBXGroup;
 			children = (
 				2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */,
@@ -17535,16 +17535,16 @@
 				77E1805B27AC8CAE0006ACC9 /* TestingAppDelegate.swift */,
 				77E1805D27AC8CE60006ACC9 /* TestingSceneDelegate.swift */,
 			);
-			path = ForaBankTests;
+			path = VortexTests;
 			sourceTree = "<group>";
 		};
-		EDB143A1265FDA430028EF5A /* ForaBankUITests */ = {
+		EDB143A1265FDA430028EF5A /* VortexUITests */ = {
 			isa = PBXGroup;
 			children = (
 				EDB143A4265FDA430028EF5A /* Info.plist */,
 				7757624C276FEE2400B902BF /* ForaBankUITests.swift */,
 			);
-			path = ForaBankUITests;
+			path = VortexUITests;
 			sourceTree = "<group>";
 		};
 		EDB143B6265FDEAD0028EF5A /* Resours */ = {
@@ -19135,7 +19135,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EDB14378265FDA410028EF5A /* Build configuration list for PBXProject "ForaBank" */;
+			buildConfigurationList = EDB14378265FDA410028EF5A /* Build configuration list for PBXProject "Vortex" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -27839,7 +27839,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		EDB14378265FDA410028EF5A /* Build configuration list for PBXProject "ForaBank" */ = {
+		EDB14378265FDA410028EF5A /* Build configuration list for PBXProject "Vortex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDB143A5265FDA430028EF5A /* Debug */,
