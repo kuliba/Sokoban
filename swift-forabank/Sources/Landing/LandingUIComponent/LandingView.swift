@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 import UIPrimitives
+import BottomSheetComponent
 
 // MARK: - for preview app
 
