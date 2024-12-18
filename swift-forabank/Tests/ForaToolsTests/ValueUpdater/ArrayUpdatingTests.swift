@@ -1,5 +1,5 @@
 //
-//  ValueUpdaterTests.swift
+//  ArrayUpdatingTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.12.2024.
@@ -9,20 +9,20 @@ import Combine
 import ForaTools
 import XCTest
 
-final class ValueUpdaterTests: XCTestCase {
+final class ArrayUpdatingTests: XCTestCase {
     
     // MARK: - empty
     
     func test_shouldDeliverEmptyOnEmpty() {
         
-        let (_,_, spy) = makeSUT(items: [])
+        let (_, spy) = makeSUT(items: [])
         
         XCTAssertNoDiff(spy.values, [[]])
     }
     
     func test_shouldNotDeliverEmptyUpdateOnEmpty() {
         
-        let (_, updater, spy) = makeSUT(items: [])
+        let (updater, spy) = makeSUT(items: [])
         
         updater.emit([:])
         
@@ -31,7 +31,7 @@ final class ValueUpdaterTests: XCTestCase {
     
     func test_shouldNotDeliverUpdateOnEmpty() {
         
-        let (_, updater, spy) = makeSUT(items: [])
+        let (updater, spy) = makeSUT(items: [])
         
         updater.emit([.init(): anyMessage()])
         
@@ -43,7 +43,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldDeliverOneOnOne() {
         
         let item = makeItem()
-        let (_,_, spy) = makeSUT(items: [item])
+        let (_, spy) = makeSUT(items: [item])
         
         XCTAssertNoDiff(spy.values, [[item]])
     }
@@ -51,7 +51,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldNotChangeWithEmptyUpdateOnOne() {
         
         let item = makeItem()
-        let (_, updater, spy) = makeSUT(items: [item])
+        let (updater, spy) = makeSUT(items: [item])
         
         updater.emit([:])
         
@@ -61,7 +61,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldNotChangeWithNonMatchingKeyUpdateOnOne() {
         
         let item = makeItem()
-        let (_, updater, spy) = makeSUT(items: [item])
+        let (updater, spy) = makeSUT(items: [item])
         
         updater.emit([.init(): anyMessage()])
         
@@ -72,7 +72,7 @@ final class ValueUpdaterTests: XCTestCase {
         
         let item = makeItem()
         let newValue = anyMessage()
-        let (_, updater, spy) = makeSUT(items: [item])
+        let (updater, spy) = makeSUT(items: [item])
         
         updater.emit([item.id: newValue])
         
@@ -86,7 +86,7 @@ final class ValueUpdaterTests: XCTestCase {
         
         let item = makeItem()
         let newValue = anyMessage()
-        let (_, updater, spy) = makeSUT(items: [item])
+        let (updater, spy) = makeSUT(items: [item])
         
         updater.emit([
             item.id: newValue,
@@ -104,7 +104,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldDeliverTwoOnTwo() {
         
         let (item1, item2) = (makeItem(), makeItem())
-        let (_,_, spy) = makeSUT(items: [item1, item2])
+        let (_, spy) = makeSUT(items: [item1, item2])
         
         XCTAssertNoDiff(spy.values, [[item1, item2]])
     }
@@ -112,7 +112,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldNotChangeWithEmptyUpdateOnTwo() {
         
         let (item1, item2) = (makeItem(), makeItem())
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         updater.emit([:])
         
@@ -122,7 +122,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldNotChangeWithNonMatchingKeyUpdateOnTwo() {
         
         let (item1, item2) = (makeItem(), makeItem())
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         updater.emit([.init(): anyMessage()])
         
@@ -133,7 +133,7 @@ final class ValueUpdaterTests: XCTestCase {
         
         let (item1, item2) = (makeItem(), makeItem())
         let newValue = anyMessage()
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         updater.emit([item1.id: newValue])
         
@@ -147,7 +147,7 @@ final class ValueUpdaterTests: XCTestCase {
         
         let (item1, item2) = (makeItem(), makeItem())
         let newValue = anyMessage()
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         updater.emit([item2.id: newValue])
         
@@ -161,7 +161,7 @@ final class ValueUpdaterTests: XCTestCase {
         
         let (item1, item2) = (makeItem(), makeItem())
         let (newValue1, newValue2) = (anyMessage(), anyMessage())
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         updater.emit([item1.id: newValue1, item2.id: newValue2])
         
@@ -175,7 +175,7 @@ final class ValueUpdaterTests: XCTestCase {
         
         let (item1, item2) = (makeItem(), makeItem())
         let newValue = anyMessage()
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         updater.emit([
             item1.id: newValue,
@@ -193,7 +193,7 @@ final class ValueUpdaterTests: XCTestCase {
     func test_shouldDeliverMultipleSequentialUpdatesOnOne() {
         
         let item = makeItem()
-        let (_, updater, spy) = makeSUT(items: [item])
+        let (updater, spy) = makeSUT(items: [item])
         
         let value1 = anyMessage()
         updater.emit([item.id: value1])
@@ -203,15 +203,15 @@ final class ValueUpdaterTests: XCTestCase {
         
         XCTAssertNoDiff(spy.values, [
             [item],
-            [Item(id: item.id, value: value1)],
-            [Item(id: item.id, value: value2)]
+            [.init(id: item.id, value: value1)],
+            [.init(id: item.id, value: value2)]
         ])
     }
     
     func test_shouldDeliverMultipleSequentialUpdatesOnTwo() {
         
         let (item1, item2) = (makeItem(), makeItem())
-        let (_, updater, spy) = makeSUT(items: [item1, item2])
+        let (updater, spy) = makeSUT(items: [item1, item2])
         
         let value1ForItem1 = anyMessage()
         updater.emit([item1.id: value1ForItem1])
@@ -219,21 +219,19 @@ final class ValueUpdaterTests: XCTestCase {
         let value1ForItem2 = anyMessage()
         updater.emit([item2.id: value1ForItem2])
         
-        let value2ForItem1 = anyMessage()
-        let value2ForItem2 = anyMessage()
+        let (value2ForItem1, value2ForItem2) = (anyMessage(), anyMessage())
         updater.emit([item1.id: value2ForItem1, item2.id: value2ForItem2])
         
         XCTAssertNoDiff(spy.values, [
             [item1, item2],
-            [Item(id: item1.id, value: value1ForItem1), item2],
-            [Item(id: item1.id, value: value1ForItem1), Item(id: item2.id, value: value1ForItem2)],
-            [Item(id: item1.id, value: value2ForItem1), Item(id: item2.id, value: value2ForItem2)]
+            [.init(id: item1.id, value: value1ForItem1), item2],
+            [.init(id: item1.id, value: value1ForItem1), .init(id: item2.id, value: value1ForItem2)],
+            [.init(id: item1.id, value: value2ForItem1), .init(id: item2.id, value: value2ForItem2)]
         ])
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = ValueUpdater<Item, UUID, String>
     private typealias Spy = ValueSpy<[Item]>
     
     private func makeSUT(
@@ -241,19 +239,16 @@ final class ValueUpdaterTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: SUT,
         updater: Updater,
         spy: Spy
     ) {
         let updater = Updater()
-        let sut = SUT(items: items, update: updater.update)
-        let spy = Spy(sut.updatingItems)
+        let spy = Spy(items.updating(with: updater.update))
         
-        trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(updater, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, updater, spy)
+        return (updater, spy)
     }
     
     private func makeItem(
@@ -290,9 +285,7 @@ private struct Item: Equatable {
 
 extension Item: ValueUpdatable {
     
-    var keyPath: KeyPath<Item, String> { \.value }
-    
-    func updated(value: Value) -> Self {
+    func updated(value: String) -> Self {
         
         return .init(id: id, value: value)
     }
