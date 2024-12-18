@@ -162,7 +162,7 @@ final class ReactiveFetchingUpdaterConvenienceTests: XCTestCase {
         let mapSpy = MapSpy(stubs: [items])
         let updateSpy = UpdateSpy()
         let sut = SUT(
-            fetch: fetchSpy.process,
+            fetcher: AnyOptionalFetcher(fetch: fetchSpy.process),
             map: mapSpy.call,
             update: updateSpy.update
         )
