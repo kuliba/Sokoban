@@ -19,6 +19,7 @@ protocol ValueUpdatable<Value> {
     associatedtype Value
     
     var keyPath: KeyPath<Self, Value> { get }
+    func updated(value: Value) -> Self
 }
 
 final class ValueUpdater<T, Key, Value>
@@ -42,17 +43,35 @@ extension ValueUpdater {
     
     var updatingItems: AnyPublisher<[T], Never> {
         
-        Just([]).eraseToAnyPublisher()
+        guard !items.isEmpty
+        else { return Just([]).eraseToAnyPublisher() }
+        
+        return update
+            .scan(items) { currentItems, updates in
+                
+                currentItems.map { item in
+                    
+                    if let newValue = updates[item.key] {
+                        return item.updated(value: newValue)
+                    } else {
+                        return item
+                    }
+                }
+            }
+            .prepend(items)
+            .eraseToAnyPublisher()
     }
 }
 
 import XCTest
 
 final class ValueUpdaterTests: XCTestCase {
+    
+    // MARK: - empty
 
     func test_shouldDeliverEmptyOnEmpty() {
         
-        let (_, updater, spy) = makeSUT(items: [])
+        let (_,_, spy) = makeSUT(items: [])
         
         XCTAssertNoDiff(spy.values, [[]])
     }
@@ -73,6 +92,67 @@ final class ValueUpdaterTests: XCTestCase {
         updater.emit([.init(): anyMessage()])
         
         XCTAssertNoDiff(spy.values, [[]])
+    }
+    
+    // MARK: - one
+
+    func test_shouldDeliverOneOnOne() {
+        
+        let item = makeItem()
+        let (_,_, spy) = makeSUT(items: [item])
+        
+        XCTAssertNoDiff(spy.values, [[item]])
+    }
+
+    func test_shouldNotChangeWithEmptyUpdateOnOne() {
+        
+        let item = makeItem()
+        let (_, updater, spy) = makeSUT(items: [item])
+
+        updater.emit([:])
+        
+        XCTAssertNoDiff(spy.values, [[item], [item]])
+    }
+
+    func test_shouldNotChangeWithNonMatchingKeyUpdateOnOne() {
+        
+        let item = makeItem()
+        let (_, updater, spy) = makeSUT(items: [item])
+
+        updater.emit([.init(): anyMessage()])
+        
+        XCTAssertNoDiff(spy.values, [[item], [item]])
+    }
+
+    func test_shouldDeliverMatchingKeyUpdateOnOne() {
+        
+        let item = makeItem()
+        let newValue = anyMessage()
+        let (_, updater, spy) = makeSUT(items: [item])
+
+        updater.emit([item.id: newValue])
+        
+        XCTAssertNoDiff(spy.values, [
+            [item],
+            [.init(id: item.id, value: newValue)]
+        ])
+    }
+
+    func test_shouldIgnoreNonMatchingKeyUpdateOnOne() {
+        
+        let item = makeItem()
+        let newValue = anyMessage()
+        let (_, updater, spy) = makeSUT(items: [item])
+
+        updater.emit([
+            item.id: newValue,
+            .init(): anyMessage()
+        ])
+        
+        XCTAssertNoDiff(spy.values, [
+            [item],
+            [.init(id: item.id, value: newValue)]
+        ])
     }
 
     // MARK: - Helpers
@@ -135,6 +215,11 @@ struct Item: Equatable {
 extension Item: ValueUpdatable {
     
     var keyPath: KeyPath<Item, String> { \.value }
+    
+    func updated(value: Value) -> Self {
+        
+        return .init(id: id, value: value)
+    }
 }
 
 extension Item: KeyProviding {
