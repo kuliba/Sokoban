@@ -68,7 +68,7 @@ public struct ClientInformListView: View {
                 .frame(height: config.sizes.navBarHeight)
                 .ignoresSafeArea()
                         
-            navBarTitle(info.navBarTitle())
+            navBarTitle(config.strings.titlePlaceholder)
         }
     }
     
@@ -141,7 +141,7 @@ public struct ClientInformListView: View {
             if !isShowNavBar {
                 
                 iconView()
-                titleView(multipleInfo.label.title)
+                titleView(config.strings.titlePlaceholder)
             }
             
             VStack(alignment: .leading, spacing: config.sizes.spacing) {
