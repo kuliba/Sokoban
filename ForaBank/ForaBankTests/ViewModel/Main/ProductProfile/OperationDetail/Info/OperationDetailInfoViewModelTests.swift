@@ -733,7 +733,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeHistoryItemsForExternal(
             .individual,
             detail,
-            .init(title: "Категория", iconType: nil, value: "штарф"),
+            .init(title: "Категория", iconType: nil, value: "штраф"),
             .init(title: "Номер", iconType: Image("hash", bundle: nil), value: "1234"),
             .init(title: "Amount", iconType: nil, value: "1234"),
             .init(title: "Fee", iconType: nil, value: "345"),
