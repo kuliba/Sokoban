@@ -284,7 +284,7 @@ extension ServerCommands {
         struct GetOperationDetailByPaymentId: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getOperationDetailByPaymentId"
+            let endpoint = "/rest/v2/getOperationDetailByPaymentId"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             

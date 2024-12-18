@@ -307,7 +307,7 @@ extension Services.Endpoint {
     
     static let getOperationDetailByPaymentID: Self = .init(
         pathPrefix: .rest,
-        version: nil,
+        version: .v2,
         serviceName: .getOperationDetailByPaymentId
     )
     

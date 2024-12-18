@@ -135,7 +135,10 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             currencyRate: currencyRate.map { NSDecimalNumber(decimal: $0).doubleValue },
             mcc: mcc,
             printData: _printData,
-            paymentMethod: _paymentMethod
+            paymentMethod: _paymentMethod,
+            documentNumber: documentNumber,
+            operationCategory: operationCategory,
+            paymentFlow: paymentFlow
         )
     }
     
@@ -245,6 +248,20 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             case .sfp:                        return .sfp
             case .taxAndStateService:         return .taxAndStateService
             case .transport:                  return .transport
+            case .accountAdressing:          return .accountAdressing
+            case .charityService:            return .charityService
+            case .digitalWalletsService:     return .digitalWalletsService
+            case .educationService:          return .educationService
+            case .foreighCard:               return .foreighCard
+            case .goldenPayment:             return .goldenPayment
+            case .networkMarketingService:   return .networkMarketingService
+            case .newDirect:                  return .newDirect
+            case .newDirectAccount:           return .newDirectAccount
+            case .newDirectCard:              return .newDirectCard
+            case .repaymentLoansAndAccountsService: return .repaymentLoansAndAccountsService
+            case .securityService:            return .securityService
+            case .socialAndGamesService:      return .socialAndGamesService
+            case .unknown:                     return .unknown
             }
         }
     }
