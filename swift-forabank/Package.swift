@@ -98,6 +98,7 @@ let package = Package(
         .bottomSheetComponent,
         .carouselComponent,
         .dropDownTextListComponent,
+        .openNewProductComponent,
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
@@ -305,6 +306,7 @@ let package = Package(
         .dropDownTextListComponent,
         .footerComponent,
         .nameComponent,
+        .openNewProductComponent,
         .optionalSelectorComponent,
         .optionalSelectorComponentTests,
         .selectComponent,
@@ -689,6 +691,11 @@ private extension Product {
         targets: [.dropDownTextListComponent]
     )
 
+    static let openNewProductComponent = library(
+        name: .openNewProductComponent,
+        targets: [.openNewProductComponent]
+    )
+    
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -2889,6 +2896,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
     
+    static let openNewProductComponent = target(
+        name: .openNewProductComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.openNewProductComponent)"
+    )
+    
     static let optionalSelectorComponent = target(
         name: .optionalSelectorComponent,
         dependencies: [
@@ -3444,6 +3459,10 @@ private extension Target.Dependency {
         name: .nameComponent
     )
     
+    static let openNewProductComponent = byName(
+        name: .openNewProductComponent
+    )
+    
     static let selectComponent = byName(
         name: .selectComponent
     )
@@ -3853,6 +3872,8 @@ private extension String {
     static let footerComponent = "FooterComponent"
     
     static let nameComponent = "NameComponent"
+    
+    static let openNewProductComponent = "OpenNewProductComponent"
     
     static let optionalSelectorComponent = "OptionalSelectorComponent"
     static let optionalSelectorComponentTests = "OptionalSelectorComponentTests"
