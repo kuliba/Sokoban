@@ -155,6 +155,95 @@ final class ValueUpdaterTests: XCTestCase {
         ])
     }
 
+    // MARK: - two
+
+    func test_shouldDeliverTwoOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let (_,_, spy) = makeSUT(items: [item1, item2])
+        
+        XCTAssertNoDiff(spy.values, [[item1, item2]])
+    }
+
+    func test_shouldNotChangeWithEmptyUpdateOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let (_, updater, spy) = makeSUT(items: [item1, item2])
+
+        updater.emit([:])
+        
+        XCTAssertNoDiff(spy.values, [[item1, item2], [item1, item2]])
+    }
+
+    func test_shouldNotChangeWithNonMatchingKeyUpdateOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let (_, updater, spy) = makeSUT(items: [item1, item2])
+
+        updater.emit([.init(): anyMessage()])
+        
+        XCTAssertNoDiff(spy.values, [[item1, item2], [item1, item2]])
+    }
+
+    func test_shouldChangeFirstWithMatchingKeyUpdateOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let newValue = anyMessage()
+        let (_, updater, spy) = makeSUT(items: [item1, item2])
+
+        updater.emit([item1.id: newValue])
+        
+        XCTAssertNoDiff(spy.values, [
+            [item1, item2],
+            [.init(id: item1.id, value: newValue), item2]
+        ])
+    }
+
+    func test_shouldChangeSecondMatchingKeyUpdateOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let newValue = anyMessage()
+        let (_, updater, spy) = makeSUT(items: [item1, item2])
+
+        updater.emit([item2.id: newValue])
+        
+        XCTAssertNoDiff(spy.values, [
+            [item1, item2],
+            [item1, .init(id: item2.id, value: newValue)]
+        ])
+    }
+
+    func test_shouldChangeBothMatchingKeyUpdatesOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let (newValue1, newValue2) = (anyMessage(), anyMessage())
+        let (_, updater, spy) = makeSUT(items: [item1, item2])
+
+        updater.emit([item1.id: newValue1, item2.id: newValue2])
+        
+        XCTAssertNoDiff(spy.values, [
+            [item1, item2],
+            [.init(id: item1.id, value: newValue1), .init(id: item2.id, value: newValue2)]
+        ])
+    }
+
+    func test_shouldIgnoreNonMatchingKeyUpdateOnTwo() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let newValue = anyMessage()
+        let (_, updater, spy) = makeSUT(items: [item1, item2])
+
+        updater.emit([
+            item1.id: newValue,
+            .init(): anyMessage()
+        ])
+        
+        XCTAssertNoDiff(spy.values, [
+            [item1, item2],
+            [.init(id: item1.id, value: newValue), item2]
+        ])
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = ValueUpdater<Item, UUID, String>
