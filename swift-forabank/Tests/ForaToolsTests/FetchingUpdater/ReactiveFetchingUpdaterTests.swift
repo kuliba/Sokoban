@@ -6,49 +6,7 @@
 //
 
 import Combine
-
-final class ReactiveFetchingUpdater<Payload, T, V> {
-    
-    private let fetch: Fetch
-    private let update: Update
-    
-    private var cancellable: AnyCancellable?
-    
-    init(
-        fetch: @escaping Fetch,
-        update: @escaping Update
-    ) {
-        self.fetch = fetch
-        self.update = update
-    }
-    
-    typealias Fetch = (Payload, @escaping (T?) -> Void) -> Void
-    typealias Update = (T) -> AnyPublisher<V, Never>
-}
-
-extension ReactiveFetchingUpdater {
-    
-    struct FetchError: Error {}
-    
-    func load(
-        payload: Payload,
-        completion: @escaping (V?) -> Void
-    ) {
-        cancellable = Future { [weak self] promise in
-            
-            guard let self else { return promise(.success(nil)) }
-            
-            fetch(payload) { promise(.success($0)) }
-        }
-        .compactMap { $0 }
-        .flatMap(update)
-        .sink(
-            receiveCompletion: { _ in completion(nil) },
-            receiveValue: completion
-        )
-    }
-}
-
+import ForaTools
 import XCTest
 
 final class ReactiveFetchingUpdaterTests: XCTestCase {

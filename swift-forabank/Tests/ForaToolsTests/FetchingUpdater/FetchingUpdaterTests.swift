@@ -5,44 +5,7 @@
 //  Created by Igor Malyarov on 18.12.2024.
 //
 
-final class FetchingUpdater<Payload, T, V> {
-    
-    private let fetch: Fetch
-    private let update: Update
-    
-    init(
-        fetch: @escaping Fetch,
-        update: @escaping Update
-    ) {
-        self.fetch = fetch
-        self.update = update
-    }
-    
-    typealias Fetch = (Payload, @escaping (T?) -> Void) -> Void
-    typealias Update = (T, @escaping (V) -> Void) -> Void
-}
-
-extension FetchingUpdater {
-    
-    func load(
-        payload: Payload,
-        completion: @escaping (V?) -> Void
-    ) {
-        fetch(payload) { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-            case .none:
-                completion(nil)
-                
-            case let .some(value):
-                update(value, completion)
-            }
-        }
-    }
-}
-
+import ForaTools
 import XCTest
 
 final class FetchingUpdaterTests: XCTestCase {
