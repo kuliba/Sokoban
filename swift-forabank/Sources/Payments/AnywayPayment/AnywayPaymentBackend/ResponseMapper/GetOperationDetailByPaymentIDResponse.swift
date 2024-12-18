@@ -282,6 +282,8 @@ public extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
         case socialAndGamesService
         case taxAndStateService
         case transport
+        case insuranceService
+        case journeyServices
         case unknown(String)
     }
 }

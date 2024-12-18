@@ -170,6 +170,8 @@ struct OperationDetailData: Codable, Hashable {
         case repaymentLoansAndAccountsService = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
         case securityService = "SECURITY_SERVICE"
         case socialAndGamesService = "SOCIAL_AND_GAMES_SERVICE"
+        case insuranceService = "INSURANCE_SERVICE"
+        case journeyServices = "JOURNEY_SERVICE"
         case unknown
     }
     
