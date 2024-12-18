@@ -243,7 +243,8 @@ extension GetCollateralLandingProduct.Calc.Rate {
     var bottomSheetItem: GetCollateralLandingState.BottomSheet.Item {
         
         .init(
-            id: String(termMonth),
+            id: UUID().uuidString,
+            termMonth: termMonth,
             icon: nil,
             title: termStringValue
         )
@@ -256,6 +257,7 @@ extension GetCollateralLandingProduct.Calc.Collateral {
         
         .init(
             id: type,
+            termMonth: nil,
             icon: icon,
             title: name
         )

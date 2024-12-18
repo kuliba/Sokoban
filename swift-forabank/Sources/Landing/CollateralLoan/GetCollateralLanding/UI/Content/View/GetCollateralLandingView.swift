@@ -34,12 +34,28 @@ public struct GetCollateralLandingView: View {
         
         switch bottomSheet.sheetType {
         case let .periods(period):
-            BottomSheetContentView(items: period.map(\.bottomSheetItem)) {
-                event(.selectCollateral($0))
+            return BottomSheetView(
+                items: period.map(\.bottomSheetItem),
+                config: factory.config.bottomSheet,
+                makeIconView: factory.makeIconView
+            ) {
+                switch $0 {
+                case .selectMonthPeriod(let termMonth):
+                    event(.selectMonthPeriod(termMonth))
+                default: break
+                }
             }
         case let .collaterals(collateral):
-            BottomSheetContentView(items: collateral.map(\.bottomSheetItem)) {
-                event(.selectCollateral($0))
+            return BottomSheetView(
+                items: collateral.map(\.bottomSheetItem),
+                config: factory.config.bottomSheet,
+                makeIconView: factory.makeIconView
+            ) {
+                switch $0 {
+                case .selectCollateral(let collateral):
+                    event(.selectCollateral(collateral))
+                default: break
+                }
             }
         }
     }
@@ -80,7 +96,11 @@ public struct GetCollateralLandingView: View {
                 )
             }
             
-            CalculatorView(config: factory.config, state: state)
+            CalculatorView(
+                config: factory.config,
+                event: { event($0) },
+                state: state
+            )
             
             state.product.faq.nilIfEmpty.map { _ in
 
@@ -98,7 +118,7 @@ public struct GetCollateralLandingView: View {
             FooterView(
                 config: factory.config.footer,
                 state: state,
-                action: { event(.createDraftApplication) }
+                event: { event($0) }
             )
         }
         .background(Color.clear)
@@ -116,6 +136,7 @@ extension GetCollateralLandingView {
     typealias FaqView = GetCollateralLandingFaqView
     typealias DocumentsView = GetCollateralLandingDocumentsView
     typealias FooterView = GetCollateralLandingFooterView
+    typealias BottomSheetView = GetCollateralLandingBottomSheetView
     
     typealias Factory = GetCollateralLandingFactory
     typealias State = GetCollateralLandingState
@@ -130,7 +151,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         
         GetCollateralLandingView(
             state: .init(product: .carStub),
-            event: { _ in },
+            event: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product with calculator")
@@ -139,7 +160,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         
         GetCollateralLandingView(
             state: .init(bottomSheet: periodBottomSheet, product: .carStub),
-            event: { _ in },
+            event: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product period selector")
@@ -148,7 +169,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
 
         GetCollateralLandingView(
             state: .init(bottomSheet: collateralBottomSheet, product: .carStub),
-            event: { _ in },
+            event: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product collateral selector")

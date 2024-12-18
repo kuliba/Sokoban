@@ -21,6 +21,7 @@ struct GetCollateralLandingConfig {
     let faq: DropDownTextListConfig
     let documents: Documents
     let footer: Footer
+    let bottomSheet: BottomSheet
         
     struct Fonts {
         
@@ -87,13 +88,15 @@ extension GetCollateralLandingConfig {
         calculator: .default,
         faq: .default,
         documents: .default,
-        footer: .default
+        footer: .default,
+        bottomSheet: .default
     )
 }
 
 extension Color {
     
     static let grayLightest: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
+    static let unselected: Self = .init(red: 0.92, green: 0.92, blue: 0.92)
     static let red: Self = .init(red: 1, green: 0.21, blue: 0.21)
     static let iconBackground: Self = .init(red: 0.5, green: 0.8, blue: 0.76)
     static let textPlaceholder: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
