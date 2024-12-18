@@ -48,7 +48,7 @@ extension ServiceCategoryFailureView {
     func contentView() -> some View {
         
         FooterView(
-            state: .failure(.iFora),
+            state: .failure(.iVortex),
             event: { event in
                 
                 switch event {
@@ -59,7 +59,7 @@ extension ServiceCategoryFailureView {
                     break
                 }
             },
-            config: .iFora
+            config: .iVortex
         )
     }
 }

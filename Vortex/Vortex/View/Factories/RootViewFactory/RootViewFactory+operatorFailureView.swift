@@ -23,7 +23,7 @@ extension ViewComponents {
             contentView: {
                 
                 FooterView(
-                    state: .failure(.iFora),
+                    state: .failure(.iVortex),
                     event: { event in
                         
                         switch event {
@@ -34,7 +34,7 @@ extension ViewComponents {
                             break
                         }
                     },
-                    config: .iFora
+                    config: .iVortex
                 )
             },
             destinationView: operatorFailureDestinationView
