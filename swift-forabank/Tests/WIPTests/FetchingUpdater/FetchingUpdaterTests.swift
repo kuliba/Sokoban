@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 18.12.2024.
 //
 
-import Combine
-
 final class FetchingUpdater<Payload, T, V> {
     
     private let fetch: Fetch
