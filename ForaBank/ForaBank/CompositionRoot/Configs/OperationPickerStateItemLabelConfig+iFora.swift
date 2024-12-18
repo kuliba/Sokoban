@@ -10,6 +10,24 @@ import PayHubUI
 extension OperationPickerStateItemLabelConfig {
     
     static let iFora: Self = .init(
-        latestPlaceholder: .iFora
+        iconSize: .init(width: 24, height: 24),
+        exchange: .exchange,
+        latestPlaceholder: .iFora,
+        templates: .templates
+    )
+}
+
+extension OperationPickerStateItemLabelConfig.IconConfig {
+    
+    static let exchange: Self = .init(
+        color: .textSecondary,
+        icon: .ic24CurrencyExchange,
+        title: "Обмен валют"
+    )
+    
+    static let templates: Self = .init(
+        color: .textSecondary,
+        icon: .ic24Star,
+        title: "Шаблоны"
     )
 }

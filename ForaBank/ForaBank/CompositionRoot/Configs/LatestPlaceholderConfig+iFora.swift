@@ -11,7 +11,7 @@ extension LatestPlaceholderConfig {
     
     static let iFora: Self = .init(
         label: .init(
-            circleSize: 56,
+            circle: 56,
             frame: .init(width: 80, height: 96),
             spacing: 8
         ),

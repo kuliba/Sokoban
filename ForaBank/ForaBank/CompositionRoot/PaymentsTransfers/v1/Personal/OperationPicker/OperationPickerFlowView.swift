@@ -53,26 +53,25 @@ extension OperationPickerDomain.Navigation {
     var destination: Destination? {
         
         switch self {
+        case .exchangeFailure:
+            return .exchangeFailure
             
         case let .exchange(exchange):
             return .exchange(exchange)
-        
+            
         case let .latest(latest):
             return .latest(latest)
-        
-        case let .status(status):
-            return .status(status)
-        
-        case .templates:
+            
+        case .outside, .templates:
             return nil
         }
     }
     
     enum Destination {
         
+        case exchangeFailure
         case exchange(CurrencyWalletViewModel)
         case latest(LatestFlowStub)
-        case status(OperationPickerFlowStatus)
     }
 }
 
@@ -81,21 +80,21 @@ extension OperationPickerDomain.Navigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case .exchangeFailure:
+            return .exchangeFailure
+            
         case let .exchange(exchange):
             return .exchange(.init(exchange))
             
         case let .latest(latest):
             return .latest(.init(latest))
-            
-        case let .status(status):
-            return .status(status)
         }
     }
     
     enum ID: Hashable {
         
+        case exchangeFailure
         case exchange(ObjectIdentifier)
         case latest(ObjectIdentifier)
-        case status(OperationPickerFlowStatus)
     }
 }

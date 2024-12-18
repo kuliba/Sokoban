@@ -8,21 +8,24 @@
 import PayHub
 import SwiftUI
 
-public struct OperationPickerStateItemLabel<Latest, PlaceholderView>: View
-where Latest: Named,
+public struct OperationPickerStateItemLabel<Latest, LatestView, PlaceholderView>: View
+where LatestView: View,
       PlaceholderView: View {
     
     private let item: Item
     private let config: Config
+    private let latestView: (Latest) -> LatestView
     private let placeholderView: () -> PlaceholderView
     
     public init(
         item: Item,
         config: Config,
-        placeholderView: @escaping () -> PlaceholderView
+        @ViewBuilder latestView: @escaping (Latest) -> LatestView,
+        @ViewBuilder placeholderView: @escaping () -> PlaceholderView
     ) {
         self.item = item
         self.config = config
+        self.latestView = latestView
         self.placeholderView = placeholderView
     }
     
@@ -32,13 +35,14 @@ where Latest: Named,
         case let .element(identified):
             switch identified.element {
             case .exchange:
-                selectableLabel(systemName: "dollarsign.arrow.circlepath", title: "Exchange")
+                selectableLabel(config.exchange)
                 
             case let .latest(latest):
-                selectableLabel(systemName: "l.circle", title: latest.name)
+                latestView(latest)
+                    .frame(config.latestPlaceholder.label.frame)
                 
             case .templates:
-                selectableLabel(systemName: "star", title: "Templates")
+                selectableLabel(config.templates)
             }
             
         case .placeholder:
@@ -57,12 +61,20 @@ public extension OperationPickerStateItemLabel {
 private extension OperationPickerStateItemLabel {
     
     func selectableLabel(
-        systemName: String,
+        _ config: Config.IconConfig
+    ) -> some View {
+        
+        selectableLabel(image: config.icon, title: config.title)
+            .foregroundColor(config.color)
+    }
+    
+    func selectableLabel(
+        image: Image,
         title: String
     ) -> some View {
         
         IconWithTitleLabelVertical(
-            icon: { icon(systemName) },
+            icon: { icon(image) },
             title: {
                 
                 Text(title)
@@ -75,7 +87,7 @@ private extension OperationPickerStateItemLabel {
     }
     
     func icon(
-        _ systemName: String
+        _ image: Image
     ) -> some View {
         
         ZStack {
@@ -83,12 +95,11 @@ private extension OperationPickerStateItemLabel {
             Color.solidGrayBackground
                 .opacity(0.2)
             
-            Image(systemName: systemName)
+            image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 24, height: 24)
+                .frame(config.iconSize)
         }
-        .foregroundColor(.secondary)
     }
 }
 
@@ -104,8 +115,8 @@ struct UIItemLabel_Previews: PreviewProvider {
                 
                 uiItemLabel(.placeholder(.init()))
                 uiItemLabel(.element(.init(.exchange)))
-                uiItemLabel(.element(.init(.latest(.preview()))))
                 uiItemLabel(.element(.init(.templates)))
+                uiItemLabel(.element(.init(.latest(.preview))))
             }
             .border(.red)
         }
@@ -115,24 +126,29 @@ struct UIItemLabel_Previews: PreviewProvider {
         _ item: OperationPickerState<PreviewLatest>.Item
     ) -> some View {
         
-        OperationPickerStateItemLabel(item: item, config: .preview) {
-            
-            Color.green.opacity(0.1)
-        }
+        OperationPickerStateItemLabel(
+            item: item,
+            config: .preview,
+            latestView: { _ in
+                
+                Color.red.opacity(0.8)
+                    .frame(width: 84, height: 96)
+            },
+            placeholderView: {
+                
+                Color.green.opacity(0.4)
+                    .frame(width: 84, height: 96)
+            }
+        )
     }
 }
 
-struct PreviewLatest: Equatable, Named {
+struct PreviewLatest: Equatable {
     
     let id: String
-    
-    var name: String { .init(id.prefix(12)) }
 }
 
 extension PreviewLatest {
     
-    static func preview() -> Self {
-        
-        return .init(id: UUID().uuidString)
-    }
+    static let preview: Self = .init(id: UUID().uuidString)
 }
