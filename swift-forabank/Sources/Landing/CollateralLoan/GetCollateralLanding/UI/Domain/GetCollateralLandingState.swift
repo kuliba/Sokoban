@@ -29,6 +29,7 @@ extension GetCollateralLandingState {
         public struct Item: Equatable, Identifiable {
             
             public let id: String
+            let termMonth: UInt?
             let icon: String?
             let title: String
         }

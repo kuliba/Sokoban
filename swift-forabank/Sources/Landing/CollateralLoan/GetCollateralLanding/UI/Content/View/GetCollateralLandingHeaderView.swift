@@ -10,13 +10,9 @@ import UIPrimitives
 
 struct GetCollateralLandingHeaderView: View {
     
-    private let config: Config
-    
-    init(config: Config) {
-        self.config = config
-    }
-    
-    public var body: some View {
+    let config: Config
+        
+    var body: some View {
         
         Spacer()
             .frame(height: config.header.height)

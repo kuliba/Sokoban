@@ -11,21 +11,13 @@ import ToggleComponent
 
 struct GetCollateralLandingCalculatorView: View {
     
-    // TODO: Replace on real data
     @State private var toggleIsOn = false
-    @State private var sliderCurrentValue = 6.0
+    @State private var sliderCurrentValue: Double = 6.0
     
     let config: Config
-    let product: GetCollateralLandingProduct
+    let event: (Event) -> Void
+    let state: GetCollateralLandingState
 
-    init(
-        config: Config,
-        product: GetCollateralLandingProduct
-    ) {
-        self.config = config
-        self.product = product
-    }
-    
     var body: some View {
         
         calculatorView
@@ -72,6 +64,10 @@ struct GetCollateralLandingCalculatorView: View {
                 
                 Toggle("", isOn: $toggleIsOn)
                     .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
+                    .onChange(of: toggleIsOn) { state in
+                        
+                        event(.toggleIHaveSalaryInCompany(state))
+                    }
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }
             .padding(.bottom, config.salary.bottomPadding)
@@ -161,6 +157,10 @@ struct GetCollateralLandingCalculatorView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
+        .onTapGesture {
+            
+            event(.showPeriodBottomSheet)
+        }
     }
     
     private func percentView(config: Config.Calculator) -> some View {
@@ -196,6 +196,10 @@ struct GetCollateralLandingCalculatorView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .onTapGesture {
+            
+            event(.showCollateralBottomSheet)
+        }
     }
     
     private func desiredAmountView(config: Config.Calculator) -> some View {
@@ -212,12 +216,6 @@ struct GetCollateralLandingCalculatorView: View {
                 
                 desiredAmountValueText(config: config)
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
-                
-                // TODO: change icon
-                Image(systemName: "pencil")
-                    .foregroundColor(config.root.colors.chevron)
-                    .frame(width: 10.5, height: 10.5)
-                    .padding(.leading, config.root.layouts.chevronSpacing)
                 
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)
@@ -240,6 +238,10 @@ struct GetCollateralLandingCalculatorView: View {
             thumbDiameter: config.salary.slider.thumbDiameter,
             trackHeight: config.salary.slider.trackHeight
         )
+        .onChange(of: sliderCurrentValue, perform: {
+            
+            event(.changeDesiredAmount(UInt($0)))
+        })
         .padding(.leading, config.root.layouts.contentLeadingPadding)
         .padding(.trailing, config.root.layouts.contentTrailingPadding)
         .padding(.bottom, config.desiredAmount.sliderBottomPadding)
@@ -343,6 +345,7 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
+    typealias Event = GetCollateralLandingEvent
 }
 
 // MARK: - Previews
@@ -353,7 +356,8 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
         
         GetCollateralLandingCalculatorView(
             config: .default,
-            product: .carStub
+            event: { print($0) },
+            state: .init(product: .carStub)
         )
     }
 }

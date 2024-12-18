@@ -55,19 +55,22 @@ extension GetCollateralLandingConfig {
                 let bottomPadding: CGFloat
                 let spacing: CGFloat
                 let iconTrailingPadding: CGFloat
+                let iconSize: CGSize
                 
                 init(
                     horizontalPadding: CGFloat,
                     topPadding: CGFloat,
                     bottomPadding: CGFloat,
                     spacing: CGFloat,
-                    iconTrailingPadding: CGFloat
+                    iconTrailingPadding: CGFloat,
+                    iconSize: CGSize
                 ) {
                     self.horizontalPadding = horizontalPadding
                     self.topPadding = topPadding
                     self.bottomPadding = bottomPadding
                     self.spacing = spacing
                     self.iconTrailingPadding = iconTrailingPadding
+                    self.iconSize = iconSize
                 }
             }
             
@@ -98,7 +101,8 @@ extension GetCollateralLandingConfig.Documents {
                 topPadding: 8,
                 bottomPadding: 6,
                 spacing: 13,
-                iconTrailingPadding: 16
+                iconTrailingPadding: 16,
+                iconSize: .init(width: 20, height: 20)
             ),
             fonts: .init(
                 title: .init(Font.system(size: 14))

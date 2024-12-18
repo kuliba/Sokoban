@@ -10,12 +10,12 @@ import SwiftUI
 struct GetCollateralLandingFooterView: View {
     
     let config: Config.Footer
-    let product: Product
-    let action: Action
+    let state: GetCollateralLandingState
+    let event: (Event) -> Void
 
     var body: some View {
         
-        Button(action: action) {
+        Button(action: { event(.createDraftApplication) }) {
             
             Text(config.text)
                 .frame(maxWidth: .infinity)
@@ -37,7 +37,7 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias Action = () -> Void
+    typealias Event = GetCollateralLandingEvent
 }
 
 // MARK: - Previews
@@ -48,8 +48,8 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
         
         GetCollateralLandingFooterView(
             config: .default,
-            product: .carStub,
-            action: {}
+            state: .init(product: .carStub),
+            event: { print($0) }
         )
     }
 }
