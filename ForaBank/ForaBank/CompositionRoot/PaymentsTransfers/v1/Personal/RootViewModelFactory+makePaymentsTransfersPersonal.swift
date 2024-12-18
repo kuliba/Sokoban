@@ -173,13 +173,13 @@ private extension OperationPickerDomain.FlowDomain.State {
         case .none, .exchange, .latest:
             return nil
             
-        case let .status(status):
-            switch status {
+        case .exchangeFailure:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
             case .main:
                 return .main
-                
-            case .exchangeFailure:
-                return nil
             }
             
         case .templates:
