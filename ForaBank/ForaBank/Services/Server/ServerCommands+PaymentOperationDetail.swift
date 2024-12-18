@@ -255,7 +255,7 @@ extension ServerCommands {
         struct GetOperationDetail: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getOperationDetail"
+            let endpoint = "/rest/v2/getOperationDetail"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
