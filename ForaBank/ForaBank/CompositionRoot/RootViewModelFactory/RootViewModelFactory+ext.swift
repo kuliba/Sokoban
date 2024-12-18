@@ -833,6 +833,8 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
         
+        let sections = makeMainViewModelSections(bannersBinder: bannersBinder)
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -843,6 +845,7 @@ private extension RootViewModelFactory {
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
+            sections: sections,
             bannersBinder: bannersBinder,
             scheduler: schedulers.main
         )

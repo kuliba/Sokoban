@@ -587,6 +587,7 @@ extension MainViewModel {
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .active,
         onRegister: {},
+        sections: [],
         bannersBinder: .preview
     )
 }

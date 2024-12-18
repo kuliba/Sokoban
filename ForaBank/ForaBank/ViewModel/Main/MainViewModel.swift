@@ -70,18 +70,20 @@ class MainViewModel: ObservableObject, Resetable {
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
+        sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = Self.getSections(
-            model,
-            bannersBinder,
-            updateInfoStatusFlag: updateInfoStatusFlag,
-            stickerViewModel: nil
-        )
+        self.sections = sections
+//        Self.getSections(
+//            model,
+//            bannersBinder,
+//            updateInfoStatusFlag: updateInfoStatusFlag,
+//            stickerViewModel: nil
+//        )
         
         self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -102,7 +104,7 @@ class MainViewModel: ObservableObject, Resetable {
         bind(sections)
     }
     
-    private static func getSections(
+    /*private*/ static func getSections(
         _ model: Model,
         _ binder: BannersBinder,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
