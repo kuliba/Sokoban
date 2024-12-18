@@ -5,16 +5,15 @@
 //  Created by Igor Malyarov on 18.12.2024.
 //
 
-/// A protocol that defines how to read and create updated instances of a value type.
-/// Conforming types must specify a `Value` type, provide a `KeyPath` to read the value,
-/// and a method to produce a new instance with an updated value.
+/// A type that can produce a new instance by applying a new value.
+///
+/// Conform to `ValueUpdatable` to allow instances to be easily updated with new values, often as part of a reactive update process.
 public protocol ValueUpdatable<Value> {
     
     associatedtype Value
-    
-    /// A key path pointing to the `Value` property within the conforming type.
-    var keyPath: KeyPath<Self, Value> { get }
-    
+        
     /// Returns a new instance by updating the `Value` of this instance.
+    ///
+    /// Use this method to create a modified copy of the original element with the given new value.
     func updated(value: Value) -> Self
 }
