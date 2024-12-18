@@ -1,12 +1,12 @@
 //
 //  RootViewModelFactory+runOnEachNextActiveSessionTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 16.12.2024.
 //
 
 import Combine
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RootViewModelFactory_runOnEachNextActiveSessionTests: RootViewModelFactoryTests {

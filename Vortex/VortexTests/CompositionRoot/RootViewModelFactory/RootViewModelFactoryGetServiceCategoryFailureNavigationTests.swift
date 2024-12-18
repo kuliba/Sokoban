@@ -1,11 +1,11 @@
 //
 //  RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 09.12.2024.
 //
 
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RootViewModelFactoryGetServiceCategoryFailureNavigationTests: RootViewModelFactoryTests {

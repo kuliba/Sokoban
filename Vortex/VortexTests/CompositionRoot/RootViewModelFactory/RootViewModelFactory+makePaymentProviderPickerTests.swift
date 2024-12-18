@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makePaymentProviderPickerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 06.12.2024.
 //

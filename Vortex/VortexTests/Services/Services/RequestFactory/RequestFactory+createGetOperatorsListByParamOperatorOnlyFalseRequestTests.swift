@@ -20,13 +20,13 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
     func test_createRequest_shouldSetRequestURL() throws {
         
         let operatorID = UUID().uuidString
-        let type = UUID().uuidString
+        let type = "housingAndCommunalService"
         let request = try createRequest(makeUtilityPaymentOperator(
             id: operatorID,
             type: type
         ))
         
-        XCTAssertNoDiff(
+        XCTAssertNoDiff( //@!
             request.url?.absoluteString,
             "https://pl.\(Config.domen)/dbo/api/v3/dict/getOperatorsListByParam?customerId=\(operatorID)&operatorOnly=false&type=housingAndCommunalService"
         )

@@ -1,6 +1,6 @@
 //
 //  ViewComponents+serviceCategoryFailureView.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 09.12.2024.
 //

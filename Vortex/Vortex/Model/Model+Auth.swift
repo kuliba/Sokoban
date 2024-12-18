@@ -1102,7 +1102,7 @@ extension Model {
             }
         } while attemptCount < maxAttempts
         
-        throw ModelAuthError.checkClientFailed(status: .userNotAuthorized, message: "Какой-то провал Карл")
+        throw ModelAuthError.checkClientFailed(status: .userNotAuthorized, message: "Невозможно проверить пользователя, ошибка авторизации")
     }
 
     func authPushRegister(token: String) async throws {

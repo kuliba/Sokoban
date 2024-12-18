@@ -1,12 +1,12 @@
 //
 //  RootViewModelFactory+GetSavingsAccountNavigationTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Andryusina Nataly on 09.12.2024.
 //
 
 import CombineSchedulers
-@testable import ForaBank
+@testable import Vortex
 import XCTest
 
 final class RootViewModelFactory_GetSavingsAccountNavigationTests: XCTestCase {
