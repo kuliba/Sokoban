@@ -99,6 +99,18 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
         ))
     }
     
+    func test_map_shouldDeliverResponseRichV2() throws {
+        
+        try assert(.validDataRichV2, .valid(
+            externalTransferType: .entity,
+            operationStatus: .inProgress,
+            paymentMethod: .cashless,
+            documentNumber: "330322",
+            paymentFlow: "STANDARD_FLOW",
+            operationCategory: "ЖКХ"
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.GetOperationDetailByPaymentIDResponse
@@ -143,7 +155,10 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
         paymentTemplateID: Int = 2773,
         puref: String = "iFora||TNS",
         returned: Bool = false,
-        transfer: Transfer = .housingAndCommunalService
+        transfer: Transfer = .housingAndCommunalService,
+        documentNumber: String? = nil,
+        paymentFlow: String? = nil,
+        operationCategory: String? = nil
     ) -> Self {
         
         .init(
@@ -153,8 +168,10 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             claimID: "7877f00d-0f37-46f7-a9d5-4eaf1ac84e32",
             currencyAmount: currencyAmount,
             dateForDetail: "17 апреля 2023, 17:13",
+            documentNumber: documentNumber,
             externalTransferType: externalTransferType,
             isTrafficPoliceService: false,
+            operationCategory: operationCategory,
             operationStatus: operationStatus,
             payeeFullName: payeeFullName,
             payeeINN: payeeINN,
@@ -171,7 +188,8 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             payerFullName: "Большаков Кирилл Сергеевич",
             payerINN: payerINN,
             payerMiddleName: payerMiddleName,
-            paymentMethod: paymentMethod, 
+            paymentFlow: paymentFlow,
+            paymentMethod: paymentMethod,
             paymentOperationDetailID: 57723,
             paymentTemplateID: paymentTemplateID,
             printFormType: .housingAndCommunalService,
@@ -195,6 +213,7 @@ private extension Data {
     static let serverError: Data = String.serverError.json
     static let validData: Data = String.validData.json
     static let validDataRich: Data = String.validDataRich.json
+    static let validDataRichV2: Data = String.validDataRichV2.json
 }
 
 private extension String {
@@ -377,8 +396,86 @@ private extension String {
         "transferEnum": "HOUSING_AND_COMMUNAL_SERVICE",
         "transferNumber": null,
         "transferReference": null,
-        "trnPickupPointName": null
+        "trnPickupPointName": null,
     }
 }
 """
+    
+    static let validDataRichV2 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "account": "766440148001",
+        "accountTitle": "Лицевой счет",
+        "amount": 1000,
+        "cityName": null,
+        "claimId": "7877f00d-0f37-46f7-a9d5-4eaf1ac84e32",
+        "comment": null,
+        "countryName": null,
+        "currencyAmount": "RUB",
+        "cursiveAmount": null,
+        "cursivePayeeAmount": null,
+        "cursivePayerAmount": null,
+        "dateForDetail": "17 апреля 2023, 17:13",
+        "externalTransferType": "ENTITY",
+        "isForaBank": null,
+        "isTrafficPoliceService": false,
+        "MCC": null,
+        "OKTMO": null,
+        "operation": null,
+        "operationStatus": "IN_PROGRESS",
+        "payerAccountId": 10004333104,
+        "payerAccountNumber": "40817810543005000761",
+        "payerAddress": "РОССИЙСКАЯ ФЕДЕРАЦИЯ",
+        "payerAmount": 1000,
+        "payerCardId": 10000204785,
+        "payerCardNumber": "**** **** **92 6035",
+        "payerCurrency": "RUB",
+        "payerDocument": null,
+        "payerFee": 0,
+        "payerFirstName": "Кирилл",
+        "payerFullName": "Большаков Кирилл Сергеевич",
+        "payerINN": "692502219386",
+        "payerMiddleName": "Сергеевич",
+        "payerPhone": null,
+        "payerSurName": null,
+        "payeeAccountId": null,
+        "payeeAccountNumber": null,
+        "payeeAmount": null,
+        "payeeBankBIC": null,
+        "payeeBankCorrAccount": null,
+        "payeeBankName": null,
+        "payeeCardId": null,
+        "payeeCardNumber": null,
+        "payeeCurrency": null,
+        "payeeFirstName": null,
+        "payeeFullName": "ПАО ТНС ЭНЕРГО ЯРОСЛАВЛЬ",
+        "payeeINN": "7606052264",
+        "payeeKPP": "760601001",
+        "payeeMiddleName": null,
+        "payeePhone": null,
+        "payeeSurName": null,
+        "paymentMethod": "Безналичный",
+        "paymentOperationDetailId": 57723,
+        "paymentTemplateId": 2773,
+        "period": null,
+        "printFormType": "housingAndCommunalService",
+        "provider": null,
+        "puref": "iFora||TNS",
+        "requestDate": "17.04.2023 17:13:36",
+        "responseDate": "17.04.2023 17:13:38",
+        "returned": false,
+        "transferDate": "17.04.2023",
+        "transferEnum": "HOUSING_AND_COMMUNAL_SERVICE",
+        "transferNumber": null,
+        "transferReference": null,
+        "trnPickupPointName": null,
+        "docNumber": "330322",
+        "operationCategory": "ЖКХ",
+        "payment_flow": "STANDARD_FLOW"
+    }
+}
+"""
+
 }

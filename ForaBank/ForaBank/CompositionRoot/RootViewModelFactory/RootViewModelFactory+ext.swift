@@ -282,6 +282,20 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
+        let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
+            
+            guard let self,
+                    let product = model.product(productId: id)
+            else { return nil }
+            
+            return makeProductProfileViewModel(
+                product,
+                "",
+                .defaultFilterComponents(product: product),
+                dismiss
+            )
+        }
+        
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
@@ -456,7 +470,15 @@ extension RootViewModelFactory {
             bindings: bindings,
             delay: settings.delay * 2,
             dismiss: dismiss,
-            getNavigation: getRootNavigation,
+            getNavigation: { [weak self] select, notify, completion in
+                
+                self?.getRootNavigation(
+                    makeProductProfileByID: makeProductProfileByID,
+                    select: select,
+                    notify: notify,
+                    completion: completion
+                )
+            },
             bindOutside: { $1.bindOutside(to: $0) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
@@ -489,8 +511,8 @@ private extension RootViewDomain.Flow {
                 guard let content, let self else { return }
                 
                 switch $0 {
-                case let .productProfile(productID):
-                    break // content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                case .productProfile:
+                    break
                     
                 case let .tab(tab):
                     content.rootActions.dismissAll()
@@ -512,7 +534,7 @@ private extension RootViewDomain.Flow {
 
 private extension FlowState<RootViewNavigation> {
     
-    var outside: RootViewOutside? {
+    var outside: RootViewDomain.Navigation.RootViewOutside? {
         
         guard case let .outside(outside) = navigation else { return nil }
         

@@ -135,7 +135,10 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             currencyRate: currencyRate.map { NSDecimalNumber(decimal: $0).doubleValue },
             mcc: mcc,
             printData: _printData,
-            paymentMethod: _paymentMethod
+            paymentMethod: _paymentMethod,
+            documentNumber: documentNumber,
+            operationCategory: operationCategory,
+            paymentFlow: paymentFlow
         )
     }
     
@@ -204,6 +207,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
         case .none: return .none
         case let .some(a):
             switch a {
+            case .accountAdressing:           return .accountAdressing
             case .accountClose:               return .accountClose
             case .accountToAccount:           return .accountToAccount
             case .accountToCard:              return .accountToCard
@@ -216,6 +220,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             case .cardToCard:                 return .cardToCard
             case .cardToPhone:                return .cardToPhone
             case .changeOutgoing:             return .changeOutgoing
+            case .charityService:             return .charityService
             case .contactAddressing:          return .contactAddressing
             case .contactAddressingCash:      return .contactAddressingCash
             case .contactAddressless:         return .contactAddressless
@@ -227,24 +232,38 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             case .conversionCardToPhone:      return .conversionCardToPhone
             case .depositClose:               return .depositClose
             case .depositOpen:                return .depositOpen
+            case .digitalWalletsService:      return .digitalWalletsService
             case .direct:                     return .direct
+            case .educationService:           return .educationService
             case .elecsnet:                   return .elecsnet
             case .external:                   return .external
+            case .foreignCard:                return .foreignCard
+            case .goldenPayment:              return .goldenPayment
             case .housingAndCommunalService:  return .housingAndCommunalService
+            case .insuranceService:           return .insuranceService
             case .interestDeposit:            return .interestDeposit
-            case .internal:                   return .internal
-            case .internet:                   return .internet
+            case .internal:                    return .internal
+            case .internet:                    return .internet
+            case .journeyServices:             return .journeyServices
             case .meToMeCredit:               return .meToMeCredit
             case .meToMeDebit:                return .meToMeDebit
             case .mobile:                     return .mobile
+            case .networkMarketingService:    return .networkMarketingService
+            case .newDirect:                   return .newDirect
+            case .newDirectAccount:            return .newDirectAccount
+            case .newDirectCard:               return .newDirectCard
             case .other:                      return .other
             case .productPaymentCourier:      return .productPaymentCourier
             case .productPaymentOffice:       return .productPaymentOffice
-            case .returnOutgoing:             return .returnOutgoing
-            case .sberQRPayment:              return .sberQRPayment
-            case .sfp:                        return .sfp
-            case .taxAndStateService:         return .taxAndStateService
-            case .transport:                  return .transport
+            case .repaymentLoansAndAccountsService: return .repaymentLoansAndAccountsService
+            case .returnOutgoing:              return .returnOutgoing
+            case .sberQRPayment:               return .sberQRPayment
+            case .securityService:             return .securityService
+            case .sfp:                          return .sfp
+            case .socialAndGamesService:       return .socialAndGamesService
+            case .taxAndStateService:          return .taxAndStateService
+            case .transport:                   return .transport
+            case .unknown:                      return .unknown
             }
         }
     }
