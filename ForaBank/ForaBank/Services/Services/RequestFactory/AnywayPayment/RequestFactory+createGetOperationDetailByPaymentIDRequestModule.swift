@@ -16,7 +16,7 @@ extension ForaBank.RequestFactory {
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.makeTransfer
+        let endpoint = Services.Endpoint.getOperationDetailByPaymentID
         let endpointURL = try! endpoint.url(withBase: base)
         
         return try RemoteServices.RequestFactory.createGetOperationDetailByPaymentIDRequest(

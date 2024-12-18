@@ -17,7 +17,7 @@ final class NanoServices_makeGetOperationDetailByPaymentIDTests: XCTestCase {
     
     func test_shouldSetURL() throws {
         
-        try assertURL("https://pl.forabank.ru/dbo/api/v3/rest/transfer/makeTransfer")
+        try assertURL("https://pl.forabank.ru/dbo/api/v3/rest/v2/getOperationDetailByPaymentId")
     }
     
     func test_shouldSetHTTPMethodToPOST() throws {

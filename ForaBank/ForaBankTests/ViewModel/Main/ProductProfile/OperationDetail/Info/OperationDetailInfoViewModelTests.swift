@@ -1912,7 +1912,10 @@ private extension OperationDetailData {
         currencyRate: Double? = nil,
         mcc: String? = nil,
         printData: OperationDetailData.PrintMapData? = nil,
-        paymentMethod: OperationDetailData.PaymentMethod? = nil
+        paymentMethod: OperationDetailData.PaymentMethod? = nil,
+        documentNumber: String? = nil,
+        operationCategory: String? = nil,
+        paymentFlow: String? = nil
     ) -> Self {
         
         .init(
@@ -1994,7 +1997,10 @@ private extension OperationDetailData {
             currencyRate: currencyRate,
             mcc: mcc,
             printData: printData,
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            documentNumber: documentNumber,
+            operationCategory: operationCategory,
+            paymentFlow: paymentFlow
         )
     }
 }

@@ -88,6 +88,9 @@ struct OperationDetailData: Codable, Hashable {
     let mcc: String?
     let printData: PrintMapData?
     let paymentMethod: PaymentMethod?
+    let documentNumber: String?
+    let operationCategory: String?
+    let paymentFlow: String?
     
     enum PaymentMethod: String, Codable, Hashable, Unknownable {
     
@@ -126,7 +129,7 @@ struct OperationDetailData: Codable, Hashable {
         case contactAddressless = "ADDRESSLESS"
         case contactAddressingCash = "ADDRESSING_CASH"
         case depositOpen = "DEPOSIT_OPEN"
-        case direct = "NEW_DIRECT"
+        case direct = "DIRECT"
         case elecsnet = "ELECSNET"
         case external = "EXTERNAL"
         case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
@@ -154,6 +157,19 @@ struct OperationDetailData: Codable, Hashable {
         case sberQRPayment = "SBER_QR_PAYMENT"
         case productPaymentOffice = "PRODUCT_PAYMENT_OFFICE"
         case productPaymentCourier = "PRODUCT_PAYMENT_COURIER"
+        case foreignCard = "FOREIGN_CARD"
+        case goldenPayment = "GOLDEN_PAYMENT"
+        case digitalWalletsService = "DIGITAL_WALLETS_SERVICE"
+        case educationService = "EDUCATION_SERVICE"
+        case charityService = "CHARITY_SERVICE"
+        case accountAdressing = "ADDRESSING_ACCOUNT"
+        case networkMarketingService = "NETWORK_MARKETING_SERVICE"
+        case newDirect = "NEW_DIRECT"
+        case newDirectAccount = "NEW_DIRECT_ACCOUNT"
+        case newDirectCard = "NEW_DIRECT_CARD"
+        case repaymentLoansAndAccountsService = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
+        case securityService = "SECURITY_SERVICE"
+        case socialAndGamesService = "SOCIAL_AND_GAMES_SERVICE"
         case unknown
     }
     
@@ -314,6 +330,9 @@ struct OperationDetailData: Codable, Hashable {
         case printData = "printDataForOperationDetailResponse"
         case mcc = "MCC"
         case paymentMethod
+        case documentNumber = "docNumber"
+        case operationCategory
+        case paymentFlow = "payment_flow"
     }
 }
 
@@ -326,7 +345,7 @@ extension OperationDetailData {
         
         let date = dateFormatter.string(from: Date())
         
-        return .init(oktmo: nil, account: nil, accountTitle: nil, amount: amount, billDate: nil, billNumber: nil, claimId: UUID().uuidString, comment: "Перевод с конверсией денежных средств между счетами Клиента", countryName: nil, currencyAmount: productFrom.currency, dateForDetail: date, division: nil, driverLicense: nil, externalTransferType: nil, isForaBank: nil, isTrafficPoliceService: false, memberId: nil, operation: "Перевод денежных средств между счетами Клиента с конверсией по курсу банка", payeeAccountId: productTo.id, payeeAccountNumber: productTo.accountNumber, payeeAmount: productTo.balanceValue, payeeBankBIC: nil, payeeBankCorrAccount: nil, payeeBankName: productTo.displayName, payeeCardId: nil, payeeCardNumber: productTo.number, payeeCurrency: productTo.currency, payeeFirstName: nil, payeeFullName: productTo.productName, payeeINN: nil, payeeKPP: nil, payeeMiddleName: nil, payeePhone: nil, payeeSurName: nil, payerAccountId: productFrom.id, payerAccountNumber: productFrom.accountNumber ?? "", payerAddress: "", payerAmount: amount, payerCardId: productFrom.id, payerCardNumber: productFrom.number, payerCurrency: productFrom.currency, payerDocument: nil, payerFee: 0, payerFirstName: productFrom.displayName, payerFullName: productFrom.productName, payerINN: nil, payerMiddleName: productFrom.displayName, payerPhone: nil, payerSurName: nil, paymentOperationDetailId: paymentOperationDetailId, paymentTemplateId: nil, period: nil, printFormType: .internal, provider: nil, puref: nil, regCert: nil, requestDate: date, responseDate: date, returned: nil, transferDate: date, transferEnum: transferEnum, transferNumber: nil, transferReference: nil, cursivePayerAmount: nil, cursivePayeeAmount: nil, cursiveAmount: nil, serviceSelect: nil, serviceName: nil, merchantSubName: nil, merchantIcon: nil, operationStatus: nil, shopLink: nil, payeeCheckAccount: nil, depositNumber: nil, depositDateOpen: nil, currencyRate: nil, mcc: nil, printData: nil, paymentMethod: nil)
+        return .init(oktmo: nil, account: nil, accountTitle: nil, amount: amount, billDate: nil, billNumber: nil, claimId: UUID().uuidString, comment: "Перевод с конверсией денежных средств между счетами Клиента", countryName: nil, currencyAmount: productFrom.currency, dateForDetail: date, division: nil, driverLicense: nil, externalTransferType: nil, isForaBank: nil, isTrafficPoliceService: false, memberId: nil, operation: "Перевод денежных средств между счетами Клиента с конверсией по курсу банка", payeeAccountId: productTo.id, payeeAccountNumber: productTo.accountNumber, payeeAmount: productTo.balanceValue, payeeBankBIC: nil, payeeBankCorrAccount: nil, payeeBankName: productTo.displayName, payeeCardId: nil, payeeCardNumber: productTo.number, payeeCurrency: productTo.currency, payeeFirstName: nil, payeeFullName: productTo.productName, payeeINN: nil, payeeKPP: nil, payeeMiddleName: nil, payeePhone: nil, payeeSurName: nil, payerAccountId: productFrom.id, payerAccountNumber: productFrom.accountNumber ?? "", payerAddress: "", payerAmount: amount, payerCardId: productFrom.id, payerCardNumber: productFrom.number, payerCurrency: productFrom.currency, payerDocument: nil, payerFee: 0, payerFirstName: productFrom.displayName, payerFullName: productFrom.productName, payerINN: nil, payerMiddleName: productFrom.displayName, payerPhone: nil, payerSurName: nil, paymentOperationDetailId: paymentOperationDetailId, paymentTemplateId: nil, period: nil, printFormType: .internal, provider: nil, puref: nil, regCert: nil, requestDate: date, responseDate: date, returned: nil, transferDate: date, transferEnum: transferEnum, transferNumber: nil, transferReference: nil, cursivePayerAmount: nil, cursivePayeeAmount: nil, cursiveAmount: nil, serviceSelect: nil, serviceName: nil, merchantSubName: nil, merchantIcon: nil, operationStatus: nil, shopLink: nil, payeeCheckAccount: nil, depositNumber: nil, depositDateOpen: nil, currencyRate: nil, mcc: nil, printData: nil, paymentMethod: nil, documentNumber: nil, operationCategory: nil, paymentFlow: nil)
     }
 }
 
@@ -583,6 +602,10 @@ extension OperationDetailData {
             currencyRate: nil,
             mcc: nil,
             printData: nil,
-            paymentMethod: nil)
+            paymentMethod: nil,
+            documentNumber: nil,
+            operationCategory: nil,
+            paymentFlow: nil
+        )
     }
 }

@@ -30,6 +30,7 @@ public extension ResponseMapper {
         public let depositDateOpen: String?
         public let depositNumber: String?
         public let division: String?
+        public let documentNumber: String?
         public let driverLicense: String?
         public let externalTransferType: ExternalTransferType?
         public let isForaBank: Bool?
@@ -39,6 +40,7 @@ public extension ResponseMapper {
         public let merchantIcon: String?
         public let merchantSubName: String?
         public let operation: String?
+        public let operationCategory: String?
         public let operationStatus: OperationStatus?
         public let oktmo: String?
         public let payeeAccountID: Int?
@@ -73,6 +75,7 @@ public extension ResponseMapper {
         public let payerMiddleName: String?
         public let payerPhone: String?
         public let payerSurName: String?
+        public let paymentFlow: String?
         public let paymentMethod: PaymentMethod?
         public let paymentOperationDetailID: Int
         public let paymentTemplateID: Int?
@@ -93,7 +96,7 @@ public extension ResponseMapper {
         public let transferReference: String?
         public let trnPickupPointName: String?
         
-        public init(account: String? = nil, accountTitle: String? = nil, amount: Decimal, billDate: String? = nil, billNumber: String? = nil, cityName: String? = nil, claimID: String, comment: String? = nil, countryName: String? = nil, currencyAmount: String? = nil, currencyRate: Decimal? = nil, cursiveAmount: String? = nil, cursivePayerAmount: String? = nil, cursivePayeeAmount: String? = nil, dateForDetail: String, depositDateOpen: String? = nil, depositNumber: String? = nil, division: String? = nil, driverLicense: String? = nil, externalTransferType: ExternalTransferType? = nil, isForaBank: Bool? = nil, isTrafficPoliceService: Bool, mcc: String? = nil, memberID: String? = nil, merchantIcon: String? = nil, merchantSubName: String? = nil, operation: String? = nil, operationStatus: OperationStatus? = nil, oktmo: String? = nil, payeeAccountID: Int? = nil, payeeAccountNumber: String? = nil, payeeAmount: Decimal? = nil, payeeBankBIC: String? = nil, payeeBankCorrAccount: String? = nil, payeeBankName: String? = nil, payeeCardID: Int? = nil, payeeCardNumber: String? = nil, payeeCheckAccount: String? = nil, payeeCurrency: String? = nil, payeeFirstName: String? = nil, payeeFullName: String? = nil, payeeINN: String? = nil, payeeKPP: String? = nil, payeeMiddleName: String? = nil, payeePhone: String? = nil, payeeSurName: String? = nil, payerAccountID: Int, payerAccountNumber: String, payerAddress: String, payerAmount: Decimal, payerCardID: Int? = nil, payerCardNumber: String? = nil, payerCurrency: String, payerDocument: String? = nil, payerFee: Decimal, payerFirstName: String, payerFullName: String, payerINN: String? = nil, payerMiddleName: String? = nil, payerPhone: String? = nil, payerSurName: String? = nil, paymentMethod: PaymentMethod? = nil, paymentOperationDetailID: Int, paymentTemplateID: Int? = nil, period: String? = nil, printFormType: PrintFormType, provider: String? = nil, puref: String? = nil, regCert: String? = nil, requestDate: String, responseDate: String, returned: Bool? = nil, serviceSelect: String? = nil, serviceName: String? = nil, shopLink: String? = nil, transfer: Transfer? = nil, transferDate: String, transferNumber: String? = nil, transferReference: String? = nil, trnPickupPointName: String? = nil
+        public init(account: String? = nil, accountTitle: String? = nil, amount: Decimal, billDate: String? = nil, billNumber: String? = nil, cityName: String? = nil, claimID: String, comment: String? = nil, countryName: String? = nil, currencyAmount: String? = nil, currencyRate: Decimal? = nil, cursiveAmount: String? = nil, cursivePayerAmount: String? = nil, cursivePayeeAmount: String? = nil, dateForDetail: String, depositDateOpen: String? = nil, depositNumber: String? = nil, division: String? = nil, documentNumber: String? = nil, driverLicense: String? = nil, externalTransferType: ExternalTransferType? = nil, isForaBank: Bool? = nil, isTrafficPoliceService: Bool, mcc: String? = nil, memberID: String? = nil, merchantIcon: String? = nil, merchantSubName: String? = nil, operation: String? = nil, operationCategory: String? = nil, operationStatus: OperationStatus? = nil, oktmo: String? = nil, payeeAccountID: Int? = nil, payeeAccountNumber: String? = nil, payeeAmount: Decimal? = nil, payeeBankBIC: String? = nil, payeeBankCorrAccount: String? = nil, payeeBankName: String? = nil, payeeCardID: Int? = nil, payeeCardNumber: String? = nil, payeeCheckAccount: String? = nil, payeeCurrency: String? = nil, payeeFirstName: String? = nil, payeeFullName: String? = nil, payeeINN: String? = nil, payeeKPP: String? = nil, payeeMiddleName: String? = nil, payeePhone: String? = nil, payeeSurName: String? = nil, payerAccountID: Int, payerAccountNumber: String, payerAddress: String, payerAmount: Decimal, payerCardID: Int? = nil, payerCardNumber: String? = nil, payerCurrency: String, payerDocument: String? = nil, payerFee: Decimal, payerFirstName: String, payerFullName: String, payerINN: String? = nil, payerMiddleName: String? = nil, payerPhone: String? = nil, payerSurName: String? = nil, paymentFlow: String? = nil,paymentMethod: PaymentMethod? = nil, paymentOperationDetailID: Int, paymentTemplateID: Int? = nil, period: String? = nil, printFormType: PrintFormType, provider: String? = nil, puref: String? = nil, regCert: String? = nil, requestDate: String, responseDate: String, returned: Bool? = nil, serviceSelect: String? = nil, serviceName: String? = nil, shopLink: String? = nil, transfer: Transfer? = nil, transferDate: String, transferNumber: String? = nil, transferReference: String? = nil, trnPickupPointName: String? = nil
         ) {
             self.account = account
             self.accountTitle = accountTitle
@@ -113,6 +116,7 @@ public extension ResponseMapper {
             self.depositDateOpen = depositDateOpen
             self.depositNumber = depositNumber
             self.division = division
+            self.documentNumber = documentNumber
             self.driverLicense = driverLicense
             self.externalTransferType = externalTransferType
             self.isForaBank = isForaBank
@@ -122,6 +126,7 @@ public extension ResponseMapper {
             self.merchantIcon = merchantIcon
             self.merchantSubName = merchantSubName
             self.operation = operation
+            self.operationCategory = operationCategory
             self.operationStatus = operationStatus
             self.oktmo = oktmo
             self.payeeAccountID = payeeAccountID
@@ -156,6 +161,7 @@ public extension ResponseMapper {
             self.payerMiddleName = payerMiddleName
             self.payerPhone = payerPhone
             self.payerSurName = payerSurName
+            self.paymentFlow = paymentFlow
             self.paymentMethod = paymentMethod
             self.paymentOperationDetailID = paymentOperationDetailID
             self.paymentTemplateID = paymentTemplateID
@@ -222,6 +228,7 @@ public extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     enum Transfer: Equatable {
         
+        case accountAdressing
         case accountClose
         case accountToAccount
         case accountToCard
@@ -234,6 +241,7 @@ public extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
         case cardToCard
         case cardToPhone
         case changeOutgoing
+        case charityService
         case contactAddressing
         case contactAddressingCash
         case contactAddressless
@@ -245,23 +253,35 @@ public extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
         case conversionCardToPhone
         case depositClose
         case depositOpen
+        case digitalWalletsService
         case direct
+        case educationService
         case elecsnet
         case external
+        case foreignCard
+        case goldenPayment
         case housingAndCommunalService
         case interestDeposit
-        case `internal`
         case internet
+        case `internal`
         case meToMeCredit
         case meToMeDebit
         case mobile
+        case networkMarketingService
+        case newDirect
+        case newDirectAccount
+        case newDirectCard
         case other
         case productPaymentCourier
         case productPaymentOffice
+        case repaymentLoansAndAccountsService
         case returnOutgoing
         case sberQRPayment
+        case securityService
         case sfp
+        case socialAndGamesService
         case taxAndStateService
         case transport
+        case unknown(String)
     }
 }

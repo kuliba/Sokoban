@@ -408,7 +408,11 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        currencyRate: 250.5,
                                        mcc: nil,
                                        printData: nil,
-                                       paymentMethod: nil)
+                                       paymentMethod: nil,
+                                       documentNumber: nil,
+                                       operationCategory: nil,
+                                       paymentFlow: nil
+        )
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -508,7 +512,11 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        currencyRate: 250.5,
                                        mcc: nil,
                                        printData: nil,
-                                       paymentMethod: nil)
+                                       paymentMethod: nil,
+                                       documentNumber: nil,
+                                       operationCategory: nil,
+                                       paymentFlow: nil
+        )
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
