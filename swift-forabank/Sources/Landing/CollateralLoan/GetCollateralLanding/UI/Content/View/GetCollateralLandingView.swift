@@ -96,7 +96,11 @@ public struct GetCollateralLandingView: View {
                 )
             }
             
-            CalculatorView(config: factory.config, state: state)
+            CalculatorView(
+                config: factory.config,
+                event: { event($0) },
+                state: state
+            )
             
             state.product.faq.nilIfEmpty.map { _ in
 
@@ -114,7 +118,7 @@ public struct GetCollateralLandingView: View {
             FooterView(
                 config: factory.config.footer,
                 state: state,
-                action: { event(.createDraftApplication) }
+                event: { event($0) }
             )
         }
         .background(Color.clear)
@@ -147,7 +151,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         
         GetCollateralLandingView(
             state: .init(product: .carStub),
-            event: { _ in },
+            event: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product with calculator")
@@ -156,7 +160,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         
         GetCollateralLandingView(
             state: .init(bottomSheet: periodBottomSheet, product: .carStub),
-            event: { _ in },
+            event: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product period selector")
@@ -165,7 +169,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
 
         GetCollateralLandingView(
             state: .init(bottomSheet: collateralBottomSheet, product: .carStub),
-            event: { _ in },
+            event: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product collateral selector")
