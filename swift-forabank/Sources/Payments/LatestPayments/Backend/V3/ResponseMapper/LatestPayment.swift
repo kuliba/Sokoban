@@ -200,6 +200,8 @@ extension ResponseMapper.LatestPayment {
         case socialAndGamesService
         case taxAndStateService
         case transport
+        case insuranceService
+        case journeyServices
     }
 }
 

@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+import SwiftUI
 
 final class OperationDetailInfoViewModelTests: XCTestCase {
     
@@ -75,7 +76,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: nil)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [])
         XCTAssertNil(detail.payeeINN)
@@ -86,7 +87,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -100,7 +101,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, .init(title: "payee Name", iconType: nil, value: "Mr Payee"), nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, .init(title: "payee Name", iconType: nil, value: "Mr Payee"), nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "payee Name", value: "Mr Payee"),
@@ -114,7 +115,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, .init(title: "payee", icon: .checkImage, name: "Payee", iconPaymentService: nil, balance: "1234", description: "Payee Description"), nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, .init(title: "payee", icon: .checkImage, name: "Payee", iconPaymentService: nil, balance: "1234", description: "Payee Description"), nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -128,7 +129,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, .init(title: "Bank", icon: .checkImage, name: "Bank Detail"), nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, .init(title: "Bank", icon: .checkImage, name: "Bank Detail"), nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -142,7 +143,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, .init(title: "Amount", iconType: nil, value: "1234"), nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, .init(title: "Amount", iconType: nil, value: "1234"), nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -156,7 +157,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, .init(title: "Fee", iconType: nil, value: "345"), nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, .init(title: "Fee", iconType: nil, value: "345"), nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -170,7 +171,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, .init(title: "payer", icon: .checkImage, name: "Payer", iconPaymentService: nil, balance: "9876", description: "PayerDescription"), nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, .init(title: "payer", icon: .checkImage, name: "Payer", iconPaymentService: nil, balance: "9876", description: "PayerDescription"), nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -184,7 +185,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, .init(title: "purpose", iconType: nil, value: "Payment Purpose"), nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, .init(title: "purpose", iconType: nil, value: "Payment Purpose"), nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -199,7 +200,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, .init(title: "DATE", iconType: nil, value: "30.06.2023 12:32:41"))
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, .init(title: "DATE", iconType: nil, value: "30.06.2023 12:32:41"))
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -218,6 +219,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .init(title: "payee Name", iconType: nil, value: "Mr Payee"),
             .init(title: "payee", icon: .checkImage, name: "Payee", iconPaymentService: nil, balance: "1234", description: "Payee Description"),
             .init(title: "Bank", icon: .checkImage, name: "Bank Detail"),
+            .init(title: "Category", iconType: nil, value: "pay"),
+            .init(title: "Document Number", iconType: Image("hash", bundle: nil), value: "123"),
             .init(title: "Amount", iconType: nil, value: "1234"),
             .init(title: "Fee", iconType: nil, value: "345"),
             .init(title: "payer", icon: .checkImage, name: "Payer", iconPaymentService: nil, balance: "9876", description: "PayerDescription"),
@@ -231,6 +234,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .product(title: "payee", name: "Payee", balance: "1234", description: "Payee Description"),
             .payeeBankBIC,
             .bank(title: "Bank", name: "Bank Detail"),
+            .property(title: "Category", value: "pay"),
+            .property(title: "Document Number", value: "123"),
             .property(title: "Amount", value: "1234"),
             .property(title: "Fee", value: "345"),
             .product(title: "payer", name: "Payer", balance: "9876", description: "PayerDescription"),
@@ -247,7 +252,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeINN: "772016190450"
         )
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -265,7 +270,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeKPP: "770801001"
         )
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -284,7 +289,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeKPP: "770801001"
         )
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -308,6 +313,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .init(title: "payee Name", iconType: nil, value: "Mr Payee"),
             .init(title: "payee", icon: .checkImage, name: "Payee", iconPaymentService: nil, balance: "1234", description: "Payee Description"),
             .init(title: "Bank", icon: .checkImage, name: "Bank Detail"),
+            .init(title: "Category", iconType: nil, value: "pay"),
+            .init(title: "Document Number", iconType: Image("hash", bundle: nil), value: "1234"),
             .init(title: "Amount", iconType: nil, value: "1234"),
             .init(title: "Fee", iconType: nil, value: "345"),
             .init(title: "payer", icon: .checkImage, name: "Payer", iconPaymentService: nil, balance: "9876", description: "PayerDescription"),
@@ -321,6 +328,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .product(title: "payee", name: "Payee", balance: "1234", description: "Payee Description"),
             .payeeBankBIC,
             .bank(title: "Bank", name: "Bank Detail"),
+            .property(title: "Category", value: "pay"),
+            .property(title: "Document Number", value: "1234"),
             .property(title: "Amount", value: "1234"),
             .property(title: "Fee", value: "345"),
             .product(title: "payer", name: "Payer", balance: "9876", description: "PayerDescription"),
@@ -338,7 +347,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeKPP: "770801001"
         )
         
-        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .payeeAccountNumber,
@@ -355,7 +364,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: nil)
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [])
         XCTAssertEqual(detail.transferEnum, .none)
@@ -365,7 +374,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport)
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, nil, nil)
 
         XCTAssertNoDiff(cells, [])
         XCTAssertEqual(detail.transferEnum, .transport)
@@ -375,7 +384,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport)
         
-        let cells = makeItemsForTransport(detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Сумма", value: "100")
@@ -387,7 +396,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport)
         
-        let cells = makeItemsForTransport(detail, nil, .init(title: "Commission", iconType: nil, value: "0.01"), nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, .init(title: "Commission", iconType: nil, value: "0.01"), nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Commission", value: "0.01")
@@ -399,7 +408,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport)
         
-        let cells = makeItemsForTransport(detail, nil, nil, .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"), nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"), nil, nil)
         
         XCTAssertNoDiff(cells, [
             .product(title: "Payer", name: "Ivanov", balance: "100", description: "Payer description"),
@@ -411,7 +420,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport)
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, .init(title: "Payee", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payee description"), nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, .init(title: "Payee", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payee description"), nil)
         
         XCTAssertNoDiff(cells, [
             .product(title: "Payee", name: "Ivanov", balance: "100", description: "Payee description"),
@@ -423,7 +432,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport)
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, .init(title: "Date", iconType: nil, value: "10:30"))
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, nil, .init(title: "Date", iconType: nil, value: "10:30"))
         
         XCTAssertNoDiff(cells, [
             .property(title: "Date", value: "10:30")
@@ -439,7 +448,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             accountTitle: "Номер карты"
         )
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Номер карты", value: "1111")
@@ -456,7 +465,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             accountTitle: "Номер карты"
         )
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Номер карты", value: "1111")
@@ -473,7 +482,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             accountTitle: "Номер карты"
         )
         
-        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [])
         XCTAssertEqual(detail.transferEnum, .transport)
@@ -483,7 +492,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
         
-        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iForaMosParking}, detail, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iForaMosParking}, detail, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Наименование получателя", value: "Паркинг")
@@ -497,6 +506,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let cells = makeItemsForTransport(
             detail,
+            .init(title: "Категория", iconType: nil, value: "штраф"),
+            .init(title: "Номер", iconType: Image("hash", bundle: nil), value: "1234"),
             .init(title: "Сумма", iconType: nil, value: "100"),
             .init(title: "Commission", iconType: nil, value: "0.01"),
             .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"),
@@ -505,6 +516,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(cells, [
             .property(title: "Наименование получателя", value: "Паркинг"),
+            .property(title: "Категория", value: "штраф"),
+            .property(title: "Номер", value: "1234"),
             .property(title: "Сумма", value: "100"),
             .property(title: "Commission", value: "0.01"),
             .product(title: "Payer", name: "Ivanov", balance: "100", description: "Payer description"),
@@ -520,7 +533,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, nil, nil, "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -536,7 +549,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .individual)
         
-        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, nil, nil, "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -552,7 +565,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -569,7 +582,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .individual)
         
-        let cells = makeHistoryItemsForExternal(.individual, detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -586,7 +599,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -603,7 +616,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .individual)
         
-        let cells = makeHistoryItemsForExternal(.individual, detail, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -620,7 +633,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, .init(title: "DebitAccount"), "", "")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, nil, .init(title: "DebitAccount"), "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -637,7 +650,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .individual)
         
-        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, .init(title: "DebitAccount"), "", "")
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, nil, .init(title: "DebitAccount"), "", "")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -654,7 +667,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .entity)
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "Comment", "10:10")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, nil, nil, "Comment", "10:10")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -670,7 +683,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeExternal(externalTransferType: .individual)
         
-        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "Comment", "10:10")
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, nil, nil, "Comment", "10:10")
 
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -689,6 +702,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeHistoryItemsForExternal(
             .entity,
             detail,
+            .init(title: "Категория", iconType: nil, value: "платеж"),
+            .init(title: "Номер", iconType: Image("hash", bundle: nil), value: "1234"),
             .init(title: "Amount", iconType: nil, value: "1234"),
             .init(title: "Fee", iconType: nil, value: "345"),
             .init(title: "DebitAccount"),
@@ -700,6 +715,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .payeeName,
             .payeeAccountNumber,
             .payeeBankBIC,
+            .property(title: "Категория", value: "платеж"),
+            .property(title: "Номер", value: "1234"),
             .property(title: "Amount", value: "1234"),
             .property(title: "Fee", value: "345"),
             .default(title: "DebitAccount"),
@@ -716,6 +733,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeHistoryItemsForExternal(
             .individual,
             detail,
+            .init(title: "Категория", iconType: nil, value: "штраф"),
+            .init(title: "Номер", iconType: Image("hash", bundle: nil), value: "1234"),
             .init(title: "Amount", iconType: nil, value: "1234"),
             .init(title: "Fee", iconType: nil, value: "345"),
             .init(title: "DebitAccount"),
@@ -727,6 +746,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .payeeName,
             .payeeAccountNumber,
             .payeeBankBIC,
+            .property(title: "Категория", value: "штраф"),
+            .property(title: "Номер", value: "1234"),
             .property(title: "Amount", value: "1234"),
             .property(title: "Fee", value: "345"),
             .default(title: "DebitAccount"),
@@ -744,7 +765,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeKPP: "770801001"
         )
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, nil, nil, "", "")
         
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -768,7 +789,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeKPP: "770801001"
         )
         
-        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, nil, nil, "", "")
         
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -790,7 +811,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             payeeAccountNumber: nil
         )
         
-        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, nil, nil, "", "")
         
         XCTAssertNoDiff(cells, [
             .payeeName,
@@ -1326,6 +1347,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         _ payeeNameViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ payeeViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
         _ payeeBankViewModel: OperationDetailInfoViewModel.BankCellViewModel?,
+        _ operationCategoryModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ documentNumberModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ payerViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
@@ -1334,7 +1357,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     ) -> [OperationDetailInfoViewModel.TestCell] {
         
         OperationDetailInfoViewModel
-            .makeItemsForExternal(dictionaryFullBankInfoBank: dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            .makeItemsForExternal(dictionaryFullBankInfoBank: dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, operationCategoryModel, documentNumberModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
             .map(\.testCell)
     }
     
@@ -1527,6 +1550,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     private func makeItemsForTransport(
         dictionaryAnywayOperator: @escaping (String) -> OperatorGroupData.OperatorData? = { _ in nil },
         _ operation: OperationDetailData,
+        _ operationCategoryModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ documentNumberModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ payerViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
@@ -1538,6 +1563,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .makeItemsForTransport(
                 dictionaryAnywayOperator: dictionaryAnywayOperator,
                 operation,
+                operationCategoryModel,
+                documentNumberModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -1647,6 +1674,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData? = { _ in nil },
         _ type: OperationDetailData.ExternalTransferType,
         _ operation: OperationDetailData,
+        _ operationCategoryModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ documentNumberModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ debitAccountViewModel: OperationDetailInfoViewModel.DefaultCellViewModel?,
@@ -1659,6 +1688,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
                 dictionaryFullBankInfoBank: dictionaryFullBankInfoBank,
                 type,
                 operation,
+                operationCategoryModel,
+                documentNumberModel,
                 amountViewModel,
                 commissionViewModel,
                 debitAccountViewModel,

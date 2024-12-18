@@ -236,6 +236,8 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.Transfer 
         case "SOCIAL_AND_GAMES_SERVICE":              self = .socialAndGamesService
         case "TAX_AND_STATE_SERVICE":                 self = .taxAndStateService
         case "TRANSPORT":                              self = .transport
+        case "INSURANCE_SERVICE":                      self = .insuranceService
+        case "JOURNEY_SERVICE":                        self = .journeyServices
         default:
             guard let rawValue else { return nil }
             self = .unknown(rawValue)
