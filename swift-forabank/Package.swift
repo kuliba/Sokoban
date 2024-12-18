@@ -24,6 +24,7 @@ let package = Package(
         .landingMapping,
         .landingUIComponent,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         .collateralLoanLandingGetConsentsBackend,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -94,8 +95,10 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         // UI Components
+        .bottomSheetComponent,
         .carouselComponent,
         .dropDownTextListComponent,
+        .openNewProductComponent,
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
@@ -150,6 +153,7 @@ let package = Package(
         .collateralLoanLandingGetConsentsBackendTests,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingBackendTests,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -302,6 +306,7 @@ let package = Package(
         .dropDownTextListComponent,
         .footerComponent,
         .nameComponent,
+        .openNewProductComponent,
         .optionalSelectorComponent,
         .optionalSelectorComponentTests,
         .selectComponent,
@@ -318,6 +323,7 @@ let package = Package(
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
+        .bottomSheetComponent,
         .carouselComponent,
         .carouselComponentTests,
         // Utilities
@@ -457,6 +463,13 @@ private extension Product {
         ]
     )
 
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = library(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        targets: [
+            .collateralLoanLandingCreateDraftCollateralLoanApplicationUI
+        ]
+    )
+    
     static let collateralLoanLandingGetCollateralLandingBackend = library(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         targets: [
@@ -522,7 +535,7 @@ private extension Product {
             .productDetailsUI
         ]
     )
-    
+        
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -658,6 +671,13 @@ private extension Product {
 
     // MARK: - UI Components
     
+    static let bottomSheetComponent = library(
+        name: .bottomSheetComponent,
+        targets: [
+            .bottomSheetComponent
+        ]
+    )
+    
     static let carouselComponent = library(
         name: .carouselComponent,
         targets: [
@@ -671,6 +691,11 @@ private extension Product {
         targets: [.dropDownTextListComponent]
     )
 
+    static let openNewProductComponent = library(
+        name: .openNewProductComponent,
+        targets: [.openNewProductComponent]
+    )
+    
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -1268,6 +1293,7 @@ private extension Target {
     static let landingUIComponent = target(
         name: .landingUIComponent,
         dependencies: [
+            .bottomSheetComponent,
             .combineSchedulers,
             .foraTools,
             .rxViewModel,
@@ -1363,6 +1389,11 @@ private extension Target {
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
 
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
+    )
+    
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
@@ -1384,10 +1415,12 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
+            .bottomSheetComponent,
+            .dropDownTextListComponent,
+            .rxViewModel,
             .sharedConfigs,
             .toggleComponent,
-            .uiPrimitives
-        ],
+            .uiPrimitives        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
     )
     
@@ -2863,6 +2896,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
     
+    static let openNewProductComponent = target(
+        name: .openNewProductComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.openNewProductComponent)"
+    )
+    
     static let optionalSelectorComponent = target(
         name: .optionalSelectorComponent,
         dependencies: [
@@ -3018,6 +3059,14 @@ private extension Target {
         path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )
     
+    static let bottomSheetComponent = target(
+        name: .bottomSheetComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.bottomSheetComponent)"
+    )
+
     static let carouselComponent = target(
         name: .carouselComponent,
         dependencies: [
@@ -3258,6 +3307,10 @@ private extension Target.Dependency {
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend
     )
     
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = byName(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI
+    )
+    
     static let collateralLoanLandingGetCollateralLandingUI = byName(
         name: .collateralLoanLandingGetCollateralLandingUI
     )
@@ -3282,6 +3335,10 @@ private extension Target.Dependency {
     
     static let accountInfoPanel = byName(
         name: .accountInfoPanel
+    )
+    
+    static let bottomSheetComponent = byName(
+        name: .bottomSheetComponent
     )
     
     static let calendarUI = byName(
@@ -3400,6 +3457,10 @@ private extension Target.Dependency {
     
     static let nameComponent = byName(
         name: .nameComponent
+    )
+    
+    static let openNewProductComponent = byName(
+        name: .openNewProductComponent
     )
     
     static let selectComponent = byName(
@@ -3707,7 +3768,8 @@ private extension String {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationName = "CreateDraftCollateralLoanApplication"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
-    
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUI"
+
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
@@ -3797,6 +3859,8 @@ private extension String {
     static let amountComponent = "AmountComponent"
     static let amountComponentTests = "AmountComponentTests"
     
+    static let bottomSheetComponent = "BottomSheetComponent"
+    
     static let buttonComponent = "ButtonComponent"
     
     static let infoComponent = "InfoComponent"
@@ -3808,6 +3872,8 @@ private extension String {
     static let footerComponent = "FooterComponent"
     
     static let nameComponent = "NameComponent"
+    
+    static let openNewProductComponent = "OpenNewProductComponent"
     
     static let optionalSelectorComponent = "OptionalSelectorComponent"
     static let optionalSelectorComponentTests = "OptionalSelectorComponentTests"
