@@ -252,7 +252,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             case .charityService:            return .charityService
             case .digitalWalletsService:     return .digitalWalletsService
             case .educationService:          return .educationService
-            case .foreighCard:               return .foreighCard
+            case .foreignCard:               return .foreignCard
             case .goldenPayment:             return .goldenPayment
             case .networkMarketingService:   return .networkMarketingService
             case .newDirect:                  return .newDirect

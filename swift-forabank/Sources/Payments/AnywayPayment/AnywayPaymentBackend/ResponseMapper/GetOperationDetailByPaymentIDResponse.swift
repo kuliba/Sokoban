@@ -258,7 +258,7 @@ public extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
         case educationService
         case elecsnet
         case external
-        case foreighCard
+        case foreignCard
         case goldenPayment
         case housingAndCommunalService
         case interestDeposit

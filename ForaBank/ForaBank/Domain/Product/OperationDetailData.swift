@@ -157,7 +157,7 @@ struct OperationDetailData: Codable, Hashable {
         case sberQRPayment = "SBER_QR_PAYMENT"
         case productPaymentOffice = "PRODUCT_PAYMENT_OFFICE"
         case productPaymentCourier = "PRODUCT_PAYMENT_COURIER"
-        case foreighCard = "FOREIGN_CARD"
+        case foreignCard = "FOREIGN_CARD"
         case goldenPayment = "GOLDEN_PAYMENT"
         case digitalWalletsService = "DIGITAL_WALLETS_SERVICE"
         case educationService = "EDUCATION_SERVICE"

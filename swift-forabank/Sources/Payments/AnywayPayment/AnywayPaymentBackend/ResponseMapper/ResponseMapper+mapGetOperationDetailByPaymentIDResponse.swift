@@ -212,7 +212,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.Transfer 
         case "EDUCATION_SERVICE":            self = .educationService
         case "ELECSNET":                      self = .elecsnet
         case "EXTERNAL":                      self = .external
-        case "FOREIGN_CARD":                  self = .foreighCard
+        case "FOREIGN_CARD":                  self = .foreignCard
         case "GOLDEN_PAYMENT":                self = .goldenPayment
         case "HOUSING_AND_COMMUNAL_SERVICE": self = .housingAndCommunalService
         case "INTEREST_DEPOSIT":              self = .interestDeposit
