@@ -54,7 +54,9 @@ extension ValueUpdater {
         
         return update
             .scan(items) { currentItems, updates in
+                
                 currentItems.map { item in
+                    
                     if let newValue = updates[item.key] {
                         return item.updated(value: newValue)
                     } else {
