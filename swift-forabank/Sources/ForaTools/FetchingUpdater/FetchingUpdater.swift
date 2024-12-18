@@ -1,5 +1,5 @@
 //
-//  FetchingUpdaterTests.swift
+//  FetchingUpdater.swift
 //
 //
 //  Created by Igor Malyarov on 18.12.2024.

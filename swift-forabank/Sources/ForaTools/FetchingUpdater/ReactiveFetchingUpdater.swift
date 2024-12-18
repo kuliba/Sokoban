@@ -1,5 +1,5 @@
 //
-//  ReactiveFetchingUpdaterTests.swift
+//  ReactiveFetchingUpdater.swift
 //
 //
 //  Created by Igor Malyarov on 18.12.2024.
