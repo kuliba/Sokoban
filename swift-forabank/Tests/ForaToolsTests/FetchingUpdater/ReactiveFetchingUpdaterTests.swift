@@ -143,8 +143,8 @@ final class ReactiveFetchingUpdaterTests: XCTestCase {
         let fetchSpy = FetchSpy()
         let updateSpy = UpdateSpy()
         let sut = SUT(
-            fetch: fetchSpy.process,
-            update: updateSpy.update
+            fetcher: AnyOptionalFetcher(fetch: fetchSpy.process),
+            updater: AnyReactiveUpdater(update: updateSpy.update)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
