@@ -5,8 +5,9 @@
 //  Created by Igor Malyarov on 18.12.2024.
 //
 
-/// A protocol that provides a unique key for an object.
-/// Types conforming to this protocol must specify a `Key` type and provide a unique `key`.
+/// A type that provides a unique key identifying each instance.
+///
+/// Conform to `KeyProviding` to let clients distinguish or update specific items in a collection.
 public protocol KeyProviding<Key> {
     
     associatedtype Key: Hashable
