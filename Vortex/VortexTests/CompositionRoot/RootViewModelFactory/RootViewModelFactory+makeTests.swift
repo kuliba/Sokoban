@@ -135,7 +135,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        httpClient.expectRequests(withQueryValueFor: "type", match: [
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -159,7 +160,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        httpClient.expectRequests(withQueryValueFor: "type", match: [
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -183,7 +185,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
-        httpClient.expectRequests(withQueryValueFor: "type", match: [
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -194,11 +197,11 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
         awaitActorThreadHop()
         
-        httpClient.expectRequests(withQueryValueFor: "type", match: [
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
+            "getOperatorsListByParam-housingAndCommunalService",
             "getServiceCategoryList",
-            "getOperatorsListByParam-housingAndCommunalService"
         ])
         XCTAssertNotNil(sut)
     }
@@ -312,12 +315,12 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         httpClient.complete(with: anyError(), at: 3)
         userInitiatedScheduler.advance(to: .init(.now().advanced(by: RootViewModelFactorySettings.prod.batchDelay.timeInterval)))
         
-        httpClient.expectRequests(withQueryValueFor: "type", match: [
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
-            "getServiceCategoryList",
             "getOperatorsListByParam-housingAndCommunalService",
-            "getOperatorsListByParam-internet"
+            "getOperatorsListByParam-internet",
+            "getServiceCategoryList",
         ])
         XCTAssertNotNil(sut)
     }

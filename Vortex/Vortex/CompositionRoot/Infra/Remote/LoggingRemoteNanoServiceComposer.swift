@@ -168,7 +168,9 @@ extension LoggingRemoteNanoServiceComposer {
         line: UInt = #line
     ) -> SerialResultLoad<T> {
         
-        return { [self] serial, completion in
+        return { [weak self] serial, completion in
+            
+            guard let self else { return completion(.failure(SerialResultLoadError.deallocatedSelf)) }
             
             let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
             let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
@@ -208,6 +210,7 @@ extension LoggingRemoteNanoServiceComposer {
     
     enum SerialResultLoadError: Error {
         
+        case deallocatedSelf
         case mapResponseFailure
         case noNewDataFailure
         case performRequestFailure

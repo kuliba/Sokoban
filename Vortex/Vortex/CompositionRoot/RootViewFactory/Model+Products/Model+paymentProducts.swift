@@ -22,6 +22,7 @@ extension Model {
     func paymentEligibleProducts() -> [ProductData] {
         
         allProducts
+            .filter(\.isRub)
             .filter(\.allowDebit)
             .filter(\.isActive)
             .filter(\.isPaymentEligible)
@@ -90,6 +91,11 @@ extension ProductData {
         }
         
         return false
+    }
+    
+    var isRub: Bool {
+        
+        return currency == "RUB"
     }
 }
 
