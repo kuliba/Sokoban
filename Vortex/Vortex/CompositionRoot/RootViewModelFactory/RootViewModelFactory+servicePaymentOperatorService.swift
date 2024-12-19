@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 16.09.2024.
 //
 
+import VortexTools
 import OperatorsListBackendV0
 import RemoteServices
 
@@ -28,7 +29,12 @@ extension RootViewModelFactory {
         
         guard !withStandard.isEmpty else { return completion([]) }
         
-        composed(withStandard) { completion($0); _ = composed }
+        composed(withStandard) { [batchServiceComposer, composed] in
+            
+            completion($0); 
+            _ = batchServiceComposer
+            _ = composed
+        }
     }
 }
 
@@ -52,25 +58,54 @@ struct CodableServicePaymentOperator: Codable, Equatable, Identifiable {
 
 extension Array where Element == CodableServicePaymentOperator {
     
-    init(providers: [RemoteServices.ResponseMapper.ServicePaymentProvider]) {
+    init(
+        providers: [RemoteServices.ResponseMapper.ServicePaymentProvider]
+    ) {
+        self.init(
+            providers: providers, 
+            priority: { $0.characterSortPriority() }
+        )
+    }
+    
+    init(
+        providers: [RemoteServices.ResponseMapper.ServicePaymentProvider],
+        priority: (Character) -> Int
+    ) {
+        let decorated = providers.map {
+            
+            (provider: $0, 
+             nameSortKey: $0.nameSortKey(priority: priority),
+             innSortKey: $0.innSortKey(priority: priority))
+        }
         
-        self = providers
-            .sorted { $0.precedes($1) }
+        let sorted = decorated.sorted {
+            
+            if $0.nameSortKey != $1.nameSortKey {
+                return $0.nameSortKey < $1.nameSortKey
+            } else {
+                return $0.innSortKey < $1.innSortKey
+            }
+        }
+        
+        self = sorted
+            .map(\.provider)
             .enumerated()
-            .map(CodableServicePaymentOperator.init(_:_:))
+            .map(CodableServicePaymentOperator.init)
     }
 }
 
 extension RemoteServices.ResponseMapper.ServicePaymentProvider {
     
-    func precedes(_ other: Self) -> Bool {
+    @inlinable
+    func nameSortKey(priority: (Character) -> Int) -> SortKey {
         
-        guard name == other.name
-        else {
-            return name.customLexicographicallyPrecedes(other.name)
-        }
+        return .init(string: name, priority: priority)
+    }
+    
+    @inlinable
+    func innSortKey(priority: (Character) -> Int) -> SortKey {
         
-        return inn.customLexicographicallyPrecedes(other.inn)
+        return .init(string: inn, priority: priority)
     }
 }
 

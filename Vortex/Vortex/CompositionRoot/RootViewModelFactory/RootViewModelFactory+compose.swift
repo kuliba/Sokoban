@@ -5,11 +5,14 @@
 //  Created by Igor Malyarov on 21.11.2024.
 //
 
+import Foundation
 import PayHub
 import PayHubUI
 import RxViewModel
 
 extension RootViewModelFactory {
+    
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
     /// Composes a `Binder` using a dynamic content factory and custom navigation logic.
     ///
@@ -22,13 +25,14 @@ extension RootViewModelFactory {
     @inlinable
     func compose<Content, Select, Navigation>(
         initialState: BinderComposer<Content, Select, Navigation>.Domain.FlowDomain.State = .init(),
+        delay: Delay? = nil,
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         makeContent: @escaping () -> Content,
         witnesses: BinderComposer<Content, Select, Navigation>.Witnesses
     ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
         
         let composer = BinderComposer(
-            delay: settings.delay,
+            delay: delay ?? settings.delay,
             getNavigation: getNavigation,
             makeContent: makeContent,
             schedulers: schedulers,
@@ -49,11 +53,18 @@ extension RootViewModelFactory {
     @inlinable
     func compose<Content, Select, Navigation>(
         initialState: BinderComposer<Content, Select, Navigation>.Domain.FlowDomain.State = .init(),
+        delay: Delay? = nil,
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         content: Content,
         witnesses: BinderComposer<Content, Select, Navigation>.Witnesses
     ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
         
-        return compose(initialState: initialState, getNavigation: getNavigation, makeContent: { content }, witnesses: witnesses)
+        return compose(
+            initialState: initialState, 
+            delay: delay,
+            getNavigation: getNavigation,
+            makeContent: { content },
+            witnesses: witnesses
+        )
     }
 }

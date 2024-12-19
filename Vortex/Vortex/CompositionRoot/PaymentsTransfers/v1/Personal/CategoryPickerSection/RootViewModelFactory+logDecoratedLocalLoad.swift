@@ -49,4 +49,10 @@ extension RootViewModelFactory {
     ) {
         logger.log(level: .debug, category: category, message: message, file: file, line: line)
     }
+    
+    @inlinable
+    func debugLog(pageCount: Int, of total: Int) {
+        
+        debugLog(category: .cache, message: "Page with \(pageCount) item(s) of \(total) total.")
+    }
 }

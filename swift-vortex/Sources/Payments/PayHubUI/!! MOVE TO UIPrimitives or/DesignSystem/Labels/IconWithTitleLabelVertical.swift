@@ -29,7 +29,7 @@ public struct IconWithTitleLabelVertical<Icon: View, Title: View>: View {
             
             icon()
                 .clipShape(Circle())
-                .frame(width: config.circleSize, height: config.circleSize)
+                .frame(width: config.circle, height: config.circle)
             
             title()
                 .frame(maxHeight: .infinity, alignment: .top)

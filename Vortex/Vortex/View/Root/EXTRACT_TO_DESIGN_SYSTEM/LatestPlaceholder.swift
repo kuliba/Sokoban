@@ -33,7 +33,7 @@ struct LatestPlaceholder: View {
             
             placeholder()
                 .clipShape(Capsule(style: .continuous))
-                .frame(width: config.label.circleSize, height: config.textHeight)
+                .frame(width: config.label.circle, height: config.textHeight)
             
             placeholder()
                 .clipShape(Capsule(style: .continuous))

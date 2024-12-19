@@ -31,29 +31,19 @@ extension Model {
 
 // MARK: - Cache
 
-struct CachingSberOperator: Codable, Equatable {
-    
-    let id: String
-    let inn: String
-    let md5Hash: String?
-    let title: String
-    let type: String
-    let sortedOrder: Int
-}
-
 private extension Array where Element == SberOperator {
     
     /// Sort and map.
     /// - Warning: Expensive operation.
-    func makeCache() -> [CachingSberOperator] {
+    func makeCache() -> [CodableServicePaymentOperator] {
         
         self.sorted { $0.precedes($1) }
             .enumerated()
-            .map(CachingSberOperator.init(_:_:))
+            .map(CodableServicePaymentOperator.init(_:_:))
     }
 }
 
-private extension CachingSberOperator {
+private extension CodableServicePaymentOperator {
     
     init(_ index: Int, _ sberOperator: SberOperator) {
         
@@ -61,7 +51,7 @@ private extension CachingSberOperator {
             id: sberOperator.id,
             inn: sberOperator.inn,
             md5Hash: sberOperator.md5Hash,
-            title: sberOperator.title,
+            name: sberOperator.title,
             type: sberOperator.type,
             sortedOrder: index
         )
@@ -113,7 +103,7 @@ extension String {
     }
 }
 
-private extension Character {
+/*private*/ extension Character {
     
     /// Determine the custom priority of the character.
     func characterSortPriority() -> Int {

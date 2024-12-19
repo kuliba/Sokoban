@@ -29,6 +29,14 @@ struct PaymentProviderPickerView: View {
                 )
             }
         )
+        .navigationBarWithBack(
+            title: binder.content.title,
+            dismiss: { binder.flow.event(.dismiss) },
+            rightItem: .barcodeScanner(action: {
+                
+                binder.flow.event(.select(.qr))
+            })
+        )
     }
 }
 
@@ -45,14 +53,6 @@ private extension PaymentProviderPickerView {
             )
         )
         .ignoresSafeArea()
-        .navigationBarWithBack(
-            title: binder.content.title,
-            dismiss: { binder.flow.event(.dismiss) },
-            rightItem: .barcodeScanner(action: {
-                
-                binder.flow.event(.select(.qr))
-            })
-        )
     }
     
     func makePaymentProviderListView(
@@ -72,8 +72,11 @@ private extension PaymentProviderPickerView {
     ) -> some View {
         
         PaymentProviderPickerDestinationView(
+            dismiss: { binder.flow.event(.dismiss) },
+            detailPayment: { binder.flow.event(.select(.detailPayment)) },
             destination: destination,
-            components: components
+            components: components, 
+            makeIconView: makeIconView
         )
     }
 }

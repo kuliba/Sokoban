@@ -49,8 +49,8 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .latest(latest):
             return .makeLatest(nanoServices.makeLatest(latest, notify))
             
-        case let .qr(qr):
-            return compose(for: qr, using: notify)
+        case .scanQR:
+            return .success(.scanQR)
             
         case let .successMeToMe(node):
             return .success(.successMeToMe(node))
@@ -82,25 +82,6 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             
         case .requisites:
             return .success(.payments(nanoServices.makeDetail(notify)))
-        }
-    }
-    
-    // bind QRScannerModel
-    // PaymentsTransfersViewModel.swift:1576
-    func compose(
-        for qr: Domain.Select.QR,
-        using notify: @escaping Notify
-    ) -> Domain.NavigationResult {
-        
-        switch qr {
-        case let .result(result):
-#warning("fixme")
-            _ = result
-            return { fatalError() }()
-            
-        case .scan:
-            // PaymentsTransfersViewModel.swift:1348
-            return .success(.scanQR(nanoServices.makeScanQR(notify)))
         }
     }
 }

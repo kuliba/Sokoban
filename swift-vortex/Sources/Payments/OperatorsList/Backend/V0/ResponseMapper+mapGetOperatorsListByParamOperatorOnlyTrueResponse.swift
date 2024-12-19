@@ -47,8 +47,11 @@ private extension ResponseMapper._DTO._List {
         return operators.compactMap { item in
             
             guard let id = item.customerId,
+                  !id.isEmpty,
                   let inn = item.inn,
-                  let name = item.juridicalName
+                  !inn.isEmpty,
+                  let name = item.juridicalName,
+                  !name.isEmpty
             else { return nil }
             
             return .init(id: id, inn: inn, md5Hash: item.md5hash, name: name, type: type)

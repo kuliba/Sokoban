@@ -20,6 +20,7 @@ public extension ResponseMapper {
     
     struct SberUtilityService: Equatable {
         
+        public let icon: String?
         public let name: String
         public let puref: String
     }
@@ -30,6 +31,7 @@ public extension ResponseMapper {
         
         guard let services = data.operatorList.first?.atributeList.first?.serviceList
         else { return [] }
+        let icon = data.operatorList.first?.atributeList.first?.md5hash
         
         return services.compactMap {
             
@@ -38,7 +40,7 @@ public extension ResponseMapper {
                   let name = $0.descr
             else { return nil }
             
-            return .init(name: name, puref: "\(channel)||\(`protocol`)")
+            return .init(icon: icon, name: name, puref: "\(channel)||\(`protocol`)")
         }
     }
 }
@@ -56,6 +58,7 @@ private extension ResponseMapper {
             
             struct _AttributeDTO: Decodable {
                 
+                let md5hash: String
                 let serviceList: [_ServiceDTO]?
             }
             

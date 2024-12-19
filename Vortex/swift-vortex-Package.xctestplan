@@ -540,13 +540,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "СlientInformListTests",
-        "name" : "СlientInformListTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "GetProductListByTypeV7ServiceTests",
         "name" : "GetProductListByTypeV7ServiceTests"
       }
@@ -620,7 +613,15 @@
         "identifier" : "SavingsAccountTests",
         "name" : "SavingsAccountTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
+      }
     }
   ],
   "version" : 1
 }
+

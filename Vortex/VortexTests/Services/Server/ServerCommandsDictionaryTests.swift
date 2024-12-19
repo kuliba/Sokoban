@@ -865,7 +865,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let result = try decoder.decode(ServerCommands.DictionaryController.GetCountriesWithServices.Response.self, from: json)
         
         // then
-        XCTAssertEqual(result, expected)
+        XCTAssertEqual(result, expected) //@!
     }
     
     func testGetDictionaryAnywayOperators_Response_Decoding() throws {

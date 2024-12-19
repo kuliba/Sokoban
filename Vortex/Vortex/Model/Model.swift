@@ -887,7 +887,7 @@ class Model {
                 case let payload as ModelAction.Dictionary.UpdateCache.Request:
                     switch payload.type {
                     case .anywayOperators:
-                        handleDictionaryAnywayOperatorsRequest(payload.serial)
+                        break // handle in Composition Root
                         
                     case .banks:
                         handleDictionaryBanks(payload.serial)

@@ -21,6 +21,15 @@ extension RootViewModelFactory {
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
         let nanoServices = makeNanoServices(for: category)
+        makePaymentProviderPicker(for: category, nanoServices: nanoServices, completion: completion)
+    }
+    
+    @inlinable
+    func makePaymentProviderPicker(
+        for category: ServiceCategory,
+        nanoServices: StandardNanoServices,
+        completion: @escaping (StandardSelectedCategoryDestination) -> Void
+    ) {
         let composer = StandardSelectedCategoryGetNavigationComposer(
             nanoServices: nanoServices
         )
@@ -34,7 +43,7 @@ extension RootViewModelFactory {
     
     private func makeNanoServices(
         for category: ServiceCategory
-    ) -> NanoServices {
+    ) -> StandardNanoServices {
         
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
@@ -42,7 +51,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            loadLatest: { getLatestPayments([category.name], $0) },
+            loadLatest: { getLatestPayments([category.type.name], $0) },
             loadOperators: {
                 
                 self.loadOperatorsForCategory(category: category, completion: $0)
@@ -55,7 +64,7 @@ extension RootViewModelFactory {
         )
     }
     
-    private typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, PaymentServiceOperator, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, UtilityPaymentProvider, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
     
     @inlinable
     func makePaymentProviderPicker(
@@ -72,7 +81,7 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, PaymentServiceOperator>
+    typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, UtilityPaymentProvider>
     
     // MARK: - Content
     
@@ -114,7 +123,7 @@ extension RootViewModelFactory {
         )
         let microServicesComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: settings.pageSize,
-            nanoServices: .init(loadOperators: loadOperators)
+            nanoServices: .init(loadOperators: loadCachedOperators)
         )
         let effectHandler = PaymentProviderPickerDomain.ProviderListEffectHandler(
             microServices: microServicesComposer.compose(
@@ -148,9 +157,36 @@ extension RootViewModelFactory {
         let flowReducer = PaymentProviderPickerDomain.FlowReducer()
         let flowEffectHandler = PaymentProviderPickerDomain.FlowEffectHandler(
             microServices: .init(
-                initiatePayment: initiateAnywayPayment,
+                initiatePayment: { latest, notify, completion in
+                    
+                    self.initiateAnywayPayment(
+                        latest: latest,
+                        notify: { event in
+                            switch event {
+                            case .main:
+                                notify(.select(.main))
+                                
+                            case .payments:
+                                notify(.select(.goToPayments))
+                            }
+                        },
+                        completion: completion)
+                },
                 makeDetailPayment: makeDetailPayment,
-                processProvider: processProvider
+                processProvider: { provider, notify, completion in
+                    
+                    self.processProvider(
+                        provider: provider,
+                        notify: { event in
+                            switch event {
+                            case .main:
+                                notify(.select(.main))
+                                
+                            case .payments:
+                                notify(.select(.goToPayments))                            }
+                        },
+                        completion: completion)
+                }
             )
         )
         
@@ -165,8 +201,11 @@ extension RootViewModelFactory {
     @inlinable
     func initiateAnywayPayment(
         latest: Latest,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
+        let anywayFlowComposer = makeAnywayFlowComposer()
+        
         initiateAnywayPayment(.latest(latest.latest)) {
             
             switch $0 {
@@ -180,7 +219,11 @@ extension RootViewModelFactory {
                 }
                 
             case let .success(transaction):
-                completion(.payment(()))
+                completion(self.makeCompletion(
+                    anywayFlowComposer: anywayFlowComposer,
+                    transaction: transaction,
+                    notify: notify)
+                )
             }
         }
     }
@@ -199,9 +242,61 @@ extension RootViewModelFactory {
     @inlinable
     func processProvider(
         provider: PaymentProviderPickerDomain.Provider,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
-        completion(.payment(()))
+        let anywayFlowComposer = makeAnywayFlowComposer()
+        
+        processSelection(select: (.operator(provider), .init(string: provider.type) ?? .housingAndCommunalService)) {
+            
+            switch $0 {
+            case let .failure(failure):
+                switch failure {
+                case let .operatorFailure(utilityPaymentOperator):
+                    completion(.payment(.failure(.operatorFailure(utilityPaymentOperator))))
+                    
+                case let .serviceFailure(serviceFailure):
+                    switch serviceFailure {
+                    case .connectivityError:
+                        completion(.payment(.failure(.serviceFailure(.connectivityError))))
+                        
+                    case let .serverError(message):
+                        completion(.payment(.failure(.serviceFailure(.serverError(message)))))
+                    }
+                }
+                
+            case let .success(success):
+                switch success {
+                case let .services(multi, for: utilityPaymentOperator):
+                    completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
+                    
+                case let .startPayment(transaction):
+                    completion(self.makeCompletion(
+                        anywayFlowComposer: anywayFlowComposer,
+                        transaction: transaction,
+                        notify: notify)
+                    )
+                }
+            }
+        }
+    }
+    
+    func makeCompletion(
+        anywayFlowComposer: AnywayFlowComposer,
+        transaction: AnywayTransactionState.Transaction,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void
+    ) -> (PaymentProviderPickerDomain.Navigation) {
+        
+        let flowModel = anywayFlowComposer.compose(transaction: transaction)
+        let cancellable = flowModel.$state.compactMap(\.outside)
+            .sink { notify($0) }
+        
+        return .payment(.success(
+            .anywayPayment(.init(
+                model: flowModel,
+                cancellable: cancellable
+            ))
+        ))
     }
 }
 

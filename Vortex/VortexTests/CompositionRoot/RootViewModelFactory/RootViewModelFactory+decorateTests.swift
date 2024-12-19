@@ -23,126 +23,153 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
     
     func test_decorated_shouldCallDecoratee() {
         
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, _,_, decorated) = makeDecorated()
         
         decorated { _ in }
         
         XCTAssertNoDiff(decoratee.callCount, 1)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldNotCallDecorationOnDecorateeNilResult() {
         
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
-        call(decorated, on: decoratee.complete(with: nil))
+        call(decorated, on: { decoratee.complete(with: nil) })
         
         XCTAssertEqual(decoration.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverNilOnDecorateeNilResult() {
         
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, nil) },
-            on: decoratee.complete(with: nil)
+            on: { decoratee.complete(with: nil) }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldNotCallDecorationOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
-        call(decorated, on: decoratee.complete(with: []))
+        call(decorated, on: { decoratee.complete(with: []) })
         
         XCTAssertEqual(decoration.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverEmptyOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, []) },
-            on: decoratee.complete(with: [])
+            on: { decoratee.complete(with: []) }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallDecorationWithOneOnDecorateeResultWithOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
-        call(decorated, on: decoratee.complete(with: [category]))
+        call(decorated, on: {
+            
+            decoratee.complete(with: [category])
+            decoration.complete(with: [])
+        })
         
         XCTAssertNoDiff(decoration.payloads, [[category]])
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverOneOnDecorateeResultOfOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, [category]) },
-            on: decoratee.complete(with: [category])
+            on: {
+                
+                decoratee.complete(with: [category])
+                decoration.complete(with: [])
+            }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallDecorationWithTwoOnDecorateeResultWithTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, _, decorated) = makeDecorated()
         
-        call(decorated, on: decoratee.complete(with: [category1, category2]))
+        call(decorated, on: {
+            
+            decoratee.complete(with: [category1, category2])
+            decoration.complete(with: [])
+        })
         
         XCTAssertNoDiff(decoration.payloads, [[category1, category2]])
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldDeliverTwoOnDecorateeResultOfTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, _,_, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration,_, decorated) = makeDecorated()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, [category1, category2]) },
-            on: decoratee.complete(with: [category1, category2])
+            on: {
+                
+                decoratee.complete(with: [category1, category2])
+                decoration.complete(with: [])
+            }
         )
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldNotCallLoggerOnEmptyDecorationResult() {
         
-        let (_,_, decoratee, _, logger, decorated) = makeDecorated()
+        let (sut,_, decoratee, _, logger, decorated) = makeDecorated()
         
-        call(
-            decorated,
-            on: decoratee.complete(with: [])
-        )
+        call(decorated, on: {
+            
+            decoratee.complete(with: [])
+            XCTAssertEqual(logger.callCount, 0)
+        })
         
         XCTAssertEqual(logger.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallLoggerWithOneOnDecorationResultOfOne() throws {
         
         let categoryName = anyMessage()
         let category = makeServiceCategory(name: categoryName)
-        let (_,_, decoratee, decoration, logger, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, logger, decorated) = makeDecorated()
         
-        call(
-            decorated,
-            on:  decoratee.complete(with: [makeServiceCategory()])
-        )
-        
-        decoration.complete(with: [category])
+        call(decorated, on: {
+            
+            decoratee.complete(with: [self.makeServiceCategory()])
+            decoration.complete(with: [category])
+        })
         
         XCTAssertNoDiff(logger.events.map(\.level), [.error])
         XCTAssertNoDiff(logger.events.map(\.category), [.network])
         
         try singleMessage(logger, contains: categoryName)
+        XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallLoggerWithTwoOnDecorationResultOfTwo() throws {
@@ -150,20 +177,20 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
         let (categoryName1, categoryName2) = (anyMessage(), anyMessage())
         let category1 = makeServiceCategory(name: categoryName1)
         let category2 = makeServiceCategory(name: categoryName2)
-        let (_,_, decoratee, decoration, logger, decorated) = makeDecorated()
+        let (sut,_, decoratee, decoration, logger, decorated) = makeDecorated()
         
-        call(
-            decorated,
-            on:  decoratee.complete(with: [makeServiceCategory()])
-        )
-        
-        decoration.complete(with: [category1, category2])
+        call(decorated, on: {
+            
+            decoratee.complete(with: [self.makeServiceCategory()])
+            decoration.complete(with: [category1, category2])
+        })
         
         XCTAssertNoDiff(logger.events.map(\.level), [.error])
         XCTAssertNoDiff(logger.events.map(\.category), [.network])
-
+        
         try singleMessage(logger, contains: categoryName1)
         try singleMessage(logger, contains: categoryName2)
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - Helpers
@@ -203,7 +230,7 @@ final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
     private func call(
         _ decorated: SUT.Load<[ServiceCategory]>,
         assert: @escaping ([ServiceCategory]?) -> Void = { _ in },
-        on action: @autoclosure () -> Void,
+        on action: @escaping () -> Void,
         timeout: TimeInterval = 1.0
     ) {
         let exp = expectation(description: "wait for completion")

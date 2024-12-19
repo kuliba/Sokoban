@@ -221,9 +221,9 @@ final class QRAcceptanceTests: AcceptanceTests {
         
         XCTAssertNoDiff(
             httpClient.requests.map(\.url?.lastPathComponent),
-            ["getBannerCatalogList", "getSberQRData"]
+            ["getSberQRData"]
         )
-        try httpClient.complete(with: getSberQRDataSuccessResponse(), at: 1)
+        try httpClient.complete(with: getSberQRDataSuccessResponse())
         
         expectSberQRPresented(rootView)
     }

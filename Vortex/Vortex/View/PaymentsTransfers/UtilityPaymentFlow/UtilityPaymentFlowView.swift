@@ -56,7 +56,7 @@ extension UtilityPaymentFlowView {
     typealias Destination = State.Destination
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
 
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel

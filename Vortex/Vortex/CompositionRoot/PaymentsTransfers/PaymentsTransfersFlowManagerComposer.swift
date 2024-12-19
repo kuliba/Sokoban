@@ -26,26 +26,33 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
+    private let loadOperators: LoadOperators
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
+        loadOperators: @escaping LoadOperators,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
         self.httpClient = httpClient
         self.log = log
+        self.loadOperators = loadOperators
         self.scheduler = scheduler
     }
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
+        
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperators = (LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
 }
 
 extension PaymentsTransfersFlowManagerComposer {
     
     func compose(
+        categoryType: ServiceCategory.CategoryType,
         _ spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> FlowManager {
         
@@ -56,13 +63,13 @@ extension PaymentsTransfersFlowManagerComposer {
             spinnerActions: spinnerActions
         )
         
-        let composer = makeReducerFactoryComposer()
+        let composer = makeReducerFactoryComposer(categoryType: categoryType)
         let factory = composer.compose(
             makeUtilityPaymentState: utilityComposer.makeUtilityPaymentState
         )
         
         return .init(
-            handleEffect: makeHandleEffect(),
+            handleEffect: makeHandleEffect(categoryType: categoryType),
             makeReduce: makeReduce(with: factory)
         )
     }
@@ -70,7 +77,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias FlowManager = PaymentsTransfersFlowManager
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
@@ -95,9 +102,13 @@ private extension PaymentsTransfersFlowManagerComposer {
 
 private extension PaymentsTransfersFlowManagerComposer {
     
-    func makeHandleEffect() -> FlowManager.HandleEffect {
+    func makeHandleEffect(
+        categoryType: ServiceCategory.CategoryType
+    ) -> FlowManager.HandleEffect {
         
-        let microServices = composeUtilityPaymentMicroServices()
+        let microServices = composeUtilityPaymentMicroServices(
+            categoryType: categoryType
+        )
         let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
             microServices: microServices
         )
@@ -161,8 +172,9 @@ private extension PaymentsTransfersFlowManagerComposer {
             }
         }
     }
-
+    
     private func composeUtilityPaymentMicroServices(
+        categoryType: ServiceCategory.CategoryType
     ) -> PrepaymentFlowEffectHandler.MicroServices {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
@@ -177,7 +189,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             composer: composer,
-            nanoServices: nanoComposer.compose(),
+            nanoServices: nanoComposer.compose(categoryType: categoryType),
             makeLegacyPaymentsServicesViewModel: makeLegacyViewModel
         )
         
@@ -187,11 +199,10 @@ private extension PaymentsTransfersFlowManagerComposer {
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     private func loadOperators(
+        _ categoryType: ServiceCategory.CategoryType,
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        let load = loadOperators()
-        
-        load(.init()) { completion($0); _ = load }
+        loadOperators(.init(categoryType: categoryType, pageSize: settings.pageSize), completion)
     }
     
     private func makeLegacyViewModel(
@@ -224,7 +235,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     }
     
     private func hideKeyboard() {
-     
+        
         UIApplication.shared.endEditing()
     }
     
@@ -242,10 +253,14 @@ private extension PaymentsTransfersFlowManagerComposer {
     typealias FlowReducer = PaymentsTransfersFlowReducer
     
     private func makeReducerFactoryComposer(
+        categoryType: ServiceCategory.CategoryType
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
-            loadOperators: loadOperators
+            loadOperators: { payload, completion in
+                
+                self.loadOperators(.init(categoryType: categoryType, operatorID: payload.operatorID, searchText: payload.searchText, pageSize: payload.pageSize), completion)
+            }
         )
         let microComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: settings.pageSize,
@@ -262,38 +277,6 @@ private extension PaymentsTransfersFlowManagerComposer {
             microServices: microComposer.compose(for: .housingAndCommunalService),
             scheduler: scheduler
         )
-    }
-    
-    private func loadOperators(
-        payload: LoadOperatorsPayload,
-        completion: @escaping ([Operator]) -> Void
-    ) {
-        let load = loadOperators()
-        
-        typealias Payload = UtilityPaymentOperatorLoaderComposer.Payload
-        
-        let payload = Payload(
-            operatorID: payload.operatorID,
-            searchText: payload.searchText
-        )
-        
-        load(payload) { completion($0); _ = load }
-    }
-    
-    typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
-    
-    private func loadOperators(
-    ) -> (
-        UtilityPaymentOperatorLoaderComposer.Payload,
-        @escaping ([Operator]) -> Void
-    ) -> Void {
-        
-        let loaderComposer = UtilityPaymentOperatorLoaderComposer(
-            model: model,
-            pageSize: settings.pageSize
-        )
-        
-        return loaderComposer.compose()
     }
 }
 

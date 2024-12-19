@@ -32,6 +32,7 @@ typealias MakePaymentsServiceView = (PaymentsServiceViewModel) -> PaymentsServic
 typealias MakePaymentsSuccessView = (PaymentsSuccessViewModel) -> PaymentsSuccessView
 typealias MakePaymentsView = (PaymentsViewModel) -> PaymentsView
 typealias MakeProductCarouselView = (ProductCarouselView.ViewModel, @escaping () -> NewProductButton?) -> ProductCarouselView
+typealias MakeProductProfileView = (ProductProfileViewModel) -> ProductProfileView
 typealias MakeProductSelectorView = (ProductSelectorView.ViewModel) -> ProductSelectorView
 typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapView
 typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
@@ -57,6 +58,7 @@ struct ViewComponents {
     let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView
     let makePaymentsSuccessView: MakePaymentsSuccessView
     let makePaymentsView: MakePaymentsView
+    let makeProductProfileView: MakeProductProfileView
     let makeQRFailedView: MakeQRFailedView
     let makeQRFailedWrapperView: MakeQRFailedWrapperView
     let makeQRSearchOperatorView: MakeQRSearchOperatorView
@@ -81,6 +83,7 @@ extension ViewComponents {
         makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
         makePaymentsSuccessView: makePaymentsSuccessView,
         makePaymentsView: makePaymentsView,
+        makeProductProfileView: makeProductProfileView,
         makeQRFailedView: makeQRFailedView,
         makeQRFailedWrapperView: makeQRFailedWrapperView,
         makeQRSearchOperatorView: makeQRSearchOperatorView,
@@ -98,6 +101,7 @@ extension ViewComponents {
     static let makeMainSectionProductsView: MakeMainSectionProductsView = { .init(viewModel: $0, viewFactory: .init(makeProductCarouselView: { .init(viewModel: $0, newProductButton: $1, viewFactory: .preview) })) }
     static let makePaymentsMeToMeView: MakePaymentsMeToMeView = { .init(viewModel: $0, viewFactory: .init(makeProductsSwapView: {.init(viewModel: $0, viewFactory: .preview)})) }
     static let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView = { .init(viewModel: $0, viewFactory: .preview) }
+    static let makeProductProfileView: MakeProductProfileView = { .init(viewModel: $0, viewFactory: .preview, productProfileViewFactory: .preview, getUImage: { _ in .checkmark })}
     static let makeQRFailedView: MakeQRFailedView = { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))})) }
     static let makeQRFailedWrapperView: MakeQRFailedWrapperView = {
         .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}), paymentsViewFactory: .preview)

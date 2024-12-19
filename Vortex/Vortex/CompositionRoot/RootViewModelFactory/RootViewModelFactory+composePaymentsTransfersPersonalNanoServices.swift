@@ -47,7 +47,8 @@ extension RootViewModelFactory {
         return (load, reload)
     }
     
-    private func batchOperators(
+    @inlinable
+    func batchOperators(
         categories: [ServiceCategory],
         completion: @escaping ([ServiceCategory]) -> Void
     ) {

@@ -27,7 +27,7 @@ final class ImageCache {
     private let fallback: Fallback
     
     private let scheduler: AnySchedulerOfDispatchQueue
-    private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         requestImages: @escaping RequestImages,
@@ -40,7 +40,7 @@ final class ImageCache {
         self.fallback = fallback
         self.scheduler = scheduler
     }
-        
+    
     func image(
         forKey imageKey: ImageKey
     ) -> ImageSubject {
@@ -60,7 +60,7 @@ final class ImageCache {
             // TODO: add queue to remove duplicated inflight requests
             requestImages([imageKey])
             
-            cancellable = imagesPublisher
+            imagesPublisher
                 .removeDuplicates()
             // .handleEvents(receiveOutput: { print("### imagesPublisher, all", $0) })
                 .compactMap { $0[imageID] }
@@ -69,6 +69,7 @@ final class ImageCache {
             // .handleEvents(receiveOutput: { print("### image for \(imageID)", $0) })
                 .receive(on: scheduler)
                 .sink(receiveValue: imageSubject.send)
+                .store(in: &cancellables)
             
             return imageSubject
         }

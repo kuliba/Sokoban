@@ -168,20 +168,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ForaTools"
-               BuildableName = "ForaTools"
-               BlueprintName = "ForaTools"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "UserModel"
                BuildableName = "UserModel"
                BlueprintName = "UserModel"
@@ -437,20 +423,6 @@
                BlueprintIdentifier = "GetProcessingSessionCodeService"
                BuildableName = "GetProcessingSessionCodeService"
                BlueprintName = "GetProcessingSessionCodeService"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ForaCrypto"
-               BuildableName = "ForaCrypto"
-               BlueprintName = "ForaCrypto"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -980,34 +952,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PlainClientInformBottomSheet"
-               BuildableName = "PlainClientInformBottomSheet"
-               BlueprintName = "PlainClientInformBottomSheet"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLanding"
-               BuildableName = "CollateralLoanLanding"
-               BlueprintName = "CollateralLoanLanding"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "EphemeralStores"
                BuildableName = "EphemeralStores"
                BlueprintName = "EphemeralStores"
@@ -1050,48 +994,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingDraftBackend"
-               BuildableName = "CollateralLoanLandingDraftBackend"
-               BlueprintName = "CollateralLoanLandingDraftBackend"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingShowCaseBackend"
-               BuildableName = "CollateralLoanLandingShowCaseBackend"
-               BlueprintName = "CollateralLoanLandingShowCaseBackend"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingShowCaseUI"
-               BuildableName = "CollateralLoanLandingShowCaseUI"
-               BlueprintName = "CollateralLoanLandingShowCaseUI"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "GetBannersMyProductListService"
                BuildableName = "GetBannersMyProductListService"
                BlueprintName = "GetBannersMyProductListService"
@@ -1120,37 +1022,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "&#x421;lientInformList"
-               BuildableName = "&#x421;lientInformList"
-               BlueprintName = "&#x421;lientInformList"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "CollateralLoanLandingSaveConsentsBackend"
                BuildableName = "CollateralLoanLandingSaveConsentsBackend"
                BlueprintName = "CollateralLoanLandingSaveConsentsBackend"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingGetJsonAbroadUI"
-               BuildableName = "CollateralLoanLandingGetJsonAbroadUI"
-               BlueprintName = "CollateralLoanLandingGetJsonAbroadUI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -1345,7 +1219,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/swift-vortex-Package.xctestplan"
+            reference = "container:../Vortex/swift-vortex-Package.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -1384,16 +1258,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "GetInfoRepeatPaymentServiceTests"
-               BuildableName = "GetInfoRepeatPaymentServiceTests"
-               BlueprintName = "GetInfoRepeatPaymentServiceTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "GetProductListByTypeV6ServiceTests"
                BuildableName = "GetProductListByTypeV6ServiceTests"
                BlueprintName = "GetProductListByTypeV6ServiceTests"
@@ -1417,16 +1281,6 @@
                BlueprintIdentifier = "MarketShowcaseTests"
                BuildableName = "MarketShowcaseTests"
                BlueprintName = "MarketShowcaseTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLandingTests"
-               BuildableName = "CollateralLoanLandingTests"
-               BlueprintName = "CollateralLoanLandingTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

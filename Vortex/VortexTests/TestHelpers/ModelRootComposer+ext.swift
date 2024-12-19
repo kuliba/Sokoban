@@ -6,7 +6,7 @@
 //
 
 @testable import Vortex
-import PayHubUI
+import PayHub
 
 extension ModelRootComposer {
     

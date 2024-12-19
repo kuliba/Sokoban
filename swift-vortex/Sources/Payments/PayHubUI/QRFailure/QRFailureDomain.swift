@@ -22,7 +22,7 @@ public extension QRFailureDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias FlowComposer = FlowDomain.Composer
     

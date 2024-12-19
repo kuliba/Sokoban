@@ -108,9 +108,13 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let detailPayment = DetailPaymentSpy()
         let providerSpy = ProviderSpy()
         let sut = SUT(microServices: .init(
-            initiatePayment: initiatePayment.process(_:completion:),
+            initiatePayment: { payload, _, completion in
+                initiatePayment.process(payload, completion: completion)
+            },
             makeDetailPayment: detailPayment.process(completion:),
-            processProvider: providerSpy.process(_:completion:)
+            processProvider: { payload, _, completion in
+                providerSpy.process(payload, completion: completion)
+            }
         ))
         
         trackForMemoryLeaks(sut, file: file, line: line)

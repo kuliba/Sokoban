@@ -107,6 +107,9 @@ final class OperationDetailInfoViewModel: Identifiable {
             value: dateString
         )
         
+        let operationCategoryCell = Self.operationCategoryCellViewModel(value: operation?.operationCategory)
+        let documentNumberCell = Self.documentNumberCellViewModel(value: operation?.documentNumber)
+        
         switch statement.paymentDetailType {
             
         case .otherBank:
@@ -117,6 +120,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.bank.icon,
                     value: payeeCardNumber))
             }
+            
+            if let operationCategoryCell { cells.append(operationCategoryCell)}
+            if let documentNumberCell { cells.append(documentNumberCell)}
             
             if let amountCell = Self.amountCell(
                 with: model,
@@ -176,6 +182,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                 }
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell)}
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -258,6 +267,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                 icon:  vortexIcon,
                 name: vortexName))
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -310,6 +322,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: countryName))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -404,6 +419,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: countryName))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amount = operation?.amount,
                let foremattedAmount = self.model.amountFormatted(
                 amount: amount,
@@ -477,10 +495,13 @@ final class OperationDetailInfoViewModel: Identifiable {
                 model: model,
                 operationType: statement.operationType)
             let type: OperationDetailData.ExternalTransferType = statement.paymentDetailType == .externalEntity ? .entity : .individual
+            
             cells = Self.makeHistoryItemsForExternal(
                 dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank,
                 type,
                 operation,
+                operationCategoryCell,
+                documentNumberCell,
                 amountCell,
                 comissionCell(),
                 debitAccounCell,
@@ -531,6 +552,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: statement.groupName))
             }
             
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -577,6 +600,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     name: provider))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -624,6 +650,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: account))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -688,6 +717,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: account))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -729,6 +761,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -774,6 +809,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: "\(statement.groupName)"))
             }
             
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
                 currencyCode: currency,
@@ -854,6 +891,9 @@ final class OperationDetailInfoViewModel: Identifiable {
               cells.append(bankCell)
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
                 currencyCode: currency,
@@ -941,6 +981,8 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells = Self.makeItemsForTransport(
                 dictionaryAnywayOperator: model.dictionaryAnywayOperator,
                 operation,
+                operationCategoryCell,
+                documentNumberCell,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -961,6 +1003,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                 return .init(uiImage: uiImage)
             }()
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
                 currencyCode: currency,
@@ -1077,6 +1122,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     name: statement.merchant))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
                 currencyCode: currency,
@@ -1110,6 +1158,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                     value: payeeINN))
             }
             
+            if let operationCategoryCell { cells.append(operationCategoryCell) }
+            if let documentNumberCell { cells.append(documentNumberCell) }
+
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
                 currencyCode: currency,
@@ -1235,7 +1286,12 @@ extension OperationDetailInfoViewModel {
             bank: model.bank(memberID:)
         )
         
+        let operationCategoryCell = Self.operationCategoryCellViewModel(value: operation?.operationCategory)
+        let documentNumberCell = Self.documentNumberCellViewModel(value: operation?.documentNumber)
+
         return [
+            operationCategoryCell,
+            documentNumberCell,
             amount,
             statement.isDebitType ? payee : nil,
             dateTimeCell,
@@ -1486,6 +1542,34 @@ private extension OperationDetailInfoViewModel {
                      iconType: IconType.balance.icon,
                      value: amountFormatted)
     }
+    
+    static func operationCategoryCellViewModel(
+        title: String = "Категория операции",
+        icon: Image? = nil,
+        value: String?
+    ) -> PropertyCellViewModel? {
+        
+        guard let value else { return nil }
+        
+        return .init(
+            title: title,
+            iconType: icon,
+            value: value)
+    }
+    
+    static func documentNumberCellViewModel(
+        title: String = "Номер документа",
+        icon: Image? = IconType.hash.icon,
+        value: String?
+    ) -> PropertyCellViewModel? {
+        
+        guard let value else { return nil }
+        
+        return .init(
+            title: title,
+            iconType: icon,
+            value: value)
+    }
 }
 
 // MARK: - Methods
@@ -1509,6 +1593,9 @@ extension OperationDetailInfoViewModel {
             productId: payerProductId,
             productNumber: payerProductNumber)
         
+        let operationCategoryViewModel = Self.operationCategoryCellViewModel(value: operation.operationCategory)
+        let documentNumberViewModel = Self.documentNumberCellViewModel(value: operation.documentNumber)
+
         let amountViewModel = makePropertyViewModel(
             productId: payerProductId,
             operation: operation,
@@ -1561,6 +1648,8 @@ extension OperationDetailInfoViewModel {
                 payeeNumberPhone,
                 payeeNameViewModel,
                 payeeBankViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -1574,6 +1663,8 @@ extension OperationDetailInfoViewModel {
             return [
                 payeeViewModel,
                 payerViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 purposeViewModel,
@@ -1584,6 +1675,8 @@ extension OperationDetailInfoViewModel {
             
             return [
                 payerViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payeeViewModel,
@@ -1595,6 +1688,8 @@ extension OperationDetailInfoViewModel {
                 payeeNumberPhone,
                 payeeNameViewModel,
                 payeeBankViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 commissionViewModel,
                 payerViewModel,
                 purposeViewModel,
@@ -1609,7 +1704,7 @@ extension OperationDetailInfoViewModel {
                 directCells.insert((PropertyCellViewModel(
                     title: "Сумма перевода",
                     iconType: IconType.balance.icon,
-                    value: formattedAmount)), at: 3)
+                    value: formattedAmount)), at: 5)
             }
             
             if let payeeAmount = operation.payeeAmount,
@@ -1622,7 +1717,7 @@ extension OperationDetailInfoViewModel {
                 directCells.insert((PropertyCellViewModel(
                     title: "Сумма зачисления в валюте",
                     iconType: IconType.balance.icon,
-                    value: formattedAmount)), at: 5)
+                    value: formattedAmount)), at: 7)
             }
             
             let payeeAmount = operation.payerAmount
@@ -1635,7 +1730,7 @@ extension OperationDetailInfoViewModel {
                 directCells.insert((PropertyCellViewModel(
                     title: "Сумма списания",
                     iconType: IconType.balance.icon,
-                    value: formattedAmount)), at: 6)
+                    value: formattedAmount)), at: 8)
             }
             
             return directCells.compactMap {$0}
@@ -1686,6 +1781,8 @@ extension OperationDetailInfoViewModel {
                         payeeNameViewModel,
                         countryViewModel,
                         payeeBankViewModel,
+                        operationCategoryViewModel,
+                        documentNumberViewModel,
                         transferAmount,
                         commissionViewModel,
                         amount,
@@ -1703,6 +1800,8 @@ extension OperationDetailInfoViewModel {
                     payeeNameViewModel,
                     countryViewModel,
                     payeeBankViewModel,
+                    operationCategoryViewModel,
+                    documentNumberViewModel,
                     commissionViewModel,
                     amountViewModel,
                     methodViewModel,
@@ -1717,6 +1816,8 @@ extension OperationDetailInfoViewModel {
                     payeeNumberPhone,
                     payeeNameViewModel,
                     payeeBankViewModel,
+                    operationCategoryViewModel,
+                    documentNumberViewModel,
                     amountViewModel,
                     commissionViewModel,
                     payerViewModel,
@@ -1726,11 +1827,13 @@ extension OperationDetailInfoViewModel {
             }
             
         case .external:
-            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, operationCategoryViewModel, documentNumberViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
             
         case .internet:
             
             var cells = [
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -1767,6 +1870,8 @@ extension OperationDetailInfoViewModel {
         case .housingAndCommunalService:
             
             var cells = [
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -1809,6 +1914,8 @@ extension OperationDetailInfoViewModel {
         case .cardToCard, .accountToCard:
             
             var cells = [
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -1833,6 +1940,8 @@ extension OperationDetailInfoViewModel {
             return Self.makeItemsForTransport(
                 dictionaryAnywayOperator: model.dictionaryAnywayOperator,
                 operation,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -1843,6 +1952,7 @@ extension OperationDetailInfoViewModel {
         case .c2bPayment:
             
             return [
+                operationCategoryViewModel,
                 amountViewModel,
                 operation.merchant,
                 dateViewModel,
@@ -1857,6 +1967,7 @@ extension OperationDetailInfoViewModel {
         case .sberQRPayment:
             
             return [
+                operationCategoryViewModel,
                 amountViewModel,
                 operation.merchant,
                 dateViewModel,
@@ -1871,6 +1982,7 @@ extension OperationDetailInfoViewModel {
         
         case .productPaymentOffice, .productPaymentCourier:
             var cells = [
+                operationCategoryViewModel,
                 amountViewModel,
                 payerViewModel,
                 dateViewModel
@@ -1892,6 +2004,7 @@ extension OperationDetailInfoViewModel {
             
             return [
                 payerViewModel,
+                operationCategoryViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payeeViewModel,
@@ -1950,6 +2063,8 @@ extension OperationDetailInfoViewModel {
         _ payeeNameViewModel: PropertyCellViewModel?,
         _ payeeViewModel: ProductCellViewModel?,
         _ payeeBankViewModel: BankCellViewModel?,
+        _ operationCategoryViewModel: PropertyCellViewModel?,
+        _ documentNumberViewModel: PropertyCellViewModel?,
         _ amountViewModel: PropertyCellViewModel?,
         _ commissionViewModel: PropertyCellViewModel?,
         _ payerViewModel: ProductCellViewModel?,
@@ -2005,6 +2120,8 @@ extension OperationDetailInfoViewModel {
                 payeeKPP,
                 payeeBankBIC,
                 payeeBankViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -2019,6 +2136,8 @@ extension OperationDetailInfoViewModel {
                 payeeViewModel,
                 payeeBankBIC,
                 payeeBankViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -2031,6 +2150,8 @@ extension OperationDetailInfoViewModel {
     static func makeItemsForTransport(
         dictionaryAnywayOperator: @escaping (String) -> OperatorGroupData.OperatorData?,
         _ operation: OperationDetailData,
+        _ operationCategoryViewModel: PropertyCellViewModel?,
+        _ documentNumberViewModel: PropertyCellViewModel?,
         _ amountViewModel: PropertyCellViewModel?,
         _ commissionViewModel: PropertyCellViewModel?,
         _ payerViewModel: ProductCellViewModel?,
@@ -2039,6 +2160,8 @@ extension OperationDetailInfoViewModel {
     ) -> [DefaultCellViewModel] {
         
         var cells = [
+            operationCategoryViewModel,
+            documentNumberViewModel,
             amountViewModel,
             commissionViewModel,
             payerViewModel,
@@ -2080,6 +2203,8 @@ extension OperationDetailInfoViewModel {
         dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData?,
         _ type: OperationDetailData.ExternalTransferType,
         _ operation: OperationDetailData?,
+        _ operationCategoryCell: PropertyCellViewModel?,
+        _ documentNumberCell: PropertyCellViewModel?,
         _ amountCell: PropertyCellViewModel?,
         _ comissionCell: PropertyCellViewModel?,
         _ debitAccounCell: DefaultCellViewModel?,
@@ -2147,6 +2272,9 @@ extension OperationDetailInfoViewModel {
                     name: bankBic
                 )
             },
+            
+            operationCategoryCell.map { $0 },
+            documentNumberCell.map { $0 },
             
             amountCell.map { $0 },
             
@@ -2279,6 +2407,18 @@ extension OperationDetailInfoViewModel {
                 title: "Номер операции СБП",
                 iconType: IconType.operationNumber.icon,
                 value: transferNumber)
+         
+        case .hash:
+            
+            guard let documentNumber = operation.documentNumber else {
+                return nil
+            }
+            
+            return .init(
+                title: "Номер документа",
+                iconType: IconType.hash.icon,
+                value: documentNumber
+            )
             
         default:
             return nil
@@ -2482,19 +2622,20 @@ extension OperationDetailInfoViewModel {
     
     enum PropertyIconType {
         
-        case phone
-        case user
+        case account
         case balance
         case bank
-        case commission
-        case purpose
-        case operationNumber
-        case date
-        case geo
-        case account
-        case file
         case cash
+        case commission
         case customer
+        case date
+        case file
+        case geo
+        case hash
+        case operationNumber
+        case phone
+        case purpose
+        case user
         
         var icon: Image {
             
@@ -2512,6 +2653,7 @@ extension OperationDetailInfoViewModel {
             case .file: return Image("file", bundle: nil)
             case .cash: return Image("Frame 579", bundle: nil)
             case .customer: return Image("customer", bundle: nil)
+            case .hash: return Image("hash", bundle: nil)
             }
         }
     }
