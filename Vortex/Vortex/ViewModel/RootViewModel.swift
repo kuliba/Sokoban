@@ -670,7 +670,6 @@ extension PaymentsTransfersPersonalDomain.Binder {
             transferPicker,
             flowHasDestination
         )
-        .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
 }

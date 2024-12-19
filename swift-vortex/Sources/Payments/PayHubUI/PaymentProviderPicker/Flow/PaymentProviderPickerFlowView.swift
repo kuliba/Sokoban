@@ -358,7 +358,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("latest") {
                     
-                    event(.select(.latest(.preview())))
+                    event(.select(.latest(.preview)))
                 }
                 
                 Button("detailPayment") {

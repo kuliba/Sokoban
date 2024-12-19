@@ -563,6 +563,7 @@
 		2A2ECBC42AE5270F00F3C946 /* ResponseMapper+ServerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBC32AE5270F00F3C946 /* ResponseMapper+ServerError.swift */; };
 		2A2ECBC62AE5362300F3C946 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */; };
 		2A2EE9042CF0760E0019FC31 /* OperationPickerDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9032CF0760E0019FC31 /* OperationPickerDomain.swift */; };
+		2A2EE9062CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */; };
 		2A2EE9082CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9072CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift */; };
 		2A2EE90A2CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9092CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift */; };
 		2A2EE90C2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE90B2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift */; };
@@ -4107,6 +4108,7 @@
 		2A2ECBC32AE5270F00F3C946 /* ResponseMapper+ServerError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ResponseMapper+ServerError.swift"; path = "../../../../../swift-vortex/Sources/Services/CVVPINServices/Mappers/ResponseMapper+ServerError.swift"; sourceTree = "<group>"; };
 		2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStore.swift; sourceTree = "<group>"; };
 		2A2EE9032CF0760E0019FC31 /* OperationPickerDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerDomain.swift; sourceTree = "<group>"; };
+		2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeLoadablePickerModel.swift"; sourceTree = "<group>"; };
 		2A2EE9072CF0ABAD0019FC31 /* RootViewModelFactory+makeMobilePayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMobilePayment.swift"; sourceTree = "<group>"; };
 		2A2EE9092CF0AC5E0019FC31 /* RootViewModelFactory+makeTaxPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTaxPayment.swift"; sourceTree = "<group>"; };
 		2A2EE90B2CF0AC740019FC31 /* RootViewModelFactory+makeTransportPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTransportPayment.swift"; sourceTree = "<group>"; };
@@ -10619,12 +10621,15 @@
 				842C42332D11FB8D006A307D /* composeLoadablePickerModel.swift */,
 				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
+				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
 				2AC72B8F2CEF7AC3001578CC /* RootViewModelFactory+compose.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
 				2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */,
 				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift */,
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				2AC932472D101E9C003B6720 /* RootViewModelFactory+runOnEachNextActiveSession.swift */,
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
 				EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */,
 				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
@@ -20984,6 +20989,7 @@
 				ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */,
 				0B931B1626DCD5F100CA8017 /* Parameters.swift in Sources */,
 				2A36249B2C5F412000174C50 /* AnywayServicePickerFlowEffect.swift in Sources */,
+				2A2EE9062CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift in Sources */,
 				83F775CF2CA44E1500A05F69 /* MarketShowcaseComposer.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				77448C05286DF60F009EEEA8 /* OperationDetailOperationViewComponent.swift in Sources */,
