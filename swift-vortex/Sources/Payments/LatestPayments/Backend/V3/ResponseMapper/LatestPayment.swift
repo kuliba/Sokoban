@@ -31,7 +31,7 @@ extension ResponseMapper.LatestPayment {
         public let md5Hash: String?
         public let name: String?
         public let paymentDate: Date
-        public let paymentFlow: PaymentFlow?
+        public let paymentFlow: PaymentFlow
         public let puref: String
         public let type: LatestType
         
@@ -46,7 +46,7 @@ extension ResponseMapper.LatestPayment {
             md5Hash: String?,
             name: String?,
             paymentDate: Date,
-            paymentFlow: PaymentFlow?,
+            paymentFlow: PaymentFlow,
             puref: String,
             type: LatestType
         ) {
