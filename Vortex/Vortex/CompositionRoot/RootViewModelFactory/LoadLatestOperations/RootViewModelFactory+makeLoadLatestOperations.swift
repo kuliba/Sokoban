@@ -11,7 +11,7 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
+    typealias LoadLatestOperationsCompletion = ([Latest]?) -> Void
     typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
     @inlinable

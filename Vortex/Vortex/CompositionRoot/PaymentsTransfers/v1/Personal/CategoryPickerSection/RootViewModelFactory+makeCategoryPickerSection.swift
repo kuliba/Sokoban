@@ -5,19 +5,27 @@
 //  Created by Igor Malyarov on 01.10.2024.
 //
 
-import CombineSchedulers
-import VortexTools
-import Foundation
-import GenericRemoteService
-import PayHub
-import SberQR
+import PayHubUI
+
+protocol ReloadableCategoryPicker: CategoryPicker {
+    
+    func reload()
+}
+
+extension CategoryPickerSectionDomain.Binder: ReloadableCategoryPicker {
+    
+    func reload() {
+         
+        content.event(.reload)
+    }
+}
 
 extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerSection(
         _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> CategoryPickerSectionDomain.Binder {
+    ) -> ReloadableCategoryPicker {
         
         return compose(
             getNavigation: getNavigation,
