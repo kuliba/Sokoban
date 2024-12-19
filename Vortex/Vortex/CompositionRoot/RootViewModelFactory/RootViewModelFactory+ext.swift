@@ -45,6 +45,12 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
+        func performOrWaitForAuthorized(
+            _ work: @escaping () -> Void
+        ) {
+            bindings.insert(model.performOrWaitForAuthorized(work))
+        }
+        
         func runOnEachNextActiveSession(
             _ work: @escaping () -> Void
         ) {
