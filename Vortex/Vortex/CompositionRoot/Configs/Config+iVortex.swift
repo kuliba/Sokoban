@@ -1,0 +1,256 @@
+//
+//  Config+iVortex.swift
+//  Vortex
+//
+//  Created by Igor Malyarov on 12.12.2023.
+//
+
+import PaymentComponents
+import SberQR
+import ManageSubscriptionsUI
+
+extension SberQR.Config {
+    
+    static let iVortex: Self = .init(
+        amount: .iVortex,
+        background: .init(
+            color: .mainColorsGrayLightest
+        ),
+        button: .iVortexFooter,
+        carousel: .iVortexSmall,
+        info: .iVortex,
+        productSelect: .iVortex
+    )
+}
+
+extension AmountComponent.AmountConfig {
+    
+    static let iVortex: Self = .init(
+        amount: .init(
+            textFont: .textH1Sb24322(),
+            textColor: .white
+        ),
+        backgroundColor: .mainColorsBlackMedium,
+        button: .iVortexFooter,
+        dividerColor: .bordersDivider,
+        title: .init(
+            textFont: .textBodySR12160(),
+            textColor: .textPlaceholder
+        )
+    )
+}
+
+extension InfoComponent.InfoConfig {
+    
+    static let iVortex: Self = .init(
+        title: .placeholder,
+        value: .secondary
+    )
+}
+
+extension UserAccountConfig {
+    
+    static let iVortex: Self = .init(
+        fpsConfig: .init(
+            title: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
+            )
+        ),
+        infoVerificationConfig: .init(
+            title: "При переводе через СБП отправителю не будет предложен банк по умолчанию для получения переводов",
+            titleConfig: .init(textFont: .textBodyMR14200(), textColor: .textSecondary),
+            icon: Image("smsColor"),
+            backgroundColor: .mainColorsGrayLightest
+        )
+    )
+}
+
+extension ProductSelectComponent.ProductSelectConfig {
+    
+    static let iVortex: Self = .init(
+        amount: .secondary,
+        card: .init(
+            amount: .init(
+                textFont: .textBodyXsSb11140(),
+                textColor: .textWhite
+            ),
+            number: .init(
+                textFont: .textBodyXsR11140(),
+                textColor: .textWhite
+            ),
+            title: .init(
+                textFont: .textBodyXsR11140(),
+                textColor: .textWhite.opacity(0.4)
+            ), 
+            selectedImage: .ic16CheckLightGray16Fixed
+        ),
+        chevron: .init(
+            color: .iconGray,
+            image: .ic24ChevronDown
+        ),
+        footer: .placeholder,
+        header: .placeholder,
+        missingSelected: .init(
+            backgroundColor: .bordersDivider,
+            foregroundColor: .iconBlackMedium,
+            image: .init("vortexlogo"),
+            title: .init(
+                textFont: .textH4M16240(),
+                textColor: .textPlaceholder
+            )
+        ),
+        title: .secondary,
+        carouselConfig: .iVortexSmall
+    )
+}
+
+import CalendarUI
+
+public extension CalendarConfig {
+    
+    static let iVortex: Self = .init(
+        title: "Выберите даты или период",
+        titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
+        option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
+        month: .init(textFont: .textH3M18240(), textColor: .mainColorsGray),
+        optionSelectBackground: .mainColorsBlackMedium,
+        weekdaysView: {
+            WeekdaysView()
+        },
+        monthLabel: { date in
+            MonthLabel(month: date)
+        },
+        dayConfig: .init(
+            selectedColor: .mainColorsBlackMedium,
+            todayBackground: .mainColorsGrayLightest,
+            todayForeground: .mainColorsRed
+        ),
+        closeImage: .ic24Close,
+        scrollDate: Date().scrollToday
+    )
+}
+
+public extension FilterConfig {
+
+    static let iVortex: Self = .init(
+        title: .init(
+            title: "Фильтры",
+            titleConfig: .init(
+                textFont: .textH3M18240(),
+                textColor: .textSecondary
+            )
+        ),
+        periodTitle: .init(
+            title: "Период",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        transactionTitle: .init(
+            title: "Движение средств",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        categoryTitle: .init(
+            title: "Категории",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        optionConfig: .init(
+            font: .textBodyMR14200(),
+            selectBackgroundColor: .mainColorsBlackMedium,
+            notSelectedBackgroundColor: .mainColorsGrayLightest,
+            selectForegroundColor: .textWhite,
+            notSelectForegroundColor: .textSecondary
+        ),
+        buttonsContainerConfig: .init(
+            clearButtonTitle: "Очистить",
+            applyButtonTitle: "Применить",
+            disableButtonBackground: .mainColorsGrayLightest
+        ),
+        optionButtonCloseImage: .ic24Close,
+        failureConfig: .init(
+            title: "Мы не смогли загрузить данные.\nПопробуйте позже.",
+            titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
+            icon: .ic32Search,
+            iconForeground: .mainColorsGray,
+            backgroundIcon: .mainColorsGrayLightest
+        ),
+        emptyConfig: .init(
+            title: "Нет подходящих операций. Попробуйте изменить параметры фильтра",
+            titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
+            icon: .ic32Search,
+            iconForeground: .mainColorsGray,
+            backgroundIcon: .mainColorsGrayLightest
+        )
+    )
+}
+
+import SwiftUI
+
+// MARK: - Previews
+
+struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            sberQRConfirmPaymentWrapperView(.init(confirm: .fixedAmount(.preview)))
+                .previewDisplayName("SberQRConfirmPayment: Fixed")
+            
+            sberQRConfirmPaymentWrapperView(.init(confirm: .editableAmount(.preview)))
+                .previewDisplayName("SberQRConfirmPayment: Editable")
+        }
+    }
+    
+    private static func sberQRConfirmPaymentWrapperView(
+        _ state: SberQRConfirmPaymentState
+    ) -> some View {
+        
+        SberQRConfirmPaymentWrapperView(
+            viewModel: .default(
+                initialState: state,
+                getProducts: { .allProducts },
+                pay: { _ in }
+            ),
+            map: PublishingInfo.preview,
+            config: .iVortex
+        )
+    }
+}
+
+extension Date {
+    
+    var scrollToday: Date {
+        var today = Date()
+        var gregorian = Calendar(identifier: .gregorian)
+        gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
+
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+
+        today = gregorian.date(from: components)!
+        
+        return today
+    }
+}
+
+extension ManageSubscriptionsUI.ProductViewConfig {
+    
+    static let iVortex: Self = .init(
+        titleFont: .textBodyMR14180(),
+        titleColor: .textPlaceholder,
+        nameFont: .textH4M16240(),
+        nameColor: .mainColorsBlack,
+        descriptionFont: .textBodyMR14180()
+    )
+}
