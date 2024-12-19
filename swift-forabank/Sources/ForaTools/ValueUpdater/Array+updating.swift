@@ -7,8 +7,6 @@
 
 import Combine
 
-import Combine
-
 /// Extends `Array` where its elements provide a unique key and can be updated with a new value.
 ///
 /// This extension offers a mechanism to reactively apply dictionary-based updates to the array elements over time.
