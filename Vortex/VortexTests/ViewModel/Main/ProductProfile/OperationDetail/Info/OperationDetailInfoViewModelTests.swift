@@ -492,7 +492,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
         
-        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iVortex}, detail, nil, nil, nil, nil, nil, nil, nil)
+        let cells = makeItemsForTransport(dictionaryAnywayOperator: { _ in .iVortexMosParking }, detail, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
             .property(title: "Наименование получателя", value: "Паркинг")

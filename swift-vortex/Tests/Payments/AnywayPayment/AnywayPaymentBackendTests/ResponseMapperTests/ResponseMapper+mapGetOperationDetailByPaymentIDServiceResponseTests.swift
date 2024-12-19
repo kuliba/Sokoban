@@ -462,7 +462,7 @@ private extension String {
         "period": null,
         "printFormType": "housingAndCommunalService",
         "provider": null,
-        "puref": "iFora||TNS",
+        "puref": "iVortex||TNS",
         "requestDate": "17.04.2023 17:13:36",
         "responseDate": "17.04.2023 17:13:38",
         "returned": false,

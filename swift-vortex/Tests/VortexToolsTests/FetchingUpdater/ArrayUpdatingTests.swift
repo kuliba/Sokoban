@@ -6,7 +6,7 @@
 //
 
 import Combine
-import ForaTools
+import VortexTools
 import XCTest
 
 final class ArrayUpdatingTests: XCTestCase {

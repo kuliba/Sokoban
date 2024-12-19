@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 18.12.2024.
 //
 
-import ForaTools
+import VortexTools
 import XCTest
 
 final class FetchingUpdaterTests: XCTestCase {
