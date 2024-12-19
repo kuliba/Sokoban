@@ -45,6 +45,12 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
+        func performOrWaitForAuthorized(
+            _ work: @escaping () -> Void
+        ) {
+            bindings.insert(model.performOrWaitForAuthorized(work))
+        }
+        
         func runOnEachNextActiveSession(
             _ work: @escaping () -> Void
         ) {
@@ -370,64 +376,12 @@ extension RootViewModelFactory {
 
         // MARK: - Notifications Authorized
         
-        let _createGetAuthorizedZoneClientInformData = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetAuthorizedZoneClientInformDataRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
-        )
-        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformListDataState?) -> Void) in
+        performOrWaitForAuthorized { [weak self] in
             
-            _createGetAuthorizedZoneClientInformData(()) { result in
-                
-                switch result {
-                case .failure:
-                    completion(nil)
-                    
-                case let .success(response):
-                    
-                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData.init($0) }
-                  
-                    list.count == 1 && list.first != nil ?
-                    completion(.init(list,
-                            infoLabel: .init(
-                                image: list.first?.image,
-                                title: list.first?.title ?? "Информация"))
-                    )
-                    : completion(.init(list,
-                            infoLabel: .init(
-                                image: nil,
-                                title: "Информация"))
-                    )
-                }
-                
-                _ = _createGetAuthorizedZoneClientInformData
-            }
+           self?.updateAuthorizedClientInform()
         }
-        
-        model.performOrWaitForAuthorized {
-            
-                createGetAuthorizedZoneClientInformData {
-                    
-                    if let info = $0 {
-                        
-                        self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                        self.model.сlientAuthorizationState.value.authorized = info
-                    } else {
-                        
-                        self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
-                    }
-                    
-                    _ = createGetAuthorizedZoneClientInformData
-                }
-        }
-        .store(in: &bindings)
-        
-        func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
-        
-        model.sessionState
-            .map(\.isActive)
-            .filter { $0 }
-            .removeDuplicates()
-            .sink { [weak self] _ in self?.updateAlerts() }
+
+        updateClientInformAlerts()
             .store(in: &bindings)
         
         let rootViewModel = make(

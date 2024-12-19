@@ -45,7 +45,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
-    private var auithBinding: AnyCancellable?
+    private var authBinding: AnyCancellable?
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
@@ -104,7 +104,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
         
-        auithBinding = model.auth
+        authBinding = model.auth
             .receive(on: mainScheduler)
             .sink { [unowned self] auth in
                 
@@ -139,6 +139,8 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
+                    model.clientInformAlertManager.setUpdatePermission(true)
+                    
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
@@ -164,9 +166,10 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     delay(for: .milliseconds(600)) { [unowned self] in
                         
-                        guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
+                        guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
 
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
+                        self.model.clientAuthorizationState.value.authorized = nil
                     }
                 }
             }

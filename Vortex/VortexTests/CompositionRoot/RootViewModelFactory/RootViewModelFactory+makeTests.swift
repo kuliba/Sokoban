@@ -96,6 +96,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
+            "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getServiceCategoryList",
         ])

@@ -812,7 +812,7 @@ private extension Model {
         _ data: ClientAuthorizationState,
         timeout: TimeInterval = 0.05
     ) {
-        сlientAuthorizationState.send(data)
+        clientAuthorizationState.send(data)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
