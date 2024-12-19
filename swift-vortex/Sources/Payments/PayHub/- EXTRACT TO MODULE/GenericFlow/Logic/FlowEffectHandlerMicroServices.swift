@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
+@available(*, deprecated, message: "Use FlowEffectHandler designated initializer with `getNavigation` closure for brevity and clarity.")
 public struct FlowEffectHandlerMicroServices<Select, Navigation> {
     
     public let getNavigation: GetNavigation

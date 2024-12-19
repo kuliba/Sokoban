@@ -23,7 +23,6 @@ import PayHub
 import PayHubUI
 import PaymentSticker
 import RemoteServices
-import SavingsServices
 import SberQR
 import SerialComponents
 import SharedAPIInfra
@@ -46,10 +45,10 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
-        func performOrWaitForAuthorized(
+        func runOnEachNextActiveSession(
             _ work: @escaping () -> Void
         ) {
-            bindings.insert(model.performOrWaitForAuthorized(work))
+            bindings.insert(self.runOnEachNextActiveSession(work))
         }
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
@@ -241,17 +240,16 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            loadOperators: { $0([]) } // not used for servicePickerComposer
+            loadOperators: { $1([]) } // not used for servicePickerComposer
         )
-        let utilityNanoServices = utilityNanoServicesComposer.compose()
         let asyncPickerComposer = AsyncPickerEffectHandlerMicroServicesComposer(
             composer: transactionComposer,
             model: model,
-            nanoServices: utilityNanoServices
+            makeNanoServices: utilityNanoServicesComposer.compose
         )
         let servicePickerComposer = PaymentProviderServicePickerFlowModelComposer(
             factory: servicePickerFlowModelFactory,
-            microServices: asyncPickerComposer.compose(),
+            makeMicroServices: asyncPickerComposer.compose,
             model: model,
             scheduler: schedulers.main
         )
@@ -284,12 +282,28 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
+        let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
+            
+            guard let self,
+                    let product = model.product(productId: id)
+            else { return nil }
+            
+            return makeProductProfileViewModel(
+                product,
+                "",
+                .defaultFilterComponents(product: product),
+                dismiss
+            )
+        }
+        
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
         
         let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+        
+        runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if paymentsTransfersFlag.isActive {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
@@ -318,7 +332,7 @@ extension RootViewModelFactory {
         )
         
         // call and notify bannerPicker
-        bindings.saveAndRun {
+        performOrWaitForActive {
             
             loadBannersList {
                 
@@ -356,12 +370,64 @@ extension RootViewModelFactory {
 
         // MARK: - Notifications Authorized
         
-        performOrWaitForAuthorized { [weak self] in
+        let _createGetAuthorizedZoneClientInformData = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAuthorizedZoneClientInformDataRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
+        )
+        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformListDataState?) -> Void) in
             
-           self?.updateAuthorizedClientInform()
+            _createGetAuthorizedZoneClientInformData(()) { result in
+                
+                switch result {
+                case .failure:
+                    completion(nil)
+                    
+                case let .success(response):
+                    
+                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData.init($0) }
+                  
+                    list.count == 1 && list.first != nil ?
+                    completion(.init(list,
+                            infoLabel: .init(
+                                image: list.first?.image,
+                                title: list.first?.title ?? "Информация"))
+                    )
+                    : completion(.init(list,
+                            infoLabel: .init(
+                                image: nil,
+                                title: "Информация"))
+                    )
+                }
+                
+                _ = _createGetAuthorizedZoneClientInformData
+            }
         }
         
-        updateClientInfromAlerts()
+        model.performOrWaitForAuthorized {
+            
+                createGetAuthorizedZoneClientInformData {
+                    
+                    if let info = $0 {
+                        
+                        self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
+                        self.model.сlientAuthorizationState.value.authorized = info
+                    } else {
+                        
+                        self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
+                    }
+                    
+                    _ = createGetAuthorizedZoneClientInformData
+                }
+        }
+        .store(in: &bindings)
+        
+        func extractImage(from item: GetAuthorizedZoneClientInformData) -> Image? { return item.image }
+        
+        model.sessionState
+            .map(\.isActive)
+            .filter { $0 }
+            .removeDuplicates()
+            .sink { [weak self] _ in self?.updateAlerts() }
             .store(in: &bindings)
         
         let rootViewModel = make(
@@ -402,9 +468,18 @@ extension RootViewModelFactory {
         
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
+            delay: settings.delay * 2,
             dismiss: dismiss,
-            getNavigation: getRootNavigation,
-            bindOutside: { $1.bindOutside(to: $0, on: self.schedulers.main) },
+            getNavigation: { [weak self] select, notify, completion in
+                
+                self?.getRootNavigation(
+                    makeProductProfileByID: makeProductProfileByID,
+                    select: select,
+                    notify: notify,
+                    completion: completion
+                )
+            },
+            bindOutside: { $1.bindOutside(to: $0) },
             schedulers: schedulers,
             witnesses: .init(content: witness, dismiss: .default)
         )
@@ -424,102 +499,25 @@ extension SavingsAccountDomain.ContentState {
     }
 }
 
-extension RootViewModelFactory {
-    
-    @inlinable
-    func makeSavingsAccount() -> SavingsAccountDomain.Binder {
-        
-        let getSavingLanding = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetSavingLandingRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
-        let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
-            loadLanding: { getSavingLanding(( "", $0), $1) },
-            orderAccount: {_ in }
-        )
-        
-        return makeSavingsAccount(nanoServices: nanoServices)
-    }
-    
-    @inlinable
-    func makeSavingsAccount(
-        nanoServices: SavingsAccountDomain.ComposerNanoServices
-    ) -> SavingsAccountDomain.Binder {
-        
-        return compose(
-            getNavigation: getSavingsAccountNavigation,
-            content: makeContent(
-                nanoServices: nanoServices,
-                status: .initiate
-            ),
-            witnesses: .init(
-                emitting: {
-                    $0.$state.compactMap(\.select)
-                },
-                dismissing: { content in
-                    { content.event(.resetSelection) }
-                }
-            )
-        )
-    }
-    
-    private func makeContent(
-        nanoServices: SavingsAccountDomain.ComposerNanoServices,
-        status: SavingsAccountDomain.ContentStatus
-    ) -> SavingsAccountDomain.Content {
-        
-        let reducer = SavingsAccountDomain.ContentReducer()
-        let effectHandler = SavingsAccountDomain.ContentEffectHandler(
-            microServices: .init(
-                loadLanding: nanoServices.loadLanding
-            ),
-            landingType: "DEFAULT"
-        )
-        
-        return .init(
-            initialState: .init(status: status),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect,
-            scheduler: schedulers.main
-        )
-    }
-
-    @inlinable
-    func getSavingsAccountNavigation(
-        select: SavingsAccountDomain.Select,
-        notify: @escaping SavingsAccountDomain.Notify,
-        completion: @escaping (SavingsAccountDomain.Navigation) -> Void
-    ) {
-        switch select {
-        case .goToMain:
-            completion(.main)
-        case .order:
-            completion(.order)
-        }
-    }
-}
-
 private extension RootViewDomain.Flow {
     
     func bindOutside(
-        to content: RootViewDomain.Content,
-        on scheduler: AnySchedulerOfDispatchQueue
+        to content: RootViewDomain.Content
     ) -> Set<AnyCancellable> {
         
         let outside = $state.compactMap(\.outside)
-            .debounce(for: .milliseconds(500), scheduler: scheduler)
-            .receive(on: scheduler)
-            .sink { [weak content] in
+            .sink { [weak content, weak self] in
                 
-                guard let content else { return }
+                guard let content, let self else { return }
                 
                 switch $0 {
-                case let .productProfile(productID):
-                    content.tabsViewModel.mainViewModel.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                case .productProfile:
+                    break
                     
                 case let .tab(tab):
+                    content.rootActions.dismissAll()
+                    event(.dismiss)
+                    
                     switch tab {
                     case .main:
                         content.selected = .main
@@ -536,7 +534,7 @@ private extension RootViewDomain.Flow {
 
 private extension FlowState<RootViewNavigation> {
     
-    var outside: RootViewOutside? {
+    var outside: RootViewDomain.Navigation.RootViewOutside? {
         
         guard case let .outside(outside) = navigation else { return nil }
         
@@ -572,7 +570,7 @@ typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewMod
 extension ProductProfileViewModel {
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
@@ -892,28 +890,7 @@ private extension MarketShowcaseDomain.ContentError {
     }
 }
 
-private extension SavingsAccountDomain.ContentError {
-    
-    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
-    
-    init(
-        error: RemoteError
-    ) {
-        switch error {
-        case let .performRequest(error):
-            if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
-            } else {
-                self = .init(kind: .alert("Попробуйте позже."))
-            }
-            
-        default:
-            self = .init(kind: .alert("Попробуйте позже."))
-        }
-    }
-}
-
-private extension Error {
+extension Error {
     
     func isNotConnectedToInternetOrTimeout() -> Bool {
         

@@ -10,16 +10,16 @@ import SwiftUI
 
 public struct IconWithTitleLabelVerticalConfig: Equatable {
     
-    public let circleSize: CGFloat
+    public let circle: CGFloat
     public let frame: CGSize
     public let spacing: CGFloat
     
     public init(
-        circleSize: CGFloat,
+        circle: CGFloat,
         frame: CGSize,
         spacing: CGFloat
     ) {
-        self.circleSize = circleSize
+        self.circle = circle
         self.frame = frame
         self.spacing = spacing
     }

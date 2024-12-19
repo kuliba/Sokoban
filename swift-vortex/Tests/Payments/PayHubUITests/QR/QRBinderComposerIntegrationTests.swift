@@ -32,7 +32,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         let mainScheduler: AnySchedulerOf<DispatchQueue> = .immediate
         let interactiveScheduler: AnySchedulerOf<DispatchQueue> = .immediate
         
-        let factory = ContentFlowBindingFactory(scheduler: mainScheduler)
+        let factory = ContentFlowBindingFactory()
         let witnesses = Witnesses(
             contentEmitting: { $0.publisher },
             contentDismissing: { content in { content.dismiss() }},

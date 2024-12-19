@@ -8,7 +8,7 @@
 import Combine
 import CombineSchedulers
 @testable import Vortex
-import PayHubUI
+import PayHub
 import XCTest
 
 final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryTests {
@@ -72,6 +72,37 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSessionAgain() throws {
+        
+        let (sut, httpClient, sessionAgent, userInitiatedScheduler) = makeSUT()
+        sessionAgent.activate()
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        userInitiatedScheduler.advance()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+        ])
+
+        sessionAgent.deactivate()
+        sessionAgent.activate()
+        
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        
+        XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
+            "getBannerCatalogList",
+            "getNotAuthorizedZoneClientInformData",
+            "getServiceCategoryList",
+            "getServiceCategoryList",
+        ])
+        
+        XCTAssertNotNil(sut)
+    }
+    
     func test_shouldSetCategoryPickerStateToLoading() throws {
         
         let (sut, _,_,_) = makeSUT()
@@ -105,13 +136,14 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: anyError(), at: 1)
+        httpClient.complete(with: anyError(), at: 2)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
@@ -128,13 +160,14 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: mobileJSON(), at: 1)
+        httpClient.complete(with: mobileJSON(), at: 2)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
@@ -151,16 +184,18 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         userInitiatedScheduler.advance()
         awaitActorThreadHop()
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
         awaitActorThreadHop()
         
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getOperatorsListByParam-housingAndCommunalService"
@@ -182,7 +217,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
         awaitActorThreadHop()
         
         XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServiceCategory].self).count, 1, "Expected to cache ServiceCategories once.")
@@ -207,7 +242,6 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
@@ -221,12 +255,11 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             sessionState: active(),
             schedulers: .immediate
         )
-        XCTAssert(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).isEmpty)
         
         awaitActorThreadHop()
+        XCTAssert(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).isEmpty)
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
-            "getBannerCatalogList",
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
@@ -239,15 +272,14 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         awaitActorThreadHop()
         
         // getOperatorsListByParam-housingAndCommunalService
-        httpClient.complete(with: getOperatorsListByParamJSON(), at: 4)
+        httpClient.complete(with: getOperatorsListByParamJSON(), at: 3)
         awaitActorThreadHop()
         
         // getOperatorsListByParam-internet
-        httpClient.complete(with: anyError(), at: 5)
+        httpClient.complete(with: anyError(), at: 4)
         awaitActorThreadHop()
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
-            "getBannerCatalogList",
             "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getOperatorsListByParam-housingAndCommunalService",
@@ -274,13 +306,14 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
         awaitActorThreadHop()
         
-        httpClient.complete(with: anyError(), at: 2)
-        awaitActorThreadHop()
+        httpClient.complete(with: anyError(), at: 3)
+        userInitiatedScheduler.advance(to: .init(.now().advanced(by: RootViewModelFactorySettings.prod.batchDelay.timeInterval)))
         
         httpClient.expectRequests(withQueryValueFor: "type", match: [
+            "getBannerCatalogList",
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getOperatorsListByParam-housingAndCommunalService",

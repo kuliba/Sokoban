@@ -128,7 +128,7 @@ final class LegacyV1StrategyTests: XCTestCase {
         legacySpy: LegacySpy,
         v1Spy: V1Spy
     ) {
-        let legacySpy = LegacySpy(response: legacy ?? makeLegacy())
+        let legacySpy = LegacySpy(stubs: [legacy ?? makeLegacy()])
         let v1Spy = V1Spy()
         let sut = SUT(
             makeLegacy: legacySpy.call(payload:),

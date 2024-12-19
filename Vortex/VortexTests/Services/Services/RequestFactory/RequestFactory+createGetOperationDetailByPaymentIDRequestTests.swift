@@ -26,7 +26,7 @@ final class RequestFactory_createGetOperationDetailByPaymentIDRequestTests: XCTe
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.\(Config.domen)/dbo/api/v3/rest/getOperationDetailByPaymentId"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/v2/getOperationDetailByPaymentId"
         )
     }
     

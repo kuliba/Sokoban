@@ -9,15 +9,28 @@ import Combine
 
 extension RootViewModelFactory {
     
+    typealias MakeProductProfileByID = (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel?
+    
     @inlinable
     func getRootNavigation(
+        makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
         notify: @escaping RootViewDomain.Notify,
         completion: @escaping (RootViewNavigation) -> Void
     ) {
         switch select {
         case let .outside(outside):
-            completion(.outside(outside))
+            switch outside {
+            case let .productProfile(id):
+                if let profile = makeProductProfileByID(id, { notify(.dismiss) }) {
+                    completion(.outside(.productProfile(profile)))
+                } else {
+                    completion(.failure(.makeProductProfileFailure(id)))
+                }
+                
+            case let .tab(tab):
+                completion(.outside(.tab(tab)))
+            }
             
         case .scanQR:
             makeScanQR()
@@ -119,15 +132,36 @@ extension RootViewModelFactory {
                 case let .success(binder):
                     completion(.standardPayment(.init(
                         model: binder,
-                        cancellables: []
+                        cancellable: bind(binder)
                     )))
                 }
             }
+        }
+        
+        func bind(
+            _ binder: PaymentProviderPickerDomain.Binder
+        ) -> AnyCancellable {
+            
+            return binder.flow.$state
+                .compactMap(\.rootEvent)
+                .sink { notify(.select($0)) }
         }
     }
 }
 
 // MARK: - Adapters
+
+private extension PaymentProviderPickerDomain.FlowDomain.State {
+    
+    var rootEvent: RootEvent? {
+        
+        switch navigation {
+        case .outside(.qr):   return .scanQR
+        case .outside(.main): return .outside(.tab(.main))
+        default:               return nil
+        }
+    }
+}
 
 private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
     
@@ -137,8 +171,8 @@ private extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel
         case .none:
             return nil
             
-        case let .productID(productID):
-            return .select(.outside(.productProfile(productID)))
+        case let .productID(productModel):
+            return .select(.outside(.productProfile(productModel)))
             
         case let .tab(tab):
             switch tab {
@@ -157,8 +191,8 @@ private extension RootViewNavigation.Failure {
     init(_ failure: RootViewModelFactory.StandardPaymentFailure) {
         
         switch failure {
-        case .makeStandardPaymentFailure:
-            self = .makeStandardPaymentFailure
+        case let .makeStandardPaymentFailure(binder):
+            self = .makeStandardPaymentFailure(binder)
             
         case let .missingCategoryOfType(categoryType):
             self = .missingCategoryOfType(categoryType)

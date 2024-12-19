@@ -13,8 +13,9 @@ import InfoComponent
 import LandingUIComponent
 import LoadableResourceComponent
 import MarketShowcase
-import PaymentComponents
+import PayHub
 import PayHubUI
+import PaymentComponents
 import PDFKit
 import SberQR
 import SwiftUI
@@ -51,6 +52,7 @@ extension RootViewFactoryComposer {
         let generalImageCache = model.generalImageCache()
         
         return .init(
+            clearCache: clearCache,
             isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
@@ -95,7 +97,8 @@ extension RootViewFactoryComposer {
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView,
+            makePaymentsView: makePaymentsView, 
+            makeProductProfileView: makeProductProfileView,
             makeQRFailedView: makeQRFailedView,
             makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
@@ -103,6 +106,11 @@ extension RootViewFactoryComposer {
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView
         )
+    }
+    
+    private func clearCache() {
+        
+        try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
     }
 }
 
@@ -586,6 +594,61 @@ private extension RootViewFactoryComposer {
         .init(
             viewModel: viewModel,
             viewFactory: makePaymentsSuccessViewFactory()
+        )
+    }
+        
+    func makeProductProfileView(
+        viewModel: ProductProfileViewModel
+    ) -> ProductProfileView {
+        
+        let getUImage = { self.model.images.value[$0]?.uiImage }
+
+        return .init(
+            viewModel: viewModel,
+            viewFactory: makePaymentsTransfersViewFactory(),
+            productProfileViewFactory: makeProductProfileViewFactory(),
+            getUImage: getUImage
+        )
+    }
+    
+    func makeProductProfileViewFactory() -> ProductProfileViewFactory {
+        .init(
+            makeActivateSliderView: ActivateSliderStateWrapperView.init,
+            makeHistoryButton: { [weak self] in
+                
+                guard let self else { return nil }
+                
+                return makeHistoryButtonView(
+                    historyFeatureFlag,
+                    isFiltered: $1,
+                    isDateFiltered: $2,
+                    clearAction: $3,
+                    event: $0
+                )
+            },
+            makeRepeatButtonView: { [weak self] in
+                
+                guard let self else { return nil }
+                
+                return makeReturnButtonView(historyFeatureFlag, action: $0)
+            }
+        )
+    }
+        
+    func makePaymentsTransfersViewFactory() -> PaymentsTransfersViewFactory {
+        
+        let imageCache = model.imageCache()
+        let generalImageCache = model.generalImageCache()
+
+        return .init(
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory(event:),
+            makeIconView: imageCache.makeIconView(for:),
+            makeGeneralIconView: generalImageCache.makeIconView(for:),
+            makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
+            makeInfoViews: .default,
+            makeUserAccountView: makeUserAccountView(viewModel:),
+            components: makeViewComponents()
         )
     }
     

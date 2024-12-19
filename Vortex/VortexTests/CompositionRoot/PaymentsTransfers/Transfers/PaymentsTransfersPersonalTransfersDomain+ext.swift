@@ -18,6 +18,9 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
         case .dismiss:
             return .dismiss
             
+        case let .isLoading(isLoading):
+            return .isLoading(isLoading)
+
         case let .receive(receive):
             return .receive(receive.equatable)
             
@@ -29,6 +32,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
     enum EquatableEvent: Equatable {
         
         case dismiss
+        case isLoading(Bool)
         case receive(PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult)
         case select(PaymentsTransfersPersonalTransfersDomain.EquatableSelect)
     }
@@ -68,8 +72,8 @@ extension PaymentsTransfersPersonalTransfersDomain.Navigation {
         case let .successMeToMe(node):
             return .successMeToMe(.init(node.model))
             
-        case let .scanQR(node):
-            return .scanQR(.init(node.model))
+        case .scanQR:
+            return .scanQR
         }
     }
 }
@@ -97,8 +101,8 @@ extension PaymentsTransfersPersonalTransfersDomain.Select {
         case let .latest(latest):
             return .latest(latest)
             
-        case let .qr(qr):
-            return .qr(qr)
+        case .scanQR:
+            return .scanQR
             
         case let .successMeToMe(successMeToMe):
             return .successMeToMe(.init(successMeToMe.model))
@@ -117,7 +121,7 @@ extension PaymentsTransfersPersonalTransfersDomain {
         case payments(ObjectIdentifier)
         case paymentsViewModel(ObjectIdentifier)
         case successMeToMe(ObjectIdentifier)
-        case scanQR(ObjectIdentifier)
+        case scanQR
     }
     
     enum EquatableNavigationFailure: Error, Equatable {
@@ -133,7 +137,7 @@ extension PaymentsTransfersPersonalTransfersDomain {
         case contacts(Payments.Operation.Source)
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
-        case qr(PaymentsTransfersPersonalTransfersDomain.Select.QR)
+        case scanQR
         case successMeToMe(ObjectIdentifier)
     }
     
@@ -148,6 +152,9 @@ extension PaymentsTransfersPersonalTransfersDomain.NotifyEvent {
         case .dismiss:
             return .dismiss
             
+        case let .isLoading(isLoading):
+            return .isLoading(isLoading)
+
         case let .select(select):
             return .select(select.equatable)
         }

@@ -35,6 +35,14 @@ extension CallSpy where Payload == Void {
     }
 }
 
+extension CallSpy where Response == Void {
+    
+    convenience init() {
+        
+        self.init(stubs: [()])
+    }
+}
+
 extension CallSpy {
     
     func call<A, B>(_ a: A, _ b: B) -> Response

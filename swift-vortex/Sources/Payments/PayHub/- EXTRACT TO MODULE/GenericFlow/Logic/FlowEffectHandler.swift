@@ -11,21 +11,26 @@ import Foundation
 public final class FlowEffectHandler<Select, Navigation> {
     
     private let delay: Delay
-    private let microServices: MicroServices
+    private let getNavigation: GetNavigation
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
+    /// - Warning: `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set. Keep until `RxViewModel` fix.
     public init(
         delay: Delay = .milliseconds(100),
-        microServices: MicroServices,
+        getNavigation: @escaping GetNavigation,
         scheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive)
     ) {
         self.delay = delay
-        self.microServices = microServices
+        self.getNavigation = getNavigation
         self.scheduler = scheduler
     }
     
-    public typealias MicroServices = FlowEffectHandlerMicroServices<Select, Navigation>
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+    
+    public typealias NotifyEvent = FlowEvent<Select, Never>
+    public typealias Notify = (NotifyEvent) -> Void
+    
+    public typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
 }
 
 public extension FlowEffectHandler {
@@ -49,24 +54,27 @@ public extension FlowEffectHandler {
     typealias Effect = FlowEffect<Select>
 }
 
-public extension FlowEffectHandler {
+private extension FlowEffectHandler {
     
     func handle(
         _ select: Select,
         _ dispatch: @escaping Dispatch
     ) {
-        let notify = { (event: MicroServices.NotifyEvent) in
+        let notify: Notify = { event in
             
             switch event {
             case .dismiss:
                 dispatch(.dismiss)
+                
+            case let .isLoading(isLoading):
+                dispatch(.isLoading(isLoading))
                 
             case let .select(select):
                 dispatch(.select(select))
             }
         }
         
-        microServices.getNavigation(select, notify) { [weak self] navigation in
+        getNavigation(select, notify) { [weak self] navigation in
             
             guard let self else { return }
             

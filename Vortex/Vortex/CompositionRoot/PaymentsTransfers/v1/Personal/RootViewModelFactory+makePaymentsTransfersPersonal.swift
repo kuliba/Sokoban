@@ -31,7 +31,7 @@ extension RootViewModelFactory {
                 
                 guard let categoryPicker else {
                     
-                    return self.logger.log(level: .error, category: .payments, message: "Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
+                    return self.logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
                 }
                 
                 categoryPicker.content.event(.loaded(categories ?? []))
@@ -63,9 +63,9 @@ private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect,
 
 // MARK: - Content
 
-private extension PaymentsTransfersPersonalDomain.Content {
+extension PaymentsTransfersPersonalDomain.Content {
     
-    var eventPublisher: EventPublisher {
+    fileprivate var eventPublisher: EventPublisher {
         
         Publishers.Merge3(
             categoryPicker.eventPublisher,
@@ -173,13 +173,13 @@ private extension OperationPickerDomain.FlowDomain.State {
         case .none, .exchange, .latest:
             return nil
             
-        case let .status(status):
-            switch status {
+        case .exchangeFailure:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
             case .main:
                 return .main
-                
-            case .exchangeFailure:
-                return nil
             }
             
         case .templates:
@@ -208,12 +208,27 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
     var eventPublisher: EventPublisher {
         
         flow.$state
-            .compactMap { _ in return nil }
+            .compactMap(\.select)
+            .handleEvents(receiveOutput: {
+                
+                print($0)
+            })
             .eraseToAnyPublisher()
     }
     
     func dismiss() {
         
         flow.event(.dismiss)
+    }
+}
+
+private extension PaymentsTransfersPersonalTransfersDomain.FlowDomain.State {
+    
+    var select: PaymentsTransfersPersonalSelect? {
+        
+        switch navigation {
+        case .success(.scanQR):         return .scanQR
+        case .none, .failure, .success: return nil
+        }
     }
 }

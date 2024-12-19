@@ -9,6 +9,7 @@ import Foundation
 
 struct UtilityService: Equatable {
     
+    let icon: String?
     let name: String
     let puref: String
 }

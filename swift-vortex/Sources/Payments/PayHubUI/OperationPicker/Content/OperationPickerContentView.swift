@@ -239,7 +239,7 @@ private extension OperationPickerState<PreviewLatest> {
     static func loadedPreview(count: Int) -> Self {
         
         return .init(
-            suffix: (0..<count).map { _ in .element(.init(.latest(.preview()))) }
+            suffix: (0..<count).map { _ in .element(.init(.latest(.preview))) }
         )
     }
     

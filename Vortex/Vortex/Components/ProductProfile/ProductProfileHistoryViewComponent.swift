@@ -193,7 +193,6 @@ extension ProductProfileHistoryView {
                             
                             storageStatements = storage.statements.filter({
                                 
-                                print($0.dateValue.localDate())
                                 return $0.dateValue.localDate().isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
                             })
                         }

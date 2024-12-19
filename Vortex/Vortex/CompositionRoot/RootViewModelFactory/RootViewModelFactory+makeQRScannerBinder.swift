@@ -249,6 +249,9 @@ private extension QRScannerDomain.NotifyEvent {
         case .dismiss:
             self = .dismiss
             
+        case let .isLoading(isLoading):
+            self = .isLoading(isLoading)
+            
         case let .select(select):
             switch select {
             case .addCompany:

@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makePaymentProviderPickerTests.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 06.12.2024.
 //
@@ -198,7 +198,7 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
     
     private typealias Destination = StandardSelectedCategoryDestination
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
-    private typealias LoadOperatorSpy = Spy<Void, Result<[PaymentServiceOperator], any Error>, Never>
+    private typealias LoadOperatorSpy = Spy<Void, Result<[UtilityPaymentProvider], any Error>, Never>
     private typealias MakeFailureSpy = Spy<Void, FailedPaymentProviderPicker, Never>
     private typealias MakeSuccessSpy = Spy<SUT.MakeSelectedCategorySuccessPayload, PaymentProviderPickerDomain.Binder, Never>
     

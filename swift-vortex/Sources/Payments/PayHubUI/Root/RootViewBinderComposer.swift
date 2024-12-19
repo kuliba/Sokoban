@@ -13,6 +13,7 @@ import PayHub
 public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Navigation> {
     
     private let bindings: Set<AnyCancellable>
+    private let delay: Delay
     private let dismiss: () -> Void
     private let getNavigation: RootDomain.GetNavigation
     // TODO: - move to witness
@@ -20,14 +21,17 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
     private let schedulers: Schedulers
     private let witnesses: RootDomain.Witnesses
     
+    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
     public init(
         bindings: Set<AnyCancellable>,
+        delay: Delay,
         dismiss: @escaping () -> Void,
         getNavigation: @escaping RootDomain.GetNavigation,
         bindOutside: @escaping BindOutside,
         schedulers: Schedulers = .init(),
         witnesses: RootDomain.Witnesses
     ) {
+        self.delay = delay
         self.bindings = bindings
         self.dismiss = dismiss
         self.getNavigation = getNavigation
@@ -36,6 +40,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
         self.witnesses = witnesses
     }
     
+    public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     public typealias RootDomain = RootViewDomain<RootViewModel, DismissAll, Select, Navigation>
     public typealias BindOutside = (RootDomain.Content, RootDomain.Flow) -> Set<AnyCancellable>
 }
@@ -47,6 +52,7 @@ public extension RootViewBinderComposer {
     ) -> RootDomain.Binder {
         
         let flowComposer = RootDomain.FlowDomain.Composer(
+            delay: delay,
             getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
@@ -67,7 +73,7 @@ private extension RootViewBinderComposer {
         flow: RootDomain.Flow
     ) -> Set<AnyCancellable> {
         
-        let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
+        let factory = ContentFlowBindingFactory()
         let bind = factory.bind(with: .init(
             contentEmitting: witnesses.content.emitting,
             contentDismissing: witnesses.content.dismissing,

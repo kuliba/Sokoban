@@ -27,6 +27,6 @@ extension PaymentsTransfersFlowManager {
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
+    typealias Operator = UtilityPaymentProvider
     typealias Service = UtilityService
 }

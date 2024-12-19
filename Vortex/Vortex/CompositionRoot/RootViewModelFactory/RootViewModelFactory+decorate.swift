@@ -15,9 +15,13 @@ extension RootViewModelFactory {
         with decoration: @escaping ServiceCategoryBatchService
     ) -> Load<[ServiceCategory]> {
         
-        return { [log = logger.log] completion in
+        return { [weak self] completion in
             
-            decoratee {
+            guard let self else { return completion(nil) }
+            
+            decoratee { [weak self] in
+                
+                guard let self else { return completion(nil) }
                 
                 switch $0 {
                 case .none:
@@ -27,11 +31,13 @@ extension RootViewModelFactory {
                     completion([])
                     
                 case let .some(categories):
-                    decoration(categories) { failedCategories in
+                    decoration(categories) { [weak self] failedCategories in
+                        
+                        guard let self else { return completion(categories) }
                         
                         if !failedCategories.isEmpty {
                             
-                            log(.error, .network, "Fail to load categories named: \(failedCategories.map(\.name)).", #fileID, #line)
+                            errorLog(category: .network, message: "Fail to load categories named: \(failedCategories.map(\.name)).")
                         }
                         
                         completion(categories)

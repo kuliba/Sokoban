@@ -29,7 +29,7 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
         
         sut.handleEffect(.select(select)) { _ in }
         
-        XCTAssertEqual(getNavigation.payloads.map(\.0), [select])
+        XCTAssertNoDiff(getNavigation.payloads.map(\.0), [select])
     }
     
     func test_getNavigation_shouldDeliverEventViaNotify() throws {
@@ -41,11 +41,15 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
         let notify = try XCTUnwrap(getNavigation.payloads.map(\.1).first)
         
         notify(.dismiss)
+        notify(.isLoading(true))
         notify(.select(select))
+        notify(.isLoading(false))
         
-        XCTAssertEqual(events, [
+        XCTAssertNoDiff(events, [
             .dismiss,
-            .select(select)
+            .isLoading(true),
+            .select(select),
+            .isLoading(false),
         ])
     }
     
@@ -77,12 +81,7 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(
-            microServices: .init(
-                getNavigation: {
-                    
-                    getNavigation.process(($0, $1), completion: $2)
-                }
-            ),
+            getNavigation: getNavigation.process,
             scheduler: .immediate
         )
         

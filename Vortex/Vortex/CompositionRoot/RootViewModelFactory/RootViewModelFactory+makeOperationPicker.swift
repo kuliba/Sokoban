@@ -59,7 +59,7 @@ extension RootViewModelFactory {
             if let exchange {
                 completion(.exchange(exchange))
             } else {
-                completion(.status(.exchangeFailure))
+                completion(.exchangeFailure)
             }
             
         case let .latest(latest):

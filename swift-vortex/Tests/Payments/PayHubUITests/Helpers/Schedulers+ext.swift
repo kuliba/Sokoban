@@ -8,9 +8,9 @@
 import Combine
 import CombineSchedulers
 import Foundation
-import PayHubUI
+import PayHub
 
-extension PayHubUI.Schedulers {
+extension PayHub.Schedulers {
     
     static let immediate: Self = .init(
         main: .immediate,

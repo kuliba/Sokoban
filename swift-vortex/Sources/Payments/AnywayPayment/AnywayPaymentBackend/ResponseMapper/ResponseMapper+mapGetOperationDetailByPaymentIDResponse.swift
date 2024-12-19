@@ -42,6 +42,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             depositDateOpen: data.depositDateOpen,
             depositNumber: data.depositNumber,
             division: data.division,
+            documentNumber: data.docNumber,
             driverLicense: data.driverLicense,
             externalTransferType: .init(data.externalTransferType),
             isForaBank: data.isForaBank,
@@ -51,6 +52,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             merchantIcon: data.merchantIcon,
             merchantSubName: data.merchantSubName,
             operation: data.operation,
+            operationCategory: data.operationCategory,
             operationStatus: .init(data.operationStatus),
             oktmo: data.OKTMO,
             payeeAccountID: data.payeeAccountId,
@@ -85,6 +87,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             payerMiddleName: data.payerMiddleName,
             payerPhone: data.payerPhone,
             payerSurName: data.payerSurName,
+            paymentFlow: data.payment_flow,
             paymentMethod: .init(data.paymentMethod),
             paymentOperationDetailID: data.paymentOperationDetailId,
             paymentTemplateID: data.paymentTemplateId,
@@ -173,7 +176,6 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.PaymentMe
         }
     }
 }
-
 private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.Transfer {
     
     init?(_ rawValue: String?) {
@@ -183,8 +185,9 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.Transfer 
         case "ACCOUNT_2_CARD":                self = .accountToCard
         case "ACCOUNT_2_PHONE":               self = .accountToPhone
         case "ACCOUNT_CLOSE":                 self = .accountClose
-        case "ADDRESSLESS":                   self = .contactAddressless
+        case "ADDRESSING_ACCOUNT":            self = .accountAdressing
         case "ADDRESSING_CASH":               self = .contactAddressingCash
+        case "ADDRESSLESS":                   self = .contactAddressless
         case "BANK_DEF":                      self = .bankDef
         case "BEST2PAY":                      self = .bestToPay
         case "C2B_PAYMENT":                   self = .c2bPayment
@@ -193,34 +196,51 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.Transfer 
         case "CARD_2_CARD":                   self = .cardToCard
         case "CARD_2_PHONE":                  self = .cardToPhone
         case "CHANGE_OUTGOING":               self = .changeOutgoing
+        case "CHARITY_SERVICE":               self = .charityService
+        case "CONTACT_ADDRESSING":            self = .contactAddressing
+        case "CONTACT_ADDRESSLESS":           self = .contactAddressless
         case "CONVERSION_ACCOUNT_2_ACCOUNT":  self = .conversionAccountToAccount
         case "CONVERSION_ACCOUNT_2_CARD":     self = .conversionAccountToCard
         case "CONVERSION_ACCOUNT_2_PHONE":    self = .conversionAccountToPhone
         case "CONVERSION_CARD_2_ACCOUNT":     self = .conversionCardToAccount
         case "CONVERSION_CARD_2_CARD":        self = .conversionCardToCard
         case "CONVERSION_CARD_2_PHONE":       self = .conversionCardToPhone
-        case "CONTACT_ADDRESSING":            self = .contactAddressing
         case "DEPOSIT_CLOSE":                 self = .depositClose
         case "DEPOSIT_OPEN":                  self = .depositOpen
+        case "DIGITAL_WALLETS_SERVICE":      self = .digitalWalletsService
+        case "DIRECT":                        self = .direct
+        case "EDUCATION_SERVICE":            self = .educationService
         case "ELECSNET":                      self = .elecsnet
         case "EXTERNAL":                      self = .external
-        case "HOUSING_AND_COMMUNAL_SERVICE":  self = .housingAndCommunalService
+        case "FOREIGN_CARD":                  self = .foreignCard
+        case "GOLDEN_PAYMENT":                self = .goldenPayment
+        case "HOUSING_AND_COMMUNAL_SERVICE": self = .housingAndCommunalService
+        case "INTEREST_DEPOSIT":              self = .interestDeposit
         case "INTERNAL":                      self = .internal
         case "INTERNET":                      self = .internet
-        case "INTEREST_DEPOSIT":              self = .interestDeposit
         case "ME2ME_CREDIT":                  self = .meToMeCredit
         case "ME2ME_DEBIT":                   self = .meToMeDebit
         case "MOBILE":                        self = .mobile
-        case "NEW_DIRECT":                    self = .direct
+        case "NETWORK_MARKETING_SERVICE":    self = .networkMarketingService
+        case "NEW_DIRECT":                    self = .newDirect
+        case "NEW_DIRECT_ACCOUNT":            self = .newDirectAccount
+        case "NEW_DIRECT_CARD":               self = .newDirectCard
         case "OTH":                           self = .other
         case "PRODUCT_PAYMENT_COURIER":       self = .productPaymentCourier
         case "PRODUCT_PAYMENT_OFFICE":        self = .productPaymentOffice
-        case "RETURN_OUTGOING":               self = .returnOutgoing
-        case "SBER_QR_PAYMENT":               self = .sberQRPayment
-        case "SFP":                           self = .sfp
-        case "TAX_AND_STATE_SERVICE":         self = .taxAndStateService
-        case "TRANSPORT":                     self = .transport
-        default:                              return nil
+        case "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE": self = .repaymentLoansAndAccountsService
+        case "RETURN_OUTGOING":                       self = .returnOutgoing
+        case "SBER_QR_PAYMENT":                       self = .sberQRPayment
+        case "SECURITY_SERVICE":                      self = .securityService
+        case "SFP":                                    self = .sfp
+        case "SOCIAL_AND_GAMES_SERVICE":              self = .socialAndGamesService
+        case "TAX_AND_STATE_SERVICE":                 self = .taxAndStateService
+        case "TRANSPORT":                              self = .transport
+        case "INSURANCE_SERVICE":                      self = .insuranceService
+        case "JOURNEY_SERVICE":                        self = .journeyServices
+        default:
+            guard let rawValue else { return nil }
+            self = .unknown(rawValue)
         }
     }
 }
@@ -247,6 +267,7 @@ private extension ResponseMapper {
         let depositDateOpen: String?
         let depositNumber: String?
         let division: String?
+        let docNumber: String?
         let driverLicense: String?
         let externalTransferType: String?
         let isForaBank: Bool?
@@ -256,6 +277,7 @@ private extension ResponseMapper {
         let merchantIcon: String?
         let merchantSubName: String?
         let operation: String?
+        let operationCategory: String?
         let operationStatus: String?
         let OKTMO: String?
         let payeeAccountId: Int?
@@ -290,6 +312,7 @@ private extension ResponseMapper {
         let payerMiddleName: String?
         let payerPhone: String?
         let payerSurName: String?
+        let payment_flow: String?
         let paymentMethod: String?
         let paymentOperationDetailId: Int
         let paymentTemplateId: Int?
