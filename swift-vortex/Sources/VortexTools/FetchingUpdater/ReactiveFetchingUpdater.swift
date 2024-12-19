@@ -48,17 +48,29 @@ public extension ReactiveFetchingUpdater {
         payload: Payload,
         completion: @escaping (V?) -> Void
     ) {
-        cancellable = Future { [weak self] promise in
+        fetcher.fetch(payload) { [weak self] value in
             
-            guard let self else { return promise(.success(nil)) }
+            guard let self else { return }
             
-            fetcher.fetch(payload) { promise(.success($0)) }
+            guard let value else { return completion(nil) }
+            
+            cancellable = updater.update(value)
+                .sink(receiveValue: completion)
         }
-        .compactMap { $0 }
-        .flatMap(updater.update)
-        .sink(
-            receiveCompletion: { _ in completion(nil) },
-            receiveValue: completion
-        )
+    }
+}
+
+/// Extends `ReactiveFetchingUpdater` for cases where no payload is required.
+///
+/// When `Payload` is `Void`, this extension provides a simplified `load` method that omits the payload parameter.
+public extension ReactiveFetchingUpdater where Payload == Void {
+    
+    /// Loads data without requiring a payload.
+    ///
+    /// - Parameter completion: A closure called with each emitted `V` value, and with `nil` when the loading completes or fails.
+    func load(
+        completion: @escaping (V?) -> Void
+    ) {
+        load(payload: (), completion: completion)
     }
 }
