@@ -34,3 +34,27 @@ extension AnyOptionalFetcher: OptionalFetcher {
         _fetch(payload, completion)
     }
 }
+
+/// Extends `AnyOptionalFetcher` for cases where no payload is required.
+///
+/// When `Payload` is `Void`, this extension provides a simplified initializer and a `fetch` method that omit the payload parameter.
+public extension AnyOptionalFetcher where Payload == Void {
+    
+    /// Initializes an `AnyOptionalFetcher` without requiring a payload.
+    ///
+    /// - Parameter fetch: A closure that fetches a `T?` value asynchronously.
+    init(
+        fetch: @escaping (@escaping (T?) -> Void) -> Void
+    ) {
+        self.init { _, completion in fetch(completion) }
+    }
+    
+    /// Fetches data without requiring a payload.
+    ///
+    /// - Parameter completion: A closure called with the fetched `T` value, or `nil` if the fetch fails.
+    func fetch(
+        completion: @escaping (T?) -> Void
+    ) {
+        fetch((), completion: completion)
+    }
+}

@@ -18,7 +18,13 @@ extension RootViewModelFactory {
         
         // MARK: - OperationPicker
         
-        let operationPicker = makeOperationPicker(nanoServices)
+        let operationPicker = makeOperationPicker(
+            loadLatest: nanoServices.loadAllLatest,
+            prefix: [
+                .element(.init(.templates)),
+                .element(.init(.exchange))
+            ]
+        )
         
         // MARK: - Transfers
         
@@ -32,8 +38,8 @@ extension RootViewModelFactory {
             transfers: transfers,
             reload: {
                 
-                categoryPicker.content.event(.reload)
-                operationPicker.content.event(.reload)
+                categoryPicker.reload()
+                operationPicker.reload()
             }
         )
     }

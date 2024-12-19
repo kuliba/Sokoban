@@ -8,12 +8,13 @@
 import PayHubUI
 import RxViewModel
 import SwiftUI
+import UtilityServicePrepaymentUI
 
 extension RootViewFactory {
     
     @ViewBuilder
     func makeOperationPickerView(
-        operationPicker: PayHubUI.OperationPicker
+        operationPicker: OperationPicker
     ) -> some View {
         
         if let binder = operationPicker.operationBinder {
@@ -75,7 +76,13 @@ extension RootViewFactory {
             config: .iVortex,
             latestView: { latest in
                 
-                LatestPaymentButtonLabelView(latest: latest, config: .prod())
+                // TODO: replace `LastPaymentLabel` with `LatestPaymentButtonLabelView(latest: latest, config: .prod())` - see below
+                LastPaymentLabel(
+                    amount: latest.amount.map { "\($0) ₽" } ?? "",
+                    title: latest.name,
+                    config: .iVortex,
+                    iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
+                )
             },
             placeholderView:  {
                 

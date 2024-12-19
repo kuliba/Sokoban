@@ -164,7 +164,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     private typealias SUT = (CategorySet) -> RootViewModelFactory.LoadLatestOperations
     private typealias GetAllLoadedCategoriesSpy = Spy<Void, [ServiceCategory], Never>
-    private typealias GetLatestPaymentsSpy = Spy<[String], Result<[Latest], Error>, Never>
+    private typealias GetLatestPaymentsSpy = Spy<[String], [Latest]?, Never>
     
     private func makeSUT(
         hardcoded: [String]? = nil,
