@@ -1,6 +1,6 @@
 //
 //  LocalAgentProtocol.swift
-//  Vortex
+//  ForaBank
 //
 //  Created by Max Gribov on 20.01.2022.
 //
