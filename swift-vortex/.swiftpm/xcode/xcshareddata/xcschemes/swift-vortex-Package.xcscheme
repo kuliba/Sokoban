@@ -1280,6 +1280,62 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ClientInformList"
+               BuildableName = "ClientInformList"
+               BlueprintName = "ClientInformList"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DropDownTextListComponent"
+               BuildableName = "DropDownTextListComponent"
+               BlueprintName = "DropDownTextListComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "VortexCrypto"
+               BuildableName = "VortexCrypto"
+               BlueprintName = "VortexCrypto"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "VortexTools"
+               BuildableName = "VortexTools"
+               BlueprintName = "VortexTools"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1401,6 +1457,796 @@
                BlueprintIdentifier = "SavingsAccountTests"
                BuildableName = "SavingsAccountTests"
                BlueprintName = "SavingsAccountTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PaymentTemplateBackendV3Tests"
+               BuildableName = "PaymentTemplateBackendV3Tests"
+               BlueprintName = "PaymentTemplateBackendV3Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PhoneNumberWrapperTests"
+               BuildableName = "PhoneNumberWrapperTests"
+               BlueprintName = "PhoneNumberWrapperTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PickerWithPreviewComponentTests"
+               BuildableName = "PickerWithPreviewComponentTests"
+               BlueprintName = "PickerWithPreviewComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PinCodeUITests"
+               BuildableName = "PinCodeUITests"
+               BlueprintName = "PinCodeUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PrePaymentPickerTests"
+               BuildableName = "PrePaymentPickerTests"
+               BlueprintName = "PrePaymentPickerTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ProductDetailsUITests"
+               BuildableName = "ProductDetailsUITests"
+               BlueprintName = "ProductDetailsUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ProductProfileTests"
+               BuildableName = "ProductProfileTests"
+               BlueprintName = "ProductProfileTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ProductSelectComponentTests"
+               BuildableName = "ProductSelectComponentTests"
+               BlueprintName = "ProductSelectComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "RemoteServicesTests"
+               BuildableName = "RemoteServicesTests"
+               BlueprintName = "RemoteServicesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "RxViewModelTests"
+               BuildableName = "RxViewModelTests"
+               BlueprintName = "RxViewModelTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SVCardLimitAPITests"
+               BuildableName = "SVCardLimitAPITests"
+               BlueprintName = "SVCardLimitAPITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SavingsServicesTests"
+               BuildableName = "SavingsServicesTests"
+               BlueprintName = "SavingsServicesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SberQRTests"
+               BuildableName = "SberQRTests"
+               BlueprintName = "SberQRTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SelectorComponentTests"
+               BuildableName = "SelectorComponentTests"
+               BlueprintName = "SelectorComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ServerAgentTests"
+               BuildableName = "ServerAgentTests"
+               BlueprintName = "ServerAgentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AccountInfoPanelTests"
+               BuildableName = "AccountInfoPanelTests"
+               BlueprintName = "AccountInfoPanelTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ActivateSliderTests"
+               BuildableName = "ActivateSliderTests"
+               BlueprintName = "ActivateSliderTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AmountComponentTests"
+               BuildableName = "AmountComponentTests"
+               BlueprintName = "AmountComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AnywayPaymentAdaptersTests"
+               BuildableName = "AnywayPaymentAdaptersTests"
+               BlueprintName = "AnywayPaymentAdaptersTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AnywayPaymentBackendTests"
+               BuildableName = "AnywayPaymentBackendTests"
+               BlueprintName = "AnywayPaymentBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AnywayPaymentCoreTests"
+               BuildableName = "AnywayPaymentCoreTests"
+               BlueprintName = "AnywayPaymentCoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AnywayPaymentUITests"
+               BuildableName = "AnywayPaymentUITests"
+               BlueprintName = "AnywayPaymentUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CVVPINServicesTests"
+               BuildableName = "CVVPINServicesTests"
+               BlueprintName = "CVVPINServicesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CVVPIN_ServicesTests"
+               BuildableName = "CVVPIN_ServicesTests"
+               BlueprintName = "CVVPIN_ServicesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CardGuardianUITests"
+               BuildableName = "CardGuardianUITests"
+               BlueprintName = "CardGuardianUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CardStatementAPITests"
+               BuildableName = "CardStatementAPITests"
+               BlueprintName = "CardStatementAPITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CardUITests"
+               BuildableName = "CardUITests"
+               BlueprintName = "CardUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CarouselComponentTests"
+               BuildableName = "CarouselComponentTests"
+               BlueprintName = "CarouselComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ClientInformListTests"
+               BuildableName = "ClientInformListTests"
+               BlueprintName = "ClientInformListTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
+               BuildableName = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
+               BlueprintName = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetCollateralLandingBackendTests"
+               BuildableName = "CollateralLoanLandingGetCollateralLandingBackendTests"
+               BlueprintName = "CollateralLoanLandingGetCollateralLandingBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetCollateralLandingUITests"
+               BuildableName = "CollateralLoanLandingGetCollateralLandingUITests"
+               BlueprintName = "CollateralLoanLandingGetCollateralLandingUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetConsentsBackendTests"
+               BuildableName = "CollateralLoanLandingGetConsentsBackendTests"
+               BlueprintName = "CollateralLoanLandingGetConsentsBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetShowcaseBackendTests"
+               BuildableName = "CollateralLoanLandingGetShowcaseBackendTests"
+               BlueprintName = "CollateralLoanLandingGetShowcaseBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingGetShowcaseUITests"
+               BuildableName = "CollateralLoanLandingGetShowcaseUITests"
+               BlueprintName = "CollateralLoanLandingGetShowcaseUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingSaveConsentsBackendTests"
+               BuildableName = "CollateralLoanLandingSaveConsentsBackendTests"
+               BlueprintName = "CollateralLoanLandingSaveConsentsBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CryptoSwaddlerTests"
+               BuildableName = "CryptoSwaddlerTests"
+               BlueprintName = "CryptoSwaddlerTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CvvPinTests"
+               BuildableName = "CvvPinTests"
+               BlueprintName = "CvvPinTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FastPaymentsSettingsTests"
+               BuildableName = "FastPaymentsSettingsTests"
+               BlueprintName = "FastPaymentsSettingsTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FetcherTests"
+               BuildableName = "FetcherTests"
+               BlueprintName = "FetcherTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GenericLoaderTests"
+               BuildableName = "GenericLoaderTests"
+               BlueprintName = "GenericLoaderTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GenericRemoteServiceTests"
+               BuildableName = "GenericRemoteServiceTests"
+               BlueprintName = "GenericRemoteServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetBannerCatalogListAPITests"
+               BuildableName = "GetBannerCatalogListAPITests"
+               BlueprintName = "GetBannerCatalogListAPITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetBannersMyProductListServiceTests"
+               BuildableName = "GetBannersMyProductListServiceTests"
+               BlueprintName = "GetBannersMyProductListServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetClientInformDataServicesTests"
+               BuildableName = "GetClientInformDataServicesTests"
+               BlueprintName = "GetClientInformDataServicesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProcessingSessionCodeServiceTests"
+               BuildableName = "GetProcessingSessionCodeServiceTests"
+               BlueprintName = "GetProcessingSessionCodeServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProductListByTypeServiceTests"
+               BuildableName = "GetProductListByTypeServiceTests"
+               BlueprintName = "GetProductListByTypeServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProductListByTypeV7ServiceTests"
+               BuildableName = "GetProductListByTypeV7ServiceTests"
+               BlueprintName = "GetProductListByTypeV7ServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "KeyChainStoreTests"
+               BuildableName = "KeyChainStoreTests"
+               BlueprintName = "KeyChainStoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LandingMappingTests"
+               BuildableName = "LandingMappingTests"
+               BlueprintName = "LandingMappingTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LandingUIComponentTests"
+               BuildableName = "LandingUIComponentTests"
+               BlueprintName = "LandingUIComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LatestPaymentsBackendV2Tests"
+               BuildableName = "LatestPaymentsBackendV2Tests"
+               BlueprintName = "LatestPaymentsBackendV2Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LatestPaymentsBackendV3Tests"
+               BuildableName = "LatestPaymentsBackendV3Tests"
+               BlueprintName = "LatestPaymentsBackendV3Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LinkableTextTests"
+               BuildableName = "LinkableTextTests"
+               BlueprintName = "LinkableTextTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LoadableModelTests"
+               BuildableName = "LoadableModelTests"
+               BlueprintName = "LoadableModelTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LoadableResourceComponentTests"
+               BuildableName = "LoadableResourceComponentTests"
+               BlueprintName = "LoadableResourceComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OTPInputComponentTests"
+               BuildableName = "OTPInputComponentTests"
+               BlueprintName = "OTPInputComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OperatorsListComponentsTests"
+               BuildableName = "OperatorsListComponentsTests"
+               BlueprintName = "OperatorsListComponentsTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OptionalSelectorComponentTests"
+               BuildableName = "OptionalSelectorComponentTests"
+               BlueprintName = "OptionalSelectorComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PayHubTests"
+               BuildableName = "PayHubTests"
+               BlueprintName = "PayHubTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PayHubUITests"
+               BuildableName = "PayHubUITests"
+               BlueprintName = "PayHubUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PaymentStickerTests"
+               BuildableName = "PaymentStickerTests"
+               BlueprintName = "PaymentStickerTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ServiceCategoriesBackendV0Tests"
+               BuildableName = "ServiceCategoriesBackendV0Tests"
+               BlueprintName = "ServiceCategoriesBackendV0Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SharedAPIInfraTests"
+               BuildableName = "SharedAPIInfraTests"
+               BlueprintName = "SharedAPIInfraTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SymmetricEncryptionTests"
+               BuildableName = "SymmetricEncryptionTests"
+               BlueprintName = "SymmetricEncryptionTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldComponentTests"
+               BuildableName = "TextFieldComponentTests"
+               BlueprintName = "TextFieldComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldDomainTests"
+               BuildableName = "TextFieldDomainTests"
+               BlueprintName = "TextFieldDomainTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldModelTests"
+               BuildableName = "TextFieldModelTests"
+               BlueprintName = "TextFieldModelTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldUITests"
+               BuildableName = "TextFieldUITests"
+               BlueprintName = "TextFieldUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TopUpCardUITests"
+               BuildableName = "TopUpCardUITests"
+               BlueprintName = "TopUpCardUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TransferPublicKeyTests"
+               BuildableName = "TransferPublicKeyTests"
+               BlueprintName = "TransferPublicKeyTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UIPrimitivesTests"
+               BuildableName = "UIPrimitivesTests"
+               BlueprintName = "UIPrimitivesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "URLRequestFactoryTests"
+               BuildableName = "URLRequestFactoryTests"
+               BlueprintName = "URLRequestFactoryTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserAccountNavigationComponentTests"
+               BuildableName = "UserAccountNavigationComponentTests"
+               BlueprintName = "UserAccountNavigationComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserModelTests"
+               BuildableName = "UserModelTests"
+               BlueprintName = "UserModelTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityPaymentTests"
+               BuildableName = "UtilityPaymentTests"
+               BlueprintName = "UtilityPaymentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityServicePrepaymentCoreTests"
+               BuildableName = "UtilityServicePrepaymentCoreTests"
+               BlueprintName = "UtilityServicePrepaymentCoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "VortexCryptoTests"
+               BuildableName = "VortexCryptoTests"
+               BlueprintName = "VortexCryptoTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "VortexToolsTests"
+               BuildableName = "VortexToolsTests"
+               BlueprintName = "VortexToolsTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
