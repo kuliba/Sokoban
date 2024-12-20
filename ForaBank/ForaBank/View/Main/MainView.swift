@@ -588,7 +588,8 @@ extension MainViewModel {
         updateInfoStatusFlag: .active,
         onRegister: {},
         sections: [],
-        bannersBinder: .preview
+        bannersBinder: .preview, 
+        makeOpenNewProductItems: { _ in [] }
     )
 }
 

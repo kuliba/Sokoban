@@ -31,7 +31,10 @@ extension RootViewModelFactory {
             MainSectionPromoView.ViewModel(model),
             //    BannerPickerSectionBinderWrapper.init(binder: binder),
             MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(
+                model,
+                makeItems: makeOpenNewProductItems
+            ),
             MainSectionAtmView.ViewModel.initial
         ]
         if updateInfoStatusFlag.isActive {
@@ -42,8 +45,8 @@ extension RootViewModelFactory {
         return sections
     }
     
-    func makeButtons(
-        newProduct: @escaping (ProductType) -> Void
+    func makeOpenNewProductItems(
+        actionHandler: (ProductType) -> Void
     ) -> [NewProductButton.ViewModel] {
         
         let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
@@ -85,7 +88,7 @@ extension RootViewModelFactory {
                             icon: icon,
                             title: title,
                             subTitle: subTitle,
-                            action: { newProduct(type) }
+                            action: { actionHandler(type) }
                         ))
                 }
                 
@@ -104,7 +107,7 @@ extension RootViewModelFactory {
                             icon: .ic24Sticker,
                             title: "Стикер",
                             subTitle: "Быстро",
-                            action: { newProduct(.loan) }
+                            action: { actionHandler(.loan) }
                         ))
                     default: break
                     }

@@ -33,15 +33,16 @@ class OpenNewProductsViewModel: ObservableObject {
         self.model = model
     }
     
-    typealias MakeNewProductButtons = ((ProductType) -> Void) -> [NewProductButton.ViewModel]
+    typealias NewProductAction = (ProductType) -> Void
+    typealias MakeNewProductItems = (NewProductAction) -> [NewProductButton.ViewModel]
     
     init(
         _ model: Model,
-        makeItems: @escaping MakeNewProductButtons
+        makeOpenNewProductItems: @escaping MakeNewProductItems
     ) {
         self.items = []
         self.model = model
-        self.items = makeItems { [weak self] in
+        self.items = makeOpenNewProductItems { [weak self] in
             
             let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: $0)
             self?.action.send(action)

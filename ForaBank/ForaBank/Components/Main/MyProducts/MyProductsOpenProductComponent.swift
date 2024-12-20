@@ -30,9 +30,12 @@ extension MyProductsOpenProductView {
             self.model = model
         }
         
-        init(_ model: Model) {
+        init(
+            _ model: Model,
+            makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems
+        ) {
             
-            self.newProducts = .init(model)
+            self.newProducts = .init(model, makeOpenNewProductItems: makeOpenNewProductItems)
             self.model = model
             
             bind()

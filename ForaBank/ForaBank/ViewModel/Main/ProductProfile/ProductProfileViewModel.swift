@@ -64,6 +64,7 @@ class ProductProfileViewModel: ObservableObject {
     
     var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     let model: Model
+    let makeOpenNewProductItems: OpenNewProductsViewModel.MakeNewProductItems
     private let fastPaymentsFactory: FastPaymentsFactory
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
@@ -112,6 +113,7 @@ class ProductProfileViewModel: ObservableObject {
         productNavigationStateManager: ProductProfileFlowManager,
         cvvPINServicesClient: CVVPINServicesClient,
         filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
+        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         filterState: FilterState,
         rootView: String,
@@ -140,6 +142,7 @@ class ProductProfileViewModel: ObservableObject {
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.filterState = filterState
+        self.makeOpenNewProductItems = makeOpenNewProductItems
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         // TODO: add removeDuplicates
@@ -194,6 +197,7 @@ class ProductProfileViewModel: ObservableObject {
         filterState: FilterState,
         rootView: String,
         dismissAction: @escaping () -> Void,
+        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
@@ -227,6 +231,7 @@ class ProductProfileViewModel: ObservableObject {
             productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
             filterHistoryRequest: filterHistoryRequest,
+            makeOpenNewProductItems: makeOpenNewProductItems,
             productProfileViewModelFactory: productProfileViewModelFactory,
             filterState: filterState,
             rootView: rootView,
@@ -1076,7 +1081,10 @@ private extension ProductProfileViewModel {
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
                             openOrderSticker: {}, 
-                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure)
+                            makeMyProductsViewFactory: .init(
+                                makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure
+                            ),
+                            makeOpenNewProductItems: makeOpenNewProductItems
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -1757,7 +1765,8 @@ private extension ProductProfileViewModel {
             filterHistoryRequest: { _,_,_,_ in },
             filterState: filterState,
             rootView: rootView,
-            dismissAction: dismissAction
+            dismissAction: dismissAction,
+            makeOpenNewProductItems: makeOpenNewProductItems
         )
     }
 }
