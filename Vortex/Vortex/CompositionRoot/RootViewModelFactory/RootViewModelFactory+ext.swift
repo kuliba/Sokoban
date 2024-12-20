@@ -315,7 +315,9 @@ extension RootViewModelFactory {
         if paymentsTransfersFlag.isActive {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         } else {
-            model.handleDictionaryAnywayOperatorsRequest(nil)
+            performOrWaitForActive({ [weak self] in
+                self?.model.handleDictionaryAnywayOperatorsRequest(nil)
+            })
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
