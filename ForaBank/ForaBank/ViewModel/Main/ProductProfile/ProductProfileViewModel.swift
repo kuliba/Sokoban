@@ -64,7 +64,7 @@ class ProductProfileViewModel: ObservableObject {
     
     var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     let model: Model
-    let makeOpenNewProductItems: OpenNewProductsViewModel.MakeNewProductItems
+    let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     private let fastPaymentsFactory: FastPaymentsFactory
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
@@ -113,7 +113,7 @@ class ProductProfileViewModel: ObservableObject {
         productNavigationStateManager: ProductProfileFlowManager,
         cvvPINServicesClient: CVVPINServicesClient,
         filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
-        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         filterState: FilterState,
         rootView: String,
@@ -142,7 +142,7 @@ class ProductProfileViewModel: ObservableObject {
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.filterState = filterState
-        self.makeOpenNewProductItems = makeOpenNewProductItems
+        self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         // TODO: add removeDuplicates
@@ -197,7 +197,7 @@ class ProductProfileViewModel: ObservableObject {
         filterState: FilterState,
         rootView: String,
         dismissAction: @escaping () -> Void,
-        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
@@ -231,7 +231,7 @@ class ProductProfileViewModel: ObservableObject {
             productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
             filterHistoryRequest: filterHistoryRequest,
-            makeOpenNewProductItems: makeOpenNewProductItems,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             productProfileViewModelFactory: productProfileViewModelFactory,
             filterState: filterState,
             rootView: rootView,
@@ -1084,7 +1084,7 @@ private extension ProductProfileViewModel {
                             makeMyProductsViewFactory: .init(
                                 makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure
                             ),
-                            makeOpenNewProductItems: makeOpenNewProductItems
+                            makeOpenNewProductButtons: makeOpenNewProductButtons
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -1766,7 +1766,7 @@ private extension ProductProfileViewModel {
             filterState: filterState,
             rootView: rootView,
             dismissAction: dismissAction,
-            makeOpenNewProductItems: makeOpenNewProductItems
+            makeOpenNewProductButtons: makeOpenNewProductButtons
         )
     }
 }

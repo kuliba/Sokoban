@@ -33,7 +33,7 @@ extension RootViewModelFactory {
             MainSectionCurrencyMetallView.ViewModel(model),
             MainSectionOpenProductView.ViewModel(
                 model,
-                makeItems: makeOpenNewProductItems
+                makeButtons: makeOpenNewProductButtons
             ),
             MainSectionAtmView.ViewModel.initial
         ]
@@ -45,8 +45,8 @@ extension RootViewModelFactory {
         return sections
     }
     
-    func makeOpenNewProductItems(
-        actionHandler: (ProductType) -> Void
+    func makeOpenNewProductButtons(
+        action: @escaping (ProductType) -> Void
     ) -> [NewProductButton.ViewModel] {
         
         let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
@@ -88,7 +88,7 @@ extension RootViewModelFactory {
                             icon: icon,
                             title: title,
                             subTitle: subTitle,
-                            action: { actionHandler(type) }
+                            action: { action(type) }
                         ))
                 }
                 
@@ -107,7 +107,7 @@ extension RootViewModelFactory {
                             icon: .ic24Sticker,
                             title: "Стикер",
                             subTitle: "Быстро",
-                            action: { actionHandler(.loan) }
+                            action: { action(.loan) }
                         ))
                     default: break
                     }

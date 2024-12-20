@@ -80,13 +80,13 @@ class MyProductsViewModel: ObservableObject {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         openOrderSticker: @escaping () -> Void,
         makeMyProductsViewFactory: MyProductsViewFactory,
-        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
             totalMoney: .init(model: model),
             productSections: [],
-            openProductVM: .init(model, makeOpenNewProductItems: makeOpenNewProductItems),
+            openProductVM: .init(model, makeOpenNewProductButtons: makeOpenNewProductButtons),
             editModeState: .inactive,
             model: model,
             cardAction: cardAction,

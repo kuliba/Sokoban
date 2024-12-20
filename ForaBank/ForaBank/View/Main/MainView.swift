@@ -571,7 +571,8 @@ extension ProductProfileViewModel  {
         updateInfoStatusFlag: .active,
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-        makeServicePaymentBinder: ServicePaymentBinder.preview
+        makeServicePaymentBinder: ServicePaymentBinder.preview,
+        makeOpenNewProductButtons: { _ in [] }
     )
 }
 
@@ -589,7 +590,7 @@ extension MainViewModel {
         onRegister: {},
         sections: [],
         bannersBinder: .preview, 
-        makeOpenNewProductItems: { _ in [] }
+        makeOpenNewProductButtons: { _ in [] }
     )
 }
 

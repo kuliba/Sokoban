@@ -276,7 +276,7 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            makeOpenNewProductItems: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
@@ -432,7 +432,7 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
-            makeOpenNewProductItems: makeOpenNewProductItems,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             marketShowcaseBinder: marketShowcaseBinder
         )
         
@@ -646,7 +646,7 @@ extension ProductProfileViewModel {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -670,7 +670,7 @@ extension ProductProfileViewModel {
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
-                makeOpenNewProductItems: makeOpenNewProductItems
+                makeOpenNewProductButtons: makeOpenNewProductButtons
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -761,7 +761,7 @@ extension ProductProfileViewModel {
                 filterState: filterState,
                 rootView: rootView,
                 dismissAction: dismissAction,
-                makeOpenNewProductItems: <#OpenNewProductsViewModel.MakeNewProductItems#>
+                makeOpenNewProductButtons: makeOpenNewProductButtons
             )
         }
     }
@@ -816,7 +816,7 @@ private extension RootViewModelFactory {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         paymentsTransfersSwitcher: PaymentsTransfersSwitcher,
         bannersBinder: BannersBinder,
-        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> RootViewModel {
         
@@ -853,7 +853,7 @@ private extension RootViewModelFactory {
             onRegister: onRegister,
             sections: sections,
             bannersBinder: bannersBinder,
-            makeOpenNewProductItems: makeOpenNewProductItems,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
         

@@ -55,7 +55,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
     let bannersBinder: BannersBinder
-    let makeOpenNewProductItems: OpenNewProductsViewModel.MakeNewProductItems
+    let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -73,7 +73,7 @@ class MainViewModel: ObservableObject, Resetable {
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
-        makeOpenNewProductItems: @escaping OpenNewProductsViewModel.MakeNewProductItems,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
@@ -90,7 +90,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.route = route
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
-        self.makeOpenNewProductItems = makeOpenNewProductItems
+        self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -666,7 +666,7 @@ private extension MainViewModel {
                     return nil
                 }
             ),
-            makeOpenNewProductItems: makeOpenNewProductItems
+            makeOpenNewProductButtons: makeOpenNewProductButtons
         )
         
         myProductsViewModel.rootActions = rootActions

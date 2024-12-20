@@ -28,9 +28,9 @@ extension MainSectionOpenProductView {
             super.init(isCollapsed: isCollapsed)
         }
         
-        init(_ model: Model, makeItems: @escaping OpenNewProductsViewModel.MakeNewProductItems) {
+        init(_ model: Model, makeButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons) {
             
-            self.newProducts = .init(model, makeOpenNewProductItems: makeItems)
+            self.newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
             self.model = model
             super.init(isCollapsed: false)
             
@@ -101,5 +101,5 @@ extension MainSectionOpenProductView.ViewModel {
         newProducts: .init(items: [.sample, .sample, .sample,.sample]),
         isCollapsed: false)
 
-    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock, makeItems: { _ in [] })
+    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock, makeButtons: { _ in [] })
 }
