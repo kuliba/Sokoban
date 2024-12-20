@@ -616,7 +616,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "ClientInformListTests",
         "name" : "ClientInformListTests"
       }
