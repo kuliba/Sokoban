@@ -507,6 +507,9 @@ struct ProductProfileView: View {
                                 self.viewModel.link = nil
                             }))
                         }
+                    case .unknown:
+                        // уточнить у аналитика
+                        break
                     }
                     
                 case let .failure(error):

@@ -2127,6 +2127,9 @@ private extension Target {
     
     static let getInfoRepeatPaymentService = target(
         name: .getInfoRepeatPaymentService,
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Services/\(String.getInfoRepeatPaymentService)"
     )
     
@@ -2137,6 +2140,7 @@ private extension Target {
             .customDump,
             // internal modules
             .getInfoRepeatPaymentService,
+            .remoteServices
         ],
         path: "Tests/Services/\(String.getInfoRepeatPaymentServiceTests)"
     )

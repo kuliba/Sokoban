@@ -20,7 +20,7 @@ extension Services {
         let createInfoRepeatPaymentServices = RemoteService(
             createRequest: RequestFactory.getInfoForRepeatPayment,
             performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: GetInfoRepeatPaymentMapper.mapResponse
+            mapResponse: RemoteServices.ResponseMapper.mapGetInfoRepeatPaymentResponse(_:_:)
         ).process(_:completion:)
         
         return .init(

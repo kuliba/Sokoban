@@ -27,6 +27,7 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
+import GetInfoRepeatPaymentService
 
 extension RootViewModelFactory {
     
@@ -149,7 +150,11 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-        
+        /*        let infoPaymentService = nanoServiceComposer.compose(
+         createRequest: RequestFactory.getInfoForRepeatPayment,
+         mapResponse: RemoteServices.ResponseMapper.mapGetInfoRepeatPaymentResponse
+     )
+*/
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "565B7441-3FD8-4EFC-A2D8-18F841A9FCE5",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetInfoRepeatPaymentServiceTests",
+        "name" : "GetInfoRepeatPaymentServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

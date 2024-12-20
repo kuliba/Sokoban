@@ -2104,6 +2104,16 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetInfoRepeatPaymentServiceTests"
+               BuildableName = "GetInfoRepeatPaymentServiceTests"
+               BlueprintName = "GetInfoRepeatPaymentServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

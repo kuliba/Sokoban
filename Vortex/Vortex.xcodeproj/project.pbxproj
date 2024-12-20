@@ -6220,6 +6220,7 @@
 		834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransfersServices.swift"; sourceTree = "<group>"; };
 		834731E52A13BCB2002590A3 /* PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesTests.swift; sourceTree = "<group>"; };
 		834838F22AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListSectionViewModelTests.swift; sourceTree = "<group>"; };
+		834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetInfoRepeatPaymentService.xctestplan; sourceTree = "<group>"; };
 		834CFDFA2A49CDD000DF301D /* InfoProductSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProductSheet.swift; sourceTree = "<group>"; };
 		834D7C2F2ACC2BD40000E02E /* Model+cachelessAuthorizedHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+cachelessAuthorizedHTTPClient.swift"; sourceTree = "<group>"; };
 		834E3F672AC2C40900E49C2B /* Services+getScenarioQRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getScenarioQRData.swift"; sourceTree = "<group>"; };
@@ -9971,6 +9972,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */,
 				84F97D682D141DA70049937A /* VortexCrypto.xctestplan */,
 				83C6A1EA2CFF47670076BC25 /* SavingsAccount.xctestplan */,
 				8330E12D2CEF3FED00694AD0 /* SavingsServices.xctestplan */,
