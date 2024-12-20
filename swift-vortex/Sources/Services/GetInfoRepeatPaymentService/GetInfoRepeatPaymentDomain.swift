@@ -111,7 +111,7 @@ extension GetInfoRepeatPaymentDomain {
             
             public struct PayeeInternal: Equatable {
                 
-                public  let accountId: Int?
+                public let accountId: Int?
                 public let accountNumber: String?
                 public let cardId: Int?
                 public let cardNumber: String?
@@ -228,7 +228,7 @@ extension GetInfoRepeatPaymentDomain {
                 public let inn: String?
                 
                 public init(
-                    cardId: Int,
+                    cardId: Int?,
                     cardNumber: String?,
                     accountId: Int?,
                     accountNumber: String?,

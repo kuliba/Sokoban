@@ -13,6 +13,7 @@ import RxViewModel
 import SberQR
 import SwiftUI
 import CalendarUI
+import GetInfoRepeatPaymentService
 
 struct ProductProfileView: View {
     
@@ -362,7 +363,7 @@ struct ProductProfileView: View {
                             }
                         }
                         
-                    case .addressingCash, .addressless, .contactAddressless, .direct, .newDirect, .newDirectAccount, .newDirectCard:
+                    case .addressingCash, .addressless, .contactAddressless, .direct, .newDirect, .newDirectAccount, .newDirectCard, .foreignCard:
                         
                         if let transfer = infoPayment.parameterList.last,
                            let additional = transfer.additional,
@@ -429,13 +430,13 @@ struct ProductProfileView: View {
                                 }))
                             }
                         }
-                    case .internet, .transport, .housingAndCommunalService:
+                    case .internet, .transport, .housingAndCommunalService, .charityService, .digitalWalletsService, .educationService, .networkMarketingService, .repaymentLoansAndAccountsService, .securityService, .socialAndGamesService:
                         
                         if let transfer = infoPayment.parameterList.first,
-                           let puref = transfer.puref,
-                           let amount = infoPayment.parameterList.first?.amount ?? infoPayment.parameterList.last?.amount {
+                           let puref = infoPayment.parameterList.puref,
+                           let amount = infoPayment.parameterList.amount {
                             
-                            let additionalList: [PaymentServiceData.AdditionalListData]? = transfer.additional?.map {
+                            let additionalList: [PaymentServiceData.AdditionalListData]? = infoPayment.parameterList.additional.map {
                                 .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
                             }
                             
@@ -445,7 +446,7 @@ struct ProductProfileView: View {
                                     puref: puref,
                                     additionalList: additionalList,
                                     amount: amount,
-                                    productId: transfer.payer?.cardId
+                                    productId: infoPayment.parameterList.productId
                                 ), model: Model.shared, closeAction: {
                                     self.viewModel.link = nil
                                 }))
@@ -509,22 +510,6 @@ struct ProductProfileView: View {
                         }
                     case .unknown:
                         // уточнить у аналитика
-                        break
-                    case .charityService:
-                        break
-                    case .digitalWalletsService:
-                        break
-                    case .educationService:
-                        break
-                    case .foreignCard:
-                        break
-                    case .networkMarketingService:
-                        break
-                    case .repaymentLoansAndAccountsService:
-                        break
-                    case .securityService:
-                        break
-                    case .socialAndGamesService:
                         break
                     }
                     
@@ -948,5 +933,76 @@ extension Date {
         today = gregorian.date(from: components)!
         
         return today
+    }
+}
+
+
+private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
+    
+    var amount: Double? {
+        
+        for transfer in self {
+            
+            if let amount = transfer.amount, amount > 0 {
+                
+                return amount
+            }
+        }
+        
+        return nil
+    }
+    
+    var puref: String? {
+        
+        for transfer in self {
+            
+            if let puref = transfer.puref, !puref.isEmpty {
+                
+                return puref
+            }
+        }
+        return nil
+    }
+    
+    var additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
+        
+            
+        if let additional = last?.additional, !additional.isEmpty {
+                
+                return additional
+            }
+        
+        return first?.additional ?? []
+    }
+    
+    var payerCardId: Int? {
+        
+        for transfer in self {
+            
+            if let payerCardId = transfer.payer?.cardId {
+                
+                return payerCardId
+            }
+        }
+        return nil
+    }
+    
+    var payerAccountId: Int? {
+        
+        for transfer in self {
+            
+            if let accountId = transfer.payer?.accountId {
+                
+                return accountId
+            }
+        }
+        return nil
+    }
+    
+    var productId: Int? {
+        
+        guard let payerCardId else { return payerAccountId }
+        
+        return payerCardId
     }
 }

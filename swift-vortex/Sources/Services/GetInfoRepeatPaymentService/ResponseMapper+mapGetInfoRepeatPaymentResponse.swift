@@ -310,7 +310,7 @@ private extension ResponseMapper {
             
             struct Payer: Decodable {
                 
-                let cardId: Int
+                let cardId: Int?
                 let cardNumber: String?
                 let accountId: Int?
                 let accountNumber: String?
