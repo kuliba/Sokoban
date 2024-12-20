@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingGetCollateralLandingContent.swift
+//  GetCollateralLandingContent.swift
 //
 //
 //  Created by Valentin Ozerov on 13.11.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class CollateralLoanLandingGetCollateralLandingContent {
+public final class GetCollateralLandingContent {
         
     let product: GetCollateralLandingProduct
 
