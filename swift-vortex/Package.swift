@@ -2639,6 +2639,7 @@ private extension Target {
         name: .savingsAccount,
         dependencies: [
             // internal packages
+            .dropDownTextListComponent,
             .linkableText,
             .paymentComponents,
             .sharedConfigs,
