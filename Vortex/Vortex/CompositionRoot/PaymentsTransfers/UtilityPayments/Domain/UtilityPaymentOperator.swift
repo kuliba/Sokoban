@@ -1,0 +1,15 @@
+//
+//  UtilityPaymentOperator.swift
+//  Vortex
+//
+//  Created by Igor Malyarov on 11.05.2024.
+//
+
+struct UtilityPaymentOperator: Equatable, Identifiable {
+    
+    let id: String
+    let inn: String
+    let title: String
+    let icon: String?
+    let type: String
+}

@@ -1,0 +1,23 @@
+//
+//  LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift
+//  Vortex
+//
+//  Created by Igor Malyarov on 19.10.2024.
+//
+
+import RemoteServices
+
+extension LoggingRemoteNanoServiceComposer {
+    
+    func composeGetLatestPayments(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> RemoteDomain<[String], [Latest], Error, Error>.Service {
+        
+        self.compose(
+            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse,
+            file: file, line: line
+        )
+    }
+}
