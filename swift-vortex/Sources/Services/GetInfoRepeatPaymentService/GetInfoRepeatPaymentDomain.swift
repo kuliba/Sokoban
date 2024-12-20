@@ -42,20 +42,33 @@ extension GetInfoRepeatPaymentDomain {
         
         public enum TransferType: Equatable {
             
+            case addressingCash
+            case addressless
             case betweenTheir
             case byPhone
+            case charityService
             case contactAddressless
+            case digitalWalletsService
             case direct
+            case educationService
             case externalEntity
             case externalIndivudual
+            case foreignCard
             case housingAndCommunalService
             case insideBank
             case internet
             case mobile
+            case networkMarketingService
+            case newDirect
+            case newDirectAccount
+            case newDirectCard
             case otherBank
+            case repaymentLoansAndAccountsService
+            case securityService
             case sfp
-            case transport
+            case socialAndGamesService
             case taxes
+            case transport
             case unknown
         }
         

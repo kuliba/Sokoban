@@ -177,6 +177,32 @@ private extension ResponseMapper._Data.TransferType {
             return .taxes
         case .transport:
             return .transport
+        case .addressingCash:
+            return .addressingCash
+        case .addressless:
+            return .addressless
+        case .charityService:
+            return .charityService
+        case .digitalWalletsService:
+            return .digitalWalletsService
+        case .educationService:
+            return .educationService
+        case .foreignCard:
+            return .foreignCard
+        case .networkMarketingService:
+            return .networkMarketingService
+        case .newDirect:
+            return .newDirect
+        case .newDirectAccount:
+            return .newDirectAccount
+        case .newDirectCard:
+            return .newDirectCard
+        case .repaymentLoansAndAccountsService:
+            return .repaymentLoansAndAccountsService
+        case .securityService:
+            return .securityService
+        case .socialAndGamesService:
+            return .socialAndGamesService
         }
     }
 }
@@ -192,20 +218,33 @@ private extension ResponseMapper {
         
         enum TransferType: String, Decodable {
             
+            case addressingCash = "ADDRESSING_CASH"
+            case addressless = "ADDRESSLESS"
             case betweenTheir = "BETWEEN_THEIR"
             case byPhone = "BY_PHONE"
+            case charityService = "CHARITY_SERVICE"
             case contactAddressless = "CONTACT_ADDRESSLESS"
-            case direct = "NEW_DIRECT"
+            case digitalWalletsService = "DIGITAL_WALLETS_SERVICE"
+            case direct = "DIRECT"
+            case educationService = "EDUCATION_SERVICE"
             case externalEntity = "EXTERNAL_ENTITY"
             case externalIndivudual = "EXTERNAL_INDIVIDUAL"
+            case foreignCard = "FOREIGN_CARD"
             case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
             case insideBank = "INSIDE_BANK"
             case internet = "INTERNET"
             case mobile = "MOBILE"
+            case networkMarketingService = "NETWORK_MARKETING_SERVICE"
+            case newDirect = "NEW_DIRECT"
+            case newDirectAccount = "NEW_DIRECT_ACCOUNT"
+            case newDirectCard = "NEW_DIRECT_CARD"
             case otherBank = "OTHER_BANK"
+            case repaymentLoansAndAccountsService = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
+            case securityService = "SECURITY_SERVICE"
             case sfp = "SFP"
-            case transport = "TRANSPORT"
+            case socialAndGamesService = "SOCIAL_AND_GAMES_SERVICE"
             case taxes = "TAX_AND_STATE_SERVICE"
+            case transport = "TRANSPORT"
         }
         
         struct Transfer: Decodable {

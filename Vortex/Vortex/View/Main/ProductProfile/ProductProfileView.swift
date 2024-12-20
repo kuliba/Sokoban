@@ -362,7 +362,7 @@ struct ProductProfileView: View {
                             }
                         }
                         
-                    case .direct, .contactAddressless:
+                    case .addressingCash, .addressless, .contactAddressless, .direct, .newDirect, .newDirectAccount, .newDirectCard:
                         
                         if let transfer = infoPayment.parameterList.last,
                            let additional = transfer.additional,
@@ -509,6 +509,22 @@ struct ProductProfileView: View {
                         }
                     case .unknown:
                         // уточнить у аналитика
+                        break
+                    case .charityService:
+                        break
+                    case .digitalWalletsService:
+                        break
+                    case .educationService:
+                        break
+                    case .foreignCard:
+                        break
+                    case .networkMarketingService:
+                        break
+                    case .repaymentLoansAndAccountsService:
+                        break
+                    case .securityService:
+                        break
+                    case .socialAndGamesService:
                         break
                     }
                     
