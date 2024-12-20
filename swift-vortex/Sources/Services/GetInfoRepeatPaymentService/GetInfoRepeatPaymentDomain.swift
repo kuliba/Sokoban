@@ -26,15 +26,18 @@ extension GetInfoRepeatPaymentDomain {
         public let type: TransferType
         public let parameterList: [Transfer]
         public let productTemplate: ProductTemplate?
+        public let paymentFlow: String?
     
         public init(
             type: TransferType,
             parameterList: [Transfer],
-            productTemplate: ProductTemplate?
+            productTemplate: ProductTemplate?,
+            paymentFlow: String?
         ) {
             self.type = type
             self.parameterList = parameterList
             self.productTemplate = productTemplate
+            self.paymentFlow = paymentFlow
         }
         
         public enum TransferType: Equatable {

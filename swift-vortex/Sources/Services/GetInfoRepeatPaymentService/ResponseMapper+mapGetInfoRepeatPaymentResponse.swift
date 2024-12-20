@@ -27,7 +27,9 @@ private extension ResponseMapper.GetInfoRepeatPaymentResult {
         self.init(
             type: data.type?.type ?? .unknown,
             parameterList: data.parameterList.compactMap { .init($0) },
-            productTemplate: data.productTemplate.map { .init($0) })
+            productTemplate: data.productTemplate.map { .init($0) }, 
+            paymentFlow: data.paymentFlow
+        )
     }
 }
 
@@ -186,6 +188,7 @@ private extension ResponseMapper {
         let type: TransferType?
         let parameterList: [Transfer]
         let productTemplate: ProductTemplate?
+        let paymentFlow: String?
         
         enum TransferType: String, Decodable {
             

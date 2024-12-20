@@ -11,17 +11,12 @@ import GetInfoRepeatPaymentService
 import GenericRemoteService
 
 struct InfoRepeatPaymentServices {
-    /*    typealias Payload = InfoForRepeatPaymentPayload
-     typealias GetInfoRepeatPaymentCompletion = (Result<GetInfoRepeatPaymentDomain.Response, Error>) -> Void
-     typealias CreateInfoRepeatPayment = (Payload, @escaping GetInfoRepeatPaymentCompletion) -> Void
-*/
-    typealias CreateInfoRepeatPayment = (InfoForRepeatPaymentPayload, @escaping GetInfoRepeatPaymentDomain.Completion) -> Void
-    typealias GetInfoPaymentResult = Result<GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, MappingError>
-    typealias GetInfoPaymentCompletion = (GetInfoPaymentResult) -> Void
-    typealias GetInfoPaymentData = (URL, @escaping GetInfoPaymentCompletion) -> Void
-    typealias MappingError = RemoteServices.ResponseMapper.MappingError
-
-    let createInfoRepeatPaymentServices: (InfoForRepeatPaymentPayload, @escaping (Result<GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>>) -> Void) -> ()
+    
+    typealias Payload = InfoForRepeatPaymentPayload
+    typealias GetInfoRepeatPaymentCompletion = (Result<GetInfoRepeatPaymentDomain.Response, Error>) -> Void
+    typealias CreateInfoRepeatPayment = (Payload, @escaping GetInfoRepeatPaymentCompletion) -> Void
+    
+    let createInfoRepeatPaymentServices: CreateInfoRepeatPayment
 }
 
 // MARK: - Preview Content
@@ -35,7 +30,8 @@ extension InfoRepeatPaymentServices {
             completion(.success(.init(
                 type: .betweenTheir,
                 parameterList: [],
-                productTemplate: nil
+                productTemplate: nil, 
+                paymentFlow: nil
             )))
         })
     }

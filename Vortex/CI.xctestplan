@@ -635,7 +635,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "GetInfoRepeatPaymentServiceTests",
         "name" : "GetInfoRepeatPaymentServiceTests"
       }
