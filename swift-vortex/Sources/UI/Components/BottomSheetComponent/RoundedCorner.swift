@@ -1,10 +1,6 @@
 //
-<<<<<<<< HEAD:swift-forabank/Sources/UI/Components/BottomSheetComponent/RoundedCorner.swift
 //  RoundedCorner.swift
-========
-//  RoundedCornerShape.swift
 //  Vortex
->>>>>>>> origin/trunk:swift-vortex/Sources/Landing/LandingUIComponent/BottomSheet/RoundedCornerShape.swift
 //
 //
 //  Created by Valentin Ozerov on 11.12.2024.
