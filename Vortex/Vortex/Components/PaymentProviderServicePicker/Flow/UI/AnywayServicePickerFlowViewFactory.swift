@@ -1,0 +1,21 @@
+//
+//  AnywayServicePickerFlowViewFactory.swift
+//  Vortex
+//
+//  Created by Igor Malyarov on 04.08.2024.
+//
+
+import SwiftUI
+
+struct AnywayServicePickerFlowViewFactory<AnywayFlowView>
+where AnywayFlowView: View {
+    
+    let makeAnywayFlowView: MakeAnywayFlowView
+    let makeIconView: IconDomain.MakeIconView
+    let makePaymentsView: MakePaymentsView
+}
+
+extension AnywayServicePickerFlowViewFactory {
+    
+    typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView
+}

@@ -1,0 +1,20 @@
+{
+  "data": {
+    "ProductCatalogList": [
+      {
+        "conditionLink": "https://www.vortex.ru/",
+        "imageLink": "dict/getProductCatalogImage?image=1",
+        "orderLink": "https://www.vortex.ru/",
+        "productName": "Карта 'Миг'",
+        "cardTarif": 1,
+        "cardType": 1,
+        "txtСondition": [
+          "string"
+        ]
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

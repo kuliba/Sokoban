@@ -39,7 +39,7 @@ fastlane-build-beta:
     - bundle exec fastlane build production:false
   artifacts:
     paths:
-      - ./fastlane/build/$APP_NAME.ipa
+      - ./fastlane/build/$APP_NAME1.ipa
     expire_in: 1 week
 
 fastlane-deploy:
