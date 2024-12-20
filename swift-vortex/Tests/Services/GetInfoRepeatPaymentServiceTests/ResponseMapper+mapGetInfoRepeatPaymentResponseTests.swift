@@ -62,18 +62,23 @@ final class ResponseMapper_mapGetInfoRepeatPaymentResponseTests: XCTestCase {
         )
     }
     
-    /*func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() {
+    func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() {
         
         for statusCode in [199, 201, 399, 400, 401, 404] {
             
             let nonOkResponse = anyHTTPURLResponse(with: statusCode)
             
             XCTAssertNoDiff(
-                map(.notAuthorized, nonOkResponse),
-                .failure(.invalid(statusCode: statusCode, data: .notAuthorized))
+                map(.validData, nonOkResponse),
+                .failure(.invalid(statusCode: statusCode, data: .validData))
             )
         }
-    }*/
+    }
+    
+    func test_map_shouldDeliverResponseWithValidData() throws {
+        
+        try assert(.validData, .validData)
+    }
         
     // MARK: - Helpers
     
@@ -116,6 +121,8 @@ private extension Data {
     static let emptyDataResponse: Data = String.emptyDataResponse.json
     static let nullServerResponse: Data = String.nullServerResponse.json
     static let serverError: Data = String.serverError.json
+    static let validData: Data = String.validData.json
+
 }
 
 private extension String {
@@ -155,4 +162,50 @@ private extension String {
     "data": null
 }
 """
+
+    static let validData = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "type": "BETWEEN_THEIR",
+        "parameterList": [
+          {
+            "check": true,
+            "amount": 23,
+            "currencyAmount": "RUB",
+            "payer": {
+              "cardId": 10000249264,
+              "cardNumber": null,
+              "accountId": null,
+              "accountNumber": null,
+              "phoneNumber": null,
+              "INN": null
+            },
+            "comment": null,
+            "payeeInternal": {
+              "cardId": null,
+              "cardNumber": null,
+              "accountId": 10004874290,
+              "accountNumber": null,
+              "phoneNumber": null,
+              "productCustomName": null
+            },
+            "payeeExternal": null
+          }
+        ]
+      }
+    }
+"""
+}
+
+private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
+    
+    static let validData: Self = .init(
+        type: .betweenTheir,
+        parameterList: [
+            .init(check: true, amount: 23, currencyAmount: "RUB", payer: .init(cardId: 10000249264, cardNumber: nil, accountId: nil, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, puref: nil, payeeInternal: .init(accountId: 10004874290, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, additional: nil, mcc: nil)
+        ],
+        productTemplate: nil,
+        paymentFlow: nil)
 }
