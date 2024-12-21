@@ -17,6 +17,7 @@ extension GetInfoRepeatPaymentDomain {
         case inside(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
         case mobile(PaymentsViewModel)
+        case otherBank(PaymentsViewModel)
         case service(PaymentsViewModel)
         case sfp(PaymentsViewModel)
         case taxes(PaymentsViewModel)
@@ -44,6 +45,13 @@ extension RootViewModelFactory {
                     
                     .init(source: source, model: $0, closeAction: closeAction)
                 }
+            },
+            makePaymentsWithService: { [weak model] service in
+                
+                model.map {
+                    
+                    .init($0, service: service, closeAction: closeAction)
+                }
             }
         )
     }
@@ -52,11 +60,12 @@ extension RootViewModelFactory {
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
         getProduct: @escaping (ProductData.ID) -> ProductData?,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?,
+        makePaymentsWithService: @escaping (Payments.Service) -> PaymentsViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        if let meToMe = makeMeToMe(from: info, getProduct: getProduct) {
-            return .meToMe(meToMe)
+        if let byPhone = makeByPhone(from: info, activeProductID: activeProductID, makePayments: makePayments) {
+            return .byPhone(byPhone)
         }
         
         if let direct = makeDirect(from: info, makePayments: makePayments) {
@@ -71,22 +80,25 @@ extension RootViewModelFactory {
             return .inside(inside)
         }
         
-        if let service = makeService(from: info, makePayments: makePayments) {
-            return .service(service)
-        }
-        
-#warning("add for `.otherBank` - service, not source: ProductProfileView.swift:456")
-        
-        if let byPhone = makeByPhone(from: info, activeProductID: activeProductID, makePayments: makePayments) {
-            return .byPhone(byPhone)
-        }
-        
-        if let sfp = makeSFP(from: info, activeProductID: activeProductID, makePayments: makePayments) {
-            return .sfp(sfp)
+        if let meToMe = makeMeToMe(from: info, getProduct: getProduct) {
+            return .meToMe(meToMe)
         }
         
         if let mobile = makeMobile(from: info, makePayments: makePayments) {
             return .mobile(mobile)
+        }
+        
+        if let otherBank = makeOtherBank(from: info, makePayments: makePaymentsWithService) {
+            
+            return .otherBank(otherBank)
+        }
+        
+        if let service = makeService(from: info, makePayments: makePayments) {
+            return .service(service)
+        }
+        
+        if let sfp = makeSFP(from: info, activeProductID: activeProductID, makePayments: makePayments) {
+            return .sfp(sfp)
         }
         
         if let taxes = makeTaxes(from: info, makePayments: makePayments) {
@@ -96,17 +108,18 @@ extension RootViewModelFactory {
         return nil
     }
     
-    func makeMeToMe(
+    func makeByPhone(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        getProduct: @escaping (ProductData.ID) -> ProductData?
-    ) -> PaymentsMeToMeViewModel? {
+        activeProductID: ProductData.ID,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
         
-        guard let mode = info.betweenTheirMode(getProduct: getProduct)
+        guard let source = info.byPhoneSource(activeProductID: activeProductID)
         else { return nil }
         
-        return .init(model, mode: mode)
+        return makePayments(source)
     }
-    
+
     func makeDirect(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
@@ -139,24 +152,44 @@ extension RootViewModelFactory {
         return makePayments(source)
     }
     
+    func makeMeToMe(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> PaymentsMeToMeViewModel? {
+        
+        guard let mode = info.betweenTheirMode(getProduct: getProduct)
+        else { return nil }
+        
+        return .init(model, mode: mode)
+    }
+    
+    func makeMobile(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.mobileSource()
+        else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeOtherBank(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Service) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let service = info.otherBankService() else { return nil }
+        
+        return makePayments(service)
+    }
+
     func makeService(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
     ) -> PaymentsViewModel? {
         
         guard let source = info.servicePaymentSource()
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeByPhone(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        activeProductID: ProductData.ID,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.byPhoneSource(activeProductID: activeProductID)
         else { return nil }
         
         return makePayments(source)
@@ -169,17 +202,6 @@ extension RootViewModelFactory {
     ) -> PaymentsViewModel? {
         
         guard let source = info.sfpSource(activeProductID: activeProductID)
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeMobile(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.mobileSource()
         else { return nil }
         
         return makePayments(source)
@@ -688,6 +710,25 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .taxes)
     }
     
+    // MARK: - otherBank
+    
+    func test_shouldCallMakePaymentsWitServiceOnOtherBank() {
+        
+        let info = makeRepeat(type: .otherBank)
+        let sut = makeSUT().sut
+        
+        let service = makePaymentsService(sut, info: info)
+        
+        XCTAssertNoDiff(service, .toAnotherCard)
+    }
+    
+    func test_shouldDeliverOtherBankOnOtherBank() {
+        
+        let info = makeRepeat(type: .otherBank)
+
+        assert(with: info, delivers: .otherBank)
+    }
+    
     // MARK: - Helpers
     
     private func makeDirect(
@@ -712,6 +753,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         case inside
         case meToMe
         case mobile
+        case otherBank
         case service
         case sfp
         case taxes
@@ -722,15 +764,16 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .byPhone:   return .byPhone
-        case .direct:    return .direct
-        case .external:  return .external
-        case .inside:    return .inside
-        case .meToMe:    return .meToMe
-        case .mobile:    return .mobile
-        case .service:   return .service
-        case .sfp:       return .sfp
-        case .taxes:     return .taxes
+        case .byPhone:      return .byPhone
+        case .direct:       return .direct
+        case .external:     return .external
+        case .inside:       return .inside
+        case .meToMe:       return .meToMe
+        case .mobile:       return .mobile
+        case .otherBank:    return .otherBank
+        case .service:      return .service
+        case .sfp:          return .sfp
+        case .taxes:        return .taxes
         }
     }
     
@@ -799,10 +842,30 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         _ = sut.getInfoRepeatPayment(
             from: info, activeProductID: activeProductID ?? makeProductID(),
             getProduct: { _ in product },
-            makePayments: { source = $0; return nil }
+            makePayments: { source = $0; return nil },
+            makePaymentsWithService: { _ in return nil }
         )
         
         return source
+    }
+    
+    private func makePaymentsService(
+        _ sut: SUT,
+        info: Repeat,
+        activeProductID: ProductData.ID? = nil,
+        product: ProductData? = nil
+    ) -> Payments.Service? {
+        
+        var service: Payments.Service?
+        
+        _ = sut.getInfoRepeatPayment(
+            from: info, activeProductID: activeProductID ?? makeProductID(),
+            getProduct: { _ in product },
+            makePayments: { _ in return nil },
+            makePaymentsWithService: { service = $0; return nil }
+        )
+        
+        return service
     }
 }
 
