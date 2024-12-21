@@ -19,6 +19,7 @@ extension GetInfoRepeatPaymentDomain {
         case mobile(PaymentsViewModel)
         case service(PaymentsViewModel)
         case sfp(PaymentsViewModel)
+        case taxes(PaymentsViewModel)
     }
 }
 
@@ -86,6 +87,10 @@ extension RootViewModelFactory {
         
         if let mobile = makeMobile(from: info, makePayments: makePayments) {
             return .mobile(mobile)
+        }
+        
+        if let taxes = makeTaxes(from: info, makePayments: makePayments) {
+            return .taxes(taxes)
         }
         
         return nil
@@ -175,6 +180,17 @@ extension RootViewModelFactory {
     ) -> PaymentsViewModel? {
         
         guard let source = info.mobileSource()
+        else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeTaxes(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.taxesSource()
         else { return nil }
         
         return makePayments(source)
@@ -653,6 +669,25 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .mobile)
     }
     
+    // MARK: - taxes
+    
+    func test_shouldCallMakePaymentsWithTaxesSourceOnTaxes() {
+        
+        let info = makeRepeat(type: .taxes)
+        let sut = makeSUT().sut
+        
+        let source = makePaymentsSource(sut, info: info)
+        
+        XCTAssertNoDiff(source, .taxes(parameterData: nil))
+    }
+    
+    func test_shouldDeliverTaxesOnTaxes() {
+        
+        let info = makeRepeat(type: .taxes)
+
+        assert(with: info, delivers: .taxes)
+    }
+    
     // MARK: - Helpers
     
     private func makeDirect(
@@ -679,6 +714,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         case mobile
         case service
         case sfp
+        case taxes
     }
     
     private func equatable(
@@ -694,6 +730,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         case .mobile:    return .mobile
         case .service:   return .service
         case .sfp:       return .sfp
+        case .taxes:     return .taxes
         }
     }
     
