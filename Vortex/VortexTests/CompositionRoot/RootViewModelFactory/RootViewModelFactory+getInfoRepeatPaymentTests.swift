@@ -27,7 +27,7 @@ extension RootViewModelFactory {
         
         return getInfoRepeatPayment(
             from: info,
-            getProduct: { id in products.first { $0.id == id }}, 
+            getProduct: { id in products.first { $0.id == id }},
             closeAction: closeAction
         )
     }
@@ -178,9 +178,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         let model = try makeModelWithMeToMeProduct(
             product: makeProduct(id: productID, currency: "RUB")
         )
-        let sut = makeSUT(model: model).sut
-
-        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
+        
+        assert(model: model, with: info, delivers: nil)
     }
     
     func test_getInfoRepeatPayment_shouldDeliverNilOnEmptyParameterList() throws {
@@ -190,9 +189,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         let model = try makeModelWithMeToMeProduct(
             product: makeProduct(id: productID, currency: "RUB")
         )
-        let sut = makeSUT(model: model).sut
-
-        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
+        
+        assert(model: model, with: info, delivers: nil)
     }
     
     func test_getInfoRepeatPayment_shouldDeliverNilOnExternalPayerProduct() throws {
@@ -203,9 +201,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         let model = try makeModelWithMeToMeProduct(
             product: makeProduct(id: productID, currency: "RUB")
         )
-        let sut = makeSUT(model: model).sut
-
-        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
+        
+        assert(model: model, with: info, delivers: nil)
     }
     
     func test_getInfoRepeatPayment_shouldDeliverMeToMeOnPayerProduct() throws {
@@ -216,11 +213,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         let model = try makeModelWithMeToMeProduct(
             product: makeProduct(id: productID, currency: "RUB")
         )
-        let sut = makeSUT(model: model).sut
         
-        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, closeAction: {}))
-        
-        XCTAssertNoDiff(equatable(navigation), .meToMe)
+        assert(model: model, with: info, delivers: .meToMe)
     }
     
     func test_getInfoRepeatPayment_shouldDeliverMeToMeOnInternalPayerProduct() throws {
@@ -231,35 +225,26 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         let model = try makeModelWithMeToMeProduct(
             product: makeProduct(id: productID, currency: "RUB")
         )
-        let sut = makeSUT(model: model).sut
-
-        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
         
-        XCTAssertNoDiff(equatable(navigation), .meToMe)
+        assert(model: model, with: info, delivers: .meToMe)
     }
     
-    // MARK: - direct
+    // MARK: - direct, contactAddressless
     
     func test_getInfoRepeatPayment_shouldDeliverDirectOnDirect() throws {
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeDirect(parameterList: [transfer])
-        let sut = makeSUT().sut
-
-        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, closeAction: {}))
         
-        XCTAssertNoDiff(equatable(navigation), .direct)
+        assert(with: info, delivers: .direct)
     }
     
     func test_getInfoRepeatPayment_shouldDeliverDirectOnContactAddressless() throws{
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeAddressless(parameterList: [transfer])
-        let sut = makeSUT().sut
-
-        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, closeAction: {}))
         
-        XCTAssertNoDiff(equatable(navigation), .direct)
+        assert(with: info, delivers: .direct)
     }
     
     // MARK: - Helpers
@@ -444,6 +429,26 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
             phoneNumber: phoneNumber,
             productCustomName: productCustomName
         )
+    }
+    
+    private func assert(
+        model: Model = .mockWithEmptyExcept(),
+        product: ProductData? = nil,
+        closeAction: @escaping () -> Void = {},
+        with info: Repeat,
+        delivers expectedNavigation: EquatableNavigation?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = makeSUT(model: model, file: file, line: line).sut
+        
+        let navigation = sut.getInfoRepeatPayment(
+            from: info,
+            getProduct: { product ?? self.makeProduct(id: $0) },
+            closeAction: closeAction
+        )
+        
+        XCTAssertNoDiff(navigation.map(equatable), expectedNavigation, "Expected \(String(describing: expectedNavigation)), but got \(String(describing: navigation)) instead.", file: file, line: line)
     }
 }
 
