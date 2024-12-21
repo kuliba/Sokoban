@@ -31,10 +31,8 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         date: Date = .init()
     ) -> Payments.Operation.Source? {
         
-        guard type == .direct || type == .contactAddressless
-        else { return nil }
-        
-        guard let transfer = parameterList.last,
+        guard type == .direct || type == .contactAddressless,
+              let transfer = parameterList.last,
               let additional = transfer.additional,
               let phone = transfer.directPhone,
               let countryId = transfer.countryID
@@ -62,6 +60,27 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             )
         )
     }
+    
+    func repeatPaymentRequisitesSource(
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .externalEntity || type == .externalIndivudual,
+              let transfer = parameterList.last,
+              let amount = transfer.amount?.description,
+              let accountNumber = transfer.payeeExternal?.accountNumber,
+              let bankBIC = transfer.payeeExternal?.bankBIC
+        else { return nil }
+        
+        return .repeatPaymentRequisites(
+            accountNumber: accountNumber,
+            bankId: bankBIC,
+            inn: transfer.payeeExternal?.inn ?? "",
+            kpp: transfer.payeeExternal?.kpp,
+            amount: amount,
+            productId: transfer.payerProductID,
+            comment: transfer.comment
+        )
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
@@ -81,7 +100,7 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
         payerProductID ?? internalPayeeProductID
     }
     
-    private var payerProductID: Int? {
+    var payerProductID: Int? {
         
         payer?.cardId ?? payer?.accountId
     }
@@ -285,6 +304,101 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
                 lastPaymentName: nil
             )
         ))
+    }
+    
+    // MARK: - repeatPaymentRequisitesSource
+    
+    func test_repeatPaymentRequisitesSource_shouldDeliverNilForNonExternalEntityNonExternalIndivudual() {
+        
+        for type in allTransferTypes(except: .externalEntity, .externalIndivudual) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.repeatPaymentRequisitesSource())
+        }
+    }
+    
+    func test_repeatPaymentRequisitesSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        for type in [TransferType.externalEntity, .externalIndivudual] {
+            
+            let info = makeRepeat(type: type, parameterList: [])
+            
+            XCTAssertNil(info.repeatPaymentRequisitesSource())
+        }
+    }
+    
+    func test_repeatPaymentRequisitesSource_shouldDeliverNilOnNilAmount() {
+        
+        for type in [TransferType.externalEntity, .externalIndivudual] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(
+                    amount: nil,
+                    payeeExternal: makeExternalPayer(bankBIC: anyMessage())
+                )
+            ])
+            
+            XCTAssertNil(info.repeatPaymentRequisitesSource())
+        }
+    }
+    
+    func test_repeatPaymentRequisitesSource_shouldDeliverNilOnNilBICPayeeExternal() {
+        
+        for type in [TransferType.externalEntity, .externalIndivudual] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(
+                    payeeExternal: makeExternalPayer(bankBIC: nil)
+                )
+            ])
+            
+            XCTAssertNil(info.repeatPaymentRequisitesSource())
+        }
+    }
+    
+    func test_repeatPaymentRequisitesSource_shouldDeliverSourceOnExternalEntity() throws {
+        
+        let transfer = makeTransfer(payeeExternal: makeExternalPayer(
+            inn: anyMessage(),
+            bankBIC: anyMessage())
+        )
+        let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
+        
+        try XCTAssertNoDiff(
+            info.repeatPaymentRequisitesSource(),
+            .repeatPaymentRequisites(
+                accountNumber: XCTUnwrap(transfer.payeeExternal?.accountNumber),
+                bankId: XCTUnwrap(transfer.payeeExternal?.bankBIC),
+                inn: XCTUnwrap(transfer.payeeExternal?.inn),
+                kpp: transfer.payeeExternal?.kpp,
+                amount: XCTUnwrap(transfer.amount?.description),
+                productId: transfer.payerProductID,
+                comment: transfer.comment
+            )
+        )
+    }
+    
+    func test_repeatPaymentRequisitesSource_shouldDeliverSourceOnExternalIndivudual() throws {
+        
+        let transfer = makeTransfer(payeeExternal: makeExternalPayer(
+            inn: anyMessage(),
+            bankBIC: anyMessage())
+        )
+        let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
+        
+        try XCTAssertNoDiff(
+            info.repeatPaymentRequisitesSource(),
+            .repeatPaymentRequisites(
+                accountNumber: XCTUnwrap(transfer.payeeExternal?.accountNumber),
+                bankId: XCTUnwrap(transfer.payeeExternal?.bankBIC),
+                inn: XCTUnwrap(transfer.payeeExternal?.inn),
+                kpp: transfer.payeeExternal?.kpp,
+                amount: XCTUnwrap(transfer.amount?.description),
+                productId: transfer.payerProductID,
+                comment: transfer.comment
+            )
+        )
     }
     
     // MARK: - Helpers
