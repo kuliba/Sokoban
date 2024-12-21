@@ -94,6 +94,26 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         
         return .toAnotherCard(from: from, to: to, amount: amount.description)
     }
+    
+    func servicePaymentSource(
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .internet || type == .transport || type == .housingAndCommunalService,
+              let transfer = parameterList.first,
+              let puref = transfer.puref,
+              let amount = transfer.amount ?? parameterList.last?.amount
+        else { return nil }
+        
+        return .servicePayment(
+            puref: puref,
+            additionalList: transfer.additional?.map {
+                
+                return .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
+            },
+            amount: amount,
+            productId: transfer.payer?.cardId
+        )
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
@@ -493,6 +513,109 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         )
     }
     
+    // MARK: - servicePaymentSource
+    
+    func test_servicePaymentSource_shouldDeliverNilForNonInternetNonTransportNonHousingAndCommunalService() {
+        
+        for type in allTransferTypes(except: .internet, .transport, .housingAndCommunalService) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.servicePaymentSource())
+        }
+    }
+    
+    func test_servicePaymentSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        for type in [TransferType.internet, .transport, .housingAndCommunalService] {
+            
+            let info = makeRepeat(type: type, parameterList: [])
+            
+            XCTAssertNil(info.servicePaymentSource())
+        }
+    }
+    
+    func test_servicePaymentSource_shouldDeliverNilOnMissingPuref() {
+        
+        for type in [TransferType.internet, .transport, .housingAndCommunalService] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(puref: nil)
+            ])
+            
+            XCTAssertNil(info.servicePaymentSource())
+        }
+    }
+    
+    func test_servicePaymentSource_shouldDeliverNilOnMissingAmount() {
+        
+        for type in [TransferType.internet, .transport, .housingAndCommunalService] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(amount: nil)
+            ])
+            
+            XCTAssertNil(info.servicePaymentSource())
+        }
+    }
+    
+    func test_servicePaymentSource_shouldDeliverSourceOnInternet() {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .internet, parameterList: [transfer])
+        
+        try XCTAssertNoDiff(info.servicePaymentSource(), .servicePayment(
+            puref: XCTUnwrap(transfer.puref),
+            additionalList: [
+                .init(fieldTitle: additional.fieldname, fieldName: additional.fieldname, fieldValue: additional.fieldvalue, svgImage: nil)
+            ],
+            amount: XCTUnwrap(transfer.amount),
+            productId: transfer.payer?.cardId
+        ))
+    }
+    
+    func test_servicePaymentSource_shouldDeliverSourceOnTransport() {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .transport, parameterList: [transfer])
+        
+        try XCTAssertNoDiff(info.servicePaymentSource(), .servicePayment(
+            puref: XCTUnwrap(transfer.puref),
+            additionalList: [
+                .init(fieldTitle: additional.fieldname, fieldName: additional.fieldname, fieldValue: additional.fieldvalue, svgImage: nil)
+            ],
+            amount: XCTUnwrap(transfer.amount),
+            productId: transfer.payer?.cardId
+        ))
+    }
+    
+    func test_servicePaymentSource_shouldDeliverSourceOnHousingAndCommunalService() {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .housingAndCommunalService, parameterList: [transfer])
+        
+        try XCTAssertNoDiff(info.servicePaymentSource(), .servicePayment(
+            puref: XCTUnwrap(transfer.puref),
+            additionalList: [
+                .init(fieldTitle: additional.fieldname, fieldName: additional.fieldname, fieldValue: additional.fieldvalue, svgImage: nil)
+            ],
+            amount: XCTUnwrap(transfer.amount),
+            productId: transfer.payer?.cardId
+        ))
+    }
+    
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
@@ -645,7 +768,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         fieldvalue: String = anyMessage()
     ) -> Transfer.Additional {
         
-        return .init(fieldname: "RECP", fieldid: fieldid, fieldvalue: fieldvalue)
+        return makeAdditional(fieldname: "RECP", fieldid: fieldid, fieldvalue: fieldvalue)
     }
     
     func makeCountryID(
@@ -653,6 +776,15 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         fieldvalue: String = anyMessage()
     ) -> Transfer.Additional {
         
-        return .init(fieldname: "trnPickupPoint", fieldid: fieldid, fieldvalue: fieldvalue)
+        return makeAdditional(fieldname: "trnPickupPoint", fieldid: fieldid, fieldvalue: fieldvalue)
+    }
+    
+    func makeAdditional(
+        fieldname: String = anyMessage(),
+        fieldid: Int = .random(in: 1...100),
+        fieldvalue: String = anyMessage()
+    ) -> Transfer.Additional {
+        
+        return .init(fieldname: fieldname, fieldid: fieldid, fieldvalue: fieldvalue)
     }
 }
