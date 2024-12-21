@@ -23,23 +23,30 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        let products = model.products.value.flatMap(\.value)
-        
         return getInfoRepeatPayment(
             from: info,
-            getProduct: { id in products.first { $0.id == id }},
-            closeAction: closeAction
+            getProduct: { [weak model] id in
+                
+                model?.products.value.flatMap(\.value).first { $0.id == id }
+            },
+            makePayments: { [weak model] source in
+                
+                model.map {
+                    
+                    .init(source: source, model: $0, closeAction: closeAction)
+                }
+            }
         )
     }
     
     func getInfoRepeatPayment(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         getProduct: @escaping (ProductData.ID) -> ProductData?,
-        closeAction: @escaping () -> Void
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
         return makeMeToMe(from: info, getProduct: getProduct).map { .meToMe($0) }
-        ?? makeDirect(from: info, closeAction: closeAction).map { .direct($0) }
+        ?? makeDirect(from: info, makePayments: makePayments).map { .direct($0) }
     }
     
     func makeMeToMe(
@@ -55,12 +62,12 @@ extension RootViewModelFactory {
     
     func makeDirect(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        closeAction: @escaping () -> Void
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
     ) -> PaymentsViewModel? {
         
-        guard let direct = info.directSource() else { return nil }
+        guard let source = info.directSource() else { return nil }
         
-        return .init(source: direct, model: model, closeAction: closeAction)
+        return makePayments(source)
     }
 }
 
@@ -83,7 +90,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
             XCTAssertNil(meToMe)
         }
     }
-
+    
     func test_shouldDeliverNilOnNilAmount() throws {
         
         let productID = makeProductID()
@@ -148,7 +155,53 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     
     // MARK: - direct, contactAddressless
     
-    func test_shouldDeliverDirectOnDirect() throws {
+    func test_shouldCallMakePaymentsWithDirectSourceOnDirect() throws {
+        
+        let (phone, country) = (makePhone(), makeCountryID())
+        let transfer = makeTransfer(additional: [phone, country])
+        let info = makeDirect(parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try assertDirect(
+            source,
+            phone: phone.fieldvalue,
+            country: country.fieldvalue,
+            additional: [
+                .init(fieldTitle: phone.fieldname, fieldName: phone.fieldname, fieldValue: phone.fieldvalue, svgImage: ""),
+                .init(fieldTitle: country.fieldname, fieldName: country.fieldname, fieldValue: country.fieldvalue, svgImage: ""),
+            ],
+            amount: XCTUnwrap(transfer.amount),
+            puref: ""
+        )
+    }
+    
+    func test_shouldCallMakePaymentsWithDirectSourceOnContactAddressless() throws {
+        
+        let (phone, country) = (makePhone(), makeCountryID())
+        let transfer = makeTransfer(additional: [phone, country])
+        let info = makeAddressless(parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try assertDirect(
+            source,
+            phone: phone.fieldvalue,
+            country: country.fieldvalue,
+            additional: [
+                .init(fieldTitle: phone.fieldname, fieldName: phone.fieldname, fieldValue: phone.fieldvalue, svgImage: ""),
+                .init(fieldTitle: country.fieldname, fieldName: country.fieldname, fieldValue: country.fieldvalue, svgImage: ""),
+            ],
+            amount: XCTUnwrap(transfer.amount),
+            puref: ""
+        )
+    }
+    
+    func test_shouldDeliverDirectOnDirect() {
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeDirect(parameterList: [transfer])
@@ -156,7 +209,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .direct)
     }
     
-    func test_shouldDeliverDirectOnContactAddressless() throws{
+    func test_shouldDeliverDirectOnContactAddressless(){
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeAddressless(parameterList: [transfer])
@@ -210,7 +263,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     
     private func assert(
         model: Model = .mockWithEmptyExcept(),
-        product: ProductData? = nil,
         closeAction: @escaping () -> Void = {},
         with info: Repeat,
         delivers expectedNavigation: EquatableNavigation?,
@@ -221,11 +273,32 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         
         let navigation = sut.getInfoRepeatPayment(
             from: info,
-            getProduct: { product ?? self.makeProduct(id: $0) },
             closeAction: closeAction
         )
         
         XCTAssertNoDiff(navigation.map(equatable), expectedNavigation, "Expected \(String(describing: expectedNavigation)), but got \(String(describing: navigation)) instead.", file: file, line: line)
+    }
+    
+    private func assertDirect(
+        _ source: Payments.Operation.Source?,
+        phone expectedPhone: String,
+        country expectedCountry: String,
+        additional: [PaymentServiceData.AdditionalListData],
+        amount: Double,
+        puref: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        switch source {
+        case let .direct(phone: phone, countryId: country, serviceData: serviceData):
+            XCTAssertNoDiff(phone, expectedPhone, "Expected \(expectedPhone), but got \(String(describing: phone)) instead.", file: file, line: line)
+            XCTAssertNoDiff(country, expectedCountry, "Expected \(expectedCountry), but got \(String(describing: country)) instead.", file: file, line: line)
+            XCTAssertNoDiff(serviceData?.additionalList, additional, file: file, line: line)
+            XCTAssertNoDiff(serviceData?.amount, amount, file: file, line: line)
+            XCTAssertNoDiff(serviceData?.puref, puref, file: file, line: line)
+        default:
+            XCTFail("Expected `direct` source, but got \(String(describing: source)) instead.", file: file, line: line)
+        }
     }
 }
 
