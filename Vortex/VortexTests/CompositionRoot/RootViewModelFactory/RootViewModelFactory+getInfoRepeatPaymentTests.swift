@@ -16,7 +16,9 @@ extension GetInfoRepeatPaymentDomain {
         case external(PaymentsViewModel)
         case inside(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
+        case mobile(PaymentsViewModel)
         case service(PaymentsViewModel)
+        case sfp(PaymentsViewModel)
     }
 }
 
@@ -76,6 +78,14 @@ extension RootViewModelFactory {
         
         if let byPhone = makeByPhone(from: info, activeProductID: activeProductID, makePayments: makePayments) {
             return .byPhone(byPhone)
+        }
+        
+        if let sfp = makeSFP(from: info, activeProductID: activeProductID, makePayments: makePayments) {
+            return .sfp(sfp)
+        }
+        
+        if let mobile = makeMobile(from: info, makePayments: makePayments) {
+            return .mobile(mobile)
         }
         
         return nil
@@ -142,6 +152,29 @@ extension RootViewModelFactory {
     ) -> PaymentsViewModel? {
         
         guard let source = info.byPhoneSource(activeProductID: activeProductID)
+        else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeSFP(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        activeProductID: ProductData.ID,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.sfpSource(activeProductID: activeProductID)
+        else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeMobile(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.mobileSource()
         else { return nil }
         
         return makePayments(source)
@@ -483,7 +516,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
     }
     
-    func test_shouldDeliverServiceOnInternet() throws {
+    func test_shouldDeliverServiceOnInternet() {
         
         let additional = makeAdditional()
         let transfer = makeTransfer(
@@ -495,7 +528,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .service)
     }
     
-    func test_shouldDeliverServiceOnTransport() throws {
+    func test_shouldDeliverServiceOnTransport() {
         
         let additional = makeAdditional()
         let transfer = makeTransfer(
@@ -507,7 +540,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .service)
     }
     
-    func test_shouldDeliverServiceOnHousingAndCommunalService() throws {
+    func test_shouldDeliverServiceOnHousingAndCommunalService() {
         
         let additional = makeAdditional()
         let transfer = makeTransfer(
@@ -540,7 +573,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         ))
     }
     
-    func test_shouldDeliverByPhoneOnByPhone() throws {
+    func test_shouldDeliverByPhoneOnByPhone() {
         
         let transfer = makeTransfer(
             payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
@@ -548,6 +581,76 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         let info = makeRepeat(type: .byPhone, parameterList: [transfer])
         
         assert(with: info, delivers: .byPhone)
+    }
+    
+    // MARK: - sfp
+    
+    func test_shouldCallMakePaymentsWithSFPSourceOnSFP() throws {
+        
+        let activeProductID = makeProductID()
+        let (phone, bankID) = (anyMessage(), anyMessage())
+        let transfer = makeTransfer(
+            additional: [
+                makeAdditional(fieldname: "RecipientID", fieldvalue: phone),
+                makeAdditional(fieldname: "BankRecipientID", fieldvalue: bankID)
+            ]
+        )
+        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+        let sut = makeSUT().sut
+        
+        let source = makePaymentsSource(sut, info: info, activeProductID: activeProductID)
+        
+        try XCTAssertNoDiff(source, .sfp(
+            phone: phone,
+            bankId: bankID,
+            amount: XCTUnwrap(transfer.amount?.description),
+            productId: activeProductID
+        ))
+    }
+    
+    func test_shouldDeliverSFPOnSFP() {
+        
+        let (phone, bankID) = (anyMessage(), anyMessage())
+        let transfer = makeTransfer(
+            additional: [
+                makeAdditional(fieldname: "RecipientID", fieldvalue: phone),
+                makeAdditional(fieldname: "BankRecipientID", fieldvalue: bankID)
+            ]
+        )
+        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+
+        assert(with: info, delivers: .sfp)
+    }
+    
+    // MARK: - mobile
+    
+    func test_shouldCallMakePaymentsWithMobileSourceOnMobile() {
+        
+        let phone = anyMessage()
+        let transfer = makeTransfer(
+            additional: [makeAdditional(fieldname: "a3_NUMBER_1_2", fieldvalue: phone)]
+        )
+        let info = makeRepeat(type: .mobile, parameterList: [transfer])
+        let sut = makeSUT().sut
+        
+        let source = makePaymentsSource(sut, info: info)
+        
+        XCTAssertNoDiff(source, .mobile(
+            phone: phone,
+            amount: transfer.amount?.description,
+            productId: nil
+        ))
+    }
+    
+    func test_shouldDeliverMobileOnMobile() {
+        
+        let phone = anyMessage()
+        let transfer = makeTransfer(
+            additional: [makeAdditional(fieldname: "a3_NUMBER_1_2", fieldvalue: phone)]
+        )
+        let info = makeRepeat(type: .mobile, parameterList: [transfer])
+
+        assert(with: info, delivers: .mobile)
     }
     
     // MARK: - Helpers
@@ -573,7 +676,9 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         case external
         case inside
         case meToMe
+        case mobile
         case service
+        case sfp
     }
     
     private func equatable(
@@ -586,7 +691,9 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         case .external:  return .external
         case .inside:    return .inside
         case .meToMe:    return .meToMe
+        case .mobile:    return .mobile
         case .service:   return .service
+        case .sfp:       return .sfp
         }
     }
     
