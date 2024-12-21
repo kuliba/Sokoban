@@ -15,6 +15,7 @@ extension GetInfoRepeatPaymentDomain {
         case external(PaymentsViewModel)
         case inside(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
+        case service(PaymentsViewModel)
     }
 }
 
@@ -51,6 +52,7 @@ extension RootViewModelFactory {
         ?? makeDirect(from: info, makePayments: makePayments).map { .direct($0) }
         ?? makeExternal(from: info, makePayments: makePayments).map { .external($0) }
         ?? makeInside(from: info, makePayments: makePayments).map { .inside($0) }
+        ?? makeService(from: info, makePayments: makePayments).map { .service($0) }
     }
     
     func makeMeToMe(
@@ -91,6 +93,17 @@ extension RootViewModelFactory {
     ) -> PaymentsViewModel? {
         
         guard let source = info.toAnotherCardSource()
+        else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeService(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.servicePaymentSource()
         else { return nil }
         
         return makePayments(source)
@@ -360,6 +373,122 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .inside)
     }
     
+    // MARK: - internet, transport, housingAndCommunalService
+    
+    func test_shouldCallMakePaymentsWithServicePaymentSourceOnInternet() {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .internet, parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try XCTAssertNoDiff(
+            source,
+            .servicePayment(
+                puref: XCTUnwrap(transfer.puref),
+                additionalList: [
+                    .init(fieldTitle: additional.fieldname, fieldName: additional.fieldname, fieldValue: additional.fieldvalue, svgImage: nil)
+                ],
+                amount: XCTUnwrap(transfer.amount),
+                productId: transfer.payer?.cardId
+            )
+        )
+    }
+    
+    func test_shouldCallMakePaymentsWithServicePaymentSourceOnTransport() {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .transport, parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try XCTAssertNoDiff(
+            source,
+            .servicePayment(
+                puref: XCTUnwrap(transfer.puref),
+                additionalList: [
+                    .init(fieldTitle: additional.fieldname, fieldName: additional.fieldname, fieldValue: additional.fieldvalue, svgImage: nil)
+                ],
+                amount: XCTUnwrap(transfer.amount),
+                productId: transfer.payer?.cardId
+            )
+        )
+    }
+    
+    func test_shouldCallMakePaymentsWithServicePaymentSourceOnHousingAndCommunalService() {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .housingAndCommunalService, parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try XCTAssertNoDiff(
+            source,
+            .servicePayment(
+                puref: XCTUnwrap(transfer.puref),
+                additionalList: [
+                    .init(fieldTitle: additional.fieldname, fieldName: additional.fieldname, fieldValue: additional.fieldvalue, svgImage: nil)
+                ],
+                amount: XCTUnwrap(transfer.amount),
+                productId: transfer.payer?.cardId
+            )
+        )
+    }
+    
+    func test_shouldDeliverServiceOnInternet() throws {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .internet, parameterList: [transfer])
+        
+        assert(with: info, delivers: .service)
+    }
+    
+    func test_shouldDeliverServiceOnTransport() throws {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .transport, parameterList: [transfer])
+        
+        assert(with: info, delivers: .service)
+    }
+    
+    func test_shouldDeliverServiceOnHousingAndCommunalService() throws {
+        
+        let additional = makeAdditional()
+        let transfer = makeTransfer(
+            puref: anyMessage(),
+            additional: [additional]
+        )
+        let info = makeRepeat(type: .housingAndCommunalService, parameterList: [transfer])
+        
+        assert(with: info, delivers: .service)
+    }
+    
     // MARK: - Helpers
     
     private func makeDirect(
@@ -382,6 +511,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         case external
         case inside
         case meToMe
+        case service
     }
     
     private func equatable(
@@ -389,10 +519,11 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .direct:   return .direct
-        case .external: return .external
-        case .inside:   return .inside
-        case .meToMe:   return .meToMe
+        case .direct:    return .direct
+        case .external:  return .external
+        case .inside:    return .inside
+        case .meToMe:    return .meToMe
+        case .service:   return .service
         }
     }
     
