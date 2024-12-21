@@ -130,7 +130,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         else { return nil }
         
         return .sfp(
-            phone: phone, 
+            phone: phone,
             bankId: Vortex.BankID.vortexID.digits,
             amount: amount.description,
             productId: activeProductID
@@ -155,6 +155,22 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             productId: activeProductID
         )
     }
+    
+    func mobileSource(
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .mobile,
+              let transfer = parameterList.last,
+              let phone = transfer.mobilePhone,
+              let amount = transfer.amount
+        else { return nil }
+        
+        return .mobile(
+            phone: phone,
+            amount: amount.description,
+            productId: transfer.payerProductID
+        )
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
@@ -167,6 +183,11 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     var directPhone: String? {
         
         additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue
+    }
+    
+    var mobilePhone: String? {
+        
+        additional?.first(where: { $0.fieldname == "a3_NUMBER_1_2"})?.fieldvalue
     }
     
     var sfpBankID: String? {
@@ -810,6 +831,55 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         ))
     }
 
+    // MARK: - mobileSource
+    
+    func test_mobileSource_shouldDeliverNilForNonMobile() {
+        
+        for type in allTransferTypes(except: .mobile) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.mobileSource())
+        }
+    }
+    
+    func test_mobileSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        let info = makeRepeat(type: .mobile, parameterList: [])
+        
+        XCTAssertNil(info.mobileSource())
+    }
+    
+    func test_mobileSource_shouldDeliverNilOnMissingMobilePhone() {
+        
+        let info = makeRepeat(type: .mobile, parameterList: [makeTransfer()])
+        
+        XCTAssertNil(info.mobileSource())
+    }
+    
+    func test_mobileSource_shouldDeliverNilOnMissingAmount() {
+        
+        let transfer = makeTransfer(
+            amount: nil,
+            additional: [makeAdditional(fieldname: "a3_NUMBER_1_2")]
+        )
+        let info = makeRepeat(type: .mobile, parameterList: [transfer])
+        
+        XCTAssertNil(info.mobileSource())
+    }
+    
+    func test_mobileSource_shouldDeliverSource() {
+        
+        let transfer = makeTransfer(
+            additional: [makeAdditional(fieldname: "a3_NUMBER_1_2")]
+        )
+        let info = makeRepeat(type: .mobile, parameterList: [transfer])
+        
+        XCTAssertNoDiff(info.mobileSource(), .mobile(
+            phone: transfer.mobilePhone, amount: transfer.amount?.description, productId: transfer.payerProductID
+        ))
+    }
+    
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
