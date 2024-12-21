@@ -309,6 +309,16 @@ extension GetInfoRepeatPaymentDomain {
             public let smallDesign: String?
             public let paymentSystemImage: String?
             
+            public init(id: Int?, numberMask: String?, customName: String?, currency: String?, type: ProductType?, smallDesign: String?, paymentSystemImage: String?) {
+                self.id = id
+                self.numberMask = numberMask
+                self.customName = customName
+                self.currency = currency
+                self.type = type
+                self.smallDesign = smallDesign
+                self.paymentSystemImage = paymentSystemImage
+            }
+            
             public enum ProductType: Equatable {
                 
                 case account

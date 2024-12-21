@@ -81,6 +81,19 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             comment: transfer.comment
         )
     }
+    
+    func toAnotherCardSource(
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .insideBank,
+              let transfer = parameterList.last,
+              let from = transfer.payer?.cardId,
+              let amount = transfer.amount,
+              let to = productTemplate?.id
+        else { return nil }
+        
+        return .toAnotherCard(from: from, to: to, amount: amount.description)
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
@@ -401,6 +414,85 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         )
     }
     
+    // MARK: - toAnotherCardSource
+    
+    func test_toAnotherCardSource_shouldDeliverNilForNonInsideBank() {
+        
+        for type in allTransferTypes(except: .insideBank) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.toAnotherCardSource())
+        }
+    }
+    
+    func test_toAnotherCardSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [],
+            productTemplate: makeProductTemplate()
+        )
+        
+        XCTAssertNil(info.toAnotherCardSource())
+    }
+    
+    func test_toAnotherCardSource_shouldDeliverNilOnNilAmount() {
+        
+        let transfer = makeTransfer(amount: nil, payer: makePayer())
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [transfer],
+            productTemplate: makeProductTemplate()
+        )
+        
+        XCTAssertNil(info.toAnotherCardSource())
+    }
+    
+    func test_toAnotherCardSource_shouldDeliverNilOnNilPayerCardID() {
+        
+        let transfer = makeTransfer(payer: nil)
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [transfer],
+            productTemplate: makeProductTemplate()
+        )
+        
+        XCTAssertNil(info.toAnotherCardSource())
+    }
+    
+    func test_toAnotherCardSource_shouldDeliverNilOnNilProductTemplateID() {
+        
+        let transfer = makeTransfer(payer: makePayer())
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [transfer],
+            productTemplate: makeProductTemplate(id: nil)
+        )
+        
+        XCTAssertNil(info.toAnotherCardSource())
+    }
+    
+    func test_toAnotherCardSource_shouldDeliverSourceOnInsideBank() throws {
+        
+        let transfer = makeTransfer(payer: makePayer())
+        let productTemplate = makeProductTemplate()
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [transfer],
+            productTemplate: productTemplate
+        )
+        
+        try XCTAssertNoDiff(
+            info.toAnotherCardSource(),
+            .toAnotherCard(
+                from: XCTUnwrap(transfer.payer?.cardId),
+                to: XCTUnwrap(productTemplate.id),
+                amount: transfer.amount?.description
+            )
+        )
+    }
+    
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
@@ -428,6 +520,27 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     ) -> Repeat {
         
         return .init(type: type, parameterList: parameterList, productTemplate: productTemplate)
+    }
+    
+    func makeProductTemplate(
+        id: Int? = .random(in: 1...100),
+        numberMask: String? = nil,
+        customName: String? = nil,
+        currency: String? = nil,
+        type: Repeat.ProductTemplate.ProductType? = nil,
+        smallDesign: String? = nil,
+        paymentSystemImage: String? = nil
+    ) -> Repeat.ProductTemplate {
+        
+        return .init(
+            id: id,
+            numberMask: numberMask,
+            customName: customName,
+            currency: currency,
+            type: type,
+            smallDesign: smallDesign,
+            paymentSystemImage: paymentSystemImage
+        )
     }
     
     func makeProductID() -> ProductData.ID {
