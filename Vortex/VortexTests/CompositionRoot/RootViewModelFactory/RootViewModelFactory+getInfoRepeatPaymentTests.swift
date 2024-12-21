@@ -11,6 +11,7 @@ extension GetInfoRepeatPaymentDomain {
     
     enum Navigation {
         
+        case direct(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
     }
 }
@@ -18,23 +19,27 @@ extension GetInfoRepeatPaymentDomain {
 extension RootViewModelFactory {
     
     func getInfoRepeatPayment(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        closeAction: @escaping () -> Void
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
         let products = model.products.value.flatMap(\.value)
         
         return getInfoRepeatPayment(
             from: info,
-            getProduct: { id in products.first { $0.id == id }}
+            getProduct: { id in products.first { $0.id == id }}, 
+            closeAction: closeAction
         )
     }
     
     func getInfoRepeatPayment(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        getProduct: @escaping (ProductData.ID) -> ProductData?
+        getProduct: @escaping (ProductData.ID) -> ProductData?,
+        closeAction: @escaping () -> Void
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
         return makeMeToMe(from: info, getProduct: getProduct).map { .meToMe($0) }
+        ?? makeDirect(from: info, closeAction: closeAction).map { .direct($0) }
     }
     
     func makeMeToMe(
@@ -46,6 +51,16 @@ extension RootViewModelFactory {
         else { return nil }
         
         return .init(model, mode: mode)
+    }
+    
+    func makeDirect(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        closeAction: @escaping () -> Void
+    ) -> PaymentsViewModel? {
+        
+        guard let direct = info.direct() else { return nil }
+        
+        return .init(source: direct, model: model, closeAction: closeAction)
     }
 }
 
@@ -66,9 +81,50 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         }
         .first
     }
+    
+    func direct() -> Payments.Operation.Source? {
+        
+        guard let transfer = parameterList.last,
+              let additional = transfer.additional,
+              let phone = transfer.directPhone,
+              let countryId = transfer.countryID
+        else { return nil }
+        
+        return .direct(
+            phone: phone,
+            countryId: countryId,
+            serviceData: .init(
+                additionalList: additional.map {
+                    
+                    return .init(
+                        fieldTitle: $0.fieldname,
+                        fieldName: $0.fieldname,
+                        fieldValue: $0.fieldvalue,
+                        svgImage: ""
+                    )
+                },
+                amount: transfer.amount ?? 0,
+                date: Date(), // ???
+                paymentDate: "", // ???
+                puref: transfer.puref ?? "", // ???
+                type: .internet, // ???
+                lastPaymentName: nil
+            )
+        )
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
+    
+    var countryID: String? {
+        
+        additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue
+    }
+    
+    var directPhone: String? {
+        
+        additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue
+    }
     
     var payerOrInternalPayerProductID: Int? {
         
@@ -124,7 +180,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         )
         let sut = makeSUT(model: model).sut
 
-        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }))
+        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
     }
     
     func test_getInfoRepeatPayment_shouldDeliverNilOnEmptyParameterList() throws {
@@ -136,7 +192,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         )
         let sut = makeSUT(model: model).sut
 
-        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }))
+        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
     }
     
     func test_getInfoRepeatPayment_shouldDeliverNilOnExternalPayerProduct() throws {
@@ -149,7 +205,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         )
         let sut = makeSUT(model: model).sut
 
-        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }))
+        XCTAssertNil(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
     }
     
     func test_getInfoRepeatPayment_shouldDeliverMeToMeOnPayerProduct() throws {
@@ -162,7 +218,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         )
         let sut = makeSUT(model: model).sut
         
-        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info))
+        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, closeAction: {}))
         
         XCTAssertNoDiff(equatable(navigation), .meToMe)
     }
@@ -177,15 +233,40 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         )
         let sut = makeSUT(model: model).sut
 
-        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }))
+        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { self.makeProduct(id: $0) }, closeAction: {}))
         
         XCTAssertNoDiff(equatable(navigation), .meToMe)
     }
     
+    // MARK: - direct
+    
+    func test_getInfoRepeatPayment_shouldDeliverDirectOnDirect() throws {
+        
+        let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
+        let info = makeDirect(parameterList: [transfer])
+        let sut = makeSUT().sut
+
+        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, closeAction: {}))
+        
+        XCTAssertNoDiff(equatable(navigation), .direct)
+    }
+    
+    func test_getInfoRepeatPayment_shouldDeliverDirectOnContactAddressless() throws{
+        
+        let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
+        let info = makeAddressless(parameterList: [transfer])
+        let sut = makeSUT().sut
+
+        let navigation = try XCTUnwrap(sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, closeAction: {}))
+        
+        XCTAssertNoDiff(equatable(navigation), .direct)
+    }
+    
     // MARK: - Helpers
     
-    private typealias TransferType = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.TransferType
     private typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
+    private typealias Transfer = Repeat.Transfer
+    private typealias TransferType = Repeat.TransferType
     
     private func allTransferTypes(
         except excludingType: TransferType
@@ -201,6 +282,20 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         return makeRepeat(type: .betweenTheir, parameterList: parameterList)
     }
     
+    private func makeDirect(
+        parameterList: [Repeat.Transfer] = []
+    ) -> Repeat {
+        
+        return makeRepeat(type: .direct, parameterList: parameterList)
+    }
+    
+    private func makeAddressless(
+        parameterList: [Repeat.Transfer] = []
+    ) -> Repeat {
+        
+        return makeRepeat(type: .contactAddressless, parameterList: parameterList)
+    }
+    
     private func makeRepeat(
         type: TransferType,
         parameterList: [Repeat.Transfer] = [],
@@ -214,12 +309,12 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         check: Bool = false,
         amount: Double? = .random(in: 1...100),
         currencyAmount: String? = nil,
-        payer: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Payer? = nil,
+        payer: Transfer.Payer? = nil,
         comment: String? = nil,
         puref: String? = nil,
-        payeeInternal: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.PayeeInternal? = nil,
-        payeeExternal: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.PayeeExternal? = nil,
-        additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional]? = nil,
+        payeeInternal: Transfer.PayeeInternal? = nil,
+        payeeExternal: Transfer.PayeeExternal? = nil,
+        additional: [Transfer.Additional]? = nil,
         mcc: String? = nil
     ) -> Repeat.Transfer {
         
@@ -237,8 +332,25 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         )
     }
     
+    private func makePhone(
+        fieldid: Int = .random(in: 1...100),
+        fieldvalue: String = anyMessage()
+    ) -> Transfer.Additional {
+        
+        return .init(fieldname: "RECP", fieldid: fieldid, fieldvalue: fieldvalue)
+    }
+    
+    private func makeCountryID(
+        fieldid: Int = .random(in: 1...100),
+        fieldvalue: String = anyMessage()
+    ) -> Transfer.Additional {
+        
+        return .init(fieldname: "trnPickupPoint", fieldid: fieldid, fieldvalue: fieldvalue)
+    }
+    
     private enum EquatableNavigation: Equatable {
         
+        case direct
         case meToMe
     }
     
@@ -247,6 +359,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
     ) -> EquatableNavigation {
         
         switch navigation {
+        case .direct: return .direct
         case .meToMe: return .meToMe
         }
     }
