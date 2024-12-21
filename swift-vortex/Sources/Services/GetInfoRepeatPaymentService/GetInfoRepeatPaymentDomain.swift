@@ -46,7 +46,7 @@ extension GetInfoRepeatPaymentDomain {
             self.productTemplate = productTemplate
         }
         
-        public enum TransferType: String {
+        public enum TransferType: String, CaseIterable {
             
             case betweenTheir = "BETWEEN_THEIR"
             case byPhone = "BY_PHONE"

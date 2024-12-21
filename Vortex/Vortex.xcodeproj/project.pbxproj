@@ -1128,6 +1128,7 @@
 		2A884E7B2C65062200493D0A /* UtilityPrepaymentBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A884E7A2C65062200493D0A /* UtilityPrepaymentBinder.swift */; };
 		2A887BAD2D01A0A7004CB7DE /* RootViewModelFactory+composeDecoratedServiceCategoryListLoadersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887BAC2D01A0A7004CB7DE /* RootViewModelFactory+composeDecoratedServiceCategoryListLoadersTests.swift */; };
 		2A887BAF2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887BAE2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift */; };
+		2A887DDE2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887DDD2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift */; };
 		2A89A11E2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89A11D2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift */; };
 		2A89A5182CCD84D30070131F /* RootViewModelFactorySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */; };
 		2A89A51A2CCD8AB80070131F /* QRNavigation+UI Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89A5192CCD8AB80070131F /* QRNavigation+UI Mapping.swift */; };
@@ -4686,6 +4687,7 @@
 		2A884E7A2C65062200493D0A /* UtilityPrepaymentBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentBinder.swift; sourceTree = "<group>"; };
 		2A887BAC2D01A0A7004CB7DE /* RootViewModelFactory+composeDecoratedServiceCategoryListLoadersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeDecoratedServiceCategoryListLoadersTests.swift"; sourceTree = "<group>"; };
 		2A887BAE2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift"; sourceTree = "<group>"; };
+		2A887DDD2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getInfoRepeatPaymentTests.swift"; sourceTree = "<group>"; };
 		2A89A11D2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposerTests.swift; sourceTree = "<group>"; };
 		2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactorySettings.swift; sourceTree = "<group>"; };
 		2A89A5192CCD8AB80070131F /* QRNavigation+UI Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRNavigation+UI Mapping.swift"; sourceTree = "<group>"; };
@@ -10677,6 +10679,7 @@
 				2A07B9BA2CFDB0B100A3399E /* RootViewModelFactory+updateAlertsTests.swift */,
 				2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */,
 				84E75DB12D12D1CB00111E49 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */,
+				2A887DDD2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 			);
 			path = RootViewModelFactory;
@@ -22534,6 +22537,7 @@
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
 				2AB766BE29EA82A600501DD2 /* StringUpdateMaskedTests.swift in Sources */,
 				C11389AB2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift in Sources */,
+				2A887DDE2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift in Sources */,
 				776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */,
 				2A3BD6102B6CEC5B009B16F7 /* RequestFactory+createGetClientConsentMe2MePullRequestTests.swift in Sources */,
 				D4A5A7A22BAA5917006EE7A5 /* ProductAccountData_getProductListByTypeV5.swift in Sources */,
