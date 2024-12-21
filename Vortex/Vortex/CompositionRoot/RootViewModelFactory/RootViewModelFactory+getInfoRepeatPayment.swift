@@ -90,13 +90,31 @@ extension RootViewModelFactory {
         getProduct: @escaping (ProductData.ID) -> ProductData?
     ) -> Payments.Operation.Source? {
         
-        return info.byPhoneSource(activeProductID: activeProductID)
-        ?? info.directSource()
-        ?? info.mobileSource()
-        ?? info.repeatPaymentRequisitesSource()
-        ?? info.servicePaymentSource()
-        ?? info.sfpSource(activeProductID: activeProductID)
-        ?? info.toAnotherCardSource()
-        ?? info.taxesSource()
+        if let source = info.byPhoneSource(activeProductID: activeProductID) {
+            return source
+        }
+        if let source =  info.directSource() {
+            return source
+        }
+        if let source =  info.mobileSource() {
+            return source
+        }
+        if let source =  info.repeatPaymentRequisitesSource() {
+            return source
+        }
+        if let source =  info.servicePaymentSource() {
+            return source
+        }
+        if let source =  info.sfpSource(activeProductID: activeProductID) {
+            return source
+        }
+        if let source =  info.toAnotherCardSource() {
+            return source
+        }
+        if let source =  info.taxesSource() {
+            return source
+        }
+        
+        return nil
     }
 }
