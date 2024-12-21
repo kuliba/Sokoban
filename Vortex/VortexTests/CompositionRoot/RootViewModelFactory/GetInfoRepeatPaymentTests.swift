@@ -27,7 +27,9 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         .first
     }
     
-    func direct() -> Payments.Operation.Source? {
+    func directSource(
+        date: Date = .init()
+    ) -> Payments.Operation.Source? {
         
         guard type == .direct || type == .contactAddressless
         else { return nil }
@@ -52,7 +54,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
                     )
                 },
                 amount: transfer.amount ?? 0,
-                date: Date(), // ???
+                date: date, // ???
                 paymentDate: "", // ???
                 puref: transfer.puref ?? "", // ???
                 type: .internet, // ???
@@ -173,6 +175,118 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         )
     }
     
+    // MARK: - directSource
+    
+    func test_directSource_shouldDeliverNilForNonDirectNonContactAddressless() {
+        
+        for type in allTransferTypes(except: .direct, .contactAddressless) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.directSource())
+        }
+    }
+    
+    func test_directSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        for type in [TransferType.direct, .contactAddressless] {
+            
+            let info = makeRepeat(type: type, parameterList: [])
+            
+            XCTAssertNil(info.directSource())
+        }
+    }
+    
+    func test_directSource_shouldDeliverNilOnNilAdditional() {
+        
+        for type in [TransferType.direct, .contactAddressless] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(additional: nil)
+            ])
+            
+            XCTAssertNil(info.directSource())
+        }
+    }
+    
+    func test_directSource_shouldDeliverNilOnMissingCountryIDField() {
+        
+        for type in [TransferType.direct, .contactAddressless] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(additional: [makePhone()])
+            ])
+            
+            XCTAssertNil(info.directSource())
+        }
+    }
+    
+    func test_directSource_shouldDeliverNilOnMissingPhoneField() {
+        
+        for type in [TransferType.direct, .contactAddressless] {
+            
+            let info = makeRepeat(type: type, parameterList: [
+                makeTransfer(additional: [makeCountryID()])
+            ])
+            
+            XCTAssertNil(info.directSource())
+        }
+    }
+    
+    func test_directSource_shouldDeliverSourceOnDirect() {
+        
+        let amount = Double.random(in: 1...1_000)
+        let date = Date()
+        let (phone, countryID) = (makePhone(), makeCountryID())
+        let info = makeRepeat(type: .direct, parameterList: [
+            makeTransfer(amount: amount, additional: [phone, countryID])
+        ])
+        
+        XCTAssertNoDiff(info.directSource(date: date), .direct(
+            phone: phone.fieldvalue,
+            countryId: countryID.fieldvalue,
+            serviceData: .init(
+                additionalList: [
+                    .init(fieldTitle: phone.fieldname, fieldName: phone.fieldname, fieldValue: phone.fieldvalue, svgImage: ""),
+                    .init(fieldTitle: countryID.fieldname, fieldName: countryID.fieldname, fieldValue: countryID.fieldvalue, svgImage: ""),
+                ],
+                amount: amount,
+                date: date,
+                paymentDate: "",
+                puref: "",
+                type: .internet,
+                lastPaymentName: nil
+            )
+        ))
+    }
+    
+    func test_directSource_shouldDeliverSourceOnContactAddressless() {
+        
+        let amount = Double.random(in: 1...1_000)
+        let date = Date()
+        let (phone, countryID) = (makePhone(), makeCountryID())
+        let info = makeRepeat(type: .contactAddressless, parameterList: [
+            makeTransfer(amount: amount, additional: [phone, countryID])
+        ])
+        
+        XCTAssertNoDiff(info.directSource(date: date), .direct(
+            phone: phone.fieldvalue,
+            countryId: countryID.fieldvalue,
+            serviceData: .init(
+                additionalList: [
+                    .init(fieldTitle: phone.fieldname, fieldName: phone.fieldname, fieldValue: phone.fieldvalue, svgImage: ""),
+                    .init(fieldTitle: countryID.fieldname, fieldName: countryID.fieldname, fieldValue: countryID.fieldvalue, svgImage: ""),
+                ],
+                amount: amount,
+                date: date,
+                paymentDate: "",
+                puref: "",
+                type: .internet,
+                lastPaymentName: nil
+            )
+        ))
+    }
+    
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
@@ -180,10 +294,10 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     typealias TransferType = Repeat.TransferType
     
     func allTransferTypes(
-        except excludingType: TransferType
+        except excludingTypes: TransferType...
     ) -> [TransferType] {
         
-        return TransferType.allCases.filter { $0 != excludingType }
+        return TransferType.allCases.filter { !excludingTypes.contains($0) }
     }
     
     func makeBetweenTheir(
@@ -297,5 +411,21 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             phoneNumber: phoneNumber,
             productCustomName: productCustomName
         )
+    }
+    
+    func makePhone(
+        fieldid: Int = .random(in: 1...100),
+        fieldvalue: String = anyMessage()
+    ) -> Transfer.Additional {
+        
+        return .init(fieldname: "RECP", fieldid: fieldid, fieldvalue: fieldvalue)
+    }
+    
+    func makeCountryID(
+        fieldid: Int = .random(in: 1...100),
+        fieldvalue: String = anyMessage()
+    ) -> Transfer.Additional {
+        
+        return .init(fieldname: "trnPickupPoint", fieldid: fieldid, fieldvalue: fieldvalue)
     }
 }

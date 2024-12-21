@@ -58,7 +58,7 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> PaymentsViewModel? {
         
-        guard let direct = info.direct() else { return nil }
+        guard let direct = info.directSource() else { return nil }
         
         return .init(source: direct, model: model, closeAction: closeAction)
     }
@@ -178,22 +178,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) -> Repeat {
         
         return makeRepeat(type: .contactAddressless, parameterList: parameterList)
-    }
-    
-    private func makePhone(
-        fieldid: Int = .random(in: 1...100),
-        fieldvalue: String = anyMessage()
-    ) -> Transfer.Additional {
-        
-        return .init(fieldname: "RECP", fieldid: fieldid, fieldvalue: fieldvalue)
-    }
-    
-    private func makeCountryID(
-        fieldid: Int = .random(in: 1...100),
-        fieldvalue: String = anyMessage()
-    ) -> Transfer.Additional {
-        
-        return .init(fieldname: "trnPickupPoint", fieldid: fieldid, fieldvalue: fieldvalue)
     }
     
     private enum EquatableNavigation: Equatable {
