@@ -114,6 +114,11 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             productId: transfer.payer?.cardId
         )
     }
+    
+    func otherBankService() -> Payments.Service? {
+        
+        type == .otherBank ? .toAnotherCard : nil
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
@@ -616,6 +621,23 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         ))
     }
     
+    // MARK: - otherBankService
+    
+    func test_otherBankService_shouldDeliverNilForNonOtherBank() {
+        
+        for type in allTransferTypes(except: .otherBank) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.otherBankService())
+        }
+    }
+
+    func test_otherBankService_shouldDeliverToAnotherCard() {
+        
+        XCTAssertNoDiff(makeRepeat(type: .otherBank).otherBankService(), .toAnotherCard)
+    }
+
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
