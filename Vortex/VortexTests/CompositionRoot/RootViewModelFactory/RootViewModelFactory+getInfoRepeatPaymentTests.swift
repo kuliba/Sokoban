@@ -11,16 +11,8 @@ extension GetInfoRepeatPaymentDomain {
     
     enum Navigation {
         
-        case byPhone(PaymentsViewModel)
-        case direct(PaymentsViewModel)
-        case external(PaymentsViewModel)
-        case inside(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
-        case mobile(PaymentsViewModel)
-        case otherBank(PaymentsViewModel)
-        case service(PaymentsViewModel)
-        case sfp(PaymentsViewModel)
-        case taxes(PaymentsViewModel)
+        case payments(PaymentsViewModel)
     }
 }
 
@@ -64,20 +56,25 @@ extension RootViewModelFactory {
         makePaymentsWithService: @escaping (Payments.Service) -> PaymentsViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
+//        if let source = makeSource(from: info) {
+//            
+//            
+//        }
+        
         if let byPhone = makeByPhone(from: info, activeProductID: activeProductID, makePayments: makePayments) {
-            return .byPhone(byPhone)
+            return .payments(byPhone)
         }
         
         if let direct = makeDirect(from: info, makePayments: makePayments) {
-            return .direct(direct)
+            return .payments(direct)
         }
         
         if let external = makeExternal(from: info, makePayments: makePayments) {
-            return .external(external)
+            return .payments(external)
         }
         
         if let inside = makeInside(from: info, makePayments: makePayments) {
-            return .inside(inside)
+            return .payments(inside)
         }
         
         if let meToMe = makeMeToMe(from: info, getProduct: getProduct) {
@@ -85,24 +82,24 @@ extension RootViewModelFactory {
         }
         
         if let mobile = makeMobile(from: info, makePayments: makePayments) {
-            return .mobile(mobile)
+            return .payments(mobile)
         }
         
         if let otherBank = makeOtherBank(from: info, makePayments: makePaymentsWithService) {
             
-            return .otherBank(otherBank)
+            return .payments(otherBank)
         }
         
         if let service = makeService(from: info, makePayments: makePayments) {
-            return .service(service)
+            return .payments(service)
         }
         
         if let sfp = makeSFP(from: info, activeProductID: activeProductID, makePayments: makePayments) {
-            return .sfp(sfp)
+            return .payments(sfp)
         }
         
         if let taxes = makeTaxes(from: info, makePayments: makePayments) {
-            return .taxes(taxes)
+            return .payments(taxes)
         }
         
         return nil
@@ -347,12 +344,12 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
     }
     
-    func test_shouldDeliverDirectOnDirect() {
+    func test_shouldDeliverPaymentsOnDirect() {
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeDirect(parameterList: [transfer])
         
-        assert(with: info, delivers: .direct)
+        assert(with: info, delivers: .payments)
     }
     
     func test_shouldDeliverDirectOnContactAddressless(){
@@ -360,7 +357,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeAddressless(parameterList: [transfer])
         
-        assert(with: info, delivers: .direct)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - externalEntity, externalIndivudual
@@ -413,7 +410,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         ))
     }
     
-    func test_shouldDeliverExternalOnExternalEntity() throws {
+    func test_shouldDeliverPaymentsOnExternalEntity() throws {
         
         let transfer = makeTransfer(
             payeeExternal: makeExternalPayer(
@@ -423,10 +420,10 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
         
-        assert(with: info, delivers: .external)
+        assert(with: info, delivers: .payments)
     }
     
-    func test_shouldDeliverExternalOnExternalIndivudual() throws {
+    func test_shouldDeliverPaymentsOnExternalIndivudual() throws {
         
         let transfer = makeTransfer(
             payeeExternal: makeExternalPayer(
@@ -436,7 +433,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
         
-        assert(with: info, delivers: .external)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - insideBank
@@ -464,7 +461,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
     }
     
-    func test_shouldDeliverInsideOnInsideBank() throws {
+    func test_shouldDeliverPaymentsOnInsideBank() throws {
         
         let transfer = makeTransfer(payer: makePayer())
         let productTemplate = makeProductTemplate()
@@ -474,7 +471,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
             productTemplate: productTemplate
         )
         
-        assert(with: info, delivers: .inside)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - internet, transport, housingAndCommunalService
@@ -554,7 +551,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
     }
     
-    func test_shouldDeliverServiceOnInternet() {
+    func test_shouldDeliverPaymentsOnInternet() {
         
         let additional = makeAdditional()
         let transfer = makeTransfer(
@@ -563,10 +560,10 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .internet, parameterList: [transfer])
         
-        assert(with: info, delivers: .service)
+        assert(with: info, delivers: .payments)
     }
     
-    func test_shouldDeliverServiceOnTransport() {
+    func test_shouldDeliverPaymentsOnTransport() {
         
         let additional = makeAdditional()
         let transfer = makeTransfer(
@@ -575,10 +572,10 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .transport, parameterList: [transfer])
         
-        assert(with: info, delivers: .service)
+        assert(with: info, delivers: .payments)
     }
     
-    func test_shouldDeliverServiceOnHousingAndCommunalService() {
+    func test_shouldDeliverPaymentsOnHousingAndCommunalService() {
         
         let additional = makeAdditional()
         let transfer = makeTransfer(
@@ -587,7 +584,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .housingAndCommunalService, parameterList: [transfer])
         
-        assert(with: info, delivers: .service)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - byPhone
@@ -611,14 +608,14 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         ))
     }
     
-    func test_shouldDeliverByPhoneOnByPhone() {
+    func test_shouldDeliverPaymentsOnByPhone() {
         
         let transfer = makeTransfer(
             payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
         )
         let info = makeRepeat(type: .byPhone, parameterList: [transfer])
         
-        assert(with: info, delivers: .byPhone)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - sfp
@@ -646,7 +643,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         ))
     }
     
-    func test_shouldDeliverSFPOnSFP() {
+    func test_shouldDeliverPaymentsOnSFP() {
         
         let (phone, bankID) = (anyMessage(), anyMessage())
         let transfer = makeTransfer(
@@ -657,7 +654,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .sfp, parameterList: [transfer])
 
-        assert(with: info, delivers: .sfp)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - mobile
@@ -680,7 +677,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         ))
     }
     
-    func test_shouldDeliverMobileOnMobile() {
+    func test_shouldDeliverPaymentsOnMobile() {
         
         let phone = anyMessage()
         let transfer = makeTransfer(
@@ -688,7 +685,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .mobile, parameterList: [transfer])
 
-        assert(with: info, delivers: .mobile)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - taxes
@@ -703,11 +700,11 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         XCTAssertNoDiff(source, .taxes(parameterData: nil))
     }
     
-    func test_shouldDeliverTaxesOnTaxes() {
+    func test_shouldDeliverPaymentsOnTaxes() {
         
         let info = makeRepeat(type: .taxes)
 
-        assert(with: info, delivers: .taxes)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - otherBank
@@ -722,11 +719,11 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         XCTAssertNoDiff(service, .toAnotherCard)
     }
     
-    func test_shouldDeliverOtherBankOnOtherBank() {
+    func test_shouldDeliverPaymentsOnOtherBank() {
         
         let info = makeRepeat(type: .otherBank)
 
-        assert(with: info, delivers: .otherBank)
+        assert(with: info, delivers: .payments)
     }
     
     // MARK: - Helpers
@@ -747,16 +744,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     
     private enum EquatableNavigation: Equatable {
         
-        case byPhone
-        case direct
-        case external
-        case inside
         case meToMe
-        case mobile
-        case otherBank
-        case service
-        case sfp
-        case taxes
+        case payments
     }
     
     private func equatable(
@@ -764,16 +753,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .byPhone:      return .byPhone
-        case .direct:       return .direct
-        case .external:     return .external
-        case .inside:       return .inside
-        case .meToMe:       return .meToMe
-        case .mobile:       return .mobile
-        case .otherBank:    return .otherBank
-        case .service:      return .service
-        case .sfp:          return .sfp
-        case .taxes:        return .taxes
+        case .meToMe:   return .meToMe
+        case .payments: return .payments
         }
     }
     
