@@ -136,6 +136,25 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             productId: activeProductID
         )
     }
+    
+    func sfpSource(
+        activeProductID: ProductData.ID
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .sfp,
+              let transfer = parameterList.last,
+              let phone = transfer.sfpPhone,
+              let bankID = transfer.sfpBankID,
+              let amount = transfer.amount
+        else { return nil }
+        
+        return .sfp(
+            phone: phone,
+            bankId: bankID,
+            amount: amount.description,
+            productId: activeProductID
+        )
+    }
 }
 
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
@@ -148,6 +167,16 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     var directPhone: String? {
         
         additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue
+    }
+    
+    var sfpBankID: String? {
+        
+        additional?.first(where: { $0.fieldname == "BankRecipientID"})?.fieldvalue
+    }
+    
+    var sfpPhone: String? {
+        
+        additional?.first(where: { $0.fieldname == "RecipientID"})?.fieldvalue
     }
     
     var payerOrInternalPayerProductID: Int? {
@@ -711,6 +740,76 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         ))
     }
     
+    // MARK: - sfp
+    
+    func test_sfp_shouldDeliverNilForNonSFP() {
+        
+        for type in allTransferTypes(except: .sfp) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
+        }
+    }
+    
+    func test_sfpSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        let info = makeRepeat(type: .sfp, parameterList: [])
+        
+        XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
+    }
+
+    func test_sfpSource_shouldDeliverNilOnMissingPhone() {
+        
+        let info = makeRepeat(type: .sfp, parameterList: [makeTransfer()])
+
+        XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
+    }
+
+    func test_sfpSource_shouldDeliverNilOnMissingBankID() {
+        
+        let transfer = makeTransfer(
+            additional: [makeAdditional(fieldname: "RecipientID")]
+        )
+        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+
+        XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
+    }
+
+    func test_sfpSource_shouldDeliverNilOnMissingAmount() {
+        
+        let transfer = makeTransfer(
+            amount: nil,
+            additional: [
+                makeAdditional(fieldname: "RecipientID"),
+                makeAdditional(fieldname: "BankRecipientID")
+            ]
+        )
+        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+
+        XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
+    }
+
+    func test_sfpSource_shouldDeliverSource() throws {
+        
+        let productID = makeProductID()
+        let (phone, bankID) = (anyMessage(), anyMessage())
+        let transfer = makeTransfer(
+            additional: [
+                makeAdditional(fieldname: "RecipientID", fieldvalue: phone),
+                makeAdditional(fieldname: "BankRecipientID", fieldvalue: bankID)
+            ]
+        )
+        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+
+        try XCTAssertNoDiff(info.sfpSource(activeProductID: productID), .sfp(
+            phone: phone,
+            bankId: bankID,
+            amount: XCTUnwrap(transfer.amount?.description),
+            productId: productID
+        ))
+    }
+
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
