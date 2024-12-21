@@ -61,8 +61,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         )
     }
     
-    func repeatPaymentRequisitesSource(
-    ) -> Payments.Operation.Source? {
+    func repeatPaymentRequisitesSource() -> Payments.Operation.Source? {
         
         guard type == .externalEntity || type == .externalIndivudual,
               let transfer = parameterList.last,
@@ -156,8 +155,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         )
     }
     
-    func mobileSource(
-    ) -> Payments.Operation.Source? {
+    func mobileSource() -> Payments.Operation.Source? {
         
         guard type == .mobile,
               let transfer = parameterList.last,
@@ -170,6 +168,11 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             amount: amount.description,
             productId: transfer.payerProductID
         )
+    }
+    
+    func taxesSource() -> Payments.Operation.Source? {
+        
+        type == .taxes ? .taxes(parameterData: nil) : nil
     }
 }
 
@@ -880,6 +883,25 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         ))
     }
     
+    // MARK: - taxesSource
+    
+    func test_taxesSource_shouldDeliverNilForNonMobile() {
+        
+        for type in allTransferTypes(except: .taxes) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.taxesSource())
+        }
+    }
+
+    func test_taxesSource_shouldDeliverTaxes() {
+        
+        let info = makeRepeat(type: .taxes)
+        
+        XCTAssertNoDiff(info.taxesSource(), .taxes(parameterData: nil))
+    }
+
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
