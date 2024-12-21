@@ -6,224 +6,6 @@
 //
 
 import GetInfoRepeatPaymentService
-
-extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
-    
-    func betweenTheirMode(
-        getProduct: @escaping (ProductData.ID) -> ProductData?
-    ) -> PaymentsMeToMeViewModel.Mode? {
-        
-        guard type == .betweenTheir else { return nil }
-        
-        return parameterList.compactMap {
-            
-            guard let amount = $0.amount,
-                  let productID = $0.payerOrInternalPayerProductID,
-                  let product = getProduct(productID)
-            else { return nil }
-            
-            return .makePaymentTo(product, amount)
-        }
-        .first
-    }
-    
-    func directSource(
-        date: Date = .init()
-    ) -> Payments.Operation.Source? {
-        
-        guard type == .direct || type == .contactAddressless,
-              let transfer = parameterList.last,
-              let additional = transfer.additional,
-              let phone = transfer.directPhone,
-              let countryId = transfer.countryID
-        else { return nil }
-        
-        return .direct(
-            phone: phone,
-            countryId: countryId,
-            serviceData: .init(
-                additionalList: additional.map {
-                    
-                    return .init(
-                        fieldTitle: $0.fieldname,
-                        fieldName: $0.fieldname,
-                        fieldValue: $0.fieldvalue,
-                        svgImage: ""
-                    )
-                },
-                amount: transfer.amount ?? 0,
-                date: date, // ???
-                paymentDate: "", // ???
-                puref: transfer.puref ?? "", // ???
-                type: .internet, // ???
-                lastPaymentName: nil
-            )
-        )
-    }
-    
-    func repeatPaymentRequisitesSource() -> Payments.Operation.Source? {
-        
-        guard type == .externalEntity || type == .externalIndivudual,
-              let transfer = parameterList.last,
-              let amount = transfer.amount?.description,
-              let accountNumber = transfer.payeeExternal?.accountNumber,
-              let bankBIC = transfer.payeeExternal?.bankBIC
-        else { return nil }
-        
-        return .repeatPaymentRequisites(
-            accountNumber: accountNumber,
-            bankId: bankBIC,
-            inn: transfer.payeeExternal?.inn ?? "",
-            kpp: transfer.payeeExternal?.kpp,
-            amount: amount,
-            productId: transfer.payerProductID,
-            comment: transfer.comment
-        )
-    }
-    
-    func toAnotherCardSource(
-    ) -> Payments.Operation.Source? {
-        
-        guard type == .insideBank,
-              let transfer = parameterList.last,
-              let from = transfer.payer?.cardId,
-              let amount = transfer.amount,
-              let to = productTemplate?.id
-        else { return nil }
-        
-        return .toAnotherCard(from: from, to: to, amount: amount.description)
-    }
-    
-    func servicePaymentSource() -> Payments.Operation.Source? {
-        
-        guard type == .internet || type == .transport || type == .housingAndCommunalService,
-              let transfer = parameterList.first,
-              let puref = transfer.puref,
-              let amount = transfer.amount ?? parameterList.last?.amount
-        else { return nil }
-        
-        return .servicePayment(
-            puref: puref,
-            additionalList: transfer.additional?.map {
-                
-                return .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
-            },
-            amount: amount,
-            productId: transfer.payer?.cardId
-        )
-    }
-    
-    func otherBankService() -> Payments.Service? {
-        
-        type == .otherBank ? .toAnotherCard : nil
-    }
-    
-    func byPhoneSource(
-        activeProductID: ProductData.ID
-    ) -> Payments.Operation.Source? {
-        
-        guard type == .byPhone,
-              let transfer = parameterList.last,
-              let phone = transfer.payeeInternal?.phoneNumber,
-              let amount = transfer.amount
-        else { return nil }
-        
-        return .sfp(
-            phone: phone,
-            bankId: Vortex.BankID.vortexID.digits,
-            amount: amount.description,
-            productId: activeProductID
-        )
-    }
-    
-    func sfpSource(
-        activeProductID: ProductData.ID
-    ) -> Payments.Operation.Source? {
-        
-        guard type == .sfp,
-              let transfer = parameterList.last,
-              let phone = transfer.sfpPhone,
-              let bankID = transfer.sfpBankID,
-              let amount = transfer.amount
-        else { return nil }
-        
-        return .sfp(
-            phone: phone,
-            bankId: bankID,
-            amount: amount.description,
-            productId: activeProductID
-        )
-    }
-    
-    func mobileSource() -> Payments.Operation.Source? {
-        
-        guard type == .mobile,
-              let transfer = parameterList.last,
-              let phone = transfer.mobilePhone,
-              let amount = transfer.amount
-        else { return nil }
-        
-        return .mobile(
-            phone: phone,
-            amount: amount.description,
-            productId: transfer.payerProductID
-        )
-    }
-    
-    func taxesSource() -> Payments.Operation.Source? {
-        
-        type == .taxes ? .taxes(parameterData: nil) : nil
-    }
-}
-
-private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
-    
-    var countryID: String? {
-        
-        additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue
-    }
-    
-    var directPhone: String? {
-        
-        additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue
-    }
-    
-    var mobilePhone: String? {
-        
-        additional?.first(where: { $0.fieldname == "a3_NUMBER_1_2"})?.fieldvalue
-    }
-    
-    var sfpBankID: String? {
-        
-        additional?.first(where: { $0.fieldname == "BankRecipientID"})?.fieldvalue
-    }
-    
-    var sfpPhone: String? {
-        
-        additional?.first(where: { $0.fieldname == "RecipientID"})?.fieldvalue
-    }
-    
-    var payerOrInternalPayerProductID: Int? {
-        
-        payerProductID ?? internalPayeeProductID
-    }
-    
-    var payerProductID: Int? {
-        
-        payer?.cardId ?? payer?.accountId
-    }
-    
-    private var externalPayeeProductID: Int? {
-        
-        payeeExternal?.cardId ?? payeeExternal?.accountId
-    }
-    
-    private var internalPayeeProductID: Int? {
-        
-        payeeInternal?.cardId ?? payeeInternal?.accountId
-    }
-}
-
 @testable import Vortex
 import XCTest
 
@@ -467,9 +249,11 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_repeatPaymentRequisitesSource_shouldDeliverSourceOnExternalEntity() throws {
         
-        let transfer = makeTransfer(payeeExternal: makeExternalPayer(
-            inn: anyMessage(),
-            bankBIC: anyMessage())
+        let transfer = makeTransfer(
+            payeeExternal: makeExternalPayer(
+                inn: anyMessage(),
+                bankBIC: anyMessage()
+            )
         )
         let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
         
@@ -481,7 +265,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
                 inn: XCTUnwrap(transfer.payeeExternal?.inn),
                 kpp: transfer.payeeExternal?.kpp,
                 amount: XCTUnwrap(transfer.amount?.description),
-                productId: transfer.payerProductID,
+                productId: nil,
                 comment: transfer.comment
             )
         )
@@ -503,7 +287,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
                 inn: XCTUnwrap(transfer.payeeExternal?.inn),
                 kpp: transfer.payeeExternal?.kpp,
                 amount: XCTUnwrap(transfer.amount?.description),
-                productId: transfer.payerProductID,
+                productId: nil,
                 comment: transfer.comment
             )
         )
@@ -702,12 +486,12 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             XCTAssertNil(info.otherBankService())
         }
     }
-
-    func test_otherBankService_shouldDeliverToAnotherCard() {
+    
+    func test_otherBankService_shouldDeliverToAnotherCardServiceOnOtherBank() {
         
         XCTAssertNoDiff(makeRepeat(type: .otherBank).otherBankService(), .toAnotherCard)
     }
-
+    
     // MARK: - byPhoneSource
     
     func test_byPhoneSource_shouldDeliverNilForNonByPhone() {
@@ -748,7 +532,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
     }
     
-    func test_byPhoneSource_shouldDeliverSource() throws {
+    func test_byPhoneSource_shouldDeliverSourceOnByPhone() throws {
         
         let productID = makeProductID()
         let transfer = makeTransfer(
@@ -782,24 +566,24 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
-
+    
     func test_sfpSource_shouldDeliverNilOnMissingPhone() {
         
         let info = makeRepeat(type: .sfp, parameterList: [makeTransfer()])
-
+        
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
-
+    
     func test_sfpSource_shouldDeliverNilOnMissingBankID() {
         
         let transfer = makeTransfer(
             additional: [makeAdditional(fieldname: "RecipientID")]
         )
         let info = makeRepeat(type: .sfp, parameterList: [transfer])
-
+        
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
-
+    
     func test_sfpSource_shouldDeliverNilOnMissingAmount() {
         
         let transfer = makeTransfer(
@@ -810,11 +594,11 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             ]
         )
         let info = makeRepeat(type: .sfp, parameterList: [transfer])
-
+        
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
-
-    func test_sfpSource_shouldDeliverSource() throws {
+    
+    func test_sfpSource_shouldDeliverSourceOnSFP() throws {
         
         let productID = makeProductID()
         let (phone, bankID) = (anyMessage(), anyMessage())
@@ -825,7 +609,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             ]
         )
         let info = makeRepeat(type: .sfp, parameterList: [transfer])
-
+        
         try XCTAssertNoDiff(info.sfpSource(activeProductID: productID), .sfp(
             phone: phone,
             bankId: bankID,
@@ -833,7 +617,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             productId: productID
         ))
     }
-
+    
     // MARK: - mobileSource
     
     func test_mobileSource_shouldDeliverNilForNonMobile() {
@@ -871,15 +655,18 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         XCTAssertNil(info.mobileSource())
     }
     
-    func test_mobileSource_shouldDeliverSource() {
+    func test_mobileSource_shouldDeliverSourceOnMobile() {
         
+        let phone = anyMessage()
         let transfer = makeTransfer(
-            additional: [makeAdditional(fieldname: "a3_NUMBER_1_2")]
+            additional: [makeAdditional(fieldname: "a3_NUMBER_1_2", fieldvalue: phone)]
         )
         let info = makeRepeat(type: .mobile, parameterList: [transfer])
         
         XCTAssertNoDiff(info.mobileSource(), .mobile(
-            phone: transfer.mobilePhone, amount: transfer.amount?.description, productId: transfer.payerProductID
+            phone: phone,
+            amount: transfer.amount?.description,
+            productId: nil
         ))
     }
     
@@ -894,14 +681,14 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             XCTAssertNil(info.taxesSource())
         }
     }
-
-    func test_taxesSource_shouldDeliverTaxes() {
+    
+    func test_taxesSource_shouldDeliverSourceOnTaxes() {
         
         let info = makeRepeat(type: .taxes)
         
         XCTAssertNoDiff(info.taxesSource(), .taxes(parameterData: nil))
     }
-
+    
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment

@@ -1130,6 +1130,7 @@
 		2A887BAF2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887BAE2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift */; };
 		2A887DDE2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887DDD2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift */; };
 		2A887DE02D16D4760094840E /* GetInfoRepeatPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887DDF2D16D4760094840E /* GetInfoRepeatPaymentTests.swift */; };
+		2A887DE22D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A887DE12D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift */; };
 		2A89A11E2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89A11D2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift */; };
 		2A89A5182CCD84D30070131F /* RootViewModelFactorySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */; };
 		2A89A51A2CCD8AB80070131F /* QRNavigation+UI Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89A5192CCD8AB80070131F /* QRNavigation+UI Mapping.swift */; };
@@ -4690,6 +4691,7 @@
 		2A887BAE2D01BBF9004CB7DE /* RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeServiceCategoryRemoteLoadTests.swift"; sourceTree = "<group>"; };
 		2A887DDD2D168AD80094840E /* RootViewModelFactory+getInfoRepeatPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getInfoRepeatPaymentTests.swift"; sourceTree = "<group>"; };
 		2A887DDF2D16D4760094840E /* GetInfoRepeatPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetInfoRepeatPaymentTests.swift; sourceTree = "<group>"; };
+		2A887DE12D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift"; sourceTree = "<group>"; };
 		2A89A11D2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryGetNavigationComposerTests.swift; sourceTree = "<group>"; };
 		2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactorySettings.swift; sourceTree = "<group>"; };
 		2A89A5192CCD8AB80070131F /* QRNavigation+UI Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRNavigation+UI Mapping.swift"; sourceTree = "<group>"; };
@@ -10648,6 +10650,7 @@
 				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
 				2A07B9B62CFDAB5E00A3399E /* RootViewModelFactory+updateAlerts.swift */,
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
+				2A887DE12D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift */,
 				842C42362D11FD2B006A307D /* SavingsAccount */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2A2EE90D2CF0AC950019FC31 /* Payments */,
@@ -21443,6 +21446,7 @@
 				ECCA5B542CFDFC250034A64A /* ImageLoader.swift in Sources */,
 				77A76A9427FB69D200A271B3 /* AtmCollectionViewCell.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
+				2A887DE22D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift in Sources */,
 				2AD15D1B2C1A02E7003329C7 /* PaymentCompleteViewFactory.swift in Sources */,
 				0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */,
 				832F83112BB8292600C97BBD /* CarouselComponentConfig+iVortex.swift in Sources */,
