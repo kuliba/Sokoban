@@ -13,6 +13,7 @@ extension GetInfoRepeatPaymentDomain {
         
         case direct(PaymentsViewModel)
         case external(PaymentsViewModel)
+        case inside(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
     }
 }
@@ -49,6 +50,7 @@ extension RootViewModelFactory {
         return makeMeToMe(from: info, getProduct: getProduct).map { .meToMe($0) }
         ?? makeDirect(from: info, makePayments: makePayments).map { .direct($0) }
         ?? makeExternal(from: info, makePayments: makePayments).map { .external($0) }
+        ?? makeInside(from: info, makePayments: makePayments).map { .inside($0) }
     }
     
     func makeMeToMe(
@@ -77,7 +79,18 @@ extension RootViewModelFactory {
         makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
     ) -> PaymentsViewModel? {
         
-        guard let source = info.repeatPaymentRequisitesSource() 
+        guard let source = info.repeatPaymentRequisitesSource()
+        else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeInside(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.toAnotherCardSource()
         else { return nil }
         
         return makePayments(source)
@@ -308,6 +321,45 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .external)
     }
     
+    // MARK: - insideBank
+    
+    func test_shouldCallMakePaymentsWithToAnotherCardSourceOnInsideBank() throws {
+        
+        let transfer = makeTransfer(payer: makePayer())
+        let productTemplate = makeProductTemplate()
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [transfer],
+            productTemplate: productTemplate
+        )
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try XCTAssertNoDiff(
+            source,
+            .toAnotherCard(
+                from: XCTUnwrap(transfer.payer?.cardId),
+                to: XCTUnwrap(productTemplate.id),
+                amount: transfer.amount?.description
+            )
+        )
+    }
+    
+    func test_shouldDeliverInsideOnInsideBank() throws {
+        
+        let transfer = makeTransfer(payer: makePayer())
+        let productTemplate = makeProductTemplate()
+        let info = makeRepeat(
+            type: .insideBank,
+            parameterList: [transfer],
+            productTemplate: productTemplate
+        )
+        
+        assert(with: info, delivers: .inside)
+    }
+    
     // MARK: - Helpers
     
     private func makeDirect(
@@ -328,6 +380,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         
         case direct
         case external
+        case inside
         case meToMe
     }
     
@@ -336,9 +389,10 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .direct: return .direct
+        case .direct:   return .direct
         case .external: return .external
-        case .meToMe: return .meToMe
+        case .inside:   return .inside
+        case .meToMe:   return .meToMe
         }
     }
     
