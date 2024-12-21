@@ -64,110 +64,14 @@ extension RootViewModelFactory {
     }
 }
 
-private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
-    
-    func mode(
-        getProduct: @escaping (ProductData.ID) -> ProductData?
-    ) -> PaymentsMeToMeViewModel.Mode? {
-        
-        return parameterList.compactMap {
-            
-            guard let amount = $0.amount,
-                  let productID = $0.payerOrInternalPayerProductID,
-                  let product = getProduct(productID)
-            else { return nil }
-            
-            return .makePaymentTo(product, amount)
-        }
-        .first
-    }
-    
-    func direct() -> Payments.Operation.Source? {
-        
-        guard let transfer = parameterList.last,
-              let additional = transfer.additional,
-              let phone = transfer.directPhone,
-              let countryId = transfer.countryID
-        else { return nil }
-        
-        return .direct(
-            phone: phone,
-            countryId: countryId,
-            serviceData: .init(
-                additionalList: additional.map {
-                    
-                    return .init(
-                        fieldTitle: $0.fieldname,
-                        fieldName: $0.fieldname,
-                        fieldValue: $0.fieldvalue,
-                        svgImage: ""
-                    )
-                },
-                amount: transfer.amount ?? 0,
-                date: Date(), // ???
-                paymentDate: "", // ???
-                puref: transfer.puref ?? "", // ???
-                type: .internet, // ???
-                lastPaymentName: nil
-            )
-        )
-    }
-}
-
-private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
-    
-    var countryID: String? {
-        
-        additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue
-    }
-    
-    var directPhone: String? {
-        
-        additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue
-    }
-    
-    var payerOrInternalPayerProductID: Int? {
-        
-        payerProductID ?? internalPayeeProductID
-    }
-    
-    private var payerProductID: Int? {
-        
-        payer?.cardId ?? payer?.accountId
-    }
-    
-    private var externalPayeeProductID: Int? {
-        
-        payeeExternal?.cardId ?? payeeExternal?.accountId
-    }
-    
-    private var internalPayeeProductID: Int? {
-        
-        payeeInternal?.cardId ?? payeeInternal?.accountId
-    }
-}
-
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPaymentTests {
     
     // MARK: - meToMe
     
-    func test_meToMe_shouldDeliverNilOnNonBetweenTheirType() {
-        
-        for type in allTransferTypes(except: .betweenTheir) {
-            
-            let info = makeRepeat(type: type)
-            let sut = makeSUT().sut
-            
-            let meToMe = sut.makeMeToMe(from: info, getProduct: { self.makeProduct(id: $0) })
-            
-            XCTAssertNil(meToMe)
-        }
-    }
-    
-    func test_getInfoRepeatPayment_shouldDeliverNilOnNilAmount() throws {
+    func test_shouldDeliverNilOnNilAmount() throws {
         
         let productID = makeProductID()
         let transfer = makeTransfer(
@@ -182,7 +86,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         assert(model: model, with: info, delivers: nil)
     }
     
-    func test_getInfoRepeatPayment_shouldDeliverNilOnEmptyParameterList() throws {
+    func test_shouldDeliverNilOnEmptyParameterList() throws {
         
         let productID = makeProductID()
         let info = makeBetweenTheir(parameterList: [])
@@ -193,7 +97,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         assert(model: model, with: info, delivers: nil)
     }
     
-    func test_getInfoRepeatPayment_shouldDeliverNilOnExternalPayerProduct() throws {
+    func test_shouldDeliverNilOnExternalPayerProduct() throws {
         
         let productID = makeProductID()
         let transfer = makeTransfer(payeeExternal: makeExternalPayer())
@@ -205,7 +109,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         assert(model: model, with: info, delivers: nil)
     }
     
-    func test_getInfoRepeatPayment_shouldDeliverMeToMeOnPayerProduct() throws {
+    func test_shouldDeliverMeToMeOnPayerProduct() throws {
         
         let productID = makeProductID()
         let transfer = makeTransfer(payer: makePayer(cardId: productID))
@@ -217,7 +121,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         assert(model: model, with: info, delivers: .meToMe)
     }
     
-    func test_getInfoRepeatPayment_shouldDeliverMeToMeOnInternalPayerProduct() throws {
+    func test_shouldDeliverMeToMeOnInternalPayerProduct() throws {
         
         let productID = makeProductID()
         let transfer = makeTransfer(payeeInternal: makeInternalPayer(accountId: productID))
@@ -231,7 +135,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
     
     // MARK: - direct, contactAddressless
     
-    func test_getInfoRepeatPayment_shouldDeliverDirectOnDirect() throws {
+    func test_shouldDeliverDirectOnDirect() throws {
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeDirect(parameterList: [transfer])
@@ -239,7 +143,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
         assert(with: info, delivers: .direct)
     }
     
-    func test_getInfoRepeatPayment_shouldDeliverDirectOnContactAddressless() throws{
+    func test_shouldDeliverDirectOnContactAddressless() throws{
         
         let transfer = makeTransfer(additional: [makePhone(), makeCountryID()])
         let info = makeAddressless(parameterList: [transfer])
@@ -248,17 +152,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
     }
     
     // MARK: - Helpers
-    
-    private typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
-    private typealias Transfer = Repeat.Transfer
-    private typealias TransferType = Repeat.TransferType
-    
-    private func allTransferTypes(
-        except excludingType: TransferType
-    ) -> [TransferType] {
-        
-        return TransferType.allCases.filter { $0 != excludingType }
-    }
     
     private func makeBetweenTheir(
         parameterList: [Repeat.Transfer] = []
@@ -279,15 +172,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: RootViewModelFactory
     ) -> Repeat {
         
         return makeRepeat(type: .contactAddressless, parameterList: parameterList)
-    }
-    
-    private func makeRepeat(
-        type: TransferType,
-        parameterList: [Repeat.Transfer] = [],
-        productTemplate: Repeat.ProductTemplate? = nil
-    ) -> Repeat {
-        
-        return .init(type: type, parameterList: parameterList, productTemplate: productTemplate)
     }
     
     private func makeTransfer(
