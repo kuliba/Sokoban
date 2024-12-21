@@ -52,7 +52,7 @@ extension RootViewModelFactory {
         makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        if let meToMe = makeMeToMe(from: info, getProduct: getProduct) { 
+        if let meToMe = makeMeToMe(from: info, getProduct: getProduct) {
             return .meToMe(meToMe)
         }
         
@@ -238,9 +238,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         let transfer = makeTransfer(additional: [phone, country])
         let info = makeDirect(parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try assertDirect(
             source,
@@ -261,9 +260,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         let transfer = makeTransfer(additional: [phone, country])
         let info = makeAddressless(parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try assertDirect(
             source,
@@ -306,9 +304,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try XCTAssertNoDiff(source, .repeatPaymentRequisites(
             accountNumber: XCTUnwrap(transfer.payeeExternal?.accountNumber),
@@ -331,9 +328,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try XCTAssertNoDiff(source, .repeatPaymentRequisites(
             accountNumber: XCTUnwrap(transfer.payeeExternal?.accountNumber),
@@ -384,9 +380,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
             productTemplate: productTemplate
         )
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try XCTAssertNoDiff(
             source,
@@ -422,9 +417,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .internet, parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try XCTAssertNoDiff(
             source,
@@ -448,9 +442,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .transport, parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try XCTAssertNoDiff(
             source,
@@ -474,9 +467,8 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         )
         let info = makeRepeat(type: .housingAndCommunalService, parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: makeProductID(), getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info)
         
         try XCTAssertNoDiff(
             source,
@@ -531,25 +523,21 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     
     func test_shouldCallMakePaymentsWithSFPSourceOnByPhone() throws {
         
-        let productID = makeProductID()
+        let activeProductID = makeProductID()
         let transfer = makeTransfer(
             payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
         )
         let info = makeRepeat(type: .byPhone, parameterList: [transfer])
         let sut = makeSUT().sut
-        var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(from: info, activeProductID: productID, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        let source = makePaymentsSource(sut, info: info, activeProductID: activeProductID)
         
-        try XCTAssertNoDiff(
-            source,
-            .sfp(
-                phone: XCTUnwrap(transfer.payeeInternal?.phoneNumber),
-                bankId: Vortex.BankID.vortexID.digits,
-                amount: XCTUnwrap(transfer.amount?.description),
-                productId: productID
-            )
-        )
+        try XCTAssertNoDiff(source, .sfp(
+            phone: XCTUnwrap(transfer.payeeInternal?.phoneNumber),
+            bankId: Vortex.BankID.vortexID.digits,
+            amount: XCTUnwrap(transfer.amount?.description),
+            productId: activeProductID
+        ))
     }
     
     func test_shouldDeliverByPhoneOnByPhone() throws {
@@ -625,7 +613,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         let sut = makeSUT(model: model, file: file, line: line).sut
         
         let navigation = sut.getInfoRepeatPayment(
-            from: info, 
+            from: info,
             activeProductID: makeProductID(),
             closeAction: closeAction
         )
@@ -653,6 +641,24 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         default:
             XCTFail("Expected `direct` source, but got \(String(describing: source)) instead.", file: file, line: line)
         }
+    }
+    
+    private func makePaymentsSource(
+        _ sut: SUT,
+        info: Repeat,
+        activeProductID: ProductData.ID? = nil,
+        product: ProductData? = nil
+    ) -> Payments.Operation.Source? {
+        
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(
+            from: info, activeProductID: activeProductID ?? makeProductID(),
+            getProduct: { _ in product },
+            makePayments: { source = $0; return nil }
+        )
+        
+        return source
     }
 }
 
