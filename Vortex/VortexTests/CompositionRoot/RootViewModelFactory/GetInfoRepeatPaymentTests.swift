@@ -9,7 +9,7 @@ import GetInfoRepeatPaymentService
 
 extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
-    func mode(
+    func betweenTheirMode(
         getProduct: @escaping (ProductData.ID) -> ProductData?
     ) -> PaymentsMeToMeViewModel.Mode? {
         
@@ -100,19 +100,77 @@ import XCTest
 
 class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
-    // MARK: - meToMe
+    // MARK: - betweenTheirMode
     
-    func test_meToMe_shouldDeliverNilOnNonBetweenTheirType() {
+    func test_betweenTheirMode_shouldDeliverNilOnNonBetweenTheirType() {
         
         for type in allTransferTypes(except: .betweenTheir) {
             
             let info = makeRepeat(type: type)
-            let sut = makeSUT().sut
             
-            let meToMe = sut.makeMeToMe(from: info, getProduct: { self.makeProduct(id: $0) })
-            
-            XCTAssertNil(meToMe)
+            XCTAssertNil(info.betweenTheirMode(getProduct: { self.makeProduct(id: $0) }))
         }
+    }
+    
+    func test_betweenTheirMode_shouldDeliverNilOnNilAmount() {
+        
+        let productID = makeProductID()
+        let transfer = makeTransfer(
+            amount: nil,
+            payer: makePayer(cardId: productID)
+        )
+        let info = makeBetweenTheir(parameterList: [transfer])
+        
+        XCTAssertNil(info.betweenTheirMode(getProduct: { self.makeProduct(id: $0) }))
+    }
+    
+    func test_betweenTheirMode_shouldDeliverNilOnEmptyParameterList() throws {
+        
+        let info = makeBetweenTheir(parameterList: [])
+        
+        XCTAssertNil(info.betweenTheirMode(getProduct: { self.makeProduct(id: $0) }))
+    }
+    
+    func test_betweenTheirMode_shouldDeliverNilOnExternalPayerProduct() throws {
+        
+        let transfer = makeTransfer(payeeExternal: makeExternalPayer())
+        let info = makeBetweenTheir(parameterList: [transfer])
+        
+        XCTAssertNil(info.betweenTheirMode(getProduct: { self.makeProduct(id: $0) }))
+    }
+    
+    func test_betweenTheirMode_shouldDeliverModeOnPayerProduct() throws {
+        
+        let productID = makeProductID()
+        let product = makeProduct(id: productID)
+        let amount = Double.random(in: 1...100)
+        let transfer = makeTransfer(
+            amount: amount,
+            payer: makePayer(cardId: productID)
+        )
+        let info = makeBetweenTheir(parameterList: [transfer])
+        
+        XCTAssertNoDiff(
+            info.betweenTheirMode(getProduct: { _ in product }),
+            .makePaymentTo(product, amount)
+        )
+    }
+    
+    func test_betweenTheirMode_shouldDeliverModeOnInternalPayerProduct() throws {
+        
+        let productID = makeProductID()
+        let product = makeProduct(id: productID)
+        let amount = Double.random(in: 1...100)
+        let transfer = makeTransfer(
+            amount: amount,
+            payeeInternal: makeInternalPayer(accountId: productID)
+        )
+        let info = makeBetweenTheir(parameterList: [transfer])
+        
+        XCTAssertNoDiff(
+            info.betweenTheirMode(getProduct: { _ in product }),
+            .makePaymentTo(product, amount)
+        )
     }
     
     // MARK: - Helpers
@@ -128,6 +186,13 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         return TransferType.allCases.filter { $0 != excludingType }
     }
     
+    func makeBetweenTheir(
+        parameterList: [Repeat.Transfer] = []
+    ) -> Repeat {
+        
+        return makeRepeat(type: .betweenTheir, parameterList: parameterList)
+    }
+    
     func makeRepeat(
         type: TransferType,
         parameterList: [Repeat.Transfer] = [],
@@ -135,5 +200,102 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     ) -> Repeat {
         
         return .init(type: type, parameterList: parameterList, productTemplate: productTemplate)
+    }
+    
+    func makeProductID() -> ProductData.ID {
+        
+        return .random(in: 1...1_000)
+    }
+    
+    func makeTransfer(
+        check: Bool = false,
+        amount: Double? = .random(in: 1...100),
+        currencyAmount: String? = nil,
+        payer: Transfer.Payer? = nil,
+        comment: String? = nil,
+        puref: String? = nil,
+        payeeInternal: Transfer.PayeeInternal? = nil,
+        payeeExternal: Transfer.PayeeExternal? = nil,
+        additional: [Transfer.Additional]? = nil,
+        mcc: String? = nil
+    ) -> Repeat.Transfer {
+        
+        return .init(
+            check: check,
+            amount: amount,
+            currencyAmount: currencyAmount,
+            payer: payer,
+            comment: comment,
+            puref: puref,
+            payeeInternal: payeeInternal,
+            payeeExternal: payeeExternal,
+            additional: additional,
+            mcc: mcc
+        )
+    }
+    
+    func makePayer(
+        cardId: Int = .random(in: 1...100),
+        cardNumber: String? = nil,
+        accountId: Int? = nil,
+        accountNumber: String? = nil,
+        phoneNumber: String? = nil,
+        inn: String? = nil
+    ) -> Repeat.Transfer.Payer {
+        
+        return .init(
+            cardId: cardId,
+            cardNumber: cardNumber,
+            accountId: accountId,
+            accountNumber: accountNumber,
+            phoneNumber: phoneNumber,
+            inn: inn
+        )
+    }
+    
+    func makeExternalPayer(
+        inn: String? = nil,
+        kpp: String? = nil,
+        accountId: Int? = nil,
+        accountNumber: String = anyMessage(),
+        bankBIC: String? = nil,
+        cardId: Int? = nil,
+        cardNumber: String? = nil,
+        compilerStatus: String? = nil,
+        date: String? = nil,
+        name: String = anyMessage()
+    ) -> Repeat.Transfer.PayeeExternal {
+        
+        return .init(
+            inn: inn,
+            kpp: kpp,
+            accountId: accountId,
+            accountNumber: accountNumber,
+            bankBIC: bankBIC,
+            cardId: cardId,
+            cardNumber: cardNumber,
+            compilerStatus: compilerStatus,
+            date: date,
+            name: name
+        )
+    }
+    
+    func makeInternalPayer(
+        accountId: Int? = nil,
+        accountNumber: String? = nil,
+        cardId: Int? = nil,
+        cardNumber: String? = nil,
+        phoneNumber: String? = nil,
+        productCustomName: String? = nil
+    ) -> Repeat.Transfer.PayeeInternal {
+        
+        return .init(
+            accountId: accountId,
+            accountNumber: accountNumber,
+            cardId: cardId,
+            cardNumber: cardNumber,
+            phoneNumber: phoneNumber,
+            productCustomName: productCustomName
+        )
     }
 }

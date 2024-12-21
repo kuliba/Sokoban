@@ -47,7 +47,7 @@ extension RootViewModelFactory {
         getProduct: @escaping (ProductData.ID) -> ProductData?
     ) -> PaymentsMeToMeViewModel? {
         
-        guard let mode = info.mode(getProduct: getProduct)
+        guard let mode = info.betweenTheirMode(getProduct: getProduct)
         else { return nil }
         
         return .init(model, mode: mode)
@@ -71,6 +71,19 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     
     // MARK: - meToMe
     
+    func test_shouldDeliverNilOnNonBetweenTheirType() {
+        
+        for type in allTransferTypes(except: .betweenTheir) {
+            
+            let info = makeRepeat(type: type)
+            let sut = makeSUT().sut
+            
+            let meToMe = sut.makeMeToMe(from: info, getProduct: { self.makeProduct(id: $0) })
+            
+            XCTAssertNil(meToMe)
+        }
+    }
+
     func test_shouldDeliverNilOnNilAmount() throws {
         
         let productID = makeProductID()
@@ -153,13 +166,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     
     // MARK: - Helpers
     
-    private func makeBetweenTheir(
-        parameterList: [Repeat.Transfer] = []
-    ) -> Repeat {
-        
-        return makeRepeat(type: .betweenTheir, parameterList: parameterList)
-    }
-    
     private func makeDirect(
         parameterList: [Repeat.Transfer] = []
     ) -> Repeat {
@@ -172,33 +178,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) -> Repeat {
         
         return makeRepeat(type: .contactAddressless, parameterList: parameterList)
-    }
-    
-    private func makeTransfer(
-        check: Bool = false,
-        amount: Double? = .random(in: 1...100),
-        currencyAmount: String? = nil,
-        payer: Transfer.Payer? = nil,
-        comment: String? = nil,
-        puref: String? = nil,
-        payeeInternal: Transfer.PayeeInternal? = nil,
-        payeeExternal: Transfer.PayeeExternal? = nil,
-        additional: [Transfer.Additional]? = nil,
-        mcc: String? = nil
-    ) -> Repeat.Transfer {
-        
-        return .init(
-            check: check,
-            amount: amount,
-            currencyAmount: currencyAmount,
-            payer: payer,
-            comment: comment,
-            puref: puref,
-            payeeInternal: payeeInternal,
-            payeeExternal: payeeExternal,
-            additional: additional,
-            mcc: mcc
-        )
     }
     
     private func makePhone(
@@ -233,11 +212,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         }
     }
     
-    private func makeProductID() -> ProductData.ID {
-        
-        return .random(in: 1...1_000)
-    }
-    
     private func makeModelWithMeToMeProduct(
         product: ProductData? = nil,
         file: StaticString = #file,
@@ -248,71 +222,6 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         try model.addMeToMeProduct(product: product, file: file, line: line)
         
         return model
-    }
-    
-    private func makePayer(
-        cardId: Int = .random(in: 1...100),
-        cardNumber: String? = nil,
-        accountId: Int? = nil,
-        accountNumber: String? = nil,
-        phoneNumber: String? = nil,
-        inn: String? = nil
-    ) -> Repeat.Transfer.Payer {
-        
-        return .init(
-            cardId: cardId,
-            cardNumber: cardNumber,
-            accountId: accountId,
-            accountNumber: accountNumber,
-            phoneNumber: phoneNumber,
-            inn: inn
-        )
-    }
-    
-    private func makeExternalPayer(
-        inn: String? = nil,
-        kpp: String? = nil,
-        accountId: Int? = nil,
-        accountNumber: String = anyMessage(),
-        bankBIC: String? = nil,
-        cardId: Int? = nil,
-        cardNumber: String? = nil,
-        compilerStatus: String? = nil,
-        date: String? = nil,
-        name: String = anyMessage()
-    ) -> Repeat.Transfer.PayeeExternal {
-        
-        return .init(
-            inn: inn,
-            kpp: kpp,
-            accountId: accountId,
-            accountNumber: accountNumber,
-            bankBIC: bankBIC,
-            cardId: cardId,
-            cardNumber: cardNumber,
-            compilerStatus: compilerStatus,
-            date: date,
-            name: name
-        )
-    }
-    
-    private func makeInternalPayer(
-        accountId: Int? = nil,
-        accountNumber: String? = nil,
-        cardId: Int? = nil,
-        cardNumber: String? = nil,
-        phoneNumber: String? = nil,
-        productCustomName: String? = nil
-    ) -> Repeat.Transfer.PayeeInternal {
-        
-        return .init(
-            accountId: accountId,
-            accountNumber: accountNumber,
-            cardId: cardId,
-            cardNumber: cardNumber,
-            phoneNumber: phoneNumber,
-            productCustomName: productCustomName
-        )
     }
     
     private func assert(
