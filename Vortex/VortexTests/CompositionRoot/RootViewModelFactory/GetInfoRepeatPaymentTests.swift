@@ -95,8 +95,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         return .toAnotherCard(from: from, to: to, amount: amount.description)
     }
     
-    func servicePaymentSource(
-    ) -> Payments.Operation.Source? {
+    func servicePaymentSource() -> Payments.Operation.Source? {
         
         guard type == .internet || type == .transport || type == .housingAndCommunalService,
               let transfer = parameterList.first,
@@ -118,6 +117,24 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     func otherBankService() -> Payments.Service? {
         
         type == .otherBank ? .toAnotherCard : nil
+    }
+    
+    func byPhoneSource(
+        activeProductID: ProductData.ID
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .byPhone,
+              let transfer = parameterList.last,
+              let phone = transfer.payeeInternal?.phoneNumber,
+              let amount = transfer.amount
+        else { return nil }
+        
+        return .sfp(
+            phone: phone, 
+            bankId: Vortex.BankID.vortexID.digits,
+            amount: amount.description,
+            productId: activeProductID
+        )
     }
 }
 
@@ -638,6 +655,62 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         XCTAssertNoDiff(makeRepeat(type: .otherBank).otherBankService(), .toAnotherCard)
     }
 
+    // MARK: - byPhoneSource
+    
+    func test_byPhoneSource_shouldDeliverNilForNonByPhone() {
+        
+        for type in allTransferTypes(except: .byPhone) {
+            
+            let info = makeRepeat(type: type)
+            
+            XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
+        }
+    }
+    
+    func test_byPhoneSource_shouldDeliverNilOnEmptyParameterList() {
+        
+        let info = makeRepeat(type: .byPhone, parameterList: [])
+        
+        XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
+    }
+    
+    func test_byPhoneSource_shouldDeliverNilOnMissingInternalPayeePhoneNumber() {
+        
+        let transfer = makeTransfer(
+            payeeInternal: makeInternalPayer(phoneNumber: nil)
+        )
+        let info = makeRepeat(type: .byPhone, parameterList: [transfer])
+        
+        XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
+    }
+    
+    func test_byPhoneSource_shouldDeliverNilOnMissingAmount() {
+        
+        let transfer = makeTransfer(
+            amount: nil,
+            payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
+        )
+        let info = makeRepeat(type: .byPhone, parameterList: [transfer])
+        
+        XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
+    }
+    
+    func test_byPhoneSource_shouldDeliverSource() throws {
+        
+        let productID = makeProductID()
+        let transfer = makeTransfer(
+            payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
+        )
+        let info = makeRepeat(type: .byPhone, parameterList: [transfer])
+        
+        try XCTAssertNoDiff(info.byPhoneSource(activeProductID: productID), .sfp(
+            phone: XCTUnwrap(transfer.payeeInternal?.phoneNumber),
+            bankId: Vortex.BankID.vortexID.digits,
+            amount: XCTUnwrap(transfer.amount?.description),
+            productId: productID
+        ))
+    }
+    
     // MARK: - Helpers
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
