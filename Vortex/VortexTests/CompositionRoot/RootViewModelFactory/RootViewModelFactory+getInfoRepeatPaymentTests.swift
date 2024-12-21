@@ -12,6 +12,7 @@ extension GetInfoRepeatPaymentDomain {
     enum Navigation {
         
         case direct(PaymentsViewModel)
+        case external(PaymentsViewModel)
         case meToMe(PaymentsMeToMeViewModel)
     }
 }
@@ -47,6 +48,7 @@ extension RootViewModelFactory {
         
         return makeMeToMe(from: info, getProduct: getProduct).map { .meToMe($0) }
         ?? makeDirect(from: info, makePayments: makePayments).map { .direct($0) }
+        ?? makeExternal(from: info, makePayments: makePayments).map { .external($0) }
     }
     
     func makeMeToMe(
@@ -66,6 +68,17 @@ extension RootViewModelFactory {
     ) -> PaymentsViewModel? {
         
         guard let source = info.directSource() else { return nil }
+        
+        return makePayments(source)
+    }
+    
+    func makeExternal(
+        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
+        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
+    ) -> PaymentsViewModel? {
+        
+        guard let source = info.repeatPaymentRequisitesSource() 
+        else { return nil }
         
         return makePayments(source)
     }
@@ -217,6 +230,84 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         assert(with: info, delivers: .direct)
     }
     
+    // MARK: - externalEntity, externalIndivudual
+    
+    func test_shouldCallMakePaymentsWithRepeatPaymentRequisitesSourceOnExternalEntity() throws {
+        
+        let transfer = makeTransfer(
+            payeeExternal: makeExternalPayer(
+                inn: anyMessage(),
+                bankBIC: anyMessage()
+            )
+        )
+        let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try XCTAssertNoDiff(source, .repeatPaymentRequisites(
+            accountNumber: XCTUnwrap(transfer.payeeExternal?.accountNumber),
+            bankId: XCTUnwrap(transfer.payeeExternal?.bankBIC),
+            inn: XCTUnwrap(transfer.payeeExternal?.inn),
+            kpp: transfer.payeeExternal?.kpp,
+            amount: XCTUnwrap(transfer.amount?.description),
+            productId: nil,
+            comment: transfer.comment
+        ))
+    }
+    
+    func test_shouldCallMakePaymentsWithRepeatPaymentRequisitesSourceOnExternalIndivudual() throws {
+        
+        let transfer = makeTransfer(
+            payeeExternal: makeExternalPayer(
+                inn: anyMessage(),
+                bankBIC: anyMessage()
+            )
+        )
+        let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
+        let sut = makeSUT().sut
+        var source: Payments.Operation.Source?
+        
+        _ = sut.getInfoRepeatPayment(from: info, getProduct: { _ in nil }, makePayments: { source = $0; return nil })
+        
+        try XCTAssertNoDiff(source, .repeatPaymentRequisites(
+            accountNumber: XCTUnwrap(transfer.payeeExternal?.accountNumber),
+            bankId: XCTUnwrap(transfer.payeeExternal?.bankBIC),
+            inn: XCTUnwrap(transfer.payeeExternal?.inn),
+            kpp: transfer.payeeExternal?.kpp,
+            amount: XCTUnwrap(transfer.amount?.description),
+            productId: nil,
+            comment: transfer.comment
+        ))
+    }
+    
+    func test_shouldDeliverExternalOnExternalEntity() throws {
+        
+        let transfer = makeTransfer(
+            payeeExternal: makeExternalPayer(
+                inn: anyMessage(),
+                bankBIC: anyMessage()
+            )
+        )
+        let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
+        
+        assert(with: info, delivers: .external)
+    }
+    
+    func test_shouldDeliverExternalOnExternalIndivudual() throws {
+        
+        let transfer = makeTransfer(
+            payeeExternal: makeExternalPayer(
+                inn: anyMessage(),
+                bankBIC: anyMessage()
+            )
+        )
+        let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
+        
+        assert(with: info, delivers: .external)
+    }
+    
     // MARK: - Helpers
     
     private func makeDirect(
@@ -236,6 +327,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     private enum EquatableNavigation: Equatable {
         
         case direct
+        case external
         case meToMe
     }
     
@@ -245,6 +337,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         
         switch navigation {
         case .direct: return .direct
+        case .external: return .external
         case .meToMe: return .meToMe
         }
     }
