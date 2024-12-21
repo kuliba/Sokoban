@@ -31,7 +31,7 @@ extension RootViewModelFactory {
                 
                 model?.products.value.flatMap(\.value).first { $0.id == id }
             },
-            makePayments: { [weak model] source in
+            makePaymentsWithSource: { [weak model] source in
                 
                 model.map {
                     
@@ -44,6 +44,12 @@ extension RootViewModelFactory {
                     
                     .init($0, service: service, closeAction: closeAction)
                 }
+            },
+            makeMeToMe: { [weak model] mode in
+                
+                guard let model else { return nil }
+            
+                return .init(model, mode: mode)
             }
         )
     }
@@ -52,167 +58,43 @@ extension RootViewModelFactory {
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
         getProduct: @escaping (ProductData.ID) -> ProductData?,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?,
-        makePaymentsWithService: @escaping (Payments.Service) -> PaymentsViewModel?
+        makePaymentsWithSource: @escaping (Payments.Operation.Source) -> PaymentsViewModel?,
+        makePaymentsWithService: @escaping (Payments.Service) -> PaymentsViewModel?,
+        makeMeToMe: (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-//        if let source = makeSource(from: info) {
-//            
-//            
-//        }
-        
-        if let byPhone = makeByPhone(from: info, activeProductID: activeProductID, makePayments: makePayments) {
-            return .payments(byPhone)
-        }
-        
-        if let direct = makeDirect(from: info, makePayments: makePayments) {
-            return .payments(direct)
-        }
-        
-        if let external = makeExternal(from: info, makePayments: makePayments) {
-            return .payments(external)
-        }
-        
-        if let inside = makeInside(from: info, makePayments: makePayments) {
-            return .payments(inside)
-        }
-        
-        if let meToMe = makeMeToMe(from: info, getProduct: getProduct) {
-            return .meToMe(meToMe)
-        }
-        
-        if let mobile = makeMobile(from: info, makePayments: makePayments) {
-            return .payments(mobile)
-        }
-        
-        if let otherBank = makeOtherBank(from: info, makePayments: makePaymentsWithService) {
+        if let source = makeSource(from: info, activeProductID: activeProductID, getProduct: getProduct) {
             
-            return .payments(otherBank)
+            return makePaymentsWithSource(source).map { .payments($0) }
         }
         
-        if let service = makeService(from: info, makePayments: makePayments) {
-            return .payments(service)
+        if let service = info.otherBankService() {
+            
+            return makePaymentsWithService(service).map { .payments($0) }
         }
         
-        if let sfp = makeSFP(from: info, activeProductID: activeProductID, makePayments: makePayments) {
-            return .payments(sfp)
-        }
-        
-        if let taxes = makeTaxes(from: info, makePayments: makePayments) {
-            return .payments(taxes)
+        if let mode = info.betweenTheirMode(getProduct: getProduct) {
+            
+            return makeMeToMe(mode).map { .meToMe($0) }
         }
         
         return nil
     }
     
-    func makeByPhone(
+    func makeSource(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.byPhoneSource(activeProductID: activeProductID)
-        else { return nil }
-        
-        return makePayments(source)
-    }
-
-    func makeDirect(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.directSource() else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeExternal(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.repeatPaymentRequisitesSource()
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeInside(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.toAnotherCardSource()
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeMeToMe(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         getProduct: @escaping (ProductData.ID) -> ProductData?
-    ) -> PaymentsMeToMeViewModel? {
+    ) -> Payments.Operation.Source? {
         
-        guard let mode = info.betweenTheirMode(getProduct: getProduct)
-        else { return nil }
-        
-        return .init(model, mode: mode)
-    }
-    
-    func makeMobile(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.mobileSource()
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeOtherBank(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Service) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let service = info.otherBankService() else { return nil }
-        
-        return makePayments(service)
-    }
-
-    func makeService(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.servicePaymentSource()
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeSFP(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        activeProductID: ProductData.ID,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.sfpSource(activeProductID: activeProductID)
-        else { return nil }
-        
-        return makePayments(source)
-    }
-    
-    func makeTaxes(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        makePayments: @escaping (Payments.Operation.Source) -> PaymentsViewModel?
-    ) -> PaymentsViewModel? {
-        
-        guard let source = info.taxesSource()
-        else { return nil }
-        
-        return makePayments(source)
+        return info.byPhoneSource(activeProductID: activeProductID)
+        ?? info.directSource()
+        ?? info.mobileSource()
+        ?? info.repeatPaymentRequisitesSource()
+        ?? info.servicePaymentSource()
+        ?? info.sfpSource(activeProductID: activeProductID)
+        ?? info.toAnotherCardSource()
+        ?? info.taxesSource()
     }
 }
 
@@ -222,19 +104,6 @@ import XCTest
 final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPaymentTests {
     
     // MARK: - meToMe
-    
-    func test_shouldDeliverNilOnNonBetweenTheirType() {
-        
-        for type in allTransferTypes(except: .betweenTheir) {
-            
-            let info = makeRepeat(type: type)
-            let sut = makeSUT().sut
-            
-            let meToMe = sut.makeMeToMe(from: info, getProduct: { self.makeProduct(id: $0) })
-            
-            XCTAssertNil(meToMe)
-        }
-    }
     
     func test_shouldDeliverNilOnNilAmount() throws {
         
@@ -653,7 +522,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
             ]
         )
         let info = makeRepeat(type: .sfp, parameterList: [transfer])
-
+        
         assert(with: info, delivers: .payments)
     }
     
@@ -684,7 +553,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
             additional: [makeAdditional(fieldname: "a3_NUMBER_1_2", fieldvalue: phone)]
         )
         let info = makeRepeat(type: .mobile, parameterList: [transfer])
-
+        
         assert(with: info, delivers: .payments)
     }
     
@@ -703,7 +572,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     func test_shouldDeliverPaymentsOnTaxes() {
         
         let info = makeRepeat(type: .taxes)
-
+        
         assert(with: info, delivers: .payments)
     }
     
@@ -722,7 +591,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     func test_shouldDeliverPaymentsOnOtherBank() {
         
         let info = makeRepeat(type: .otherBank)
-
+        
         assert(with: info, delivers: .payments)
     }
     
@@ -823,8 +692,9 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         _ = sut.getInfoRepeatPayment(
             from: info, activeProductID: activeProductID ?? makeProductID(),
             getProduct: { _ in product },
-            makePayments: { source = $0; return nil },
-            makePaymentsWithService: { _ in return nil }
+            makePaymentsWithSource: { source = $0; return nil },
+            makePaymentsWithService: { _ in return nil },
+            makeMeToMe: { _ in nil }
         )
         
         return source
@@ -842,8 +712,9 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         _ = sut.getInfoRepeatPayment(
             from: info, activeProductID: activeProductID ?? makeProductID(),
             getProduct: { _ in product },
-            makePayments: { _ in return nil },
-            makePaymentsWithService: { service = $0; return nil }
+            makePaymentsWithSource: { _ in return nil },
+            makePaymentsWithService: { service = $0; return nil },
+            makeMeToMe: { _ in nil }
         )
         
         return service
