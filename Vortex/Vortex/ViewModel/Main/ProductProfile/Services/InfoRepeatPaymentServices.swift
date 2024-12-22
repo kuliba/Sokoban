@@ -12,13 +12,11 @@ import GenericRemoteService
 
 struct InfoRepeatPaymentServices {
     
-    typealias CreateInfoRepeatPayment = (InfoForRepeatPaymentPayload, @escaping GetInfoRepeatPaymentDomain.Completion) -> Void
-    typealias GetInfoPaymentResult = Result<GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, MappingError>
-    typealias GetInfoPaymentCompletion = (GetInfoPaymentResult) -> Void
-    typealias GetInfoPaymentData = (URL, @escaping GetInfoPaymentCompletion) -> Void
-    typealias MappingError = MappingRemoteServiceError<GetInfoRepeatPaymentDomain.InfoPaymentError>
-
-    let createInfoRepeatPaymentServices: (InfoForRepeatPaymentPayload, @escaping (Result<GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, RemoteServiceError<Error, Error, GetInfoRepeatPaymentDomain.InfoPaymentError>>) -> Void) -> ()
+    typealias Payload = InfoForRepeatPaymentPayload
+    typealias GetInfoRepeatPaymentCompletion = (Result<GetInfoRepeatPaymentDomain.Response, Error>) -> Void
+    typealias CreateInfoRepeatPayment = (Payload, @escaping GetInfoRepeatPaymentCompletion) -> Void
+    
+    let createInfoRepeatPaymentServices: CreateInfoRepeatPayment
 }
 
 // MARK: - Preview Content
@@ -30,9 +28,10 @@ extension InfoRepeatPaymentServices {
         .init(createInfoRepeatPaymentServices: { _, completion in
             
             completion(.success(.init(
-                type: .betweenTheir,
+                type: "BETWEEN_THEIR",
                 parameterList: [],
-                productTemplate: nil
+                productTemplate: nil, 
+                paymentFlow: nil
             )))
         })
     }

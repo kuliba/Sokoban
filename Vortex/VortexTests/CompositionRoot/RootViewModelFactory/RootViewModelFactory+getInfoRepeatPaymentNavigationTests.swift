@@ -171,7 +171,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
                 bankBIC: anyMessage()
             )
         )
-        let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
+        let info = makeRepeat(type: .externalIndividual, parameterList: [transfer])
         let sut = makeSUT().sut
         
         let source = makePaymentsSource(sut, info: info)
@@ -208,7 +208,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
                 bankBIC: anyMessage()
             )
         )
-        let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
+        let info = makeRepeat(type: .externalIndividual, parameterList: [transfer])
         
         assert(with: info, delivers: .payments)
     }
@@ -509,7 +509,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
         parameterList: [Repeat.Transfer] = []
     ) -> Repeat {
         
-        return makeRepeat(type: .direct, parameterList: parameterList)
+        return makeRepeat(type: ._direct, parameterList: parameterList)
     }
     
     private func makeAddressless(
@@ -691,4 +691,35 @@ extension XCTestCase {
             smallBackgroundDesignHash: smallBackgroundDesignHash
         )
     }
+}
+
+private extension String {
+    
+    static let addressingCash: Self = "ADDRESSING_CASH"
+    static let addressless: Self = "ADDRESSLESS"
+    static let betweenTheir: Self = "BETWEEN_THEIR"
+    static let byPhone: Self = "BY_PHONE"
+    static let charityService: Self = "CHARITY_SERVICE"
+    static let contactAddressless: Self = "CONTACT_ADDRESSLESS"
+    static let digitalWalletsService: Self = "DIGITAL_WALLETS_SERVICE"
+    static let _direct: Self = "DIRECT"
+    static let educationService: Self = "EDUCATION_SERVICE"
+    static let externalEntity: Self = "EXTERNAL_ENTITY"
+    static let externalIndividual: Self = "EXTERNAL_INDIVIDUAL"
+    static let foreignCard: Self = "FOREIGN_CARD"
+    static let housingAndCommunalService: Self = "HOUSING_AND_COMMUNAL_SERVICE"
+    static let insideBank: Self = "INSIDE_BANK"
+    static let internet: Self = "INTERNET"
+    static let mobile: Self = "MOBILE"
+    static let networkMarketingService: Self = "NETWORK_MARKETING_SERVICE"
+    static let newDirect: Self = "NEW_DIRECT"
+    static let newDirectAccount: Self = "NEW_DIRECT_ACCOUNT"
+    static let newDirectCard: Self = "NEW_DIRECT_CARD"
+    static let otherBank: Self = "OTHER_BANK"
+    static let repaymentLoansAndAccountsService: Self = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
+    static let securityService: Self = "SECURITY_SERVICE"
+    static let sfp: Self = "SFP"
+    static let socialAndGamesService: Self = "SOCIAL_AND_GAMES_SERVICE"
+    static let taxes: Self = "TAX_AND_STATE_SERVICE"
+    static let transport: Self = "TRANSPORT"
 }

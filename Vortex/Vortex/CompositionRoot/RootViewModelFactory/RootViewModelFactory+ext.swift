@@ -27,6 +27,7 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
+import GetInfoRepeatPaymentService
 
 extension RootViewModelFactory {
     
@@ -145,9 +146,9 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
-        let infoPaymentService = Services.makeInfoRepeatPaymentServices(
-            httpClient: httpClient,
-            log: infoNetworkLog
+        let infoPaymentService = nanoServiceComposer.compose(
+            createRequest: RequestFactory.getInfoForRepeatPayment,
+            mapResponse: RemoteServices.ResponseMapper.mapGetInfoRepeatPaymentResponse
         )
         
         let productProfileServices = ProductProfileServices(
@@ -157,7 +158,7 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
-            repeatPayment: infoPaymentService,
+            repeatPayment: .init(createInfoRepeatPaymentServices: infoPaymentService),
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: {
                 self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
@@ -314,7 +315,9 @@ extension RootViewModelFactory {
         if paymentsTransfersFlag.isActive {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         } else {
-            model.handleDictionaryAnywayOperatorsRequest(nil)
+            performOrWaitForActive({ [weak self] in
+                self?.model.handleDictionaryAnywayOperatorsRequest(nil)
+            })
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()

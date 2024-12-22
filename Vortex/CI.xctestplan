@@ -632,6 +632,13 @@
         "identifier" : "ClientInformListTests",
         "name" : "ClientInformListTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "GetInfoRepeatPaymentServiceTests",
+        "name" : "GetInfoRepeatPaymentServiceTests"
+      }
     }
   ],
   "version" : 1

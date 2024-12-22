@@ -6,63 +6,62 @@
 //
 
 import Foundation
+import RemoteServices
 
 /// A namespace.
 public enum GetInfoRepeatPaymentDomain {}
-
-public extension GetInfoRepeatPaymentDomain {
-    
-    typealias Payload = GetInfoRepeatPayment
-    typealias Result = Swift.Result<Payload, InfoPaymentError>
-    typealias Completion = (Result) -> Void
-    
-    typealias Response = Swift.Result<(Data, HTTPURLResponse), Swift.Error>
-    typealias ResponseCompletion = (Response) -> Void
-    typealias PerformRequest = (URLRequest, @escaping ResponseCompletion) -> Void
-    typealias MapResponse = (Data, HTTPURLResponse) -> Result
-    
-    enum InfoPaymentError: Error, Equatable {
-        
-        case connectivity
-        case serverError(statusCode: Int, errorMessage: String)
-    }
-}
 
 extension GetInfoRepeatPaymentDomain {
     
     public struct GetInfoRepeatPayment: Equatable {
         
-        public let type: TransferType
+        public let type: String
         public let parameterList: [Transfer]
         public let productTemplate: ProductTemplate?
+        public let paymentFlow: String?
     
         public init(
-            type: TransferType,
+            type: String,
             parameterList: [Transfer],
-            productTemplate: ProductTemplate?
+            productTemplate: ProductTemplate?,
+            paymentFlow: String?
         ) {
             self.type = type
             self.parameterList = parameterList
             self.productTemplate = productTemplate
+            self.paymentFlow = paymentFlow
         }
         
-        public enum TransferType: String, CaseIterable {
-            
-            case betweenTheir = "BETWEEN_THEIR"
-            case byPhone = "BY_PHONE"
-            case contactAddressless = "CONTACT_ADDRESSLESS"
-            case direct = "DIRECT"
-            case externalEntity = "EXTERNAL_ENTITY"
-            case externalIndivudual = "EXTERNAL_INDIVIDUAL"
-            case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
-            case insideBank = "INSIDE_BANK"
-            case internet = "INTERNET"
-            case mobile = "MOBILE"
-            case otherBank = "OTHER_BANK"
-            case sfp = "SFP"
-            case transport = "TRANSPORT"
-            case taxes = "TAX_AND_STATE_SERVICE"
-        }
+        public static let allTransferTypes: [String] =
+        [
+            "ADDRESSING_CASH",
+            "ADDRESSLESS",
+            "BETWEEN_THEIR",
+            "BY_PHONE",
+            "CHARITY_SERVICE",
+            "CONTACT_ADDRESSLESS",
+            "DIGITAL_WALLETS_SERVICE",
+            "DIRECT",
+            "EDUCATION_SERVICE",
+            "EXTERNAL_ENTITY",
+            "EXTERNAL_INDIVIDUAL",
+            "FOREIGN_CARD",
+            "HOUSING_AND_COMMUNAL_SERVICE",
+            "INSIDE_BANK",
+            "INTERNET",
+            "MOBILE",
+            "NETWORK_MARKETING_SERVICE",
+            "NEW_DIRECT",
+            "NEW_DIRECT_ACCOUNT",
+            "NEW_DIRECT_CARD",
+            "OTHER_BANK",
+            "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE",
+            "SECURITY_SERVICE",
+            "SFP",
+            "SOCIAL_AND_GAMES_SERVICE",
+            "TAX_AND_STATE_SERVICE",
+            "TRANSPORT"
+        ]
         
         public struct Transfer: Equatable {
             
@@ -101,30 +100,9 @@ extension GetInfoRepeatPaymentDomain {
                 self.mcc = mcc
             }
             
-            public init(
-                transfer: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.Transfer
-            ) {
-                self.check = transfer.check
-                self.amount = transfer.amount
-                self.currencyAmount = transfer.currencyAmount
-                self.payer = .init(payer: transfer.payer)
-                self.comment = transfer.comment
-                self.puref = transfer.puref
-                self.payeeInternal = .init(payeeInternal: transfer.payeeInternal)
-                self.payeeExternal = .init(payeeExternal: transfer.payeeExternal)
-                self.additional = transfer.additional?.map({
-                    .init(
-                        fieldname: $0.fieldname,
-                        fieldid: $0.fieldid,
-                        fieldvalue: $0.fieldvalue
-                    )
-                })
-                self.mcc = transfer.mcc
-            }
-            
             public struct PayeeInternal: Equatable {
                 
-                public  let accountId: Int?
+                public let accountId: Int?
                 public let accountNumber: String?
                 public let cardId: Int?
                 public let cardNumber: String?
@@ -145,17 +123,6 @@ extension GetInfoRepeatPaymentDomain {
                     self.cardNumber = cardNumber
                     self.phoneNumber = phoneNumber
                     self.productCustomName = productCustomName
-                }
-                
-                public init(
-                    payeeInternal: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.Transfer.PayeeInternal?
-                ) {
-                    self.accountId = payeeInternal?.accountId
-                    self.accountNumber = payeeInternal?.accountNumber
-                    self.cardId = payeeInternal?.cardId
-                    self.cardNumber = payeeInternal?.cardNumber
-                    self.phoneNumber = payeeInternal?.phoneNumber
-                    self.productCustomName = payeeInternal?.productCustomName
                 }
             }
             
@@ -194,21 +161,6 @@ extension GetInfoRepeatPaymentDomain {
                     self.compilerStatus = compilerStatus
                     self.date = date
                     self.name = name
-                }
-                
-                public init(
-                    payeeExternal: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.Transfer.PayeeExternal?
-                ) {
-                    self.inn = payeeExternal?.inn
-                    self.kpp = payeeExternal?.kpp
-                    self.accountId = payeeExternal?.accountId
-                    self.accountNumber = payeeExternal?.accountNumber ?? ""
-                    self.bankBIC = payeeExternal?.bankBIC
-                    self.cardId = payeeExternal?.cardId
-                    self.cardNumber = payeeExternal?.cardNumber
-                    self.compilerStatus = payeeExternal?.compilerStatus
-                    self.date = payeeExternal?.date
-                    self.name = payeeExternal?.name ?? ""
                 }
                 
                 public struct Tax: Equatable {
@@ -271,7 +223,7 @@ extension GetInfoRepeatPaymentDomain {
                 public let inn: String?
                 
                 public init(
-                    cardId: Int,
+                    cardId: Int?,
                     cardNumber: String?,
                     accountId: Int?,
                     accountNumber: String?,
@@ -284,17 +236,6 @@ extension GetInfoRepeatPaymentDomain {
                     self.accountNumber = accountNumber
                     self.phoneNumber = phoneNumber
                     self.inn = inn
-                }
-                
-                public init(
-                    payer: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.Transfer.Payer?
-                ) {
-                    self.cardId = payer?.cardId
-                    self.cardNumber = payer?.cardNumber
-                    self.accountId = payer?.accountId
-                    self.accountNumber = payer?.accountNumber
-                    self.phoneNumber = payer?.phoneNumber
-                    self.inn = payer?.INN
                 }
             }
         }
@@ -309,7 +250,15 @@ extension GetInfoRepeatPaymentDomain {
             public let smallDesign: String?
             public let paymentSystemImage: String?
             
-            public init(id: Int?, numberMask: String?, customName: String?, currency: String?, type: ProductType?, smallDesign: String?, paymentSystemImage: String?) {
+            public init(
+                id: Int?,
+                numberMask: String?,
+                customName: String?,
+                currency: String?,
+                type: ProductType?,
+                smallDesign: String?,
+                paymentSystemImage: String?
+            ) {
                 self.id = id
                 self.numberMask = numberMask
                 self.customName = customName
