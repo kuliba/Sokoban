@@ -14,7 +14,6 @@ extension RemoteServices.ResponseMapper.LatestPayment {
     enum PaymentPayload: Equatable {
         
         case paymentFlow(PaymentFlow, Payload)
-        case paymentFlow(PaymentFlow)
         
         struct Payload: Equatable {
             
@@ -36,19 +35,7 @@ extension RemoteServices.ResponseMapper.LatestPayment {
         
         switch self {
         case let .service(service):
-            switch service.paymentFlow {
-            case .qr:
-                return nil
-                
-            case .mobile:
-                return service.payload.map { .paymentFlow(.mobile, $0) }
-                
-            case .standard:
-                return service.payload.map { .paymentFlow(.standard, $0) }
-                
-            default:
-                return .paymentFlow(service.paymentFlow)
-            }
+            return service.payload.map { .paymentFlow(service.paymentFlow, $0) }
             
         default:
             return nil
@@ -56,25 +43,29 @@ extension RemoteServices.ResponseMapper.LatestPayment {
     }
 }
 
-private extension RemoteServices.ResponseMapper.LatestPayment.Service {
+private typealias LatestPayment = RemoteServices.ResponseMapper.LatestPayment
+
+private extension LatestPayment.Service {
     
-    var payload: RemoteServices.ResponseMapper.LatestPayment.PaymentPayload.Payload? {
+    var payload: LatestPayment.PaymentPayload.Payload? {
         
-        guard let amount else { return nil }
+        guard paymentFlow != .qr,
+              let amount
+        else { return nil }
         
         return .init(
             amount: amount,
             puref: puref,
-            fields: (additionalItems ?? []).map {
-                
-                return .init(
-                    id: $0.fieldName,
-                    title: $0.fieldTitle,
-                    svg: $0.svgImage,
-                    value: $0.fieldValue
-                )
-            }
+            fields: additionalItems?.map(\.field)  ?? []
         )
+    }
+}
+
+private extension LatestPayment.Service.AdditionalItem {
+    
+    var field: LatestPayment.PaymentPayload.Payload.Field {
+        
+        return .init(id: fieldName, title: fieldTitle, svg: svgImage, value: fieldValue)
     }
 }
 
@@ -237,21 +228,173 @@ final class LatestToPayloadMappingTests: XCTestCase {
     
     // MARK: - taxAndStateServices
     
-    func test_shouldDeliverTaxAndStateServicesPaymentFlowOnServiceLatestPaymentWithTaxAndStateServicesPaymentFlow() {
+    func test_shouldDeliverNilOnServiceLatestPaymentWithTaxAndStateServicesPaymentFlowNilAmount() {
         
         assert(
-            makeServiceLatestPayment(paymentFlow: .taxAndStateServices),
-            hasPayload: .paymentFlow(.taxAndStateServices)
+            makeServiceLatestPayment(
+                amount: nil,
+                paymentFlow: .taxAndStateServices
+            ),
+            hasPayload: nil
+        )
+    }
+    
+    func test_shouldDeliverTaxAndStateServicesPaymentFlowWithEmptyFieldsOnServiceLatestPaymentWithTaxAndStateServicesPaymentFlowWithEmptyAdditionalItems() {
+        
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [],
+                amount: amount,
+                paymentFlow: .taxAndStateServices,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.taxAndStateServices, .init(
+                amount: amount,
+                puref: puref,
+                fields: []
+            ))
+        )
+    }
+    
+    func test_shouldDeliverTaxAndStateServicesPaymentFlowOnServiceLatestPaymentWithTaxAndStateServicesPaymentFlow() {
+        
+        let (name, value, title, svg) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name, fieldValue: value, fieldTitle: title, svgImage: svg)
+                ],
+                amount: amount,
+                paymentFlow: .taxAndStateServices,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.taxAndStateServices, .init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name, title: title, svg: svg, value: value)
+                ]
+            ))
+        )
+    }
+    
+    func test_shouldDeliverTaxAndStateServicesPaymentFlowOnServiceLatestPaymentWithTaxAndStateServicesPaymentFlowWithTwoAdditionalItems() {
+        
+        let (name1, value1, title1, svg1) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let (name2, value2, title2, svg2) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name1, fieldValue: value1, fieldTitle: title1, svgImage: svg1),
+                    .init(fieldName: name2, fieldValue: value2, fieldTitle: title2, svgImage: svg2)
+                ],
+                amount: amount,
+                paymentFlow: .taxAndStateServices,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.taxAndStateServices, .init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name1, title: title1, svg: svg1, value: value1),
+                    .init(id: name2, title: title2, svg: svg2, value: value2)
+                ]
+            ))
         )
     }
     
     // MARK: - transport
     
-    func test_shouldDeliverTransportPaymentFlowOnServiceLatestPaymentWithTransportPaymentFlow() {
+    func test_shouldDeliverNilOnServiceLatestPaymentWithTransportPaymentFlowNilAmount() {
         
         assert(
-            makeServiceLatestPayment(paymentFlow: .transport),
-            hasPayload: .paymentFlow(.transport)
+            makeServiceLatestPayment(
+                amount: nil,
+                paymentFlow: .transport
+            ),
+            hasPayload: nil
+        )
+    }
+    
+    func test_shouldDeliverTransportPaymentFlowWithEmptyFieldsOnServiceLatestPaymentWithTransportPaymentFlowWithEmptyAdditionalItems() {
+        
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [],
+                amount: amount,
+                paymentFlow: .transport,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.transport, .init(
+                amount: amount,
+                puref: puref,
+                fields: []
+            ))
+        )
+    }
+    
+    func test_shouldDeliverTransportPaymentFlowOnServiceLatestPaymentWithTransportPaymentFlow() {
+        
+        let (name, value, title, svg) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name, fieldValue: value, fieldTitle: title, svgImage: svg)
+                ],
+                amount: amount,
+                paymentFlow: .transport,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.transport, .init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name, title: title, svg: svg, value: value)
+                ]
+            ))
+        )
+    }
+    
+    func test_shouldDeliverTransportPaymentFlowOnServiceLatestPaymentWithTransportPaymentFlowWithTwoAdditionalItems() {
+        
+        let (name1, value1, title1, svg1) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let (name2, value2, title2, svg2) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name1, fieldValue: value1, fieldTitle: title1, svgImage: svg1),
+                    .init(fieldName: name2, fieldValue: value2, fieldTitle: title2, svgImage: svg2)
+                ],
+                amount: amount,
+                paymentFlow: .transport,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.transport, .init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name1, title: title1, svg: svg1, value: value1),
+                    .init(id: name2, title: title2, svg: svg2, value: value2)
+                ]
+            ))
         )
     }
     
