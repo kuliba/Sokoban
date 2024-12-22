@@ -79,7 +79,15 @@ final class ResponseMapper_mapGetInfoRepeatPaymentResponseTests: XCTestCase {
         
         try assert(.validData, .validData)
     }
+    
+    func test_map_shouldDeliverInvalidFailureWithTypeNull() {
         
+        XCTAssertNoDiff(
+            map(.typeNullData),
+            .failure(.invalid(statusCode: 200, data: .typeNullData))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.GetInfoRepeatPaymentResult
@@ -122,7 +130,7 @@ private extension Data {
     static let nullServerResponse: Data = String.nullServerResponse.json
     static let serverError: Data = String.serverError.json
     static let validData: Data = String.validData.json
-
+    static let typeNullData: Data = String.typeNullData.json
 }
 
 private extension String {
@@ -162,13 +170,48 @@ private extension String {
     "data": null
 }
 """
-
+    
     static let validData = """
     {
       "statusCode": 0,
       "errorMessage": null,
       "data": {
         "type": "BETWEEN_THEIR",
+        "parameterList": [
+          {
+            "check": true,
+            "amount": 23,
+            "currencyAmount": "RUB",
+            "payer": {
+              "cardId": 10000249264,
+              "cardNumber": null,
+              "accountId": null,
+              "accountNumber": null,
+              "phoneNumber": null,
+              "INN": null
+            },
+            "comment": null,
+            "payeeInternal": {
+              "cardId": null,
+              "cardNumber": null,
+              "accountId": 10004874290,
+              "accountNumber": null,
+              "phoneNumber": null,
+              "productCustomName": null
+            },
+            "payeeExternal": null
+          }
+        ]
+      }
+    }
+"""
+    
+    static let typeNullData = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "type": null,
         "parameterList": [
           {
             "check": true,

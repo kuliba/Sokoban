@@ -15,33 +15,42 @@ extension GetInfoRepeatPaymentDomain {
     typealias Response = GetInfoRepeatPayment
     typealias Result = RemoteServices.ResponseMapper.MappingResult<Response>
     typealias Completion = (Result) -> Void
-}
-
-enum _PaymentType {
     
-    case betweenTheir
-    case byPhone
-    case direct
-    case insideBank
-    case mobile
-    case otherBank
-    case repeatPaymentRequisites
-    case servicePayment
-    case sfp
-    case taxes
-    case unknown
+    enum _PaymentType {
+        
+        case betweenTheir
+        case byPhone
+        case direct
+        case insideBank
+        case mobile
+        case otherBank
+        case repeatPaymentRequisites
+        case servicePayment
+        case sfp
+        case taxes
+    }
 }
 
 extension String {
     
-    var paymentType: _PaymentType {
+    var paymentType: GetInfoRepeatPaymentDomain._PaymentType? {
         
         switch camelCased {
+        case "addressingCash", "addressless", "contactAddressless",
+            "direct", "newDirect", "newDirectAccount", "newDirectCard",
+            "foreignCard":
+            return .direct
+            
         case "betweenTheir":
             return .betweenTheir
             
-        case "addressingCash", "addressless", "contactAddressless", "direct", "newDirect", "newDirectAccount", "newDirectCard", "foreignCard":
-            return .direct
+        case "byPhone":
+            return .byPhone
+            
+        case "charityService", "digitalWalletsService", "educationService", "housingAndCommunalService",
+            "internet", "networkMarketingService","repaymentLoansAndAccountsService",
+            "securityService", "socialAndGamesService", "transport":
+            return .servicePayment
             
         case "externalEntity", "externalIndividual":
             return .repeatPaymentRequisites
@@ -49,26 +58,20 @@ extension String {
         case "insideBank":
             return .insideBank
             
-        case "otherBank":
-            return .otherBank
-           
-        case "internet", "transport", "housingAndCommunalService", "charityService", "digitalWalletsService", "educationService", "networkMarketingService", "repaymentLoansAndAccountsService", "securityService", "socialAndGamesService":
-            return .servicePayment
-        
-        case "byPhone":
-            return .byPhone
-            
-        case "sfp":
-            return .sfp
-            
         case "mobile":
             return .mobile
             
+        case "otherBank":
+            return .otherBank
+
+        case "sfp":
+            return .sfp
+            
         case "taxAndStateService":
             return .taxes
-         
+            
         default:
-            return .unknown
+            return nil
         }
     }
 }

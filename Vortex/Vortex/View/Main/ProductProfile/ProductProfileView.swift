@@ -509,7 +509,8 @@ struct ProductProfileView: View {
                                 self.viewModel.link = nil
                             }))
                         }
-                    case .unknown:
+                        
+                    case .none:
                         break // Add informer or start servicePayment
                     }
                     
@@ -961,16 +962,16 @@ private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepea
                 return puref
             }
         }
+        
         return nil
     }
     
     var additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
         
-            
         if let additional = last?.additional, !additional.isEmpty {
-                
-                return additional
-            }
+            
+            return additional
+        }
         
         return first?.additional ?? []
     }
@@ -984,6 +985,7 @@ private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepea
                 return payerCardId
             }
         }
+        
         return nil
     }
     
@@ -996,13 +998,12 @@ private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepea
                 return accountId
             }
         }
+        
         return nil
     }
     
     var productId: Int? {
         
-        guard let payerCardId else { return payerAccountId }
-        
-        return payerCardId
+        return payerCardId ?? payerAccountId
     }
 }

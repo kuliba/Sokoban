@@ -23,14 +23,20 @@ public extension ResponseMapper {
 
 private extension ResponseMapper.GetInfoRepeatPaymentResult {
     
-    init(data: ResponseMapper._Data) {
+    init(data: ResponseMapper._Data) throws {
+        
+        guard let type = data.type, !type.isEmpty 
+        else { throw ResponseFailure() }
+        
         self.init(
-            type: data.type ?? "",
+            type: type,
             parameterList: data.parameterList.compactMap { .init($0) },
             productTemplate: data.productTemplate.map { .init($0) }, 
             paymentFlow: data.paymentFlow
         )
     }
+    
+    struct ResponseFailure: Error {}
 }
 
 private extension ResponseMapper.GetInfoRepeatPaymentResult.ProductTemplate {
