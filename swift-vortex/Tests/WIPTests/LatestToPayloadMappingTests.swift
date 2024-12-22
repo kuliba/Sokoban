@@ -13,22 +13,22 @@ extension RemoteServices.ResponseMapper.LatestPayment {
     
     enum PaymentPayload: Equatable {
         
-        case mobilePaymentFlow(MobilePayload)
+        case paymentFlow(PaymentFlow, Payload)
         case paymentFlow(PaymentFlow)
         
-        struct MobilePayload: Equatable {
+        struct Payload: Equatable {
             
             let amount: Decimal
             let puref: String
             let fields: [Field]
-        }
-        
-        struct Field: Equatable {
             
-            let id: String // fieldName
-            let title: String?
-            let svg: String?
-            let value: String
+            struct Field: Equatable {
+                
+                let id: String // fieldName
+                let title: String?
+                let svg: String?
+                let value: String
+            }
         }
     }
     
@@ -41,7 +41,10 @@ extension RemoteServices.ResponseMapper.LatestPayment {
                 return nil
                 
             case .mobile:
-                return service.mobilePayload.map { .mobilePaymentFlow($0) }
+                return service.payload.map { .paymentFlow(.mobile, $0) }
+                
+            case .standard:
+                return service.payload.map { .paymentFlow(.standard, $0) }
                 
             default:
                 return .paymentFlow(service.paymentFlow)
@@ -55,7 +58,7 @@ extension RemoteServices.ResponseMapper.LatestPayment {
 
 private extension RemoteServices.ResponseMapper.LatestPayment.Service {
     
-    var mobilePayload: RemoteServices.ResponseMapper.LatestPayment.PaymentPayload.MobilePayload? {
+    var payload: RemoteServices.ResponseMapper.LatestPayment.PaymentPayload.Payload? {
         
         guard let amount else { return nil }
         
@@ -64,7 +67,12 @@ private extension RemoteServices.ResponseMapper.LatestPayment.Service {
             puref: puref,
             fields: (additionalItems ?? []).map {
                 
-                return .init(id: $0.fieldName, title: $0.fieldTitle, svg: $0.svgImage, value: $0.fieldValue)
+                return .init(
+                    id: $0.fieldName,
+                    title: $0.fieldTitle,
+                    svg: $0.svgImage,
+                    value: $0.fieldValue
+                )
             }
         )
     }
@@ -98,7 +106,7 @@ final class LatestToPayloadMappingTests: XCTestCase {
                 paymentFlow: .mobile,
                 puref: puref
             ),
-            hasPayload: .mobilePaymentFlow(.init(
+            hasPayload: .paymentFlow(.mobile, .init(
                 amount: amount,
                 puref: puref,
                 fields: []
@@ -121,7 +129,7 @@ final class LatestToPayloadMappingTests: XCTestCase {
                 paymentFlow: .mobile,
                 puref: puref
             ),
-            hasPayload: .mobilePaymentFlow(.init(
+            hasPayload: .paymentFlow(.mobile, .init(
                 amount: amount,
                 puref: puref,
                 fields: [
@@ -143,11 +151,87 @@ final class LatestToPayloadMappingTests: XCTestCase {
     
     // MARK: - standard
     
-    func test_shouldDeliverStandardPaymentFlowOnServiceLatestPaymentWithStandardPaymentFlow() {
+    func test_shouldDeliverNilOnServiceLatestPaymentWithStandardPaymentFlowNilAmount() {
         
         assert(
-            makeServiceLatestPayment(paymentFlow: .standard),
-            hasPayload: .paymentFlow(.standard)
+            makeServiceLatestPayment(
+                amount: nil,
+                paymentFlow: .standard
+            ),
+            hasPayload: nil
+        )
+    }
+    
+    func test_shouldDeliverStandardPaymentFlowWithEmptyFieldsOnServiceLatestPaymentWithStandardPaymentFlowWithEmptyAdditionalItems() {
+        
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [],
+                amount: amount,
+                paymentFlow: .standard,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.standard, .init(
+                amount: amount,
+                puref: puref,
+                fields: []
+            ))
+        )
+    }
+    
+    func test_shouldDeliverStandardPaymentFlowOnServiceLatestPaymentWithStandardPaymentFlow() {
+        
+        let (name, value, title, svg) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name, fieldValue: value, fieldTitle: title, svgImage: svg)
+                ],
+                amount: amount,
+                paymentFlow: .standard,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.standard, .init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name, title: title, svg: svg, value: value)
+                ]
+            ))
+        )
+    }
+    
+    func test_shouldDeliverStandardPaymentFlowOnServiceLatestPaymentWithStandardPaymentFlowWithTwoAdditionalItems() {
+        
+        let (name1, value1, title1, svg1) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let (name2, value2, title2, svg2) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name1, fieldValue: value1, fieldTitle: title1, svgImage: svg1),
+                    .init(fieldName: name2, fieldValue: value2, fieldTitle: title2, svgImage: svg2)
+                ],
+                amount: amount,
+                paymentFlow: .standard,
+                puref: puref
+            ),
+            hasPayload: .paymentFlow(.standard, .init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name1, title: title1, svg: svg1, value: value1),
+                    .init(id: name2, title: title2, svg: svg2, value: value2)
+                ]
+            ))
         )
     }
     
