@@ -11,9 +11,27 @@ import RemoteServices
 
 extension RemoteServices.ResponseMapper.LatestPayment {
     
+    var paymentPayload: PaymentPayload? {
+        
+        switch self {
+        case let .service(service):
+            return service.payload.map { .paymentFlow(service.paymentFlow, $0) }
+            
+        case let .withPhone(withPhone):
+            switch withPhone.type {
+            case .phone:
+                return withPhone.phonePayload.map { .phone($0) }
+                
+            default:
+                return nil
+            }
+        }
+    }
+    
     enum PaymentPayload: Equatable {
         
         case paymentFlow(PaymentFlow, Payload)
+        case phone(PhonePayload)
         
         struct Payload: Equatable {
             
@@ -23,22 +41,19 @@ extension RemoteServices.ResponseMapper.LatestPayment {
             
             struct Field: Equatable {
                 
-                let id: String // fieldName
-                let title: String?
-                let svg: String?
-                let value: String
+                let id: String     // fieldName
+                let title: String? // fieldTitle
+                let svg: String?   // svgImage
+                let value: String  // fieldValue
             }
         }
-    }
-    
-    var paymentPayload: PaymentPayload? {
         
-        switch self {
-        case let .service(service):
-            return service.payload.map { .paymentFlow(service.paymentFlow, $0) }
+        struct PhonePayload: Equatable {
             
-        default:
-            return nil
+            let amount: Decimal
+            let bankID: String
+            let phoneNumber: String
+            let puref: String?
         }
     }
 }
@@ -66,6 +81,21 @@ private extension LatestPayment.Service.AdditionalItem {
     var field: LatestPayment.PaymentPayload.Payload.Field {
         
         return .init(id: fieldName, title: fieldTitle, svg: svgImage, value: fieldValue)
+    }
+}
+
+private extension LatestPayment.WithPhone {
+    
+    var phonePayload: LatestPayment.PaymentPayload.PhonePayload? {
+        
+        guard let amount, let bankID, let phoneNumber else { return nil }
+        
+        return .init(
+            amount: amount,
+            bankID: bankID,
+            phoneNumber: phoneNumber,
+            puref: puref
+        )
     }
 }
 
@@ -404,6 +434,8 @@ final class LatestToPayloadMappingTests: XCTestCase {
         
         let mapped = try ResponseMapper.mapGetAllLatestPaymentsResponse(data(from: "v3_getAllLatestPayments"), anyHTTPURLResponse()).get()
         
+#warning("outside is not mapped!")
+        
         XCTAssertNoDiff(mapped.map(\.paymentPayload), [
             .paymentFlow(.standard, .init(
                 amount: 25.50,
@@ -469,8 +501,8 @@ final class LatestToPayloadMappingTests: XCTestCase {
                 amount: 123.00,
                 puref: "iVortex||8084",
                 fields: [
-                makeField(id: "a3_COMMENT_2_1", value: ""),
-                makeField(id: "a3_SUM_3_1", value: "123")
+                    makeField(id: "a3_COMMENT_2_1", value: ""),
+                    makeField(id: "a3_SUM_3_1", value: "123")
                 ]
             )),
             .paymentFlow(.standard, .init(
@@ -478,11 +510,36 @@ final class LatestToPayloadMappingTests: XCTestCase {
                 puref: "iVortex||7994",
                 fields: [makeField(id: "a3_PERSONAL_ACCOUNT_1_2", value: "kvna0908@gmail.com")]
             )),
-            nil,
-            nil,
-            nil,
-            nil,
-            nil,
+            .phone(.init(
+                amount: 16.8,
+                bankID: "1crt88888881",
+                phoneNumber: "0079191619658",
+                puref: "iVortex||TransferC2CSTEP"
+            )),
+            .phone(.init(
+                amount: 21,
+                bankID: "1crt88888881",
+                phoneNumber: "0070115110217",
+                puref: "iVortex||TransferC2CSTEP"
+            )),
+            .phone(.init(
+                amount: 100.00,
+                bankID: "100000000217",
+                phoneNumber: "9636124249",
+                puref: nil
+            )),
+            .phone(.init(
+                amount: 11.11,
+                bankID: "100000000217",
+                phoneNumber: "9191619658",
+                puref: nil
+            )),
+            .phone(.init(
+                amount: 10.00,
+                bankID: "100000000217",
+                phoneNumber: "9636188169",
+                puref: nil
+            ))
         ])
     }
     
@@ -548,15 +605,15 @@ final class LatestToPayloadMappingTests: XCTestCase {
             type: type
         )
     }
+    
+    func data(
+        from filename: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Data {
         
-        func data(
-            from filename: String,
-            file: StaticString = #file,
-            line: UInt = #line
-        ) throws -> Data {
-            
-            let filename = Bundle.module.url(forResource: filename, withExtension: "json")
-            let url = try XCTUnwrap(filename, file: file, line: line)
-            return try Data(contentsOf: url)
-        }
+        let filename = Bundle.module.url(forResource: filename, withExtension: "json")
+        let url = try XCTUnwrap(filename, file: file, line: line)
+        return try Data(contentsOf: url)
+    }
 }
