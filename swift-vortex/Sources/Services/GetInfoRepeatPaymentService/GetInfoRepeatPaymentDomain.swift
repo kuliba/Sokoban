@@ -211,7 +211,11 @@ extension GetInfoRepeatPaymentDomain {
                 public let fieldid: Int
                 public let fieldvalue: String
                 
-                public init(fieldname: String, fieldid: Int, fieldvalue: String) {
+                public init(
+                    fieldname: String, 
+                    fieldid: Int, 
+                    fieldvalue: String
+                ) {
                     self.fieldname = fieldname
                     self.fieldid = fieldid
                     self.fieldvalue = fieldvalue
