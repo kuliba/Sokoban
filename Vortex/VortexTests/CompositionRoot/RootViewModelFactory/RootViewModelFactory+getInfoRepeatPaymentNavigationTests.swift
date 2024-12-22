@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+getInfoRepeatPaymentTests.swift
+//  RootViewModelFactory+getInfoRepeatPaymentNavigationTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 21.12.2024.
@@ -9,7 +9,7 @@ import GetInfoRepeatPaymentService
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPaymentTests {
+final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRepeatPaymentTests {
     
     // MARK: - meToMe
     
@@ -557,7 +557,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
     ) {
         let sut = makeSUT(model: model, file: file, line: line).sut
         
-        let navigation = sut.getInfoRepeatPayment(
+        let navigation = sut.getInfoRepeatPaymentNavigation(
             from: info,
             activeProductID: makeProductID(),
             closeAction: closeAction
@@ -597,7 +597,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         
         var source: Payments.Operation.Source?
         
-        _ = sut.getInfoRepeatPayment(
+        _ = sut.getInfoRepeatPaymentNavigation(
             from: info, activeProductID: activeProductID ?? makeProductID(),
             getProduct: { _ in product },
             makePaymentsWithSource: { source = $0; return nil },
@@ -617,7 +617,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentTests: GetInfoRepeatPayment
         
         var service: Payments.Service?
         
-        _ = sut.getInfoRepeatPayment(
+        _ = sut.getInfoRepeatPaymentNavigation(
             from: info, activeProductID: activeProductID ?? makeProductID(),
             getProduct: { _ in product },
             makePaymentsWithSource: { _ in return nil },

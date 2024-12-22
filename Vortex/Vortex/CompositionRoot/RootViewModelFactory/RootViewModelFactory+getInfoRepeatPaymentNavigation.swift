@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+getInfoRepeatPayment.swift
+//  RootViewModelFactory+getInfoRepeatPaymentNavigation.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 21.12.2024.
@@ -19,13 +19,13 @@ extension GetInfoRepeatPaymentDomain {
 extension RootViewModelFactory {
     
     @inlinable
-    func getInfoRepeatPayment(
+    func getInfoRepeatPaymentNavigation(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
         closeAction: @escaping () -> Void
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        return getInfoRepeatPayment(
+        return getInfoRepeatPaymentNavigation(
             from: info,
             activeProductID: activeProductID,
             getProduct: { [weak model] id in
@@ -56,7 +56,7 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func getInfoRepeatPayment(
+    func getInfoRepeatPaymentNavigation(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
         getProduct: @escaping (ProductData.ID) -> ProductData?,
