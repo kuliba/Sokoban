@@ -65,7 +65,7 @@ extension RootViewModelFactory {
         makeMeToMe: (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        if let source = makeSource(from: info, activeProductID: activeProductID, getProduct: getProduct) {
+        if let source = info.source(activeProductID: activeProductID, getProduct: getProduct) {
             
             return makePaymentsWithSource(source).map { .payments($0) }
         }
@@ -78,41 +78,6 @@ extension RootViewModelFactory {
         if let mode = info.betweenTheirMode(getProduct: getProduct) {
             
             return makeMeToMe(mode).map { .meToMe($0) }
-        }
-        
-        return nil
-    }
-    
-    @inlinable
-    func makeSource(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        activeProductID: ProductData.ID,
-        getProduct: @escaping (ProductData.ID) -> ProductData?
-    ) -> Payments.Operation.Source? {
-        
-        if let source = info.byPhoneSource(activeProductID: activeProductID) {
-            return source
-        }
-        if let source =  info.directSource() {
-            return source
-        }
-        if let source =  info.mobileSource() {
-            return source
-        }
-        if let source =  info.repeatPaymentRequisitesSource() {
-            return source
-        }
-        if let source =  info.servicePaymentSource() {
-            return source
-        }
-        if let source =  info.sfpSource(activeProductID: activeProductID) {
-            return source
-        }
-        if let source =  info.toAnotherCardSource() {
-            return source
-        }
-        if let source =  info.taxesSource() {
-            return source
         }
         
         return nil
