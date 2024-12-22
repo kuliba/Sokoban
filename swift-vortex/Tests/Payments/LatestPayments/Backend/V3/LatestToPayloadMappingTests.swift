@@ -398,6 +398,94 @@ final class LatestToPayloadMappingTests: XCTestCase {
         )
     }
     
+    // MARK: - multiple
+    
+    func test_fileData() throws {
+        
+        let mapped = try ResponseMapper.mapGetAllLatestPaymentsResponse(data(from: "v3_getAllLatestPayments"), anyHTTPURLResponse()).get()
+        
+        XCTAssertNoDiff(mapped.map(\.paymentPayload), [
+            .paymentFlow(.standard, .init(
+                amount: 25.50,
+                puref: "iVortex||CTV",
+                fields: [makeField(id: "P1", value: "33694934")]
+            )),
+            .paymentFlow(.standard, .init(
+                amount: 12.70,
+                puref: "iVortex||TNS",
+                fields: [
+                    makeField(id: "account", value: "766440148001"),
+                    makeField(id: "counter", value: "97"),
+                    makeField(id: "counterDay", value: "97"),
+                    makeField(id: "counterNight", value: "12"),
+                    makeField(id: "fine", value: "42")
+                ]
+            )),
+            .paymentFlow(.standard, .init(
+                amount: 12.50,
+                puref: "iVortex||KSK",
+                fields: [makeField(id: "account", value: "110110580")]
+            )),
+            .paymentFlow(.transport, .init(
+                amount: 11.50,
+                puref: "iVortex||AVDD",
+                fields: [makeField(id: "P1", value: "161807")]
+            )),
+            .paymentFlow(.taxAndStateServices, .init(
+                amount: 56.00,
+                puref: "iVortex||6273",
+                fields: [
+                    makeField(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
+                    makeField(id: "a3_OKTMO_5_1", value: "45390000"),
+                    makeField(id: "a3_dutyCategory_1_1", value: "3"),
+                    makeField(id: "a3_categorySelect_3_1", value: "44"),
+                    makeField(id: "a3_INN_4_1", value: "7723013452"),
+                    makeField(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563"),
+                    makeField(id: "a3_fio_1_2", value: "Пыркова Дарья Владимировна"),
+                    makeField(id: "a3_docValue_4_2", value: "183472137431"),
+                    makeField(id: "a3_docType_3_2", value: "2")
+                ]
+            )),
+            .paymentFlow(.taxAndStateServices, .init(
+                amount: 5000.00,
+                puref: "iVortex||7069",
+                fields: [
+                    makeField(id: "a3_BillNumber_1_1", value: "18201800230035226326"),
+                    makeField(id: "a3_fio_4_1", value: "Пыркова Дарья Владимировна"),
+                    makeField(id: "a3_address_10_1", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563")
+                ]
+            )),
+            .paymentFlow(.mobile, .init(
+                amount: 63.00,
+                puref: "iVortex||6169",
+                fields: [makeField(id: "a3_PERSONAL_ACCOUNT_1_1", value: "9955082827")]
+            )),
+            .paymentFlow(.mobile, .init(
+                amount: 54.00,
+                puref: "iVortex||4285",
+                fields: [makeField(id: "a3_NUMBER_1_2", value: "9031115311")]
+            )),
+            .paymentFlow(.standard, .init(
+                amount: 123.00,
+                puref: "iVortex||8084",
+                fields: [
+                makeField(id: "a3_COMMENT_2_1", value: ""),
+                makeField(id: "a3_SUM_3_1", value: "123")
+                ]
+            )),
+            .paymentFlow(.standard, .init(
+                amount: 10.00,
+                puref: "iVortex||7994",
+                fields: [makeField(id: "a3_PERSONAL_ACCOUNT_1_2", value: "kvna0908@gmail.com")]
+            )),
+            nil,
+            nil,
+            nil,
+            nil,
+            nil,
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias Latest = RemoteServices.ResponseMapper.LatestPayment
@@ -416,6 +504,16 @@ final class LatestToPayloadMappingTests: XCTestCase {
     private func makeAmount() -> Decimal {
         
         return .init(Int.random(in: 100...10_000)) / 100
+    }
+    
+    private func makeField(
+        id: String,
+        title: String? = nil,
+        svg: String? = nil,
+        value: String
+    ) -> Latest.PaymentPayload.Payload.Field {
+        
+        return .init(id: id, title: title, svg: svg, value: value)
     }
     
     private func makeServiceLatestPayment(
@@ -450,4 +548,15 @@ final class LatestToPayloadMappingTests: XCTestCase {
             type: type
         )
     }
+        
+        func data(
+            from filename: String,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) throws -> Data {
+            
+            let filename = Bundle.module.url(forResource: filename, withExtension: "json")
+            let url = try XCTUnwrap(filename, file: file, line: line)
+            return try Data(contentsOf: url)
+        }
 }
