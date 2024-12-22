@@ -3198,11 +3198,13 @@ private extension Target {
             // internal modules
             .ephemeralStores,
             .fetcher,
-            .vortexTools,
             .genericLoader,
             .genericRemoteService,
+            .latestPaymentsBackendV3,
+            .remoteServices,
             .rxViewModel,
             .serialComponents,
+            .vortexTools,
         ]
     )
     
