@@ -10,6 +10,8 @@ import Foundation
 
 extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
+    // MARK: - Mode
+    
     func betweenTheirMode(
         getProduct: @escaping (ProductData.ID) -> ProductData?
     ) -> PaymentsMeToMeViewModel.Mode? {
@@ -26,6 +28,66 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             return .makePaymentTo(product, amount)
         }
         .first
+    }
+    
+    // MARK: - Service
+    
+    func otherBankService() -> Payments.Service? {
+        
+        type == .otherBank ? .toAnotherCard : nil
+    }
+    
+    // MARK: - Source
+    
+    func source(
+        activeProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> Payments.Operation.Source? {
+        
+        if let source = byPhoneSource(activeProductID: activeProductID) {
+            return source
+        }
+        if let source =  directSource() {
+            return source
+        }
+        if let source =  mobileSource() {
+            return source
+        }
+        if let source =  repeatPaymentRequisitesSource() {
+            return source
+        }
+        if let source =  servicePaymentSource() {
+            return source
+        }
+        if let source =  sfpSource(activeProductID: activeProductID) {
+            return source
+        }
+        if let source =  taxesSource() {
+            return source
+        }
+        if let source =  toAnotherCardSource() {
+            return source
+        }
+        
+        return nil
+    }
+    
+    func byPhoneSource(
+        activeProductID: ProductData.ID
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .byPhone,
+              let transfer = parameterList.last,
+              let phone = transfer.payeeInternal?.phoneNumber,
+              let amount = transfer.amount
+        else { return nil }
+        
+        return .sfp(
+            phone: phone,
+            bankId: Vortex.BankID.vortexID.digits,
+            amount: amount.description,
+            productId: activeProductID
+        )
     }
     
     func directSource(
@@ -62,6 +124,21 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         )
     }
     
+    func mobileSource() -> Payments.Operation.Source? {
+        
+        guard type == .mobile,
+              let transfer = parameterList.last,
+              let phone = transfer.mobilePhone,
+              let amount = transfer.amount
+        else { return nil }
+        
+        return .mobile(
+            phone: phone,
+            amount: amount.description,
+            productId: transfer.payerProductID
+        )
+    }
+    
     func repeatPaymentRequisitesSource() -> Payments.Operation.Source? {
         
         guard type == .externalEntity || type == .externalIndivudual,
@@ -82,19 +159,6 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         )
     }
     
-    func toAnotherCardSource(
-    ) -> Payments.Operation.Source? {
-        
-        guard type == .insideBank,
-              let transfer = parameterList.last,
-              let from = transfer.payer?.cardId,
-              let amount = transfer.amount,
-              let to = productTemplate?.id
-        else { return nil }
-        
-        return .toAnotherCard(from: from, to: to, amount: amount.description)
-    }
-    
     func servicePaymentSource() -> Payments.Operation.Source? {
         
         guard type == .internet || type == .transport || type == .housingAndCommunalService,
@@ -111,29 +175,6 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
             },
             amount: amount,
             productId: transfer.payer?.cardId
-        )
-    }
-    
-    func otherBankService() -> Payments.Service? {
-        
-        type == .otherBank ? .toAnotherCard : nil
-    }
-    
-    func byPhoneSource(
-        activeProductID: ProductData.ID
-    ) -> Payments.Operation.Source? {
-        
-        guard type == .byPhone,
-              let transfer = parameterList.last,
-              let phone = transfer.payeeInternal?.phoneNumber,
-              let amount = transfer.amount
-        else { return nil }
-        
-        return .sfp(
-            phone: phone,
-            bankId: Vortex.BankID.vortexID.digits,
-            amount: amount.description,
-            productId: activeProductID
         )
     }
     
@@ -156,24 +197,22 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         )
     }
     
-    func mobileSource() -> Payments.Operation.Source? {
-        
-        guard type == .mobile,
-              let transfer = parameterList.last,
-              let phone = transfer.mobilePhone,
-              let amount = transfer.amount
-        else { return nil }
-        
-        return .mobile(
-            phone: phone,
-            amount: amount.description,
-            productId: transfer.payerProductID
-        )
-    }
-    
     func taxesSource() -> Payments.Operation.Source? {
         
         type == .taxes ? .taxes(parameterData: nil) : nil
+    }
+    
+    func toAnotherCardSource(
+    ) -> Payments.Operation.Source? {
+        
+        guard type == .insideBank,
+              let transfer = parameterList.last,
+              let from = transfer.payer?.cardId,
+              let amount = transfer.amount,
+              let to = productTemplate?.id
+        else { return nil }
+        
+        return .toAnotherCard(from: from, to: to, amount: amount.description)
     }
 }
 

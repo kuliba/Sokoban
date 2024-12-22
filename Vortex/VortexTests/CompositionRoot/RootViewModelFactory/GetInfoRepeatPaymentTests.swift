@@ -534,17 +534,17 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_byPhoneSource_shouldDeliverSourceOnByPhone() throws {
         
-        let productID = makeProductID()
+        let activeProductID = makeProductID()
         let transfer = makeTransfer(
             payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
         )
         let info = makeRepeat(type: .byPhone, parameterList: [transfer])
         
-        try XCTAssertNoDiff(info.byPhoneSource(activeProductID: productID), .sfp(
+        try XCTAssertNoDiff(info.byPhoneSource(activeProductID: activeProductID), .sfp(
             phone: XCTUnwrap(transfer.payeeInternal?.phoneNumber),
             bankId: Vortex.BankID.vortexID.digits,
             amount: XCTUnwrap(transfer.amount?.description),
-            productId: productID
+            productId: activeProductID
         ))
     }
     
@@ -600,7 +600,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_sfpSource_shouldDeliverSourceOnSFP() throws {
         
-        let productID = makeProductID()
+        let activeProductID = makeProductID()
         let (phone, bankID) = (anyMessage(), anyMessage())
         let transfer = makeTransfer(
             additional: [
@@ -610,11 +610,11 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         )
         let info = makeRepeat(type: .sfp, parameterList: [transfer])
         
-        try XCTAssertNoDiff(info.sfpSource(activeProductID: productID), .sfp(
+        try XCTAssertNoDiff(info.sfpSource(activeProductID: activeProductID), .sfp(
             phone: phone,
             bankId: bankID,
             amount: XCTUnwrap(transfer.amount?.description),
-            productId: productID
+            productId: activeProductID
         ))
     }
     
