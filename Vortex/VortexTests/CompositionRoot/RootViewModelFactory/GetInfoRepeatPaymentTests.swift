@@ -664,7 +664,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let info = makeRepeat(type: "MOBILE", parameterList: [transfer])
         
         XCTAssertNoDiff(info.mobileSource(), .mobile(
-            phone: phone,
+            phone: "7\(phone)",
             amount: transfer.amount?.description,
             productId: nil
         ))

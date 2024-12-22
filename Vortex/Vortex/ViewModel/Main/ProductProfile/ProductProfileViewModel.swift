@@ -3215,246 +3215,75 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    func closeAction() {
+        
+        link = nil
+    }
+    
+    func cannotRepeatPayment() {
+        model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось повторить операцию. Попробуйте позже", icon: .close)))
+    }
+    
     func payment(
         viewModel: OperationDetailViewModel
     ) {
         
-        guard let  operationId = viewModel.operationId else { return }
+        guard let operationId = viewModel.operationId
+        else {
+            cannotRepeatPayment()
+            return
+        }
         
-        productProfileServices.repeatPayment.createInfoRepeatPaymentServices(.init(paymentOperationDetailId: operationId)) { result in
+        productProfileServices.repeatPayment.createInfoRepeatPaymentServices(.init(paymentOperationDetailId: operationId)) { [weak self] result in
+            
+            guard let self else { return }
             
             switch result {
             case let .success(infoPayment):
+                
+                let source = infoPayment.source(activeProductID: product.activeProductId, getProduct: model.product(productId:))
+                
+                let delay = infoPayment.delay
+                
                 switch infoPayment.type.paymentType {
                 case .betweenTheir:
+                    if let mode = infoPayment.betweenTheirMode(getProduct: model.product(productId:)),
+                       let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: mode) {
                     
-                    let paymentViewModels = infoPayment.parameterList.compactMap { transfer -> PaymentsMeToMeViewModel? in
-                        
-                        let allProducts = viewModel.model.products.value.flatMap({ $0.value })
-                        
-                        if let payeeInternalId = transfer.payeeInternal?.cardId ?? transfer.payeeInternal?.accountId,
-                           let product = allProducts.first(where: { $0.id == payeeInternalId }),
-                           let amount = transfer.amount,
-                           let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: .makePaymentTo(product, amount)) {
-                            
-                            return paymentViewModel
-                        }
-                        
-                        if let payerId = transfer.payer?.cardId ?? transfer.payer?.accountId,
-                           let product = allProducts.first(where: { $0.id == payerId }),
-                           let amount = transfer.amount,
-                           let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: .makePaymentTo(product, amount)) {
-                            
-                            return paymentViewModel
-                        }
-                        
-                        return nil
-                    }
-                    
-                    if let firstPaymentViewModel = paymentViewModels.first {
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) { [weak self] in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
                             guard let self else { return }
                             
-                            bottomSheet = .init(type: .meToMe(firstPaymentViewModel))
+                            bottomSheet = .init(type: .meToMe(paymentViewModel))
                         }
                     }
                     
-                case .direct:
+                case .byPhone, .direct, .insideBank, .mobile, .repeatPaymentRequisites, .servicePayment, .sfp, .taxes:
                     
-                    if let transfer = infoPayment.parameterList.last,
-                       let additional = transfer.additional,
-                       let phone = transfer.additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue,
-                       let countryId = transfer.additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .direct(
-                                phone: phone,
-                                countryId: countryId,
-                                serviceData: .init(
-                                    additionalList: additional.map({ PaymentServiceData.AdditionalListData(
-                                        fieldTitle: $0.fieldname,
-                                        fieldName: $0.fieldname,
-                                        fieldValue: $0.fieldvalue,
-                                        svgImage: ""
-                                    )}),
-                                    amount: transfer.amount ?? 0,
-                                    date: Date(),
-                                    paymentDate: "",
-                                    puref: transfer.puref ?? "",
-                                    type: .internet,
-                                    lastPaymentName: nil
-                                )
-                            ), model: Model.shared, closeAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
-                    }
-                case .repeatPaymentRequisites:
-                    
-                    if let transfer = infoPayment.parameterList.last,
-                       let bankBic = transfer.payeeExternal?.bankBIC,
-                       let amount = transfer.amount?.description,
-                       let accountNumber = transfer.payeeExternal?.accountNumber {
-                        
-                        let inn: String = transfer.payeeExternal?.inn ?? ""
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .repeatPaymentRequisites(
-                                accountNumber: accountNumber,
-                                bankId: bankBic,
-                                inn: inn,
-                                kpp: transfer.payeeExternal?.kpp,
-                                amount: amount,
-                                productId: transfer.payer?.cardId ?? transfer.payer?.accountId,
-                                comment: transfer.comment
-                            ), model: Model.shared, closeAction: {
-                                [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
+                    guard let source 
+                    else {
+                        cannotRepeatPayment()
+                        return
                     }
                     
-                case .insideBank:
-                    
-                    if let transfer = infoPayment.parameterList.last,
-                       let from = transfer.payer?.cardId,
-                       let amount = transfer.amount,
-                       let to = infoPayment.productTemplate?.id {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                        guard let self else { return }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .toAnotherCard(from: from, to: to, amount: String(amount)), model: Model.shared, closeAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
-                    }
-                    
-                case .servicePayment:
-                    
-                    if let transfer = infoPayment.parameterList.first,
-                       let puref = infoPayment.parameterList.puref,
-                       let amount = infoPayment.parameterList.amount {
-                        
-                        let additionalList: [PaymentServiceData.AdditionalListData]? = infoPayment.parameterList.additional.map {
-                            .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .servicePayment(
-                                puref: puref,
-                                additionalList: additionalList,
-                                amount: amount,
-                                productId: infoPayment.parameterList.productId
-                            ), model: Model.shared, closeAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
+                        link = .payment(.init(source: source, model: model, closeAction: closeAction))
                     }
                     
                 case .otherBank:
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) { [weak self] in
+                    guard let source
+                    else {
+                        cannotRepeatPayment()
+                        return
+                    }
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
                         
                         guard let self else { return }
                         
-                        link = .payment(.init(Model.shared, service: .toAnotherCard, closeAction: {
-                            [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = nil
-                        }))
-                    }
-                    
-                case .byPhone:
-                    
-                    if let phone = infoPayment.parameterList.last?.payeeInternal?.phoneNumber,
-                       let amount = infoPayment.parameterList.last?.amount?.description {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .sfp(phone: phone, bankId: Vortex.BankID.vortexID.digits, amount: amount, productId: product.activeProductId), model: Model.shared, closeAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
-                    }
-                case .sfp:
-                    
-                    if let transfer = infoPayment.parameterList.last,
-                       let phone = transfer.additional?.first(where: { $0.fieldname == "RecipientID"})?.fieldvalue,
-                       let bankId = transfer.additional?.first(where: { $0.fieldname == "BankRecipientID"})?.fieldvalue,
-                       let amount = transfer.amount?.description {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .sfp(phone: phone, bankId: bankId, amount: amount, productId: product.activeProductId), model: Model.shared, closeAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
-                    }
-                case .mobile:
-                    
-                    if let transfer = infoPayment.parameterList.last,
-                       let phone = transfer.additional?.first(where: { $0.fieldname == "a3_NUMBER_1_2"})?.fieldvalue,
-                       let amount = transfer.amount?.description {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = .payment(.init(source: .mobile(
-                                phone: "7\(phone)",
-                                amount: amount,
-                                productId: transfer.payer?.cardId ?? transfer.payer?.accountId
-                            ), model: Model.shared, closeAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                link = nil
-                            }))
-                        }
-                    }
-                case .taxes:
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) { [weak self] in
-                        
-                        guard let self else { return }
-                        
-                        link = .payment(.init(source: .taxes(parameterData: nil), model: Model.shared, closeAction: { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            link = nil
-                        }))
+                        link = .payment(.init(model, service: .toAnotherCard, closeAction: closeAction))
                     }
                     
                 case .none:
@@ -3462,10 +3291,9 @@ extension ProductProfileViewModel {
                 }
                 
             case let .failure(error):
-                print(error)
+                cannotRepeatPayment()
             }
         }
-        
         bottomSheet = nil
     }
 }
@@ -3528,75 +3356,5 @@ extension Model {
         } else {
             return []
         }
-    }
-}
-
-private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
-    
-    var amount: Double? {
-        
-        for transfer in self {
-            
-            if let amount = transfer.amount, amount > 0 {
-                
-                return amount
-            }
-        }
-        
-        return nil
-    }
-    
-    var puref: String? {
-        
-        for transfer in self {
-            
-            if let puref = transfer.puref, !puref.isEmpty {
-                
-                return puref
-            }
-        }
-        
-        return nil
-    }
-    
-    var additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
-        
-        if let additional = last?.additional, !additional.isEmpty {
-            
-            return additional
-        }
-        
-        return first?.additional ?? []
-    }
-    
-    var payerCardId: Int? {
-        
-        for transfer in self {
-            
-            if let payerCardId = transfer.payer?.cardId {
-                
-                return payerCardId
-            }
-        }
-        
-        return nil
-    }
-    
-    var payerAccountId: Int? {
-        
-        for transfer in self {
-            
-            if let accountId = transfer.payer?.accountId {
-                
-                return accountId
-            }
-        }
-        
-        return nil
-    }
-    
-    var productId: Int? {
-        
-        return payerCardId ?? payerAccountId
     }
 }
