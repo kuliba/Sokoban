@@ -3461,7 +3461,7 @@
 		EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAEF268245EC004EE095 /* CardViewModel.swift */; };
 		EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF22682461F004EE095 /* CardCell.swift */; };
 		EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF72683943A004EE095 /* UISwitch.swift */; };
-		EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFA2683C135004EE095 /* PaymentType.swift */; };
+		EDFFCAFB2683C135004EE095 /* LegacyPaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFA2683C135004EE095 /* LegacyPaymentType.swift */; };
 		EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */; };
 		F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */; };
 		F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4D93E1924F097E08847C /* ClientInfoModel.swift */; };
@@ -6964,7 +6964,7 @@
 		EDFFCAEF268245EC004EE095 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		EDFFCAF22682461F004EE095 /* CardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCell.swift; sourceTree = "<group>"; };
 		EDFFCAF72683943A004EE095 /* UISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitch.swift; sourceTree = "<group>"; };
-		EDFFCAFA2683C135004EE095 /* PaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentType.swift; sourceTree = "<group>"; };
+		EDFFCAFA2683C135004EE095 /* LegacyPaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPaymentType.swift; sourceTree = "<group>"; };
 		EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController API.swift"; sourceTree = "<group>"; };
 		F343D52CB492075F3BA8B548 /* Image+Icons.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Image+Icons.swift"; sourceTree = "<group>"; };
 		F63D4056E8B88CC673C85295 /* CheckBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckBoxView.xib; sourceTree = "<group>"; };
@@ -18160,7 +18160,7 @@
 		EDFFCAF92683C123004EE095 /* PaymentType */ = {
 			isa = PBXGroup;
 			children = (
-				EDFFCAFA2683C135004EE095 /* PaymentType.swift */,
+				EDFFCAFA2683C135004EE095 /* LegacyPaymentType.swift */,
 			);
 			path = PaymentType;
 			sourceTree = "<group>";
@@ -21349,7 +21349,7 @@
 				C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */,
 				6830A02427D37E87003CA4F1 /* BannerCatalogListData.swift in Sources */,
 				0BBAFAAA277CB748006D9323 /* PhoneNumberKitHelper.swift in Sources */,
-				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
+				EDFFCAFB2683C135004EE095 /* LegacyPaymentType.swift in Sources */,
 				2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */,
 				0B283FCE2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift in Sources */,
 				77DC126A2770F65000C917B0 /* ServerAgentProtocol.swift in Sources */,
