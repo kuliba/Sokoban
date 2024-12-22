@@ -46,7 +46,7 @@ extension GetInfoRepeatPaymentDomain {
             self.productTemplate = productTemplate
         }
         
-        public enum TransferType: String {
+        public enum TransferType: String, CaseIterable {
             
             case betweenTheir = "BETWEEN_THEIR"
             case byPhone = "BY_PHONE"
@@ -249,6 +249,16 @@ extension GetInfoRepeatPaymentDomain {
                 public let fieldname: String
                 public let fieldid: Int
                 public let fieldvalue: String
+                
+                public init(
+                    fieldname: String, 
+                    fieldid: Int, 
+                    fieldvalue: String
+                ) {
+                    self.fieldname = fieldname
+                    self.fieldid = fieldid
+                    self.fieldvalue = fieldvalue
+                }
             }
             
             public struct Payer: Equatable {
@@ -298,6 +308,16 @@ extension GetInfoRepeatPaymentDomain {
             public let type: ProductType?
             public let smallDesign: String?
             public let paymentSystemImage: String?
+            
+            public init(id: Int?, numberMask: String?, customName: String?, currency: String?, type: ProductType?, smallDesign: String?, paymentSystemImage: String?) {
+                self.id = id
+                self.numberMask = numberMask
+                self.customName = customName
+                self.currency = currency
+                self.type = type
+                self.smallDesign = smallDesign
+                self.paymentSystemImage = paymentSystemImage
+            }
             
             public enum ProductType: Equatable {
                 

@@ -334,6 +334,7 @@ struct ProductProfileView: View {
                     case .betweenTheir:
                         
                         let paymentViewModels = infoPayment.parameterList.compactMap { transfer -> PaymentsMeToMeViewModel? in
+                            
                             let allProducts = viewModel.model.products.value.flatMap({ $0.value })
                             
                             if let payeeInternalId = transfer.payeeInternal?.cardId ?? transfer.payeeInternal?.accountId,

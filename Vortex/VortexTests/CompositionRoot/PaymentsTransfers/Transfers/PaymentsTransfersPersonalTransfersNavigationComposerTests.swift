@@ -427,11 +427,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
 extension Model {
     
     func addMeToMeProduct(
+        product: ProductData? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
-        products.value.append(element: .accountActiveRub, toValueOfKey: .account)
+        products.value.append(element: product ?? .accountActiveRub, toValueOfKey: .account)
         _ = try XCTUnwrap(PaymentsMeToMeViewModel(self, mode: .demandDeposit), "Fail to add product for MeToMe (Expected PaymentsMeToMeViewModel, got nil instead).", file: file, line: line)
     }
 }
