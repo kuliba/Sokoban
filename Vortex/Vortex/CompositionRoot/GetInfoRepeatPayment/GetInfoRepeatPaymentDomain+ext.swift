@@ -19,10 +19,10 @@ extension GetInfoRepeatPaymentDomain {
 
 enum _PaymentType {
     
+    case betweenTheir
     case byPhone
     case direct
     case insideBank
-    case betweenTheir
     case mobile
     case otherBank
     case repeatPaymentRequisites

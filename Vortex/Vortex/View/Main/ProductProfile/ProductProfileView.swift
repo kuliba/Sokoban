@@ -510,7 +510,7 @@ struct ProductProfileView: View {
                             }))
                         }
                     case .unknown:
-                        break // Add informer
+                        break // Add informer or start servicePayment
                     }
                     
                 case let .failure(error):
