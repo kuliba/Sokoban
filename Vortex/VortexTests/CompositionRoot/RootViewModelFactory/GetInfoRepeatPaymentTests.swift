@@ -15,7 +15,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_betweenTheirMode_shouldDeliverNilOnNonBetweenTheirType() {
         
-        for type in allTransferTypes(except: .betweenTheir) {
+        for type in allTransferTypes(except: "BETWEEN_THEIR") {
             
             let info = makeRepeat(type: type)
             
@@ -88,7 +88,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_directSource_shouldDeliverNilForNonDirectNonContactAddressless() {
         
-        for type in allTransferTypes(except: .direct, .contactAddressless) {
+        for type in allTransferTypes(except: "DIRECT", "CONTACT_ADDRESSLESS") {
             
             let info = makeRepeat(type: type)
             
@@ -98,7 +98,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_directSource_shouldDeliverNilOnEmptyParameterList() {
         
-        for type in [TransferType.direct, .contactAddressless] {
+        for type in ["DIRECT", "CONTACT_ADDRESSLESS"] {
             
             let info = makeRepeat(type: type, parameterList: [])
             
@@ -108,7 +108,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_directSource_shouldDeliverNilOnNilAdditional() {
         
-        for type in [TransferType.direct, .contactAddressless] {
+        for type in ["DIRECT", "CONTACT_ADDRESSLESS"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(additional: nil)
@@ -120,7 +120,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_directSource_shouldDeliverNilOnMissingCountryIDField() {
         
-        for type in [TransferType.direct, .contactAddressless] {
+        for type in ["DIRECT", "CONTACT_ADDRESSLESS"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(additional: [makePhone()])
@@ -132,7 +132,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_directSource_shouldDeliverNilOnMissingPhoneField() {
         
-        for type in [TransferType.direct, .contactAddressless] {
+        for type in ["DIRECT", "CONTACT_ADDRESSLESS"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(additional: [makeCountryID()])
@@ -147,7 +147,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let amount = Double.random(in: 1...1_000)
         let date = Date()
         let (phone, countryID) = (makePhone(), makeCountryID())
-        let info = makeRepeat(type: .direct, parameterList: [
+        let info = makeRepeat(type: "DIRECT", parameterList: [
             makeTransfer(amount: amount, additional: [phone, countryID])
         ])
         
@@ -174,7 +174,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let amount = Double.random(in: 1...1_000)
         let date = Date()
         let (phone, countryID) = (makePhone(), makeCountryID())
-        let info = makeRepeat(type: .contactAddressless, parameterList: [
+        let info = makeRepeat(type: "CONTACT_ADDRESSLESS", parameterList: [
             makeTransfer(amount: amount, additional: [phone, countryID])
         ])
         
@@ -200,7 +200,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_repeatPaymentRequisitesSource_shouldDeliverNilForNonExternalEntityNonExternalIndivudual() {
         
-        for type in allTransferTypes(except: .externalEntity, .externalIndivudual) {
+        for type in allTransferTypes(except: "EXTERNAL_ENTITY", "EXTERNAL_INDIVIDUAL") {
             
             let info = makeRepeat(type: type)
             
@@ -210,7 +210,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_repeatPaymentRequisitesSource_shouldDeliverNilOnEmptyParameterList() {
         
-        for type in [TransferType.externalEntity, .externalIndivudual] {
+        for type in ["EXTERNAL_ENTITY", "EXTERNAL_INDIVIDUAL"] {
             
             let info = makeRepeat(type: type, parameterList: [])
             
@@ -220,7 +220,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_repeatPaymentRequisitesSource_shouldDeliverNilOnNilAmount() {
         
-        for type in [TransferType.externalEntity, .externalIndivudual] {
+        for type in ["EXTERNAL_ENTITY", "EXTERNAL_INDIVIDUAL"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(
@@ -235,7 +235,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_repeatPaymentRequisitesSource_shouldDeliverNilOnNilBICPayeeExternal() {
         
-        for type in [TransferType.externalEntity, .externalIndivudual] {
+        for type in ["EXTERNAL_ENTITY", "EXTERNAL_INDIVIDUAL"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(
@@ -255,7 +255,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
                 bankBIC: anyMessage()
             )
         )
-        let info = makeRepeat(type: .externalEntity, parameterList: [transfer])
+        let info = makeRepeat(type: "EXTERNAL_ENTITY", parameterList: [transfer])
         
         try XCTAssertNoDiff(
             info.repeatPaymentRequisitesSource(),
@@ -277,7 +277,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             inn: anyMessage(),
             bankBIC: anyMessage())
         )
-        let info = makeRepeat(type: .externalIndivudual, parameterList: [transfer])
+        let info = makeRepeat(type: "EXTERNAL_INDIVIDUAL", parameterList: [transfer])
         
         try XCTAssertNoDiff(
             info.repeatPaymentRequisitesSource(),
@@ -297,7 +297,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_toAnotherCardSource_shouldDeliverNilForNonInsideBank() {
         
-        for type in allTransferTypes(except: .insideBank) {
+        for type in allTransferTypes(except: "INSIDE_BANK") {
             
             let info = makeRepeat(type: type)
             
@@ -308,7 +308,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     func test_toAnotherCardSource_shouldDeliverNilOnEmptyParameterList() {
         
         let info = makeRepeat(
-            type: .insideBank,
+            type: "INSIDE_BANK",
             parameterList: [],
             productTemplate: makeProductTemplate()
         )
@@ -320,7 +320,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         
         let transfer = makeTransfer(amount: nil, payer: makePayer())
         let info = makeRepeat(
-            type: .insideBank,
+            type: "INSIDE_BANK",
             parameterList: [transfer],
             productTemplate: makeProductTemplate()
         )
@@ -332,7 +332,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         
         let transfer = makeTransfer(payer: nil)
         let info = makeRepeat(
-            type: .insideBank,
+            type: "INSIDE_BANK",
             parameterList: [transfer],
             productTemplate: makeProductTemplate()
         )
@@ -344,7 +344,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         
         let transfer = makeTransfer(payer: makePayer())
         let info = makeRepeat(
-            type: .insideBank,
+            type: "INSIDE_BANK",
             parameterList: [transfer],
             productTemplate: makeProductTemplate(id: nil)
         )
@@ -357,7 +357,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let transfer = makeTransfer(payer: makePayer())
         let productTemplate = makeProductTemplate()
         let info = makeRepeat(
-            type: .insideBank,
+            type: "INSIDE_BANK",
             parameterList: [transfer],
             productTemplate: productTemplate
         )
@@ -376,7 +376,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_servicePaymentSource_shouldDeliverNilForNonInternetNonTransportNonHousingAndCommunalService() {
         
-        for type in allTransferTypes(except: .internet, .transport, .housingAndCommunalService) {
+        for type in allTransferTypes(except: "INTERNET", "TRANSPORT", "HOUSING_AND_COMMUNAL_SERVICE") {
             
             let info = makeRepeat(type: type)
             
@@ -386,7 +386,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_servicePaymentSource_shouldDeliverNilOnEmptyParameterList() {
         
-        for type in [TransferType.internet, .transport, .housingAndCommunalService] {
+        for type in ["INTERNET", "TRANSPORT", "HOUSING_AND_COMMUNAL_SERVICE"] {
             
             let info = makeRepeat(type: type, parameterList: [])
             
@@ -396,7 +396,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_servicePaymentSource_shouldDeliverNilOnMissingPuref() {
         
-        for type in [TransferType.internet, .transport, .housingAndCommunalService] {
+        for type in ["INTERNET", "TRANSPORT", "HOUSING_AND_COMMUNAL_SERVICE"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(puref: nil)
@@ -408,7 +408,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_servicePaymentSource_shouldDeliverNilOnMissingAmount() {
         
-        for type in [TransferType.internet, .transport, .housingAndCommunalService] {
+        for type in ["INTERNET", "TRANSPORT", "HOUSING_AND_COMMUNAL_SERVICE"] {
             
             let info = makeRepeat(type: type, parameterList: [
                 makeTransfer(amount: nil)
@@ -425,7 +425,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             puref: anyMessage(),
             additional: [additional]
         )
-        let info = makeRepeat(type: .internet, parameterList: [transfer])
+        let info = makeRepeat(type: "INTERNET", parameterList: [transfer])
         
         try XCTAssertNoDiff(info.servicePaymentSource(), .servicePayment(
             puref: XCTUnwrap(transfer.puref),
@@ -444,7 +444,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             puref: anyMessage(),
             additional: [additional]
         )
-        let info = makeRepeat(type: .transport, parameterList: [transfer])
+        let info = makeRepeat(type: "TRANSPORT", parameterList: [transfer])
         
         try XCTAssertNoDiff(info.servicePaymentSource(), .servicePayment(
             puref: XCTUnwrap(transfer.puref),
@@ -463,7 +463,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             puref: anyMessage(),
             additional: [additional]
         )
-        let info = makeRepeat(type: .housingAndCommunalService, parameterList: [transfer])
+        let info = makeRepeat(type: "HOUSING_AND_COMMUNAL_SERVICE", parameterList: [transfer])
         
         try XCTAssertNoDiff(info.servicePaymentSource(), .servicePayment(
             puref: XCTUnwrap(transfer.puref),
@@ -479,7 +479,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_otherBankService_shouldDeliverNilForNonOtherBank() {
         
-        for type in allTransferTypes(except: .otherBank) {
+        for type in allTransferTypes(except: "OTHER_BANK") {
             
             let info = makeRepeat(type: type)
             
@@ -489,14 +489,14 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_otherBankService_shouldDeliverToAnotherCardServiceOnOtherBank() {
         
-        XCTAssertNoDiff(makeRepeat(type: .otherBank).otherBankService(), .toAnotherCard)
+        XCTAssertNoDiff(makeRepeat(type: "OTHER_BANK").otherBankService(), .toAnotherCard)
     }
     
     // MARK: - byPhoneSource
     
     func test_byPhoneSource_shouldDeliverNilForNonByPhone() {
         
-        for type in allTransferTypes(except: .byPhone) {
+        for type in allTransferTypes(except: "BY_PHONE") {
             
             let info = makeRepeat(type: type)
             
@@ -506,7 +506,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_byPhoneSource_shouldDeliverNilOnEmptyParameterList() {
         
-        let info = makeRepeat(type: .byPhone, parameterList: [])
+        let info = makeRepeat(type: "BY_PHONE", parameterList: [])
         
         XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
     }
@@ -516,7 +516,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let transfer = makeTransfer(
             payeeInternal: makeInternalPayer(phoneNumber: nil)
         )
-        let info = makeRepeat(type: .byPhone, parameterList: [transfer])
+        let info = makeRepeat(type: "BY_PHONE", parameterList: [transfer])
         
         XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
     }
@@ -527,7 +527,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             amount: nil,
             payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
         )
-        let info = makeRepeat(type: .byPhone, parameterList: [transfer])
+        let info = makeRepeat(type: "BY_PHONE", parameterList: [transfer])
         
         XCTAssertNil(info.byPhoneSource(activeProductID: makeProductID()))
     }
@@ -538,7 +538,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let transfer = makeTransfer(
             payeeInternal: makeInternalPayer(phoneNumber: anyMessage())
         )
-        let info = makeRepeat(type: .byPhone, parameterList: [transfer])
+        let info = makeRepeat(type: "BY_PHONE", parameterList: [transfer])
         
         try XCTAssertNoDiff(info.byPhoneSource(activeProductID: activeProductID), .sfp(
             phone: XCTUnwrap(transfer.payeeInternal?.phoneNumber),
@@ -552,7 +552,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_sfp_shouldDeliverNilForNonSFP() {
         
-        for type in allTransferTypes(except: .sfp) {
+        for type in allTransferTypes(except: "SFP") {
             
             let info = makeRepeat(type: type)
             
@@ -562,14 +562,14 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_sfpSource_shouldDeliverNilOnEmptyParameterList() {
         
-        let info = makeRepeat(type: .sfp, parameterList: [])
+        let info = makeRepeat(type: "SFP", parameterList: [])
         
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
     
     func test_sfpSource_shouldDeliverNilOnMissingPhone() {
         
-        let info = makeRepeat(type: .sfp, parameterList: [makeTransfer()])
+        let info = makeRepeat(type: "SFP", parameterList: [makeTransfer()])
         
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
@@ -579,7 +579,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let transfer = makeTransfer(
             additional: [makeAdditional(fieldname: "RecipientID")]
         )
-        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+        let info = makeRepeat(type: "SFP", parameterList: [transfer])
         
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
@@ -593,7 +593,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
                 makeAdditional(fieldname: "BankRecipientID")
             ]
         )
-        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+        let info = makeRepeat(type: "SFP", parameterList: [transfer])
         
         XCTAssertNil(info.sfpSource(activeProductID: makeProductID()))
     }
@@ -608,7 +608,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
                 makeAdditional(fieldname: "BankRecipientID", fieldvalue: bankID)
             ]
         )
-        let info = makeRepeat(type: .sfp, parameterList: [transfer])
+        let info = makeRepeat(type: "SFP", parameterList: [transfer])
         
         try XCTAssertNoDiff(info.sfpSource(activeProductID: activeProductID), .sfp(
             phone: phone,
@@ -622,7 +622,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_mobileSource_shouldDeliverNilForNonMobile() {
         
-        for type in allTransferTypes(except: .mobile) {
+        for type in allTransferTypes(except: "MOBILE") {
             
             let info = makeRepeat(type: type)
             
@@ -632,14 +632,14 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_mobileSource_shouldDeliverNilOnEmptyParameterList() {
         
-        let info = makeRepeat(type: .mobile, parameterList: [])
+        let info = makeRepeat(type: "MOBILE", parameterList: [])
         
         XCTAssertNil(info.mobileSource())
     }
     
     func test_mobileSource_shouldDeliverNilOnMissingMobilePhone() {
         
-        let info = makeRepeat(type: .mobile, parameterList: [makeTransfer()])
+        let info = makeRepeat(type: "MOBILE", parameterList: [makeTransfer()])
         
         XCTAssertNil(info.mobileSource())
     }
@@ -650,7 +650,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
             amount: nil,
             additional: [makeAdditional(fieldname: "a3_NUMBER_1_2")]
         )
-        let info = makeRepeat(type: .mobile, parameterList: [transfer])
+        let info = makeRepeat(type: "MOBILE", parameterList: [transfer])
         
         XCTAssertNil(info.mobileSource())
     }
@@ -661,7 +661,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         let transfer = makeTransfer(
             additional: [makeAdditional(fieldname: "a3_NUMBER_1_2", fieldvalue: phone)]
         )
-        let info = makeRepeat(type: .mobile, parameterList: [transfer])
+        let info = makeRepeat(type: "MOBILE", parameterList: [transfer])
         
         XCTAssertNoDiff(info.mobileSource(), .mobile(
             phone: phone,
@@ -674,7 +674,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_taxesSource_shouldDeliverNilForNonMobile() {
         
-        for type in allTransferTypes(except: .taxes) {
+        for type in allTransferTypes(except: "TAX_AND_STATE_SERVICE") {
             
             let info = makeRepeat(type: type)
             
@@ -684,7 +684,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     func test_taxesSource_shouldDeliverSourceOnTaxes() {
         
-        let info = makeRepeat(type: .taxes)
+        let info = makeRepeat(type: "TAX_AND_STATE_SERVICE")
         
         XCTAssertNoDiff(info.taxesSource(), .taxes(parameterData: nil))
     }
@@ -693,29 +693,31 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
     
     typealias Repeat = GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
     typealias Transfer = Repeat.Transfer
-    typealias TransferType = Repeat.TransferType
+    typealias TransferType = String
+    typealias GetInfoRepeatPaymentFlow = String
     
     func allTransferTypes(
         except excludingTypes: TransferType...
     ) -> [TransferType] {
         
-        return TransferType.allCases.filter { !excludingTypes.contains($0) }
+        return GetInfoRepeatPaymentService.GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.allTransferTypes.filter { !excludingTypes.contains($0) }
     }
     
     func makeBetweenTheir(
         parameterList: [Repeat.Transfer] = []
     ) -> Repeat {
         
-        return makeRepeat(type: .betweenTheir, parameterList: parameterList)
+        return makeRepeat(type: "BETWEEN_THEIR", parameterList: parameterList)
     }
     
     func makeRepeat(
         type: TransferType,
         parameterList: [Repeat.Transfer] = [],
-        productTemplate: Repeat.ProductTemplate? = nil
+        productTemplate: Repeat.ProductTemplate? = nil,
+        paymentFlow: GetInfoRepeatPaymentFlow? = nil
     ) -> Repeat {
         
-        return .init(type: type, parameterList: parameterList, productTemplate: productTemplate)
+        return .init(type: type, parameterList: parameterList, productTemplate: productTemplate, paymentFlow: paymentFlow)
     }
     
     func makeProductTemplate(

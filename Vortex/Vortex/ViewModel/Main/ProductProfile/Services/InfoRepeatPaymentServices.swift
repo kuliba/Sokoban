@@ -28,7 +28,7 @@ extension InfoRepeatPaymentServices {
         .init(createInfoRepeatPaymentServices: { _, completion in
             
             completion(.success(.init(
-                type: .betweenTheir,
+                type: "BETWEEN_THEIR",
                 parameterList: [],
                 productTemplate: nil, 
                 paymentFlow: nil

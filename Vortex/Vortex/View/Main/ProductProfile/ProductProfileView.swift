@@ -330,8 +330,7 @@ struct ProductProfileView: View {
                 
                 switch result {
                 case let .success(infoPayment):
-                    switch infoPayment.type {
-                        
+                    switch infoPayment.type.paymentType {
                     case .betweenTheir:
                         
                         let paymentViewModels = infoPayment.parameterList.compactMap { transfer -> PaymentsMeToMeViewModel? in
@@ -364,7 +363,7 @@ struct ProductProfileView: View {
                             }
                         }
                         
-                    case .addressingCash, .addressless, .contactAddressless, .direct, .newDirect, .newDirectAccount, .newDirectCard, .foreignCard:
+                    case .direct:
                         
                         if let transfer = infoPayment.parameterList.last,
                            let additional = transfer.additional,
@@ -393,7 +392,7 @@ struct ProductProfileView: View {
                                 }))
                             }
                         }
-                    case .externalEntity, .externalIndivudual:
+                    case .repeatPaymentRequisites:
                        
                         if let transfer = infoPayment.parameterList.last,
                            let bankBic = transfer.payeeExternal?.bankBIC,
@@ -431,7 +430,8 @@ struct ProductProfileView: View {
                                 }))
                             }
                         }
-                    case .internet, .transport, .housingAndCommunalService, .charityService, .digitalWalletsService, .educationService, .networkMarketingService, .repaymentLoansAndAccountsService, .securityService, .socialAndGamesService:
+
+                    case .servicePayment:
                         
                         if let transfer = infoPayment.parameterList.first,
                            let puref = infoPayment.parameterList.puref,
@@ -510,8 +510,7 @@ struct ProductProfileView: View {
                             }))
                         }
                     case .unknown:
-                        // уточнить у аналитика
-                        break
+                        break // Add informer
                     }
                     
                 case let .failure(error):

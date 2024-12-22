@@ -11,14 +11,6 @@ import RemoteServices
 /// A namespace.
 public enum GetInfoRepeatPaymentDomain {}
 
-public extension GetInfoRepeatPaymentDomain {
-    
-    typealias MappingError = RemoteServices.ResponseMapper.MappingError
-    typealias Response = GetInfoRepeatPayment
-    typealias Result = RemoteServices.ResponseMapper.MappingResult<Response>
-    typealias Completion = (Result) -> Void
-}
-
 extension GetInfoRepeatPaymentDomain {
     
     public struct GetInfoRepeatPayment: Equatable {

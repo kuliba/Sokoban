@@ -16,7 +16,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         getProduct: @escaping (ProductData.ID) -> ProductData?
     ) -> PaymentsMeToMeViewModel.Mode? {
         
-        guard type == .betweenTheir else { return nil }
+        guard type.paymentType == .betweenTheir else { return nil }
         
         return parameterList.compactMap {
             
@@ -34,7 +34,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     func otherBankService() -> Payments.Service? {
         
-        type == .otherBank ? .toAnotherCard : nil
+        type.paymentType == .otherBank ? .toAnotherCard : nil
     }
     
     // MARK: - Source
@@ -76,7 +76,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         activeProductID: ProductData.ID
     ) -> Payments.Operation.Source? {
         
-        guard type == .byPhone,
+        guard type.paymentType == .byPhone,
               let transfer = parameterList.last,
               let phone = transfer.payeeInternal?.phoneNumber,
               let amount = transfer.amount
@@ -94,7 +94,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         date: Date = .init()
     ) -> Payments.Operation.Source? {
         
-        guard type == .direct || type == .contactAddressless,
+        guard type.paymentType == .direct,
               let transfer = parameterList.last,
               let additional = transfer.additional,
               let phone = transfer.directPhone,
@@ -126,7 +126,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     func mobileSource() -> Payments.Operation.Source? {
         
-        guard type == .mobile,
+        guard type.paymentType == .mobile,
               let transfer = parameterList.last,
               let phone = transfer.mobilePhone,
               let amount = transfer.amount
@@ -141,7 +141,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     func repeatPaymentRequisitesSource() -> Payments.Operation.Source? {
         
-        guard type == .externalEntity || type == .externalIndivudual,
+        guard type.paymentType == .repeatPaymentRequisites,
               let transfer = parameterList.last,
               let amount = transfer.amount?.description,
               let accountNumber = transfer.payeeExternal?.accountNumber,
@@ -161,7 +161,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     func servicePaymentSource() -> Payments.Operation.Source? {
         
-        guard type == .internet || type == .transport || type == .housingAndCommunalService,
+        guard type.paymentType == .servicePayment,
               let transfer = parameterList.first,
               let puref = transfer.puref,
               let amount = transfer.amount ?? parameterList.last?.amount
@@ -182,7 +182,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         activeProductID: ProductData.ID
     ) -> Payments.Operation.Source? {
         
-        guard type == .sfp,
+        guard type.paymentType == .sfp,
               let transfer = parameterList.last,
               let phone = transfer.sfpPhone,
               let bankID = transfer.sfpBankID,
@@ -199,13 +199,13 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     func taxesSource() -> Payments.Operation.Source? {
         
-        type == .taxes ? .taxes(parameterData: nil) : nil
+        type.paymentType == .taxes ? .taxes(parameterData: nil) : nil
     }
     
     func toAnotherCardSource(
     ) -> Payments.Operation.Source? {
         
-        guard type == .insideBank,
+        guard type.paymentType == .insideBank,
               let transfer = parameterList.last,
               let from = transfer.payer?.cardId,
               let amount = transfer.amount,
