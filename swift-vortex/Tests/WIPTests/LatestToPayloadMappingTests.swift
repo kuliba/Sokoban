@@ -6,13 +6,30 @@
 //
 
 import LatestPaymentsBackendV3
+import Foundation
 import RemoteServices
 
 extension RemoteServices.ResponseMapper.LatestPayment {
     
     enum PaymentPayload: Equatable {
         
+        case mobilePaymentFlow(MobilePayload)
         case paymentFlow(PaymentFlow)
+        
+        struct MobilePayload: Equatable {
+            
+            let amount: Decimal
+            let puref: String
+            let fields: [Field]
+        }
+        
+        struct Field: Equatable {
+            
+            let id: String // fieldName
+            let title: String?
+            let svg: String?
+            let value: String
+        }
     }
     
     var paymentPayload: PaymentPayload? {
@@ -22,6 +39,9 @@ extension RemoteServices.ResponseMapper.LatestPayment {
             switch service.paymentFlow {
             case .qr:
                 return nil
+                
+            case .mobile:
+                return service.mobilePayload.map { .mobilePaymentFlow($0) }
                 
             default:
                 return .paymentFlow(service.paymentFlow)
@@ -33,17 +53,85 @@ extension RemoteServices.ResponseMapper.LatestPayment {
     }
 }
 
+private extension RemoteServices.ResponseMapper.LatestPayment.Service {
+    
+    var mobilePayload: RemoteServices.ResponseMapper.LatestPayment.PaymentPayload.MobilePayload? {
+        
+        guard let amount else { return nil }
+        
+        return .init(
+            amount: amount,
+            puref: puref,
+            fields: (additionalItems ?? []).map {
+                
+                return .init(id: $0.fieldName, title: $0.fieldTitle, svg: $0.svgImage, value: $0.fieldValue)
+            }
+        )
+    }
+}
+
 import XCTest
 
 final class LatestToPayloadMappingTests: XCTestCase {
     
-    func test_shouldDeliverMobilePaymentFlowOnServiceLatestPaymentWithMobilePaymentFlow() {
+    // MARK: - mobile
+    
+    func test_shouldDeliverNilOnServiceLatestPaymentWithMobilePaymentFlowNilAmount() {
         
         assert(
-            makeServiceLatestPayment(paymentFlow: .mobile),
-            hasPayload: .paymentFlow(.mobile)
+            makeServiceLatestPayment(
+                amount: nil
+            ),
+            hasPayload: nil
         )
     }
+    
+    func test_shouldDeliverMobilePaymentFlowWithEmptyFieldsOnServiceLatestPaymentWithMobilePaymentFlowWithEmptyAdditionalItems() {
+        
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [],
+                amount: amount,
+                paymentFlow: .mobile,
+                puref: puref
+            ),
+            hasPayload: .mobilePaymentFlow(.init(
+                amount: amount,
+                puref: puref,
+                fields: []
+            ))
+        )
+    }
+    
+    func test_shouldDeliverMobilePaymentFlowOnServiceLatestPaymentWithMobilePaymentFlow() {
+        
+        let (name, value, title, svg) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let amount = makeAmount()
+        let puref = anyMessage()
+        
+        assert(
+            makeServiceLatestPayment(
+                additionalItems: [
+                    .init(fieldName: name, fieldValue: value, fieldTitle: title, svgImage: svg)
+                ],
+                amount: amount,
+                paymentFlow: .mobile,
+                puref: puref
+            ),
+            hasPayload: .mobilePaymentFlow(.init(
+                amount: amount,
+                puref: puref,
+                fields: [
+                    .init(id: name, title: title, svg: svg, value: value)
+                ]
+            ))
+        )
+    }
+    
+    // MARK: - QR
     
     func test_shouldDeliverNilOnServiceLatestPaymentWithQRPaymentFlow() {
         
@@ -53,6 +141,8 @@ final class LatestToPayloadMappingTests: XCTestCase {
         )
     }
     
+    // MARK: - standard
+    
     func test_shouldDeliverStandardPaymentFlowOnServiceLatestPaymentWithStandardPaymentFlow() {
         
         assert(
@@ -61,6 +151,8 @@ final class LatestToPayloadMappingTests: XCTestCase {
         )
     }
     
+    // MARK: - taxAndStateServices
+    
     func test_shouldDeliverTaxAndStateServicesPaymentFlowOnServiceLatestPaymentWithTaxAndStateServicesPaymentFlow() {
         
         assert(
@@ -68,6 +160,8 @@ final class LatestToPayloadMappingTests: XCTestCase {
             hasPayload: .paymentFlow(.taxAndStateServices)
         )
     }
+    
+    // MARK: - transport
     
     func test_shouldDeliverTransportPaymentFlowOnServiceLatestPaymentWithTransportPaymentFlow() {
         
@@ -90,6 +184,11 @@ final class LatestToPayloadMappingTests: XCTestCase {
         let payload = Latest.service(service).paymentPayload
         
         XCTAssertNoDiff(payload, expectedPayload, "Expected \(String(describing: expectedPayload)), but got \(String(describing: payload)) instead.", file: file, line: line)
+    }
+    
+    private func makeAmount() -> Decimal {
+        
+        return .init(Int.random(in: 100...10_000)) / 100
     }
     
     private func makeServiceLatestPayment(
