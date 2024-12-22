@@ -25,7 +25,7 @@ private extension ResponseMapper.GetInfoRepeatPaymentResult {
     
     init(data: ResponseMapper._Data) {
         self.init(
-            type: data.type?.type ?? .unknown,
+            type: data.type ?? "",
             parameterList: data.parameterList.compactMap { .init($0) },
             productTemplate: data.productTemplate.map { .init($0) }, 
             paymentFlow: data.paymentFlow
@@ -144,7 +144,7 @@ private extension ResponseMapper.GetInfoRepeatPaymentResult.Transfer.Additional 
     }
 }
 
-private extension ResponseMapper._Data.TransferType {
+/*private extension ResponseMapper._Data.TransferType {
     
     var type: ResponseMapper.GetInfoRepeatPaymentResult.TransferType {
         
@@ -205,47 +205,16 @@ private extension ResponseMapper._Data.TransferType {
             return .socialAndGamesService
         }
     }
-}
+}*/
 
 private extension ResponseMapper {
         
     struct _Data: Decodable {
         
-        let type: TransferType?
+        let type: String?
         let parameterList: [Transfer]
         let productTemplate: ProductTemplate?
         let paymentFlow: String?
-        
-        enum TransferType: String, Decodable {
-            
-            case addressingCash = "ADDRESSING_CASH"
-            case addressless = "ADDRESSLESS"
-            case betweenTheir = "BETWEEN_THEIR"
-            case byPhone = "BY_PHONE"
-            case charityService = "CHARITY_SERVICE"
-            case contactAddressless = "CONTACT_ADDRESSLESS"
-            case digitalWalletsService = "DIGITAL_WALLETS_SERVICE"
-            case direct = "DIRECT"
-            case educationService = "EDUCATION_SERVICE"
-            case externalEntity = "EXTERNAL_ENTITY"
-            case externalIndivudual = "EXTERNAL_INDIVIDUAL"
-            case foreignCard = "FOREIGN_CARD"
-            case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
-            case insideBank = "INSIDE_BANK"
-            case internet = "INTERNET"
-            case mobile = "MOBILE"
-            case networkMarketingService = "NETWORK_MARKETING_SERVICE"
-            case newDirect = "NEW_DIRECT"
-            case newDirectAccount = "NEW_DIRECT_ACCOUNT"
-            case newDirectCard = "NEW_DIRECT_CARD"
-            case otherBank = "OTHER_BANK"
-            case repaymentLoansAndAccountsService = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
-            case securityService = "SECURITY_SERVICE"
-            case sfp = "SFP"
-            case socialAndGamesService = "SOCIAL_AND_GAMES_SERVICE"
-            case taxes = "TAX_AND_STATE_SERVICE"
-            case transport = "TRANSPORT"
-        }
         
         struct Transfer: Decodable {
             

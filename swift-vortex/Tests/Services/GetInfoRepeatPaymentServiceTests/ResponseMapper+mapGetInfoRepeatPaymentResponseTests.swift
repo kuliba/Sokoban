@@ -202,7 +202,7 @@ private extension String {
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     static let validData: Self = .init(
-        type: .betweenTheir,
+        type: "BETWEEN_THEIR",
         parameterList: [
             .init(check: true, amount: 23, currencyAmount: "RUB", payer: .init(cardId: 10000249264, cardNumber: nil, accountId: nil, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, puref: nil, payeeInternal: .init(accountId: 10004874290, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, additional: nil, mcc: nil)
         ],

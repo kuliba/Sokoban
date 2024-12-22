@@ -23,13 +23,13 @@ extension GetInfoRepeatPaymentDomain {
     
     public struct GetInfoRepeatPayment: Equatable {
         
-        public let type: TransferType
+        public let type: String
         public let parameterList: [Transfer]
         public let productTemplate: ProductTemplate?
         public let paymentFlow: String?
     
         public init(
-            type: TransferType,
+            type: String,
             parameterList: [Transfer],
             productTemplate: ProductTemplate?,
             paymentFlow: String?
@@ -40,37 +40,36 @@ extension GetInfoRepeatPaymentDomain {
             self.paymentFlow = paymentFlow
         }
         
-        public enum TransferType: Equatable {
-            
-            case addressingCash
-            case addressless
-            case betweenTheir
-            case byPhone
-            case charityService
-            case contactAddressless
-            case digitalWalletsService
-            case direct
-            case educationService
-            case externalEntity
-            case externalIndivudual
-            case foreignCard
-            case housingAndCommunalService
-            case insideBank
-            case internet
-            case mobile
-            case networkMarketingService
-            case newDirect
-            case newDirectAccount
-            case newDirectCard
-            case otherBank
-            case repaymentLoansAndAccountsService
-            case securityService
-            case sfp
-            case socialAndGamesService
-            case taxes
-            case transport
-            case unknown
-        }
+        public static let allTransferTypes: [String] =
+        [
+            "ADDRESSING_CASH",
+            "ADDRESSLESS",
+            "BETWEEN_THEIR",
+            "BY_PHONE",
+            "CHARITY_SERVICE",
+            "CONTACT_ADDRESSLESS",
+            "DIGITAL_WALLETS_SERVICE",
+            "DIRECT",
+            "EDUCATION_SERVICE",
+            "EXTERNAL_ENTITY",
+            "EXTERNAL_INDIVIDUAL",
+            "FOREIGN_CARD",
+            "HOUSING_AND_COMMUNAL_SERVICE",
+            "INSIDE_BANK",
+            "INTERNET",
+            "MOBILE",
+            "NETWORK_MARKETING_SERVICE",
+            "NEW_DIRECT",
+            "NEW_DIRECT_ACCOUNT",
+            "NEW_DIRECT_CARD",
+            "OTHER_BANK",
+            "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE",
+            "SECURITY_SERVICE",
+            "SFP",
+            "SOCIAL_AND_GAMES_SERVICE",
+            "TAX_AND_STATE_SERVICE",
+            "TRANSPORT"
+        ]
         
         public struct Transfer: Equatable {
             
