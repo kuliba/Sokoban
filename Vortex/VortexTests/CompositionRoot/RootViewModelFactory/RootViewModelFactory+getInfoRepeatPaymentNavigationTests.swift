@@ -448,7 +448,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
         let source = makePaymentsSource(sut, info: info)
         
         XCTAssertNoDiff(source, .mobile(
-            phone: phone,
+            phone: "7\(phone)",
             amount: transfer.amount?.description,
             productId: nil
         ))
