@@ -13,7 +13,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/WIPTests.xctestplan"
+            reference = "container:../Vortex/TestPlans/WIPTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

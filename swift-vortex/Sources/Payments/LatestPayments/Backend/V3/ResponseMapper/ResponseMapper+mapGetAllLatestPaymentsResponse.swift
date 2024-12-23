@@ -52,7 +52,7 @@ private extension ResponseMapper._Latest {
             return service.service.map { .service($0) }
             
         case let .withPhone(withPhone):
-            return .withPhone(withPhone.withPhone)
+            return withPhone.withPhone.map { .withPhone($0) }
         }
     }
 }
@@ -62,7 +62,9 @@ private extension ResponseMapper._Latest._Service {
     var service: ResponseMapper.LatestPayment.Service? {
         
         guard let puref,
-              let type = type?.type
+              !puref.isEmpty,
+              let type,
+              !type.isEmpty
         else { return nil }
         
         return .init(
@@ -85,7 +87,9 @@ private extension ResponseMapper._Latest._Service {
 
 private extension ResponseMapper._Latest._WithPhone {
     
-    var withPhone: ResponseMapper.LatestPayment.WithPhone {
+    var withPhone: ResponseMapper.LatestPayment.WithPhone? {
+        
+        guard let phoneNumber else { return nil }
         
         return .init(
             amount: amount?.value,
@@ -100,32 +104,8 @@ private extension ResponseMapper._Latest._WithPhone {
             paymentFlow: paymentFlow?.flow,
             phoneNumber: phoneNumber,
             puref: puref,
-            type: type.type
+            type: type
         )
-    }
-}
-
-private extension ResponseMapper._Latest._LatestType {
-    
-    var type: ResponseMapper.LatestPayment.LatestType {
-        
-        switch self {
-        case .charity:                   return .charity
-        case .country:                   return .country
-        case .digitalWallets:            return .digitalWallets
-        case .education:                 return .education
-        case .internet:                  return .internet
-        case .mobile:                    return .mobile
-        case .networkMarketing:          return .networkMarketing
-        case .outside:                   return .outside
-        case .phone:                     return .phone
-        case .repaymentLoansAndAccounts: return .repaymentLoansAndAccounts
-        case .security:                  return .security
-        case .service:                   return .service
-        case .socialAndGames:            return .socialAndGames
-        case .taxAndStateService:        return .taxAndStateService
-        case .transport:                 return .transport
-        }
     }
 }
 
@@ -161,6 +141,7 @@ private extension ResponseMapper._Latest._PaymentOperationDetailType {
     var detail: ResponseMapper.LatestPayment.PaymentOperationDetailType {
         
         switch self {
+
         case .account2Account:                  return .account2Account
         case .account2Card:                     return .account2Card
         case .account2Phone:                    return .account2Phone
@@ -170,11 +151,11 @@ private extension ResponseMapper._Latest._PaymentOperationDetailType {
         case .addressless:                      return .addressless
         case .bankDef:                          return .bankDef
         case .best2Pay:                         return .best2Pay
+        case .c2BPayment:                       return .c2BPayment
+        case .c2BQrData:                        return .c2BQrData
         case .card2Account:                     return .card2Account
         case .card2Card:                        return .card2Card
         case .card2Phone:                       return .card2Phone
-        case .c2BPayment:                       return .c2BPayment
-        case .c2BQrData:                        return .c2BQrData
         case .changeOutgoing:                   return .changeOutgoing
         case .charityService:                   return .charityService
         case .contactAddressing:                return .contactAddressing
@@ -188,33 +169,35 @@ private extension ResponseMapper._Latest._PaymentOperationDetailType {
         case .depositClose:                     return .depositClose
         case .depositOpen:                      return .depositOpen
         case .digitalWalletsService:            return .digitalWalletsService
-        case .direct:                           return .direct
+        case .direct:                            return .direct
         case .educationService:                 return .educationService
         case .elecsnet:                         return .elecsnet
         case .external:                         return .external
         case .foreignCard:                      return .foreignCard
         case .golden:                           return .golden
-        case .housingAndCommunalService:        return .housingAndCommunalService
+        case .housingAndCommunalService:       return .housingAndCommunalService
+        case .insuranceService:                 return .insuranceService
         case .interestDeposit:                  return .interestDeposit
         case .internet:                         return .internet
+        case .journeyServices:                  return .journeyServices
         case .me2MeCredit:                      return .me2MeCredit
         case .me2MeDebit:                       return .me2MeDebit
         case .mobile:                           return .mobile
-        case .networkMarketingService:          return .networkMarketingService
+        case .networkMarketingService:         return .networkMarketingService
         case .newDirect:                        return .newDirect
         case .newDirectAccount:                 return .newDirectAccount
         case .newDirectCard:                    return .newDirectCard
-        case .oth:                              return .oth
+        case .oth:                               return .oth
         case .productPaymentCourier:            return .productPaymentCourier
         case .productPaymentOffice:             return .productPaymentOffice
         case .repaymentLoansAndAccountsService: return .repaymentLoansAndAccountsService
         case .returnOutgoing:                   return .returnOutgoing
         case .sberQrPayment:                    return .sberQrPayment
         case .securityService:                  return .securityService
-        case .sfp:                              return .sfp
+        case .sfp:                               return .sfp
         case .socialAndGamesService:            return .socialAndGamesService
         case .taxAndStateService:               return .taxAndStateService
-        case .transport:                        return .transport
+        case .transport:                         return .transport
         }
     }
 }
@@ -231,9 +214,9 @@ private extension ResponseMapper {
         init(from decoder: Decoder) throws {
             
             do {
-                self = try .service(_Service(from: decoder))
-            } catch {
                 self = try .withPhone(_WithPhone(from: decoder))
+            } catch {
+                self = try .service(_Service(from: decoder))
             }
         }
     }
@@ -288,24 +271,7 @@ private extension ResponseMapper._Latest {
 
 private extension ResponseMapper._Latest {
     
-    enum _LatestType: String, Decodable {
-        
-        case charity
-        case country
-        case digitalWallets
-        case education
-        case internet
-        case mobile
-        case networkMarketing
-        case outside
-        case phone
-        case repaymentLoansAndAccounts
-        case security
-        case service
-        case socialAndGames
-        case taxAndStateService
-        case transport
-    }
+    typealias _LatestType = String
     
     enum _PaymentFlow: String, Decodable {
         
@@ -372,5 +338,7 @@ private extension ResponseMapper._Latest {
         case socialAndGamesService = "SOCIAL_AND_GAMES_SERVICE"
         case taxAndStateService = "TAX_AND_STATE_SERVICE"
         case transport = "TRANSPORT"
+        case insuranceService = "INSURANCE_SERVICE"
+        case journeyServices = "JOURNEY_SERVICE"
     }
 }

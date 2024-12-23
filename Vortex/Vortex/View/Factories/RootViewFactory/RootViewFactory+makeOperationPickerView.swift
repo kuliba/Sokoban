@@ -8,12 +8,13 @@
 import PayHubUI
 import RxViewModel
 import SwiftUI
+import UtilityServicePrepaymentUI
 
 extension RootViewFactory {
     
     @ViewBuilder
     func makeOperationPickerView(
-        operationPicker: PayHubUI.OperationPicker
+        operationPicker: OperationPicker
     ) -> some View {
         
         if let binder = operationPicker.operationBinder {
@@ -59,20 +60,30 @@ extension RootViewFactory {
                     state: state,
                     event: event,
                     config: .prod,
-                    itemLabel: itemLabel
+                    itemLabel: operationPickerItemLabel
                 )
             }
         )
         .onFirstAppear { content.event(.load) }
     }
     
-    private func itemLabel(
+    private func operationPickerItemLabel(
         item: OperationPickerState.Item
     ) -> some View {
         
         OperationPickerStateItemLabel(
             item: item,
             config: .iVortex,
+            latestView: { latest in
+                
+                // TODO: replace `LastPaymentLabel` with `LatestPaymentButtonLabelView(latest: latest, config: .prod())` - see below
+                LastPaymentLabel(
+                    amount: latest.amount.map { "\($0) ₽" } ?? "",
+                    title: latest.name,
+                    config: .iVortex,
+                    iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
+                )
+            },
             placeholderView:  {
                 
                 LatestPlaceholder(
@@ -89,14 +100,66 @@ extension RootViewFactory {
     ) -> some View {
         
         switch destination {
+        case .exchangeFailure:
+            EmptyView()
+            
         case let .exchange(currencyWalletViewModel):
             components.makeCurrencyWalletView(currencyWalletViewModel)
             
         case let .latest(latest):
             Text("TBD: destination " + String(describing: latest))
-            
-        case let .status(operationPickerFlowStatus):
-            EmptyView()
         }
+    }
+}
+
+extension LatestPaymentButtonLabelView {
+    
+    init(
+        latest: Latest,
+        config: LatestPaymentButtonLabelConfig
+    ) {
+        self.init(label: latest.label, config: config)
+    }
+}
+
+private extension Latest {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        switch self {
+        case let .service(service):
+            return service.label
+            
+        case let .withPhone(withPhone):
+            return withPhone.label
+        }
+    }
+}
+
+// LatestPaymentsViewComponent.swift:204
+
+private extension Latest.Service {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        return .init(
+            amount: amount.map(String.init), 
+            avatar: .text(name ?? lpName ?? ""),
+            description: "",
+            topIcon: nil
+        )
+    }
+}
+
+private extension Latest.WithPhone {
+    
+    var label: LatestPaymentButtonLabel {
+        
+        return .init(
+            amount: amount.map(String.init),
+            avatar: .text(name ?? ""),
+            description: "",
+            topIcon: nil
+        )
     }
 }

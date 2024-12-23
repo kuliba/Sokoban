@@ -1,6 +1,6 @@
 //
 //  XCTestCase+factories.swift
-//  ForaBankTests
+//  VortexTests
 //
 //  Created by Igor Malyarov on 07.12.2024.
 //
@@ -24,7 +24,7 @@ extension XCTestCase {
         paymentDate: Date = .now,
         paymentFlow: RemoteServices.ResponseMapper.LatestPayment.PaymentFlow? = nil,
         puref: String = anyMessage(),
-        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = .internet
+        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = "internet"
     ) -> Latest.Service {
         
         return .init(
@@ -47,11 +47,11 @@ extension XCTestCase {
     func makePaymentServiceOperator(
         id: String = anyMessage(),
         inn: String = anyMessage(),
-        md5Hash: String? = anyMessage(),
-        name: String = anyMessage(),
+        icon: String? = anyMessage(),
+        title: String = anyMessage(),
         type: String = anyMessage()
-    ) -> PaymentServiceOperator {
+    ) -> UtilityPaymentProvider {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
 }

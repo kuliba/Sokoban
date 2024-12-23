@@ -427,7 +427,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     static func avatarOutside(puref: String, additionalList: [PaymentServiceData.AdditionalListData]) -> Avatar? {
         
-        let code = CountryWithServiceData.Service.Code(rawValue: puref) ?? .unknown
+        let code = CountryWithServiceData.Service.Code(rawValue: puref)
         
         switch code {
             

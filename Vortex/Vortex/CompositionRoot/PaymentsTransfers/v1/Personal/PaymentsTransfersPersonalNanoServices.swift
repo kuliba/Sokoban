@@ -19,6 +19,6 @@ extension PaymentsTransfersPersonalNanoServices {
     typealias LoadCategoriesCompletion = ([ServiceCategory]?) -> Void
     typealias LoadCategories = (@escaping LoadCategoriesCompletion) -> Void
     
-    typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void
+    typealias LoadLatestCompletion = ([Latest]?) -> Void
     typealias LoadAllLatest = (@escaping LoadLatestCompletion) -> Void
 }

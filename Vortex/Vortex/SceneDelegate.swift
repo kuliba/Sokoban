@@ -82,9 +82,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // FIXME: remove after refactor payments
     @objc func dismissAll() {
+                
+        binder.content.tabsViewModel.paymentsModel.dismiss()
         
-        self.binder.content.action.send(RootViewModelAction.DismissAll())
-        self.binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
+        DispatchQueue.main.delay(for: .milliseconds(500)) { [weak self] in
+            
+            self?.binder.content.action.send(RootViewModelAction.DismissAll())
+            self?.binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
+        }
     }
 }
 

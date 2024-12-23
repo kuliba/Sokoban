@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct PaymentProviderPickerDestinationView: View {
     
     let dismiss: () -> Void
+    let detailPayment: () -> Void
     let destination: PaymentProviderPickerDomain.Navigation
     let components: ViewComponents
     let makeIconView: MakeIconView
@@ -46,7 +48,19 @@ private extension PaymentProviderPickerDestinationView {
         case let .failure(failure):
             switch failure {
             case let .operatorFailure(utilityPaymentOperator):
-                Text("TBD: destination view \(String(describing: utilityPaymentOperator))")
+                components.operatorFailureView(
+                    operatorFailure: .init(content: utilityPaymentOperator),
+                    payByInstructions: detailPayment,
+                    dismissDestination: dismiss
+                )
+                .frame(maxHeight: .infinity)
+                .navigationBarWithAsyncIcon(
+                    title: utilityPaymentOperator.title,
+                    subtitle: "ИНН \(utilityPaymentOperator.inn)",
+                    dismiss: dismiss,
+                    icon: makeMD5HashIconView(utilityPaymentOperator.icon),
+                    style: .large
+                )
                 
             case let .serviceFailure(serviceFailure):
                 Text("TBD: destination view \(String(describing: serviceFailure))")
@@ -58,10 +72,10 @@ private extension PaymentProviderPickerDestinationView {
                 // components.makeAnywayServicePickerFlowView(<#T##AnywayServicePickerFlowModel#>)
                 Text("TBD: destination view \(String(describing: milti))")
                 
-            case let .anywayPayment(anywayPayment):
-                let payload = anywayPayment.state.content.state.transaction.context.outline.payload
+            case let .anywayPayment(node):
+                let payload = node.model.state.content.state.transaction.context.outline.payload
                 
-                components.makeAnywayFlowView(anywayPayment)
+                components.makeAnywayFlowView(node.model)
                     .navigationBarWithAsyncIcon(
                         title: payload.title,
                         subtitle: payload.subtitle,
@@ -71,5 +85,12 @@ private extension PaymentProviderPickerDestinationView {
                     )
             }
         }
+    }
+    
+    private func makeMD5HashIconView(
+        _ icon: String?
+    ) -> UIPrimitives.AsyncImage {
+        
+        makeIconView(icon.map { .md5Hash(.init($0)) })
     }
 }

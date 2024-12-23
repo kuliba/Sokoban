@@ -43,7 +43,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, De
     
     public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<CategoryPicker, DetailPayment>
     
-    public typealias ContentFlowWitnesses = PayHubUI.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
+    public typealias ContentFlowWitnesses = PayHub.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
     public typealias Domain = QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment>
 }
 
@@ -51,10 +51,7 @@ public extension QRFailureBinderComposer {
     
     func compose(with qrCode: QRCode?) -> Domain.Binder {
         
-        let factory = ContentFlowBindingFactory(
-            delay: delay,
-            scheduler: schedulers.main
-        )
+        let factory = ContentFlowBindingFactory()
         
         let composer = Domain.FlowComposer(
             delay: delay,

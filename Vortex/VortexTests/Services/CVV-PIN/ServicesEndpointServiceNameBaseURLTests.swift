@@ -52,7 +52,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
     }
     
     func test_baseURL_getPINConfirmationCode() {
-        
+    
         // https://dmz-api-gate-test.innovation.ru/processing/cardInfo/v1/getPINConfirmationCode?sessionId=
         assertBaseURL(
             for: .getPINConfirmationCode,
@@ -70,7 +70,7 @@ final class ServicesEndpointServiceNameBaseURLTests: XCTestCase {
     }
     
     func test_baseURL_processPublicKeyAuthenticationRequest() {
-        
+
         // https://dmz-api-gate-test.innovation.ru/processing/authenticate/v1/processPublicKeyAuthenticationRequest
         assertBaseURL(
             for: .processPublicKeyAuthenticationRequest,

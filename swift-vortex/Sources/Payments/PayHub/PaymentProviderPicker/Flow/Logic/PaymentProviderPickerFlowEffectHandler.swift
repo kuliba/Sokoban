@@ -45,6 +45,8 @@ private extension PaymentProviderPickerFlowEffectHandler {
         _ select: Effect.Select,
         _ dispatch: @escaping Dispatch
     ) {
+        let notify: MicroServices.Notify = dispatch
+        
         switch select {
         case .detailPayment:
             microServices.makeDetailPayment {
@@ -53,13 +55,13 @@ private extension PaymentProviderPickerFlowEffectHandler {
             }
             
         case let .latest(latest):
-            microServices.initiatePayment(latest) {
+            microServices.initiatePayment(latest, notify) {
                 
                 dispatch(.destination($0))
             }
             
         case let .provider(provider):
-            microServices.processProvider(provider) {
+            microServices.processProvider(provider, notify) {
                 
                 dispatch(.destination($0))
             }

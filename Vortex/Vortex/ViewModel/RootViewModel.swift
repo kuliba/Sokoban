@@ -45,7 +45,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
-    private var auithBinding: AnyCancellable?
+    private var authBinding: AnyCancellable?
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
@@ -104,7 +104,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
         
-        auithBinding = model.auth
+        authBinding = model.auth
             .receive(on: mainScheduler)
             .sink { [unowned self] auth in
                 
@@ -139,6 +139,8 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
+                    model.clientInformAlertManager.setUpdatePermission(true)
+                    
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
@@ -164,9 +166,10 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     delay(for: .milliseconds(600)) { [unowned self] in
                         
-                        guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
+                        guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
 
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
+                        self.model.clientAuthorizationState.value.authorized = nil
                     }
                 }
             }
@@ -606,7 +609,7 @@ extension RootViewModel.PaymentsModel: Resetable {
             
         case let .v1(paymentsTransfersSwitcher):
 #warning("unimplemented")
-            break
+            paymentsTransfersSwitcher.dismiss()
         }
     }
     
@@ -627,17 +630,22 @@ extension RootViewModel.PaymentsModel: Resetable {
 extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     
     var hasDestination: AnyPublisher<Bool, Never> {
-        
-        switch state {
-        case .none:
-            return Empty().eraseToAnyPublisher()
-            
-        case let .corporate(corporate):
-            return corporate.hasDestination
-            
-        case let .personal(personal):
-            return personal.hasDestination
-        }
+                
+        $state
+            .flatMap {
+                
+                switch $0 {
+                case .none:
+                    return Just(false).eraseToAnyPublisher()
+                    
+                case let .corporate(corporate):
+                    return corporate.hasDestination
+                    
+                case let .personal(personal):
+                    return personal.hasDestination
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }
 
@@ -656,15 +664,15 @@ extension PaymentsTransfersPersonalDomain.Binder {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
+        let transferPicker = content.transfers.hasDestination
         let flowHasDestination = Just(false)
         
-        return Publishers.CombineLatest3(
+        return Publishers.Merge4(
             categoryPicker,
             operationPicker,
+            transferPicker,
             flowHasDestination
         )
-        .map { $0 || $1 || $2 }
-        .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
 }
@@ -698,6 +706,14 @@ private extension OperationPickerDomain.Binder {
     var hasDestination: AnyPublisher<Bool, Never> {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension PayHubUI.TransfersPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        transfersBinder?.flow.$state.map(\.hasDestination).eraseToAnyPublisher() ?? Empty().eraseToAnyPublisher()
     }
 }
 

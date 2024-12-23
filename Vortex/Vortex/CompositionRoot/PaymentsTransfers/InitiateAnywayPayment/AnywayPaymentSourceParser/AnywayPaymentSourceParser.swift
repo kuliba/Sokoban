@@ -33,7 +33,7 @@ extension AnywayPaymentSourceParser {
         case template(PaymentTemplateData)
         
         typealias Latest = RemoteServices.ResponseMapper.LatestServicePayment
-        typealias Operator = UtilityPaymentOperator
+        typealias Operator = UtilityPaymentProvider
         typealias Service = UtilityService
     }
     

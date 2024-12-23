@@ -38,24 +38,24 @@ extension PaymentProviderPickerDomain {
     
     typealias DetailPayment = ClosePaymentsViewModelWrapper
     typealias Payment = ProcessSelectionResult
-    typealias Provider = PaymentServiceOperator
+    typealias Provider = UtilityPaymentProvider
     typealias Service = Void
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void
     
-    typealias _ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.ProcessSelectionResult
+    typealias _ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.ProcessSelectionResult
     
     typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
     
     enum ProcessSelectionSuccess {
         
-        case services(MultiElementArray<UtilityService>, for: UtilityPaymentOperator)
-        case anywayPayment(AnywayFlowModel)
+        case services(MultiElementArray<UtilityService>, for: UtilityPaymentProvider)
+        case anywayPayment(Node<AnywayFlowModel>)
     }
     
     enum ProcessSelectionFailure: Error {
         
-        case operatorFailure(UtilityPaymentOperator)
+        case operatorFailure(UtilityPaymentProvider)
         case serviceFailure(ServiceFailure)
         
 #warning("extract…")

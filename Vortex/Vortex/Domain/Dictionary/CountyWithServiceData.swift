@@ -1,7 +1,6 @@
 //
 //  CountyWithServiceData.swift
 //  Vortex
-//
 //  Created by Дмитрий Савушкин on 31.01.2023.
 //
 
@@ -72,3 +71,5 @@ struct CountryWithServiceData: Codable, Equatable, Identifiable {
         }
     }
 }
+
+

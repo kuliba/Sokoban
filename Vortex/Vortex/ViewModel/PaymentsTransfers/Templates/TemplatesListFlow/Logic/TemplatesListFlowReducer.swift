@@ -39,6 +39,7 @@ private extension TemplatesListFlowReducer {
         
         switch event {
         case .dismiss(.destination):
+            state.isLoading = false
             state.status = nil
             
         case let .flow(flow):

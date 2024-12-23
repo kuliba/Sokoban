@@ -5,36 +5,52 @@
 //  Created by Igor Malyarov on 21.10.2024.
 //
 
+import Combine
+import VortexTools
 import Foundation
+import PayHub
 import PayHubUI
 
 private typealias Domain = OperationPickerDomain
 
-private extension PaymentsTransfersPersonalNanoServices {
+protocol ReloadableOperationPicker: OperationPicker {
     
-    func load(
-        completion: @escaping ([OperationPickerDomain.Select]?) -> Void
-    ) {
-        loadAllLatest {
-            
-            completion(((try? $0.get()) ?? []).map { .latest($0) })
-        }
+    func reload()
+}
+
+extension OperationPickerDomain.Binder: ReloadableOperationPicker {
+    
+    func reload() {
+        
+        content.event(.reload)
     }
 }
 
 extension RootViewModelFactory {
     
+    typealias LoadLatestCompletion = ([Latest]?) -> Void
+    typealias LoadLatest = (@escaping LoadLatestCompletion) -> Void
+    
     @inlinable
     func makeOperationPicker(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> OperationPickerDomain.Binder {
+        loadLatest: @escaping LoadLatest,
+        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
+    ) -> ReloadableOperationPicker {
+        
+        let fetchingUpdater = makeLatestUpdater(fetch: loadLatest)
+        
+        return makeOperationPicker(load: fetchingUpdater.load, prefix: prefix)
+    }
+    
+    @inlinable
+    func makeOperationPicker(
+        load: @escaping (@escaping ([OperationPickerDomain.Select]?) -> Void) -> Void,
+        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
+    ) -> ReloadableOperationPicker {
         
         let content = composeLoadablePickerModel(
-            load: nanoServices.load(completion:),
-            prefix: [
-                .element(.init(.templates)),
-                .element(.init(.exchange))
-            ],
+            load: load,
+            prefix: prefix,
             suffix: [],
             placeholderCount: settings.operationPickerPlaceholderCount
         )
@@ -59,7 +75,7 @@ extension RootViewModelFactory {
             if let exchange {
                 completion(.exchange(exchange))
             } else {
-                completion(.status(.exchangeFailure))
+                completion(.exchangeFailure)
             }
             
         case let .latest(latest):
@@ -75,6 +91,23 @@ extension RootViewModelFactory {
         return .init(
             emitting: { $0.$state.compactMap(\.selected) },
             dismissing: { content in { content.event(.select(nil)) }}
+        )
+    }
+    
+    @inlinable
+    func makeLatestUpdater(
+        fetch: @escaping (@escaping ([Latest]?) -> Void) -> Void
+    ) -> ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]> {
+        
+        ReactiveFetchingUpdater(
+            fetcher: AnyOptionalFetcher(fetch: fetch),
+            updater: AnyReactiveUpdater {
+                
+            // TODO: reuse/extract mapping from LatestPaymentsView.ViewModel.bind() - see LatestPaymentsViewComponent.swift:41
+                Just($0.map { .latest($0) })
+                    .handleEvents(receiveOutput: { print("===== latest", $0.count) })
+                    .eraseToAnyPublisher()
+            }
         )
     }
 }

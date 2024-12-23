@@ -15,7 +15,7 @@ class ContactInputViewController: UIViewController {
     let model = Model.shared
     let phoneNumberKit = PhoneNumberKit()
     var operatorsViewModel: OperatorsViewModel?
-    var typeOfPay: PaymentType = .contact {
+    var typeOfPay: LegacyPaymentType = .contact {
         didSet {
             readAndSetupCard(type: typeOfPay)
         }
@@ -549,7 +549,7 @@ class ContactInputViewController: UIViewController {
         })
     }
     
-    private func readAndSetupCard(type: PaymentType) {
+    private func readAndSetupCard(type: LegacyPaymentType) {
         DispatchQueue.main.async {
             var products: [UserAllCardsModel] = []
             let types: [ProductType] = [.card, .account]

@@ -109,10 +109,10 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
         icon: String? = anyMessage(),
         inn: String = anyMessage(),
         title: String = anyMessage(),
-        segment: String = anyMessage()
+        type: String = anyMessage()
     ) -> UtilityPaymentProvider {
         
-        return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
     
     private func makeSegmentedProvider(

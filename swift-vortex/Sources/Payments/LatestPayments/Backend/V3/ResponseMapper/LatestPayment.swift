@@ -78,7 +78,7 @@ extension ResponseMapper.LatestPayment {
         public let name: String?
         public let paymentDate: Date
         public let paymentFlow: PaymentFlow?
-        public let phoneNumber: String?
+        public let phoneNumber: String
         public let puref: String?
         public let type: LatestType
         
@@ -93,7 +93,7 @@ extension ResponseMapper.LatestPayment {
             name: String?,
             paymentDate: Date,
             paymentFlow: PaymentFlow?,
-            phoneNumber: String?,
+            phoneNumber: String,
             puref: String?,
             type: LatestType
         ) {
@@ -116,24 +116,7 @@ extension ResponseMapper.LatestPayment {
 
 extension ResponseMapper.LatestPayment {
     
-    public enum LatestType: Equatable {
-        
-        case charity
-        case country
-        case digitalWallets
-        case education
-        case internet
-        case mobile
-        case networkMarketing
-        case outside
-        case phone
-        case repaymentLoansAndAccounts
-        case security
-        case service
-        case socialAndGames
-        case taxAndStateService
-        case transport
-    }
+    public typealias LatestType = String
     
     public enum PaymentFlow: Equatable {
         
@@ -200,6 +183,8 @@ extension ResponseMapper.LatestPayment {
         case socialAndGamesService
         case taxAndStateService
         case transport
+        case insuranceService
+        case journeyServices
     }
 }
 

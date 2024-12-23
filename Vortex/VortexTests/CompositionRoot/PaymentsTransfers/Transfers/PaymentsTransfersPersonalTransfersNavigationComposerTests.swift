@@ -235,23 +235,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     
     // MARK: - qr: scan
     
-    func test_scanQR_shouldCallMakeQR() {
+    func test_scanQR_shouldDeliverScanQR() {
+                
+        let (sut, _) = makeSUT()
         
-        let (sut, spies) = makeSUT()
-        
-        _ = sut.compose(.qr(.scan)) { _ in }
-        
-        XCTAssertNoDiff(spies.makeScanQR.payloads.count, 1)
-    }
-    
-    func test_scanQR_shouldDeliverSourcePayment() throws {
-        
-        let scanQR = makeScanQRNode()
-        let (sut, _) = makeSUT(scanQR: scanQR)
-        
-        let navigation = sut.compose(.qr(.scan)) { _ in }
+        let navigation = sut.compose(.scanQR) { _ in }
   
-        assert(navigation, .scanQR(.init(scanQR.model)))
+        assert(navigation, .scanQR)
     }
     
     // MARK: - Helpers
@@ -264,7 +254,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
-    private typealias MakeScanQR = CallSpy<Notify, Node<QRScannerModel>>
     private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
     private struct Spies {
@@ -275,7 +264,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         let makeDetail: MakeDetail
         let makeLatest: MakeLatest
         let makeMeToMe: MakeMeToMe
-        let makeScanQR: MakeScanQR
         let makeSource: MakeSource
     }
     
@@ -286,7 +274,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         detail: ClosePaymentsViewModelWrapper? = nil,
         latestPayment: Node<ClosePaymentsViewModelWrapper>? = nil,
         meToMe: Node<PaymentsMeToMeViewModel>? = nil,
-        scanQR: Node<QRScannerModel>? = nil,
         sourcePayment: Node<PaymentsViewModel>? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -309,9 +296,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
             ]),
             makeLatest: .init(stubs: [latestPayment]),
             makeMeToMe: .init(stubs: [meToMe]),
-            makeScanQR: .init(stubs: [
-                scanQR ?? makeScanQRNode()
-            ]),
             makeSource: .init(stubs: [
                 sourcePayment ?? makeSourcePayment()
             ])
@@ -323,7 +307,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
             makeDetail: spies.makeDetail.call,
             makeLatest: spies.makeLatest.call,
             makeMeToMe: spies.makeMeToMe.call,
-            makeScanQR: spies.makeScanQR.call,
             makeSource: spies.makeSource.call
         ))
         
@@ -444,11 +427,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
 extension Model {
     
     func addMeToMeProduct(
+        product: ProductData? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
-        products.value.append(element: .accountActiveRub, toValueOfKey: .account)
+        products.value.append(element: product ?? .accountActiveRub, toValueOfKey: product?.productType ?? .account)
         _ = try XCTUnwrap(PaymentsMeToMeViewModel(self, mode: .demandDeposit), "Fail to add product for MeToMe (Expected PaymentsMeToMeViewModel, got nil instead).", file: file, line: line)
     }
 }

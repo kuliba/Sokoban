@@ -10,7 +10,7 @@ import Combine
 
 extension RootViewModelFactory {
     
-    func updateClientInfromAlerts() -> AnyCancellable {
+    func updateClientInformAlerts() -> AnyCancellable {
         
         model.sessionState
             .map(\.isActive)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PayHub
 import PayHubUI
 import RemoteServices
 import RxViewModel
@@ -41,7 +42,7 @@ extension SavingsAccountDomain {
     
     // MARK: - Binder
     
-    typealias BinderDomain = PayHubUI.BinderDomain<Content, Select, Navigation>
+    typealias BinderDomain = PayHub.BinderDomain<Content, Select, Navigation>
     typealias Binder = BinderDomain.Binder
         
     // MARK: - Flow

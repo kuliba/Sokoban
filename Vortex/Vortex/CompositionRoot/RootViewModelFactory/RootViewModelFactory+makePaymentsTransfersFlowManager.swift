@@ -1,6 +1,6 @@
 //
 //  RootViewModelFactory+makePaymentsTransfersFlowManager.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Igor Malyarov on 07.12.2024.
 //
@@ -19,6 +19,6 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        return composer.compose(spinner)
+        return composer.compose(categoryType: .housingAndCommunalService, spinner)
     }
 }

@@ -20,18 +20,20 @@ public extension FlowReducer {
         var state = state
         var effect: Effect?
         
-        state.isLoading = false
-        
         switch event {
         case .dismiss:
             state.navigation = nil
             
+        case let .isLoading(isLoading):
+            state.isLoading = isLoading
+            
         case let .receive(navigation):
+            state.isLoading = false
             state.navigation = navigation
             
         case let .select(select):
             state.isLoading = true
-            //  state.navigation = nil
+            state.navigation = nil
             effect = .select(select)
         }
         

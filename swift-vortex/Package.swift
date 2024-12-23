@@ -24,6 +24,7 @@ let package = Package(
         .landingMapping,
         .landingUIComponent,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         .collateralLoanLandingGetConsentsBackend,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -94,11 +95,14 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         // UI Components
+        .bottomSheetComponent,
         .carouselComponent,
         .dropDownTextListComponent,
+        .openNewProductComponent,
         .paymentComponents,
         .productProfileComponents,
         .selectorComponents,
+        .toggleComponent,
         // Utilities
         .remoteServices,
         // tools
@@ -149,6 +153,7 @@ let package = Package(
         .collateralLoanLandingGetConsentsBackendTests,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingBackendTests,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -301,12 +306,14 @@ let package = Package(
         .dropDownTextListComponent,
         .footerComponent,
         .nameComponent,
+        .openNewProductComponent,
         .optionalSelectorComponent,
         .optionalSelectorComponentTests,
         .selectComponent,
         .selectComponentTests,
         .selectorComponent,
         .selectorComponentTests,
+        .toggleComponent,
         .inputPhoneComponent,
         .inputComponent,
         .inputComponentTests,
@@ -316,6 +323,7 @@ let package = Package(
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
+        .bottomSheetComponent,
         .carouselComponent,
         .carouselComponentTests,
         // Utilities
@@ -455,6 +463,13 @@ private extension Product {
         ]
     )
 
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = library(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        targets: [
+            .collateralLoanLandingCreateDraftCollateralLoanApplicationUI
+        ]
+    )
+    
     static let collateralLoanLandingGetCollateralLandingBackend = library(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         targets: [
@@ -520,7 +535,7 @@ private extension Product {
             .productDetailsUI
         ]
     )
-    
+        
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -656,6 +671,13 @@ private extension Product {
 
     // MARK: - UI Components
     
+    static let bottomSheetComponent = library(
+        name: .bottomSheetComponent,
+        targets: [
+            .bottomSheetComponent
+        ]
+    )
+    
     static let carouselComponent = library(
         name: .carouselComponent,
         targets: [
@@ -669,6 +691,11 @@ private extension Product {
         targets: [.dropDownTextListComponent]
     )
 
+    static let openNewProductComponent = library(
+        name: .openNewProductComponent,
+        targets: [.openNewProductComponent]
+    )
+    
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -709,6 +736,13 @@ private extension Product {
         targets: [
             .optionalSelectorComponent,
             .selectorComponent,
+        ]
+    )
+    
+    static let toggleComponent = library(
+        name: .toggleComponent,
+        targets: [
+            .toggleComponent
         ]
     )
     
@@ -1259,6 +1293,7 @@ private extension Target {
     static let landingUIComponent = target(
         name: .landingUIComponent,
         dependencies: [
+            .bottomSheetComponent,
             .combineSchedulers,
             .vortexTools,
             .rxViewModel,
@@ -1354,6 +1389,11 @@ private extension Target {
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
     )
 
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
+    )
+    
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
@@ -1375,8 +1415,12 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
-            .uiPrimitives
-        ],
+            .bottomSheetComponent,
+            .dropDownTextListComponent,
+            .rxViewModel,
+            .sharedConfigs,
+            .toggleComponent,
+            .uiPrimitives        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
     )
     
@@ -1730,6 +1774,8 @@ private extension Target {
     static let payHub = target(
         name: .payHub,
         dependencies: [
+            // external packages
+            .combineSchedulers,
             // internal modules
             .rxViewModel,
         ],
@@ -1739,6 +1785,7 @@ private extension Target {
         name: .payHubTests,
         dependencies: [
             // external packages
+            .combineSchedulers,
             .customDump,
             // internal modules
             .payHub,
@@ -2124,6 +2171,9 @@ private extension Target {
     
     static let getInfoRepeatPaymentService = target(
         name: .getInfoRepeatPaymentService,
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Services/\(String.getInfoRepeatPaymentService)"
     )
     
@@ -2134,6 +2184,7 @@ private extension Target {
             .customDump,
             // internal modules
             .getInfoRepeatPaymentService,
+            .remoteServices
         ],
         path: "Tests/Services/\(String.getInfoRepeatPaymentServiceTests)"
     )
@@ -2636,10 +2687,12 @@ private extension Target {
         name: .savingsAccount,
         dependencies: [
             // internal packages
+            .dropDownTextListComponent,
             .linkableText,
             .paymentComponents,
             .sharedConfigs,
-            .uiPrimitives, 
+            .toggleComponent,
+            .uiPrimitives,
         ],
         path: "Sources/UI/\(String.savingsAccount)"
     )
@@ -2851,6 +2904,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
     
+    static let openNewProductComponent = target(
+        name: .openNewProductComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.openNewProductComponent)"
+    )
+    
     static let optionalSelectorComponent = target(
         name: .optionalSelectorComponent,
         dependencies: [
@@ -2925,6 +2986,15 @@ private extension Target {
         path: "Tests/UI/Components/\(String.selectorComponentTests)"
     )
     
+    static let toggleComponent = target(
+        name: .toggleComponent,
+        dependencies: [
+            .uiPrimitives,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.toggleComponent)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -2997,6 +3067,14 @@ private extension Target {
         path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )
     
+    static let bottomSheetComponent = target(
+        name: .bottomSheetComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.bottomSheetComponent)"
+    )
+
     static let carouselComponent = target(
         name: .carouselComponent,
         dependencies: [
@@ -3120,11 +3198,13 @@ private extension Target {
             // internal modules
             .ephemeralStores,
             .fetcher,
-            .vortexTools,
             .genericLoader,
             .genericRemoteService,
+            .latestPaymentsBackendV3,
+            .remoteServices,
             .rxViewModel,
             .serialComponents,
+            .vortexTools,
         ]
     )
     
@@ -3237,6 +3317,10 @@ private extension Target.Dependency {
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend
     )
     
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = byName(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI
+    )
+    
     static let collateralLoanLandingGetCollateralLandingUI = byName(
         name: .collateralLoanLandingGetCollateralLandingUI
     )
@@ -3261,6 +3345,10 @@ private extension Target.Dependency {
     
     static let accountInfoPanel = byName(
         name: .accountInfoPanel
+    )
+    
+    static let bottomSheetComponent = byName(
+        name: .bottomSheetComponent
     )
     
     static let calendarUI = byName(
@@ -3381,12 +3469,20 @@ private extension Target.Dependency {
         name: .nameComponent
     )
     
+    static let openNewProductComponent = byName(
+        name: .openNewProductComponent
+    )
+    
     static let selectComponent = byName(
         name: .selectComponent
     )
     
     static let selectorComponent = byName(
         name: .selectorComponent
+    )
+    
+    static let toggleComponent = byName(
+        name: .toggleComponent
     )
     
     static let inputPhoneComponent = byName(
@@ -3682,7 +3778,8 @@ private extension String {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationName = "CreateDraftCollateralLoanApplication"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
-    
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUI"
+
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
@@ -3772,6 +3869,8 @@ private extension String {
     static let amountComponent = "AmountComponent"
     static let amountComponentTests = "AmountComponentTests"
     
+    static let bottomSheetComponent = "BottomSheetComponent"
+    
     static let buttonComponent = "ButtonComponent"
     
     static let infoComponent = "InfoComponent"
@@ -3784,6 +3883,8 @@ private extension String {
     
     static let nameComponent = "NameComponent"
     
+    static let openNewProductComponent = "OpenNewProductComponent"
+    
     static let optionalSelectorComponent = "OptionalSelectorComponent"
     static let optionalSelectorComponentTests = "OptionalSelectorComponentTests"
     
@@ -3794,6 +3895,8 @@ private extension String {
     
     static let selectorComponent = "SelectorComponent"
     static let selectorComponentTests = "SelectorComponentTests"
+    
+    static let toggleComponent = "ToggleComponent"
     
     static let inputComponent = "InputComponent"
     static let inputComponentTests = "InputComponentTests"
