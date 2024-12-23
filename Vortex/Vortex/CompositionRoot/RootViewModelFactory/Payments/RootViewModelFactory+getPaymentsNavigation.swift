@@ -22,6 +22,15 @@ extension PaymentsDomain {
         case meToMe(PaymentsMeToMeViewModel)
         case payments(PaymentsViewModel)
     }
+    
+    enum PaymentFlow {
+        
+        case mobile
+        case qr
+        case standard
+        case taxAndStateServices
+        case transport
+    }
 }
 
 extension RootViewModelFactory {
