@@ -24,7 +24,7 @@ extension XCTestCase {
         paymentDate: Date = .now,
         paymentFlow: RemoteServices.ResponseMapper.LatestPayment.PaymentFlow? = nil,
         puref: String = anyMessage(),
-        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = .internet
+        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = "internet"
     ) -> Latest.Service {
         
         return .init(

@@ -1,13 +1,21 @@
 //
-//  RootViewModelFactory+getInfoRepeatPaymentNavigation.swift
+//  RootViewModelFactory+getPaymentsNavigation.swift
 //  Vortex
 //
-//  Created by Igor Malyarov on 21.12.2024.
+//  Created by Igor Malyarov on 23.12.2024.
 //
 
-import GetInfoRepeatPaymentService
+/// A namespace.
+enum PaymentsDomain {}
 
-extension GetInfoRepeatPaymentDomain {
+extension PaymentsDomain {
+    
+    enum PaymentsPayload: Equatable {
+        
+        case source(Payments.Operation.Source)
+        case service(Payments.Service)
+        case mode(PaymentsMeToMeViewModel.Mode)
+    }
     
     enum Navigation {
         
@@ -19,19 +27,13 @@ extension GetInfoRepeatPaymentDomain {
 extension RootViewModelFactory {
     
     @inlinable
-    func getInfoRepeatPaymentNavigation(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        activeProductID: ProductData.ID,
+    func getPaymentsNavigation(
+        from paymentsPayload: PaymentsDomain.PaymentsPayload,
         closeAction: @escaping () -> Void
-    ) -> GetInfoRepeatPaymentDomain.Navigation? {
+    ) -> PaymentsDomain.Navigation? {
         
-        return getInfoRepeatPaymentNavigation(
-            from: info,
-            activeProductID: activeProductID,
-            getProduct: { [weak model] id in
-                
-                model?.products.value.flatMap(\.value).first { $0.id == id }
-            },
+        return getPaymentsNavigation(
+            from: paymentsPayload,
             makePaymentsWithSource: { [weak model] source in
                 
                 model.map {
@@ -56,30 +58,22 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func getInfoRepeatPaymentNavigation(
-        from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
-        activeProductID: ProductData.ID,
-        getProduct: @escaping (ProductData.ID) -> ProductData?,
+    func getPaymentsNavigation(
+        from paymentsPayload: PaymentsDomain.PaymentsPayload,
         makePaymentsWithSource: @escaping (Payments.Operation.Source) -> PaymentsViewModel?,
         makePaymentsWithService: @escaping (Payments.Service) -> PaymentsViewModel?,
         makeMeToMe: (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
-    ) -> GetInfoRepeatPaymentDomain.Navigation? {
+    ) -> PaymentsDomain.Navigation? {
         
-        if let source = info.source(activeProductID: activeProductID, getProduct: getProduct) {
+        switch paymentsPayload {
+        case let .mode(mode):
+            return makeMeToMe(mode).map { .meToMe($0) }
             
+        case let .service(service):
+            return makePaymentsWithService(service).map { .payments($0) }
+            
+        case let .source(source):
             return makePaymentsWithSource(source).map { .payments($0) }
         }
-        
-        if let service = info.otherBankService() {
-            
-            return makePaymentsWithService(service).map { .payments($0) }
-        }
-        
-        if let mode = info.betweenTheirMode(getProduct: getProduct) {
-            
-            return makeMeToMe(mode).map { .meToMe($0) }
-        }
-        
-        return nil
     }
 }

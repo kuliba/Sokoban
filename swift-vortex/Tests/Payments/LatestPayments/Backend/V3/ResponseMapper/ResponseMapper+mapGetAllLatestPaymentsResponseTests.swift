@@ -494,3 +494,22 @@ private extension String {
 }
 """
 }
+
+extension String {
+    
+    static let charity = "charity"
+    static let country = "country"
+    static let digitalWallets = "digitalWallets"
+    static let education = "education"
+    static let internet = "internet"
+    static let mobile = "mobile"
+    static let networkMarketing = "networkMarketing"
+    static let outside = "outside"
+    static let phone = "phone"
+    static let repaymentLoansAndAccounts = "repaymentLoansAndAccounts"
+    static let security = "security"
+    static let service = "service"
+    static let socialAndGames = "socialAndGames"
+    static let taxAndStateService = "taxAndStateService"
+    static let transport = "transport"
+}
