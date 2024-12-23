@@ -344,12 +344,17 @@ final class LatestToPayloadMappingTests: XCTestCase {
         
 #warning("outside is not mapped!")
         
-        XCTAssertNoDiff(mapped.map(\.paymentPayload), [
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[0],
             .paymentFlow(.standard, .init(
                 amount: 25.50,
                 puref: "iVortex||CTV",
                 fields: [makeField(id: "P1", value: "33694934")]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[1],
             .paymentFlow(.standard, .init(
                 amount: 12.70,
                 puref: "iVortex||TNS",
@@ -360,17 +365,29 @@ final class LatestToPayloadMappingTests: XCTestCase {
                     makeField(id: "counterNight", value: "12"),
                     makeField(id: "fine", value: "42")
                 ]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[2],
             .paymentFlow(.standard, .init(
                 amount: 12.50,
                 puref: "iVortex||KSK",
                 fields: [makeField(id: "account", value: "110110580")]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[3],
             .paymentFlow(.transport, .init(
                 amount: 11.50,
                 puref: "iVortex||AVDD",
                 fields: [makeField(id: "P1", value: "161807")]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[4],
             .paymentFlow(.taxAndStateServices, .init(
                 amount: 56.00,
                 puref: "iVortex||6273",
@@ -385,7 +402,11 @@ final class LatestToPayloadMappingTests: XCTestCase {
                     makeField(id: "a3_docValue_4_2", value: "183472137431"),
                     makeField(id: "a3_docType_3_2", value: "2")
                 ]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[5],
             .paymentFlow(.taxAndStateServices, .init(
                 amount: 5000.00,
                 puref: "iVortex||7069",
@@ -394,17 +415,29 @@ final class LatestToPayloadMappingTests: XCTestCase {
                     makeField(id: "a3_fio_4_1", value: "Пыркова Дарья Владимировна"),
                     makeField(id: "a3_address_10_1", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563")
                 ]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[6],
             .paymentFlow(.mobile, .init(
                 amount: 63.00,
                 puref: "iVortex||6169",
                 fields: [makeField(id: "a3_PERSONAL_ACCOUNT_1_1", value: "9955082827")]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[7],
             .paymentFlow(.mobile, .init(
                 amount: 54.00,
                 puref: "iVortex||4285",
                 fields: [makeField(id: "a3_NUMBER_1_2", value: "9031115311")]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[8],
             .paymentFlow(.standard, .init(
                 amount: 123.00,
                 puref: "iVortex||8084",
@@ -412,43 +445,67 @@ final class LatestToPayloadMappingTests: XCTestCase {
                     makeField(id: "a3_COMMENT_2_1", value: ""),
                     makeField(id: "a3_SUM_3_1", value: "123")
                 ]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[9],
             .paymentFlow(.standard, .init(
                 amount: 10.00,
                 puref: "iVortex||7994",
                 fields: [makeField(id: "a3_PERSONAL_ACCOUNT_1_2", value: "kvna0908@gmail.com")]
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[10],
             .phone(.init(
                 amount: 16.8,
                 bankID: "1crt88888881",
                 phoneNumber: "0079191619658",
                 puref: "iVortex||TransferC2CSTEP"
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[11],
             .phone(.init(
                 amount: 21,
                 bankID: "1crt88888881",
                 phoneNumber: "0070115110217",
                 puref: "iVortex||TransferC2CSTEP"
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[12],
             .phone(.init(
                 amount: 100.00,
                 bankID: "100000000217",
                 phoneNumber: "9636124249",
                 puref: nil
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[13],
             .phone(.init(
                 amount: 11.11,
                 bankID: "100000000217",
                 phoneNumber: "9191619658",
                 puref: nil
-            )),
+            ))
+        )
+        
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[14],
             .phone(.init(
                 amount: 10.00,
                 bankID: "100000000217",
                 phoneNumber: "9636188169",
                 puref: nil
             ))
-        ])
+        )
     }
     
     // MARK: - Helpers
