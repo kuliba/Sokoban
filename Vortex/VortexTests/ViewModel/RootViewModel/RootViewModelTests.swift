@@ -565,7 +565,7 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
-                    sections: [],
+                    sections: makeSections(),
                     bannersBinder: .immediate,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
@@ -614,6 +614,19 @@ final class RootViewModelTests: XCTestCase {
         
         return (sut, scheduler, linkSpy, alertSpy)
     }
+    
+    private func makeSections() -> [MainSectionViewModel] {
+        
+        [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample,
+            MainSectionAtmView.ViewModel.initial
+        ]
+    }
+
     
     private func setSelectedAndFinishAsyncWorkInInit(
         sut: RootViewModel,

@@ -130,7 +130,7 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            sections: [],
+            sections: makeSections(),
             bannersBinder: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )
@@ -698,7 +698,7 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: {},
-            sections: [],
+            sections: makeSections(),
             bannersBinder: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )
@@ -708,6 +708,18 @@ final class MainViewModelTests: XCTestCase {
         // trackForMemoryLeaks(model, file: file, line: line)
         
         return (sut, model)
+    }
+    
+    private func makeSections() -> [MainSectionViewModel] {
+        
+        [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample,
+            MainSectionAtmView.ViewModel.initial
+        ]
     }
     
     private func makeSUTWithLocalAgent(
@@ -734,7 +746,7 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            sections: [],
+            sections: makeSections(),
             bannersBinder: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )
@@ -774,7 +786,7 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            sections: [],
+            sections: makeSections(),
             bannersBinder: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )
@@ -832,7 +844,7 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            sections: [],
+            sections: makeSections(),
             bannersBinder: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )

@@ -50,7 +50,7 @@ class RootViewModel_Tests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
-                    sections: [],
+                    sections: makeSections(),
                     bannersBinder: .preview,
                     makeOpenNewProductButtons: { _ in [] }
                 ),
@@ -75,6 +75,18 @@ class RootViewModel_Tests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, spy)
+    }
+    
+    private func makeSections() -> [MainSectionViewModel] {
+        
+        [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample,
+            MainSectionAtmView.ViewModel.initial
+        ]
     }
     
     func mainViewSections(
