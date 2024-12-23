@@ -10,6 +10,21 @@ import Foundation
 
 extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
+    // MARK: - delay
+
+    var delay: DispatchTimeInterval {
+        switch type.paymentType {
+        case .direct, .insideBank, .mobile, .repeatPaymentRequisites, .servicePayment, .sfp:
+            return .milliseconds(300)
+            
+        case .betweenTheir, .byPhone, .otherBank, .taxes:
+            return .milliseconds(1300)
+            
+        case .none:
+            return .milliseconds(0)
+        }
+    }
+
     // MARK: - Mode
     
     func betweenTheirMode(
@@ -47,25 +62,25 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         if let source = byPhoneSource(activeProductID: activeProductID) {
             return source
         }
-        if let source =  directSource() {
+        if let source = directSource() {
             return source
         }
-        if let source =  mobileSource() {
+        if let source = mobileSource() {
             return source
         }
-        if let source =  repeatPaymentRequisitesSource() {
+        if let source = repeatPaymentRequisitesSource() {
             return source
         }
-        if let source =  servicePaymentSource() {
+        if let source = servicePaymentSource() {
             return source
         }
-        if let source =  sfpSource(activeProductID: activeProductID) {
+        if let source = sfpSource(activeProductID: activeProductID) {
             return source
         }
-        if let source =  taxesSource() {
+        if let source = taxesSource() {
             return source
         }
-        if let source =  toAnotherCardSource() {
+        if let source = toAnotherCardSource() {
             return source
         }
         
@@ -133,7 +148,7 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         else { return nil }
         
         return .mobile(
-            phone: phone,
+            phone: "7\(phone)", // ?? or only phone
             amount: amount.description,
             productId: transfer.payerProductID
         )
@@ -162,19 +177,18 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     func servicePaymentSource() -> Payments.Operation.Source? {
         
         guard type.paymentType == .servicePayment,
-              let transfer = parameterList.first,
-              let puref = transfer.puref,
-              let amount = transfer.amount ?? parameterList.last?.amount
+              let puref = parameterList.puref,
+              let amount = parameterList.amount
         else { return nil }
         
         return .servicePayment(
             puref: puref,
-            additionalList: transfer.additional?.map {
+            additionalList: parameterList.additional.map {
                 
                 return .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
             },
             amount: amount,
-            productId: transfer.payer?.cardId
+            productId: parameterList.productId
         )
     }
     
@@ -261,5 +275,75 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     private var internalPayeeProductID: Int? {
         
         payeeInternal?.cardId ?? payeeInternal?.accountId
+    }
+}
+
+private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
+    
+    var amount: Double? {
+        
+        for transfer in self {
+            
+            if let amount = transfer.amount, amount > 0 {
+                
+                return amount
+            }
+        }
+        
+        return nil
+    }
+    
+    var puref: String? {
+        
+        for transfer in self {
+            
+            if let puref = transfer.puref, !puref.isEmpty {
+                
+                return puref
+            }
+        }
+        
+        return nil
+    }
+    
+    var additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
+        
+        if let additional = last?.additional, !additional.isEmpty {
+            
+            return additional
+        }
+        
+        return first?.additional ?? []
+    }
+    
+    var payerCardId: Int? {
+        
+        for transfer in self {
+            
+            if let payerCardId = transfer.payer?.cardId {
+                
+                return payerCardId
+            }
+        }
+        
+        return nil
+    }
+    
+    var payerAccountId: Int? {
+        
+        for transfer in self {
+            
+            if let accountId = transfer.payer?.accountId {
+                
+                return accountId
+            }
+        }
+        
+        return nil
+    }
+    
+    var productId: Int? {
+        
+        return payerCardId ?? payerAccountId
     }
 }
