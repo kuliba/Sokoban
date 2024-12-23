@@ -124,7 +124,7 @@ private extension LatestPayment.WithPhone {
     
     var phonePayload: LatestPayment.PaymentPayload.PhonePayload? {
         
-        guard let amount, let bankID, let phoneNumber else { return nil }
+        guard let amount, let bankID else { return nil }
         
         return .init(
             amount: amount,

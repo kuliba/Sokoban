@@ -477,6 +477,8 @@ final class LatestToPayloadMappingTests: XCTestCase {
             ))
         )
         
+        XCTAssertNoDiff(mapped.map(\.paymentPayload)[12], nil)
+        
         XCTAssertNoDiff(
             mapped.map(\.paymentPayload)[13],
             .phone(.init(
@@ -506,6 +508,10 @@ final class LatestToPayloadMappingTests: XCTestCase {
                 puref: nil
             ))
         )
+        
+        XCTAssertNoDiff(mapped.map(\.paymentPayload)[16], nil)
+
+        XCTAssertNoDiff(mapped.map(\.paymentPayload)[17], nil)
     }
     
     // MARK: - Helpers
