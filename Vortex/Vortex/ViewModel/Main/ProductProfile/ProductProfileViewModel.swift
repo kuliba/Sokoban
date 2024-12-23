@@ -3241,53 +3241,29 @@ extension ProductProfileViewModel {
             switch result {
             case let .success(infoPayment):
                 
-                let source = infoPayment.source(activeProductID: product.activeProductId, getProduct: model.product(productId:))
-                
+                let navigation = productProfileViewModelFactory.makePaymentNavigation(infoPayment, product.activeProductId, closeAction)
                 let delay = infoPayment.delay
                 
-                switch infoPayment.type.paymentType {
-                case .betweenTheir:
-                    if let mode = infoPayment.betweenTheirMode(getProduct: model.product(productId:)),
-                       let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: mode) {
+                switch navigation {
+                case .none:
+                    cannotRepeatPayment()
                     
+                case let .some(value):
+                    switch value {
+                    case let .meToMe(payment):
+                         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                             guard let self else { return }
+                             
+                             bottomSheet = .init(type: .meToMe(payment))
+                         }
+
+                    case let .payments(payment):
                         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
                             guard let self else { return }
                             
-                            bottomSheet = .init(type: .meToMe(paymentViewModel))
+                            link = .payment(payment)
                         }
                     }
-                    
-                case .byPhone, .direct, .insideBank, .mobile, .repeatPaymentRequisites, .servicePayment, .sfp, .taxes:
-                    
-                    guard let source 
-                    else {
-                        cannotRepeatPayment()
-                        return
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                        guard let self else { return }
-                        
-                        link = .payment(.init(source: source, model: model, closeAction: closeAction))
-                    }
-                    
-                case .otherBank:
-                    
-                    guard let source
-                    else {
-                        cannotRepeatPayment()
-                        return
-                    }
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                        
-                        guard let self else { return }
-                        
-                        link = .payment(.init(model, service: .toAnotherCard, closeAction: closeAction))
-                    }
-                    
-                case .none:
-                    break // Add informer or start servicePayment
                 }
                 
             case let .failure(error):

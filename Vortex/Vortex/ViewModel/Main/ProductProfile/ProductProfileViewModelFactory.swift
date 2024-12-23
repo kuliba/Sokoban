@@ -7,6 +7,9 @@
 
 import SwiftUI
 import LandingUIComponent
+import GetInfoRepeatPaymentService
+
+typealias MakePaymentNavigation = (GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, ProductData.ID, @escaping () -> Void) -> GetInfoRepeatPaymentDomain.Navigation?
 
 struct ProductProfileViewModelFactory {
     
@@ -15,6 +18,7 @@ struct ProductProfileViewModelFactory {
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
     let makeCardGuardianPanel: MakeCardGuardianPanel
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
+    let makePaymentNavigation: MakePaymentNavigation
 
     private let model: Model
     
@@ -23,6 +27,7 @@ struct ProductProfileViewModelFactory {
         makeAlert: @escaping (AlertParameters) -> Alert.ViewModel,
         makeInformerDataUpdateFailure: @escaping MakeInformerDataUpdateFailure,
         makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
+        makePaymentNavigation: @escaping MakePaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         model: Model
     ) {
@@ -30,6 +35,7 @@ struct ProductProfileViewModelFactory {
         self.makeAlert = makeAlert
         self.makeInformerDataUpdateFailure = makeInformerDataUpdateFailure
         self.makeCardGuardianPanel = makeCardGuardianPanel
+        self.makePaymentNavigation = makePaymentNavigation
         self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
         self.model = model
     }
@@ -125,6 +131,7 @@ extension ProductProfileViewModelFactory {
         },
         makeInformerDataUpdateFailure: { nil }, 
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
+        makePaymentNavigation: { _,_,_ in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
         model: .emptyMock
     )

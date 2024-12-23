@@ -268,6 +268,11 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
         
+        let makePaymentNavigation = { [weak self] in
+            
+            self?.getInfoRepeatPaymentNavigation(from: $0, activeProductID: $1, closeAction: $2)
+        }
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -281,7 +286,8 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
-            makeCardGuardianPanel: makeCardGuardianPanel,
+            makeCardGuardianPanel: makeCardGuardianPanel, 
+            makePaymentNavigation: makePaymentNavigation,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
@@ -548,6 +554,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
+        makePaymentNavigation: @escaping MakePaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
@@ -570,7 +577,8 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
-                makeCardGuardianPanel: makeCardGuardianPanel,
+                makeCardGuardianPanel: makeCardGuardianPanel, 
+                makePaymentNavigation: makePaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
@@ -636,6 +644,7 @@ extension ProductProfileViewModel {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 },
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makePaymentNavigation: makePaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 model: model
             )

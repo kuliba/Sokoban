@@ -81,6 +81,7 @@ extension PaymentsTransfersFactory {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makePaymentNavigation: { _,_,_  in .none },
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .inactive,
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
