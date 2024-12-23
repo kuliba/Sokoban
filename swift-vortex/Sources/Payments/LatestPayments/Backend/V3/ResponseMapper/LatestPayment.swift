@@ -116,24 +116,7 @@ extension ResponseMapper.LatestPayment {
 
 extension ResponseMapper.LatestPayment {
     
-    public enum LatestType: Equatable {
-        
-        case charity
-        case country
-        case digitalWallets
-        case education
-        case internet
-        case mobile
-        case networkMarketing
-        case outside
-        case phone
-        case repaymentLoansAndAccounts
-        case security
-        case service
-        case socialAndGames
-        case taxAndStateService
-        case transport
-    }
+    public typealias LatestType = String
     
     public enum PaymentFlow: Equatable {
         
