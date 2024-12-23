@@ -21,7 +21,7 @@ extension ResponseMapper.LatestPayment {
             
         case let .withPhone(withPhone):
             switch withPhone.type {
-            case .phone:
+            case "phone":
                 return withPhone.phonePayload.map { .phone($0) }
                 
             default:

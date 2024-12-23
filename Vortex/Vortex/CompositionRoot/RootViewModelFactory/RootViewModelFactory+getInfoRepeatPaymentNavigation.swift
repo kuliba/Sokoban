@@ -57,6 +57,28 @@ extension RootViewModelFactory {
     
     @inlinable
     func getInfoRepeatPaymentNavigation(
+        from paymentsPayload: PaymentsPayload,
+        activeProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?,
+        makePaymentsWithSource: @escaping (Payments.Operation.Source) -> PaymentsViewModel?,
+        makePaymentsWithService: @escaping (Payments.Service) -> PaymentsViewModel?,
+        makeMeToMe: (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
+    ) -> GetInfoRepeatPaymentDomain.Navigation? {
+        
+        switch paymentsPayload {
+        case let .mode(mode):
+            return makeMeToMe(mode).map { .meToMe($0) }
+            
+        case let .service(service):
+            return makePaymentsWithService(service).map { .payments($0) }
+            
+        case let .source(source):
+            return makePaymentsWithSource(source).map { .payments($0) }
+        }
+    }
+    
+    @inlinable
+    func getInfoRepeatPaymentNavigation(
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
         getProduct: @escaping (ProductData.ID) -> ProductData?,
@@ -65,21 +87,42 @@ extension RootViewModelFactory {
         makeMeToMe: (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        if let source = info.source(activeProductID: activeProductID, getProduct: getProduct) {
+        guard let a = info.paymentsPayload(activeProductID: activeProductID, getProduct: getProduct)
+        else { return nil }
+        
+        return getInfoRepeatPaymentNavigation(from: a, activeProductID: activeProductID, getProduct: getProduct, makePaymentsWithSource: makePaymentsWithSource, makePaymentsWithService: makePaymentsWithService, makeMeToMe: makeMeToMe)
+    }
+}
+
+extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
+    
+    func paymentsPayload(
+        activeProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> PaymentsPayload? {
+        
+        if let source = source(activeProductID: activeProductID, getProduct: getProduct) {
             
-            return makePaymentsWithSource(source).map { .payments($0) }
+            return .source(source)
         }
         
-        if let service = info.otherBankService() {
+        if let service = otherBankService() {
             
-            return makePaymentsWithService(service).map { .payments($0) }
+            return .service(service)
         }
         
-        if let mode = info.betweenTheirMode(getProduct: getProduct) {
+        if let mode = betweenTheirMode(getProduct: getProduct) {
             
-            return makeMeToMe(mode).map { .meToMe($0) }
+            return .mode(mode)
         }
         
         return nil
     }
+}
+
+enum PaymentsPayload: Equatable {
+    
+    case source(Payments.Operation.Source)
+    case service(Payments.Service)
+    case mode(PaymentsMeToMeViewModel.Mode)
 }

@@ -62,7 +62,9 @@ private extension ResponseMapper._Latest._Service {
     var service: ResponseMapper.LatestPayment.Service? {
         
         guard let puref,
-              let type = type?.type
+              !puref.isEmpty,
+              let type,
+              !type.isEmpty
         else { return nil }
         
         return .init(
@@ -102,32 +104,8 @@ private extension ResponseMapper._Latest._WithPhone {
             paymentFlow: paymentFlow?.flow,
             phoneNumber: phoneNumber,
             puref: puref,
-            type: type.type
+            type: type
         )
-    }
-}
-
-private extension ResponseMapper._Latest._LatestType {
-    
-    var type: ResponseMapper.LatestPayment.LatestType {
-        
-        switch self {
-        case .charity:                   return .charity
-        case .country:                   return .country
-        case .digitalWallets:            return .digitalWallets
-        case .education:                 return .education
-        case .internet:                  return .internet
-        case .mobile:                    return .mobile
-        case .networkMarketing:          return .networkMarketing
-        case .outside:                   return .outside
-        case .phone:                     return .phone
-        case .repaymentLoansAndAccounts: return .repaymentLoansAndAccounts
-        case .security:                  return .security
-        case .service:                   return .service
-        case .socialAndGames:            return .socialAndGames
-        case .taxAndStateService:        return .taxAndStateService
-        case .transport:                 return .transport
-        }
     }
 }
 
@@ -293,24 +271,7 @@ private extension ResponseMapper._Latest {
 
 private extension ResponseMapper._Latest {
     
-    enum _LatestType: String, Decodable {
-        
-        case charity
-        case country
-        case digitalWallets
-        case education
-        case internet
-        case mobile
-        case networkMarketing
-        case outside
-        case phone
-        case repaymentLoansAndAccounts
-        case security
-        case service
-        case socialAndGames
-        case taxAndStateService
-        case transport
-    }
+    typealias _LatestType = String
     
     enum _PaymentFlow: String, Decodable {
         
