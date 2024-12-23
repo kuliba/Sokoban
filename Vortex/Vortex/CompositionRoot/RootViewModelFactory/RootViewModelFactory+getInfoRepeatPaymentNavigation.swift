@@ -87,10 +87,17 @@ extension RootViewModelFactory {
         makeMeToMe: (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
     ) -> GetInfoRepeatPaymentDomain.Navigation? {
         
-        guard let a = info.paymentsPayload(activeProductID: activeProductID, getProduct: getProduct)
+        guard let paymentsPayload = info.paymentsPayload(activeProductID: activeProductID, getProduct: getProduct)
         else { return nil }
         
-        return getInfoRepeatPaymentNavigation(from: a, activeProductID: activeProductID, getProduct: getProduct, makePaymentsWithSource: makePaymentsWithSource, makePaymentsWithService: makePaymentsWithService, makeMeToMe: makeMeToMe)
+        return getInfoRepeatPaymentNavigation(
+            from: paymentsPayload,
+            activeProductID: activeProductID,
+            getProduct: getProduct,
+            makePaymentsWithSource: makePaymentsWithSource,
+            makePaymentsWithService: makePaymentsWithService,
+            makeMeToMe: makeMeToMe
+        )
     }
 }
 
