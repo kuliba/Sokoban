@@ -1,5 +1,5 @@
 //
-//  LatestToPayloadMappingTests.swift
+//  LatestPayment+paymentPayloadTests.swift
 //
 //
 //  Created by Igor Malyarov on 22.12.2024.
@@ -9,7 +9,7 @@ import LatestPaymentsBackendV3
 import RemoteServices
 import XCTest
 
-final class LatestToPayloadMappingTests: XCTestCase {
+final class LatestPayment_paymentPayloadTests: XCTestCase {
     
     // MARK: - mobile
     

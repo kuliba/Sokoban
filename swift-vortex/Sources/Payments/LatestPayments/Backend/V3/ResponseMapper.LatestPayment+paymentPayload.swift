@@ -1,5 +1,5 @@
 //
-//  RemoteServices.ResponseMapper.LatestPayment+paymentPayload.swift
+//  ResponseMapper.LatestPayment+paymentPayload.swift
 //  
 //
 //  Created by Igor Malyarov on 22.12.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import RemoteServices
 
-extension RemoteServices.ResponseMapper.LatestPayment {
+extension ResponseMapper.LatestPayment {
     
     public var paymentPayload: PaymentPayload? {
         
@@ -94,7 +94,7 @@ extension RemoteServices.ResponseMapper.LatestPayment {
     }
 }
 
-private typealias LatestPayment = RemoteServices.ResponseMapper.LatestPayment
+private typealias LatestPayment = ResponseMapper.LatestPayment
 
 private extension LatestPayment.Service {
     
