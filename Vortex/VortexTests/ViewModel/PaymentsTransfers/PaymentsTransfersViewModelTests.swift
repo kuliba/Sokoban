@@ -1036,8 +1036,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: svCardLandingServices, 
-            repeatPayment: {_,_,_,_ in },
-            makeSVCardLandingViewModel: {_,_,_,_ in nil},
+            repeatPayment: { _,_,_ in },
+            makeSVCardLandingViewModel: { _,_,_,_ in nil },
             makeInformer: { _ in }
         )
 

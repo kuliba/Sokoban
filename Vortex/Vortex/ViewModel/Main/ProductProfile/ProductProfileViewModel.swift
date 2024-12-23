@@ -2521,6 +2521,7 @@ extension ProductProfileViewModel {
     
     enum Link {
         
+        case anyway(Node<AnywayFlowModel>)
         case productInfo(InfoProductViewModel)
         case payment(PaymentsViewModel)
         case productStatement(ProductStatementViewModel)
@@ -3227,12 +3228,22 @@ extension ProductProfileViewModel {
     }
     
     func payment(
-        operationID: Int?
+        operationID: Int?,
+        productStatement: ProductStatementData
     ) {
+        
         // TODO: call with non-optional operationID
         guard let operationID else { return cannotRepeatPayment() }
         
-        productProfileServices.repeatPayment(operationID, product.activeProductId, closeAction) { [weak self] in
+        productProfileServices.repeatPayment(
+            .init(
+                operationID: operationID,
+                activeProductID: product.activeProductId,
+                operatorName: productStatement.merchantNameRus ?? productStatement.merchantName ?? productStatement.merchant,
+                operatorIcon: productStatement.md5hash
+            ),
+             closeAction)
+        { [weak self] in
             
             self?.handleNavigation($0)
         }
@@ -3247,6 +3258,12 @@ extension ProductProfileViewModel {
             
         case let .some(value):
             switch value {
+            case let .anywayPayment(node):
+                scheduler.delay(for: .milliseconds(300)) { [weak self] in
+                    
+                    self?.link = .anyway(node)
+                }
+
             case let .meToMe(payment):
                 scheduler.delay(for: .milliseconds(1300)) { [weak self] in
                     

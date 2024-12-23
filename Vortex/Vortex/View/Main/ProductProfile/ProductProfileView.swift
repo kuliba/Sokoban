@@ -13,6 +13,7 @@ import RxViewModel
 import SberQR
 import SwiftUI
 import VortexTools
+import Combine
 
 struct ProductProfileView: View {
     
@@ -226,6 +227,18 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch link {
+        case let .anyway(node):
+            let payload = node.model.state.content.state.transaction.context.outline.payload
+
+            viewFactory.components.makeAnywayFlowView(node.model)
+                .navigationBarWithAsyncIcon(
+                    title: payload.title,
+                    subtitle: payload.subtitle,
+                    dismiss: viewModel.closeAction,
+                    icon: viewFactory.iconView(payload.icon),
+                    style: .normal
+                )
+            
         case let .controlPanel(controlPanelViewModel):
             viewFactory.components.makeControlPanelWrapperView(controlPanelViewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -276,7 +289,7 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(operationDetail):
-            viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId) })
+            viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId, productStatement: operationDetail.productStatement) })
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)

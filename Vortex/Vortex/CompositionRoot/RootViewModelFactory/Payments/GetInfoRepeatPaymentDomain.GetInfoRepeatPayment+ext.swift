@@ -275,7 +275,7 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     }
 }
 
-private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
+extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     
     var amount: Double? {
         

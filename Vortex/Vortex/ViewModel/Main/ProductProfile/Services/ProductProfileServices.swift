@@ -30,7 +30,8 @@ struct ProductProfileServices {
     typealias OperationID = Int
     typealias ActiveProductID = ProductData.ID
     typealias CloseAction = () -> Void
-    typealias RepeatPayment = (OperationID, ActiveProductID, @escaping CloseAction, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
+    typealias RepeatPayment = (GetInfoRepeatPaymentDomain.PaymentPayload, @escaping CloseAction, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
+
 }
 
 // MARK: - Preview Content
@@ -44,7 +45,7 @@ extension ProductProfileServices {
         createCreateGetSVCardLimits: .preview(),
         createChangeSVCardLimit: .preview(),
         createSVCardLanding: .preview(),
-        repeatPayment: { _,_,_,_ in },
+        repeatPayment: { _,_,_ in },
         makeSVCardLandingViewModel: { _,_,_,_ in nil },
         makeInformer: { _ in }
     )

@@ -17,33 +17,13 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> PaymentsDomain.Navigation? {
         
-        let paymentFlow = info.paymentFlow(info.paymentFlow)
+        guard let paymentsPayload = info.paymentsPayload(activeProductID: activeProductID, getProduct: getProduct)
+        else { return nil }
         
-        switch paymentFlow {
-        case .none:
-            guard let paymentsPayload = info.paymentsPayload(activeProductID: activeProductID, getProduct: getProduct)
-            else { return nil }
-            
-            return getPaymentsNavigation(
-                from: paymentsPayload,
-                closeAction: closeAction
-            )
-            
-        case .mobile:
-            return nil
-            
-        case .qr:
-            return nil
-            
-        case .standard:
-            return nil
-            
-        case .taxAndStateServices:
-            return nil
-            
-        case .transport:
-            return nil
-        }
+        return getPaymentsNavigation(
+            from: paymentsPayload,
+            closeAction: closeAction
+        )
     }
 }
 

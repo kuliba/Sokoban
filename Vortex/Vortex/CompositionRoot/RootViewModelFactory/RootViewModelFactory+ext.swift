@@ -145,6 +145,38 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
+        
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+
+        func processPayments(
+            lastPayment: UtilityPaymentLastPayment,
+            notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
+            completion: @escaping (PaymentsDomain.Navigation?) -> Void
+        ) {
+            self.processPayments(
+                lastPayment: lastPayment,
+                getCategoryType: { type in
+                    
+                    let categories = paymentsTransfersPersonal.content.categoryPicker.sectionBinder?.content.state.elements.map(\.element)
+                    
+                    return categories?.first { $0.type.name == type }?.type
+                },
+                notify: notify,
+                completion: completion
+            )
+        }
+        
+        func processPayments(
+            lastPayment: UtilityPaymentLastPayment,
+            close: @escaping () -> Void,
+            completion: @escaping (PaymentsDomain.Navigation?) -> Void
+        ) {
+            processPayments(
+                lastPayment: lastPayment,
+                notify: { _ in close() },
+                completion: completion
+            )
+        }
                 
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
@@ -153,7 +185,9 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
-            repeatPayment: repeatPayment,
+            repeatPayment: {
+                self.repeatPayment(payload: $0, closeAction: $1, makeStandardFlow: processPayments, completion: $2)
+            },
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: {
                 self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
@@ -303,39 +337,7 @@ extension RootViewModelFactory {
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
-        
-        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
-
-        func processPayments(
-            lastPayment: UtilityPaymentLastPayment,
-            notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
-            completion: @escaping (PaymentsDomain.Navigation?) -> Void
-        ) {
-            self.processPayments(
-                lastPayment: lastPayment,
-                getCategoryType: { type in
-                    
-                    let categories = paymentsTransfersPersonal.content.categoryPicker.sectionBinder?.content.state.elements.map(\.element)
-                    
-                    return categories?.first { $0.type.name == type }?.type
-                },
-                notify: notify,
-                completion: completion
-            )
-        }
-        
-        func processPayments(
-            lastPayment: UtilityPaymentLastPayment,
-            close: @escaping () -> Void,
-            completion: @escaping (PaymentsDomain.Navigation?) -> Void
-        ) {
-            processPayments(
-                lastPayment: lastPayment, 
-                notify: { _ in close() },
-                completion: completion
-            )
-        }
-        
+                
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if paymentsTransfersFlag.isActive {
