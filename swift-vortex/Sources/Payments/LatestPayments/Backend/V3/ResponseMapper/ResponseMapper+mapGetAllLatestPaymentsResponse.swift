@@ -52,7 +52,7 @@ private extension ResponseMapper._Latest {
             return service.service.map { .service($0) }
             
         case let .withPhone(withPhone):
-            return .withPhone(withPhone.withPhone)
+            return withPhone.withPhone.map { .withPhone($0) }
         }
     }
 }
@@ -63,8 +63,8 @@ private extension ResponseMapper._Latest._Service {
         
         guard let puref,
               !puref.isEmpty,
-              let type = type?.type,
-              let flow = paymentFlow?.flow
+              let type,
+              !type.isEmpty
         else { return nil }
         
         return .init(
@@ -78,7 +78,7 @@ private extension ResponseMapper._Latest._Service {
             md5Hash: md5hash,
             name: name,
             paymentDate: paymentDate,
-            paymentFlow: flow,
+            paymentFlow: paymentFlow?.flow,
             puref: puref,
             type: type
         )
@@ -87,7 +87,9 @@ private extension ResponseMapper._Latest._Service {
 
 private extension ResponseMapper._Latest._WithPhone {
     
-    var withPhone: ResponseMapper.LatestPayment.WithPhone {
+    var withPhone: ResponseMapper.LatestPayment.WithPhone? {
+        
+        guard let phoneNumber else { return nil }
         
         return .init(
             amount: amount?.value,
@@ -102,32 +104,8 @@ private extension ResponseMapper._Latest._WithPhone {
             paymentFlow: paymentFlow?.flow,
             phoneNumber: phoneNumber,
             puref: puref,
-            type: type.type
+            type: type
         )
-    }
-}
-
-private extension ResponseMapper._Latest._LatestType {
-    
-    var type: ResponseMapper.LatestPayment.LatestType {
-        
-        switch self {
-        case .charity:                   return .charity
-        case .country:                   return .country
-        case .digitalWallets:            return .digitalWallets
-        case .education:                 return .education
-        case .internet:                  return .internet
-        case .mobile:                    return .mobile
-        case .networkMarketing:          return .networkMarketing
-        case .outside:                   return .outside
-        case .phone:                     return .phone
-        case .repaymentLoansAndAccounts: return .repaymentLoansAndAccounts
-        case .security:                  return .security
-        case .service:                   return .service
-        case .socialAndGames:            return .socialAndGames
-        case .taxAndStateService:        return .taxAndStateService
-        case .transport:                 return .transport
-        }
     }
 }
 
@@ -236,9 +214,9 @@ private extension ResponseMapper {
         init(from decoder: Decoder) throws {
             
             do {
-                self = try .service(_Service(from: decoder))
-            } catch {
                 self = try .withPhone(_WithPhone(from: decoder))
+            } catch {
+                self = try .service(_Service(from: decoder))
             }
         }
     }
@@ -293,24 +271,7 @@ private extension ResponseMapper._Latest {
 
 private extension ResponseMapper._Latest {
     
-    enum _LatestType: String, Decodable {
-        
-        case charity
-        case country
-        case digitalWallets
-        case education
-        case internet
-        case mobile
-        case networkMarketing
-        case outside
-        case phone
-        case repaymentLoansAndAccounts
-        case security
-        case service
-        case socialAndGames
-        case taxAndStateService
-        case transport
-    }
+    typealias _LatestType = String
     
     enum _PaymentFlow: String, Decodable {
         

@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "3B545205-2CFC-42DD-B88A-595253CCE000",
-      "name" : "Test Scheme Action",
+      "id" : "565B7441-3FD8-4EFC-A2D8-18F841A9FCE5",
+      "name" : "Configuration 1",
       "options" : {
 
       }
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "WIPTests",
-        "name" : "WIPTests"
+        "identifier" : "GetInfoRepeatPaymentServiceTests",
+        "name" : "GetInfoRepeatPaymentServiceTests"
       }
     }
   ],

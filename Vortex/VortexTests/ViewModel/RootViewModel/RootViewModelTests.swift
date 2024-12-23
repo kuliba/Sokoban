@@ -418,7 +418,7 @@ final class RootViewModelTests: XCTestCase {
             selected: .market
         )
         
-        sut.openPayment(.housingAndCommunalService)
+        sut.openPayment(._housingAndCommunalService)
         scheduler.advance()
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -436,7 +436,7 @@ final class RootViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(alertSpy.values, [nil])
         
-        sut.openPayment(.housingAndCommunalService)
+        sut.openPayment(._housingAndCommunalService)
         scheduler.advance()
         
         XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
@@ -900,7 +900,7 @@ private extension Alert.ViewModel.View {
 
 private extension String {
     
-    static let housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
+    static let _housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
 }
 
 private extension MarketShowcaseDomain.Binder {

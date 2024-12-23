@@ -2171,6 +2171,9 @@ private extension Target {
     
     static let getInfoRepeatPaymentService = target(
         name: .getInfoRepeatPaymentService,
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Services/\(String.getInfoRepeatPaymentService)"
     )
     
@@ -2181,6 +2184,7 @@ private extension Target {
             .customDump,
             // internal modules
             .getInfoRepeatPaymentService,
+            .remoteServices
         ],
         path: "Tests/Services/\(String.getInfoRepeatPaymentServiceTests)"
     )
@@ -3194,11 +3198,13 @@ private extension Target {
             // internal modules
             .ephemeralStores,
             .fetcher,
-            .vortexTools,
             .genericLoader,
             .genericRemoteService,
+            .latestPaymentsBackendV3,
+            .remoteServices,
             .rxViewModel,
             .serialComponents,
+            .vortexTools,
         ]
     )
     

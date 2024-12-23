@@ -308,3 +308,17 @@ extension String {
         return isMatching
     }
 }
+
+extension String {
+
+    var camelCased: String {
+        
+        let result = self
+            .split(separator: "_")  // split to components
+            .enumerated()  // get indices
+            .map { $0.offset > 0 ? $0.element.capitalized : $0.element.lowercased() } // added lowercasing
+            .joined() // join to one string
+        
+        return result
+    }
+}

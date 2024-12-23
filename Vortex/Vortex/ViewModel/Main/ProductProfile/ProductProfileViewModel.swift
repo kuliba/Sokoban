@@ -20,6 +20,7 @@ import LandingUIComponent
 import UIPrimitives
 import ManageSubscriptionsUI
 import CalendarUI
+import GetInfoRepeatPaymentService
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -3218,6 +3219,91 @@ extension ProductProfileViewModel {
                 completion(.success)
             }
         }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func closeAction() {
+        
+        link = nil
+    }
+    
+    func cannotRepeatPayment() {
+        model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось повторить операцию. Попробуйте позже", icon: .close)))
+    }
+    
+    func payment(
+        viewModel: OperationDetailViewModel
+    ) {
+        
+        guard let operationId = viewModel.operationId
+        else {
+            cannotRepeatPayment()
+            return
+        }
+        
+        productProfileServices.repeatPayment.createInfoRepeatPaymentServices(.init(paymentOperationDetailId: operationId)) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case let .success(infoPayment):
+                
+                let source = infoPayment.source(activeProductID: product.activeProductId, getProduct: model.product(productId:))
+                
+                let delay = infoPayment.delay
+                
+                switch infoPayment.type.paymentType {
+                case .betweenTheir:
+                    if let mode = infoPayment.betweenTheirMode(getProduct: model.product(productId:)),
+                       let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: mode) {
+                    
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                            guard let self else { return }
+                            
+                            bottomSheet = .init(type: .meToMe(paymentViewModel))
+                        }
+                    }
+                    
+                case .byPhone, .direct, .insideBank, .mobile, .repeatPaymentRequisites, .servicePayment, .sfp, .taxes:
+                    
+                    guard let source 
+                    else {
+                        cannotRepeatPayment()
+                        return
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                        guard let self else { return }
+                        
+                        link = .payment(.init(source: source, model: model, closeAction: closeAction))
+                    }
+                    
+                case .otherBank:
+                    
+                    guard let source
+                    else {
+                        cannotRepeatPayment()
+                        return
+                    }
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                        
+                        guard let self else { return }
+                        
+                        link = .payment(.init(model, service: .toAnotherCard, closeAction: closeAction))
+                    }
+                    
+                case .none:
+                    break // Add informer or start servicePayment
+                }
+                
+            case let .failure(error):
+                cannotRepeatPayment()
+            }
+        }
+        bottomSheet = nil
     }
 }
 

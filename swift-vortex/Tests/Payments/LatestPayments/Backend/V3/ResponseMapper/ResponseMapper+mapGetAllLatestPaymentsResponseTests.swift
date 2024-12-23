@@ -96,52 +96,51 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         )
     }
     
-    func test_shouldSkipItemsWithoutPaymentFlow_fileData_count() throws {
+    func test_fileData_count() throws {
         
         let mapped = try map(data(from: "v3_getAllLatestPayments")).get()
         
-        XCTAssertEqual(mapped.count, 15)
+        XCTAssertEqual(mapped.count, 18)
     }
     
     func test_fileData() throws {
         
         let mapped = try map(data(from: "v3_getAllLatestPayments")).get()
         
-        XCTAssertNoDiff(mapped.prefix(2), [
-            makeService(
-                additionalItems: [
-                    makeAdditional(fieldName: "P1", fieldValue: "33694934")
-                ],
-                amount: 25.5,
-                date: 1725603273000,
-                detail: .internet,
-                md5Hash: "fe9594527b02d8295319c7aca3d13ee0",
-                name: "АКАДО Телеком",
-                paymentDate: .init(timeIntervalSince1970: 1725603273000 / 1000),
-                paymentFlow: .standard,
-                puref: "iVortex||CTV",
-                type: .internet
-            ),
-            makeService(
-                additionalItems: [
-                    makeAdditional(fieldName: "account", fieldValue: "766440148001"),
-                    makeAdditional(fieldName: "counter", fieldValue: "97"),
-                    makeAdditional(fieldName: "counterDay", fieldValue: "97"),
-                    makeAdditional(fieldName: "counterNight", fieldValue: "12"),
-                    makeAdditional(fieldName: "fine", fieldValue: "42"),
-                ],
-                amount: 12.7,
-                date: 1725601828000,
-                detail: .housingAndCommunalService,
-                inn: "7606052264",
-                md5Hash: "1efeda3c9130101d4d88113853b03bb5",
-                name: "ПАО ТНС энерго Ярославль",
-                paymentDate: .init(timeIntervalSince1970: 1725601828000 / 1000),
-                paymentFlow: .standard,
-                puref: "iVortex||TNS",
-                type: .service
-            ),
-        ])
+        XCTAssertNoDiff(mapped[0], makeService(
+            additionalItems: [
+                makeAdditional(fieldName: "P1", fieldValue: "33694934")
+            ],
+            amount: 25.5,
+            date: 1725603273000,
+            detail: .internet,
+            md5Hash: "fe9594527b02d8295319c7aca3d13ee0",
+            name: "АКАДО Телеком",
+            paymentDate: .init(timeIntervalSince1970: 1725603273000 / 1000),
+            paymentFlow: .standard,
+            puref: "iVortex||CTV",
+            type: .internet
+        ))
+        
+        XCTAssertNoDiff(mapped[1], makeService(
+            additionalItems: [
+                makeAdditional(fieldName: "account", fieldValue: "766440148001"),
+                makeAdditional(fieldName: "counter", fieldValue: "97"),
+                makeAdditional(fieldName: "counterDay", fieldValue: "97"),
+                makeAdditional(fieldName: "counterNight", fieldValue: "12"),
+                makeAdditional(fieldName: "fine", fieldValue: "42"),
+            ],
+            amount: 12.7,
+            date: 1725601828000,
+            detail: .housingAndCommunalService,
+            inn: "7606052264",
+            md5Hash: "1efeda3c9130101d4d88113853b03bb5",
+            name: "ПАО ТНС энерго Ярославль",
+            paymentDate: .init(timeIntervalSince1970: 1725601828000 / 1000),
+            paymentFlow: .standard,
+            puref: "iVortex||TNS",
+            type: .service
+        ))
         
         XCTAssertNoDiff(mapped[2], makeService(
             additionalItems: [
@@ -208,6 +207,117 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             puref: "iVortex||TransferC2CSTEP",
             type: .phone
         ))
+        
+        XCTAssertNoDiff(mapped[11], makeWithPhone(
+            amount: 21,
+            bankID: "1crt88888881",
+            bankName: "Пир Банк",
+            date: 1722414425000,
+            detail: .sfp,
+            paymentDate: .init(timeIntervalSince1970: 1722414425000 / 1000),
+            phoneNumber: "0070115110217",
+            puref: "iVortex||TransferC2CSTEP",
+            type: .phone
+        ))
+        
+        XCTAssertNoDiff(mapped[12], makeService(
+            additionalItems: [
+                makeAdditional(fieldName: "trnPickupPoint", fieldValue: "AM"),
+                makeAdditional(fieldName: "DIRECT_BANKS", fieldValue: "iVortex||TransferEvocaClient12"),
+                makeAdditional(fieldName: "RECP", fieldValue: "37496127188"),
+                makeAdditional(fieldName: "##CURR", fieldValue: "RUB")
+            ],
+            amount: 201.00,
+            date: 1722350592000,
+            detail: .newDirect,
+            lpName: "37496127188",
+            md5Hash: "2dab5e994b3925a213dd63bffcc948ab",
+            paymentDate: .init(timeIntervalSince1970: 1722350592000 / 1000),
+            paymentFlow: nil,
+            puref: "iVortex||MIG",
+            type: .outside
+        ))
+        
+        XCTAssertNoDiff(mapped[13], makeWithPhone(
+            amount: 100,
+            bankID: "100000000217",
+            bankName: "Инновации-Бизнеса",
+            date: 1722345951000,
+            detail: .card2Phone,
+            paymentDate: .init(timeIntervalSince1970: 1722345951000 / 1000),
+            phoneNumber: "9636124249",
+            type: .phone
+        ))
+        
+        XCTAssertNoDiff(mapped[14], makeWithPhone(
+            amount: 11.11,
+            bankID: "100000000217",
+            bankName: "Инновации-Бизнеса",
+            currency: "RUB",
+            date: 1719408263000,
+            detail: .account2Phone,
+            md5Hash: nil,
+            name: nil,
+            paymentDate: .init(timeIntervalSince1970: 1719408263000 / 1000),
+            paymentFlow: nil,
+            phoneNumber: "9191619658",
+            puref: nil,
+            type: .phone
+        ))
+        
+        XCTAssertNoDiff(mapped[15], makeWithPhone(
+            amount: 10,
+            bankID: "100000000217",
+            bankName: "Инновации-Бизнеса",
+            currency: "RUB",
+            date: 1718707936000,
+            detail: .card2Phone,
+            md5Hash: nil,
+            name: nil,
+            paymentDate: .init(timeIntervalSince1970: 1718707936000 / 1000),
+            paymentFlow: nil,
+            phoneNumber: "9636188169",
+            puref: nil,
+            type: .phone
+        ))
+        
+        XCTAssertNoDiff(mapped[16], makeService(
+            additionalItems: [
+                makeAdditional(fieldName: "trnPickupPoint", fieldValue: "KZ"),
+                makeAdditional(fieldName: "P1", fieldValue: "4400430261723339"),
+                makeAdditional(fieldName: "RECFIO", fieldValue: "ffh"),
+                makeAdditional(fieldName: "##CURR", fieldValue: "RUB"),
+            ],
+            amount: 50.0,
+            date: 1710254187000,
+            detail: .foreignCard,
+            lpName: "••• 3339",
+            md5Hash: "b13bd87d1ed9cfa7aefff0c57e50ec30",
+            paymentDate: .init(timeIntervalSince1970: 1710254187000 / 1000),
+            paymentFlow: nil,
+            puref: "iVortex||PW0",
+            type: .outside
+        ))
+        
+        XCTAssertNoDiff(mapped[17], makeService(
+            additionalItems: [
+                makeAdditional(fieldName: "trnPickupPoint", fieldValue: "AB"),
+                makeAdditional(fieldName: "bSurName", fieldValue: ""),
+                makeAdditional(fieldName: "bName", fieldValue: "fvh"),
+                makeAdditional(fieldName: "bLastName", fieldValue: "tfjyg"),
+                makeAdditional(fieldName: "payee_fio", fieldValue: "fvh tfjyg  "),
+                makeAdditional(fieldName: "CURR", fieldValue: "RUB"),
+            ],
+            amount: 103.02,
+            date: 1709567037000,
+            detail: .addressless,
+            lpName: "fvh tfjyg",
+            md5Hash: "b45eaff714d0f06242e705c494269df8",
+            paymentDate: .init(timeIntervalSince1970: 1709567037000 / 1000),
+            paymentFlow: nil,
+            puref: "iVortex||Addressless",
+            type: .outside
+        ))
     }
     
     // MARK: - Helpers
@@ -256,7 +366,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         md5Hash: String? = nil,
         name: String? = nil,
         paymentDate: Date,
-        paymentFlow: ResponseMapper.LatestPayment.PaymentFlow = .standard,
+        paymentFlow: ResponseMapper.LatestPayment.PaymentFlow? = nil,
         puref: String,
         type: ResponseMapper.LatestPayment.LatestType
     ) -> ResponseMapper.LatestPayment {
@@ -304,7 +414,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         name: String? = nil,
         paymentDate: Date,
         paymentFlow: ResponseMapper.LatestPayment.PaymentFlow? = nil,
-        phoneNumber: String? = nil,
+        phoneNumber: String,
         puref: String? = nil,
         type: ResponseMapper.LatestPayment.LatestType
     ) -> ResponseMapper.LatestPayment {
@@ -383,4 +493,23 @@ private extension String {
   "data": []
 }
 """
+}
+
+extension String {
+    
+    static let charity = "charity"
+    static let country = "country"
+    static let digitalWallets = "digitalWallets"
+    static let education = "education"
+    static let internet = "internet"
+    static let mobile = "mobile"
+    static let networkMarketing = "networkMarketing"
+    static let outside = "outside"
+    static let phone = "phone"
+    static let repaymentLoansAndAccounts = "repaymentLoansAndAccounts"
+    static let security = "security"
+    static let service = "service"
+    static let socialAndGames = "socialAndGames"
+    static let taxAndStateService = "taxAndStateService"
+    static let transport = "transport"
 }

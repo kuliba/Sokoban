@@ -22,9 +22,9 @@ extension XCTestCase {
         md5Hash: String? = nil,
         name: String? = nil,
         paymentDate: Date = .now,
-        paymentFlow: RemoteServices.ResponseMapper.LatestPayment.PaymentFlow = .standard,
+        paymentFlow: RemoteServices.ResponseMapper.LatestPayment.PaymentFlow? = nil,
         puref: String = anyMessage(),
-        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = .internet
+        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = "internet"
     ) -> Latest.Service {
         
         return .init(
