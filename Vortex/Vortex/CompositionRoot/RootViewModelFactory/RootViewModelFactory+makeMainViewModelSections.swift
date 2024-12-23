@@ -13,13 +13,6 @@ extension RootViewModelFactory {
         bannersBinder: BannersBinder
     ) -> [MainSectionViewModel] {
         
-        //        MainViewModel.getSections(
-        //            model,
-        //            bannersBinder,
-        //            updateInfoStatusFlag: updateInfoStatusFlag,
-        //            stickerViewModel: nil
-        //        )
-        
         let stickerViewModel:  ProductCarouselView.StickerViewModel? = nil
         
         var sections = [
@@ -111,8 +104,8 @@ extension RootViewModelFactory {
                         ))
                     default: break
                     }
-                } //if
-        } //for
+                }
+        }
         
         return viewModels
 
