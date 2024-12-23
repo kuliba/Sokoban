@@ -52,7 +52,7 @@ private extension ResponseMapper._Latest {
             return service.service.map { .service($0) }
             
         case let .withPhone(withPhone):
-            return .withPhone(withPhone.withPhone)
+            return withPhone.withPhone.map { .withPhone($0) }
         }
     }
 }
@@ -62,9 +62,7 @@ private extension ResponseMapper._Latest._Service {
     var service: ResponseMapper.LatestPayment.Service? {
         
         guard let puref,
-              !puref.isEmpty,
-              let type = type?.type,
-              let flow = paymentFlow?.flow
+              let type = type?.type
         else { return nil }
         
         return .init(
@@ -78,7 +76,7 @@ private extension ResponseMapper._Latest._Service {
             md5Hash: md5hash,
             name: name,
             paymentDate: paymentDate,
-            paymentFlow: flow,
+            paymentFlow: paymentFlow?.flow,
             puref: puref,
             type: type
         )
@@ -87,7 +85,9 @@ private extension ResponseMapper._Latest._Service {
 
 private extension ResponseMapper._Latest._WithPhone {
     
-    var withPhone: ResponseMapper.LatestPayment.WithPhone {
+    var withPhone: ResponseMapper.LatestPayment.WithPhone? {
+        
+        guard let phoneNumber else { return nil }
         
         return .init(
             amount: amount?.value,
@@ -236,9 +236,9 @@ private extension ResponseMapper {
         init(from decoder: Decoder) throws {
             
             do {
-                self = try .service(_Service(from: decoder))
-            } catch {
                 self = try .withPhone(_WithPhone(from: decoder))
+            } catch {
+                self = try .service(_Service(from: decoder))
             }
         }
     }
