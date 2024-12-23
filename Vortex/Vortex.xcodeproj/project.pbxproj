@@ -2955,6 +2955,7 @@
 		A78AC1DB2CEC652500154B88 /* CollateralLoanLandingGetConsentsBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A78AC1DA2CEC652500154B88 /* CollateralLoanLandingGetConsentsBackend */; };
 		A7B5BD6A2CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */; };
 		A7B5BD6C2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */; };
+		A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */; };
 		A7C41FCA2CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */; };
 		A7E8D0382CF6E608008DF828 /* CollateralLoanLandingGetShowcaseBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7E8D0372CF6E608008DF828 /* CollateralLoanLandingGetShowcaseBackend */; };
 		A7E8D03A2CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7E8D0392CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI */; };
@@ -6471,6 +6472,7 @@
 		A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift"; sourceTree = "<group>"; };
 		A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift"; sourceTree = "<group>"; };
 		A7B5BD6D2CF855830094D7C6 /* CollateralLoanLandingGetCollateralLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingUI.xctestplan; sourceTree = "<group>"; };
+		A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMainViewModelSectionsTests.swift"; sourceTree = "<group>"; };
 		A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetShowcaseRequest.swift"; sourceTree = "<group>"; };
 		A7DBAC402CE51FB4006776D1 /* CollateralLoanLandingGetJsonAbroadUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetJsonAbroadUI.xctestplan; sourceTree = "<group>"; };
 		A7E8D0352CF6E38E008DF828 /* CollateralLoanLandingGetShowcaseBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetShowcaseBackend.xctestplan; sourceTree = "<group>"; };
@@ -10681,6 +10683,7 @@
 				2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */,
 				84E75DB12D12D1CB00111E49 /* RootViewModelFactoryGetServiceCategoryFailureNavigationTests.swift */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
+				A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */,
 			);
 			path = RootViewModelFactory;
 			sourceTree = "<group>";
@@ -22423,6 +22426,7 @@
 				2A01BAFB29A8E52B0021833F /* ActiveSessionAgentStubTests.swift in Sources */,
 				2AEDAD5829A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift in Sources */,
 				2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */,
+				A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */,
 				2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */,
 				2A89A11E2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift in Sources */,
 				2AF5299E2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift in Sources */,
@@ -25176,7 +25180,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -25864,7 +25868,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -26925,7 +26929,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -26962,7 +26966,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

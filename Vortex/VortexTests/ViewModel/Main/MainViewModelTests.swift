@@ -130,7 +130,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: [],
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         sut.orderSticker()
@@ -696,7 +698,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: {},
-            bannersBinder: .preview
+            sections: [],
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -730,7 +734,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: [],
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -768,7 +774,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: [],
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -824,7 +832,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: [],
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)

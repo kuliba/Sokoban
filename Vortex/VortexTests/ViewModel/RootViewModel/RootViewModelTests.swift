@@ -479,6 +479,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
+
                     makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
@@ -487,7 +488,9 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
+                    sections: [],
                     bannersBinder: .preview,
+                    makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(
@@ -562,7 +565,9 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
+                    sections: [],
                     bannersBinder: .immediate,
+                    makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(

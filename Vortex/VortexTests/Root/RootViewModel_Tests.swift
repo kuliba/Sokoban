@@ -50,7 +50,9 @@ class RootViewModel_Tests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
-                    bannersBinder: .preview
+                    sections: [],
+                    bannersBinder: .preview,
+                    makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,
                 chatViewModel: .init(),

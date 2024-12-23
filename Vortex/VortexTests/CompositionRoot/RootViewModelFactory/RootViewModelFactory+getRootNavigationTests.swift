@@ -373,6 +373,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             productNavigationStateManager: .preview,
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             filterHistoryRequest: { _,_,_,_ in },
+            makeOpenNewProductButtons: { _ in [] },
             productProfileViewModelFactory: .preview,
             filterState: .preview,
             rootView: ""
