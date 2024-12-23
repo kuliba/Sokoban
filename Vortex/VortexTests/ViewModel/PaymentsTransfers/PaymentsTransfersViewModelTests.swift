@@ -1066,7 +1066,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
-            makePaymentNavigation: { _,_,_ in .none },
+            makeRepeatPaymentNavigation: { _,_,_,_  in .none },
             makeSubscriptionsViewModel: { _,_  in .preview},
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,

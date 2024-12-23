@@ -3241,7 +3241,7 @@ extension ProductProfileViewModel {
             switch result {
             case let .success(infoPayment):
                 
-                let navigation = productProfileViewModelFactory.makePaymentNavigation(infoPayment, product.activeProductId, closeAction)
+                let navigation = productProfileViewModelFactory.makeRepeatPaymentNavigation(infoPayment, product.activeProductId, model.product(productId:), closeAction)
                 let delay = infoPayment.delay
                 
                 switch navigation {

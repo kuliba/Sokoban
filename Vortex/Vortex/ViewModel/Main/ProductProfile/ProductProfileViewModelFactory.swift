@@ -9,7 +9,7 @@ import SwiftUI
 import LandingUIComponent
 import GetInfoRepeatPaymentService
 
-typealias MakePaymentNavigation = (GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, ProductData.ID, @escaping () -> Void) -> GetInfoRepeatPaymentDomain.Navigation?
+typealias MakeRepeatPaymentNavigation = (GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, ProductData.ID, @escaping (ProductData.ID) -> ProductData?, @escaping () -> Void) -> PaymentsDomain.Navigation?
 
 struct ProductProfileViewModelFactory {
     
@@ -17,8 +17,8 @@ struct ProductProfileViewModelFactory {
     let makeAlert: (AlertParameters) -> Alert.ViewModel
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
     let makeCardGuardianPanel: MakeCardGuardianPanel
+    let makeRepeatPaymentNavigation: MakeRepeatPaymentNavigation
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
-    let makePaymentNavigation: MakePaymentNavigation
 
     private let model: Model
     
@@ -27,7 +27,7 @@ struct ProductProfileViewModelFactory {
         makeAlert: @escaping (AlertParameters) -> Alert.ViewModel,
         makeInformerDataUpdateFailure: @escaping MakeInformerDataUpdateFailure,
         makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
-        makePaymentNavigation: @escaping MakePaymentNavigation,
+        makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         model: Model
     ) {
@@ -35,7 +35,7 @@ struct ProductProfileViewModelFactory {
         self.makeAlert = makeAlert
         self.makeInformerDataUpdateFailure = makeInformerDataUpdateFailure
         self.makeCardGuardianPanel = makeCardGuardianPanel
-        self.makePaymentNavigation = makePaymentNavigation
+        self.makeRepeatPaymentNavigation = makeRepeatPaymentNavigation
         self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
         self.model = model
     }
@@ -131,7 +131,7 @@ extension ProductProfileViewModelFactory {
         },
         makeInformerDataUpdateFailure: { nil }, 
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
-        makePaymentNavigation: { _,_,_ in .none },
+        makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
         model: .emptyMock
     )
