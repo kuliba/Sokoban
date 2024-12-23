@@ -305,6 +305,36 @@ extension RootViewModelFactory {
         )
         
         let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+
+        func processPayments(
+            lastPayment: UtilityPaymentLastPayment,
+            notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
+            completion: @escaping (PaymentsDomain.Navigation?) -> Void
+        ) {
+            self.processPayments(
+                lastPayment: lastPayment,
+                getCategoryType: { type in
+                    
+                    let categories = paymentsTransfersPersonal.content.categoryPicker.sectionBinder?.content.state.elements.map(\.element)
+                    
+                    return categories?.first { $0.type.name == type }?.type
+                },
+                notify: notify,
+                completion: completion
+            )
+        }
+        
+        func processPayments(
+            lastPayment: UtilityPaymentLastPayment,
+            close: @escaping () -> Void,
+            completion: @escaping (PaymentsDomain.Navigation?) -> Void
+        ) {
+            processPayments(
+                lastPayment: lastPayment, 
+                notify: { _ in close() },
+                completion: completion
+            )
+        }
         
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         

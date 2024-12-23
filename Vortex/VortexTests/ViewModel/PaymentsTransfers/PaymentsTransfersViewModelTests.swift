@@ -1140,11 +1140,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeLatestPayment(
         date: Date = .init(),
-        _ title: String = UUID().uuidString,
+        _ title: String = anyMessage(),
+        _ type: String = anyMessage(),
         additionalItems: [RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem] = []
     ) -> UtilityPaymentLastPayment {
         
-        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, additionalItems: additionalItems)
+        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, type: type, additionalItems: additionalItems)
     }
     
     private func makeService(
