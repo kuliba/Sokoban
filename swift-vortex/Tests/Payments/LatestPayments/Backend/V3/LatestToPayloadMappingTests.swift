@@ -478,7 +478,7 @@ final class LatestToPayloadMappingTests: XCTestCase {
         )
         
         XCTAssertNoDiff(
-            mapped.map(\.paymentPayload)[12],
+            mapped.map(\.paymentPayload)[13],
             .phone(.init(
                 amount: 100.00,
                 bankID: "100000000217",
@@ -488,7 +488,7 @@ final class LatestToPayloadMappingTests: XCTestCase {
         )
         
         XCTAssertNoDiff(
-            mapped.map(\.paymentPayload)[13],
+            mapped.map(\.paymentPayload)[14],
             .phone(.init(
                 amount: 11.11,
                 bankID: "100000000217",
@@ -498,7 +498,7 @@ final class LatestToPayloadMappingTests: XCTestCase {
         )
         
         XCTAssertNoDiff(
-            mapped.map(\.paymentPayload)[14],
+            mapped.map(\.paymentPayload)[15],
             .phone(.init(
                 amount: 10.00,
                 bankID: "100000000217",

@@ -62,9 +62,7 @@ private extension ResponseMapper._Latest._Service {
     var service: ResponseMapper.LatestPayment.Service? {
         
         guard let puref,
-              !puref.isEmpty,
-              let type = type?.type,
-              let flow = paymentFlow?.flow
+              let type = type?.type
         else { return nil }
         
         return .init(
@@ -78,7 +76,7 @@ private extension ResponseMapper._Latest._Service {
             md5Hash: md5hash,
             name: name,
             paymentDate: paymentDate,
-            paymentFlow: flow,
+            paymentFlow: paymentFlow?.flow,
             puref: puref,
             type: type
         )

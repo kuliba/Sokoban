@@ -96,11 +96,11 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         )
     }
     
-    func test_shouldSkipItemsWithoutPaymentFlow_fileData_count() throws {
+    func test_fileData_count() throws {
         
         let mapped = try map(data(from: "v3_getAllLatestPayments")).get()
         
-        XCTAssertEqual(mapped.count, 15)
+        XCTAssertEqual(mapped.count, 18)
     }
     
     func test_fileData() throws {
@@ -256,7 +256,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         md5Hash: String? = nil,
         name: String? = nil,
         paymentDate: Date,
-        paymentFlow: ResponseMapper.LatestPayment.PaymentFlow = .standard,
+        paymentFlow: ResponseMapper.LatestPayment.PaymentFlow? = nil,
         puref: String,
         type: ResponseMapper.LatestPayment.LatestType
     ) -> ResponseMapper.LatestPayment {

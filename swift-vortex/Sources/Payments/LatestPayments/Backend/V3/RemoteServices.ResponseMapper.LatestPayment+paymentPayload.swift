@@ -14,7 +14,10 @@ extension RemoteServices.ResponseMapper.LatestPayment {
         
         switch self {
         case let .service(service):
-            return service.payload.map { .paymentFlow(service.paymentFlow, $0) }
+            guard let paymentFlow = service.paymentFlow
+            else { return nil }
+            
+            return service.payload.map { .paymentFlow(paymentFlow, $0) }
             
         case let .withPhone(withPhone):
             switch withPhone.type {
