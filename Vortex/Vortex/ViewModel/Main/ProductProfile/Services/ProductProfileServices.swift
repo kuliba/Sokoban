@@ -18,7 +18,7 @@ struct ProductProfileServices {
     let createCreateGetSVCardLimits: GetSVCardLimitsServices
     let createChangeSVCardLimit: ChangeSVCardLimitServices
     let createSVCardLanding: SVCardLandingServices
-    let repeatPayment: InfoRepeatPaymentServices
+    let repeatPayment: RepeatPayment
     
     let makeSVCardLandingViewModel: (Landing, ListHorizontalRectangleLimitsViewModel?, UILanding.Component.Config, @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel?
@@ -26,6 +26,11 @@ struct ProductProfileServices {
     let makeInformer: (String) -> Void
     
     typealias LimitType = String
+    
+    typealias OperationID = Int
+    typealias ActiveProductID = ProductData.ID
+    typealias CloseAction = () -> Void
+    typealias RepeatPayment = (OperationID, ActiveProductID, @escaping CloseAction, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
 }
 
 // MARK: - Preview Content
@@ -39,8 +44,8 @@ extension ProductProfileServices {
         createCreateGetSVCardLimits: .preview(),
         createChangeSVCardLimit: .preview(),
         createSVCardLanding: .preview(),
-        repeatPayment: .preview(),
-        makeSVCardLandingViewModel: { _,_,_,_  in nil },
+        repeatPayment: { _,_,_,_ in },
+        makeSVCardLandingViewModel: { _,_,_,_ in nil },
         makeInformer: { _ in }
     )
 }

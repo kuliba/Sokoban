@@ -145,12 +145,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-        
-        let infoPaymentService = nanoServiceComposer.compose(
-            createRequest: RequestFactory.getInfoForRepeatPayment,
-            mapResponse: RemoteServices.ResponseMapper.mapGetInfoRepeatPaymentResponse
-        )
-        
+                
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -158,7 +153,7 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
-            repeatPayment: .init(createInfoRepeatPaymentServices: infoPaymentService),
+            repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: {
                 self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))

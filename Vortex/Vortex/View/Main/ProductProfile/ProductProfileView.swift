@@ -276,7 +276,7 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(operationDetail):
-            viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(viewModel: operationDetail) })
+            viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId) })
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)

@@ -20,6 +20,7 @@ struct ProductProfileViewModelFactory {
     let makeRepeatPaymentNavigation: MakeRepeatPaymentNavigation
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
 
+    // TODO: need remove model
     private let model: Model
     
     init(

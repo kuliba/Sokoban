@@ -91,6 +91,7 @@ class ProductProfileViewModel: ObservableObject {
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
     private let filterSubject = PassthroughSubject<FilterState, Never>()
     private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
+    private let scheduler: AnySchedulerOfDispatchQueue
 
     init(
         navigationBar: NavigationBarView.ViewModel,
@@ -141,6 +142,7 @@ class ProductProfileViewModel: ObservableObject {
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.filterState = filterState
+        self.scheduler = scheduler
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         // TODO: add removeDuplicates
@@ -3225,52 +3227,43 @@ extension ProductProfileViewModel {
     }
     
     func payment(
-        viewModel: OperationDetailViewModel
+        operationID: Int?
     ) {
+        // TODO: call with non-optional operationID
+        guard let operationID else { return cannotRepeatPayment() }
         
-        guard let operationId = viewModel.operationId
-        else {
-            cannotRepeatPayment()
-            return
+        productProfileServices.repeatPayment(operationID, product.activeProductId, closeAction) { [weak self] in
+            
+            self?.handleNavigation($0)
         }
-        
-        productProfileServices.repeatPayment.createInfoRepeatPaymentServices(.init(paymentOperationDetailId: operationId)) { [weak self] result in
+    }
+    
+    private func handleNavigation(
+        _ navigation: PaymentsDomain.Navigation?
+    ) {
+        switch navigation {
+        case .none:
+            cannotRepeatPayment()
             
-            guard let self else { return }
-            
-            switch result {
-            case let .success(infoPayment):
-                
-                let navigation = productProfileViewModelFactory.makeRepeatPaymentNavigation(infoPayment, product.activeProductId, model.product(productId:), closeAction)
-                let delay = infoPayment.delay
-                
-                switch navigation {
-                case .none:
-                    cannotRepeatPayment()
+        case let .some(value):
+            switch value {
+            case let .meToMe(payment):
+                scheduler.delay(for: .milliseconds(1300)) { [weak self] in
                     
-                case let .some(value):
-                    switch value {
-                    case let .meToMe(payment):
-                         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                             guard let self else { return }
-                             
-                             bottomSheet = .init(type: .meToMe(payment))
-                         }
-
-                    case let .payments(payment):
-                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                            guard let self else { return }
-                            
-                            link = .payment(payment)
-                        }
-                    }
+                    self?.bottomSheet = .init(type: .meToMe(payment))
                 }
                 
-            case let .failure(error):
-                cannotRepeatPayment()
+            case let .payments(payment):
+                scheduler.delay(for: .milliseconds(300)) { [weak self] in
+                    
+                    self?.link = .payment(payment)
+                }
             }
         }
-        bottomSheet = nil
+        
+        scheduler.delay(for: .milliseconds(0)) { [weak self] in
+            self?.bottomSheet = nil
+        }
     }
 }
 
