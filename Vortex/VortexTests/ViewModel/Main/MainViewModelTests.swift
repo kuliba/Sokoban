@@ -132,6 +132,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
+            collateralLoanLandingFactory: .init(),
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -700,6 +701,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
+            collateralLoanLandingFactory: .init(),
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -748,6 +750,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
+            collateralLoanLandingFactory: .init(),
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -788,6 +791,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
+            collateralLoanLandingFactory: .init(),
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -846,6 +850,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
+            collateralLoanLandingFactory: .init(),
             makeOpenNewProductButtons: { _ in [] }
         )
         

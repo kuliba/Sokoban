@@ -490,6 +490,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: [],
                     bannersBinder: .preview,
+                    collateralLoanLandingFactory: .init(),
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -567,6 +568,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
+                    collateralLoanLandingFactory: .init(),
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),

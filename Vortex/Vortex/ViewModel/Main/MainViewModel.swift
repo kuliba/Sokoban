@@ -50,6 +50,7 @@ class MainViewModel: ObservableObject, Resetable {
 
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
+    private let collateralLoanLandingFactory: CollateralLoanLandingFactory
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
@@ -73,6 +74,7 @@ class MainViewModel: ObservableObject, Resetable {
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
+        collateralLoanLandingFactory: CollateralLoanLandingFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
@@ -90,6 +92,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.route = route
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
+        self.collateralLoanLandingFactory = collateralLoanLandingFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
@@ -493,7 +496,6 @@ private extension MainViewModel {
                 openProductSection.action
                     .receive(on: scheduler)
                     .sink { [weak self] action in
-                            
                         guard let self else { return }
 
                         switch action {
@@ -522,6 +524,9 @@ private extension MainViewModel {
                                 
                                 handleLandingAction(.sticker)
                             }
+                            
+                        case _ as MainSectionViewModelAction.OpenProduct.openCollateralLoanLanding:
+                            openCollateralLoanLanding()
                             
                         default:
                             break
@@ -934,6 +939,12 @@ private extension MainViewModel {
         )]
     }
     
+    func openCollateralLoanLanding() {
+        
+        let viewModel = collateralLoanLandingFactory.makeViewModel()
+        route.destination = .collateralLoanLanding(viewModel)
+    }
+
     private func openDeposit() {
         
         let openDepositViewModel = OpenDepositListViewModel(
@@ -965,12 +976,7 @@ private extension MainViewModel {
             route.destination = .openCard(authProductsViewModel)
         }
     }
-        
-    private func openCollateralLoanLanding() {
-        
-        route.destination = .collateralLoanLanding
-    }
-    
+            
     private typealias DepositeID = Int
     private func returnFirstExpiredDepositID(
         previousData: (expired: Date?, DepositeID?),

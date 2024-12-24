@@ -746,12 +746,15 @@ private extension RootViewModelFactory {
             makeTemplates: makeTemplates,
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
-        
+                
+        let collateralLoanLandingFactory = CollateralLoanLandingFactory()
+        let openCollateralLanding: () -> Void
+
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
         )
-        
+                
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -764,6 +767,7 @@ private extension RootViewModelFactory {
             onRegister: onRegister,
             sections: sections,
             bannersBinder: bannersBinder,
+            collateralLoanLandingFactory: collateralLoanLandingFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )

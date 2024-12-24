@@ -366,9 +366,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         )
         let sut = factory.make(
             dismiss: {},
-            collateralLoanLandingFlag: .active,
-            paymentsTransfersFlag: .active,
-            savingsAccountFlag: .active
+            featureFlags: makeFeatureFlagsStub()
         )
         
         return (sut, httpClient, sessionAgent, userInitiatedScheduler)
@@ -414,6 +412,17 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
     ) throws -> URLRequest {
         
         try RequestFactory.createGetServiceCategoryListRequest(serial: serial)
+    }
+    
+    private func makeFeatureFlagsStub() -> FeatureFlags {
+        
+        .init(
+            getProductListByTypeV6Flag: .active,
+            historyFilterFlag: true,
+            paymentsTransfersFlag: .active,
+            savingsAccountFlag: .active,
+            collateralLoanLandingFlag: .active
+        )
     }
 }
 

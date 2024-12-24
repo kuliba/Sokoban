@@ -52,6 +52,7 @@ class RootViewModel_Tests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .preview,
+                    collateralLoanLandingFactory: .init(),
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,

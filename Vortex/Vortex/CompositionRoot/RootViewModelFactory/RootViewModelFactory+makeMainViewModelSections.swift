@@ -49,7 +49,7 @@ extension RootViewModelFactory {
     
     func makeOpenNewProductButtons(
         collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        action: @escaping (ProductType) -> Void
+        action: @escaping (ProductType, Bool) -> Void
     ) -> [NewProductButton.ViewModel] {
         
         let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
@@ -80,7 +80,7 @@ extension RootViewModelFactory {
                             icon: icon,
                             title: title,
                             subTitle: subTitle,
-                            action: loanButtonAction
+                            action: { action(.loan, true) }
                         ))
                     } else {
                         viewModels.append(.init(
@@ -99,7 +99,7 @@ extension RootViewModelFactory {
                             icon: icon,
                             title: title,
                             subTitle: subTitle,
-                            action: { action(type) }
+                            action: { action(type, false) }
                         ))
                 }
                 
@@ -118,7 +118,7 @@ extension RootViewModelFactory {
                             icon: .ic24Sticker,
                             title: "Стикер",
                             subTitle: "Быстро",
-                            action: { action(.loan) }
+                            action: { action(.loan, false) }
                         ))
                     default: break
                     }
@@ -127,11 +127,6 @@ extension RootViewModelFactory {
         
         return viewModels
 
-    }
-    
-    func loanButtonAction() {
-        
-        
     }
     
     func description(for type: ProductType) -> String {

@@ -266,7 +266,7 @@ struct MainView<NavigationOperationView: View>: View {
             
         case .collateralLoanLanding:
             // TODO: There are will added integration in next commit
-            Color.clear
+            Color.yellow
                 .edgesIgnoringSafeArea(.bottom)
         }
     }
@@ -589,7 +589,8 @@ extension MainViewModel {
         updateInfoStatusFlag: .active,
         onRegister: {},
         sections: [],
-        bannersBinder: .preview, 
+        bannersBinder: .preview,
+        collateralLoanLandingFactory: .init(),
         makeOpenNewProductButtons: { _ in [] }
     )
 }
