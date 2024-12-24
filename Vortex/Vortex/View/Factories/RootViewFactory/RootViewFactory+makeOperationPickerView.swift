@@ -17,6 +17,22 @@ extension RootViewFactory {
         operationPicker: OperationPicker
     ) -> some View {
         
+        OperationPickerView(
+            operationPicker: operationPicker, 
+            components: components,
+            makeIconView: makeIconView
+        )
+    }
+}
+
+struct OperationPickerView: View {
+
+    let operationPicker: OperationPicker
+    let components: ViewComponents
+    let makeIconView: MakeIconView
+
+    var body: some View {
+        
         if let binder = operationPicker.operationBinder {
             
             makeOperationPickerView(binder: binder)
@@ -27,6 +43,9 @@ extension RootViewFactory {
                 .foregroundColor(.red)
         }
     }
+}
+
+extension OperationPickerView {
     
     private func makeOperationPickerView(
         binder: OperationPickerDomain.Binder
