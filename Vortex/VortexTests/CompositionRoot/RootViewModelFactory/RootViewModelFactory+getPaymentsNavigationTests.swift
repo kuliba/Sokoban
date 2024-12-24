@@ -508,6 +508,7 @@ final class RootViewModelFactory_getPaymentsNavigationTests: GetInfoRepeatPaymen
     
     private enum EquatableNavigation: Equatable {
         
+        case anywayPayment
         case meToMe
         case payments
     }
@@ -517,8 +518,9 @@ final class RootViewModelFactory_getPaymentsNavigationTests: GetInfoRepeatPaymen
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .meToMe:   return .meToMe
-        case .payments: return .payments
+        case .anywayPayment: return .anywayPayment
+        case .meToMe:        return .meToMe
+        case .payments:      return .payments
         }
     }
     

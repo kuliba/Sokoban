@@ -320,7 +320,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.Service {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, additionalItems: additionalItems?.map(\.additional) ?? [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type, additionalItems: additionalItems?.map(\.additional) ?? [])
     }
 }
 
@@ -336,6 +336,6 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", additionalItems: [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", type: type, additionalItems: [])
     }
 }

@@ -19,8 +19,18 @@ extension PaymentsDomain {
     
     enum Navigation {
         
+        case anywayPayment(Node<AnywayFlowModel>)
         case meToMe(PaymentsMeToMeViewModel)
         case payments(PaymentsViewModel)
+    }
+    
+    enum PaymentFlow {
+        
+        case mobile
+        case qr
+        case standard
+        case taxAndStateServices
+        case transport
     }
 }
 

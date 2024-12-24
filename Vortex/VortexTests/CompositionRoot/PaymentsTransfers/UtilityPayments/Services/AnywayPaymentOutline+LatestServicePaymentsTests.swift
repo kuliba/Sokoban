@@ -116,6 +116,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         name: String,
         md5Hash: String?,
         puref: String,
+        type: String = anyMessage(),
         additionalItems: [LatestPayment.AdditionalItem]
     ) -> LatestPayment {
         
@@ -125,6 +126,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
             name: name,
             md5Hash: md5Hash,
             puref: puref,
+            type: type,
             additionalItems: additionalItems
         )
     }
