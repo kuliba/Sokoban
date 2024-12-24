@@ -18,6 +18,7 @@ import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
 import ClientInformList
+import RxViewModel
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -584,13 +585,21 @@ extension MainViewModel {
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
-        landingServices: .empty(), 
+        landingServices: .empty(),
+        
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .active,
-        onRegister: {},
+        onRegister: {
+        },
         sections: [],
         bannersBinder: .preview,
-        collateralLoanLandingFactory: .init(),
+        makeCollateralLoanLandingViewModel: {
+            _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            )
+        },
         makeOpenNewProductButtons: { _ in [] }
     )
 }

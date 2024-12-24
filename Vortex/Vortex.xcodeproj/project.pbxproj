@@ -2965,7 +2965,6 @@
 		A7A4FBFD2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FBFC2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift */; };
 		A7A4FBFF2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FBFE2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift */; };
 		A7A4FC012D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FC002D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift */; };
-		A7A4FC032D1AA1BB006031E0 /* CollateralLoanLandingFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FC022D1AA1BB006031E0 /* CollateralLoanLandingFactory.swift */; };
 		A7B5BD6A2CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */; };
 		A7B5BD6C2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */; };
 		A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */; };
@@ -6494,7 +6493,6 @@
 		A7A4FBFC2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingDomain.swift; sourceTree = "<group>"; };
 		A7A4FBFE2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollateralLoanLandingDomain+Reducer.swift"; sourceTree = "<group>"; };
 		A7A4FC002D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollateralLoanLanding+EffectHandler.swift"; sourceTree = "<group>"; };
-		A7A4FC022D1AA1BB006031E0 /* CollateralLoanLandingFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingFactory.swift; sourceTree = "<group>"; };
 		A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift"; sourceTree = "<group>"; };
 		A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift"; sourceTree = "<group>"; };
 		A7B5BD6D2CF855830094D7C6 /* CollateralLoanLandingGetCollateralLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingUI.xctestplan; sourceTree = "<group>"; };
@@ -16193,7 +16191,6 @@
 				A7A4FC002D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift */,
 				A7A4FBFE2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift */,
 				A7A4FBFC2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift */,
-				A7A4FC022D1AA1BB006031E0 /* CollateralLoanLandingFactory.swift */,
 			);
 			path = CollateralLoanLanding;
 			sourceTree = "<group>";
@@ -22089,7 +22086,6 @@
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
-				A7A4FC032D1AA1BB006031E0 /* CollateralLoanLandingFactory.swift in Sources */,
 				2A33941D2CBEDA8D000C6459 /* LocalAgentWrapper.swift in Sources */,
 				503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */,
 				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,

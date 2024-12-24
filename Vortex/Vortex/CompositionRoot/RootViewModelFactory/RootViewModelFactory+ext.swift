@@ -298,11 +298,6 @@ extension RootViewModelFactory {
             )
         }
         
-        let collateralLoanLandingShowCase = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetShowcaseRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
-        )
-        
         let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
         
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
@@ -747,7 +742,6 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
                 
-        let collateralLoanLandingFactory = CollateralLoanLandingFactory()
         let openCollateralLanding: () -> Void
 
         let sections = makeMainViewModelSections(
@@ -767,7 +761,7 @@ private extension RootViewModelFactory {
             onRegister: onRegister,
             sections: sections,
             bannersBinder: bannersBinder,
-            collateralLoanLandingFactory: collateralLoanLandingFactory,
+            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
