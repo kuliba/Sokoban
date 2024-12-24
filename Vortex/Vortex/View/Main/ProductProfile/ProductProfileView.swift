@@ -669,6 +669,7 @@ extension ProductProfileViewModel {
         productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         filterHistoryRequest: { _,_,_,_ in },
+        makeOpenNewProductButtons: { _ in [] },
         productProfileViewModelFactory: .preview,
         filterState: .preview,
         rootView: ""
@@ -691,6 +692,7 @@ extension ProductProfileViewModel {
         productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         filterHistoryRequest: { _,_,_,_ in },
+        makeOpenNewProductButtons: { _ in [] },
         productProfileViewModelFactory: .preview,
         filterState: .preview,
         rootView: ""

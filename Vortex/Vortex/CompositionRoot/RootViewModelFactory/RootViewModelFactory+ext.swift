@@ -283,7 +283,8 @@ extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder
+            makeServicePaymentBinder: makeServicePaymentBinder,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
@@ -405,6 +406,7 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             marketShowcaseBinder: marketShowcaseBinder
         )
         
@@ -550,7 +552,8 @@ extension ProductProfileViewModel {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -574,7 +577,8 @@ extension ProductProfileViewModel {
                 updateInfoStatusFlag: updateInfoStatusFlag,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-                makeServicePaymentBinder: makeServicePaymentBinder
+                makeServicePaymentBinder: makeServicePaymentBinder,
+                makeOpenNewProductButtons: makeOpenNewProductButtons
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -665,7 +669,8 @@ extension ProductProfileViewModel {
                 },
                 filterState: filterState,
                 rootView: rootView,
-                dismissAction: dismissAction
+                dismissAction: dismissAction,
+                makeOpenNewProductButtons: makeOpenNewProductButtons
             )
         }
     }
@@ -720,6 +725,7 @@ private extension RootViewModelFactory {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         paymentsTransfersSwitcher: PaymentsTransfersSwitcher,
         bannersBinder: BannersBinder,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> RootViewModel {
         
@@ -742,6 +748,8 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
         
+        let sections = makeMainViewModelSections(bannersBinder: bannersBinder)
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -752,7 +760,9 @@ private extension RootViewModelFactory {
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
+            sections: sections,
             bannersBinder: bannersBinder,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
         

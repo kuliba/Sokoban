@@ -130,7 +130,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: makeSections(),
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         sut.orderSticker()
@@ -696,7 +698,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: {},
-            bannersBinder: .preview
+            sections: makeSections(),
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -704,6 +708,18 @@ final class MainViewModelTests: XCTestCase {
         // trackForMemoryLeaks(model, file: file, line: line)
         
         return (sut, model)
+    }
+    
+    private func makeSections() -> [MainSectionViewModel] {
+        
+        [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample,
+            MainSectionAtmView.ViewModel.initial
+        ]
     }
     
     private func makeSUTWithLocalAgent(
@@ -730,7 +746,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: makeSections(),
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -768,7 +786,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: makeSections(),
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -824,7 +844,9 @@ final class MainViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
-            bannersBinder: .preview
+            sections: makeSections(),
+            bannersBinder: .preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)

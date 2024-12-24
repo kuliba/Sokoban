@@ -1069,7 +1069,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview
+            makeServicePaymentBinder: ServicePaymentBinder.preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
