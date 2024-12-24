@@ -10,7 +10,8 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeMainViewModelSections(
-        bannersBinder: BannersBinder
+        bannersBinder: BannersBinder,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) -> [MainSectionViewModel] {
         
         let stickerViewModel:  ProductCarouselView.StickerViewModel? = nil
@@ -26,7 +27,15 @@ extension RootViewModelFactory {
             MainSectionCurrencyMetallView.ViewModel(model),
             MainSectionOpenProductView.ViewModel(
                 model,
-                makeButtons: makeOpenNewProductButtons
+                makeButtons: { [weak self] in
+                    
+                    guard let self else { return [] }
+                    
+                    return self.makeOpenNewProductButtons(
+                        collateralLoanLandingFlag: collateralLoanLandingFlag,
+                        action: $0
+                    )
+                }
             ),
             MainSectionAtmView.ViewModel.initial
         ]
@@ -39,6 +48,7 @@ extension RootViewModelFactory {
     }
     
     func makeOpenNewProductButtons(
+        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         action: @escaping (ProductType) -> Void
     ) -> [NewProductButton.ViewModel] {
         
@@ -64,15 +74,23 @@ extension RootViewModelFactory {
                 
                 switch type {
                 case .loan:
-                    viewModels.append(
-                        NewProductButton.ViewModel(
+                    if collateralLoanLandingFlag.isActive {
+                        viewModels.append(.init(
+                            id: id,
+                            icon: icon,
+                            title: title,
+                            subTitle: subTitle,
+                            action: loanButtonAction
+                        ))
+                    } else {
+                        viewModels.append(.init(
                             id: id,
                             icon: icon,
                             title: title,
                             subTitle: subTitle,
                             url: model.productsOpenLoanURL
-                        )
-                    )
+                        ))
+                    }
                     
                 default:
                     viewModels.append(
@@ -109,6 +127,11 @@ extension RootViewModelFactory {
         
         return viewModels
 
+    }
+    
+    func loanButtonAction() {
+        
+        
     }
     
     func description(for type: ProductType) -> String {

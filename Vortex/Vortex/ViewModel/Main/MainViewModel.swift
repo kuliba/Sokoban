@@ -1681,7 +1681,7 @@ extension MainViewModel {
         case paymentSticker
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
-        case collateralLoanLanding
+        case collateralLoanLanding(CollateralLoanLandingDomain.ViewModel)
         
         var id: Case {
             

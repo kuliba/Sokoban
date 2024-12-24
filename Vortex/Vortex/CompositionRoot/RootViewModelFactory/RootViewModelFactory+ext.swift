@@ -33,9 +33,7 @@ extension RootViewModelFactory {
     
     func make(
         dismiss: @escaping () -> Void,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        paymentsTransfersFlag: PaymentsTransfersFlag,
-        savingsAccountFlag: SavingsAccountFlag
+        featureFlags: FeatureFlags
     ) -> RootViewDomain.Binder {
         
         var bindings = Set<AnyCancellable>()
@@ -67,10 +65,6 @@ extension RootViewModelFactory {
         }
         
         model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
-        
-        if collateralLoanLandingFlag.isActive {
-            model.featureFlags.productsOpenLoanURL = nil
-        }
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
@@ -104,7 +98,7 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
-            paymentsTransfersFlag: paymentsTransfersFlag
+            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag
         )
         
         let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
@@ -272,7 +266,7 @@ extension RootViewModelFactory {
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            makeTemplates: makeMakeTemplates(paymentsTransfersFlag),
+            makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -313,7 +307,7 @@ extension RootViewModelFactory {
         
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
-        if paymentsTransfersFlag.isActive {
+        if featureFlags.paymentsTransfersFlag.isActive {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         } else {
             performOrWaitForActive({ [weak self] in
@@ -389,9 +383,9 @@ extension RootViewModelFactory {
             .store(in: &bindings)
         
         let rootViewModel = make(
-            paymentsTransfersFlag: paymentsTransfersFlag,
+            featureFlags: featureFlags,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplates: makeMakeTemplates(paymentsTransfersFlag),
+            makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
@@ -402,14 +396,20 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             updateInfoStatusFlag: updateInfoStatusFlag,
-            collateralLoanLandingFlag: collateralLoanLandingFlag,
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
-            makeOpenNewProductButtons: makeOpenNewProductButtons,
+            makeOpenNewProductButtons: { [weak self] in
+                
+                guard let self else { return [] }
+                return makeOpenNewProductButtons(
+                    collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+                    action: $0
+                )
+            },
             marketShowcaseBinder: marketShowcaseBinder
         )
         
@@ -422,7 +422,7 @@ extension RootViewModelFactory {
         bindings.formUnion(marketBinder.bind())
         
         let witness = RootViewDomain.ContentWitnesses(
-            isFlagActive: paymentsTransfersFlag == .active
+            isFlagActive: featureFlags.paymentsTransfersFlag == .active
         )
         
         let composer = RootViewDomain.BinderComposer(
@@ -705,7 +705,7 @@ private extension RootViewModelFactory {
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     func make(
-        paymentsTransfersFlag: PaymentsTransfersFlag,
+        featureFlags: FeatureFlags,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -718,7 +718,6 @@ private extension RootViewModelFactory {
         qrViewModelFactory: QRViewModelFactory,
         landingServices: LandingServices,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag,
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
@@ -748,7 +747,10 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
         
-        let sections = makeMainViewModelSections(bannersBinder: bannersBinder)
+        let sections = makeMainViewModelSections(
+            bannersBinder: bannersBinder,
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
+        )
         
         let mainViewModel = MainViewModel(
             model,
@@ -778,7 +780,7 @@ private extension RootViewModelFactory {
         
         let paymentsModel: RootViewModel.PaymentsModel = {
             
-            switch paymentsTransfersFlag.rawValue {
+            switch featureFlags.paymentsTransfersFlag.rawValue {
             case .active:
                 return .v1(paymentsTransfersSwitcher)
                 
