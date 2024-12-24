@@ -490,7 +490,11 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: [],
                     bannersBinder: .preview,
-                    collateralLoanLandingFactory: .init(),
+                    makeCollateralLoanLandingViewModel: { _ in .init(
+                        initialState: .init(),
+                        reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                        handleEffect: { _,_ in }
+                    ) },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -568,7 +572,11 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
-                    collateralLoanLandingFactory: .init(),
+                    makeCollateralLoanLandingViewModel: { _ in .init(
+                        initialState: .init(),
+                        reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                        handleEffect: { _,_ in }
+                    ) },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),

@@ -52,7 +52,11 @@ class RootViewModel_Tests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .preview,
-                    collateralLoanLandingFactory: .init(),
+                    makeCollateralLoanLandingViewModel: { _ in .init(
+                        initialState: .init(),
+                        reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                        handleEffect: { _,_ in }
+                    ) },
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,
