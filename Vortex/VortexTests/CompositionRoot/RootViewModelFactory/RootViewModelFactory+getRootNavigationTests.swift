@@ -140,13 +140,13 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     
     func test_standardPayment_shouldDeliverStandardPayment() throws {
         
-        for type in codableCategoryTypes {
+        for type in categoryTypes {
             
             let (sut, httpClient, _) = try makeSUT(
                 model: .withServiceCategoryAndOperator(ofType: type)
             )
             
-            expect(sut: sut, .standardPayment(categoryType(type)), toDeliver: .standardPayment) {
+            expect(sut: sut, .standardPayment(type), toDeliver: .standardPayment) {
                 
                 completeGetAllLatestPayments(httpClient)
             }
@@ -179,29 +179,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         return .random(in: 0..<Int.max)
     }
     
-    private let categoryTypes = [ServiceCategory.CategoryType.charity, .digitalWallets, .education, .housingAndCommunalService, .internet, .mobile, .networkMarketing, .qr, .repaymentLoansAndAccounts, .security, .socialAndGames, .taxAndStateService, .transport]
-    private let codableCategoryTypes = [CodableServiceCategory.CategoryType.charity, .digitalWallets, .education, .housingAndCommunalService, .internet, .mobile, .networkMarketing, .qr, .repaymentLoansAndAccounts, .security, .socialAndGames, .taxAndStateService, .transport]
-    
-    private func categoryType(
-        _ type: CodableServiceCategory.CategoryType
-    ) -> ServiceCategory.CategoryType {
-        
-        switch type {
-        case .charity:                   return .charity
-        case .digitalWallets:            return .digitalWallets
-        case .education:                 return .education
-        case .housingAndCommunalService: return .housingAndCommunalService
-        case .internet:                  return .internet
-        case .mobile:                    return .mobile
-        case .networkMarketing:          return .networkMarketing
-        case .qr:                        return .qr
-        case .repaymentLoansAndAccounts: return .repaymentLoansAndAccounts
-        case .security:                  return .security
-        case .socialAndGames:            return .socialAndGames
-        case .transport:                 return .transport
-        case .taxAndStateService:        return .taxAndStateService
-        }
-    }
+    private let categoryTypes = ["charity", "digitalWallets", "education", "housingAndCommunalService", "internet", "mobile", "networkMarketing", "qr", "repaymentLoansAndAccounts", "security", "socialAndGames", "taxAndStateService", "transport"]
     
     private func completeGetAllLatestPayments(
         _ httpClient: HTTPClientSpy,
@@ -492,7 +470,7 @@ extension XCTestCase {
 extension Model {
     
     static func withServiceCategoryAndOperator(
-        ofType categoryType: CodableServiceCategory.CategoryType = .housingAndCommunalService,
+        ofType categoryType: CodableServiceCategory.CategoryType = "housingAndCommunalService",
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> Model {
@@ -511,7 +489,7 @@ extension Model {
         ])
         
         XCTAssertNotNil(localAgent.load(type: [CodableServiceCategory].self)?.first(where: { $0.type == categoryType }), file: file, line: line)
-        XCTAssertNotNil(localAgent.load(type: [CodableServicePaymentOperator].self)?.first(where: { $0.type == categoryTypeName(of: categoryType) }), file: file, line: line)
+        XCTAssertNotNil(localAgent.load(type: [CodableServicePaymentOperator].self)?.first(where: { $0.type == categoryType }), file: file, line: line)
         
         return .mockWithEmptyExcept(localAgent: localAgent)
     }
@@ -521,34 +499,13 @@ extension Model {
         inn: String = anyMessage(),
         md5Hash: String? = nil,
         name: String = anyMessage(),
-        type: CodableServiceCategory.CategoryType = .housingAndCommunalService,
+        type: CodableServiceCategory.CategoryType = "housingAndCommunalService",
         sortedOrder: Int = .random(in: 0..<1_000)
     ) -> CodableServicePaymentOperator {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: categoryTypeName(of: type), sortedOrder: sortedOrder)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type, sortedOrder: sortedOrder)
     }
-    
-    private static func categoryTypeName(
-        of type: CodableServiceCategory.CategoryType
-    ) -> String {
         
-        switch type {
-        case .charity:                   return "charity"
-        case .digitalWallets:            return "digitalWallets"
-        case .education:                 return "education"
-        case .housingAndCommunalService: return "housingAndCommunalService"
-        case .internet:                  return "internet"
-        case .mobile:                    return "mobile"
-        case .networkMarketing:          return "networkMarketing"
-        case .qr:                        return "qr"
-        case .repaymentLoansAndAccounts: return "repaymentLoansAndAccounts"
-        case .security:                  return "security"
-        case .socialAndGames:            return "socialAndGames"
-        case .transport:                 return "transport"
-        case .taxAndStateService:        return "taxAndStateService"
-        }
-    }
-    
     private static func makeCodableServiceCategory(
         latestPaymentsCategory: CodableServiceCategory.LatestPaymentsCategory? = nil,
         md5Hash: String = anyMessage(),
@@ -556,7 +513,7 @@ extension Model {
         ord: Int = .random(in: 0..<1_000),
         paymentFlow: CodableServiceCategory.PaymentFlow = .standard,
         hasSearch: Bool = false,
-        type: CodableServiceCategory.CategoryType = .housingAndCommunalService
+        type: CodableServiceCategory.CategoryType = "housingAndCommunalService"
     ) -> CodableServiceCategory {
         
         return .init(
@@ -569,4 +526,17 @@ extension Model {
             type: type
         )
     }
+}
+
+extension String {
+    
+    static let charity                    = "charity"
+    static let digitalWallets             = "digitalWallets"
+    static let education                  = "education"
+    static let networkMarketing           = "networkMarketing"
+    static let qr                         = "qr"
+    static let repaymentLoansAndAccounts  = "repaymentLoansAndAccounts"
+    static let security                   = "security"
+    static let socialAndGames             = "socialAndGames"
+    static let taxAndStateService         = "taxAndStateService"
 }

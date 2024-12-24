@@ -23,7 +23,7 @@ extension RequestFactory {
         
         try getOperatorsListByParam(
             serial: payload.serial,
-            type: payload.category.type.name
+            type: payload.category.type
         )
     }
     
@@ -76,27 +76,5 @@ extension RequestFactory {
         request.httpMethod = "GET"
         
         return request
-    }
-}
-
-extension ServiceCategory.CategoryType {
-    
-    var name: String {
-        
-        switch self {
-        case .charity:                   return "charity"
-        case .digitalWallets:            return "digitalWallets"
-        case .education:                 return "education"
-        case .housingAndCommunalService: return "housingAndCommunalService"
-        case .internet:                  return "internet"
-        case .mobile:                    return "mobile"
-        case .networkMarketing:          return "networkMarketing"
-        case .qr:                        return "qr"
-        case .repaymentLoansAndAccounts: return "repaymentLoansAndAccounts"
-        case .security:                  return "security"
-        case .socialAndGames:            return "socialAndGames"
-        case .taxAndStateService:        return "taxAndStateService"
-        case .transport:                 return "transport"
-        }
     }
 }

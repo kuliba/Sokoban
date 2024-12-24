@@ -274,7 +274,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 fraudDelay: settings.fraudDelay,
                 navTitle: settings.utilityNavTitle
             ),
-            microServices: microComposer.compose(for: .housingAndCommunalService),
+            microServices: microComposer.compose(for: "housingAndCommunalService"),
             scheduler: scheduler
         )
     }

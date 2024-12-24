@@ -141,13 +141,13 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
     static let one: Self = .init(
         list: [
             .init(
-                latestPaymentsCategory: .mobile,
+                latestPaymentsCategory: "isMobilePayments",
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
                 paymentFlow: .mobile,
                 hasSearch: false,
-                type: .mobile
+                type: "mobile"
             )
         ],
         serial: "1bebd140bc2660211fbba306105479ae"
@@ -161,115 +161,115 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 10,
                 paymentFlow: .qr,
                 hasSearch: false,
-                type: .qr
+                type: "qr"
             ),
             .init(
-                latestPaymentsCategory: .mobile,
+                latestPaymentsCategory: "isMobilePayments",
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
                 paymentFlow: .mobile,
                 hasSearch: false,
-                type: .mobile
+                type: "mobile"
             ),
             .init(
-                latestPaymentsCategory: .service,
+                latestPaymentsCategory: "isServicePayments",
                 md5Hash: "ffc64acafb053c5e6ebc4e9300f7cccc",
                 name: "Услуги ЖКХ",
                 ord: 30,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .housingAndCommunalService
+                type: "housingAndCommunalService"
             ),
             .init(
-                latestPaymentsCategory: .service,
+                latestPaymentsCategory: "isServicePayments",
                 md5Hash: "c15643f89507e5fd4f5caef8fbd3e4df",
                 name: "Интернет, ТВ",
                 ord: 40,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .internet
+                type: "internet"
             ),
             .init(
-                latestPaymentsCategory: .transport,
+                latestPaymentsCategory: "isTransportPayments",
                 md5Hash: "23d9ad3ce923f736b8ee4c5a11cb1915",
                 name: "Транспорт",
                 ord: 50,
                 paymentFlow: .transport,
                 hasSearch: false,
-                type: .transport
+                type: "transport"
             ),
             .init(
-                latestPaymentsCategory: .taxAndStateService,
+                latestPaymentsCategory: "isTaxAndStateServicePayments",
                 md5Hash: "a49599eb358791b62b8d4c6341a163e5",
                 name: "Налоги и госуслуги",
                 ord: 60,
                 paymentFlow: .taxAndStateServices,
                 hasSearch: false,
-                type: .taxAndStateService
+                type: "taxAndStateService"
             ),
             .init(
-                latestPaymentsCategory: .security,
+                latestPaymentsCategory: "isSecurityPayments",
                 md5Hash: "12e2479526b75f3ac2cf2b4bf420626d",
                 name: "Охранные системы",
                 ord: 70,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .security
+                type: "security"
             ),
             .init(
-                latestPaymentsCategory: .digitalWallets,
+                latestPaymentsCategory: "isDigitalWalletsPayments",
                 md5Hash: "39e857d35b8e683526ec4912845f1c55",
                 name: "Электронный кошелек",
                 ord: 80,
                 paymentFlow: .standard,
                 hasSearch: false,
-                type: .digitalWallets
+                type: "digitalWallets"
             ),
             .init(
-                latestPaymentsCategory: .repaymentLoansAndAccounts,
+                latestPaymentsCategory: "isRepaymentLoansAndAccountsPayments",
                 md5Hash: "9f37d214d2462f2c5dc952c553613cc6",
                 name: "Погашение кредита ",
                 ord: 90,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .repaymentLoansAndAccounts
+                type: "repaymentLoansAndAccounts"
             ),
             .init(
-                latestPaymentsCategory: .socialAndGames,
+                latestPaymentsCategory: "isSocialAndGamesPayments",
                 md5Hash: "d7d1c6adc224e96343c012ca1fcf1472",
                 name: "Развлечения (игры и соц.сети)",
                 ord: 100,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .socialAndGames
+                type: "socialAndGames"
             ),
             .init(
-                latestPaymentsCategory: .networkMarketing,
+                latestPaymentsCategory: "isNetworkMarketingPayments",
                 md5Hash: "9a2b90b30cf0e65dccb44f43d3c1e145",
                 name: "Сетевой маркетинг",
                 ord: 110,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .networkMarketing
+                type: "networkMarketing"
             ),
             .init(
-                latestPaymentsCategory: .education,
+                latestPaymentsCategory: "isEducationPayments",
                 md5Hash: "a83b5b005fc16c356b2456d5a514c842",
                 name: "Образование",
                 ord: 120,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .education
+                type: "education"
             ),
             .init(
-                latestPaymentsCategory: .charity,
+                latestPaymentsCategory: "isCharityPayments",
                 md5Hash: "f7463aa7646d1e2cfe33f71ab4a72d75",
                 name: "Благотворительность",
                 ord: 130,
                 paymentFlow: .standard,
                 hasSearch: true,
-                type: .charity
+                type: "charity"
             ),
         ],
         serial: "1bebd140bc2660211fbba306105479ae"
