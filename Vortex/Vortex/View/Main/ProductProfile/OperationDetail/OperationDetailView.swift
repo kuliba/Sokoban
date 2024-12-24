@@ -76,7 +76,7 @@ struct OperationDetailView: View {
             }
             
             if viewModel.operationId != nil,
-               viewModel.repeatButtonAvailable {
+               viewModel.isRepeatButtonAvailable {
                 
                 makeRepeatButtonView(payment)
                     .frame(height: 56, alignment: .center)
