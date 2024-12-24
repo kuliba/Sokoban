@@ -12,7 +12,7 @@ extension RootViewModelFactory {
         ofType type: ServiceCategory.CategoryType,
         completion: @escaping (StandardPaymentResult) -> Void
     ) {
-        loadCategory(type: type) {
+        loadServiceCategory(ofType: type) {
             
             guard let category = $0
             else {
