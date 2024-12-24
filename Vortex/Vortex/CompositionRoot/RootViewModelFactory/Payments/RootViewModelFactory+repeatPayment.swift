@@ -22,6 +22,33 @@ extension GetInfoRepeatPaymentDomain {
 
 extension RootViewModelFactory {
     
+    @inlinable
+    func repeatPayment(
+        payload: GetInfoRepeatPaymentDomain.PaymentPayload,
+        closeAction: @escaping () -> Void,
+        completion: @escaping (PaymentsDomain.Navigation?) -> Void
+    ) {
+        repeatPayment(
+            payload: payload,
+            closeAction: closeAction,
+            makeStandardFlow: processPayments,
+            completion: completion
+        )
+    }
+    
+    func processPayments(
+        lastPayment: UtilityPaymentLastPayment,
+        close: @escaping () -> Void,
+        completion: @escaping (PaymentsDomain.Navigation?) -> Void
+    ) {
+        processPayments(
+            lastPayment: lastPayment,
+            getCategoryType: getServiceCategoryType,
+            notify: { _ in close() },
+            completion: completion
+        )
+    }
+    
     typealias MakeStandardFlow = (UtilityPaymentLastPayment, @escaping () -> Void, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
     
     @inlinable

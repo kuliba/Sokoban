@@ -146,33 +146,6 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
-        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
-        
-        func processPayments(
-            lastPayment: UtilityPaymentLastPayment,
-            notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
-            completion: @escaping (PaymentsDomain.Navigation?) -> Void
-        ) {
-            self.processPayments(
-                lastPayment: lastPayment,
-                getCategoryType: getServiceCategoryType,
-                notify: notify,
-                completion: completion
-            )
-        }
-        
-        func processPayments(
-            lastPayment: UtilityPaymentLastPayment,
-            close: @escaping () -> Void,
-            completion: @escaping (PaymentsDomain.Navigation?) -> Void
-        ) {
-            processPayments(
-                lastPayment: lastPayment,
-                notify: { _ in close() },
-                completion: completion
-            )
-        }
-        
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -180,14 +153,11 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
-            repeatPayment: {
-                
-                self.repeatPayment(payload: $0, closeAction: $1, makeStandardFlow: processPayments, completion: $2)
-            },
+            repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
-            makeInformer: {
+            makeInformer: { [weak model] in
                 
-                self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
+                model?.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
             }
         )
         
@@ -334,6 +304,8 @@ extension RootViewModelFactory {
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse
         )
+        
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
         
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
