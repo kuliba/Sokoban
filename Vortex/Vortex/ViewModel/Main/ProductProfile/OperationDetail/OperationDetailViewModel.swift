@@ -22,9 +22,10 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     @Published var isLoading: Bool
     @Published var sheet: Sheet?
     @Published var fullScreenSheet: FullScreenSheet?
-    let isRepeatButtonAvailable: Bool
     
-    var operationId: Int? = nil
+    var operationId: Int?
+    var paymentFlow: String?
+    var printFormType: PrintFormType?
     var productStatement: ProductStatementData
     
     var templateAction: () -> Void = {}
@@ -51,10 +52,9 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.templateButton = nil
         self.isLoading = false
         self.updateFastAll = updateFastAll
-        self.isRepeatButtonAvailable = productStatement.isRepeatButtonAvailable
         self.model = model
         self.productStatement = productStatement
-
+        
         bind()
 
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
@@ -132,7 +132,6 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         }
                 
                         self.update(with: statement, product: product, operationDetail: details)
-                        self.operationId = details.paymentOperationDetailId
                         
                         guard statement.paymentDetailType != .insideOther,
                               details.shouldHaveTemplateButton,
@@ -229,10 +228,13 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     
     private func update(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData?) {
         
-        guard let operationDetail = operationDetail else {
-            return
-        }
+        guard let operationDetail else { return }
         
+        self.operationId = operationDetail.paymentOperationDetailId
+        self.paymentFlow = operationDetail.paymentFlow
+        self.printFormType = operationDetail.printFormType
+        self.productStatement = productStatement
+
         withAnimation {
             
             operation = operation.updated(with: productStatement, operation: operationDetail, viewModel: self)
@@ -552,29 +554,5 @@ extension OperationDetailViewModel {
         static func == (lhs: OperationDetailViewModel.FullScreenSheet, rhs: OperationDetailViewModel.FullScreenSheet) -> Bool {
             lhs.id == rhs.id
         }
-    }
-}
-
-private extension ProductStatementData {
-    
-    var isRepeatButtonAvailable: Bool {
-        
-        let availableTypes: [ProductStatementData.Kind] = [
-            .betweenTheir,
-            .contactAddressless,
-            .direct,
-            .externalEntity,
-            .externalIndivudual,
-            .housingAndCommunalService,
-            .insideBank,
-            .internet,
-            .mobile,
-            .outsideCash,
-            .sfp,
-            .taxes,
-            .transport,
-        ]
-        
-        return availableTypes.contains(where:  { $0 == self.paymentDetailType })
     }
 }
