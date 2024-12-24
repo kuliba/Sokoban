@@ -16,9 +16,9 @@ enum URLConstruct {
                        _ path: String) -> URLType {
         
 #if MOCK
-        let temp = "http://" + host.getHostValue() + path
+        let temp = "http://" + URLHost.getHost() + path
 #else
-        let temp = scheme.rawValue + "://" + host.getHostValue() + path
+        let temp = scheme.rawValue + "://" + URLHost.getHost() + path
 #endif
         
         let components = URLComponents(string: temp)
