@@ -71,15 +71,14 @@ extension RootViewModelFactory {
         case .exchange:
             let composer = CurrencyWalletViewModelComposer(model: model)
             let exchange = composer.compose(dismiss: { notify(.dismiss) })
-            
-            if let exchange {
-                completion(.exchange(exchange))
-            } else {
-                completion(.exchangeFailure)
-            }
+            completion(exchange.map { .exchange($0) } ?? .exchangeFailure)
             
         case let .latest(latest):
-            completion(.latest(.init(latest: latest)))
+            processPayments(
+                lastPayment: .init(latest),
+                notify: { notify($0.event) },
+                completion: { $0.map { completion(.latest($0)) }}
+            )
             
         case .templates:
             completion(.templates)
@@ -109,5 +108,51 @@ extension RootViewModelFactory {
                     .eraseToAnyPublisher()
             }
         )
+    }
+}
+
+// MARK: - Adapters
+
+private extension AnywayFlowState.Status.Outside {
+    
+    var event: Domain.FlowDomain.NotifyEvent {
+        
+        switch self {
+        case .main:     return .dismiss
+        case .payments: return .dismiss
+        }
+    }
+}
+
+private extension UtilityPaymentLastPayment {
+    
+    init(_ latest: Latest) {
+        
+        self.init(
+            date: .init(),
+            amount: latest.amount ?? 0,
+            name: latest.name,
+            md5Hash: latest.md5Hash,
+            puref: latest.puref,
+            type: latest.type,
+            additionalItems: latest.additionalItems
+        )
+    }
+}
+
+private extension Latest {
+    
+    var additionalItems: [UtilityPaymentLastPayment.AdditionalItem] {
+        
+        switch self {
+        case let .service(service):
+            return (service.additionalItems ?? []).map {
+                
+                return .init(fieldName: $0.fieldName, fieldValue: $0.fieldValue, fieldTitle: $0.fieldTitle, svgImage: $0.svgImage)
+            }
+            
+        case .withPhone:
+            return []
+        }
     }
 }
