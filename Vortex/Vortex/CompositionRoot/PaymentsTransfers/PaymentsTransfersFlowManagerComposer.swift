@@ -295,6 +295,7 @@ private extension LatestPaymentData {
             name: data.lastPaymentName ?? "",
             md5Hash: nil,
             puref: data.puref,
+            type: data.type.defaultName,
             additionalItems: data.additionalList.map { .init(data: $0) }
         )
     }

@@ -1193,6 +1193,9 @@ private extension ProductProfileViewModel {
         guard let link = link else { return nil }
         
         switch link {
+        case let .anyway(node):
+            return node.model
+            
         case let .payment(viewModel):
             return viewModel
             

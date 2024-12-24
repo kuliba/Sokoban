@@ -567,6 +567,7 @@ extension ProductProfileViewModel  {
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         productNavigationStateManager: .preview,
         makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+        makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
         updateInfoStatusFlag: .active,
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
