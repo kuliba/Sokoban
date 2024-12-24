@@ -43,7 +43,8 @@ extension RootViewModelFactory {
         processSelection(select.0) { completion($0); _ = microComposer }
     }
     
-    typealias GetCategoryType = (String, @escaping (ServiceCategory.CategoryType?) -> Void) -> Void
+    typealias GetCategoryTypeCompletion = (ServiceCategory.CategoryType?) -> Void
+    typealias GetCategoryType = (String, @escaping GetCategoryTypeCompletion) -> Void
     
     @inlinable
     func processPayments(
