@@ -43,7 +43,6 @@ extension RootViewModelFactory {
     ) {
         processPayments(
             lastPayment: lastPayment,
-            getCategoryType: getServiceCategoryType,
             notify: { _ in close() },
             completion: completion
         )
