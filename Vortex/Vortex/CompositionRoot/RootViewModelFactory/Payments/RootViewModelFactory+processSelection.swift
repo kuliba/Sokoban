@@ -43,34 +43,37 @@ extension RootViewModelFactory {
         processSelection(select.0) { completion($0); _ = microComposer }
     }
     
+    typealias GetCategoryType = (String, @escaping (ServiceCategory.CategoryType?) -> Void) -> Void
+    
     @inlinable
     func processPayments(
         lastPayment: UtilityPaymentLastPayment,
-        getCategoryType: @escaping (String) -> ServiceCategory.CategoryType?,
+        getCategoryType: @escaping GetCategoryType,
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
-        guard let categoryType = getCategoryType(lastPayment.type)
-        else { return completion(nil) }
-        
-        let anywayFlowComposer = makeAnywayFlowComposer()
-        
-        processSelection(
-            select: (.lastPayment(lastPayment), categoryType)
-        ) {
-            guard case let .success(.startPayment(transaction)) = $0
-            else { return completion(nil) }
-                        
-            let flowModel = anywayFlowComposer.compose(transaction: transaction)
-            let cancellable = flowModel.$state.compactMap(\.outside)
-                .sink { notify($0) }
+        getCategoryType(lastPayment.type) { [weak self] categoryType in
             
-            completion(
-                .anywayPayment(.init(
+            guard let self, let categoryType
+            else { return completion(nil) }
+            
+            let anywayFlowComposer = makeAnywayFlowComposer()
+            
+            processSelection(
+                select: (.lastPayment(lastPayment), categoryType)
+            ) {
+                guard case let .success(.startPayment(transaction)) = $0
+                else { return completion(nil) }
+                
+                let flowModel = anywayFlowComposer.compose(transaction: transaction)
+                let cancellable = flowModel.$state.compactMap(\.outside)
+                    .sink { notify($0) }
+                
+                completion(.anywayPayment(.init(
                     model: flowModel,
                     cancellable: cancellable
-                ))
-            )
+                )))
+            }
         }
     }
 }

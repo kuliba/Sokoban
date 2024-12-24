@@ -33,6 +33,19 @@ extension RootViewModelFactory {
             completion(model.loadServiceCategory(ofType: type))
         }
     }
+    
+    @inlinable
+    func getServiceCategoryType(
+        ofType type: String,
+        completion: @escaping (ServiceCategory.CategoryType?) -> Void
+    ) {
+        schedulers.interactive.schedule { [weak model] in
+            
+            guard let model else { return }
+            
+            completion(model.loadServiceCategory(ofType: type).map(\.type))
+        }
+    }
 }
 
 private extension Model {

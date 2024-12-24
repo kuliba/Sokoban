@@ -155,12 +155,7 @@ extension RootViewModelFactory {
         ) {
             self.processPayments(
                 lastPayment: lastPayment,
-                getCategoryType: { type in
-                    
-                    let categories = paymentsTransfersPersonal.content.categoryPicker.sectionBinder?.content.state.elements.map(\.element)
-                    
-                    return categories?.first { $0.type.name == type }?.type
-                },
+                getCategoryType: getServiceCategoryType,
                 notify: notify,
                 completion: completion
             )
