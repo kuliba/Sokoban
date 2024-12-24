@@ -89,7 +89,8 @@ private extension ResponseMapper._Latest._WithPhone {
     
     var withPhone: ResponseMapper.LatestPayment.WithPhone? {
         
-        guard let phoneNumber else { return nil }
+        guard let phoneNumber, let puref
+        else { return nil }
         
         return .init(
             amount: amount?.value,
