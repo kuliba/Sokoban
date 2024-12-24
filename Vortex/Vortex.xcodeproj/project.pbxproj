@@ -8994,6 +8994,7 @@
 			isa = PBXGroup;
 			children = (
 				2AB5EBF92D1957FC00D32B4E /* RootViewModelFactory+getPaymentsNavigation.swift */,
+				2A366E6F2D00910A006D1FB8 /* RootViewModelFactory+processSelection.swift */,
 				83EB7A112D198DAD00E6E7BB /* RootViewModelFactory+repeatPayment.swift */,
 				2AB8BA602D1753EA00DA11D2 /* RootViewModelFactory+getInfoRepeatPaymentNavigation.swift */,
 				2A887DE12D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift */,
@@ -9011,7 +9012,6 @@
 				2ADB21CF2CF8392700B37234 /* RootViewModelFactory+initiateStandardPaymentFlow.swift */,
 				2A366E672CFF966A006D1FB8 /* RootViewModelFactory+makePaymentProviderPicker.swift */,
 				842C42382D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift */,
-				2A366E6F2D00910A006D1FB8 /* RootViewModelFactory+processSelection.swift */,
 				2A366E692CFF9906006D1FB8 /* RootViewModelFactory+makeSearch.swift */,
 				2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */,
 				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,

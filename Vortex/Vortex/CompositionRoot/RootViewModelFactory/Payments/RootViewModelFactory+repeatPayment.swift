@@ -22,21 +22,23 @@ extension GetInfoRepeatPaymentDomain {
 
 extension RootViewModelFactory {
     
+    typealias MakeStandardFlow = (UtilityPaymentLastPayment, @escaping () -> Void, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
+    
     @inlinable
     func repeatPayment(
         payload: GetInfoRepeatPaymentDomain.PaymentPayload,
         closeAction: @escaping () -> Void,
-        makeStandardFlow: @escaping (UtilityPaymentLastPayment,
-        @escaping () -> Void,
-        @escaping (PaymentsDomain.Navigation?) -> Void) -> Void,
+        makeStandardFlow: @escaping MakeStandardFlow,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
         let infoPaymentService = nanoServiceComposer.compose(
             createRequest: RequestFactory.getInfoForRepeatPayment,
             mapResponse: RemoteServices.ResponseMapper.mapGetInfoRepeatPaymentResponse
         )
-
-        infoPaymentService(.init(paymentOperationDetailId: payload.operationID)) { [weak self, infoPaymentService] in
+        
+        infoPaymentService(
+            .init(paymentOperationDetailId: payload.operationID)
+        ) { [weak self, infoPaymentService] in
             
             guard let self else { return completion(nil) }
             
@@ -62,11 +64,11 @@ extension RootViewModelFactory {
                     return completion(nil)
                     
                 case .standard:
-                    
-                    let name = payload.operatorName
-                    let md5Hash = payload.operatorIcon
-                    
-                    guard let utilityPaymentLastPayment = makeUtilityPaymentLastPayment(info, name: name, md5Hash: md5Hash)
+                    guard let utilityPaymentLastPayment = makeUtilityPaymentLastPayment(
+                        info, 
+                        name: payload.operatorName,
+                        md5Hash: payload.operatorIcon
+                    )
                     else { return completion(nil) }
                     
                     makeStandardFlow(utilityPaymentLastPayment, closeAction, completion)
