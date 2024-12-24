@@ -18,18 +18,20 @@ final class UtilityPaymentNanoServicesComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-    private let loadOperators: LoadOperators
+    /// `b`
+    /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
+    private let getOperatorsListByParam: LoadOperators
     
     init(
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
-        loadOperators: @escaping LoadOperators
+        loadOperators getOperatorsListByParam: @escaping LoadOperators
     ) {
         self.model = model
         self.httpClient = httpClient
         self.log = log
-        self.loadOperators = loadOperators
+        self.getOperatorsListByParam = getOperatorsListByParam
     }
             
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
@@ -60,20 +62,6 @@ extension UtilityPaymentNanoServicesComposer {
     }
     
     typealias NanoServices = UtilityPaymentNanoServices
-}
-
-// MARK: - getOperatorsListByParam
-
-private extension UtilityPaymentNanoServicesComposer {
-    
-    /// `b`
-    /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
-    func getOperatorsListByParam(
-        _ categoryType: ServiceCategory.CategoryType,
-        _ completion: @escaping ([Operator]) -> Void
-    ) {
-        loadOperators(categoryType, completion)
-    }
 }
 
 // MARK: - getAllLatestPayments

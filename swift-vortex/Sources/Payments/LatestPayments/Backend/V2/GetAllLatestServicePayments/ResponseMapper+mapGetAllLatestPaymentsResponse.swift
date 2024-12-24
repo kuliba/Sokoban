@@ -35,6 +35,7 @@ extension ResponseMapper {
         public let name: String
         public let md5Hash: String?
         public let puref: String
+        public let type: String
         public let additionalItems: [AdditionalItem]
         
         public init(
@@ -43,6 +44,7 @@ extension ResponseMapper {
             name: String,
             md5Hash: String?,
             puref: String,
+            type: String,
             additionalItems: [AdditionalItem]
         ) {
             self.date = date
@@ -50,6 +52,7 @@ extension ResponseMapper {
             self.name = name
             self.md5Hash = md5Hash
             self.puref = puref
+            self.type = type
             self.additionalItems = additionalItems
         }
         
@@ -99,6 +102,7 @@ private extension ResponseMapper.LatestServicePayment {
             name: data.name,
             md5Hash: data.md5hash,
             puref: data.puref,
+            type: data.type,
             additionalItems: data.additionalList.map(AdditionalItem.init)
         )
     }

@@ -42,4 +42,35 @@ extension RootViewModelFactory {
         
         processSelection(select.0) { completion($0); _ = microComposer }
     }
+    
+    @inlinable
+    func processPayments(
+        lastPayment: UtilityPaymentLastPayment,
+        getCategoryType: @escaping (String) -> ServiceCategory.CategoryType?,
+        notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
+        completion: @escaping (PaymentsDomain.Navigation?) -> Void
+    ) {
+        guard let categoryType = getCategoryType(lastPayment.type)
+        else { return completion(nil) }
+        
+        let anywayFlowComposer = makeAnywayFlowComposer()
+        
+        processSelection(
+            select: (.lastPayment(lastPayment), categoryType)
+        ) {
+            guard case let .success(.startPayment(transaction)) = $0
+            else { return completion(nil) }
+                        
+            let flowModel = anywayFlowComposer.compose(transaction: transaction)
+            let cancellable = flowModel.$state.compactMap(\.outside)
+                .sink { notify($0) }
+            
+            completion(
+                .anywayPayment(.init(
+                    model: flowModel,
+                    cancellable: cancellable
+                ))
+            )
+        }
+    }
 }

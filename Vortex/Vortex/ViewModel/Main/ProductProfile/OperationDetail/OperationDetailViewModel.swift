@@ -25,6 +25,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     let repeatButtonAvailable: Bool
     
     var operationId: Int? = nil
+    var productStatement: ProductStatementData
     
     var templateAction: () -> Void = {}
     
@@ -40,7 +41,6 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         updateFastAll: @escaping UpdateFastAll,
         model: Model
     ) {
-                
         let header = HeaderViewModel(statement: productStatement, model: model)
         let operation = OperationViewModel(productStatement: productStatement, model: model)
         
@@ -53,6 +53,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.updateFastAll = updateFastAll
         self.repeatButtonAvailable = productStatement.repeatButtonAvailable
         self.model = model
+        self.productStatement = productStatement
 
         bind()
 
