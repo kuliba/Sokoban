@@ -122,7 +122,9 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
+            makeProductProfileViewModel: {
+                _,_,_,_   in nil
+            },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -132,7 +134,11 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            collateralLoanLandingFactory: .init(),
+            makeCollateralLoanLandingViewModel: { _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            ) },
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -701,7 +707,11 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            collateralLoanLandingFactory: .init(),
+            makeCollateralLoanLandingViewModel: { _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            ) },
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -750,7 +760,11 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            collateralLoanLandingFactory: .init(),
+            makeCollateralLoanLandingViewModel: { _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            ) },
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -791,7 +805,11 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            collateralLoanLandingFactory: .init(),
+            makeCollateralLoanLandingViewModel: { _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            ) },
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -850,7 +868,11 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            collateralLoanLandingFactory: .init(),
+            makeCollateralLoanLandingViewModel: { _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            ) },
             makeOpenNewProductButtons: { _ in [] }
         )
         
