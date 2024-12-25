@@ -17,6 +17,22 @@ extension RootViewFactory {
         operationPicker: OperationPicker
     ) -> some View {
         
+        OperationPickerView(
+            operationPicker: operationPicker, 
+            components: components,
+            makeIconView: makeIconView
+        )
+    }
+}
+
+struct OperationPickerView: View {
+
+    let operationPicker: OperationPicker
+    let components: ViewComponents
+    let makeIconView: MakeIconView
+
+    var body: some View {
+        
         if let binder = operationPicker.operationBinder {
             
             makeOperationPickerView(binder: binder)
@@ -27,6 +43,9 @@ extension RootViewFactory {
                 .foregroundColor(.red)
         }
     }
+}
+
+extension OperationPickerView {
     
     private func makeOperationPickerView(
         binder: OperationPickerDomain.Binder
@@ -41,7 +60,13 @@ extension RootViewFactory {
                     event: $1,
                     factory: .init(
                         makeContent: { makeContentView(binder.content) },
-                        makeDestination: makeDestinationView
+                        makeDestination: {
+                            
+                            makeDestinationView(
+                                destination: $0,
+                                closeAction: { binder.flow.event(.dismiss) }
+                            )
+                        }
                     )
                 )
             }
@@ -96,7 +121,8 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: OperationPickerDomain.Navigation.Destination
+        destination: OperationPickerDomain.Navigation.Destination,
+        closeAction: @escaping () -> Void
     ) -> some View {
         
         switch destination {
@@ -107,7 +133,25 @@ extension RootViewFactory {
             components.makeCurrencyWalletView(currencyWalletViewModel)
             
         case let .latest(latest):
-            Text("TBD: destination " + String(describing: latest))
+            switch latest {
+            case let .anywayPayment(node):
+                let payload = node.model.state.content.state.transaction.context.outline.payload
+                
+                components.makeAnywayFlowView(node.model)
+                    .navigationBarWithAsyncIcon(
+                        title: payload.title,
+                        subtitle: payload.subtitle,
+                        dismiss: closeAction,
+                        icon: makeIconView(payload.icon.map { .md5Hash(.init($0)) }),
+                        style: .normal
+                    )
+                
+            case let .meToMe(meToMe):
+                components.makePaymentsMeToMeView(meToMe)
+                
+            case let .payments(payments):
+                components.makePaymentsView(payments)
+            }
         }
     }
 }

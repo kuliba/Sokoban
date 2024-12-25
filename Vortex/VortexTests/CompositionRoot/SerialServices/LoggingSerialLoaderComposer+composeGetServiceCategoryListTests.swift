@@ -208,34 +208,34 @@ private extension Array where Element == ServiceCategory {
     
     static let one: Self = [
         .init(
-            latestPaymentsCategory: .mobile,
+            latestPaymentsCategory: "isMobilePayments",
             md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
             name: "Мобильная связь",
             ord: 20,
             paymentFlow: .mobile,
             hasSearch: false,
-            type: .mobile
+            type: "mobile"
         )
     ]
     
     static let two: Self = [
         .init(
-            latestPaymentsCategory: .education,
+            latestPaymentsCategory: "isEducationPayments",
             md5Hash: "a83b5b005fc16c356b2456d5a514c842",
             name: "Образование",
             ord: 120,
             paymentFlow: .standard,
             hasSearch: true,
-            type: .education
+            type: "education"
         ),
         .init(
-            latestPaymentsCategory: .charity,
+            latestPaymentsCategory: "isCharityPayments",
             md5Hash: "f7463aa7646d1e2cfe33f71ab4a72d75",
             name: "Благотворительность",
             ord: 130,
             paymentFlow: .standard,
             hasSearch: true,
-            type: .charity
+            type: "charity"
         )
     ]
 }

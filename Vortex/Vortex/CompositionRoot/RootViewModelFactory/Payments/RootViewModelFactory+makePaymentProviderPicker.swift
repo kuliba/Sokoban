@@ -51,7 +51,10 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            loadLatest: { getLatestPayments([category.type.name], $0) },
+            loadLatest: {
+                
+                getLatestPayments([category.latestPaymentsCategory].compactMap { $0 }, $0)
+            },
             loadOperators: {
                 
                 self.loadOperatorsForCategory(category: category, completion: $0)
@@ -247,7 +250,7 @@ extension RootViewModelFactory {
     ) {
         let anywayFlowComposer = makeAnywayFlowComposer()
         
-        processSelection(select: (.operator(provider), .init(string: provider.type) ?? .housingAndCommunalService)) {
+        processSelection(select: (.operator(provider), provider.type)) {
             
             switch $0 {
             case let .failure(failure):

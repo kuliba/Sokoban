@@ -71,7 +71,7 @@ extension OperationPickerDomain.Navigation {
         
         case exchangeFailure
         case exchange(CurrencyWalletViewModel)
-        case latest(LatestFlowStub)
+        case latest(PaymentsDomain.Navigation)
     }
 }
 
@@ -87,7 +87,16 @@ extension OperationPickerDomain.Navigation.Destination: Identifiable {
             return .exchange(.init(exchange))
             
         case let .latest(latest):
-            return .latest(.init(latest))
+            switch latest {
+            case let .anywayPayment(anywayPayment):
+                return .latest(.anywayPayment(.init(anywayPayment.model)))
+            
+            case let .meToMe(meToMe):
+                return .latest(.meToMe(.init(meToMe)))
+            
+            case let .payments(payments):
+                return .latest(.payments(.init(payments)))
+            }
         }
     }
     
@@ -95,6 +104,13 @@ extension OperationPickerDomain.Navigation.Destination: Identifiable {
         
         case exchangeFailure
         case exchange(ObjectIdentifier)
-        case latest(ObjectIdentifier)
+        case latest(Latest)
+        
+        enum Latest: Hashable {
+            
+            case anywayPayment(ObjectIdentifier)
+            case meToMe(ObjectIdentifier)
+            case payments(ObjectIdentifier)
+        }
     }
 }

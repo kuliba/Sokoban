@@ -6,6 +6,7 @@
 //
 
 import VortexTools
+
 extension RootViewModelFactory {
     
     func composedLoadOperators(
@@ -58,7 +59,7 @@ extension CodableServicePaymentOperator: FilterableItem {
     
     func matches(_ payload: LoadOperatorsPayload) -> Bool {
         
-        categoryType == payload.categoryType && contains(payload.searchText)
+        type == payload.categoryType && contains(payload.searchText)
     }
     
     func contains(_ searchText: String) -> Bool {
@@ -88,58 +89,5 @@ private extension UtilityPaymentProvider {
             title: codable.name,
             type: codable.type
         )
-    }
-}
-
-extension UtilityPaymentProvider {
-    
-    var categoryType: ServiceCategory.CategoryType {
-        
-        return .init(string: type) ?? .housingAndCommunalService
-    }
-}
-
-extension CodableServicePaymentOperator {
-    
-    var categoryType: ServiceCategory.CategoryType {
-        
-        return .init(string: type) ?? .housingAndCommunalService
-    }
-}
-
-extension ServiceCategory.CategoryType {
-    
-    init?(string: String) {
-        
-        switch string {
-        case "charity":
-            self = .charity
-        case "digitalWallets":
-            self = .digitalWallets
-        case "education":
-            self = .education
-        case "housingAndCommunalService":
-            self = .housingAndCommunalService
-        case "internet":
-            self = .internet
-        case "mobile":
-            self = .mobile
-        case "networkMarketing":
-            self = .networkMarketing
-        case "qr":
-            self = .qr
-        case "repaymentLoansAndAccounts":
-            self = .repaymentLoansAndAccounts
-        case "security":
-            self = .security
-        case "socialAndGames":
-            self = .socialAndGames
-        case "taxAndStateService":
-            self = .taxAndStateService
-        case "transport":
-            self = .transport
-        default:
-            return nil
-        }
     }
 }

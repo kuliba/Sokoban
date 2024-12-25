@@ -33,38 +33,8 @@ struct CodableServiceCategory: Codable {
     let hasSearch: Bool
     let type: CategoryType
     
-    enum CategoryType: Codable {
-        
-        case charity
-        case digitalWallets
-        case education
-        case housingAndCommunalService
-        case internet
-        case mobile
-        case networkMarketing
-        case qr
-        case repaymentLoansAndAccounts
-        case security
-        case socialAndGames
-        case transport
-        case taxAndStateService
-    }
-    
-    enum LatestPaymentsCategory: Codable {
-        
-        case charity
-        case education
-        case digitalWallets
-        case internet
-        case mobile
-        case networkMarketing
-        case repaymentLoansAndAccounts
-        case security
-        case service
-        case socialAndGames
-        case taxAndStateService
-        case transport
-    }
+    typealias CategoryType = String
+    typealias LatestPaymentsCategory = String
     
     enum PaymentFlow: Codable {
         
@@ -81,13 +51,13 @@ extension ServiceCategory {
     var codable: CodableServiceCategory {
         
         return .init(
-            latestPaymentsCategory: codableLatestPaymentsCategory,
+            latestPaymentsCategory: latestPaymentsCategory,
             md5Hash: md5Hash,
             name: name,
             ord: ord,
             paymentFlow: codablePaymentFlow,
             hasSearch: hasSearch,
-            type: codableType
+            type: type
         )
     }
 }
@@ -97,34 +67,16 @@ private extension ServiceCategory {
     init(codable: CodableServiceCategory) {
         
         self.init(
-            latestPaymentsCategory: codable.latestCategory,
+            latestPaymentsCategory: codable.latestPaymentsCategory,
             md5Hash: codable.md5Hash,
             name: codable.name,
             ord: codable.ord,
             paymentFlow: codable.flow,
             hasSearch: codable.hasSearch,
-            type: codable.category
+            type: codable.type
         )
     }
     
-    private var codableLatestPaymentsCategory: CodableServiceCategory.LatestPaymentsCategory? {
-        
-        switch latestPaymentsCategory {
-        case .none:                        return .none
-        case .charity:                     return .charity
-        case .education:                   return .education
-        case .digitalWallets:              return .digitalWallets
-        case .internet:                    return .internet
-        case .mobile:                      return .mobile
-        case .networkMarketing:            return .networkMarketing
-        case .repaymentLoansAndAccounts:   return .repaymentLoansAndAccounts
-        case .security:                    return .security
-        case .service:                     return .service
-        case .socialAndGames:              return .socialAndGames
-        case .taxAndStateService:          return .taxAndStateService
-        case .transport:                   return .transport
-        }
-    }
     
     private var codablePaymentFlow: CodableServiceCategory.PaymentFlow {
         
@@ -136,25 +88,6 @@ private extension ServiceCategory {
         case .transport:            return .transport
         }
     }
-    
-    private var codableType: CodableServiceCategory.CategoryType {
-        
-        switch type {
-        case .charity:                     return .charity
-        case .digitalWallets:              return .digitalWallets
-        case .education:                   return .education
-        case .housingAndCommunalService:   return .housingAndCommunalService
-        case .internet:                    return .internet
-        case .mobile:                      return .mobile
-        case .networkMarketing:            return .networkMarketing
-        case .qr:                          return .qr
-        case .repaymentLoansAndAccounts:   return .repaymentLoansAndAccounts
-        case .security:                    return .security
-        case .socialAndGames:              return .socialAndGames
-        case .transport:                   return .transport
-        case .taxAndStateService:          return .taxAndStateService
-        }
-    }
 }
 
 extension CodableServiceCategory {
@@ -162,56 +95,18 @@ extension CodableServiceCategory {
     var serviceCategory: ServiceCategory {
         
         return .init(
-            latestPaymentsCategory: latestCategory,
+            latestPaymentsCategory: latestPaymentsCategory,
             md5Hash: md5Hash,
             name: name,
             ord: ord,
             paymentFlow: flow,
             hasSearch: hasSearch,
-            type: category
+            type: type
         )
     }
 }
 
 private extension CodableServiceCategory {
-    
-    var category: ServiceCategory.CategoryType {
-        
-        switch type {
-        case .charity:                     return .charity
-        case .digitalWallets:              return .digitalWallets
-        case .education:                   return .education
-        case .housingAndCommunalService:   return .housingAndCommunalService
-        case .internet:                    return .internet
-        case .mobile:                      return .mobile
-        case .networkMarketing:            return .networkMarketing
-        case .qr:                          return .qr
-        case .repaymentLoansAndAccounts:   return .repaymentLoansAndAccounts
-        case .security:                    return .security
-        case .socialAndGames:              return .socialAndGames
-        case .transport:                   return .transport
-        case .taxAndStateService:          return .taxAndStateService
-        }
-    }
-    
-    var latestCategory: ServiceCategory.LatestPaymentsCategory? {
-        
-        switch latestPaymentsCategory {
-        case .none:                        return .none
-        case .charity:                     return .charity
-        case .education:                   return .education
-        case .digitalWallets:              return .digitalWallets
-        case .internet:                    return .internet
-        case .mobile:                      return .mobile
-        case .networkMarketing:            return .networkMarketing
-        case .repaymentLoansAndAccounts:   return .repaymentLoansAndAccounts
-        case .security:                    return .security
-        case .service:                     return .service
-        case .socialAndGames:              return .socialAndGames
-        case .taxAndStateService:          return .taxAndStateService
-        case .transport:                   return .transport
-        }
-    }
     
     var flow: ServiceCategory.PaymentFlow {
         

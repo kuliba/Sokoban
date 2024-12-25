@@ -169,26 +169,36 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
     private var _printFormType: Vortex.PrintFormType {
         
         switch printFormType {
+        case .`internal`:                return .`internal`
         case .addressing_cash:           return .addressing_cash
         case .addressless:               return .addressless
         case .c2b:                       return .c2b
         case .changeOutgoing:            return .changeOutgoing
+        case .charity:                   return .charity
         case .closeAccount:              return .closeAccount
         case .closeDeposit:              return .closeDeposit
         case .contactAddressless:        return .contactAddressless
+        case .digitalWallets:            return .digitalWallets
         case .direct:                    return .direct
+        case .education:                 return .education
         case .external:                  return .external
         case .housingAndCommunalService: return .housingAndCommunalService
-        case .`internal`:                return .`internal`
+        case .insurance:                 return .insurance
         case .internet:                  return .internet
+        case .journey:                   return .journey
         case .mobile:                    return .mobile
+        case .networkMarketing:          return .networkMarketing
         case .newDirect:                 return .newDirect
+        case .repaymentLoansAndAccounts: return .repaymentLoansAndAccounts
         case .returnOutgoing:            return .returnOutgoing
         case .sberQR:                    return .sberQR
         case .sbp:                       return .sbp
+        case .security:                  return .security
+        case .socialAndGames:            return .socialAndGames
         case .sticker:                   return .sticker
         case .taxAndStateService:        return .taxAndStateService
         case .transport:                 return .transport
+        case .unknown:                   return .unknown
         }
     }
     

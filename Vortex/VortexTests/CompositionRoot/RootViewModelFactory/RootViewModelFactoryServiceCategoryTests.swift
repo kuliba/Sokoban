@@ -19,31 +19,31 @@ class RootViewModelFactoryServiceCategoryTests: RootViewModelFactoryTests {
     func categories() -> [ServiceCategory] {
         
         [.stub(
-            latestPaymentsCategory: .mobile,
+            latestPaymentsCategory: "isMobilePayments",
             md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
             name: "Мобильная связь",
             ord: 20,
             flow: .mobile,
             hasSearch: false,
-            type: .mobile
+            type: "mobile"
         ),
          .stub(
-            latestPaymentsCategory: .service,
+            latestPaymentsCategory: "isServicePayments",
             md5Hash: "ffc64acafb053c5e6ebc4e9300f7cccc",
             name: "Услуги ЖКХ",
             ord: 30,
             flow: .standard,
             hasSearch: true,
-            type: .housingAndCommunalService
+            type: "housingAndCommunalService"
          ),
          .stub(
-            latestPaymentsCategory: .service,
+            latestPaymentsCategory: "isServicePayments",
             md5Hash: "c15643f89507e5fd4f5caef8fbd3e4df",
             name: "Интернет, ТВ",
             ord: 40,
             flow: .standard,
             hasSearch: true,
-            type: .internet
+            type: "internet"
          )]
     }
     
@@ -69,7 +69,7 @@ class RootViewModelFactoryServiceCategoryTests: RootViewModelFactoryTests {
         ord: Int = .random(in: 1...100),
         paymentFlow: CodableServiceCategory.PaymentFlow = .standard,
         hasSearch: Bool = .random(),
-        type: CodableServiceCategory.CategoryType = .education
+        type: CodableServiceCategory.CategoryType = "education"
     ) -> CodableServiceCategory {
         
         return .init(

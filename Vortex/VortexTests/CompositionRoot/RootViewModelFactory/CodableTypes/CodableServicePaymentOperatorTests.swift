@@ -32,7 +32,7 @@ class CodableServicePaymentOperatorTests: XCTestCase {
         sortedOrder: Int = .random(in: 1...100)
     ) -> CodableServicePaymentOperator {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type.name, sortedOrder: sortedOrder)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type, sortedOrder: sortedOrder)
     }
     
     func makeOperator(
