@@ -123,16 +123,13 @@ private extension ResponseMapper.CreateAnywayTransferResponse.DocumentStatus {
 
 private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
-    init?(_ parameter: ResponseMapper._Data._Parameter) {
-        
-        guard let dataType = DataType(parameter)
-        else { return nil }
+    init(_ parameter: ResponseMapper._Data._Parameter) {
         
         self.init(
             content: parameter.content,
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
-            dataType: dataType,
+            dataType: .init(parameter),
             group: parameter.group,
             id: parameter.id,
             inputFieldType: .init(parameter.inputFieldType),
@@ -251,9 +248,10 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldTyp
     init(_ rawValue: ResponseMapper._Data._Parameter.FieldType) {
         
         switch rawValue {
-        case .input:      self = .input
-        case .select:     self = .select
-        case .maskList:   self = .maskList
+        case .checkbox:      self = .checkbox
+        case .input:         self = .input
+        case .select:        self = .select
+        case .maskList:      self = .maskList
         }
     }
 }
@@ -346,6 +344,7 @@ private extension ResponseMapper._Data._Parameter {
     
     enum FieldType: String, Decodable {
         
+        case checkbox = "CheckBox"
         case input    = "Input"
         case select   = "Select"
         case maskList = "MaskList"

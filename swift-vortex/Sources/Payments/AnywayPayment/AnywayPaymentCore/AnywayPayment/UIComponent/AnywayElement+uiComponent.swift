@@ -107,6 +107,7 @@ extension AnywayElement.UIComponent.Parameter {
     
     public enum ParameterType: Equatable {
         
+        case checkbox
         case hidden
         case nonEditable
         case numberInput
@@ -166,6 +167,9 @@ private extension AnywayElement.Parameter.UIAttributes {
         guard !isReadOnly else { return .nonEditable }
         
         switch (type, viewType, dataType) {
+        case (.checkbox, _,_):
+            return .checkbox
+            
         case (_, .constant, _):
             return .nonEditable
             

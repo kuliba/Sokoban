@@ -1209,6 +1209,7 @@
 		2A9CB0812BEFC2CB00DA5EF3 /* UtilityServicePrepayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */; };
 		2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */; };
 		2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */; };
+		2A9CC0C72D1C173E0071F30E /* AnywayElementModelMapper+makeCheckboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CC0C62D1C173E0071F30E /* AnywayElementModelMapper+makeCheckboxViewModel.swift */; };
 		2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */; };
 		2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporateDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */; };
 		2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonalDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */; };
@@ -4774,6 +4775,7 @@
 		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
 		2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperator.swift; sourceTree = "<group>"; };
+		2A9CC0C62D1C173E0071F30E /* AnywayElementModelMapper+makeCheckboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModelMapper+makeCheckboxViewModel.swift"; sourceTree = "<group>"; };
 		2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcher.swift; sourceTree = "<group>"; };
 		2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporateDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateDomain.swift; sourceTree = "<group>"; };
 		2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalDomain.swift; sourceTree = "<group>"; };
@@ -12299,6 +12301,7 @@
 				2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */,
 				2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */,
 				2ABB63172C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift */,
+				2A9CC0C62D1C173E0071F30E /* AnywayElementModelMapper+makeCheckboxViewModel.swift */,
 			);
 			path = AnywayElementModelMapper;
 			sourceTree = "<group>";
@@ -22024,6 +22027,7 @@
 				0B8C1C60273DCB6200BA5CAC /* PushHistoryViewController.swift in Sources */,
 				ECCA5B4A2CFDFC250034A64A /* BatchService.swift in Sources */,
 				2A80C6CB2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift in Sources */,
+				2A9CC0C72D1C173E0071F30E /* AnywayElementModelMapper+makeCheckboxViewModel.swift in Sources */,
 				2AA54A712C57A37800542C49 /* PaymentProviderServicePickerPayload+preview.swift in Sources */,
 				C1EC6F942BFFB0C8007E5AD9 /* ComponentsConfigurations.swift in Sources */,
 				0C4B0BB828620C35004B7F69 /* FastPaymentContractFullInfoType+Legacy.swift in Sources */,

@@ -36,7 +36,7 @@ struct AnywayFlowView<PaymentCompleteView: View>: View {
         )
         .fullScreenCover(
             cover: flowModel.state.fullScreenCover,
-            dismissFullScreenCover: { flowModel.event(.goTo(.main)) },
+            dismiss: { flowModel.event(.goTo(.main)) },
             content: makePaymentCompleteView
         )
         .bottomSheet(

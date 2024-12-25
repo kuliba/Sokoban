@@ -19,6 +19,9 @@ struct AnywayPaymentParameterView: View {
     var body: some View {
         
         switch parameter.type {
+        case let .checkbox(node):
+            checkboxView(node.model)
+            
         case .hidden:
             EmptyView()
             
@@ -68,5 +71,34 @@ private extension AnywayPaymentParameterView {
             }
         )
         .paddedRoundedBackground()
+    }
+    
+    func checkboxView(
+        _ model: RxCheckboxViewModel
+    ) -> some View {
+        
+        RxWrapperView(
+            model: model
+        ) { state, event in
+            
+            HStack(alignment: .top, spacing: 18) {
+                
+                PaymentsCheckView.CheckBoxView(
+                    isChecked: .init(
+                        get: { state.isChecked },
+                        set: { _ in event(.toggle) }
+                    ),
+                    activeColor: .systemColorActive
+                )
+                
+                Text(state.text)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .animation(.easeInOut, value: state.isChecked)
+            .contentShape(Rectangle())
+            .onTapGesture { event(.toggle) }
+        }
     }
 }

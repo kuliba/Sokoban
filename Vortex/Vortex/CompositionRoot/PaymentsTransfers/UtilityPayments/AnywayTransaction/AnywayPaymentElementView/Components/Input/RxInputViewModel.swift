@@ -10,3 +10,18 @@ import PaymentComponents
 import RxViewModel
 
 typealias RxInputViewModel = RxViewModel<TextInputState, TextInputEvent, TextInputEffect>
+
+typealias RxCheckboxViewModel = RxViewModel<CheckboxState, CheckboxEvent, CheckboxEffect>
+
+struct CheckboxState: Equatable {
+    
+    var isChecked: Bool
+    let text: String
+}
+
+enum CheckboxEvent: Equatable {
+
+    case toggle
+}
+
+enum CheckboxEffect: Equatable {}

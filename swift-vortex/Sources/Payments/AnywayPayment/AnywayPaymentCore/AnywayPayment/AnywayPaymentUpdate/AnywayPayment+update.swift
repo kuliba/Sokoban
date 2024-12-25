@@ -376,7 +376,7 @@ private extension AnywayElement.Parameter.UIAttributes {
     init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
         
         self.init(
-            dataType: .init(uiAttributes.dataType),
+            dataType: uiAttributes.dataType.map { .init($0) },
             group: uiAttributes.group,
             isPrint: uiAttributes.isPrint,
             phoneBook: uiAttributes.phoneBook,
@@ -438,6 +438,7 @@ private extension AnywayElement.Parameter.UIAttributes.FieldType {
     init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
         
         switch fieldType {
+        case .checkbox: self = .checkbox
         case .input:    self = .input
         case .select:   self = .select
         case .maskList: self = .maskList

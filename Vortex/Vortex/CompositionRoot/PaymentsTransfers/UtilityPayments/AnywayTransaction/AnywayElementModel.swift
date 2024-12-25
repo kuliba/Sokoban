@@ -28,6 +28,7 @@ extension AnywayElementModel {
 
         enum ParameterType {
          
+            case checkbox(Node<RxCheckboxViewModel>)
             case hidden
             case nonEditable(Node<RxInputViewModel>)
             case numberInput(Node<RxInputViewModel>)
