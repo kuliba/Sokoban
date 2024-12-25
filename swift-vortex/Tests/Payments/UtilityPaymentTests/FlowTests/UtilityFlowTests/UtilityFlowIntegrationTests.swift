@@ -23,7 +23,7 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     
     func test_loadOptionsFailureFlow() {
         
-        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+        let (sut, spy, _, optionsLoader, _, _) = makeSUT()
         
         sut.event(.initiatePrepayment)
         optionsLoader.complete(with: .failure(anyError()))
@@ -43,9 +43,9 @@ final class UtilityFlowIntegrationTests: XCTestCase {
     func test_flow() {
         
         let lastPayments = [makeLastPayment()]
-        let (`operator`, operators) = makeOperatorOperators()
+        let (_, operators) = makeOperatorOperators()
         let options = Options(lastPayments: lastPayments, operators: operators)
-        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+        let (sut, spy, _, optionsLoader, _, _) = makeSUT()
         
         sut.event(.initiatePrepayment)
         optionsLoader.complete(with: .success((lastPayments, operators)))
