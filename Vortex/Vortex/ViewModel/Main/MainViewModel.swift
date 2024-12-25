@@ -55,6 +55,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
     let bannersBinder: BannersBinder
+    let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -70,19 +71,15 @@ class MainViewModel: ObservableObject, Resetable {
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
+        sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = Self.getSections(
-            model,
-            bannersBinder,
-            updateInfoStatusFlag: updateInfoStatusFlag,
-            stickerViewModel: nil
-        )
-        
+        self.sections = sections
         self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.navigationStateManager = navigationStateManager
@@ -93,6 +90,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.route = route
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
+        self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -100,33 +98,6 @@ class MainViewModel: ObservableObject, Resetable {
         update(sections, with: model.settingsMainSections)
         bind(productsSections: sections)
         bind(sections)
-    }
-    
-    private static func getSections(
-        _ model: Model,
-        _ binder: BannersBinder,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        stickerViewModel: ProductCarouselView.StickerViewModel? = nil
-    ) -> [MainSectionViewModel] {
-        
-        var sections = [
-            MainSectionProductsView.ViewModel(
-                model,
-                stickerViewModel: stickerViewModel
-            ),
-            MainSectionFastOperationView.ViewModel(),
-            MainSectionPromoView.ViewModel(model),
-        //    BannerPickerSectionBinderWrapper.init(binder: binder),
-            MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
-            MainSectionAtmView.ViewModel.initial
-        ]
-        if updateInfoStatusFlag.isActive {
-            if !model.updateInfo.value.areProductsUpdated {
-                sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
-            }
-        }
-        return sections
     }
     
     private func makeStickerViewModel(
@@ -694,7 +665,8 @@ private extension MainViewModel {
                     }
                     return nil
                 }
-            )
+            ),
+            makeOpenNewProductButtons: makeOpenNewProductButtons
         )
         
         myProductsViewModel.rootActions = rootActions

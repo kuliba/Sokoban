@@ -11,9 +11,9 @@ import CodableLanding
 import CollateralLoanLandingGetShowcaseBackend
 import Combine
 import Fetcher
-import VortexTools
 import Foundation
 import GenericRemoteService
+import GetInfoRepeatPaymentService
 import LandingMapping
 import LandingUIComponent
 import ManageSubscriptionsUI
@@ -27,7 +27,7 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
-import GetInfoRepeatPaymentService
+import VortexTools
 
 extension RootViewModelFactory {
     
@@ -146,11 +146,6 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
-        let infoPaymentService = nanoServiceComposer.compose(
-            createRequest: RequestFactory.getInfoForRepeatPayment,
-            mapResponse: RemoteServices.ResponseMapper.mapGetInfoRepeatPaymentResponse
-        )
-        
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -158,10 +153,11 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
-            repeatPayment: .init(createInfoRepeatPaymentServices: infoPaymentService),
+            repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
-            makeInformer: {
-                self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
+            makeInformer: { [weak model] in
+                
+                model?.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
             }
         )
         
@@ -282,17 +278,19 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
+            makeRepeatPaymentNavigation: getInfoRepeatPaymentNavigation(from:activeProductID:getProduct:closeAction:),
             makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder
+            makeServicePaymentBinder: makeServicePaymentBinder,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
             
             guard let self,
-                    let product = model.product(productId: id)
+                  let product = model.product(productId: id)
             else { return nil }
             
             return makeProductProfileViewModel(
@@ -374,16 +372,16 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
-                
+        
         let savingsAccount = makeSavingsAccount()
-
+        
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in
             
-           self?.updateAuthorizedClientInform()
+            self?.updateAuthorizedClientInform()
         }
-
+        
         updateClientInformAlerts()
             .store(in: &bindings)
         
@@ -408,6 +406,7 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
             bannersBinder: mainViewBannersBinder,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             marketShowcaseBinder: marketShowcaseBinder
         )
         
@@ -478,7 +477,7 @@ private extension RootViewDomain.Flow {
                     switch tab {
                     case .main:
                         content.selected = .main
-
+                        
                     case .payments:
                         content.selected = .payments
                     }
@@ -548,11 +547,13 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
+        makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -571,11 +572,13 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-                makeServicePaymentBinder: makeServicePaymentBinder
+                makeServicePaymentBinder: makeServicePaymentBinder,
+                makeOpenNewProductButtons: makeOpenNewProductButtons
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -636,6 +639,7 @@ extension ProductProfileViewModel {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 },
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 model: model
             )
@@ -655,7 +659,7 @@ extension ProductProfileViewModel {
                 productNavigationStateManager: productNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
                 filterHistoryRequest: { lowerDate, upperDate, operationType, category in
-
+                    
                     model.action.send(ModelAction.Statement.List.Request(
                         productId: product.id,
                         direction: .custom(start: lowerDate, end: upperDate),
@@ -665,7 +669,8 @@ extension ProductProfileViewModel {
                 },
                 filterState: filterState,
                 rootView: rootView,
-                dismissAction: dismissAction
+                dismissAction: dismissAction,
+                makeOpenNewProductButtons: makeOpenNewProductButtons
             )
         }
     }
@@ -720,6 +725,7 @@ private extension RootViewModelFactory {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         paymentsTransfersSwitcher: PaymentsTransfersSwitcher,
         bannersBinder: BannersBinder,
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> RootViewModel {
         
@@ -742,6 +748,8 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
         
+        let sections = makeMainViewModelSections(bannersBinder: bannersBinder)
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -752,7 +760,9 @@ private extension RootViewModelFactory {
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
+            sections: sections,
             bannersBinder: bannersBinder,
+            makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
         

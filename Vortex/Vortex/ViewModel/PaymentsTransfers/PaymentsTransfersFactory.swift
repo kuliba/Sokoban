@@ -81,11 +81,13 @@ extension PaymentsTransfersFactory {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeRepeatPaymentNavigation: { _,_,_,_  in .none },
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .inactive,
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview
+            makeServicePaymentBinder: ServicePaymentBinder.preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         return .init(

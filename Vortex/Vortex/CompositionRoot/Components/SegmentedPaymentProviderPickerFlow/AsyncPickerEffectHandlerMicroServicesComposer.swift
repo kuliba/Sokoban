@@ -46,7 +46,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping ([ServicePickerItem]) -> Void
     ) {
-        let nanoServices = makeNanoServices(.init(string: payload.provider.segment) ?? .housingAndCommunalService)
+        let nanoServices = makeNanoServices(payload.provider.segment)
         
         nanoServices.getServicesFor(payload.provider.origin) {
             
@@ -64,7 +64,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping (PaymentProviderServicePickerResult) -> Void
     ) {
-        let nanoServices = makeNanoServices(.init(string: payload.provider.segment) ?? .housingAndCommunalService)
+        let nanoServices = makeNanoServices(payload.provider.segment)
 
         nanoServices.startAnywayPayment(
             .service(item.service, for: payload.provider.origin)

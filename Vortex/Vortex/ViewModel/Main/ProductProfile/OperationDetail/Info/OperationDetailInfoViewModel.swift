@@ -82,6 +82,7 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     init?(
         with statement: ProductStatementData,
+        isStandardFlow: Bool,
         operation: OperationDetailData?,
         product: ProductData,
         dismissAction: @escaping () -> Void,
@@ -109,6 +110,20 @@ final class OperationDetailInfoViewModel: Identifiable {
         
         let operationCategoryCell = Self.operationCategoryCellViewModel(value: operation?.operationCategory)
         let documentNumberCell = Self.documentNumberCellViewModel(value: operation?.documentNumber)
+        
+        guard !isStandardFlow else {
+            
+            (cells, self.logo) = Self.standardFlow(
+                model: model,
+                statement: statement,
+                operation: operation,
+                currency: currency,
+                dateTimeCell: dateTimeCell,
+                product: product
+            )
+            
+            return
+        }
         
         switch statement.paymentDetailType {
             
@@ -1250,6 +1265,79 @@ private extension ProductStatementData {
 }
 
 extension OperationDetailInfoViewModel {
+    
+    static func standardFlow(
+        model: Model,
+        statement: ProductStatementData,
+        operation: OperationDetailData?,
+        currency: String,
+        dateTimeCell: PropertyCellViewModel,
+        product: ProductData
+    ) -> ([DefaultCellViewModel], Image?) {
+        
+        let image = model.images.value[statement.md5hash]?.image // 1
+        
+        let merchant = image.map { // 2
+            
+            BankCellViewModel(
+                title: "Наименование получателя",
+                icon: $0,
+                name: operation?.payeeFullName ?? statement.merchant
+            )
+        }
+        
+        let operationCategoryCell = Self.operationCategoryCellViewModel( // 3
+            value: operation?.operationCategory
+        )
+        
+        let documentNumberCell = Self.documentNumberCellViewModel( // 4
+            value: operation?.documentNumber
+        )
+
+        let paymentID = operation?.account.map { // 5
+            
+            PropertyCellViewModel(
+                title: "Идентификатор платежа",
+                iconType: IconType.account.icon,
+                value: $0
+            )
+        }
+        
+        let amount = Self.amount( // 6
+            statement: statement,
+            currency: currency,
+            model: model
+        )
+
+        var feeCell: PropertyCellViewModel? // 7
+        if let fee = operation?.payerFee {
+            
+            feeCell = Self.commissionCell(
+                with: model,
+                fee: fee,
+                currency: currency
+            )
+        }
+        
+        let account = Self.accountCell( // 8
+            with: product,
+            model: model,
+            operationType: statement.operationType
+        )
+        
+        let cells = [
+            merchant,
+            operationCategoryCell,
+            documentNumberCell,
+            paymentID,
+            amount,
+            feeCell,
+            account,
+            dateTimeCell  // 9
+        ].compactMap { $0 }
+        
+        return (cells, image)
+    }
     
     static func sberQRPayment(
         statement: ProductStatementData,

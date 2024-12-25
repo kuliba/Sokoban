@@ -311,18 +311,7 @@ extension PaymentProviderPickerDomain.Flow {
     }
 }
 
-extension Latest: Named {
-    
-    public var name: String {
-        
-        switch self {
-        case let .service(service):
-            return service.name ?? String(describing: service)
-            
-        case let .withPhone(withPhone):
-            return withPhone.name ?? String(describing: withPhone)
-        }
-    }
+extension Latest {
     
     var amount: Decimal? {
         
@@ -343,6 +332,42 @@ extension Latest: Named {
             
         case let .withPhone(withPhone):
             return withPhone.md5Hash
+        }
+    }
+    
+    var puref: String {
+        
+        switch self {
+        case let .service(service):
+            return service.puref
+            
+        case let .withPhone(withPhone):
+            return withPhone.puref
+        }
+    }
+    
+    var type: String {
+        
+        switch self {
+        case let .service(service):
+            return service.type
+            
+        case let .withPhone(withPhone):
+            return withPhone.type
+        }
+    }
+}
+
+extension Latest: Named {
+    
+    public var name: String {
+        
+        switch self {
+        case let .service(service):
+            return service.name ?? String(describing: service)
+            
+        case let .withPhone(withPhone):
+            return withPhone.name ?? String(describing: withPhone)
         }
     }
 }

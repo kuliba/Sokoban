@@ -479,39 +479,9 @@ final class LatestPayment_paymentPayloadTests: XCTestCase {
         
         XCTAssertNoDiff(mapped.map(\.paymentPayload)[12], nil)
         
-        XCTAssertNoDiff(
-            mapped.map(\.paymentPayload)[13],
-            .phone(.init(
-                amount: 100.00,
-                bankID: "100000000217",
-                phoneNumber: "9636124249",
-                puref: nil
-            ))
-        )
+        XCTAssertNil(mapped.map(\.paymentPayload)[13])
         
-        XCTAssertNoDiff(
-            mapped.map(\.paymentPayload)[14],
-            .phone(.init(
-                amount: 11.11,
-                bankID: "100000000217",
-                phoneNumber: "9191619658",
-                puref: nil
-            ))
-        )
-        
-        XCTAssertNoDiff(
-            mapped.map(\.paymentPayload)[15],
-            .phone(.init(
-                amount: 10.00,
-                bankID: "100000000217",
-                phoneNumber: "9636188169",
-                puref: nil
-            ))
-        )
-        
-        XCTAssertNoDiff(mapped.map(\.paymentPayload)[16], nil)
-
-        XCTAssertNoDiff(mapped.map(\.paymentPayload)[17], nil)
+        XCTAssertNil(mapped.map(\.paymentPayload)[14])
     }
     
     // MARK: - Helpers

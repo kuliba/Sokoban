@@ -64,7 +64,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     func test_load_shouldCallGetLatestPaymentsWithLoadedOne_withHardcoded() {
         
-        let categories = makeCategories([.charity])
+        let categories = makeCategories(["isCharityPayments"])
         let (sut, getAllLoadedCategoriesSpy, getLatestPaymentsSpy) = makeSUT()
         
         let load = sut(.all)
@@ -76,7 +76,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     func test_load_shouldCallGetLatestPaymentsWithLoadedTwo_withHardcoded() {
         
-        let categories = makeCategories([.charity, .mobile])
+        let categories = makeCategories(["isCharityPayments", "isMobilePayments"])
         let (sut, getAllLoadedCategoriesSpy, getLatestPaymentsSpy) = makeSUT()
         
         let load = sut(.all)
@@ -101,7 +101,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     func test_load_shouldCallGetLatestPaymentsWithLoadedOne_emptyHardcoded() {
         
-        let categories = makeCategories([.charity])
+        let categories = makeCategories(["isCharityPayments"])
         let (sut, getAllLoadedCategoriesSpy, getLatestPaymentsSpy) = makeSUT(
             hardcoded: []
         )
@@ -115,7 +115,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     func test_load_shouldCallGetLatestPaymentsWithLoadedTwo_emptyHardcoded() {
         
-        let categories = makeCategories([.charity, .mobile])
+        let categories = makeCategories(["isCharityPayments", "isMobilePayments"])
         let (sut, getAllLoadedCategoriesSpy, getLatestPaymentsSpy) = makeSUT(
             hardcoded: []
         )
@@ -140,7 +140,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     func test_load_shouldCallGetLatestPaymentsWithListOfOne() {
         
-        let categories = makeCategories([.charity])
+        let categories = makeCategories(["isCharityPayments"])
         let (sut, _, getLatestPaymentsSpy) = makeSUT()
         
         let load = sut(.list(categories))
@@ -151,7 +151,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     
     func test_load_shouldCallGetLatestPaymentsWithListOfTwo() {
         
-        let categories = makeCategories([.charity, .mobile])
+        let categories = makeCategories(["isCharityPayments", "isMobilePayments"])
         let (sut, _, getLatestPaymentsSpy) = makeSUT()
         
         let load = sut(.list(categories))
@@ -215,11 +215,11 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     }
     
     private func makeCategories(
-        _ categories: [ServiceCategory.LatestPaymentsCategory]
+        _ latestCategories: [ServiceCategory.LatestPaymentsCategory]
     ) -> [ServiceCategory] {
         
-        let count = categories.count
-        let categories = categories.map {  makeServiceCategory(latestPaymentsCategory: $0) }
+        let count = latestCategories.count
+        let categories = latestCategories.map {  makeServiceCategory(latestPaymentsCategory: $0) }
         XCTAssertEqual(categories.count, count)
         
         return categories

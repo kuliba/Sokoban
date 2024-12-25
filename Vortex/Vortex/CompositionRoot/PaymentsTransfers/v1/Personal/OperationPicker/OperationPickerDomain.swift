@@ -16,24 +16,14 @@ extension OperationPickerDomain {
 
 enum OperationPickerNavigation {
     
-    case exchangeFailure
     case exchange(CurrencyWalletViewModel)
-    case latest(LatestFlowStub)
+    case exchangeFailure
+    case latest(PaymentsDomain.Navigation)
     case outside(Outside)
     case templates
     
     enum Outside: Equatable {
         
         case main
-    }
-}
-
-final class LatestFlowStub {
-    
-    let latest: Latest
-    
-    init(latest: Latest) {
-        
-        self.latest = latest
     }
 }

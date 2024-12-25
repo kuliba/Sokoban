@@ -418,7 +418,7 @@ final class RootViewModelTests: XCTestCase {
             selected: .market
         )
         
-        sut.openPayment(.housingAndCommunalService)
+        sut.openPayment(._housingAndCommunalService)
         scheduler.advance()
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -436,7 +436,7 @@ final class RootViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(alertSpy.values, [nil])
         
-        sut.openPayment(.housingAndCommunalService)
+        sut.openPayment(._housingAndCommunalService)
         scheduler.advance()
         
         XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
@@ -479,6 +479,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
+
                     makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
@@ -487,7 +488,9 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
+                    sections: [],
                     bannersBinder: .preview,
+                    makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(
@@ -562,7 +565,9 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
+                    sections: makeSections(),
                     bannersBinder: .immediate,
+                    makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(
@@ -609,6 +614,19 @@ final class RootViewModelTests: XCTestCase {
         
         return (sut, scheduler, linkSpy, alertSpy)
     }
+    
+    private func makeSections() -> [MainSectionViewModel] {
+        
+        [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample,
+            MainSectionAtmView.ViewModel.initial
+        ]
+    }
+
     
     private func setSelectedAndFinishAsyncWorkInInit(
         sut: RootViewModel,
@@ -882,7 +900,7 @@ private extension Alert.ViewModel.View {
 
 private extension String {
     
-    static let housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
+    static let _housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
 }
 
 private extension MarketShowcaseDomain.Binder {

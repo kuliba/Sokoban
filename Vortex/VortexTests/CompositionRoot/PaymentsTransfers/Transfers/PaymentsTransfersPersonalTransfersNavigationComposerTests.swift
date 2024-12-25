@@ -432,7 +432,7 @@ extension Model {
         line: UInt = #line
     ) throws {
         
-        products.value.append(element: product ?? .accountActiveRub, toValueOfKey: .account)
+        products.value.append(element: product ?? .accountActiveRub, toValueOfKey: product?.productType ?? .account)
         _ = try XCTUnwrap(PaymentsMeToMeViewModel(self, mode: .demandDeposit), "Fail to add product for MeToMe (Expected PaymentsMeToMeViewModel, got nil instead).", file: file, line: line)
     }
 }

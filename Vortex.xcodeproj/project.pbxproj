@@ -519,6 +519,8 @@
 		2A248F652C691A5B00082814 /* InitiateAnywayPaymentMicroService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F4F2C6885FB00082814 /* InitiateAnywayPaymentMicroService.swift */; };
 		2A248F662C691A5B00082814 /* InitiateAnywayPaymentMicroServiceComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F512C68862B00082814 /* InitiateAnywayPaymentMicroServiceComposer.swift */; };
 		2A24C8582CB9256D0073F636 /* Model+performOrWaitForActiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A24C8572CB9256D0073F636 /* Model+performOrWaitForActiveTests.swift */; };
+		2A25B3BE2D13249C0048F729 /* RootViewModelFactory+makeMainViewModelSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A25B3BD2D13249C0048F729 /* RootViewModelFactory+makeMainViewModelSections.swift */; };
+		2A26C2B52C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iFora.swift */; };
 		2A26C2B52C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift */; };
 		2A273E912C770173009935E6 /* OperationPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E902C770173009935E6 /* OperationPickerContent.swift */; };
 		2A2836E42CC79A9D00694241 /* ModelRootComposer+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E32CC79A9D00694241 /* ModelRootComposer+shared.swift */; };
@@ -4052,6 +4054,8 @@
 		2A248F5B2C68E4D600082814 /* AnywayPaymentTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentTestHelpers.swift; sourceTree = "<group>"; };
 		2A248F5D2C68EFF600082814 /* InitialAnywayTransactionComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialAnywayTransactionComposer.swift; sourceTree = "<group>"; };
 		2A24C8572CB9256D0073F636 /* Model+performOrWaitForActiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForActiveTests.swift"; sourceTree = "<group>"; };
+		2A25B3BD2D13249C0048F729 /* RootViewModelFactory+makeMainViewModelSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMainViewModelSections.swift"; sourceTree = "<group>"; };
+		2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersCorporateContentViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersCorporateContentViewConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2A273E902C770173009935E6 /* OperationPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContent.swift; sourceTree = "<group>"; };
 		2A2836E32CC79A9D00694241 /* ModelRootComposer+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelRootComposer+shared.swift"; sourceTree = "<group>"; };
@@ -10601,6 +10605,8 @@
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				2A25B3BD2D13249C0048F729 /* RootViewModelFactory+makeMainViewModelSections.swift */,
+				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
 				EC5A2D1F2D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift */,
 				2AC72B8F2CEF7AC3001578CC /* RootViewModelFactory+compose.swift */,
 				2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */,
@@ -20743,6 +20749,7 @@
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */,
 				2A6679E32C58B0DD003ACA31 /* PaymentCompleteViewConfig.swift in Sources */,
+				2A25B3BE2D13249C0048F729 /* RootViewModelFactory+makeMainViewModelSections.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */,

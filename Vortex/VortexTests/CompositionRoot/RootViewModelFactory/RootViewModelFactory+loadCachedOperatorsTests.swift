@@ -39,20 +39,20 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         
     func test_loadCachedOperators_shouldDeliverEmptyOnNonMatchingCategoryType() {
         
-        let (_, model) = makeOperatorWithModel(type: .charity)
+        let (_, model) = makeOperatorWithModel(type: "charity")
         let (sut, _) = makeSUT(loadStub: [model])
         
         expect(
             sut: sut, 
             withLoadStub: [model],
-            payload: makePayload(for: .digitalWallets),
+            payload: makePayload(for: "digitalWallets"),
             toDeliver: []
         )
     }
         
     func test_loadCachedOperators_shouldDeliverOneOnValueOfOneForMatchingCategoryType() {
         
-        let categoryType: CategoryType = .networkMarketing
+        let categoryType: CategoryType = "networkMarketing"
         let (`operator`, model) = makeOperatorWithModel(type: categoryType)
         let (sut, _) = makeSUT(loadStub: [model])
         
@@ -66,7 +66,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         
     func test_loadCachedOperators_shouldDeliverTwoOnValueOfOneForMatchingCategoryType() {
         
-        let categoryType: CategoryType = .socialAndGames
+        let categoryType: CategoryType = "socialAndGames"
         let (operator1, model1) = makeOperatorWithModel(type: categoryType)
         let (operator2, model2) = makeOperatorWithModel(type: categoryType)
         let (sut, _) = makeSUT(loadStub: [model1, model2])
@@ -124,11 +124,11 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
     }
     
     private func makeOperatorWithModel(
-        type: ServiceCategory.CategoryType = .repaymentLoansAndAccounts,
+        type: ServiceCategory.CategoryType = "repaymentLoansAndAccounts",
         sortedOrder: Int = .random(in: 1...100)
     ) -> (UtilityPaymentProvider, CodableServicePaymentOperator) {
         
-        let `operator` = makePaymentServiceOperator(type: type.name)
+        let `operator` = makePaymentServiceOperator(type: type)
         
         return (`operator`, codable(`operator`, sortedOrder: sortedOrder))
     }

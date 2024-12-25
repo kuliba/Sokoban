@@ -22,9 +22,11 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     @Published var isLoading: Bool
     @Published var sheet: Sheet?
     @Published var fullScreenSheet: FullScreenSheet?
-    let repeatButtonAvailable: Bool
     
-    var operationId: Int? = nil
+    var operationId: Int?
+    var paymentFlow: String?
+    var printFormType: PrintFormType?
+    var productStatement: ProductStatementData
     
     var templateAction: () -> Void = {}
     
@@ -40,7 +42,6 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         updateFastAll: @escaping UpdateFastAll,
         model: Model
     ) {
-                
         let header = HeaderViewModel(statement: productStatement, model: model)
         let operation = OperationViewModel(productStatement: productStatement, model: model)
         
@@ -51,9 +52,9 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.templateButton = nil
         self.isLoading = false
         self.updateFastAll = updateFastAll
-        self.repeatButtonAvailable = productStatement.repeatButtonAvailable
         self.model = model
-
+        self.productStatement = productStatement
+        
         bind()
 
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
@@ -131,7 +132,6 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         }
                 
                         self.update(with: statement, product: product, operationDetail: details)
-                        self.operationId = details.paymentOperationDetailId
                         
                         guard statement.paymentDetailType != .insideOther,
                               details.shouldHaveTemplateButton,
@@ -228,10 +228,13 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     
     private func update(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData?) {
         
-        guard let operationDetail = operationDetail else {
-            return
-        }
+        guard let operationDetail else { return }
         
+        self.operationId = operationDetail.paymentOperationDetailId
+        self.paymentFlow = operationDetail.paymentFlow
+        self.printFormType = operationDetail.printFormType
+        self.productStatement = productStatement
+
         withAnimation {
             
             operation = operation.updated(with: productStatement, operation: operationDetail, viewModel: self)
@@ -240,9 +243,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         var actionButtonsUpdated: [ActionButtonViewModel]? = nil
         var featureButtonsUpdated = [FeatureButtonViewModel]()
         
-        switch productStatement.paymentDetailType {
-            
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
+        if operationDetail.paymentFlow == "STANDARD_FLOW" {
             
             if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
@@ -250,26 +251,40 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
+
+        } else {
             
-        case .contactAddressless:
-            // TODO: revert after templates fix
-            // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-            //     featureButtonsUpdated.append(templateButtonViewModel)
-            // }
-            if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
-                featureButtonsUpdated.append(documentButtonViewModel)
+            switch productStatement.paymentDetailType {
+                
+            case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
+                
+                if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                    featureButtonsUpdated.append(documentButtonViewModel)
+                }
+                if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                    featureButtonsUpdated.append(infoButtonViewModel)
+                }
+                
+            case .contactAddressless:
+                // TODO: revert after templates fix
+                // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+                //     featureButtonsUpdated.append(templateButtonViewModel)
+                // }
+                if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                    featureButtonsUpdated.append(documentButtonViewModel)
+                }
+                if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                    featureButtonsUpdated.append(infoButtonViewModel)
+                }
+                if operationDetail.transferReference != nil {
+                    actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: { [weak self] in
+                        self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
+                    })
+                }
+                
+            default:
+                break
             }
-            if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
-                featureButtonsUpdated.append(infoButtonViewModel)
-            }
-            if operationDetail.transferReference != nil {
-                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: { [weak self] in
-                    self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
-                })
-            }
-            
-        default:
-            break
         }
         
         withAnimation {
@@ -317,9 +332,17 @@ private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData? = nil) -> FeatureButtonViewModel? {
         
-        guard let operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.action.send(OperationDetailViewModelAction.CloseSheet())}, model: model) else {
-            return nil
-        }
+        guard let operationDetailInfoViewModel = OperationDetailInfoViewModel(
+            with: productStatement,
+            isStandardFlow: operationDetail?.paymentFlow == "STANDARD_FLOW",
+            operation: operationDetail,
+            product: product,
+            dismissAction: { [weak self] in
+                
+                self?.action.send(OperationDetailViewModelAction.CloseSheet())
+            },
+            model: model
+        ) else { return nil }
         
     return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowInfo(viewModel: operationDetailInfoViewModel)) })
     }
@@ -551,29 +574,5 @@ extension OperationDetailViewModel {
         static func == (lhs: OperationDetailViewModel.FullScreenSheet, rhs: OperationDetailViewModel.FullScreenSheet) -> Bool {
             lhs.id == rhs.id
         }
-    }
-}
-
-private extension ProductStatementData {
-
-    var repeatButtonAvailable: Bool {
-        
-        let availableTypes: [ProductStatementData.Kind] = [
-            .taxes,
-            .betweenTheir,
-            .insideBank,
-            .housingAndCommunalService,
-            .externalEntity,
-            .externalIndivudual,
-            .sfp,
-            .contactAddressless,
-            .outsideCash,
-            .direct,
-            .transport,
-            .mobile,
-            .internet
-        ]
-        
-        return availableTypes.contains(where:  { $0 == self.paymentDetailType })
     }
 }

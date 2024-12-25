@@ -274,7 +274,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 fraudDelay: settings.fraudDelay,
                 navTitle: settings.utilityNavTitle
             ),
-            microServices: microComposer.compose(for: .housingAndCommunalService),
+            microServices: microComposer.compose(for: "housingAndCommunalService"),
             scheduler: scheduler
         )
     }
@@ -295,6 +295,7 @@ private extension LatestPaymentData {
             name: data.lastPaymentName ?? "",
             md5Hash: nil,
             puref: data.puref,
+            type: data.type.defaultName,
             additionalItems: data.additionalList.map { .init(data: $0) }
         )
     }
