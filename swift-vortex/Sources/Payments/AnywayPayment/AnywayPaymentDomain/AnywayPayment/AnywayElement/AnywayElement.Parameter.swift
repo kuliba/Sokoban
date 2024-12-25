@@ -154,7 +154,7 @@ extension AnywayElement.Parameter.UIAttributes {
     
     public enum FieldType: Equatable {
         
-        case input, maskList, missing, select
+        case checkbox, input, maskList, missing, select
     }
     
     public enum InputFieldType: Equatable {

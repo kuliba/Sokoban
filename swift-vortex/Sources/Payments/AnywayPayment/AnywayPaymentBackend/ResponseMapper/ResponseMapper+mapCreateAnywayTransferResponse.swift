@@ -248,9 +248,10 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldTyp
     init(_ rawValue: ResponseMapper._Data._Parameter.FieldType) {
         
         switch rawValue {
-        case .input:      self = .input
-        case .select:     self = .select
-        case .maskList:   self = .maskList
+        case .checkbox:      self = .checkbox
+        case .input:         self = .input
+        case .select:        self = .select
+        case .maskList:      self = .maskList
         }
     }
 }
@@ -343,6 +344,7 @@ private extension ResponseMapper._Data._Parameter {
     
     enum FieldType: String, Decodable {
         
+        case checkbox = "CheckBox"
         case input    = "Input"
         case select   = "Select"
         case maskList = "MaskList"

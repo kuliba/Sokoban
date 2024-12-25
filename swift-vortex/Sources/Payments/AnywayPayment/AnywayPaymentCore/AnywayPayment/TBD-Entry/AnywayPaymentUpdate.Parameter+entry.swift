@@ -37,13 +37,13 @@ public extension AnywayPaymentUpdate.Parameter {
                 case .input:
                     return .numberInput(id: field.id, value: field.content)
                     
-                case .maskList, .missing, .select:
+                case .checkbox, .maskList, .missing, .select:
                     return nil
                 }
                 
             case let .pairs(pair, pairs):
                 switch uiAttributes.type {
-                case .input, .missing:
+                case .checkbox, .input, .missing:
                     return nil
                     
                 case .maskList:
@@ -58,7 +58,7 @@ public extension AnywayPaymentUpdate.Parameter {
                 case .input:
                     return .textInput(id: field.id, value: field.content)
                     
-                case .maskList, .missing, .select:
+                case .checkbox, .maskList, .missing, .select:
                     return nil
                 }
             }

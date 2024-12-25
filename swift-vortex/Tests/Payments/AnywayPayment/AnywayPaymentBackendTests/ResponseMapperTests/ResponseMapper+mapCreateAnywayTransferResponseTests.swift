@@ -426,6 +426,27 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             ._backendReserved,
         ])
     }
+    
+    func test_shouldDeliverResponseWithOneCheckBox() throws {
+        
+        let response = try map(String.withOneCheckBox.json).get()
+        
+        XCTAssertNoDiff(response.parametersForNextStep.map(\.type), [.checkbox])
+    }
+
+    func test_shouldDeliverResponseWithCheckBox() throws {
+        
+        let response = try map(String.withCheckBox.json).get()
+        
+        XCTAssertNoDiff(response.parametersForNextStep.map(\.type), [
+            .input,
+            .checkbox,
+            .checkbox,
+            .select,
+            .missing,
+            .missing
+        ])
+    }
 
     // MARK: - Helpers
     
@@ -2082,6 +2103,102 @@ private extension String {
         "id": "##ID##",
         "viewType": "OUTPUT",
         "content": "7e2fbb3f-680b-484e-97be-31a1cd03b74e",
+        "visible": false
+      },
+      {
+        "id": "##STEP##",
+        "viewType": "OUTPUT",
+        "content": "1",
+        "visible": false
+      }
+    ]
+  }
+}
+"""
+    
+    static let withOneCheckBox = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "parameterListForNextStep": [
+      {
+        "id": "a3_INFO_3_2_2",
+        "title": "Email введён корректно",
+        "subTitle": "Email введён корректно",
+        "viewType": "OUTPUT",
+        "type": "CheckBox",
+        "rawLength": 0,
+        "isRequired": true,
+        "content": "1",
+        "readOnly": false,
+        "visible": true
+      }
+    ]
+  }
+}
+"""
+    
+    static let withCheckBox = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "parameterListForNextStep": [
+      {
+        "id": "a3_PERSONAL_ACCOUNT_1_2",
+        "title": "Адрес электронной почты",
+        "subTitle": "Введите адрес электронной почты",
+        "viewType": "INPUT",
+        "dataType": "%String",
+        "type": "Input",
+        "rawLength": 0,
+        "isRequired": true,
+        "readOnly": false,
+        "inputFieldType": "ACCOUNT",
+        "visible": true,
+        "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+      },
+      {
+        "id": "a3_INFO_3_2_2",
+        "title": "Email введён корректно",
+        "subTitle": "Email введён корректно",
+        "viewType": "OUTPUT",
+        "type": "CheckBox",
+        "rawLength": 0,
+        "isRequired": true,
+        "content": "1",
+        "readOnly": false,
+        "visible": true
+      },
+      {
+        "id": "a3_INFO_4_3_2",
+        "title": "У меня есть USA аккаунт, я понимаю необходимость использования VPN при активации кода",
+        "subTitle": "У меня есть USA аккаунт, я понимаю необходимость использования VPN при активации кода",
+        "viewType": "OUTPUT",
+        "type": "CheckBox",
+        "rawLength": 0,
+        "isRequired": true,
+        "content": "1",
+        "readOnly": false,
+        "visible": true
+      },
+      {
+        "id": "a3_service_4_2",
+        "title": "Номинал карты:",
+        "viewType": "INPUT",
+        "dataType": "=,xbox_psb_demo=USD 10",
+        "type": "Select",
+        "rawLength": 0,
+        "isRequired": true,
+        "content": "xbox_psb_demo",
+        "readOnly": false,
+        "visible": true
+      },
+      {
+        "id": "##ID##",
+        "viewType": "OUTPUT",
+        "content": "8e0c82ae-a4a8-4391-89aa-4e9bc099f00a",
         "visible": false
       },
       {

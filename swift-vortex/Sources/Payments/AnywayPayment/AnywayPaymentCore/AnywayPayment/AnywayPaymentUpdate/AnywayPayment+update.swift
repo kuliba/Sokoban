@@ -438,6 +438,7 @@ private extension AnywayElement.Parameter.UIAttributes.FieldType {
     init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
         
         switch fieldType {
+        case .checkbox: self = .checkbox
         case .input:    self = .input
         case .select:   self = .select
         case .maskList: self = .maskList

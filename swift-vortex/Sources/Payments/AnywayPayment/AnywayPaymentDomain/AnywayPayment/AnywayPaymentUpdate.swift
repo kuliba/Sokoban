@@ -325,7 +325,7 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
 
     enum FieldType: Equatable {
         
-        case input, select, maskList, missing
+        case checkbox, input, select, maskList, missing
     }
     
     enum InputFieldType: Equatable {

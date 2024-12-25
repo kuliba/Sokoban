@@ -246,7 +246,7 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
 
     public enum FieldType: Equatable {
         
-        case input, select, maskList, missing
+        case checkbox, input, select, maskList, missing
     }
     
     public enum InputFieldType: Equatable {

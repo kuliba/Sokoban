@@ -37,13 +37,13 @@ public extension AnywayElement.Parameter {
                 case .input:
                     return .numberInput(id: field.id, value: field.value)
                     
-                case .maskList, .missing, .select:
+                case .checkbox, .maskList, .missing, .select:
                     return nil
                 }
                 
             case let .pairs(pair, pairs):
                 switch uiAttributes.type {
-                case .input, .missing:
+                case .checkbox, .input, .missing:
                     return nil
                     
                 case .maskList:
@@ -55,6 +55,9 @@ public extension AnywayElement.Parameter {
                 
             case .string, .string2, .string2Rus, .stringEn:
                 switch uiAttributes.type {
+                case .checkbox:
+                    return .checkbox(id: field.id, value: field.value)
+                    
                 case .input:
                     return .textInput(id: field.id, value: field.value)
                     
@@ -82,6 +85,7 @@ public extension AnywayElement.Parameter {
     
     enum Entry: Equatable {
         
+        case checkbox(id: ID, value: Value?)
         case hidden(String)
         case maskList(Pair?, [Pair])
         case nonEditable(Field)
@@ -104,4 +108,3 @@ public extension AnywayElement.Parameter.Entry {
     
     typealias Pair = AnywayElement.Parameter.UIAttributes.DataType.Pair
 }
-

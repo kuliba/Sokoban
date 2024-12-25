@@ -292,6 +292,7 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.FieldType {
     init(_ type: ResponseMapper.CreateAnywayTransferResponse.Parameter.FieldType) {
         
         switch type {
+        case .checkbox: self = .checkbox
         case .input:    self = .input
         case .select:   self = .select
         case .maskList: self = .maskList
