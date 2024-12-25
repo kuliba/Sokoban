@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/CardStatementAPI.xctestplan"
+            reference = "container:../Vortex/TestPlans/CardStatementAPI.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

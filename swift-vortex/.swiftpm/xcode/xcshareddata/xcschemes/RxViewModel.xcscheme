@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/RxViewModel.xctestplan"
+            reference = "container:../Vortex/TestPlans/RxViewModel.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
