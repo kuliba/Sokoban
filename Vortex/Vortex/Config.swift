@@ -21,7 +21,7 @@ enum Config {
     static let googleServiceInfoFileName: String = {
         
         #if DEBUG || MOCK
-            "GoogleService-InfoVortex"
+            "GoogleService-InfoVortexMbsDebug"
         #else
             "GoogleService-InfoVortex"
         #endif

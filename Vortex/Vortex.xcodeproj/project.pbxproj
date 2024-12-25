@@ -2998,6 +2998,7 @@
 		C115BEF82C231ED100DDD0CB /* HistoryFilterFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */; };
 		C11779DF2C59003C00CAF414 /* RequestFactory+getInfoForRepeatPaymentRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11779DE2C59003C00CAF414 /* RequestFactory+getInfoForRepeatPaymentRequestTests.swift */; };
 		C11F5A582CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F5A572CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift */; };
+		C121877A2D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist in Resources */ = {isa = PBXBuildFile; fileRef = C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */; };
 		C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */; };
 		C12ACF282B0228C0006C6B2E /* ResponseMapper+GetImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */; };
 		C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */; };
@@ -6518,6 +6519,7 @@
 		C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryFilterFlag.swift; sourceTree = "<group>"; };
 		C11779DE2C59003C00CAF414 /* RequestFactory+getInfoForRepeatPaymentRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getInfoForRepeatPaymentRequestTests.swift"; sourceTree = "<group>"; };
 		C11F5A572CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createPrepareDeleteDefaultBankRequest.swift"; sourceTree = "<group>"; };
+		C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-InfoVortexMbsDebug.plist"; sourceTree = "<group>"; };
 		C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWrapperView.swift; sourceTree = "<group>"; };
 		C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+GetImageList.swift"; sourceTree = "<group>"; };
 		C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTests.swift; sourceTree = "<group>"; };
@@ -17426,6 +17428,7 @@
 				68935F70276970B7002F56C2 /* ViewModel */,
 				EDB143B0265FDB380028EF5A /* Vortex.entitlements */,
 				A50C44B72827070B00746947 /* VortexRelease.entitlements */,
+				C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */,
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */,
 				68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */,
@@ -19435,6 +19438,7 @@
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 				503F075A28252E1B00E84A77 /* Inter-SemiBold.ttf in Resources */,
 				2A3E03BC2B74C6B000A4494D /* getBankDefaultC4.json in Resources */,
+				C121877A2D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist in Resources */,
 				0C276593290691C10007D31D /* MyProductsOrdered3x.mov in Resources */,
 				2A3E03AE2B74C6B000A4494D /* getC2BSubJ1.json in Resources */,
 				F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */,
