@@ -14,7 +14,7 @@ public extension AnywayPaymentUpdate.Parameter {
         switch uiAttributes.viewType {
         case .constant:
             switch uiAttributes.dataType {
-            case ._backendReserved:
+            case .none, ._backendReserved:
                 return nil
                 
             case .integer, .number, .numeric, .string, .string2, .string2Rus, .stringEn:
@@ -29,7 +29,7 @@ public extension AnywayPaymentUpdate.Parameter {
             
         case .input:
             switch uiAttributes.dataType {
-            case ._backendReserved:
+            case .none, ._backendReserved:
                 return nil
                 
             case .integer, .number, .numeric:
@@ -65,6 +65,9 @@ public extension AnywayPaymentUpdate.Parameter {
             
         case .output:
             switch uiAttributes.dataType {
+            case .none:
+                return nil
+                
             case ._backendReserved:
                 return .hidden("OUTPUT")
                 

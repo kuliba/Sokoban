@@ -235,9 +235,12 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
 
 private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType {
     
-    init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+    init?(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
         
         switch parameter.dataType {
+        case .none:
+            return nil
+            
         case ._backendReserved:
             self = ._backendReserved
             

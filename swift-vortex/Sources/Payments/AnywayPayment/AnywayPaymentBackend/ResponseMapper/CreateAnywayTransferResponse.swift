@@ -133,7 +133,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let content: String?
         public let dataDictionary: String?
         public let dataDictionaryРarent: String?
-        public let dataType: DataType
+        public let dataType: DataType?
         public let group: String?
         public let id: String
         public let inputFieldType: InputFieldType?
@@ -161,7 +161,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             content: String? = nil,
             dataDictionary: String? = nil,
             dataDictionaryРarent: String? = nil,
-            dataType: DataType,
+            dataType: DataType?,
             group: String? = nil,
             id: String,
             inputFieldType: InputFieldType?,

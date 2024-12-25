@@ -123,16 +123,13 @@ private extension ResponseMapper.CreateAnywayTransferResponse.DocumentStatus {
 
 private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
-    init?(_ parameter: ResponseMapper._Data._Parameter) {
-        
-        guard let dataType = DataType(parameter)
-        else { return nil }
+    init(_ parameter: ResponseMapper._Data._Parameter) {
         
         self.init(
             content: parameter.content,
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
-            dataType: dataType,
+            dataType: .init(parameter),
             group: parameter.group,
             id: parameter.id,
             inputFieldType: .init(parameter.inputFieldType),

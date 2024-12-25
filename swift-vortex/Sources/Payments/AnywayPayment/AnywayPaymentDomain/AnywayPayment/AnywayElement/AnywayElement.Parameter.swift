@@ -86,7 +86,7 @@ extension AnywayElement.Parameter {
     
     public struct UIAttributes: Equatable {
         
-        public let dataType: DataType // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
+        public let dataType: DataType? // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
         public let group: String?
         public let isPrint: Bool // not used for `type: FieldType = .input`
         public let phoneBook: Bool
@@ -98,7 +98,7 @@ extension AnywayElement.Parameter {
         public let viewType: ViewType
         
         public init(
-            dataType: DataType,
+            dataType: DataType?,
             group: String?,
             isPrint: Bool,
             phoneBook: Bool,
