@@ -82,6 +82,7 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     init?(
         with statement: ProductStatementData,
+        isStandardFlow: Bool,
         operation: OperationDetailData?,
         product: ProductData,
         dismissAction: @escaping () -> Void,
@@ -109,6 +110,63 @@ final class OperationDetailInfoViewModel: Identifiable {
         
         let operationCategoryCell = Self.operationCategoryCellViewModel(value: operation?.operationCategory)
         let documentNumberCell = Self.documentNumberCellViewModel(value: operation?.documentNumber)
+        
+        guard !isStandardFlow else {
+            
+            let image = model.images.value[statement.md5hash]?.image
+            
+            self.logo = image // 1
+            
+            image.map { // 2
+                
+                cells.append(BankCellViewModel(
+                    title: "Наименование получателя",
+                    icon: $0,
+                    name: operation?.payeeFullName ?? statement.merchant
+                ))
+            }
+            
+            operationCategoryCell.map { cells.append($0) } // 3
+            documentNumberCell.map { cells.append($0) } // 4
+            
+            operation?.account.map { // 5
+                
+                cells.append(PropertyCellViewModel(
+                    title: "Идентификатор платежа",
+                    iconType: IconType.account.icon,
+                    value: $0
+                ))
+            }
+            
+            if let amount = Self.amount( // 6
+                statement: statement,
+                currency: currency,
+                model: model
+            ) {
+                cells.append(amount)
+            }
+            
+            if let fee = operation?.payerFee, // 7
+               let feeCell = Self.commissionCell(
+                with: model,
+                fee: fee,
+                currency: currency
+               ) {
+                cells.append(feeCell)
+            }
+            
+            if let account = Self.accountCell( // 8
+                with: product,
+                model: model,
+                operationType: statement.operationType
+            ) {
+                cells.append(account)
+            }
+            
+            cells.append(dateTimeCell) // 9
+            
+            return
+        }
         
         switch statement.paymentDetailType {
             

@@ -332,9 +332,17 @@ private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData? = nil) -> FeatureButtonViewModel? {
         
-        guard let operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.action.send(OperationDetailViewModelAction.CloseSheet())}, model: model) else {
-            return nil
-        }
+        guard let operationDetailInfoViewModel = OperationDetailInfoViewModel(
+            with: productStatement,
+            isStandardFlow: operationDetail?.paymentFlow == "STANDARD_FLOW",
+            operation: operationDetail,
+            product: product,
+            dismissAction: { [weak self] in
+                
+                self?.action.send(OperationDetailViewModelAction.CloseSheet())
+            },
+            model: model
+        ) else { return nil }
         
     return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowInfo(viewModel: operationDetailInfoViewModel)) })
     }
