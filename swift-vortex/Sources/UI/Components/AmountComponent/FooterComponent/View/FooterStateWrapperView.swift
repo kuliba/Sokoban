@@ -30,7 +30,7 @@ where InfoView: View {
     }
     
     private let frameInsets = EdgeInsets(
-        top: 4,
+        top: 6,
         leading: 20,
         bottom: 16,
         trailing: 19
@@ -62,6 +62,7 @@ private extension FooterStateWrapperView {
             
             amountView()
             buttonView(action: { viewModel.event(.button(.tap)) })
+                //.padding(.top, 6)
         }
         .padding(frameInsets)
         .background(config.backgroundColor.ignoresSafeArea())
@@ -72,9 +73,15 @@ private extension FooterStateWrapperView {
         VStack(alignment: .leading, spacing: 4) {
             
             config.title.text(withConfig: config.titleConfig)
+                .frame(height: config.heightOfElements.titleHeight)
             textField()
-            Divider().background(config.dividerColor)
-                .padding(.top, 4)
+                .frame(height: config.heightOfElements.textFieldHeight)
+            
+            Rectangle()
+                .fill(config.dividerColor.opacity(0.3))
+                .frame(height: 1)
+                .padding(.top, 3)
+            
             infoView()
         }
     }

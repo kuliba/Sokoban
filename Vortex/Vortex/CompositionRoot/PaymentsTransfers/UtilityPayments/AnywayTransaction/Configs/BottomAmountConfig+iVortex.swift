@@ -23,6 +23,9 @@ extension BottomAmountConfig {
         titleConfig: .init(
             textFont: .textBodySR12160(),
             textColor: .textPlaceholder
+        ), heightOfElements: .init(
+            titleHeight: 16,
+            textFieldHeight: 24
         )
     )
 }
