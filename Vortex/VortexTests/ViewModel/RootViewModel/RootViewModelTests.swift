@@ -490,7 +490,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: [],
                     bannersBinder: .preview,
-                    collateralLoanLandingFactory: .init(),
+                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -568,7 +568,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
-                    collateralLoanLandingFactory: .init(),
+                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -699,6 +699,17 @@ final class RootViewModelTests: XCTestCase {
             statusCard: status,
             cardType: cardType,
             idParent: nil
+        )
+    }
+    
+    private func makeCollateralLoanLandingViewModel(
+        initialState: CollateralLoanLandingDomain.State = .init()
+    ) -> CollateralLoanLandingDomain.ViewModel {
+        
+        .init(
+            initialState: .init(),
+            reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+            handleEffect: CollateralLoanLandingDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
         )
     }
 }
