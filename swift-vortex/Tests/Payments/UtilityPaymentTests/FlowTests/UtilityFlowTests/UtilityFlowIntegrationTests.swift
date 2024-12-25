@@ -33,8 +33,6 @@ final class UtilityFlowIntegrationTests: XCTestCase {
             .init(), {
                 _ in
             }, {
-                _ in
-            }, {
                 $0.push(.prepayment(.failure))
             }
         )
@@ -53,8 +51,6 @@ final class UtilityFlowIntegrationTests: XCTestCase {
         assert(
             spy,
             .init(), {
-                _ in
-            }, {
                 _ in
             }, {
                 $0.push(.prepayment(.options(options)))

@@ -304,11 +304,15 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapOpenAccount_accountProductsListNotNil_shouldSetModalToOpenAccount() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         model.accountProductsList.value = [.test]
         XCTAssertNil(sut.route.destination)
         
-        sut.openProductSection?.tapOpenProductButtonAndWait(type: .account)
+        sut.openProductSection?.tapOpenProductButton(type: .account)
         
         XCTAssertNoDiff(sut.route.modal?.case, .openAccount)
     }
@@ -1152,10 +1156,15 @@ private extension MainSectionFastOperationView.ViewModel {
 
 private extension MainSectionOpenProductView.ViewModel {
     
-    func tapOpenProductButtonAndWait(type: ProductType, timeout: TimeInterval = 0.05) {
+    func tapOpenProductButton(type: ProductType) {
         
         let openProductAction = MainSectionViewModelAction.OpenProduct.ButtonTapped.init(productType: type)
         action.send(openProductAction)
+    }
+    
+    func tapOpenProductButtonAndWait(type: ProductType, timeout: TimeInterval = 0.05) {
+        
+        tapOpenProductButton(type: type)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }

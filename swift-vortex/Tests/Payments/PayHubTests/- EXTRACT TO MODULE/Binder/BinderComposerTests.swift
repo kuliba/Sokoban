@@ -64,6 +64,7 @@ final class BinderComposerTests: XCTestCase {
         
         XCTAssertNil(binder.flow.state.navigation)
         
+        schedulers.main.advance()
         schedulers.interactive.advance(by: .milliseconds(1))
         schedulers.main.advance()
         
@@ -78,7 +79,9 @@ final class BinderComposerTests: XCTestCase {
         XCTAssertEqual(binder.content.receiveCount, 0)
         
         binder.content.emit(select)
+        schedulers.main.advance()
         schedulers.interactive.advance(to: .init(.now()).advanced(by: .milliseconds(500)))
+
         schedulers.interactive.advance(by: .milliseconds(1))
         schedulers.main.advance()
         

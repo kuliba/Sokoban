@@ -126,7 +126,6 @@ final class PrePaymentOptionsIntegrationTests: XCTestCase {
         
         assert(
             stateSpy, initialState,
-            { _ in },
             {
                 var operators = $0.operators
                 operators.append(.init(id: "111"))
@@ -147,10 +146,7 @@ final class PrePaymentOptionsIntegrationTests: XCTestCase {
         sut.event(.didScrollTo("9"))
         loadOperatorsSpy.complete(with: .success([]))
         
-        assert(
-            stateSpy, initialState,
-            { _ in }
-        )
+        assert(stateSpy, initialState)
     }
     
     // MARK: - sample flow
