@@ -83,7 +83,7 @@ extension RootViewModelFactory {
         
         func makeTemplatesNode() {
             
-            let templates = makeTemplates { notify(.dismiss) }
+            let templates = makeTemplates(.active) { notify(.dismiss) }
             let cancellables = bind(templates)
             
             completion(.templates(.init(
