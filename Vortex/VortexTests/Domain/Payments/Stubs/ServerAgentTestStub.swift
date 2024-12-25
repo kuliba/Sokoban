@@ -392,7 +392,7 @@ extension ServerAgentTestStub {
     
     func executeDownloadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerDownloadCommand {
         
-        let _: Command = unimplemented("executeDownloadCommand")
+        completion(.failure(.emptyResponse))
     }
     
     func executeUploadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerUploadCommand {
