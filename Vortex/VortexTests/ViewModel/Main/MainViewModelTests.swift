@@ -705,6 +705,7 @@ final class MainViewModelTests: XCTestCase {
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
+        buttons: [NewProductButton.ViewModel] = [],
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
@@ -733,7 +734,7 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] },
+            makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
         
@@ -836,6 +837,7 @@ final class MainViewModelTests: XCTestCase {
     
     private func makeSUTWithLocalAgent(
         localAgent: LocalAgent,
+        buttons: [NewProductButton.ViewModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -861,7 +863,7 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in buttons }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -875,6 +877,7 @@ final class MainViewModelTests: XCTestCase {
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        buttons: [NewProductButton.ViewModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -903,7 +906,7 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] },
+            makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
         
@@ -946,6 +949,7 @@ final class MainViewModelTests: XCTestCase {
     private func makeModelWithServerAgentStub(
         getC2bResponseStub: [ServerAgentTestStub.Stub],
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        buttons: [NewProductButton.ViewModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -975,7 +979,7 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] },
+            makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
         
