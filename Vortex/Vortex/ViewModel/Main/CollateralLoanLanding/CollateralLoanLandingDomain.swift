@@ -8,6 +8,17 @@
 import CollateralLoanLandingGetShowcaseUI
 import RxViewModel
 
+extension CollateralLoanLandingDomain.State {
+    
+    var showcase: CollateralLoanLandingDomain.ShowCase? {
+        
+        guard case let .success(showcase) = result
+        else { return nil }
+        
+        return showcase
+    }
+}
+
 enum CollateralLoanLandingDomain {
     
     struct State: Equatable {

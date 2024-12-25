@@ -265,9 +265,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        case .collateralLoanLanding:
-            // TODO: There are will added integration in next commit
-            Color.yellow
+        case let .collateralLoanLanding(viewModel):
+            CollateralLoanLandingView(viewModel: viewModel)
+                .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
     }

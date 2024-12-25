@@ -2965,6 +2965,7 @@
 		A7A4FBFD2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FBFC2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift */; };
 		A7A4FBFF2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FBFE2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift */; };
 		A7A4FC012D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FC002D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift */; };
+		A7A4FC072D1BEE8B006031E0 /* CollateralLoanLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FC062D1BEE8B006031E0 /* CollateralLoanLandingView.swift */; };
 		A7B5BD6A2CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */; };
 		A7B5BD6C2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */; };
 		A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */; };
@@ -6493,6 +6494,7 @@
 		A7A4FBFC2D1A9FB4006031E0 /* CollateralLoanLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingDomain.swift; sourceTree = "<group>"; };
 		A7A4FBFE2D1AA006006031E0 /* CollateralLoanLandingDomain+Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollateralLoanLandingDomain+Reducer.swift"; sourceTree = "<group>"; };
 		A7A4FC002D1AA081006031E0 /* CollateralLoanLanding+EffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollateralLoanLanding+EffectHandler.swift"; sourceTree = "<group>"; };
+		A7A4FC062D1BEE8B006031E0 /* CollateralLoanLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingView.swift; sourceTree = "<group>"; };
 		A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift"; sourceTree = "<group>"; };
 		A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift"; sourceTree = "<group>"; };
 		A7B5BD6D2CF855830094D7C6 /* CollateralLoanLandingGetCollateralLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingUI.xctestplan; sourceTree = "<group>"; };
@@ -14703,6 +14705,7 @@
 				2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */,
 				2AFA3B142CB78DC10019AFBA /* Refreshable.swift */,
 				2ACBA67C2CE9E99A00758D71 /* ElementIDs.swift */,
+				A7A4FC062D1BEE8B006031E0 /* CollateralLoanLandingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -22177,6 +22180,7 @@
 				2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */,
 				2A4D9AD02CF1B2A90092908E /* RootViewModelFactory+makeInitiateAnywayPaymentMicroServiceComposer.swift in Sources */,
 				ECA4BD102CF775F300896CDC /* AlertManager.swift in Sources */,
+				A7A4FC072D1BEE8B006031E0 /* CollateralLoanLandingView.swift in Sources */,
 				68CB588C28ABCA7A003064B0 /* LoggerAgentProtocol.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
 				68F9A06B27ECC348006C552C /* ProductViewControllerHistoryTableView.swift in Sources */,
