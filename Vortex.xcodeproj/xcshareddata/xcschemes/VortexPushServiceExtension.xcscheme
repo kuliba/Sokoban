@@ -60,7 +60,7 @@
       <RemoteRunnable
          runnableDebuggingMode = "1"
          BundleIdentifier = "ru.vortex.sense"
-         RemotePath = "/var/containers/Bundle/Application/7A6E338C-E0E0-4CCC-B861-58CF10584ACB/ForaBank.app">
+         RemotePath = "/var/containers/Bundle/Application/7A6E338C-E0E0-4CCC-B861-58CF10584ACB/Vortex.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference

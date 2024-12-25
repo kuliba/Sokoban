@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/KeyChainStore.xctestplan"
+            reference = "container:../Vortex/TestPlans/KeyChainStore.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

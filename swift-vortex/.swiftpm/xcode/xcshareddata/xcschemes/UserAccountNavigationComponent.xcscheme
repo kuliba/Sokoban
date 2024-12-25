@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/UserAccountNavigationComponent.xctestplan"
+            reference = "container:../Vortex/TestPlans/UserAccountNavigationComponent.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
