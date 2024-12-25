@@ -6,6 +6,7 @@
 //
 
 @testable import Vortex
+import CombineSchedulers
 import LandingUIComponent
 import SberQR
 import XCTest
@@ -55,7 +56,7 @@ final class MainViewModelTests: XCTestCase {
         
         let (sut, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates)
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates, timeout: 0.25)
         
         sut.templatesListViewModel?.closeAndWait()
         
@@ -353,12 +354,12 @@ final class MainViewModelTests: XCTestCase {
     
     func test_productsSection_tapProductProfile_shouldSetRouteToProductProfile() {
         
-        let (sut, model) = makeSUT()
+        let (sut, model) = makeSUT(scheduler: .immediate)
         let productID = 1
         model.products.value[.card] = [makeCardProduct(id: productID, cardType: .main, isMain: true)]
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.openProductProfileAndWait(productId: productID)
+        sut.mainSection?.openProductProfile(productId: productID)
         
         XCTAssertNoDiff(sut.route.case, .productProfile)
     }
@@ -674,6 +675,7 @@ final class MainViewModelTests: XCTestCase {
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -700,7 +702,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            scheduler: scheduler
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -1193,26 +1196,41 @@ private extension MainSectionOpenProductView.ViewModel {
 
 private extension MainSectionProductsView.ViewModel {
     
-    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+    func showSticker() {
         
         let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
         action.send(stickerAction)
+    }
+    
+    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+        
+        showSticker()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func openMoreProduct() {
+        
+        let moreAction = MainSectionViewModelAction.Products.MoreButtonTapped()
+        action.send(moreAction)
     }
     
     func openMoreProductAndWait(timeout: TimeInterval = 0.05) {
         
-        let moreAction = MainSectionViewModelAction.Products.MoreButtonTapped()
-        action.send(moreAction)
+        openMoreProduct()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
-    func openProductProfileAndWait(productId: Int, timeout: TimeInterval = 0.1) {
+    func openProductProfile(productId: Int) {
         
         let productProfileAction = MainSectionViewModelAction.Products.ProductDidTapped(productId: productId)
         action.send(productProfileAction)
+    }
+    
+    func openProductProfileAndWait(productId: Int, timeout: TimeInterval = 0.1) {
+        
+        openProductProfile(productId: productId)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
