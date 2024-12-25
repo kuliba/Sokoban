@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/PayHubUI.xctestplan"
+            reference = "container:../Vortex/TestPlans/PayHubUI.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

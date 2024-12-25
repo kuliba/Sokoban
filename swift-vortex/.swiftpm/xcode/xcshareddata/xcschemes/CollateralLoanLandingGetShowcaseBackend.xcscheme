@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/CollateralLoanLandingGetShowcaseBackend.xctestplan"
+            reference = "container:../Vortex/TestPlans/CollateralLoanLandingGetShowcaseBackend.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

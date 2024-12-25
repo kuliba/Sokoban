@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/TextFieldComponent.xctestplan"
+            reference = "container:../Vortex/TestPlans/TextFieldComponent.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
