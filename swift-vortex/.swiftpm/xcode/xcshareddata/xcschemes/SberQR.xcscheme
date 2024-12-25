@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/SberQR.xctestplan"
+            reference = "container:../Vortex/TestPlans/SberQR.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
