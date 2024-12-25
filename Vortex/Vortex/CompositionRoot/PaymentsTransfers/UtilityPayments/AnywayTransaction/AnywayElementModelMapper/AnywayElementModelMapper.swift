@@ -80,6 +80,12 @@ private extension AnywayElementModelMapper {
     ) -> AnywayElementModel {
         
         switch parameter.uiComponent.type {
+        case .checkbox:
+            return .parameter(.init(
+                origin: parameter.uiComponent, 
+                type: .checkbox(makeCheckboxViewModel(with: parameter, event: event))
+            ))
+            
         case .hidden:
             return .parameter(.init(
                 origin: parameter.uiComponent,
