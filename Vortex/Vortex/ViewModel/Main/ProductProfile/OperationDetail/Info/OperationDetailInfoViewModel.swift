@@ -1275,57 +1275,66 @@ extension OperationDetailInfoViewModel {
         product: ProductData
     ) -> ([DefaultCellViewModel], Image?) {
         
-        var cells = [DefaultCellViewModel]()
-        
         let image = model.images.value[statement.md5hash]?.image // 1
         
-        image.map { // 2
+        let merchant = image.map { // 2
             
-            cells.append(BankCellViewModel(
+            BankCellViewModel(
                 title: "Наименование получателя",
                 icon: $0,
                 name: operation?.payeeFullName ?? statement.merchant
-            ))
+            )
         }
         
-        Self.operationCategoryCellViewModel(value: operation?.operationCategory).map { cells.append($0) } // 3
-        Self.documentNumberCellViewModel(value: operation?.documentNumber).map { cells.append($0) } // 4
+        let operationCategoryCell = Self.operationCategoryCellViewModel( // 3
+            value: operation?.operationCategory
+        )
         
-        operation?.account.map { // 5
+        let documentNumberCell = Self.documentNumberCellViewModel( // 4
+            value: operation?.documentNumber
+        )
+
+        let paymentID = operation?.account.map { // 5
             
-            cells.append(PropertyCellViewModel(
+            PropertyCellViewModel(
                 title: "Идентификатор платежа",
                 iconType: IconType.account.icon,
                 value: $0
-            ))
+            )
         }
         
-        if let amount = Self.amount( // 6
+        let amount = Self.amount( // 6
             statement: statement,
             currency: currency,
             model: model
-        ) {
-            cells.append(amount)
+        )
+
+        var feeCell: PropertyCellViewModel? // 7
+        if let fee = operation?.payerFee {
+            
+            feeCell = Self.commissionCell(
+                with: model,
+                fee: fee,
+                currency: currency
+            )
         }
         
-        if let fee = operation?.payerFee, // 7
-           let feeCell = Self.commissionCell(
-            with: model,
-            fee: fee,
-            currency: currency
-           ) {
-            cells.append(feeCell)
-        }
-        
-        if let account = Self.accountCell( // 8
+        let account = Self.accountCell( // 8
             with: product,
             model: model,
             operationType: statement.operationType
-        ) {
-            cells.append(account)
-        }
+        )
         
-        cells.append(dateTimeCell) // 9
+        let cells = [
+            merchant,
+            operationCategoryCell,
+            documentNumberCell,
+            paymentID,
+            amount,
+            feeCell,
+            account,
+            dateTimeCell  // 9
+        ].compactMap { $0 }
         
         return (cells, image)
     }
