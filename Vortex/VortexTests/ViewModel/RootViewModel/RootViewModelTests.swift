@@ -568,7 +568,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
-                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    collateralLoanLandingFactory: .init(),
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
