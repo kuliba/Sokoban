@@ -36,7 +36,7 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(stickerSpy.values, [nil])
         
         model.images.value = ["1": .tiny()]
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(stickerSpy.values, [nil, nil])
     }
@@ -54,9 +54,9 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates, timeout: 0.25)
+        sut.fastPayment?.tapFastPaymentButton(type: .templates)
         
         sut.templatesListViewModel?.closeAndWait()
         
@@ -66,7 +66,8 @@ final class MainViewModelTests: XCTestCase {
     func test_tapUserAccount_shouldSendGetSubscriptionRequest() {
         
         let (sut, model) = makeModelWithServerAgentStub(
-            getC2bResponseStub: getC2bResponseStub()
+            getC2bResponseStub: getC2bResponseStub(),
+            scheduler: .immediate
         )
         let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.C2B.GetC2BSubscription.Request })
         XCTAssertNoDiff(spy.values.count, 0)
@@ -210,7 +211,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapByPhone_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT()
+        let (sut, model) = makeSUT(scheduler: .immediate)
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -219,7 +220,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.modal)
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
+        sut.fastPayment?.tapFastPaymentButton(type: .byPhone)
         
         XCTAssertNotNil(sut.route.modal?.alert)
     }
@@ -849,6 +850,7 @@ final class MainViewModelTests: XCTestCase {
     
     private func makeModelWithServerAgentStub(
         getC2bResponseStub: [ServerAgentTestStub.Stub],
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -877,7 +879,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            scheduler: scheduler
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
