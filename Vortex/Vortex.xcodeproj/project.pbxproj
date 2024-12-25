@@ -10648,33 +10648,18 @@
 		2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */ = {
 			isa = PBXGroup;
 			children = (
-				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
 				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
+				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
-				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
+				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
 				2AC72B8F2CEF7AC3001578CC /* RootViewModelFactory+compose.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
-				2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */,
-				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift */,
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
-				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
-				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
 				EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */,
-				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
 				EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */,
-				EC5A2D1F2D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift */,
-				EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */,
-				2AA09D642CFA25050062415C /* RootViewModelFactory+makeFastPaymentsFactory.swift */,
-				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
-				2A72ACC92CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift */,
-				2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */,
-				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
-				2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */,
-				2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */,
 				842C42312D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift */,
-				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
-				2A07B9B62CFDAB5E00A3399E /* RootViewModelFactory+updateAlerts.swift */,
-				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
+				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
+				2A9CC0C52D1BE09E0071F30E /* Factories */,
 				842C42362D11FD2B006A307D /* SavingsAccount */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2A2EE90D2CF0AC950019FC31 /* Payments */,
@@ -11261,6 +11246,29 @@
 				2AE2215F2C0C398100618E7C /* Prepayment */,
 			);
 			path = UtilityPayments;
+			sourceTree = "<group>";
+		};
+		2A9CC0C52D1BE09E0071F30E /* Factories */ = {
+			isa = PBXGroup;
+			children = (
+				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
+				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
+				2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */,
+				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift */,
+				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
+				EC5A2D1F2D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift */,
+				EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */,
+				2AA09D642CFA25050062415C /* RootViewModelFactory+makeFastPaymentsFactory.swift */,
+				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
+				2A72ACC92CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift */,
+				2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */,
+				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
+				2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */,
+				2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */,
+				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
+				2A07B9B62CFDAB5E00A3399E /* RootViewModelFactory+updateAlerts.swift */,
+			);
+			path = Factories;
 			sourceTree = "<group>";
 		};
 		2A9D79E02C81877C00A17677 /* Personal */ = {
