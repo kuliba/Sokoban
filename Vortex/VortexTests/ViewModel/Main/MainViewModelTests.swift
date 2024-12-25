@@ -334,20 +334,20 @@ final class MainViewModelTests: XCTestCase {
     
     func test_productsSection_tapOpenSticker_shouldSetRouteToLanding() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.showStickerAndWait()
+        sut.mainSection?.showSticker()
         
         XCTAssertNoDiff(sut.route.case, .landing)
     }
     
     func test_productsSection_tapMoreProduct_shouldSetRouteToMyProducts() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.openMoreProductAndWait()
+        sut.mainSection?.openMoreProduct()
         
         XCTAssertNoDiff(sut.route.case, .myProducts)
     }
@@ -366,7 +366,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapCurrencyWallet_buy_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -376,14 +380,18 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .buy)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .buy)
         
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_buy_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -393,31 +401,39 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .buy)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .buy)
         
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
     func test_tapCurrencyWallet_item_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
-            makeCardProduct(id: 2, cardType: .corporate)
+            makeCardProduct(id: 2, cardType: .corporate),
         ]
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .item)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .item)
         
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_item_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -427,14 +443,18 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .item)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .item)
         
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
     func test_tapCurrencyWallet_sell_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -444,14 +464,18 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .sell)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .sell)
         
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_sell_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -461,14 +485,18 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .sell)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .sell)
         
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
     func test_openMigTransfer_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -485,7 +513,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_openMigTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -496,14 +528,17 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         
         sut.openMigTransfer(.init(countryId: "810"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         XCTAssertNoDiff(sut.route.case, .payments)
     }
     
     func test_openContactTransfer_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -520,7 +555,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_openContactTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -531,7 +570,6 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         
         sut.openContactTransfer(.init(countryId: "810"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         XCTAssertNoDiff(sut.route.case, .payments)
     }
@@ -764,6 +802,7 @@ final class MainViewModelTests: XCTestCase {
     private func makeSUT(
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -791,7 +830,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            scheduler: scheduler
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -1131,27 +1171,34 @@ private extension MainSectionCurrencyMetallView.ViewModel {
         case buy, item, sell
     }
     
+    func tapCurrencyWalletButton(
+        currency: Currency,
+        actionType: ActionType
+    ) {
+        let currencyAction: Action = {
+            switch actionType {
+            case .buy:
+                return MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy(code: currency)
+                
+            case .item:
+                return MainSectionViewModelAction.CurrencyMetall.DidTapped.Item(code: currency)
+                
+            case .sell:
+                return MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell(code: currency)
+            }
+        }()
+        action.send(currencyAction)
+    }
+    
     func tapCurrencyWalletButtonAndWait(
         currency: Currency,
         actionType: ActionType,
-        timeout: TimeInterval = 0.05) {
-            
-            let currencyAction: Action = {
-                switch actionType {
-                case .buy:
-                    return MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy(code: currency)
-                    
-                case .item:
-                    return MainSectionViewModelAction.CurrencyMetall.DidTapped.Item(code: currency)
-                    
-                case .sell:
-                    return MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell(code: currency)
-                }
-            }()
-            action.send(currencyAction)
-            
-            _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-        }
+        timeout: TimeInterval = 0.05
+    ) {
+        tapCurrencyWalletButton(currency: currency, actionType: actionType)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
 }
 
 private extension TemplatesListViewModel {
