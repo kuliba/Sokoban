@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/TransferPublicKey.xctestplan"
+            reference = "container:../Vortex/TestPlans/TransferPublicKey.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
