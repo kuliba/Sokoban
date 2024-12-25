@@ -1053,7 +1053,8 @@ final class ProductProfileViewModelTests: XCTestCase {
             filterHistoryRequest: {_,_,_,_  in},
             filterState: .preview,
             rootView: rootView,
-            dismissAction: {}
+            dismissAction: {},
+            makeOpenNewProductButtons: { _ in [] }
         )
     }
     
@@ -1092,7 +1093,8 @@ final class ProductProfileViewModelTests: XCTestCase {
                 filterHistoryRequest: {_,_,_,_  in},
                 filterState: .preview,
                 rootView: "",
-                dismissAction: {}
+                dismissAction: {},
+                makeOpenNewProductButtons: { _ in [] }
             )
         )
         
@@ -1130,7 +1132,8 @@ final class ProductProfileViewModelTests: XCTestCase {
                 filterHistoryRequest: {_,_,_,_  in},
                 filterState: .preview,
                 rootView: "",
-                dismissAction: {}
+                dismissAction: {},
+                makeOpenNewProductButtons: { _ in [] }
             )
         )
         
@@ -1193,6 +1196,9 @@ private extension ProductProfileViewModel {
         guard let link = link else { return nil }
         
         switch link {
+        case let .anyway(node):
+            return node.model
+            
         case let .payment(viewModel):
             return viewModel
             

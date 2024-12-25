@@ -567,11 +567,13 @@ extension ProductProfileViewModel  {
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         productNavigationStateManager: .preview,
         makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+        makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
         updateInfoStatusFlag: .active,
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-        makeServicePaymentBinder: ServicePaymentBinder.preview
+        makeServicePaymentBinder: ServicePaymentBinder.preview,
+        makeOpenNewProductButtons: { _ in [] }
     )
 }
 
@@ -587,7 +589,9 @@ extension MainViewModel {
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .active,
         onRegister: {},
-        bannersBinder: .preview
+        sections: [],
+        bannersBinder: .preview, 
+        makeOpenNewProductButtons: { _ in [] }
     )
 }
 

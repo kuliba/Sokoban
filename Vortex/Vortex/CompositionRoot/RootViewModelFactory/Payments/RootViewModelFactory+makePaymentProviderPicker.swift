@@ -51,7 +51,10 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            loadLatest: { getLatestPayments([category.type.name], $0) },
+            loadLatest: {
+                
+                getLatestPayments([category.latestPaymentsCategory].compactMap { $0 }, $0)
+            },
             loadOperators: {
                 
                 self.loadOperatorsForCategory(category: category, completion: $0)
@@ -247,7 +250,7 @@ extension RootViewModelFactory {
     ) {
         let anywayFlowComposer = makeAnywayFlowComposer()
         
-        processSelection(select: (.operator(provider), .init(string: provider.type) ?? .housingAndCommunalService)) {
+        processSelection(select: (.operator(provider), provider.type)) {
             
             switch $0 {
             case let .failure(failure):
@@ -320,7 +323,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.Service {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, additionalItems: additionalItems?.map(\.additional) ?? [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type, additionalItems: additionalItems?.map(\.additional) ?? [])
     }
 }
 
@@ -336,6 +339,6 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", additionalItems: [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", type: type, additionalItems: [])
     }
 }

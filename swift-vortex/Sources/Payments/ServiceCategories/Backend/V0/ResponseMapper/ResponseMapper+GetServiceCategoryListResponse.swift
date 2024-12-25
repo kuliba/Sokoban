@@ -42,38 +42,8 @@ extension ResponseMapper {
             self.type = type
         }
         
-        public enum CategoryType: Equatable {
-            
-            case charity
-            case digitalWallets
-            case education
-            case housingAndCommunalService
-            case internet
-            case mobile
-            case networkMarketing
-            case qr
-            case repaymentLoansAndAccounts
-            case security
-            case socialAndGames
-            case taxAndStateService
-            case transport
-        }
-        
-        public enum LatestPaymentsCategory: Equatable {
-            
-            case charity
-            case digitalWallets
-            case education
-            case internet
-            case mobile
-            case networkMarketing
-            case repaymentLoansAndAccounts
-            case security
-            case service
-            case socialAndGames
-            case taxAndStateService
-            case transport
-        }
+        public typealias CategoryType = String
+        public typealias LatestPaymentsCategory = String
         
         public enum PaymentFlow: CaseIterable, Equatable {
             

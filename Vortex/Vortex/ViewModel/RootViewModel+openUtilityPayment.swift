@@ -39,11 +39,12 @@ extension RootViewModel {
                 break
                 
             case .personal:
-                guard let type = type(for: category) else {
+                guard category == "housingAndCommunalService" else {
                     
                     return LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
                 }
-                action.send(RootEvent.standardPayment(type))
+                
+                action.send(RootEvent.standardPayment(category))
             }
             
         default:
@@ -54,10 +55,5 @@ extension RootViewModel {
     private func legacyPayment(by name: String) -> PTSectionPaymentsView.ViewModel.PaymentsType? {
         
         return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .service : nil
-    }
-    
-    private func type(for name: String) -> ServiceCategory.CategoryType? {
-        
-        return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .housingAndCommunalService : nil
     }
 }

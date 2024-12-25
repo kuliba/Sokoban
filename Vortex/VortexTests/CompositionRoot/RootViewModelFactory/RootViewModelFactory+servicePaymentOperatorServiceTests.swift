@@ -70,7 +70,7 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
     func test_remote_shouldCallHTTPClientOnStandardFlowCategory() {
         
         let payloads = [
-            makeCategory(flow: .standard, type: .digitalWallets)
+            makeCategory(flow: .standard, type: "digitalWallets")
         ].map { Payload(serial: nil, category: $0) }
         let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
@@ -87,8 +87,8 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
     func test_remote_shouldCallHTTPClientOnStandardFlowCategories() {
         
         let payloads = [
-            makeCategory(flow: .standard, type: .education),
-            makeCategory(flow: .standard, type: .digitalWallets),
+            makeCategory(flow: .standard, type: "education"),
+            makeCategory(flow: .standard, type: "digitalWallets"),
         ].map { Payload(serial: nil, category: $0) }
         let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
@@ -108,9 +108,9 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
         
         let payloads = [
             makeCategory(flow: .qr),
-            makeCategory(flow: .standard, type: .charity),
+            makeCategory(flow: .standard, type: "charity"),
             makeCategory(flow: .mobile),
-            makeCategory(flow: .standard, type: .security),
+            makeCategory(flow: .standard, type: "security"),
         ].map { Payload(serial: nil, category: $0) }
         let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
@@ -168,15 +168,15 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
     func test_remote_shouldDeliverTwoCategoriesOnHTTPFailuresTwoStandardCategory() {
         
         let payloads = [
-            makeCategory(flow: .standard, type: .internet),
-            makeCategory(flow: .standard, type: .security),
+            makeCategory(flow: .standard, type: "internet"),
+            makeCategory(flow: .standard, type: "security"),
         ].map { Payload(serial: nil, category: $0) }
         let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
         batchService(payloads) {
             
-            XCTAssertNoDiff($0.map(\.category.type), [.internet, .security])
+            XCTAssertNoDiff($0.map(\.category.type), ["internet", "security"])
             XCTAssertNoDiff($0.map(\.serial), [nil, nil])
             exp.fulfill()
         }
@@ -189,15 +189,15 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
     func test_remote_shouldDeliverMixedOnMixedHTTPFailures() {
         
         let payloads = [
-            makeCategory(flow: .standard, type: .internet),
-            makeCategory(flow: .standard, type: .security),
+            makeCategory(flow: .standard, type: "internet"),
+            makeCategory(flow: .standard, type: "security"),
         ].map { Payload(serial: nil, category: $0) }
         let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
         batchService(payloads) {
             
-            XCTAssertNoDiff($0.map(\.category.type), [.internet])
+            XCTAssertNoDiff($0.map(\.category.type), ["internet"])
             XCTAssertNoDiff($0.map(\.serial), [nil])
             exp.fulfill()
         }
@@ -272,7 +272,7 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
         ord: Int = .random(in: 1...100),
         flow paymentFlow: ServiceCategory.PaymentFlow,
         hasSearch: Bool = false,
-        type: ServiceCategory.CategoryType = .charity
+        type: ServiceCategory.CategoryType = "charity"
     ) -> ServiceCategory {
         
         return .init(
@@ -296,14 +296,14 @@ final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewMod
     
     private func security() -> Data {
         
-        return .getOperatorsListByParam(type: .security)
+        return .getOperatorsListByParam(type: "security")
     }
 }
 
 private extension Data {
     
     static func getOperatorsListByParam(
-        type: ServiceCategory.CategoryType = .charity
+        type: ServiceCategory.CategoryType = "charity"
     ) -> Self {
         
         return .init(String.getOperatorsListByParam(type: type).utf8)
@@ -324,7 +324,7 @@ private extension String {
         "serial": "39baea8dd3f9c1d152f69c01fcf3cddc",
         "operatorList": [
             {
-                "type": "\(type.name)",
+                "type": "\(type)",
                 "atributeList": [
                     {
                         "md5hash": "ef7a4271cdec35cc20c4ca0bb4d43f93",

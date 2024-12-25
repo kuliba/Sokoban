@@ -334,7 +334,7 @@ struct OperationDetailData: Codable, Hashable {
         case paymentMethod
         case documentNumber = "docNumber"
         case operationCategory
-        case paymentFlow = "payment_flow"
+        case paymentFlow
     }
 }
 

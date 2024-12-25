@@ -751,6 +751,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         date: Date = .init(),
         icon: String? = anyMessage(),
         puref: String = anyMessage(),
+        type: String = anyMessage(),
         title: String = anyMessage()
     ) -> Latest {
         
@@ -760,6 +761,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
             name: title,
             md5Hash: icon,
             puref: puref,
+            type: type,
             additionalItems: additionalItems
         )
     }

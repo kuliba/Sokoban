@@ -76,7 +76,7 @@ struct OperationDetailView: View {
             }
             
             if viewModel.operationId != nil,
-               viewModel.repeatButtonAvailable {
+               viewModel.isRepeatButtonAvailable {
                 
                 makeRepeatButtonView(payment)
                     .frame(height: 56, alignment: .center)
@@ -109,6 +109,47 @@ struct OperationDetailView: View {
             }
         }
     }
+}
+
+private extension OperationDetailViewModel {
+    
+    var isRepeatButtonAvailable: Bool {
+        
+        return isDebitOrCredit &&                          // 1
+        hasPaymentOperationDetailId && hasPrintFormType && // 2
+        (hasSuitableType || hasStandardFlow)               // 3
+    }
+    
+    private var isDebitOrCredit: Bool {
+        
+        [OperationType.debit, .credit].contains(productStatement.operationType)
+    }
+    
+    private var hasPaymentOperationDetailId: Bool { operationId != nil }
+    private var hasPrintFormType: Bool { printFormType != nil }
+    
+    private var hasSuitableType: Bool {
+        
+        return Self.availableTypes.contains { $0 == productStatement.paymentDetailType }
+    }
+    
+    private static let availableTypes: [ProductStatementData.Kind] = [
+        .betweenTheir,
+        .contactAddressless,
+        .direct,
+        .externalEntity,
+        .externalIndivudual,
+        .housingAndCommunalService,
+        .insideBank,
+        .internet,
+        .mobile,
+        .outsideCash,
+        .sfp,
+        .taxes,
+        .transport,
+    ]
+    
+    private var hasStandardFlow: Bool { paymentFlow == "STANDARD_FLOW" }
 }
 
 extension OperationDetailView {

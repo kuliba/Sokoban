@@ -238,12 +238,12 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
 private extension ServiceCategory {
     
     static let one: Self = .init(
-        latestPaymentsCategory: .mobile,
+        latestPaymentsCategory: "isMobilePayments",
         md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
         name: "Мобильная связь",
         ord: 20,
         paymentFlow: .mobile,
         hasSearch: false,
-        type: .mobile
+        type: "mobile"
     )
 }

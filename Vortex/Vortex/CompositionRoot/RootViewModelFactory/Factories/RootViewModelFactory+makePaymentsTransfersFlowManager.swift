@@ -19,6 +19,6 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        return composer.compose(categoryType: .housingAndCommunalService, spinner)
+        return composer.compose(categoryType: "housingAndCommunalService", spinner)
     }
 }

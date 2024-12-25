@@ -251,6 +251,7 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
     
     private enum EquatableNavigation: Equatable {
         
+        case anywayPayment
         case meToMe
         case payments
     }
@@ -260,8 +261,9 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .meToMe:   return .meToMe
-        case .payments: return .payments
+        case .anywayPayment:   return .anywayPayment
+        case .meToMe:          return .meToMe
+        case .payments:        return .payments
         }
     }
     

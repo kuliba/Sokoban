@@ -7,6 +7,9 @@
 
 import SwiftUI
 import LandingUIComponent
+import GetInfoRepeatPaymentService
+
+typealias MakeRepeatPaymentNavigation = (GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, ProductData.ID, @escaping (ProductData.ID) -> ProductData?, @escaping () -> Void) -> PaymentsDomain.Navigation?
 
 struct ProductProfileViewModelFactory {
     
@@ -14,8 +17,10 @@ struct ProductProfileViewModelFactory {
     let makeAlert: (AlertParameters) -> Alert.ViewModel
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
     let makeCardGuardianPanel: MakeCardGuardianPanel
+    let makeRepeatPaymentNavigation: MakeRepeatPaymentNavigation
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
 
+    // TODO: need remove model
     private let model: Model
     
     init(
@@ -23,6 +28,7 @@ struct ProductProfileViewModelFactory {
         makeAlert: @escaping (AlertParameters) -> Alert.ViewModel,
         makeInformerDataUpdateFailure: @escaping MakeInformerDataUpdateFailure,
         makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
+        makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         model: Model
     ) {
@@ -30,6 +36,7 @@ struct ProductProfileViewModelFactory {
         self.makeAlert = makeAlert
         self.makeInformerDataUpdateFailure = makeInformerDataUpdateFailure
         self.makeCardGuardianPanel = makeCardGuardianPanel
+        self.makeRepeatPaymentNavigation = makeRepeatPaymentNavigation
         self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
         self.model = model
     }
@@ -125,6 +132,7 @@ extension ProductProfileViewModelFactory {
         },
         makeInformerDataUpdateFailure: { nil }, 
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
+        makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
         model: .emptyMock
     )

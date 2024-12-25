@@ -1029,8 +1029,6 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
 
         let svCardLandingServices = SVCardLandingServices.preview()
         
-        let repeatPayment = InfoRepeatPaymentServices.preview()
-
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -1038,8 +1036,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: svCardLandingServices, 
-            repeatPayment: repeatPayment,
-            makeSVCardLandingViewModel: {_,_,_,_  in nil},
+            repeatPayment: { _,_,_ in },
+            makeSVCardLandingViewModel: { _,_,_,_ in nil },
             makeInformer: { _ in }
         )
 
@@ -1066,11 +1064,13 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeRepeatPaymentNavigation: { _,_,_,_  in .none },
             makeSubscriptionsViewModel: { _,_  in .preview},
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview
+            makeServicePaymentBinder: ServicePaymentBinder.preview,
+            makeOpenNewProductButtons: { _ in [] }
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -1141,11 +1141,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeLatestPayment(
         date: Date = .init(),
-        _ title: String = UUID().uuidString,
+        _ title: String = anyMessage(),
+        _ type: String = anyMessage(),
         additionalItems: [RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem] = []
     ) -> UtilityPaymentLastPayment {
         
-        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, additionalItems: additionalItems)
+        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, type: type, additionalItems: additionalItems)
     }
     
     private func makeService(

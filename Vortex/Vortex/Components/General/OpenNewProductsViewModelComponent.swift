@@ -33,11 +33,20 @@ class OpenNewProductsViewModel: ObservableObject {
         self.model = model
     }
     
-    init(_ model: Model) {
-        
+    typealias NewProductAction = (ProductType) -> Void
+    typealias MakeNewProductButtons = (@escaping NewProductAction) -> [NewProductButton.ViewModel]
+    
+    init(
+        _ model: Model,
+        makeOpenNewProductButtons: @escaping MakeNewProductButtons
+    ) {
         self.items = []
         self.model = model
-        self.items = createItems()
+        self.items = makeOpenNewProductButtons { [weak self] in
+            
+            let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: $0)
+            self?.action.send(action)
+        }
         
         bind()
     }
@@ -54,70 +63,6 @@ class OpenNewProductsViewModel: ObservableObject {
                 deposit.subTitle = depositDescription(with: deposits)
                 
             }.store(in: &bindings)
-    }
-    
-    private func createItems() -> [NewProductButton.ViewModel] {
-        
-        var viewModel: [NewProductButton.ViewModel] = []
-        
-        for typeStr in displayButtons {
-            
-            if let type = ProductType(rawValue: typeStr) {
-                
-                let id = type.rawValue
-                let icon = type.openButtonIcon
-                let title = type.openButtonTitle
-                let subTitle = description(for: type)
-                
-                switch type {
-                case .loan:
-                    viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
-                        subTitle: subTitle, url: model.productsOpenLoanURL))
-                    
-                default:
-                    viewModel.append(NewProductButton.ViewModel(id: id, icon: icon, title: title,
-                        subTitle: subTitle, action: { [weak self] in
-                            self?.action.send(OpenNewProductsViewModelAction
-                                                .Tapped.NewProduct(productType: type))
-                    }))
-                }
-                
-                } else { //no ProductType
-                   
-                    switch typeStr {
-                    case "INSURANCE":
-                        viewModel.append(NewProductButton.ViewModel(id: typeStr, icon: .ic24InsuranceColor, title: "Страховку", subTitle: "Надежно", url: model.productsOpenInsuranceURL))
-                        
-                    case "MORTGAGE":
-                        viewModel.append(NewProductButton.ViewModel(id: typeStr, icon: .ic24Mortgage, title: "Ипотеку", subTitle: "Удобно", url: model.productsOpenMortgageURL))
-                    
-                    case "STICKER":
-                        viewModel.append(NewProductButton.ViewModel(
-                            id: typeStr,
-                            icon: .ic24Sticker,
-                            title: "Стикер",
-                            subTitle: "Быстро",
-                            action: { [weak self] in
-                                
-                                self?.action.send(OpenNewProductsViewModelAction.Tapped.NewProduct(productType: .loan))
-                            }
-                        ))
-                    default: break
-                    }
-                } //if
-        } //for
-        
-        return viewModel
-    }
-    
-    private func description(for type: ProductType) -> String {
-        
-        switch type {
-        case .card: return "С кешбэком"
-        case .account: return "Бесплатно"
-        case .deposit: return depositDescription(with: model.deposits.value)
-        case .loan: return "Выгодно"
-        }
     }
     
     private func depositDescription(with deposits: [DepositProductData]) -> String {
