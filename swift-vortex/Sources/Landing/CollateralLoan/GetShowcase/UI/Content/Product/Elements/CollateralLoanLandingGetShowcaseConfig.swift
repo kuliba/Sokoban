@@ -120,10 +120,12 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
     public struct FooterView {
 
         public let height: CGFloat
-        
-        public init(height: CGFloat) {
+        public let topPadding: CGFloat
+
+        public init(height: CGFloat, topPadding: CGFloat) {
 
             self.height = height
+            self.topPadding = topPadding
         }
     }
 }
@@ -148,6 +150,6 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
         termsView: .init(height: 24),
         bulletsView: .init(itemSpacing: 4, height: 84),
         imageView: .init(height: 236, сornerRadius: 12),
-        footerView: .init(height: 48)
+        footerView: .init(height: 48, topPadding: 12)
     )
 }
