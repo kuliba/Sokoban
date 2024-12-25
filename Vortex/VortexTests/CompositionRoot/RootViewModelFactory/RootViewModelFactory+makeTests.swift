@@ -175,7 +175,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         let state = try sut.content.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
-        XCTAssertNoDiff(state.elements.map(\.type), [.mobile])
+        XCTAssertNoDiff(state.elements.map(\.type), ["mobile"])
     }
     
     func test_shouldRequestOperatorsAfterCategories() throws {
@@ -226,9 +226,9 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServiceCategory].self).count, 1, "Expected to cache ServiceCategories once.")
         XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServiceCategory].self)?.map(\.type), [
-            .mobile,
-            .housingAndCommunalService,
-            .internet,
+            "mobile",
+            "housingAndCommunalService",
+            "internet",
         ])
         XCTAssertNotNil(sut)
     }

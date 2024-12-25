@@ -67,65 +67,20 @@ extension RootViewModelFactory {
     }
 }
 
-private extension Optional where Wrapped == Array<RemoteServices.ResponseMapper.ServiceCategory> {
+private extension Optional 
+where Wrapped == Array<RemoteServices.ResponseMapper.ServiceCategory> {
     
     var latestPaymentsCategoryNames: [String] {
         
-        (self ?? []).compactMap(\.latestPaymentsCategoryName)
+        (self ?? []).compactMap(\.latestPaymentsCategory)
     }
 }
 
-private extension Array where Element == RemoteServices.ResponseMapper.ServiceCategory {
+private extension Array 
+where Element == RemoteServices.ResponseMapper.ServiceCategory {
     
     var latestPaymentsCategoryNames: [String] {
         
-        compactMap(\.latestPaymentsCategoryName)
-    }
-}
-
-private extension RemoteServices.ResponseMapper.ServiceCategory {
-    
-    var latestPaymentsCategoryName: String? {
-        
-        switch latestPaymentsCategory {
-        case .none:
-            return .none
-            
-        case .charity:
-            return "isCharityPayments"
-            
-        case .education:
-            return "isEducationPayments"
-            
-        case .digitalWallets:
-            return "isDigitalWalletsPayments"
-            
-        case .internet:
-            return "isInternetPayments"
-            
-        case .mobile:
-            return "isMobilePayments"
-            
-        case .networkMarketing:
-            return "isNetworkMarketingPayments"
-            
-        case .repaymentLoansAndAccounts:
-            return "isRepaymentLoansAndAccountsPayments"
-            
-        case .security:
-            return "isServicePayments"
-            
-        case .service:
-            return "isSecurityPayments"
-            
-        case .socialAndGames:
-            return "isSocialAndGamesPayments"
-            
-        case .taxAndStateService:
-            return "isTaxAndStateServicePayments"
-            
-        case .transport:
-            return "isTransportPayments"
-        }
+        compactMap(\.latestPaymentsCategory)
     }
 }

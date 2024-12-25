@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/Fetcher.xctestplan"
+            reference = "container:../Vortex/TestPlans/Fetcher.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

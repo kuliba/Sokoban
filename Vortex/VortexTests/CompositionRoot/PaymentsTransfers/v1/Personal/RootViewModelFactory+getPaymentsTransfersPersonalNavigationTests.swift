@@ -35,12 +35,12 @@ final class RootViewModelFactory_getPaymentsTransfersPersonalNavigationTests: Ro
     
     func test_standardPayment_shouldDeliverStandardPayment_charity() {
         
-        expect(.standardPayment(.charity), toDeliver: .standardPayment(.charity))
+        expect(.standardPayment("charity"), toDeliver: .standardPayment("charity"))
     }
     
     func test_standardPayment_shouldDeliverStandardPayment_security() {
         
-        expect(.standardPayment(.security), toDeliver: .standardPayment(.security))
+        expect(.standardPayment("security"), toDeliver: .standardPayment("security"))
     }
     
     // MARK: - templates

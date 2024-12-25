@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/PrePaymentPicker.xctestplan"
+            reference = "container:../Vortex/TestPlans/PrePaymentPicker.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

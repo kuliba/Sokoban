@@ -109,6 +109,7 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
                 name: "ПАО Калужская сбытовая компания",
                 md5Hash: "aeacabf71618e6f66aac16ed3b1922f3",
                 puref: "iVortex||KSK",
+                type: "service",
                 additionalItems: [
                     makeAdditionalItem(
                         fieldName: "account",
@@ -127,7 +128,8 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
                 amount: 777,
                 name: "МУП АГО АНГАРСКИЙ ВОДОКАНАЛ",
                 md5Hash: "1efeda3c9130101d4d88113853b03bb5",
-                puref: "iVortexNKORR||18650",
+                puref: "iVortexNKORR||18650", 
+                type: "service",
                 additionalItems: [
                     makeAdditionalItem(
                         fieldName: "1",
@@ -156,7 +158,8 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
                 amount: 6820,
                 name: "ООО БАЙКАЛЬСКАЯ ЭНЕРГЕТИЧЕСКАЯ КОМПАНИЯ",
                 md5Hash: "1efeda3c9130101d4d88113853b03bb5",
-                puref: "iVortexNKORR||18631",
+                puref: "iVortexNKORR||18631", 
+                type: "service",
                 additionalItems: [
                     makeAdditionalItem(
                         fieldName: "1",
@@ -234,6 +237,7 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
         name: String,
         md5Hash: String?,
         puref: String,
+        type: String,
         additionalItems: [ResponseMapper.LatestServicePayment.AdditionalItem]
     ) -> ResponseMapper.LatestServicePayment {
         
@@ -242,7 +246,8 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
             amount: amount,
             name: name,
             md5Hash: md5Hash,
-            puref: puref,
+            puref: puref, 
+            type: type,
             additionalItems: additionalItems
         )
     }

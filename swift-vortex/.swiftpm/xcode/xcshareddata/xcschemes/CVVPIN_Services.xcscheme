@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/CVVPIN_Services.xctestplan"
+            reference = "container:../Vortex/TestPlans/CVVPIN_Services.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

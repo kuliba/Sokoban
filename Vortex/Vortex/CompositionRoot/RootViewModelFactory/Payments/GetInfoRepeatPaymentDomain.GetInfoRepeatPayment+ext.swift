@@ -10,21 +10,18 @@ import Foundation
 
 extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
-    // MARK: - delay
-
-    var delay: DispatchTimeInterval {
-        switch type.paymentType {
-        case .direct, .insideBank, .mobile, .repeatPaymentRequisites, .servicePayment, .sfp:
-            return .milliseconds(300)
-            
-        case .betweenTheir, .byPhone, .otherBank, .taxes:
-            return .milliseconds(1300)
-            
-        case .none:
-            return .milliseconds(0)
+    func paymentFlow(_ type: String?) -> PaymentsDomain.PaymentFlow? {
+        
+        switch type {
+        case "MOBILE":                 return .mobile
+        case "QR":                     return .qr
+        case "STANDARD_FLOW":         return .standard
+        case "TAX_AND_STATE_SERVICE": return .taxAndStateServices
+        case "TRANSPORT":              return .transport
+        default:                       return nil
         }
     }
-
+    
     // MARK: - Mode
     
     func betweenTheirMode(
@@ -278,7 +275,7 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     }
 }
 
-private extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
+extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     
     var amount: Double? {
         

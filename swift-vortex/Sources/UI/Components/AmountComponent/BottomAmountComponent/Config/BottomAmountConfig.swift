@@ -19,6 +19,7 @@ public struct BottomAmountConfig {
     public let dividerColor: Color
     public let title: String
     public let titleConfig: TextConfig
+    public let heightOfElements: HeightOfElementsConfig
     
     public init(
         amount: TextConfig,
@@ -28,7 +29,8 @@ public struct BottomAmountConfig {
         buttonSize: CGSize,
         dividerColor: Color,
         title: String,
-        titleConfig: TextConfig
+        titleConfig: TextConfig,
+        heightOfElements: HeightOfElementsConfig
     ) {
         self.amount = amount
         self.amountFont = amountFont
@@ -38,5 +40,6 @@ public struct BottomAmountConfig {
         self.dividerColor = dividerColor
         self.title = title
         self.titleConfig = titleConfig
+        self.heightOfElements = heightOfElements
     }
 }

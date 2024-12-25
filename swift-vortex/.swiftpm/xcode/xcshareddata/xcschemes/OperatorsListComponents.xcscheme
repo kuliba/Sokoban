@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/OperatorsListComponents.xctestplan"
+            reference = "container:../Vortex/TestPlans/OperatorsListComponents.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

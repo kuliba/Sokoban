@@ -46,49 +46,6 @@ private extension ResponseMapper.ServiceCategory {
     }
 }
 
-private extension ResponseMapper.ServiceCategory.CategoryType {
-    
-    init(_ paymentFlow: ResponseMapper._Data._Category.CategoryType) {
-        
-        switch paymentFlow {
-        case .charity:                   self = .charity
-        case .digitalWallets:            self = .digitalWallets
-        case .education:                 self = .education
-        case .housingAndCommunalService: self = .housingAndCommunalService
-        case .internet:                  self = .internet
-        case .mobile:                    self = .mobile
-        case .networkMarketing:          self = .networkMarketing
-        case .qr:                        self = .qr
-        case .repaymentLoansAndAccounts: self = .repaymentLoansAndAccounts
-        case .security:                  self = .security
-        case .socialAndGames:            self = .socialAndGames
-        case .transport:                 self = .transport
-        case .taxAndStateService:        self = .taxAndStateService
-        }
-    }
-}
-
-private extension ResponseMapper.ServiceCategory.LatestPaymentsCategory {
-    
-    init(_ category: ResponseMapper._Data._Category.LatestPaymentsCategory) {
-        
-        switch category {
-        case .isCharityPayments:                   self = .charity
-        case .isEducationPayments:                 self = .education
-        case .isDigitalWalletsPayments:            self = .digitalWallets
-        case .isInternetPayments:                  self = .internet
-        case .isMobilePayments:                    self = .mobile
-        case .isNetworkMarketingPayments:          self = .networkMarketing
-        case .isRepaymentLoansAndAccountsPayments: self = .repaymentLoansAndAccounts
-        case .isServicePayments:                   self = .service
-        case .isSecurityPayments:                  self = .security
-        case .isSocialAndGamesPayments:            self = .socialAndGames
-        case .isTaxAndStateServicePayments:        self = .taxAndStateService
-        case .isTransportPayments:                 self = .transport
-        }
-    }
-}
-
 private extension ResponseMapper.ServiceCategory.PaymentFlow {
     
     init(_ flow: ResponseMapper._Data._Category._PaymentFlow) {
@@ -120,38 +77,8 @@ private extension ResponseMapper {
             let latestPaymentsCategory: LatestPaymentsCategory?
             let search: Bool
             
-            enum CategoryType: String, Decodable {
-                
-                case charity
-                case digitalWallets
-                case education
-                case housingAndCommunalService
-                case internet
-                case mobile
-                case networkMarketing
-                case qr
-                case repaymentLoansAndAccounts
-                case security
-                case socialAndGames
-                case transport
-                case taxAndStateService
-            }
-            
-            enum LatestPaymentsCategory: String, Decodable {
-                
-                case isCharityPayments
-                case isEducationPayments
-                case isDigitalWalletsPayments
-                case isInternetPayments
-                case isMobilePayments
-                case isNetworkMarketingPayments
-                case isRepaymentLoansAndAccountsPayments
-                case isServicePayments
-                case isSecurityPayments
-                case isSocialAndGamesPayments
-                case isTaxAndStateServicePayments
-                case isTransportPayments
-            }
+            typealias CategoryType = String
+            typealias LatestPaymentsCategory = String
             
             enum _PaymentFlow: String, Decodable {
                 

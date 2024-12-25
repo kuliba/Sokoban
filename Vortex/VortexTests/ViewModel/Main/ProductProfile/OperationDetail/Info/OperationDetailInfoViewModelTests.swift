@@ -1465,7 +1465,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         sut: OperationDetailInfoViewModel,
         model: Model
     ) {
-       
+        
         let model: Model = .mockWithEmptyExcept()
         model.products.value = products
         model.currencyList.value.append(.rub)
@@ -1478,18 +1478,19 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             currencyCodeNumeric: statement.currencyCodeNumeric,
             isCancellation: statement.isCancellation
         )
-       
+        
         let sut = try XCTUnwrap(OperationDetailInfoViewModel(
-                with: statement,
-                operation: detail,
-                product: .loanStub1,
-                dismissAction: {},
-                model: model
-            ))
-       
+            with: statement,
+            isStandardFlow: false,
+            operation: detail,
+            product: .loanStub1,
+            dismissAction: {},
+            model: model
+        ))
+        
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(model, file: file, line: line)
-
+        
         return (sut, model)
     }
     

@@ -6,6 +6,7 @@
 //
 
 @testable import Vortex
+import CombineSchedulers
 import LandingUIComponent
 import SberQR
 import XCTest
@@ -35,27 +36,27 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(stickerSpy.values, [nil])
         
         model.images.value = ["1": .tiny()]
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(stickerSpy.values, [nil, nil])
     }
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates)
+        sut.fastPayment?.tapFastPaymentButton(type: .templates)
         
         XCTAssertNoDiff(linkSpy.values, [nil, .templates])
     }
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates)
+        sut.fastPayment?.tapFastPaymentButton(type: .templates)
         
         sut.templatesListViewModel?.closeAndWait()
         
@@ -65,7 +66,8 @@ final class MainViewModelTests: XCTestCase {
     func test_tapUserAccount_shouldSendGetSubscriptionRequest() {
         
         let (sut, model) = makeModelWithServerAgentStub(
-            getC2bResponseStub: getC2bResponseStub()
+            getC2bResponseStub: getC2bResponseStub(),
+            scheduler: .immediate
         )
         let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.C2B.GetC2BSubscription.Request })
         XCTAssertNoDiff(spy.values.count, 0)
@@ -212,7 +214,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapByPhone_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT()
+        let (sut, model) = makeSUT(scheduler: .immediate)
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -221,14 +223,14 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.modal)
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
+        sut.fastPayment?.tapFastPaymentButton(type: .byPhone)
         
         XCTAssertNotNil(sut.route.modal?.alert)
     }
     
     func test_tapByPhone_notOnlyCorporateCards_shouldSetModalToByPhone() {
         
-        let (sut, model) = makeSUT()
+        let (sut, model) = makeSUT(scheduler: .immediate)
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -238,7 +240,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.modal)
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
+        sut.fastPayment?.tapFastPaymentButton(type: .byPhone)
         
         XCTAssertNoDiff(sut.route.modal?.case, .byPhone)
     }
@@ -336,39 +338,43 @@ final class MainViewModelTests: XCTestCase {
     
     func test_productsSection_tapOpenSticker_shouldSetRouteToLanding() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.showStickerAndWait()
+        sut.mainSection?.showSticker()
         
         XCTAssertNoDiff(sut.route.case, .landing)
     }
     
     func test_productsSection_tapMoreProduct_shouldSetRouteToMyProducts() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.openMoreProductAndWait()
+        sut.mainSection?.openMoreProduct()
         
         XCTAssertNoDiff(sut.route.case, .myProducts)
     }
     
     func test_productsSection_tapProductProfile_shouldSetRouteToProductProfile() {
         
-        let (sut, model) = makeSUT()
+        let (sut, model) = makeSUT(scheduler: .immediate)
         let productID = 1
         model.products.value[.card] = [makeCardProduct(id: productID, cardType: .main, isMain: true)]
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.openProductProfileAndWait(productId: productID)
+        sut.mainSection?.openProductProfile(productId: productID)
         
         XCTAssertNoDiff(sut.route.case, .productProfile)
     }
     
     func test_tapCurrencyWallet_buy_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -378,14 +384,18 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .buy)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .buy)
         
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_buy_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -395,31 +405,39 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .buy)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .buy)
         
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
     func test_tapCurrencyWallet_item_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
-            makeCardProduct(id: 2, cardType: .corporate)
+            makeCardProduct(id: 2, cardType: .corporate),
         ]
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .item)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .item)
         
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_item_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -429,14 +447,18 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .item)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .item)
         
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
     func test_tapCurrencyWallet_sell_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -446,14 +468,18 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .sell)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .sell)
         
         XCTAssertNoDiff(sut.route.modal?.case, .alert)
     }
     
     func test_tapCurrencyWallet_sell_notOnlyCorporateCards_shouldSetRouteToCurrencyWallet() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -463,14 +489,18 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.currencyWalletSection?.tapCurrencyWalletButtonAndWait(currency: .rub, actionType: .sell)
+        sut.currencyWalletSection?.tapCurrencyWalletButton(currency: .rub, actionType: .sell)
         
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
     
     func test_openMigTransfer_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -487,7 +517,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_openMigTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -498,14 +532,17 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         
         sut.openMigTransfer(.init(countryId: "810"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         XCTAssertNoDiff(sut.route.case, .payments)
     }
     
     func test_openContactTransfer_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -522,7 +559,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_openContactTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
         
-        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        let (sut, model) = makeSUT(
+            currencyList: [.rub],
+            currencyWalletList: [.rub],
+            scheduler: .immediate
+        )
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -533,7 +574,6 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         
         sut.openContactTransfer(.init(countryId: "810"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         XCTAssertNoDiff(sut.route.case, .payments)
     }
@@ -590,48 +630,39 @@ final class MainViewModelTests: XCTestCase {
      */
     func test_updateSections_updateInfoFullPath_updateInfoStatusFlagInActive_shouldAddUpdateSections()  {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive, scheduler: .immediate)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .card)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .loan)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .deposit)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .account)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .card)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .loan)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .deposit)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .account)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
     }
@@ -640,14 +671,13 @@ final class MainViewModelTests: XCTestCase {
     
     func test_handleLandingAction_shouldSetDestinationToLanding() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let type = anyMessage()
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
         sut.handleLandingAction(type)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(sut.route.case, .landing)
         XCTAssertNil(sut.route.modal)
@@ -655,16 +685,14 @@ final class MainViewModelTests: XCTestCase {
     
     func test_landingAction_tapGoToBack_shouldSetDestinationToNil() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let type = anyMessage()
         
         let destinationSpy = ValueSpy(sut.$route.map(\.case))
         
         sut.handleLandingAction(type)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         sut.landingWrapperViewModel?.action(.goToBack)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(destinationSpy.values, [nil, .landing, nil])
     }
@@ -677,6 +705,7 @@ final class MainViewModelTests: XCTestCase {
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -704,7 +733,8 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            scheduler: scheduler
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -844,6 +874,7 @@ final class MainViewModelTests: XCTestCase {
     private func makeSUT(
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -872,7 +903,8 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            scheduler: scheduler
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -913,6 +945,7 @@ final class MainViewModelTests: XCTestCase {
     
     private func makeModelWithServerAgentStub(
         getC2bResponseStub: [ServerAgentTestStub.Stub],
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -942,7 +975,8 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            scheduler: scheduler
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -1198,10 +1232,15 @@ private extension MainViewModel.Modal {
 
 private extension MainSectionFastOperationView.ViewModel {
     
-    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.1) {
+    func tapFastPaymentButton(type: FastOperations) {
         
         let fastPaymentAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: type)
         action.send(fastPaymentAction)
+    }
+    
+    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.1) {
+        
+        tapFastPaymentButton(type: type)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -1224,27 +1263,34 @@ private extension MainSectionCurrencyMetallView.ViewModel {
         case buy, item, sell
     }
     
+    func tapCurrencyWalletButton(
+        currency: Currency,
+        actionType: ActionType
+    ) {
+        let currencyAction: Action = {
+            switch actionType {
+            case .buy:
+                return MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy(code: currency)
+                
+            case .item:
+                return MainSectionViewModelAction.CurrencyMetall.DidTapped.Item(code: currency)
+                
+            case .sell:
+                return MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell(code: currency)
+            }
+        }()
+        action.send(currencyAction)
+    }
+    
     func tapCurrencyWalletButtonAndWait(
         currency: Currency,
         actionType: ActionType,
-        timeout: TimeInterval = 0.05) {
-            
-            let currencyAction: Action = {
-                switch actionType {
-                case .buy:
-                    return MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy(code: currency)
-                    
-                case .item:
-                    return MainSectionViewModelAction.CurrencyMetall.DidTapped.Item(code: currency)
-                    
-                case .sell:
-                    return MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell(code: currency)
-                }
-            }()
-            action.send(currencyAction)
-            
-            _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-        }
+        timeout: TimeInterval = 0.05
+    ) {
+        tapCurrencyWalletButton(currency: currency, actionType: actionType)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
 }
 
 private extension TemplatesListViewModel {
@@ -1289,26 +1335,41 @@ private extension MainSectionOpenProductView.ViewModel {
 
 private extension MainSectionProductsView.ViewModel {
     
-    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+    func showSticker() {
         
         let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
         action.send(stickerAction)
+    }
+    
+    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+        
+        showSticker()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func openMoreProduct() {
+        
+        let moreAction = MainSectionViewModelAction.Products.MoreButtonTapped()
+        action.send(moreAction)
     }
     
     func openMoreProductAndWait(timeout: TimeInterval = 0.05) {
         
-        let moreAction = MainSectionViewModelAction.Products.MoreButtonTapped()
-        action.send(moreAction)
+        openMoreProduct()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
-    func openProductProfileAndWait(productId: Int, timeout: TimeInterval = 0.1) {
+    func openProductProfile(productId: Int) {
         
         let productProfileAction = MainSectionViewModelAction.Products.ProductDidTapped(productId: productId)
         action.send(productProfileAction)
+    }
+    
+    func openProductProfileAndWait(productId: Int, timeout: TimeInterval = 0.1) {
+        
+        openProductProfile(productId: productId)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
