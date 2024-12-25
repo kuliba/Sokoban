@@ -243,9 +243,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         var actionButtonsUpdated: [ActionButtonViewModel]? = nil
         var featureButtonsUpdated = [FeatureButtonViewModel]()
         
-        switch productStatement.paymentDetailType {
-            
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
+        if operationDetail.paymentFlow == "STANDARD_FLOW" {
             
             if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
@@ -253,26 +251,40 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
+
+        } else {
             
-        case .contactAddressless:
-            // TODO: revert after templates fix
-            // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-            //     featureButtonsUpdated.append(templateButtonViewModel)
-            // }
-            if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
-                featureButtonsUpdated.append(documentButtonViewModel)
+            switch productStatement.paymentDetailType {
+                
+            case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
+                
+                if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                    featureButtonsUpdated.append(documentButtonViewModel)
+                }
+                if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                    featureButtonsUpdated.append(infoButtonViewModel)
+                }
+                
+            case .contactAddressless:
+                // TODO: revert after templates fix
+                // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+                //     featureButtonsUpdated.append(templateButtonViewModel)
+                // }
+                if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                    featureButtonsUpdated.append(documentButtonViewModel)
+                }
+                if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                    featureButtonsUpdated.append(infoButtonViewModel)
+                }
+                if operationDetail.transferReference != nil {
+                    actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: { [weak self] in
+                        self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
+                    })
+                }
+                
+            default:
+                break
             }
-            if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
-                featureButtonsUpdated.append(infoButtonViewModel)
-            }
-            if operationDetail.transferReference != nil {
-                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: { [weak self] in
-                    self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
-                })
-            }
-            
-        default:
-            break
         }
         
         withAnimation {
