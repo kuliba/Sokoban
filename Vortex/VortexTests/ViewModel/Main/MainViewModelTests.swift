@@ -43,11 +43,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates)
+        sut.fastPayment?.tapFastPaymentButton(type: .templates)
         
         XCTAssertNoDiff(linkSpy.values, [nil, .templates])
     }
@@ -226,7 +226,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapByPhone_notOnlyCorporateCards_shouldSetModalToByPhone() {
         
-        let (sut, model) = makeSUT()
+        let (sut, model) = makeSUT(scheduler: .immediate)
         
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
@@ -236,7 +236,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.modal)
         
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
+        sut.fastPayment?.tapFastPaymentButton(type: .byPhone)
         
         XCTAssertNoDiff(sut.route.modal?.case, .byPhone)
     }
@@ -626,48 +626,39 @@ final class MainViewModelTests: XCTestCase {
      */
     func test_updateSections_updateInfoFullPath_updateInfoStatusFlagInActive_shouldAddUpdateSections()  {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive, scheduler: .immediate)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .card)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .loan)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .deposit)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .account)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .card)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .loan)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .deposit)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .account)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         assert(sections: sut.sections, count: 6, type: .products)
     }
@@ -676,14 +667,13 @@ final class MainViewModelTests: XCTestCase {
     
     func test_handleLandingAction_shouldSetDestinationToLanding() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let type = anyMessage()
         
         XCTAssertNil(sut.route.destination)
         XCTAssertNil(sut.route.modal)
         
         sut.handleLandingAction(type)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(sut.route.case, .landing)
         XCTAssertNil(sut.route.modal)
@@ -691,16 +681,14 @@ final class MainViewModelTests: XCTestCase {
     
     func test_landingAction_tapGoToBack_shouldSetDestinationToNil() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(scheduler: .immediate)
         let type = anyMessage()
         
         let destinationSpy = ValueSpy(sut.$route.map(\.case))
         
         sut.handleLandingAction(type)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         sut.landingWrapperViewModel?.action(.goToBack)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(destinationSpy.values, [nil, .landing, nil])
     }
@@ -1145,10 +1133,15 @@ private extension MainViewModel.Modal {
 
 private extension MainSectionFastOperationView.ViewModel {
     
-    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.1) {
+    func tapFastPaymentButton(type: FastOperations) {
         
         let fastPaymentAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: type)
         action.send(fastPaymentAction)
+    }
+    
+    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.1) {
+        
+        tapFastPaymentButton(type: type)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
