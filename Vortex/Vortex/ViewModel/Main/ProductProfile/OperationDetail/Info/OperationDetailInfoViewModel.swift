@@ -113,57 +113,14 @@ final class OperationDetailInfoViewModel: Identifiable {
         
         guard !isStandardFlow else {
             
-            let image = model.images.value[statement.md5hash]?.image
-            
-            self.logo = image // 1
-            
-            image.map { // 2
-                
-                cells.append(BankCellViewModel(
-                    title: "Наименование получателя",
-                    icon: $0,
-                    name: operation?.payeeFullName ?? statement.merchant
-                ))
-            }
-            
-            operationCategoryCell.map { cells.append($0) } // 3
-            documentNumberCell.map { cells.append($0) } // 4
-            
-            operation?.account.map { // 5
-                
-                cells.append(PropertyCellViewModel(
-                    title: "Идентификатор платежа",
-                    iconType: IconType.account.icon,
-                    value: $0
-                ))
-            }
-            
-            if let amount = Self.amount( // 6
-                statement: statement,
-                currency: currency,
-                model: model
-            ) {
-                cells.append(amount)
-            }
-            
-            if let fee = operation?.payerFee, // 7
-               let feeCell = Self.commissionCell(
-                with: model,
-                fee: fee,
-                currency: currency
-               ) {
-                cells.append(feeCell)
-            }
-            
-            if let account = Self.accountCell( // 8
-                with: product,
+            (cells, self.logo) = Self.standardFlow(
                 model: model,
-                operationType: statement.operationType
-            ) {
-                cells.append(account)
-            }
-            
-            cells.append(dateTimeCell) // 9
+                statement: statement,
+                operation: operation,
+                currency: currency,
+                dateTimeCell: dateTimeCell,
+                product: product
+            )
             
             return
         }
@@ -1308,6 +1265,70 @@ private extension ProductStatementData {
 }
 
 extension OperationDetailInfoViewModel {
+    
+    static func standardFlow(
+        model: Model,
+        statement: ProductStatementData,
+        operation: OperationDetailData?,
+        currency: String,
+        dateTimeCell: PropertyCellViewModel,
+        product: ProductData
+    ) -> ([DefaultCellViewModel], Image?) {
+        
+        var cells = [DefaultCellViewModel]()
+        
+        let image = model.images.value[statement.md5hash]?.image // 1
+        
+        image.map { // 2
+            
+            cells.append(BankCellViewModel(
+                title: "Наименование получателя",
+                icon: $0,
+                name: operation?.payeeFullName ?? statement.merchant
+            ))
+        }
+        
+        Self.operationCategoryCellViewModel(value: operation?.operationCategory).map { cells.append($0) } // 3
+        Self.documentNumberCellViewModel(value: operation?.documentNumber).map { cells.append($0) } // 4
+        
+        operation?.account.map { // 5
+            
+            cells.append(PropertyCellViewModel(
+                title: "Идентификатор платежа",
+                iconType: IconType.account.icon,
+                value: $0
+            ))
+        }
+        
+        if let amount = Self.amount( // 6
+            statement: statement,
+            currency: currency,
+            model: model
+        ) {
+            cells.append(amount)
+        }
+        
+        if let fee = operation?.payerFee, // 7
+           let feeCell = Self.commissionCell(
+            with: model,
+            fee: fee,
+            currency: currency
+           ) {
+            cells.append(feeCell)
+        }
+        
+        if let account = Self.accountCell( // 8
+            with: product,
+            model: model,
+            operationType: statement.operationType
+        ) {
+            cells.append(account)
+        }
+        
+        cells.append(dateTimeCell) // 9
+        
+        return (cells, image)
+    }
     
     static func sberQRPayment(
         statement: ProductStatementData,
