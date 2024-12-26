@@ -39,12 +39,12 @@ extension RootViewModel {
                 break
                 
             case .personal:
-                guard category == "housingAndCommunalService" else {
+                guard category == "HOUSING_AND_COMMUNAL_SERVICE" else {
                     
                     return LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
                 }
                 
-                action.send(RootEvent.standardPayment(category))
+                action.send(RootEvent.standardPayment("housingAndCommunalService"))
             }
             
         default:
