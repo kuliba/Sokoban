@@ -7,27 +7,21 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetShowcaseView {
+public struct CollateralLoanLandingGetShowcaseView: View {
     
-    @ObservedObject private(set) var content: Content
+    public let data: CollateralLoanLandingGetShowcaseData
     
-    @State var isSpinnerShowing = true
+    private let factory = Factory()
     
-    private let factory: Factory
-    
-    init(
-        content: Content,
-        factory: Factory
-    ) {
-        self.content = content
-        self.factory = factory
+    public init(data: CollateralLoanLandingGetShowcaseData) {
+        self.data = data
     }
     
-    var body: some View {
+    public var body: some View {
         
         ScrollView(showsIndicators: false) {
             
-            ForEach(content.data.products, id: \.landingId) {
+            ForEach(data.products, id: \.landingId) {
                 factory.makeView(with: $0)
             }
         }
@@ -36,6 +30,6 @@ struct CollateralLoanLandingGetShowcaseView {
 
 extension CollateralLoanLandingGetShowcaseView {
     
-    typealias Content = CollateralLoanLandingGetShowcaseContent
+    typealias Data = CollateralLoanLandingGetShowcaseData
     typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

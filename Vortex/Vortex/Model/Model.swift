@@ -145,14 +145,6 @@ class Model {
     
     var getProductsV6: Services.GetProductListByTypeV6?
 
-    var featureFlags = FeatureFlags()
-    
-    // TODO: Temporary solution. Need to move to CompositionRoot
-    struct FeatureFlags: Equatable {
-        
-        var productsOpenLoanURL = URL(string: "https://www.\(Config.domen)/private/credits/")
-    }
-    
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol

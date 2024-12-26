@@ -34,9 +34,7 @@ extension ModelRootComposer: RootComposer {
         
         return rootViewModelFactory.make(
             dismiss: dismiss,
-            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            savingsAccountFlag: featureFlags.savingsAccountFlag
+            featureFlags: featureFlags
         )
     }
 }

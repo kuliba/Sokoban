@@ -33,7 +33,7 @@ class OpenNewProductsViewModel: ObservableObject {
         self.model = model
     }
     
-    typealias NewProductAction = (ProductType) -> Void
+    typealias NewProductAction = (ProductType, Bool) -> Void
     typealias MakeNewProductButtons = (@escaping NewProductAction) -> [NewProductButton.ViewModel]
     
     init(
@@ -42,10 +42,15 @@ class OpenNewProductsViewModel: ObservableObject {
     ) {
         self.items = []
         self.model = model
-        self.items = makeOpenNewProductButtons { [weak self] in
+        self.items = makeOpenNewProductButtons { [weak self] productType, openCollateralLoanLanding in
             
-            let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: $0)
-            self?.action.send(action)
+            if openCollateralLoanLanding {
+                let action = OpenNewProductsViewModelAction.Tapped.CollateralLoanLanding()
+                self?.action.send(action)
+            } else {
+                let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: productType)
+                self?.action.send(action)
+            }
         }
         
         bind()
@@ -106,5 +111,7 @@ enum OpenNewProductsViewModelAction {
         struct NewProduct: Action {
             let productType: ProductType
         }
+        
+        struct CollateralLoanLanding: Action {}
     }
 }

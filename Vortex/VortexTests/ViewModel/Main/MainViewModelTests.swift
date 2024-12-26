@@ -124,7 +124,9 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
+            makeProductProfileViewModel: {
+                _,_,_,_   in nil
+            },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -134,6 +136,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
+            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -706,6 +709,7 @@ final class MainViewModelTests: XCTestCase {
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
+        buttons: [NewProductButton.ViewModel] = [],
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
@@ -733,7 +737,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] },
+            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
         
@@ -744,6 +749,84 @@ final class MainViewModelTests: XCTestCase {
         return (sut, model)
     }
     
+    private func makeOpenNewProductButtons() -> [NewProductButton.ViewModel] {
+        
+        let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
+        
+        let displayButtons: [String] = {
+            
+            var items = (displayButtonsTypes.map { $0.rawValue } + ["INSURANCE", "MORTGAGE"])
+            items.insert(contentsOf: ["STICKER"], at: 3)
+            return items
+        }()
+        
+        var viewModels: [NewProductButton.ViewModel] = []
+        
+        for typeStr in displayButtons {
+            
+            if let type = ProductType(rawValue: typeStr) {
+                
+                let id = type.rawValue
+                let icon = type.openButtonIcon
+                let title = type.openButtonTitle
+                let subTitle = description(for: type)
+                
+                switch type {
+                case .loan:
+                        viewModels.append(.init(
+                            id: id,
+                            icon: icon,
+                            title: title,
+                            subTitle: subTitle,
+                            action: {}
+                        ))
+                    
+                default:
+                    viewModels.append(
+                        NewProductButton.ViewModel(
+                            id: id,
+                            icon: icon,
+                            title: title,
+                            subTitle: subTitle,
+                            action: {}
+                        ))
+                }
+                
+                } else { //no ProductType
+                   
+                    switch typeStr {
+                    case "INSURANCE":
+                        viewModels.append(NewProductButton.ViewModel(id: typeStr, icon: .ic24InsuranceColor, title: "Страховку", subTitle: "Надежно", url: URL(string: "www.home.com")!))
+                        
+                    case "MORTGAGE":
+                        viewModels.append(NewProductButton.ViewModel(id: typeStr, icon: .ic24Mortgage, title: "Ипотеку", subTitle: "Удобно", url: URL(string: "www.home.com")!))
+                    
+                    case "STICKER":
+                        viewModels.append(NewProductButton.ViewModel(
+                            id: typeStr,
+                            icon: .ic24Sticker,
+                            title: "Стикер",
+                            subTitle: "Быстро",
+                            action: {}
+                        ))
+                    default: break
+                    }
+                }
+        }
+        
+        return viewModels   
+    }
+    
+    func description(for type: ProductType) -> String {
+        
+        switch type {
+        case .card: return "С кешбэком"
+        case .account: return "Бесплатно"
+        case .deposit: return "22,5%"
+        case .loan: return "Выгодно"
+        }
+    }
+
     private func makeSections() -> [MainSectionViewModel] {
         
         [
@@ -758,6 +841,7 @@ final class MainViewModelTests: XCTestCase {
     
     private func makeSUTWithLocalAgent(
         localAgent: LocalAgent,
+        buttons: [NewProductButton.ViewModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -782,7 +866,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeOpenNewProductButtons: { _ in buttons }
         )
         
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -796,6 +881,7 @@ final class MainViewModelTests: XCTestCase {
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        buttons: [NewProductButton.ViewModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -823,7 +909,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] },
+            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
         
@@ -834,6 +921,17 @@ final class MainViewModelTests: XCTestCase {
         return (sut, model)
     }
     
+    private func makeCollateralLoanLandingViewModel(
+        initialState: CollateralLoanLandingDomain.State = .init()
+    ) -> CollateralLoanLandingDomain.ViewModel {
+        
+        .init(
+            initialState: .init(),
+            reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+            handleEffect: CollateralLoanLandingDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+        )
+    }
+
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = ProductCarouselView.StickerViewModel
     
@@ -855,6 +953,7 @@ final class MainViewModelTests: XCTestCase {
     private func makeModelWithServerAgentStub(
         getC2bResponseStub: [ServerAgentTestStub.Stub],
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        buttons: [NewProductButton.ViewModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -883,7 +982,8 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeOpenNewProductButtons: { _ in [] },
+            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
         

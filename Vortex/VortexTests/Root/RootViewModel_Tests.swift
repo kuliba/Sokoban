@@ -52,6 +52,7 @@ class RootViewModel_Tests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .preview,
+                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,
@@ -76,7 +77,7 @@ class RootViewModel_Tests: XCTestCase {
         
         return (sut, spy)
     }
-    
+     
     private func makeSections() -> [MainSectionViewModel] {
         
         [
@@ -129,6 +130,17 @@ class RootViewModel_Tests: XCTestCase {
     ) throws {
         
         try sut.tapLegacyPaymentsSectionQRButton()
+    }
+    
+    private func makeCollateralLoanLandingViewModel(
+        initialState: CollateralLoanLandingDomain.State = .init()
+    ) -> CollateralLoanLandingDomain.ViewModel {
+        
+        .init(
+            initialState: .init(),
+            reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+            handleEffect: CollateralLoanLandingDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+        )
     }
 }
 
