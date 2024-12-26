@@ -282,6 +282,7 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    type: AnywayElement.Parameter.UIAttributes.FieldType = .input,
     isRequired: Bool
 ) -> AnywayElement.Parameter {
     
@@ -292,6 +293,9 @@ func makeAnywayPaymentParameter(
             maxLength: nil,
             minLength: nil,
             regExp: ""
+        ),
+        uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            type: type
         )
     )
 }
@@ -299,16 +303,21 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    type: AnywayElement.Parameter.UIAttributes.FieldType = .input,
+    isRequired: Bool,
     minLength: Int?
 ) -> AnywayElement.Parameter {
     
     return makeAnywayPaymentParameter(
         field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
-            isRequired: false,
+            isRequired: isRequired,
             maxLength: nil,
             minLength: minLength,
             regExp: ""
+        ),
+        uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            type: type
         )
     )
 }
@@ -316,16 +325,21 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    type: AnywayElement.Parameter.UIAttributes.FieldType = .input,
+    isRequired: Bool,
     maxLength: Int?
 ) -> AnywayElement.Parameter {
     
     return makeAnywayPaymentParameter(
         field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
-            isRequired: false,
+            isRequired: isRequired,
             maxLength: maxLength,
             minLength: nil,
             regExp: ""
+        ),
+        uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            type: type
         )
     )
 }
@@ -333,16 +347,21 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    type: AnywayElement.Parameter.UIAttributes.FieldType = .input,
+    isRequired: Bool,
     regExp: String
 ) -> AnywayElement.Parameter {
     
     return makeAnywayPaymentParameter(
         field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
-            isRequired: false,
+            isRequired: isRequired,
             maxLength: nil,
             minLength: nil,
             regExp: regExp
+        ),
+        uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            type: type
         )
     )
 }
@@ -350,6 +369,7 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    type: AnywayElement.Parameter.UIAttributes.FieldType = .input,
     viewType: AnywayElement.Parameter.UIAttributes.ViewType = .input
 ) -> AnywayElement.Parameter {
     
@@ -359,6 +379,7 @@ func makeAnywayPaymentParameter(
             value: value
         ),
         uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            type: type,
             viewType: viewType
         )
     )
