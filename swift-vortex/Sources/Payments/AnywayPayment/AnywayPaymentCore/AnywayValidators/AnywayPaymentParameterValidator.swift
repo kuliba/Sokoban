@@ -17,17 +17,6 @@ public final class AnywayPaymentParameterValidator {
 public extension AnywayPaymentParameterValidator {
     
     @inlinable
-    func validate(
-        _ parameter: Parameter
-    ) -> AnywayPaymentParameterValidationError? {
-        
-        return validate(
-            parameter.field.value,
-            with: parameter.validation
-        )
-    }
-    
-    @inlinable
     func isValid(
         _ value: String?,
         with validation: Parameter.Validation
@@ -35,7 +24,39 @@ public extension AnywayPaymentParameterValidator {
         
         return validate(value, with: validation) == nil
     }
+    
+    @inlinable
+    func validate(
+        _ parameter: Parameter
+    ) -> AnywayPaymentParameterValidationError? {
         
+        switch parameter.uiAttributes.type {
+            
+        case .checkbox:
+            return validateCheckbox(
+                parameter.field.value,
+                with: parameter.validation
+            )
+            
+        default:
+            return validate(
+                parameter.field.value,
+                with: parameter.validation
+            )
+        }
+    }
+    
+    @inlinable
+    func validateCheckbox(
+        _ value: String?,
+        with validation: Parameter.Validation
+    ) -> AnywayPaymentParameterValidationError? {
+        
+        let eligible = validation.isRequired ? ["1"] : [nil, "", "0", "1"]
+
+        return eligible.contains(value) ? nil : .invalidCheckbox
+    }
+    
     @inlinable
     func validate(
         _ value: String?,
