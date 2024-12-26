@@ -10,7 +10,6 @@ import VortexTools
 import PaymentComponents
 import SwiftUI
 
-// TODO: - doing too much - split into subtypes
 final class AnywayElementModelMapper {
     
     private let currencyOfProduct: CurrencyOfProduct
