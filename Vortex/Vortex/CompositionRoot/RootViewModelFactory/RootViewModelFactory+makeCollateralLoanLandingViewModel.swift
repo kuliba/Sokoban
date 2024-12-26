@@ -14,11 +14,11 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeCollateralLoanLandingViewModel(
-        initialState: CollateralLoanLandingDomain.State = .init()
-    ) -> CollateralLoanLandingDomain.ViewModel {
+        initialState: GetShowcaseDomain.State = .init()
+    ) -> GetShowcaseDomain.ViewModel {
         
-        let reducer = CollateralLoanLandingDomain.Reducer()
-        let effectHandler = CollateralLoanLandingDomain.EffectHandler(load: loadCollateralLoanLanding)
+        let reducer = GetShowcaseDomain.Reducer()
+        let effectHandler = GetShowcaseDomain.EffectHandler(load: loadCollateralLoanLanding)
         
         return .init(
             initialState: initialState,
@@ -29,7 +29,7 @@ extension RootViewModelFactory {
     }
     
     private func loadCollateralLoanLanding(
-        completion: @escaping(CollateralLoanLandingDomain.Result) -> Void
+        completion: @escaping(GetShowcaseDomain.Result) -> Void
     ) {
         
         let load = nanoServiceComposer.compose(
@@ -49,7 +49,7 @@ extension RootViewModelFactory {
     }
 }
 
-private extension CollateralLoanLandingDomain.Result {
+private extension GetShowcaseDomain.Result {
     
     init(result: Result<RemoteServices.ResponseMapper.GetShowcaseData, Error>) {
         

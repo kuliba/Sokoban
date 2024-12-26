@@ -14,13 +14,14 @@ import LandingUIComponent
 import PaymentSticker
 import SberQR
 import SwiftUI
+import CollateralLoanLandingGetShowcaseUI
 
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeCollateralLoanLandingViewModel = (CollateralLoanLandingDomain.State) -> CollateralLoanLandingDomain.ViewModel
+    typealias MakeCollateralLoanLandingViewModel = (GetShowcaseDomain.State) -> GetShowcaseDomain.ViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -1688,7 +1689,7 @@ extension MainViewModel {
         case paymentSticker
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
-        case collateralLoanLanding(CollateralLoanLandingDomain.ViewModel)
+        case collateralLoanLanding(GetShowcaseDomain.ViewModel)
         
         var id: Case {
             

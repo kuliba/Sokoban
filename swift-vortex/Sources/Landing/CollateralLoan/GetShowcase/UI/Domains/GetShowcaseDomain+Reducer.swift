@@ -1,15 +1,17 @@
 //
-//  CollateralLoanLandingDomain+Reducer.swift
-//  Vortex
+//  GetShowcaseDomain+Reducer.swift
 //
-//  Created by Valentin Ozerov on 24.12.2024.
+//
+//  Created by Valentin Ozerov on 26.12.2024.
 //
 
-extension CollateralLoanLandingDomain {
+extension GetShowcaseDomain {
     
-    final class Reducer {
+    public final class Reducer {
         
-        func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
+        public init() {}
+        
+        public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
            
             var state = state
             var effect: Effect?

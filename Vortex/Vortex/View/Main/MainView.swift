@@ -19,6 +19,7 @@ import SwiftUI
 import UIPrimitives
 import ClientInformList
 import RxViewModel
+import CollateralLoanLandingGetShowcaseUI
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -597,7 +598,7 @@ extension MainViewModel {
         makeCollateralLoanLandingViewModel: {
             _ in .init(
                 initialState: .init(),
-                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
                 handleEffect: { _,_ in }
             )
         },

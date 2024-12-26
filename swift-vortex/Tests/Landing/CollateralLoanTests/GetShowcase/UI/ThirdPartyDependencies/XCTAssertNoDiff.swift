@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 23.04.2023.
 //
 
-// TODO: вынести в отдельный модуль
-
 import CustomDump
 import XCTest
 
