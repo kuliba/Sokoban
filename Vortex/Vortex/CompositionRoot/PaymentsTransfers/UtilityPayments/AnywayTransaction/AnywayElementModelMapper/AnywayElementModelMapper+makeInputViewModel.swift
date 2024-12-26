@@ -9,10 +9,9 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import Foundation
 import InputComponent
-import RxViewModel
 import TextFieldComponent
 import TextFieldModel
-import VortexTools
+import RxViewModel
 
 extension AnywayElementModelMapper {
     
@@ -79,30 +78,10 @@ private extension AnywayElement.Parameter {
         placeholderText: String
     ) -> TransformingReducer {
         
-        switch uiAttributes.dataType {
-            
-        case .number:
-            return .sberNumericReducer(placeholderText: placeholderText)
-            
-        default:
-            return .init(
-                placeholderText: placeholderText,
-                transformer: transformer
-            )
-        }
-    }
-    
-    var transformer: any Transformer {
+        guard case .number = uiAttributes.dataType
+        else { return .init(placeholderText: placeholderText) }
         
-        if let mask = masking.inputMask ?? masking.mask {
-            
-            let format = { Masker.mask($0, with: mask) }
-            return Transformers.formatter(format)
-            
-        } else {
-            
-            return Transform.identity
-        }
+        return .sberNumericReducer(placeholderText: placeholderText)
     }
 }
 
