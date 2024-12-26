@@ -27,7 +27,7 @@ final class RootViewDomainContentWitnessesTests: RootViewModel_Tests {
         
         try tapMainViewFastSectionQRButton(sut)
         
-        XCTAssertNoDiff(spy.values, [.scanQR])
+        XCTAssertNoDiff(spy.values, [.select(.scanQR)])
     }
     
     // MARK: - Helpers

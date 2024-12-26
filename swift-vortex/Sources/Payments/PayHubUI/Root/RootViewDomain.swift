@@ -47,7 +47,7 @@ public extension RootViewDomain {
         }
     }
     
-    typealias ContentWitnesses = PayHub.ContentWitnesses<Content, Select>
+    typealias ContentWitnesses = PayHub.ContentWitnesses<Content, FlowDomain.NotifyEvent>
     
     // MARK: - Content
     

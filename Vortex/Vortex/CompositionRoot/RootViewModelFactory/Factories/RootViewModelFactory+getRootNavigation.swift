@@ -144,7 +144,7 @@ extension RootViewModelFactory {
             
             return binder.flow.$state
                 .compactMap(\.rootEvent)
-                .sink { notify(.select($0)) }
+                .sink { notify($0) }
         }
     }
 }
@@ -156,9 +156,9 @@ private extension PaymentProviderPickerDomain.FlowDomain.State {
     var rootEvent: RootEvent? {
         
         switch navigation {
-        case .outside(.qr):   return .scanQR
-        case .outside(.main): return .outside(.tab(.main))
-        default:               return nil
+        case .outside(.qr):   return .select(.scanQR)
+        case .outside(.main): return .select(.outside(.tab(.main)))
+        default:              return nil
         }
     }
 }
