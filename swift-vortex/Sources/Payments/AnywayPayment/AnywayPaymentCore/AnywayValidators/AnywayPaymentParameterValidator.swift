@@ -16,16 +16,7 @@ public final class AnywayPaymentParameterValidator {
 
 public extension AnywayPaymentParameterValidator {
     
-    func validate(
-        _ parameter: Parameter
-    ) -> AnywayPaymentParameterValidationError? {
-        
-        return validate(
-            parameter.field.value,
-            with: parameter.validation
-        )
-    }
-        
+    @inlinable
     func isValid(
         _ value: String?,
         with validation: Parameter.Validation
@@ -33,20 +24,53 @@ public extension AnywayPaymentParameterValidator {
         
         return validate(value, with: validation) == nil
     }
+    
+    @inlinable
+    func validate(
+        _ parameter: Parameter
+    ) -> AnywayPaymentParameterValidationError? {
         
+        switch parameter.uiAttributes.type {
+            
+        case .checkbox:
+            return validateCheckbox(
+                parameter.field.value,
+                with: parameter.validation
+            )
+            
+        default:
+            return validate(
+                parameter.field.value,
+                with: parameter.validation
+            )
+        }
+    }
+    
+    @inlinable
+    func validateCheckbox(
+        _ value: String?,
+        with validation: Parameter.Validation
+    ) -> AnywayPaymentParameterValidationError? {
+        
+        let eligible = validation.isRequired ? ["1"] : [nil, "", "0", "1"]
+
+        return eligible.contains(value) ? nil : .invalidCheckbox
+    }
+    
+    @inlinable
     func validate(
         _ value: String?,
         with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
         let validationErrors = [
-            validateRequired(value, with: validation),
+            validateEmptyRequired(value, with: validation),
             validateMaxLength(value, with: validation),
             validateMinLength(value, with: validation),
             validateRegExp(value, with: validation),
-        ].compactMap { $0 }
+        ]
         
-        return validationErrors.first
+        return validationErrors.compactMap { $0 }.first
     }
 }
 
@@ -65,9 +89,10 @@ private extension Optional where Wrapped == String {
     }
 }
 
-private extension AnywayPaymentParameterValidator {
+extension AnywayPaymentParameterValidator {
     
-    func validateRequired(
+    @usableFromInline
+    func validateEmptyRequired(
         _ value: String?,
         with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
@@ -79,6 +104,7 @@ private extension AnywayPaymentParameterValidator {
         }
     }
     
+    @usableFromInline
     func validateMinLength(
         _ value: String?,
         with validation: Parameter.Validation
@@ -88,9 +114,17 @@ private extension AnywayPaymentParameterValidator {
         
         let value = value ?? ""
         
-        return value.count >= minLength ? nil : .tooShort
+        switch (value.count, validation.isRequired) {
+            
+        case (0, false):
+            return nil
+            
+        default:
+            return value.count >= minLength ? nil : .tooShort
+        }
     }
     
+    @usableFromInline
     func validateMaxLength(
         _ value: String?,
         with validation: Parameter.Validation
@@ -103,6 +137,7 @@ private extension AnywayPaymentParameterValidator {
         return value.count <= maxLength ? nil : .tooLong
     }
     
+    @usableFromInline
     func validateRegExp(
         _ value: String?,
         with validation: Parameter.Validation

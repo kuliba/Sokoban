@@ -31,10 +31,9 @@ public extension RxViewModel {
         initialState: State,
         reducer: any Reducer<State, Event, Effect>,
         effectHandler: any EffectHandler<Event, Effect>,
-        predicate: @escaping (State, State) -> Bool = { _,_ in false },
+        predicate: @escaping Predicate = { _,_ in false },
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        
         self.init(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),

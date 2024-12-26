@@ -23,7 +23,7 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
                     .frame(width: 24, height: 24)
                 Text("Подробные условия")
             }
-            .foregroundColor(theme.backgroundColor)
+            .foregroundColor(theme.foregroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             
             HStack {
@@ -43,6 +43,7 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
             idealHeight: config.footerView.height,
             maxHeight: config.footerView.height
         )
+        .padding(.top, config.footerView.topPadding)
         .padding(.bottom, config.paddings.outer.vertical)
         .padding(.leading, config.paddings.outer.leading)
         .padding(.trailing, config.paddings.outer.trailing)

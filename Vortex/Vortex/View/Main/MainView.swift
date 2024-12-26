@@ -18,6 +18,7 @@ import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
 import ClientInformList
+import RxViewModel
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -264,9 +265,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        case .collateralLoanLanding:
-            // TODO: There are will added integration in next commit
-            Color.clear
+        case let .collateralLoanLanding(viewModel):
+            CollateralLoanLandingView(viewModel: viewModel)
+                .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
     }
@@ -585,12 +586,21 @@ extension MainViewModel {
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
-        landingServices: .empty(), 
+        landingServices: .empty(),
+        
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .active,
-        onRegister: {},
+        onRegister: {
+        },
         sections: [],
-        bannersBinder: .preview, 
+        bannersBinder: .preview,
+        makeCollateralLoanLandingViewModel: {
+            _ in .init(
+                initialState: .init(),
+                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            )
+        },
         makeOpenNewProductButtons: { _ in [] }
     )
 }
