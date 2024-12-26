@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "3B545205-2CFC-42DD-B88A-595253CCE000",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "WIPTests",
+        "name" : "WIPTests"
+      }
+    }
+  ],
+  "version" : 1
+}

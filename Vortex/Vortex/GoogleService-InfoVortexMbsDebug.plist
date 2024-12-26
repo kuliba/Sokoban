@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyC3qt3FiDYjRCkq3uV7R3vAp1Lrxg3la5U</string>
+	<key>GCM_SENDER_ID</key>
+	<string>399866612200</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>ru.vortex.sense</string>
+	<key>PROJECT_ID</key>
+	<string>mbc-forabank</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mbc-forabank.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:399866612200:ios:d68264d5a0b64ce1397c5d</string>
+	<key>DATABASE_URL</key>
+	<string>https://mbc-forabank.firebaseio.com</string>
+</dict>
+</plist>

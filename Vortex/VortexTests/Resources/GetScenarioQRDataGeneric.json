@@ -1,0 +1,239 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "scenario": "C2B_SUBSCRIPTION",
+        "qrcId": "AS10006QJQ2789N79JVP19G0KEK4LSGU",
+        "parameters": [{
+                "id": "brandName",
+                "type": "SUBSCRIBER",
+                "icon": "12123344",
+                "value": "Кофейня у Артема",
+                "purpose": "Привязка счета для платежей в пользу АО \"Кофеек\", регулярность раз в месяц, сумма 100 рублей",
+                "style": "REGULAR"
+            },
+            {
+                "id": "debit_account",
+                "value": null,
+                "type": "PRODUCT_SELECT",
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            },
+            {
+                "id": "terms_check",
+                "value": true,
+                "type": "CHECK",
+                "link": {
+                    "title": "Включить переводы через СБП,",
+                    "subtitle": "принять условия обслуживания",
+                    "url": "https://www.vortex.ru/dkbo/dkbo.pdf"
+                }
+            },
+            {
+                "id": "title",
+                "type": "HEADER",
+                "value": "Оплата через СБП"
+            }, {
+                "id": "debit_account",
+                "type": "PRODUCT_SELECT",
+                "value": null,
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            }, {
+                "id": "brandName",
+                "type": "INFO",
+                "value": "www.nalog24.online",
+                "title": "Получатель",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "f7ed31786034f5e464e7de1e33345f0f"
+                }
+            }, {
+                "id": "paymentPurpose",
+                "type": "INFO",
+                "value": "без суммы 1",
+                "title": "Назначение платежа",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            }, {
+                "id": "recipientBank",
+                "type": "INFO",
+                "value": "ИННОВАЦИИ БИЗНЕСА",
+                "title": "Банк получателя",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "321a9e7f551a13c44cbaa811454e504c"
+                }
+            }, {
+                "id": "sfp_logo",
+                "type": "ICON",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            }, {
+                "id": "payment_amount",
+                "type": "AMOUNT",
+                "value": null,
+                "title": "Сумма перевода",
+                "validationRules": [{
+                    "type": "LESS",
+                    "value": 1000000.00,
+                    "warning": "Сумма операции должна быть меньше 1 000 000 ₽"
+                }],
+                "button": {
+                    "title": "Оплатить",
+                    "action": "PAY",
+                    "color": "red"
+                }
+            }, {
+                "id": "currency",
+                "type": "DATA",
+                "value": "RUB"
+            },
+            {
+                "id": "paymentOperationDetailId",
+                "type": "DATA",
+                "value": 53491
+            }, {
+                "id": "printFormType",
+                "type": "DATA",
+                "value": "c2b"
+            }, {
+                "id": "success_status",
+                "type": "SUCCESS_STATUS_ICON",
+                "value": "COMPLETE"
+            }, {
+                "id": "success_title",
+                "type": "SUCCESS_TEXT",
+                "value": "Покупка оплачена",
+                "style": "TITLE"
+            }, {
+                "id": "success_amount",
+                "type": "SUCCESS_TEXT",
+                "value": "10 005.63 ₽",
+                "style": "AMOUNT"
+            }, {
+                "id": "brandName",
+                "type": "SUBSCRIBER",
+                "value": "Цветы  у дома",
+                "style": "SMALL",
+                "icon": "b8b31e25a275e3f04ae189f4a538536a",
+                "purpose": null
+            }, {
+                "id": "debit_account",
+                "type": "PRODUCT_SELECT",
+                "value": "10004812750",
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            }, {
+                "id": "success_link_message",
+                "type": "SUCCESS_TEXT",
+                "value": "Привяжите счет, деньги будут списываться автоматически. Счет можно будет изменить в настройках приложения",
+                "style": "MESSAGE"
+            }, {
+                "id": "success_option_buttons",
+                "type": "SUCCESS_OPTION_BUTTONS",
+                "value": ["DOCUMENT", "DETAILS"]
+            }, {
+                "id": "button_save",
+                "type": "BUTTON",
+                "value": "Сохранить",
+                "color": "red",
+                "action": "SAVE",
+                "placement": "BOTTOM"
+            }, {
+                "id": "button_cancel",
+                "type": "BUTTON",
+                "value": "Отказаться",
+                "color": "white",
+                "action": "CANCEL",
+                "placement": "BOTTOM"
+            }, {
+                "id": "sfp_logo",
+                "type": "ICON",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            },
+            {
+                "id": "title",
+                "type": "HEADER",
+                "value": "Оплата по QR-коду"
+            }, {
+                "id": "debit_account",
+                "type": "PRODUCT_SELECT",
+                "value": null,
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            }, {
+                "id": "brandName",
+                "type": "INFO",
+                "value": "Цветы  у дома",
+                "title": "Получатель",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "b8b31e25a275e3f04ae189f4a538536a"
+                }
+            }, {
+                "id": "paymentPurpose",
+                "type": "INFO",
+                "value": null,
+                "title": "Назначение платежа",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            }, {
+                "id": "amount",
+                "type": "INFO",
+                "value": "10 005.63 ₽",
+                "title": "Сумма",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            }, {
+                "id": "recipientBank",
+                "type": "INFO",
+                "value": "Пир Банк",
+                "title": "Банк получателя",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "86ca7b52e62486a3024e88aec088dc60"
+                }
+            }, {
+                "id": "button_pay",
+                "type": "BUTTON",
+                "value": "Оплатить",
+                "color": "red",
+                "action": "PAY",
+                "placement": "BOTTOM"
+            }, {
+                "id": "sfp_logo",
+                "type": "ICON",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            }
+        ],
+        "required": ["debit_account"]
+    }
+}
