@@ -11,276 +11,330 @@ import XCTest
 
 final class AnywayPaymentParameterValidatorTests: XCTestCase {
     
+    // MARK: - checkbox: not required
+    
+    func test_checkbox_notRequired_shouldNotDeliverErrorOnNilValue() {
+        
+        assert(value: nil, type: .checkbox, isRequired: false, validationError: nil)
+    }
+    
+    func test_checkbox_notRequired_shouldNotDeliverErrorOnEmptyValue() {
+        
+        assert(value: "", type: .checkbox, isRequired: false, validationError: nil)
+    }
+    
+    func test_checkbox_notRequired_shouldNotDeliverErrorOnZeroValue() {
+        
+        assert(value: "0", type: .checkbox, isRequired: false, validationError: nil)
+    }
+    
+    func test_checkbox_notRequired_shouldNotDeliverErrorOnOneValue() {
+        
+        assert(value: "1", type: .checkbox, isRequired: false, validationError: nil)
+    }
+    
+    func test_checkbox_notRequired_shouldNotDeliverErrorOnTextValue() {
+        
+        assert(value: "abc", type: .checkbox, isRequired: false, validationError: .invalidCheckbox)
+    }
+    
+    // MARK: - checkbox: not required
+    
+    func test_checkbox_required_shouldDeliverErrorOnNilValue() {
+        
+        assert(value: nil, type: .checkbox, isRequired: true, validationError: .invalidCheckbox)
+    }
+    
+    func test_checkbox_required_shouldNotDeliverErrorOnEmptyValue() {
+        
+        assert(value: "", type: .checkbox, isRequired: true, validationError: .invalidCheckbox)
+    }
+    
+    func test_checkbox_required_shouldDeliverErrorOnZeroValue() {
+        
+        assert(value: "0", type: .checkbox, isRequired: true, validationError: .invalidCheckbox)
+    }
+    
+    func test_checkbox_required_shouldNotDeliverErrorOnOneValue() {
+        
+        assert(value: "1", type: .checkbox, isRequired: true, validationError: nil)
+    }
+    
+    func test_checkbox_required_shouldDeliverErrorOnTextValue() {
+        
+        assert(value: "abc", type: .checkbox, isRequired: true, validationError: .invalidCheckbox)
+    }
+    
     // MARK: - not required
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValue() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValue() {
         
         assert(value: nil, isRequired: false, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValue() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValue() {
         
         assert(value: "", isRequired: false, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNonEmptyValue() {
+    func test_notRequired_shouldNotDeliverErrorOnNonEmptyValue() {
         
         assert(isRequired: false, validationError: nil)
     }
-
+    
     // MARK: - required
     
-    func test_isValid_required_shouldDeliverErrorOnNilValue() {
+    func test_required_shouldDeliverErrorOnNilValue() {
         
         assert(value: nil, isRequired: true, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnEmptyValue() {
+    func test_required_shouldDeliverErrorOnEmptyValue() {
         
         assert(value: "", isRequired: true, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnNonEmptyValue() {
+    func test_required_shouldNotDeliverErrorOnNonEmptyValue() {
         
         assert(isRequired: true, validationError: nil)
     }
     
     // MARK: - not required: min length
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValueOnEmptyMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValueOnEmptyMinLength() {
         
         assert(value: .none, isRequired: false, minLength: nil, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValueOnEmptyMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValueOnEmptyMinLength() {
         
         assert(value: "", isRequired: false, minLength: nil, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMinLength() {
         
         assert(value: "abc", isRequired: false, minLength: nil, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValueOnZeroMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValueOnZeroMinLength() {
         
         assert(value: .none, isRequired: false, minLength: 0, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValueOnZeroMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValueOnZeroMinLength() {
         
         assert(value: "", isRequired: false, minLength: 0, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNonEmptyValueOnZeroMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNonEmptyValueOnZeroMinLength() {
         
         assert(value: "abc", isRequired: false, minLength: 0, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValueOnMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValueOnMinLength() {
         
         assert(value: .none, isRequired: false, minLength: 1, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValueOnMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValueOnMinLength() {
         
         assert(value: "", isRequired: false, minLength: 1, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnSameLengthValueOnMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnSameLengthValueOnMinLength() {
         
         assert(value: "a", isRequired: false, minLength: 1, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnLongerValueOnMinLength() {
+    func test_notRequired_shouldNotDeliverErrorOnLongerValueOnMinLength() {
         
         assert(value: "abc", isRequired: false, minLength: 1, validationError: nil)
     }
     
     // MARK: - required: min length
     
-    func test_isValid_required_shouldDeliverErrorOnNilValueOnEmptyMinLength() {
+    func test_required_shouldDeliverErrorOnNilValueOnEmptyMinLength() {
         
         assert(value: .none, isRequired: true, minLength: nil, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnEmptyValueOnEmptyMinLength() {
+    func test_required_shouldNotDeliverErrorOnEmptyValueOnEmptyMinLength() {
         
         assert(value: "", isRequired: true, minLength: nil, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMinLength() {
+    func test_required_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMinLength() {
         
         assert(value: "abc", isRequired: true, minLength: nil, validationError: nil)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnNilValueOnZeroMinLength() {
+    func test_required_shouldDeliverErrorOnNilValueOnZeroMinLength() {
         
         assert(value: .none, isRequired: true, minLength: 0, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnEmptyValueOnZeroMinLength() {
+    func test_required_shouldDeliverErrorOnEmptyValueOnZeroMinLength() {
         
         assert(value: "", isRequired: true, minLength: 0, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnNonEmptyValueOnZeroMinLength() {
+    func test_required_shouldNotDeliverErrorOnNonEmptyValueOnZeroMinLength() {
         
         assert(value: "abc", isRequired: true, minLength: 0, validationError: nil)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnNilValueOnMinLength() {
+    func test_required_shouldDeliverErrorOnNilValueOnMinLength() {
         
         assert(value: .none, isRequired: true, minLength: 1, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnEmptyValueOnMinLength() {
+    func test_required_shouldDeliverErrorOnEmptyValueOnMinLength() {
         
         assert(value: "", isRequired: true, minLength: 1, validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnSameLengthValueOnMinLength() {
+    func test_required_shouldNotDeliverErrorOnSameLengthValueOnMinLength() {
         
         assert(value: "a", isRequired: true, minLength: 1, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnLongerValueOnMinLength() {
+    func test_required_shouldNotDeliverErrorOnLongerValueOnMinLength() {
         
         assert(value: "abc", isRequired: true, minLength: 1, validationError: nil)
     }
     
     // MARK: - not required: max length
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValueOnEmptyMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValueOnEmptyMaxLength() {
         
         assert(value: .none, isRequired: false, maxLength: nil, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValueOnEmptyMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValueOnEmptyMaxLength() {
         
         assert(value: "", isRequired: false, maxLength: nil, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMaxLength() {
         
         assert(value: "abc", isRequired: false, maxLength: nil, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValueOnZeroMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValueOnZeroMaxLength() {
         
         assert(value: .none, isRequired: false, maxLength: 0, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValueOnZeroMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValueOnZeroMaxLength() {
         
         assert(value: "", isRequired: false, maxLength: 0, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldDeliverErrorOnNonEmptyValueOnZeroMaxLength() {
+    func test_notRequired_shouldDeliverErrorOnNonEmptyValueOnZeroMaxLength() {
         
         assert(value: "abc", isRequired: false, maxLength: 0, validationError: .tooLong)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnNilValueOnMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnNilValueOnMaxLength() {
         
         assert(value: .none, isRequired: false, maxLength: 1, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnEmptyValueOnMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnEmptyValueOnMaxLength() {
         
         assert(value: "", isRequired: false, maxLength: 1, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorOnSameLengthValueOnMaxLength() {
+    func test_notRequired_shouldNotDeliverErrorOnSameLengthValueOnMaxLength() {
         
         assert(value: "a", isRequired: false, maxLength: 1, validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldDeliverErrorOnLongerValueOnMaxLength() {
+    func test_notRequired_shouldDeliverErrorOnLongerValueOnMaxLength() {
         
         assert(value: "abc", isRequired: false, maxLength: 1, validationError: .tooLong)
     }
     
     // MARK: - required: max length
     
-    func test_isValid_required_shouldNotDeliverErrorOnNilValueOnEmptyMaxLength() {
+    func test_required_shouldNotDeliverErrorOnNilValueOnEmptyMaxLength() {
         
         assert(value: .none, isRequired: false, maxLength: nil, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnEmptyValueOnEmptyMaxLength() {
+    func test_required_shouldNotDeliverErrorOnEmptyValueOnEmptyMaxLength() {
         
         assert(value: "", isRequired: false, maxLength: nil, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMaxLength() {
+    func test_required_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMaxLength() {
         
         assert(value: "abc", isRequired: false, maxLength: nil, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnNilValueOnZeroMaxLength() {
+    func test_required_shouldNotDeliverErrorOnNilValueOnZeroMaxLength() {
         
         assert(value: .none, isRequired: false, maxLength: 0, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnEmptyValueOnZeroMaxLength() {
+    func test_required_shouldNotDeliverErrorOnEmptyValueOnZeroMaxLength() {
         
         assert(value: "", isRequired: false, maxLength: 0, validationError: nil)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnNonEmptyValueOnZeroMaxLength() {
+    func test_required_shouldDeliverErrorOnNonEmptyValueOnZeroMaxLength() {
         
         assert(value: "abc", isRequired: false, maxLength: 0, validationError: .tooLong)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnNilValueOnMaxLength() {
+    func test_required_shouldNotDeliverErrorOnNilValueOnMaxLength() {
         
         assert(value: .none, isRequired: false, maxLength: 1, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnEmptyValueOnMaxLength() {
+    func test_required_shouldNotDeliverErrorOnEmptyValueOnMaxLength() {
         
         assert(value: "", isRequired: false, maxLength: 1, validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorOnSameLengthValueOnMaxLength() {
+    func test_required_shouldNotDeliverErrorOnSameLengthValueOnMaxLength() {
         
         assert(value: "a", isRequired: false, maxLength: 1, validationError: nil)
     }
     
-    func test_isValid_required_shouldDeliverErrorOnLongerValueOnMaxLength() {
+    func test_required_shouldDeliverErrorOnLongerValueOnMaxLength() {
         
         assert(value: "abc", isRequired: false, maxLength: 1, validationError: .tooLong)
     }
     
     // MARK: - not required: regExp
     
-    func test_isValid_notRequired_shouldNotDeliverErrorForNilValueOnEmptyRegex() {
+    func test_notRequired_shouldNotDeliverErrorForNilValueOnEmptyRegex() {
         
         assert(value: nil, isRequired: false, regExp: "", validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorForEmptyValueOnEmptyRegex() {
+    func test_notRequired_shouldNotDeliverErrorForEmptyValueOnEmptyRegex() {
         
         assert(value: "", isRequired: false, regExp: "", validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorForNonEmptyValueOnEmptyRegex() {
+    func test_notRequired_shouldNotDeliverErrorForNonEmptyValueOnEmptyRegex() {
         
         assert(value: "abc", isRequired: false, regExp: "", validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldNotDeliverErrorForMatchingRegex() {
+    func test_notRequired_shouldNotDeliverErrorForMatchingRegex() {
         
         assert(value: "abc123", isRequired: false, regExp: "^[a-zA-Z0-9]+$", validationError: nil)
     }
     
-    func test_isValid_notRequired_shouldDeliverErrorForNonMatchingRegex() {
+    func test_notRequired_shouldDeliverErrorForNonMatchingRegex() {
         
         assert(value: "abc-123", isRequired: false, regExp: "^[a-zA-Z0-9]+$", validationError: .regExViolation)
     }
     
-    func test_isValid_notRequired_withRealLifeRegEx() {
+    func test_notRequired_withRealLifeRegEx() {
         
         // A number with 1 to 30 digits followed by a period and 1 to 4 digits.
         // A whole number with 1 to 30 digits.
@@ -300,32 +354,32 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
     
     // MARK: - required: regExp
     
-    func test_isValid_required_shouldDeliverErrorForNilValueOnEmptyRegex() {
+    func test_required_shouldDeliverErrorForNilValueOnEmptyRegex() {
         
         assert(value: nil, isRequired: true, regExp: "", validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldDeliverErrorForEmptyValueOnEmptyRegex() {
+    func test_required_shouldDeliverErrorForEmptyValueOnEmptyRegex() {
         
         assert(value: "", isRequired: true, regExp: "", validationError: .emptyRequired)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorForNonEmptyValueOnEmptyRegex() {
+    func test_required_shouldNotDeliverErrorForNonEmptyValueOnEmptyRegex() {
         
         assert(value: "abc", isRequired: true, regExp: "", validationError: nil)
     }
     
-    func test_isValid_required_shouldNotDeliverErrorForMatchingRegex() {
+    func test_required_shouldNotDeliverErrorForMatchingRegex() {
         
         assert(value: "abc123", isRequired: true, regExp: "^[a-zA-Z0-9]+$", validationError: nil)
     }
     
-    func test_isValid_required_shouldDeliverErrorForNonMatchingRegex() {
+    func test_required_shouldDeliverErrorForNonMatchingRegex() {
         
         assert(value: "abc-123", isRequired: true, regExp: "^[a-zA-Z0-9]+$", validationError: .regExViolation)
     }
     
-    func test_isValid_required_withRealLifeRegEx() {
+    func test_required_withRealLifeRegEx() {
         
         // A number with 1 to 30 digits followed by a period and 1 to 4 digits.
         // A whole number with 1 to 30 digits.

@@ -8,6 +8,7 @@
 public enum AnywayPaymentParameterValidationError: Equatable {
     
     case emptyRequired
+    case invalidCheckbox
     case regExViolation
     case tooLong
     case tooShort
