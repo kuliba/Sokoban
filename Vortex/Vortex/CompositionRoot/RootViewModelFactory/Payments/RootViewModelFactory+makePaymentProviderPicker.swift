@@ -181,6 +181,7 @@ extension RootViewModelFactory {
                     self.processProvider(
                         provider: provider,
                         notify: { event in
+                            
                             switch event {
                             case .main:
                                 notify(.select(.main))
