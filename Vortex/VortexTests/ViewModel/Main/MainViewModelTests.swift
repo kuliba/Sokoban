@@ -361,8 +361,6 @@ final class MainViewModelTests: XCTestCase {
         
         try sut.tapOpenCollateralLoanLandingButton()
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-
         try XCTAssert(XCTUnwrap(sut.getShowcaseDomainViewModel) === showcase)
     }
     
