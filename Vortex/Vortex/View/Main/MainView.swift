@@ -595,7 +595,7 @@ extension MainViewModel {
         },
         sections: [],
         bannersBinder: .preview,
-        makeCollateralLoanLandingViewModel: { _ in .preview },
+        makeCollateralLoanLandingViewModel: { .preview },
         makeOpenNewProductButtons: { _ in [] }
     )
 }

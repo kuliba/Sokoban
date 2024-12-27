@@ -6,22 +6,22 @@
 //
 
 import CalendarUI
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import CombineSchedulers
-import VortexTools
 import Foundation
 import LandingUIComponent
 import PaymentSticker
 import SberQR
 import SwiftUI
-import CollateralLoanLandingGetShowcaseUI
+import VortexTools
 
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeCollateralLoanLandingViewModel = (GetShowcaseDomain.State) -> GetShowcaseDomain.ViewModel
+    typealias MakeCollateralLoanLandingViewModel = () -> GetShowcaseDomain.ViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -943,7 +943,7 @@ private extension MainViewModel {
     
     func openCollateralLoanLanding() {
         
-        let viewModel = makeCollateralLoanLandingViewModel(.init())
+        let viewModel = makeCollateralLoanLandingViewModel()
         route.destination = .collateralLoanLanding(viewModel)
     }
 

@@ -134,7 +134,6 @@ class RootViewModel_Tests: XCTestCase {
     }
     
     private func makeCollateralLoanLandingViewModel(
-        initialState: GetShowcaseDomain.State = .init()
     ) -> GetShowcaseDomain.ViewModel {
         
         .init(

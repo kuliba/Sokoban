@@ -14,14 +14,13 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeCollateralLoanLandingViewModel(
-        initialState: GetShowcaseDomain.State = .init()
     ) -> GetShowcaseDomain.ViewModel {
         
         let reducer = GetShowcaseDomain.Reducer()
         let effectHandler = GetShowcaseDomain.EffectHandler(load: loadCollateralLoanLanding)
         
         return .init(
-            initialState: initialState,
+            initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
