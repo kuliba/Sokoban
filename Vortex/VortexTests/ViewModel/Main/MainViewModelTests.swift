@@ -341,14 +341,27 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.route.case, .landing)
     }
     
-    func test_openCollateralLoanLanding() {
+    func test_shouldCallMakeCollateralLoanLandingViewModelOnOpenCollateralLoanLandingProductEvent() throws {
         
-        let (sut, _) = makeSUT()
+        let showcaseSpy = ShowcaseSpy(stubs: [makeCollateralLoanLandingViewModel()])
+        let (sut, _) = makeSUT(showcaseSpy: showcaseSpy, scheduler: .immediate)
+        XCTAssertEqual(showcaseSpy.callCount, 0)
+        
+        try sut.tapOpenCollateralLoanLandingButton()
+
+        XCTAssertEqual(showcaseSpy.callCount, 1)
+    }
+    
+    func test_shouldSetDestinationOnOpenCollateralLoanLandingProductEvent() throws {
+        
+        let showcase = makeCollateralLoanLandingViewModel()
+        let showcaseSpy = ShowcaseSpy(stubs: [showcase])
+        let (sut, _) = makeSUT(showcaseSpy: showcaseSpy, scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.tapOpenCollateralLoanLandingButton()
+        try sut.tapOpenCollateralLoanLandingButton()
 
-        XCTAssertNotNil(sut.getShowcaseDomainViewModel)
+        try XCTAssert(XCTUnwrap(sut.getShowcaseDomainViewModel) === showcase)
     }
     
     func test_productsSection_tapOpenSticker_shouldSetRouteToLanding() {
@@ -715,12 +728,14 @@ final class MainViewModelTests: XCTestCase {
     // MARK: - Helpers
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
+    private typealias ShowcaseSpy = CallSpy<Void, GetShowcaseDomain.ViewModel>
     
     private func makeSUT(
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
         buttons: [NewProductButton.ViewModel] = [],
+        showcaseSpy: ShowcaseSpy = .init(),
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         file: StaticString = #file,
         line: UInt = #line
@@ -748,7 +763,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingViewModel: showcaseSpy.call,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -1201,6 +1216,7 @@ private extension MainViewModel.Route {
             return .productProfile
         case .templates:
             return .templates
+            
         default:
             return .other
         }
@@ -1260,11 +1276,21 @@ private extension MainViewModel.Modal {
 
 private extension MainViewModel {
     
-    func tapOpenCollateralLoanLandingButton() {
+    func tapOpenCollateralLoanLandingButton(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let section = sections.compactMap {
+            
+            $0 as? MainSectionOpenProductView.ViewModel
+        }.first
+        
+        let openProductSection = try XCTUnwrap(section, file: file, line: line)
 
         let openCollateralLoanLandingAction =
-            OpenNewProductsViewModelAction.Tapped.CollateralLoanLanding()
-        action.send(openCollateralLoanLandingAction)
+        MainSectionViewModelAction.OpenProduct.OpenCollateralLoanLanding()
+        openProductSection.action.send(openCollateralLoanLandingAction)
     }
 }
 

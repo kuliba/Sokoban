@@ -498,8 +498,9 @@ private extension MainViewModel {
                 openProductSection.action
                     .receive(on: scheduler)
                     .sink { [weak self] action in
+                        
                         guard let self else { return }
-
+                        
                         switch action {
                         case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
                             
@@ -523,18 +524,17 @@ private extension MainViewModel {
                                 
                             default:
                                 //MARK: Action for Sticker Product
-                                
                                 handleLandingAction(.sticker)
                             }
                             
-                        case _ as MainSectionViewModelAction.OpenProduct.openCollateralLoanLanding:
+                        case _ as MainSectionViewModelAction.OpenProduct.OpenCollateralLoanLanding:
                             openCollateralLoanLanding()
                             
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
             case let fastPayment as MainSectionFastOperationView.ViewModel:
                 fastPayment.action
