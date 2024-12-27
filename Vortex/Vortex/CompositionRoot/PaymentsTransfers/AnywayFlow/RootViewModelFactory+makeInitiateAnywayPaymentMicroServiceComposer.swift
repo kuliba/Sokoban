@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentBackend
+import AnywayPaymentDomain
 import GenericRemoteService
 import RemoteServices
 
@@ -16,9 +17,17 @@ extension RootViewModelFactory {
     ) -> InitiateAnywayPaymentMicroServiceComposer {
         
         return .init(
-            getOutlineProduct: { _ in self.model.outlineProduct() },
+            getOutlineProduct: getOutlineProduct(source:),
             processPayload: initiateAnywayPayment(output:completion:)
         )
+    }
+    
+    @inlinable
+    func getOutlineProduct(
+        source: AnywayPaymentSourceParser.Source
+    ) -> AnywayPaymentOutline.Product? {
+        
+        return model.outlineProduct()
     }
     
     typealias CreateAnywayTransferResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
