@@ -343,7 +343,8 @@ final class MainViewModelTests: XCTestCase {
     
     func test_shouldCallMakeCollateralLoanLandingViewModelOnOpenCollateralLoanLandingProductEvent() throws {
         
-        let showcaseSpy = ShowcaseSpy(stubs: [makeCollateralLoanLandingViewModel()])
+        let showcase = makeCollateralLoanLandingViewModel()
+        let showcaseSpy = ShowcaseSpy(stubs: .init(repeating: showcase, count: 100))
         let (sut, _) = makeSUT(showcaseSpy: showcaseSpy, scheduler: .immediate)
         XCTAssertEqual(showcaseSpy.callCount, 0)
         
@@ -355,7 +356,7 @@ final class MainViewModelTests: XCTestCase {
     func test_shouldSetDestinationOnOpenCollateralLoanLandingProductEvent() throws {
         
         let showcase = makeCollateralLoanLandingViewModel()
-        let showcaseSpy = ShowcaseSpy(stubs: [showcase])
+        let showcaseSpy = ShowcaseSpy(stubs: .init(repeating: showcase, count: 100))
         let (sut, _) = makeSUT(showcaseSpy: showcaseSpy, scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
