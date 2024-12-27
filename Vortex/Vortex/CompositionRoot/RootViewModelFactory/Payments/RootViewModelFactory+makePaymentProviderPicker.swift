@@ -252,7 +252,8 @@ extension RootViewModelFactory {
                     notify(.select(.goToPayments))
                 }
             },
-            completion: completion)
+            completion: completion
+        )
     }
     
     @inlinable
@@ -261,7 +262,12 @@ extension RootViewModelFactory {
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
-        processSelection(select: select) {
+        processSelection(select: select) { [weak self] in
+            
+            guard let self else {
+                
+                return completion(.payment(.failure(.serviceFailure(.connectivityError))))
+            }
             
             switch $0 {
             case let .failure(failure):
@@ -285,7 +291,7 @@ extension RootViewModelFactory {
                     completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
                     
                 case let .startPayment(transaction):
-                    completion(self.makeCompletion(
+                    completion(makeCompletion(
                         transaction: transaction,
                         notify: notify
                     ))
@@ -299,9 +305,9 @@ extension RootViewModelFactory {
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void
     ) -> (PaymentProviderPickerDomain.Navigation) {
         
-        let anywayFlowComposer = makeAnywayFlowComposer()
-        let flowModel = anywayFlowComposer.compose(transaction: transaction)
-        let cancellable = flowModel.$state.compactMap(\.outside)
+        let flowModel = makeAnywayFlowModel(transaction: transaction)
+        let cancellable = flowModel.$state
+            .compactMap(\.outside)
             .sink { notify($0) }
         
         return .payment(.success(

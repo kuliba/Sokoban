@@ -21,15 +21,15 @@ extension RootViewModelFactory {
             guard let self, let categoryType
             else { return completion(nil) }
             
-            let anywayFlowComposer = makeAnywayFlowComposer()
-            
             processSelection(
                 select: (.lastPayment(lastPayment), categoryType)
-            ) {
-                guard case let .success(.startPayment(transaction)) = $0
+            ) { [weak self] in
+                
+                guard let self,
+                      case let .success(.startPayment(transaction)) = $0
                 else { return completion(nil) }
                 
-                let flowModel = anywayFlowComposer.compose(transaction: transaction)
+                let flowModel = makeAnywayFlowModel(transaction: transaction)
                 let cancellable = flowModel.$state.compactMap(\.outside)
                     .sink { notify($0) }
                 
