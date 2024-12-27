@@ -31,16 +31,15 @@ extension RootViewModelFactory {
     private func loadCollateralLoanLanding(
         completion: @escaping(GetShowcaseDomain.Result) -> Void
     ) {
+        // TODO: Fix error case
+        //      return completion(.init(result: .failure(NSError(domain: "Showcase error", code: -1))))
+        //      return completion(.init(result: .success(.init(serial: "", products: []))))
         
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:)
         )
-
-        // TODO: Fix error case
-//      return completion(.init(result: .failure(NSError(domain: "Showcase error", code: -1))))
-//      return completion(.init(result: .success(.init(serial: "", products: []))))
-
+        
         load(nil) { [load] in
             
             completion(.init(result: $0))
@@ -57,7 +56,8 @@ private extension GetShowcaseDomain.Result {
     }
 }
 
-// MARK: Adapater
+// MARK: Adapter
+
 private extension RemoteServices.ResponseMapper.GetShowcaseData.Product {
     
     var product: CollateralLoanLandingGetShowcaseData.Product {
