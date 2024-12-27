@@ -279,7 +279,7 @@ private extension AnywayPaymentOutline.Payload {
     }
 }
 
-private extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure where Operator == UtilityPaymentProvider{
+private extension InitiateAnywayPaymentDomain.Failure where Operator == UtilityPaymentProvider {
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure

@@ -1,0 +1,37 @@
+//
+//  InitiateAnywayPaymentDomain.swift
+//  Vortex
+//
+//  Created by Igor Malyarov on 27.12.2024.
+//
+
+import VortexTools
+
+enum InitiateAnywayPaymentDomain<Latest, Operator, Service> {
+    
+    enum Select {
+        
+        case lastPayment(Latest)
+        case `operator`(Operator)
+        case oneOf(Service, for: Operator)
+        case singleService(Service, for: Operator)
+    }
+    
+    typealias Result = Swift.Result<Success, Failure>
+    
+    enum Success {
+        
+        case services(MultiElementArray<Service>, for: Operator)
+        case startPayment(AnywayTransactionState.Transaction)
+    }
+    
+    enum Failure: Error {
+        
+        case operatorFailure(Operator)
+        case serviceFailure(ServiceFailureAlert.ServiceFailure)
+    }
+}
+
+extension InitiateAnywayPaymentDomain.Select: Equatable where Latest: Equatable, Operator: Equatable, Service: Equatable {}
+extension InitiateAnywayPaymentDomain.Success: Equatable where Operator: Equatable, Service: Equatable {}
+extension InitiateAnywayPaymentDomain.Failure: Equatable where Operator: Equatable {}

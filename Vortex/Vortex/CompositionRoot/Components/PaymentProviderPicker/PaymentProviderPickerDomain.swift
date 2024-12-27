@@ -43,7 +43,7 @@ extension PaymentProviderPickerDomain {
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void
     
-    typealias _ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.ProcessSelectionResult
+    typealias _ProcessSelectionResult = InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.Result
     
     typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
     
