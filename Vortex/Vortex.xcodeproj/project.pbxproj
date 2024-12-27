@@ -3171,6 +3171,7 @@
 		D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60972B98A24E00909F43 /* StickerView.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
 		EC0575E32CFDA55E00A2D677 /* AlertManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0575E22CFDA55E00A2D677 /* AlertManagerSpy.swift */; };
+		EC4374C82D1D7700009FB5B1 /* SplashScreenFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */; };
 		EC554A402CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */; };
 		EC554A422CC92919002A8C3A /* RootViewModelFactory+logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */; };
 		EC554A442CC9291E002A8C3A /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */; };
@@ -6684,6 +6685,7 @@
 		D4BD60912B97DF5500909F43 /* NewProductButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductButton.swift; sourceTree = "<group>"; };
 		D4BD60972B98A24E00909F43 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		EC0575E22CFDA55E00A2D677 /* AlertManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManagerSpy.swift; sourceTree = "<group>"; };
+		EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenFlag.swift; sourceTree = "<group>"; };
 		EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeBannersBinder.swift"; sourceTree = "<group>"; };
 		EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logging.swift"; sourceTree = "<group>"; };
 		EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Load.swift"; sourceTree = "<group>"; };
@@ -10255,6 +10257,7 @@
 				2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */,
 				A7ECFEC22CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift */,
 				8307B3B32CD67A1C00484132 /* SavingsAccountFlag.swift */,
+				EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */,
 			);
 			path = Flags;
 			sourceTree = "<group>";
@@ -21294,6 +21297,7 @@
 				2A438C3C2C57674E002FC79F /* LabelWithIcon.swift in Sources */,
 				779CF7AF2A6EA2A500011812 /* EncryptionLocalAgent.swift in Sources */,
 				2A3BD61A2B6D254A009B16F7 /* RequestFactory+createCreateFastPaymentContractRequest.swift in Sources */,
+				EC4374C82D1D7700009FB5B1 /* SplashScreenFlag.swift in Sources */,
 				0C5D7DA02983294600BC0CCF /* NetworkMonitorAgentMock.swift in Sources */,
 				774CA5DC28789E6E00544C17 /* LegacyKeychainAgent.swift in Sources */,
 				2A4300852C521835002FF8C7 /* ServicePaymentBinder.swift in Sources */,

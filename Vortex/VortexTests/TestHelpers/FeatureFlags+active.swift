@@ -16,7 +16,8 @@ extension FeatureFlags {
         historyFilterFlag: HistoryFilterFlag = true,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
         savingsAccountFlag: SavingsAccountFlag = .active,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag = .active
+        collateralLoanLandingFlag: CollateralLoanLandingFlag = .active,
+        splashScreenFlag: SplashScreenFlag = .inactive
     ) -> Self {
         
         return .init(
@@ -24,7 +25,8 @@ extension FeatureFlags {
             historyFilterFlag: historyFilterFlag,
             paymentsTransfersFlag: paymentsTransfersFlag,
             savingsAccountFlag: savingsAccountFlag,
-            collateralLoanLandingFlag: collateralLoanLandingFlag
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
+            splashScreenFlag: splashScreenFlag
         )
     }
 }

@@ -56,6 +56,16 @@
 			<key>Key</key>
 			<string>collateralLoanLanding</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Title</key>
+			<string>Заставка</string>
+			<key>Key</key>
+			<string>splashScreen</string>
+		</dict>
 	</array>
 </dict>
 </plist>
