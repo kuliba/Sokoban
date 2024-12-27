@@ -48,29 +48,21 @@ extension RootViewModelFactory {
         for category: ServiceCategory
     ) -> StandardNanoServices {
         
-        let getLatestPayments = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
-            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
-        )
-        
         return .init(
-            loadLatest: { completion in
+            loadLatest: { [weak self] in
                 
-                getLatestPayments(
-                    [category.latestPaymentsCategory].compactMap { $0 }
-                ) {
-                    completion($0)
-                    _ = getLatestPayments
-                }
+                self?.loadLatestPayments(for: category, completion: $0)
             },
-            loadOperators: {
+            loadOperators: { [weak self] in
                 
-                self.loadOperatorsForCategory(category: category, completion: $0)
+                self?.loadOperatorsForCategory(category: category, completion: $0)
             },
             makeFailure: { $0(.init()) },
-            makeSuccess: { payload, completion in
+            makeSuccess: { [weak self] payload, completion in
                 
-                completion(self.makePaymentProviderPicker(payload: payload))
+                guard let self else { return }
+                
+                completion(makePaymentProviderPicker(payload: payload))
             }
         )
     }

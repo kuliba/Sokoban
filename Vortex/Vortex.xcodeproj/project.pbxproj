@@ -1650,6 +1650,7 @@
 		2AEDAD5A29A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5929A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift */; };
 		2AEEC24B2C9480B900EBDD65 /* OperatorsListBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */; };
 		2AEF006D2D1E95440027687E /* InitiateAnywayPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */; };
+		2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */; };
 		2AEF68582AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68572AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift */; };
 		2AEF685A2AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68592AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift */; };
 		2AEF685C2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF685B2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift */; };
@@ -5209,6 +5210,7 @@
 		2AEDAD5B29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAnywayTransferHelpersTests.swift; sourceTree = "<group>"; };
 		2AEEC24C2C9480E100EBDD65 /* OperatorsListBackendV0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OperatorsListBackendV0.xctestplan; sourceTree = "<group>"; };
 		2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentDomain.swift; sourceTree = "<group>"; };
+		2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadLatestPayments.swift"; sourceTree = "<group>"; };
 		2AEF68572AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapFormSessionKeyResponse.swift"; sourceTree = "<group>"; };
 		2AEF68592AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift"; sourceTree = "<group>"; };
 		2AEF685B2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapShowCVVResponse.swift"; sourceTree = "<group>"; };
@@ -9024,6 +9026,7 @@
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
 				2ADB21CF2CF8392700B37234 /* RootViewModelFactory+initiateStandardPaymentFlow.swift */,
 				2A366E672CFF966A006D1FB8 /* RootViewModelFactory+makePaymentProviderPicker.swift */,
+				2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */,
 				842C42382D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift */,
 				2A366E692CFF9906006D1FB8 /* RootViewModelFactory+makeSearch.swift */,
 				2A3B4F602CF3218D00076F05 /* RootViewModelFactory+makePaymentsNode.swift */,
@@ -21267,6 +21270,7 @@
 				774A8B4A2865FD3600B81140 /* MyProductsView.swift in Sources */,
 				2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */,
 				7709F12428EDDC22008B5EC4 /* Payments+Step.swift in Sources */,
+				2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */,
 				EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */,
 				842C42392D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,

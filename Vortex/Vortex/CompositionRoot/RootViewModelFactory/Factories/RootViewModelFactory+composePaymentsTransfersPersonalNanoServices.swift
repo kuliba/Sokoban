@@ -19,13 +19,7 @@ extension RootViewModelFactory {
         
         let makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: loadCategories,
-            getLatestPayments: { names, completion in
-                
-                getLatestPayments(names) {
-                    
-                    completion((try? $0.get()) ?? [])
-                }
-            }
+            getLatestPayments: loadLatestPayments
         )
         
         return .init(
