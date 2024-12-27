@@ -341,6 +341,16 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.route.case, .landing)
     }
     
+    func test_openCollateralLoanLanding() {
+        
+        let (sut, _) = makeSUT()
+        XCTAssertNil(sut.route.destination)
+        
+        sut.tapOpenCollateralLoanLandingButton()
+
+        XCTAssertNotNil(sut.getShowcaseDomainViewModel)
+    }
+    
     func test_productsSection_tapOpenSticker_shouldSetRouteToLanding() {
         
         let (sut, _) = makeSUT(scheduler: .immediate)
@@ -1135,7 +1145,18 @@ private extension MainViewModel {
             return nil
         }
     }
-    
+
+    var getShowcaseDomainViewModel: GetShowcaseDomain.ViewModel? {
+        
+        switch route.destination {
+        case let .collateralLoanLanding(viewModel):
+            return viewModel
+            
+        default:
+            return nil
+        }
+    }
+
     var currencyWalletSection: MainSectionCurrencyMetallView.ViewModel? {
         
         sections.compactMap {
@@ -1234,6 +1255,16 @@ private extension MainViewModel.Modal {
         case other
         case qrScanner
         case success
+    }
+}
+
+private extension MainViewModel {
+    
+    func tapOpenCollateralLoanLandingButton() {
+
+        let openCollateralLoanLandingAction =
+            OpenNewProductsViewModelAction.Tapped.CollateralLoanLanding()
+        action.send(openCollateralLoanLandingAction)
     }
 }
 
