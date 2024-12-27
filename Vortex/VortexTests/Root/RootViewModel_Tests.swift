@@ -8,6 +8,7 @@
 @testable import Vortex
 import PayHub
 import XCTest
+import CollateralLoanLandingGetShowcaseUI
 
 class RootViewModel_Tests: XCTestCase {
     
@@ -133,13 +134,13 @@ class RootViewModel_Tests: XCTestCase {
     }
     
     private func makeCollateralLoanLandingViewModel(
-        initialState: CollateralLoanLandingDomain.State = .init()
-    ) -> CollateralLoanLandingDomain.ViewModel {
+        initialState: GetShowcaseDomain.State = .init()
+    ) -> GetShowcaseDomain.ViewModel {
         
         .init(
             initialState: .init(),
-            reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
-            handleEffect: CollateralLoanLandingDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+            reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
+            handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
         )
     }
 }

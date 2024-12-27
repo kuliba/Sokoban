@@ -10,6 +10,7 @@ import CombineSchedulers
 import LandingUIComponent
 import SberQR
 import XCTest
+import CollateralLoanLandingGetShowcaseUI
 
 final class RootViewModelTests: XCTestCase {
     
@@ -703,13 +704,13 @@ final class RootViewModelTests: XCTestCase {
     }
     
     private func makeCollateralLoanLandingViewModel(
-        initialState: CollateralLoanLandingDomain.State = .init()
-    ) -> CollateralLoanLandingDomain.ViewModel {
+        initialState: GetShowcaseDomain.State = .init()
+    ) -> GetShowcaseDomain.ViewModel {
         
         .init(
             initialState: .init(),
-            reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
-            handleEffect: CollateralLoanLandingDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+            reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
+            handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
         )
     }
 }
