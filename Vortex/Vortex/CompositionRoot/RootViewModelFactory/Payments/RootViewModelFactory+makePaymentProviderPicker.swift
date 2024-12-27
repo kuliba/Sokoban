@@ -311,7 +311,7 @@ extension RootViewModelFactory {
             .sink { notify($0) }
         
         return .payment(.success(
-            .anywayPayment(.init(
+            .startPayment(.init(
                 model: flowModel,
                 cancellable: cancellable
             ))
@@ -355,6 +355,6 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref ?? "", type: type, additionalItems: [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type, additionalItems: [])
     }
 }

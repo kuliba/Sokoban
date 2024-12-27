@@ -42,7 +42,7 @@ extension UtilityPrepaymentFlowEvent {
     typealias Select = InitiateAnywayPaymentDomain.Select
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
     
-    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, AnywayTransactionState.Transaction>
 }
 
 extension UtilityPrepaymentFlowEvent.Initiated: Equatable where LastPayment: Equatable, Operator: Equatable {
@@ -73,7 +73,4 @@ extension UtilityPrepaymentFlowEvent.Initiated {
 }
 
 extension UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
-//extension UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
-//extension UtilityPrepaymentFlowEvent.ProcessSelectionSuccess: Equatable where Operator: Equatable, Service: Equatable {}
-//extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure: Equatable where Operator: Equatable {}
 extension UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}

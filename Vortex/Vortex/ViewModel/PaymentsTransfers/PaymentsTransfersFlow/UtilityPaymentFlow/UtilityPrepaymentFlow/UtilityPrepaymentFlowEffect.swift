@@ -23,5 +23,5 @@ extension UtilityPrepaymentFlowEffect {
     }
     
     typealias Select = Domain.Select
-    typealias Domain = InitiateAnywayPaymentDomain<LastPayment, Operator, Service>
+    typealias Domain = InitiateAnywayPaymentDomain<LastPayment, Operator, Service, AnywayTransactionState.Transaction>
 }
