@@ -105,7 +105,9 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             process(.init(digest: digest)) {
                 
                 // dump($0, name: "makeCreateAnywayTransferNew result")
-                completion($0.result) }
+                completion($0.result)
+                _ = process
+            }
         }
     }
     
