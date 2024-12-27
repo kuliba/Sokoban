@@ -82,7 +82,7 @@ private extension ResponseMapper._Latest._Service {
             paymentDate: paymentDate,
             paymentFlow: paymentFlow?.flow,
             puref: puref,
-            type: .init(type)
+            type: .init(type == "service" ? "housingAndCommunalService" : type)
         )
     }
 }
@@ -112,7 +112,7 @@ private extension ResponseMapper._Latest._WithPhone {
             paymentFlow: paymentFlow?.flow,
             phoneNumber: phoneNumber,
             puref: puref,
-            type: .init(type)
+            type: .init(type == "service" ? "housingAndCommunalService" : type)
         )
     }
 }
