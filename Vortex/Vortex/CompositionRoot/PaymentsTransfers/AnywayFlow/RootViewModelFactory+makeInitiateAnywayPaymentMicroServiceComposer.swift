@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentBackend
+import GenericRemoteService
 import RemoteServices
 
 extension RootViewModelFactory {
@@ -14,51 +15,62 @@ extension RootViewModelFactory {
     func makeInitiateAnywayPaymentMicroServiceComposer(
     ) -> InitiateAnywayPaymentMicroServiceComposer {
         
-        let initiatePayment = initiateAnywayPayment(puref:completion:)
-        
         return .init(
             getOutlineProduct: { _ in self.model.outlineProduct() },
-            processPayload: { payload, completion in
-                
-                initiatePayment(payload.outline.payload.puref) {
-                    
-                    switch $0 {
-                    case let .failure(serviceFailure):
-                        switch serviceFailure {
-                        case .connectivityError:
-                            completion(.failure(.connectivityError))
-                            
-                        case let .serverError(message):
-                            completion(.failure(.serverError(message)))
-                        }
-                        
-                    case let .success(response):
-                        completion(.success(response))
-                    }
-                }
-            }
+            processPayload: initiateAnywayPayment(output:completion:)
         )
     }
     
     typealias CreateAnywayTransferResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
-    typealias CreateAnywayTransferResult = Result<CreateAnywayTransferResponse, ServiceFailure>
+    typealias CreateAnywayTransferResult = Result<CreateAnywayTransferResponse, ServiceFailureAlert.ServiceFailure>
     
     @inlinable
     func initiateAnywayPayment(
-        puref: String,
+        output: AnywayPaymentSourceParser.Output,
         completion: @escaping (CreateAnywayTransferResult) -> Void
     ) {
         let createAnywayTransferNewV2 = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateAnywayTransferNewV2Request,
             mapResponse: RemoteServices.ResponseMapper.mapCreateAnywayTransferResponse,
-            mapError: ServiceFailure.init
+            mapError: ServiceFailureAlert.ServiceFailure.init
         )
         
-        createAnywayTransferNewV2(
-            .init(additional: [], check: true, puref: puref)
-        ) {
+        createAnywayTransferNewV2(.init(output: output)) {
+            
             completion($0)
             _ = createAnywayTransferNewV2
+        }
+    }
+}
+
+// MARK: - Adapters
+
+private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
+    
+    init(output: AnywayPaymentSourceParser.Output) {
+        
+        self.init(additional: [], check: true, puref: output.outline.payload.puref)
+    }
+}
+
+private extension ServiceFailureAlert.ServiceFailure {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
+    
+    init(_ error: RemoteError) {
+        
+        switch error {
+        case .createRequest, .performRequest:
+            self = .connectivityError
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .invalid:
+                self = .connectivityError
+                
+            case let .server(_, message):
+                self = .serverError(message)
+            }
         }
     }
 }
