@@ -83,7 +83,19 @@ private extension RootViewBinderComposer {
                     .map(\RootDomain.FlowDomain.State.navigation)
                     .eraseToAnyPublisher()
             },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
+            flowReceiving: { flow in {
+                
+                switch $0 {
+                case .dismiss:
+                    flow.event(.dismiss)
+                    
+                case let .isLoading(isLoading):
+                    flow.event(.isLoading(isLoading))
+                    
+                case let .select(select):
+                    flow.event(.select(select))
+                }
+            }}
         ))
         
         var bindings = bindings.union(bind(content, flow))

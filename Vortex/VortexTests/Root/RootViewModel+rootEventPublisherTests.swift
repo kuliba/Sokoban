@@ -31,14 +31,14 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         for index in sections.indices {
             
-            emit(.scanQR, from: sections[index])
+            emit(.select(.scanQR), from: sections[index])
             
             let value = spy.values[index]
-            XCTAssertNoDiff(value, .scanQR, "Expected `scanQR` RootEvent from \(sections[index]) at \(index), but got \(value) instead.")
+            XCTAssertNoDiff(value, .select(.scanQR), "Expected `scanQR` RootEvent from \(sections[index]) at \(index), but got \(value) instead.")
         }
         
         XCTAssertEqual(sections.count, 6)
-        XCTAssertNoDiff(spy.values, .init(repeating: .scanQR, count: 6), "Expected \(6) `scanQR` RootEvents, but got \(spy.values.count) instead.")
+        XCTAssertNoDiff(spy.values, .init(repeating: .select(.scanQR), count: 6), "Expected \(6) `scanQR` RootEvents, but got \(spy.values.count) instead.")
     }
     
     func test_shouldEmitScanQROnMainViewFastOperationSectionQRButtonAction() throws {
@@ -47,7 +47,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         try tapMainViewFastSectionQRButton(sut)
         
-        XCTAssertNoDiff(spy.values, [.scanQR])
+        XCTAssertNoDiff(spy.values, [.select(.scanQR)])
     }
     
     func test_shouldEmitScanQROnLegacyPaymentsTransfersPaymentsSectionQRButtonAction() throws {
@@ -56,7 +56,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         try tapLegacyPaymentsSectionQRButton(sut)
         
-        XCTAssertNoDiff(spy.values, [.scanQR])
+        XCTAssertNoDiff(spy.values, [.select(.scanQR)])
     }
     
     // MARK: - templates
@@ -67,7 +67,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         try tapMainViewFastSectionTemplatesButton(sut)
         
-        XCTAssertNoDiff(spy.values, [.templates])
+        XCTAssertNoDiff(spy.values, [.select(.templates)])
     }
     
     func test_shouldEmitTemplatesOnOperationPickerSelectTemplates() throws {
@@ -76,7 +76,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         try sut.operationPickerContentSelect(.templates)
         
-        XCTAssertNoDiff(spy.values, [.templates])
+        XCTAssertNoDiff(spy.values, [.select(.templates)])
     }
     
     // MARK: - userAccount
@@ -87,7 +87,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         sut.paymentsTransfersCorporateSelect(.userAccount)
         
-        XCTAssertNoDiff(spy.values, [.userAccount])
+        XCTAssertNoDiff(spy.values, [.select(.userAccount)])
     }
     
     func test_shouldEmitUserAccountOnPaymentsTransfersPersonalUserAccountSelect() throws {
@@ -96,7 +96,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         
         sut.paymentsTransfersPersonalSelect(.userAccount)
         
-        XCTAssertNoDiff(spy.values, [.userAccount])
+        XCTAssertNoDiff(spy.values, [.select(.userAccount)])
     }
     
     // MARK: - Helpers
