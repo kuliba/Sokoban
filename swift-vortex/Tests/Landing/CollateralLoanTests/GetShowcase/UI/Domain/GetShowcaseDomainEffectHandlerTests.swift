@@ -18,8 +18,10 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
         
         XCTAssertEqual(spy.receivedEvents, [])
     }
+
+    // TODO: - add test for load call
     
-    func test_handleEffect_shouldLoadithLoadEvent() {
+    func test_handleEffect_shouldDeliverFailureOnLoadFailure() {
         
         let (sut, _, loadSpy) = makeSUT()
         
@@ -33,6 +35,8 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
             }
         )
     }
+    
+    // TODO: - add test for load success
     
     // MARK: - Helpers
     
