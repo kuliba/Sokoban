@@ -11,19 +11,15 @@ import Combine
 
 final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
     
-    func test_init_shouldNotCallEvent() {
+    func test_init_shouldNotCallLoadOnInit() {
         
-        let (sut, spy, _) = makeSUT()
-        sut.handleEffect(.load, dispatch: { _ in })
-        
-        XCTAssertEqual(spy.receivedEvents, [])
+        let (_, loadSpy) = makeSUT()
+        XCTAssert(loadSpy.callCount == 0)
     }
 
-    // TODO: - add test for load call
-    
     func test_handleEffect_shouldDeliverFailureOnLoadFailure() {
         
-        let (sut, _, loadSpy) = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
         expect(
             sut,
@@ -35,54 +31,74 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
             }
         )
     }
-    
-    // TODO: - add test for load success
+
+    func test_handleEffect_shouldDeliverSuccessOnLoadSuccess() {
+        
+        let (sut, loadSpy) = makeSUT()
+        
+        expect(
+            sut,
+            with: .load,
+            toDeliver: .loaded(.success(.stub)),
+            on: {
+                
+                loadSpy.complete(with: .success(.stub))
+            }
+        )
+    }
+
+    func test_handleEffect_shouldCallLoadOnLoadEffect() {
+        
+        let (sut, loadSpy) = makeSUT()
+        
+        sut.handleEffect(.load) { _ in }
+        
+        XCTAssertEqual(loadSpy.callCount, 1)
+
+    }
     
     // MARK: - Helpers
     
     private typealias SUT = GetShowcaseDomain.EffectHandler
-    private typealias Event = GetShowcaseDomain.Event
-    private typealias Dispatch = (Event) -> Void
     private typealias Load = (@escaping Completion) -> Void
     private typealias Completion = (GetShowcaseDomain.Result) -> Void
-    private typealias LoadSpy = SpyDispatch<Void, GetShowcaseDomain.Result>
+    private typealias LoadSpy = Spy<Void, GetShowcaseDomain.Result>
     
     private func makeSUT() -> (
         sut: SUT,
-        spy: Spy,
         loadSpy: LoadSpy
     ) {
-        let spy = Spy()
         let loadSpy = LoadSpy()
         let sut = SUT(load: loadSpy.process(completion:))
 
-        return (sut, spy, loadSpy)
+        return (sut, loadSpy)
     }
     
-    private struct State: Equatable {
+    func expect(
+        _ sut: GetShowcaseDomain.EffectHandler,
+        with effect: GetShowcaseDomain.Effect,
+        toDeliver expectedEvent: GetShowcaseDomain.Event,
+        on action: @escaping () -> Void,
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
         
-        let value: String
-    }
-    
-    private final class Spy {
+        let exp = expectation(description: "wait for completion")
         
-        private let subject = PassthroughSubject<State, Never>()
-        
-        private(set) var receivedEvents = [Event]()
-        
-        var statePublisher: AnyPublisher<State, Never> {
+        sut.handleEffect(effect) { receivedEvent in
             
-            subject.eraseToAnyPublisher()
+            XCTAssertNoDiff(
+                receivedEvent,
+                expectedEvent,
+                "\nExpected \(expectedEvent), but got \(receivedEvent) instead.",
+                file: file, line: line
+            )
+            exp.fulfill()
         }
         
-        func event(_ event: Event) {
-            
-            self.receivedEvents.append(event)
-        }
+        action()
         
-        func send(_ state: State) {
-            
-            subject.send(state)
-        }
+        wait(for: [exp], timeout: timeout)
     }
 }
