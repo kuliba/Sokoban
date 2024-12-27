@@ -360,6 +360,8 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNil(sut.route.destination)
         
         try sut.tapOpenCollateralLoanLandingButton()
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
         try XCTAssert(XCTUnwrap(sut.getShowcaseDomainViewModel) === showcase)
     }
