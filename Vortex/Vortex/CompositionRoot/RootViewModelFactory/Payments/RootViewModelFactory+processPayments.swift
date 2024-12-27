@@ -19,7 +19,11 @@ extension RootViewModelFactory {
         getServiceCategoryType(ofType: lastPayment.type) { [weak self] categoryType in
             
             guard let self, let categoryType
-            else { return completion(nil) }
+            else {
+            
+                self?.errorLog(category: .cache, message: "Can't find categoryType for \"\(lastPayment.type)\"")
+                return completion(nil)
+            }
             
             processSelection(
                 select: (.lastPayment(lastPayment), categoryType)
