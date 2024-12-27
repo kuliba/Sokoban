@@ -9,6 +9,8 @@
 import PayHub
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
+import UIPrimitives
+import Combine
 
 class RootViewModel_Tests: XCTestCase {
     
@@ -54,6 +56,12 @@ class RootViewModel_Tests: XCTestCase {
                     sections: makeSections(),
                     bannersBinder: .preview,
                     makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
+                        .init(
+                            makeIconView: { _ in self.previewAsyncImage },
+                            makeImageView: { _ in self.previewAsyncImage }
+                        )
+                    },
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,
@@ -143,6 +151,15 @@ class RootViewModel_Tests: XCTestCase {
             handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
         )
     }
+    
+    // MARK: Helpers
+    
+    private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Just(.init(systemName: "house"))
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    )}
 }
 
 // MARK: - DSL

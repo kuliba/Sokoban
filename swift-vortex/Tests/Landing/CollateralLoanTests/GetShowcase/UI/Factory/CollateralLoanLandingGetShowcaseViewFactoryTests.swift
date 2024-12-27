@@ -7,6 +7,8 @@
 
 import XCTest
 import SwiftUI
+import UIPrimitives
+import Combine
 
 @testable import CollateralLoanLandingGetShowcaseUI
 
@@ -121,8 +123,18 @@ final class CollateralLoanLandingGetShowcaseViewFactoryTests: XCTestCase {
     private typealias ModelTheme = CollateralLoanLandingGetShowcaseData.Product.Theme
     
     private func makeSUT() -> SUT {
-        .init()
+        .init(
+            makeIconView: { _ in self.previewAsyncImage },
+            makeImageView: { _ in self.previewAsyncImage }
+        )
     }
+    
+    var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Just(.init(systemName: "house"))
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    )}
 }
 
 extension CollateralLoanLandingGetShowcaseData {

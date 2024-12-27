@@ -11,6 +11,8 @@ import LandingUIComponent
 import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
+import UIPrimitives
+import Combine
 
 final class RootViewModelTests: XCTestCase {
     
@@ -472,6 +474,7 @@ final class RootViewModelTests: XCTestCase {
         let infoDictionary: [String : Any]? = appVersion.map {
             ["CFBundleShortVersionString": $0]
         }
+        
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
             stickerViewFactory: .preview,
@@ -492,8 +495,13 @@ final class RootViewModelTests: XCTestCase {
                     sections: [],
                     bannersBinder: .preview,
                     makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-                    makeOpenNewProductButtons: { _ in [] },
-                    scheduler: .immediate
+                    makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
+                        .init(
+                            makeIconView: { _ in self.previewAsyncImage },
+                            makeImageView: { _ in self.previewAsyncImage }
+                        )
+                    },
+                    makeOpenNewProductButtons: { _ in [] }, scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(
                     model: model,
@@ -570,6 +578,12 @@ final class RootViewModelTests: XCTestCase {
                     sections: makeSections(),
                     bannersBinder: .immediate,
                     makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
+                        .init(
+                            makeIconView: { _ in self.previewAsyncImage },
+                            makeImageView: { _ in self.previewAsyncImage }
+                        )
+                    },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -713,6 +727,15 @@ final class RootViewModelTests: XCTestCase {
             handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
         )
     }
+    
+    // MARK: Helpers
+    
+    var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Just(.init(systemName: "house"))
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    )}
 }
 
 // MARK: - DSL
