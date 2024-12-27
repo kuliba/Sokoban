@@ -12,7 +12,8 @@ extension CollateralLoanLandingGetShowcaseViewFactory {
 
             .init(
                 url: model.image,
-                config: config
+                config: config, 
+                makeImageView: makeImageView
             )
     }
 }

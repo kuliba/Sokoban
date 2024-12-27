@@ -150,6 +150,6 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
         termsView: .init(height: 24),
         bulletsView: .init(itemSpacing: 4, height: 84),
         imageView: .init(height: 236, сornerRadius: 12),
-        footerView: .init(height: 48, topPadding: 12)
+        footerView: .init(height: 48, topPadding: 24)
     )
 }

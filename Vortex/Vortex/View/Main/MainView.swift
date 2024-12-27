@@ -266,8 +266,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        case let .collateralLoanLanding(viewModel):
-            CollateralLoanLandingView(viewModel: viewModel)
+        case let .collateralLoanLanding(viewModel, factory):
+            CollateralLoanLandingView(viewModel: viewModel, factory: factory)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
@@ -581,6 +581,13 @@ extension ProductProfileViewModel  {
 
 extension MainViewModel {
     
+    static private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Just(.init(systemName: "house"))
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    )}
+    
     static let sample = MainViewModel(
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
@@ -600,6 +607,12 @@ extension MainViewModel {
                 initialState: .init(),
                 reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
                 handleEffect: { _,_ in }
+            )
+        },
+        makeCollateralLoanLandingGetShowcaseFactory: {
+            .init(
+                makeIconView: { _ in previewAsyncImage },
+                makeImageView: { _ in previewAsyncImage }
             )
         },
         makeOpenNewProductButtons: { _ in [] }

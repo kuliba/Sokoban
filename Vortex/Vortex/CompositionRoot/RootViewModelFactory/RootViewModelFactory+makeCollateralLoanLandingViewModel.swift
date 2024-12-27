@@ -10,6 +10,7 @@ import CollateralLoanLandingGetShowcaseUI
 import RemoteServices
 import RxViewModel
 import Foundation
+import UIPrimitives
 
 extension RootViewModelFactory {
     
@@ -25,6 +26,17 @@ extension RootViewModelFactory {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
+        )
+    }
+    
+    func makeCollateralLoanLandingGetShowcaseFactory() -> CollateralLoanLandingGetShowcaseViewFactory {
+        
+        let imageCache = model.imageCache()
+        let generalImageCache = model.generalImageCache()
+
+        return .init(
+            makeIconView: imageCache.makeIconView(for:),
+            makeImageView: generalImageCache.makeIconView(for:)
         )
     }
     

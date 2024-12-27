@@ -9,12 +9,12 @@ import SwiftUI
 
 public struct CollateralLoanLandingGetShowcaseView: View {
     
-    public let data: CollateralLoanLandingGetShowcaseData
-    
-    private let factory = Factory()
-    
-    public init(data: CollateralLoanLandingGetShowcaseData) {
+    private let data: CollateralLoanLandingGetShowcaseData
+    private let factory: Factory
+
+    public init(data: Data, factory: Factory) {
         self.data = data
+        self.factory = factory
     }
     
     public var body: some View {
@@ -30,6 +30,6 @@ public struct CollateralLoanLandingGetShowcaseView: View {
 
 extension CollateralLoanLandingGetShowcaseView {
     
-    typealias Data = CollateralLoanLandingGetShowcaseData
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    public typealias Data = CollateralLoanLandingGetShowcaseData
+    public typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

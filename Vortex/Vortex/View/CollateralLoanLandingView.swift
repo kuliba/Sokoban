@@ -12,6 +12,7 @@ import RxViewModel
 struct CollateralLoanLandingView: View {
     
     let viewModel: GetShowcaseDomain.ViewModel
+    let factory: CollateralLoanLandingGetShowcaseViewFactory
     
     var body: some View {
     
@@ -29,7 +30,7 @@ struct CollateralLoanLandingView: View {
                 SpinnerView(viewModel: .init())
                 
             case let .some(showcase):
-                CollateralLoanLandingGetShowcaseView(data: showcase)
+                CollateralLoanLandingGetShowcaseView(data: showcase, factory: factory)
             }
         }
         .onFirstAppear { event(.load) }

@@ -762,6 +762,7 @@ private extension RootViewModelFactory {
             sections: sections,
             bannersBinder: bannersBinder,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingGetShowcaseFactory: makeCollateralLoanLandingGetShowcaseFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
