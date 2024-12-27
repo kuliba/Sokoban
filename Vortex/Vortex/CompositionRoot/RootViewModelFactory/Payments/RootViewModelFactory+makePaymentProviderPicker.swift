@@ -54,9 +54,14 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            loadLatest: {
+            loadLatest: { completion in
                 
-                getLatestPayments([category.latestPaymentsCategory].compactMap { $0 }, $0)
+                getLatestPayments(
+                    [category.latestPaymentsCategory].compactMap { $0 }
+                ) {
+                    completion($0)
+                    _ = getLatestPayments
+                }
             },
             loadOperators: {
                 
