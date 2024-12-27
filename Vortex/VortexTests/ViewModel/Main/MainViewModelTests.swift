@@ -922,8 +922,7 @@ final class MainViewModelTests: XCTestCase {
         return (sut, model)
     }
     
-    private func makeCollateralLoanLandingViewModel(
-    ) -> GetShowcaseDomain.ViewModel {
+    private func makeCollateralLoanLandingViewModel() -> GetShowcaseDomain.ViewModel {
         
         .init(
             initialState: .init(),

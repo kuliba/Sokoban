@@ -133,8 +133,7 @@ class RootViewModel_Tests: XCTestCase {
         try sut.tapLegacyPaymentsSectionQRButton()
     }
     
-    private func makeCollateralLoanLandingViewModel(
-    ) -> GetShowcaseDomain.ViewModel {
+    private func makeCollateralLoanLandingViewModel() -> GetShowcaseDomain.ViewModel {
         
         .init(
             initialState: .init(),
