@@ -6,6 +6,7 @@
 //
 
 import Combine
+import PayHub
 import PayHubUI
 import XCTest
 
@@ -135,7 +136,7 @@ final class RootViewBinderComposerTests: XCTestCase {
             schedulers: .immediate,
             witnesses: .init(
                 content: .init(
-                    emitting: { $0.selectPublisher },
+                    emitting: { $0.publisher },
                     dismissing: { $0.dismiss }
                 ),
                 dismiss: .init(
@@ -160,17 +161,19 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private final class RootViewModel {
         
-        private let selectSubject = PassthroughSubject<Select, Never>()
+        typealias NotifyEvent = PayHub.FlowEvent<Select, Never>
+        
+        private let selectSubject = PassthroughSubject<NotifyEvent, Never>()
         private(set) var dismissCount = 0
         
-        var selectPublisher: AnyPublisher<Select, Never> {
+        var publisher: AnyPublisher<NotifyEvent, Never> {
             
             selectSubject.eraseToAnyPublisher()
         }
         
         func emit(_ select: Select) {
             
-            selectSubject.send(select)
+            selectSubject.send(.select(select))
         }
         
         func dismiss() {

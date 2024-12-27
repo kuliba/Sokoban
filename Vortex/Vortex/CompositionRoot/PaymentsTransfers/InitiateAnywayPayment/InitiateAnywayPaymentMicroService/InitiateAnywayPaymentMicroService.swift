@@ -57,7 +57,8 @@ extension InitiateAnywayPaymentMicroService {
                 completion(.failure(serviceFailure))
                 
             case let .success(response):
-                guard let transaction = initiateTransaction(payload, response) else {
+                guard let transaction = initiateTransaction(payload, response) 
+                else {
                     
                     return completion(.failure(.connectivityError))
                 }
