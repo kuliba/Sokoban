@@ -6,6 +6,7 @@
 //
 
 @testable import Vortex
+import LatestPaymentsBackendV3
 import RemoteServices
 import XCTest
 
@@ -16,7 +17,7 @@ extension XCTestCase {
         amount: Decimal? = nil,
         currency: String? = nil,
         date: Int = .random(in: 1...1_000),
-        detail: RemoteServices.ResponseMapper.LatestPayment.PaymentOperationDetailType? = nil,
+        detail: RemoteServices.ResponseMapper.LatestPayment.PaymentOperationDetailType = .account2Card,
         inn: String? = nil,
         lpName: String? = nil,
         md5Hash: String? = nil,

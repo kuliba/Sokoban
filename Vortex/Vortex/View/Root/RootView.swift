@@ -350,10 +350,10 @@ extension Latest {
         
         switch self {
         case let .service(service):
-            return service.type
+            return service.type.rawValue
             
         case let .withPhone(withPhone):
-            return withPhone.type
+            return withPhone.type.rawValue
         }
     }
 }
