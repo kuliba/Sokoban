@@ -3182,7 +3182,6 @@
 		EC9711252CC6457D00C4537D /* ClientInformZoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */; };
 		EC9711292CC6471800C4537D /* ClientInformListDataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711282CC6471800C4537D /* ClientInformListDataState.swift */; };
 		ECA4BD102CF775F300896CDC /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA4BD0F2CF775F300896CDC /* AlertManager.swift */; };
-		ECCA5B482CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCA5B342CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift */; };
 		ECCA5B492CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeServiceCategoryRemoteLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCA5B352CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeServiceCategoryRemoteLoad.swift */; };
 		ECCA5B4A2CFDFC250034A64A /* BatchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCA5B372CFDFC250034A64A /* BatchService.swift */; };
 		ECCA5B4B2CFDFC250034A64A /* ErasedRemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCA5B382CFDFC250034A64A /* ErasedRemoteNanoServiceFactory.swift */; };
@@ -6698,7 +6697,6 @@
 		EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformZoneData.swift; sourceTree = "<group>"; };
 		EC9711282CC6471800C4537D /* ClientInformListDataState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformListDataState.swift; sourceTree = "<group>"; };
 		ECA4BD0F2CF775F300896CDC /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
-		ECCA5B342CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift"; sourceTree = "<group>"; };
 		ECCA5B352CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeServiceCategoryRemoteLoad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+composeServiceCategoryRemoteLoad.swift"; sourceTree = "<group>"; };
 		ECCA5B372CFDFC250034A64A /* BatchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatchService.swift; sourceTree = "<group>"; };
 		ECCA5B382CFDFC250034A64A /* ErasedRemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErasedRemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
@@ -16615,7 +16613,6 @@
 		ECCA5B362CFDFC250034A64A /* LoggingRemoteNanoServiceComposer */ = {
 			isa = PBXGroup;
 			children = (
-				ECCA5B342CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift */,
 				ECCA5B352CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeServiceCategoryRemoteLoad.swift */,
 			);
 			path = LoggingRemoteNanoServiceComposer;
@@ -21421,7 +21418,6 @@
 				2AB5EBF82D19344800D32B4E /* PaymentType.swift in Sources */,
 				2AF9ACDC2AE6AFEB00AAB1DB /* Loader.swift in Sources */,
 				774A3E4529264A980011D952 /* Model+Payments.swift in Sources */,
-				ECCA5B482CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift in Sources */,
 				2AA3A9442BFF8C3600AEBCC9 /* AnywayPaymentElementView.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				833D3E3A2C2EDE31006626F2 /* ControlPanelEvent.swift in Sources */,

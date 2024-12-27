@@ -15,8 +15,6 @@ extension RootViewModelFactory {
         
         let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
 
-        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
-        
         let makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: loadCategories,
             getLatestPayments: loadLatestPayments
