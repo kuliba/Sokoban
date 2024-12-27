@@ -6,8 +6,9 @@
 //
 
 import Combine
+import PayHub
 
-typealias RootEvent = RootViewSelect
+typealias RootEvent = PayHub.FlowEvent<RootViewSelect, Never>
 
 extension RootViewModel {
     
@@ -103,10 +104,10 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
     var rootEvent: RootEvent? {
         
         switch self {
-        case .byQr:      return .scanQR
-        case .templates: return .templates
+        case .byQr:      return .select(.scanQR)
+        case .templates: return .select(.templates)
         case .byPhone:   return nil
-        case .utility:       return nil
+        case .utility:   return nil
         }
     }
 }
@@ -145,7 +146,7 @@ private extension PTSectionPaymentsViewAction.ButtonTapped.Payment {
     var rootEvent: RootEvent? {
         
         switch type {
-        case .qrPayment: return .scanQR
+        case .qrPayment: return .select(.scanQR)
         default:         return nil
         }
     }
@@ -200,7 +201,7 @@ private extension PaymentsTransfersCorporateNavigation {
         
         switch self {
         case .userAccount:
-            return .userAccount
+            return .select(.userAccount)
         }
     }
 }
@@ -220,13 +221,12 @@ private extension PaymentsTransfersPersonalNavigation {
     var rootEvent: RootEvent? {
         
         switch self {
-        case .byPhoneTransfer: return nil // .byPhoneTransfer
-        case .main:            return .outside(.tab(.main))
-        case .scanQR:          return .scanQR
-        case let .standardPayment(type):
-            return .standardPayment(type)
-        case .templates:       return .templates
-        case .userAccount:     return .userAccount
+        case .byPhoneTransfer:           return nil // .byPhoneTransfer
+        case .main:                      return .select(.outside(.tab(.main)))
+        case .scanQR:                    return .select(.scanQR)
+        case let .standardPayment(type): return .select(.standardPayment(type))
+        case .templates:                 return .select(.templates)
+        case .userAccount:               return .select(.userAccount)
         }
     }
 }

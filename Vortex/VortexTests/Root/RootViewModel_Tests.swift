@@ -15,7 +15,7 @@ class RootViewModel_Tests: XCTestCase {
     // MARK: - Helpers
     
     typealias SUT = RootViewModel
-    typealias Spy = ValueSpy<RootViewSelect>
+    typealias Spy = ValueSpy<RootEvent>
     typealias Witnesses = ContentWitnesses<RootViewModel, RootViewSelect>
     
     func makeSUT(
