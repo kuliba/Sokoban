@@ -13,7 +13,7 @@ struct GetCollateralLandingBottomSheetView: View {
     
     let items: [Item]
     let config: Config
-    let makeIconView: Factory.MakeIconView
+    let makeImageView: Factory.MakeImageView
     let event: (Event) -> Void
     
     @State var selected: Item? = nil
@@ -99,7 +99,7 @@ struct GetCollateralLandingBottomSheetView: View {
         
         if let icon = item.icon {
             
-            makeIconView(icon)
+            makeImageView(icon)
         } else {
             
             makeRadioButton(for: item)
@@ -234,7 +234,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         GetCollateralLandingBottomSheetView(
             items: periodItems,
             config: .default,
-            makeIconView: Factory.preview.makeIconView,
+            makeImageView: Factory.preview.makeImageView,
             event: { print($0) },
             selected: periodItems[1]
         )
@@ -243,7 +243,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         GetCollateralLandingBottomSheetView(
             items: collateralItems,
             config: .default,
-            makeIconView: Factory.preview.makeIconView,
+            makeImageView: Factory.preview.makeImageView,
             event: { print($0) }
         )
         .previewDisplayName("Product collateral selector")
