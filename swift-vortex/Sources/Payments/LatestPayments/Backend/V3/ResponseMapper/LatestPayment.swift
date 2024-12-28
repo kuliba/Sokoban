@@ -11,6 +11,7 @@ import Tagged
 
 extension ResponseMapper {
     
+    /// - Warning: `service` is hardcoded as `housingAndCommunalService`
     public enum LatestPayment: Equatable {
         
         case service(Service)
@@ -20,6 +21,7 @@ extension ResponseMapper {
 
 extension ResponseMapper.LatestPayment {
     
+    /// - Warning: `service` is hardcoded as `housingAndCommunalService`
     public struct Service: Equatable {
         
         public let additionalItems: [AdditionalItem]?
@@ -67,6 +69,7 @@ extension ResponseMapper.LatestPayment {
         }
     }
     
+    /// - Warning: `service` is hardcoded as `housingAndCommunalService`
     public struct WithPhone: Equatable {
         
         public let amount: Decimal?
@@ -117,6 +120,7 @@ extension ResponseMapper.LatestPayment {
 
 extension ResponseMapper.LatestPayment {
     
+    /// - Warning: `service` is hardcoded as `housingAndCommunalService`
     public typealias LatestType = Tagged<_LatestType, String>
     public enum _LatestType {}
     
@@ -169,7 +173,7 @@ public extension RemoteServices.ResponseMapper.LatestPayment.LatestType {
     static let phone: Self                         = "phone"
     static let repaymentLoansAndAccounts: Self     = "repaymentLoansAndAccounts"
     static let security: Self                      = "security"
-    static let service: Self                       = "service"
+    static let service: Self                       = "housingAndCommunalService"
     static let socialAndGames: Self                = "socialAndGames"
     static let taxAndStateService: Self            = "taxAndStateService"
     static let transport: Self                     = "transport"
