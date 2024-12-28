@@ -7,19 +7,19 @@
 
 import ActivateSlider
 import Banners
+import ClientInformList
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import FooterComponent
-import VortexTools
 import InfoComponent
 import LandingUIComponent
 import PaymentSticker
+import RxViewModel
 import SberQR
 import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
-import ClientInformList
-import RxViewModel
-import CollateralLoanLandingGetShowcaseUI
+import VortexTools
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -616,6 +616,15 @@ extension MainViewModel {
             )
         },
         makeOpenNewProductButtons: { _ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.ViewModel {
+    
+    static let preview: GetShowcaseDomain.ViewModel = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

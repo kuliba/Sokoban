@@ -82,7 +82,7 @@ enum MainSectionViewModelAction {
             let productType: ProductType
         }
         
-        struct openCollateralLoanLanding: Action {}
+        struct OpenCollateralLoanLanding: Action {}
     }
     
     enum FastPayment {

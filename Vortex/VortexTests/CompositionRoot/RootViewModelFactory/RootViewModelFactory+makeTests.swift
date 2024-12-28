@@ -421,7 +421,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             historyFilterFlag: true,
             paymentsTransfersFlag: .active,
             savingsAccountFlag: .active,
-            collateralLoanLandingFlag: .active
+            collateralLoanLandingFlag: .active,
+            splashScreenFlag: .inactive
         )
     }
 }

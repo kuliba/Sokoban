@@ -20,11 +20,11 @@ extension RootViewModelFactory {
         payload: AnywayPaymentSourceParser.Source,
         completion: @escaping AnywayFlowModelCompletion
     ) {
-        let anywayFlowComposer = makeAnywayFlowComposer()
+        let compose = makeAnywayFlowModel
         
         initiateAnywayPayment(payload) {
 
-            completion($0.map(anywayFlowComposer.compose))
+            completion($0.map(compose))
         }
     }
     

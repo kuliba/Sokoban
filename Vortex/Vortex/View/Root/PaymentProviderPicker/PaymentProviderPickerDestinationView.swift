@@ -72,7 +72,7 @@ private extension PaymentProviderPickerDestinationView {
                 // components.makeAnywayServicePickerFlowView(<#T##AnywayServicePickerFlowModel#>)
                 Text("TBD: destination view \(String(describing: milti))")
                 
-            case let .anywayPayment(node):
+            case let .startPayment(node):
                 let payload = node.model.state.content.state.transaction.context.outline.payload
                 
                 components.makeAnywayFlowView(node.model)

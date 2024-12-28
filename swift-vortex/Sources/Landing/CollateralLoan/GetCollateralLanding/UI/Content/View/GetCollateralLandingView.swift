@@ -37,7 +37,7 @@ public struct GetCollateralLandingView: View {
             return BottomSheetView(
                 items: period.map(\.bottomSheetItem),
                 config: factory.config.bottomSheet,
-                makeIconView: factory.makeIconView
+                makeImageView: factory.makeImageView
             ) {
                 switch $0 {
                 case .selectMonthPeriod(let termMonth):
@@ -49,7 +49,7 @@ public struct GetCollateralLandingView: View {
             return BottomSheetView(
                 items: collateral.map(\.bottomSheetItem),
                 config: factory.config.bottomSheet,
-                makeIconView: factory.makeIconView
+                makeImageView: factory.makeImageView
             ) {
                 switch $0 {
                 case .selectCollateral(let collateral):
@@ -92,7 +92,7 @@ public struct GetCollateralLandingView: View {
                 ConditionsView(
                     config: factory.config,
                     state: state,
-                    makeIconView: factory.makeIconView
+                    makeImageView: factory.makeImageView
                 )
             }
             
@@ -112,7 +112,7 @@ public struct GetCollateralLandingView: View {
                 DocumentsView(
                     config: factory.config,
                     state: state,
-                    makeIconView: factory.makeIconView)
+                    makeImageView: factory.makeImageView)
             }
             
             FooterView(

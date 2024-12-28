@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 26.12.2024.
 //
 
-final class SpyDispatch<Payload, Response> {
+final class Spy<Payload, Response> {
     
     typealias Completion = (Response) -> Void
     typealias Message = (payload: Payload, completion: Completion)
@@ -30,7 +30,7 @@ final class SpyDispatch<Payload, Response> {
     }
 }
 
-extension SpyDispatch where Payload == Void {
+extension Spy where Payload == Void {
     
     func process(completion: @escaping Completion) {
         

@@ -1684,6 +1684,8 @@ private extension Target {
     static let latestPaymentsBackendV3 = target(
         name: .latestPaymentsBackendV3,
         dependencies: [
+            // external packages
+            .tagged,
             // internal modules
             .vortexTools,
             .remoteServices,
