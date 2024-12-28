@@ -71,6 +71,34 @@ struct ViewComponents {
 
 extension ViewComponents {
     
+    @ViewBuilder
+    func makeAnywayServicePickerFlowView(
+        flowModel: AnywayServicePickerFlowModel,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        makeAnywayServicePickerFlowView(flowModel)
+            .navigationBarWithAsyncIcon(
+                title: provider.origin.title,
+                subtitle: provider.origin.inn,
+                dismiss: dismiss,
+                icon: iconView(provider.origin.icon),
+                style: .normal
+            )
+    }
+    
+    func iconView(
+        _ icon: String?
+    ) -> IconDomain.IconView {
+        
+        makeIconView(icon.map { .md5Hash(.init($0)) })
+    }
+}
+
+extension ViewComponents {
+    
     static let preview: Self = .init(
         makeAnywayFlowView: { _ in fatalError() },
         makeAnywayServicePickerFlowView: { _ in fatalError() },
