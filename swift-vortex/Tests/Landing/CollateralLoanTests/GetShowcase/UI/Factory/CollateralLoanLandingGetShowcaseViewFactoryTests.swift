@@ -124,7 +124,6 @@ final class CollateralLoanLandingGetShowcaseViewFactoryTests: XCTestCase {
     
     private func makeSUT() -> SUT {
         .init(
-            makeIconView: { _ in self.previewAsyncImage },
             makeImageView: { _ in self.previewAsyncImage }
         )
     }

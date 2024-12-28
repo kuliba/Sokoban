@@ -611,7 +611,6 @@ extension MainViewModel {
         },
         makeCollateralLoanLandingGetShowcaseFactory: {
             .init(
-                makeIconView: { _ in previewAsyncImage },
                 makeImageView: { _ in previewAsyncImage }
             )
         },

@@ -142,7 +142,6 @@ final class MainViewModelTests: XCTestCase {
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
             makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
                 .init(
-                    makeIconView: { _ in self.previewAsyncImage },
                     makeImageView: { _ in self.previewAsyncImage }
                 )
             },
@@ -776,7 +775,6 @@ final class MainViewModelTests: XCTestCase {
             makeCollateralLoanLandingViewModel: showcaseSpy.call,
             makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
                 .init(
-                    makeIconView: { _ in self.previewAsyncImage },
                     makeImageView: { _ in self.previewAsyncImage }
                 )
             },
@@ -911,7 +909,6 @@ final class MainViewModelTests: XCTestCase {
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
             makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
                 .init(
-                    makeIconView: { _ in self.previewAsyncImage },
                     makeImageView: { _ in self.previewAsyncImage }
                 )
             },
@@ -960,7 +957,6 @@ final class MainViewModelTests: XCTestCase {
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
             makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
                 .init(
-                    makeIconView: { _ in self.previewAsyncImage },
                     makeImageView: { _ in self.previewAsyncImage }
                 )
             },
@@ -1037,7 +1033,6 @@ final class MainViewModelTests: XCTestCase {
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
             makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
                 .init(
-                    makeIconView: { _ in self.previewAsyncImage },
                     makeImageView: { _ in self.previewAsyncImage }
                 )
             },

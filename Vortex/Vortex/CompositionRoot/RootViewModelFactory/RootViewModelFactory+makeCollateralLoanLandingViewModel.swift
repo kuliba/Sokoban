@@ -30,12 +30,8 @@ extension RootViewModelFactory {
     
     func makeCollateralLoanLandingGetShowcaseFactory() -> CollateralLoanLandingGetShowcaseViewFactory {
         
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-
-        return .init(
-            makeIconView: imageCache.makeIconView(for:),
-            makeImageView: generalImageCache.makeIconView(for:)
+        .init(
+            makeImageView: model.generalImageCache().makeIconView(for:)
         )
     }
     
