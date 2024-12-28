@@ -80,13 +80,20 @@ private extension PaymentProviderPickerDestinationView {
                         title: payload.title,
                         subtitle: payload.subtitle,
                         dismiss: dismiss,
-                        icon: makeIconView(payload.icon.map { .md5Hash(.init($0)) }),
+                        icon: iconView(payload.icon),
                         style: .normal
                     )
             }
         }
     }
     
+    func iconView(
+        _ icon: String?
+    ) -> IconDomain.IconView {
+        
+        makeIconView(icon.map { .md5Hash(.init($0)) })
+    }
+
     private func makeMD5HashIconView(
         _ icon: String?
     ) -> UIPrimitives.AsyncImage {

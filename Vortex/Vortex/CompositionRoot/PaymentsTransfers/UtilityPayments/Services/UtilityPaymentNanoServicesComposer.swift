@@ -130,7 +130,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ completion: @escaping NanoServices.GetServicesForCompletion
     ) {
         let fetch = Vortex.NanoServices.adaptedLoggingFetch(
-            createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
+            createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(operator:),
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
             mapOutput: { $0.map(\.service) },
