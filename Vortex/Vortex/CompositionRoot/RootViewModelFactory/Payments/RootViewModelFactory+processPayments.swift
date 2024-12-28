@@ -19,17 +19,21 @@ extension RootViewModelFactory {
         getServiceCategoryType(ofType: lastPayment.type) { [weak self] categoryType in
             
             guard let self, let categoryType
-            else { return completion(nil) }
+            else {
             
-            let anywayFlowComposer = makeAnywayFlowComposer()
+                self?.errorLog(category: .cache, message: "Can't find categoryType for \"\(lastPayment.type)\"")
+                return completion(nil)
+            }
             
             processSelection(
                 select: (.lastPayment(lastPayment), categoryType)
-            ) {
-                guard case let .success(.startPayment(transaction)) = $0
+            ) { [weak self] in
+                
+                guard let self,
+                      case let .success(.startPayment(transaction)) = $0
                 else { return completion(nil) }
                 
-                let flowModel = anywayFlowComposer.compose(transaction: transaction)
+                let flowModel = makeAnywayFlowModel(transaction: transaction)
                 let cancellable = flowModel.$state.compactMap(\.outside)
                     .sink { notify($0) }
                 

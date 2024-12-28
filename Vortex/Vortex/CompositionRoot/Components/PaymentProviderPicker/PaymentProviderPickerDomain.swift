@@ -26,7 +26,7 @@ extension PaymentProviderPickerDomain {
     typealias Search = RegularFieldViewModel
     
     // MARK: - Flow
-
+    
     typealias FlowDomain = PayHub.PaymentProviderPickerFlowDomain<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
     
     typealias Flow = FlowDomain.Flow
@@ -43,28 +43,8 @@ extension PaymentProviderPickerDomain {
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = Void
     
-    typealias _ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.ProcessSelectionResult
-    
-    typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
-    
-    enum ProcessSelectionSuccess {
-        
-        case services(MultiElementArray<UtilityService>, for: UtilityPaymentProvider)
-        case anywayPayment(Node<AnywayFlowModel>)
-    }
-    
-    enum ProcessSelectionFailure: Error {
-        
-        case operatorFailure(UtilityPaymentProvider)
-        case serviceFailure(ServiceFailure)
-        
-#warning("extract…")
-        enum ServiceFailure: Error, Hashable {
-            
-            case connectivityError
-            case serverError(String)
-        }
-    }
+    typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, Node<AnywayFlowModel>>
 }
 
 // MARK: - ProviderList
