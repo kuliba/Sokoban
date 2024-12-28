@@ -1207,7 +1207,7 @@ private extension MainViewModel {
     var getShowcaseDomainViewModel: GetShowcaseDomain.ViewModel? {
         
         switch route.destination {
-        case let .collateralLoanLanding(viewModel):
+        case let .collateralLoanLanding(viewModel, _):
             return viewModel
             
         default:

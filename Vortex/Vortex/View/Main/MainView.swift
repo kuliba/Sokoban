@@ -603,7 +603,7 @@ extension MainViewModel {
         sections: [],
         bannersBinder: .preview,
         makeCollateralLoanLandingViewModel: {
-            _ in .init(
+            .init(
                 initialState: .init(),
                 reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
                 handleEffect: { _,_ in }
