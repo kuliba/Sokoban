@@ -7,18 +7,19 @@
 
 import ActivateSlider
 import Banners
+import ClientInformList
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import FooterComponent
-import VortexTools
 import InfoComponent
 import LandingUIComponent
 import PaymentSticker
+import RxViewModel
 import SberQR
 import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
-import ClientInformList
-import RxViewModel
+import VortexTools
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -594,14 +595,17 @@ extension MainViewModel {
         },
         sections: [],
         bannersBinder: .preview,
-        makeCollateralLoanLandingViewModel: {
-            _ in .init(
-                initialState: .init(),
-                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
-                handleEffect: { _,_ in }
-            )
-        },
+        makeCollateralLoanLandingViewModel: { .preview },
         makeOpenNewProductButtons: { _ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.ViewModel {
+    
+    static let preview: GetShowcaseDomain.ViewModel = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

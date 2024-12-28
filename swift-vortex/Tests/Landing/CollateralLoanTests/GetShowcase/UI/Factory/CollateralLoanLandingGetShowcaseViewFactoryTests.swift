@@ -125,7 +125,7 @@ final class CollateralLoanLandingGetShowcaseViewFactoryTests: XCTestCase {
     }
 }
 
-fileprivate extension CollateralLoanLandingGetShowcaseData {
+extension CollateralLoanLandingGetShowcaseData {
 
     static let stub = Self(
         products: [Product](repeating: .makeStub(), count: .random(in: 0..<10))

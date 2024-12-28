@@ -11,7 +11,7 @@ import RxViewModel
 
 struct CollateralLoanLandingView: View {
     
-    let viewModel: CollateralLoanLandingDomain.ViewModel
+    let viewModel: GetShowcaseDomain.ViewModel
     
     var body: some View {
     
@@ -35,5 +35,5 @@ struct CollateralLoanLandingView: View {
         .onFirstAppear { event(.load) }
     }
     
-    typealias Domain = CollateralLoanLandingDomain
+    typealias Domain = GetShowcaseDomain
 }

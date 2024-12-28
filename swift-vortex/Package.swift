@@ -1338,6 +1338,9 @@ private extension Target {
     
     static let collateralLoanLandingGetShowcaseUI = target(
         name: .collateralLoanLandingGetShowcaseUI,
+        dependencies: [
+            .rxViewModel
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingGetShowcaseName)/UI"
     )
     

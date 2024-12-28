@@ -1,17 +1,17 @@
 //
-//  CollateralLoanLanding+EffectHandler.swift
-//  Vortex
+//  GetShowcaseDomain+EffectHandler.swift
 //
-//  Created by Valentin Ozerov on 24.12.2024.
+//
+//  Created by Valentin Ozerov on 26.12.2024.
 //
 
-extension CollateralLoanLandingDomain {
+extension GetShowcaseDomain {
     
-    final class EffectHandler {
+    public final class EffectHandler {
         
         let load: Load
         
-        init(
+        public init(
             load: @escaping Load
         ) {
             self.load = load
@@ -26,8 +26,8 @@ extension CollateralLoanLandingDomain {
             }
         }
 
-        typealias Dispatch = (Event) -> Void
-        typealias Completion = (Result) -> Void
-        typealias Load = (@escaping Completion) -> Void
+        public typealias Dispatch = (Event) -> Void
+        public typealias Load = (@escaping Completion) -> Void
+        public typealias Completion = (Result) -> Void
     }
 }
