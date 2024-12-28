@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 08.11.2024.
 //
 
+import Combine
 import Foundation
 import LoadableResourceComponent
 import SwiftUI
@@ -51,6 +52,7 @@ struct ViewComponents {
     let makeContactsView: MakeContactsView
     let makeControlPanelWrapperView: MakeControlPanelWrapperView
     let makeCurrencyWalletView: MakeCurrencyWalletView
+    let makeIconView: MakeIconView
     let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
     let makeMainSectionProductsView: MakeMainSectionProductsView
     let makeOperationDetailView: MakeOperationDetailView
@@ -76,6 +78,7 @@ extension ViewComponents {
         makeContactsView: makeContactsView,
         makeControlPanelWrapperView: makeControlPanelWrapperView,
         makeCurrencyWalletView: makeCurrencyWalletView,
+        makeIconView: { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) },
         makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
         makeMainSectionProductsView: makeMainSectionProductsView,
         makeOperationDetailView: { _,_,_  in fatalError() },

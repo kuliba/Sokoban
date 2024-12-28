@@ -91,6 +91,7 @@ extension RootViewFactoryComposer {
             makeContactsView: makeContactsView,
             makeControlPanelWrapperView: makeControlPanelWrapperView,
             makeCurrencyWalletView: makeCurrencyWalletView,
+            makeIconView: makeIconView,
             makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
             makeMainSectionProductsView: makeMainSectionProductsView,
             makeOperationDetailView: makeOperationDetailView,
@@ -756,7 +757,14 @@ private extension RootViewFactoryComposer {
         _ icon: String
     ) -> IconView {
         
-        return model.imageCache().makeIconView(for: .md5Hash(.init(icon)))
+        return makeIconView(for: .md5Hash(.init(icon)))
+    }
+    
+    private func makeIconView(
+        for icon: IconDomain.Icon?
+    ) -> IconView {
+        
+        return model.imageCache().makeIconView(for: icon)
     }
     
     func makePaymentCompleteView(
