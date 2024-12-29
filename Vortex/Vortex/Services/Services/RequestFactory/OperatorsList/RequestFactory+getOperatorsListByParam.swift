@@ -51,6 +51,7 @@ extension RequestFactory {
     }
     
     // TODO: combine with above, improve API (strong types for type & operatorID)
+    @available(*, deprecated, message: "Use `static RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(payload:)`")
     static func createGetOperatorsListByParamOperatorOnlyFalseRequest(
         `operator`: UtilityPaymentProvider
     ) throws -> URLRequest {
