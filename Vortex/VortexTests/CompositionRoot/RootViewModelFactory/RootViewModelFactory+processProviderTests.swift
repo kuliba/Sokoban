@@ -5,64 +5,6 @@
 //  Created by Igor Malyarov on 29.12.2024.
 //
 
-import VortexTools
-
-// RootViewModelFactory+makePaymentProviderPicker.swift:257
-/// A namespace.
-enum ProcessPaymentProviderDomain<Operator, Service, StartPaymentResult> {}
-
-extension ProcessPaymentProviderDomain {
-    
-    typealias Payload = Operator
-    
-    enum Response {
-        
-        /// `d3-d5`
-        case operatorFailure(Operator)
-        /// `d1`
-        case services(MultiElementArray<Service>, for: Operator)
-        /// Success: `d2, e1`, Failure: `d2, e2-e4`
-        case startPayment(StartPaymentResult)
-    }
-}
-
-extension ProcessPaymentProviderDomain.Response: Equatable where Operator: Equatable, Service: Equatable, StartPaymentResult: Equatable {}
-
-extension UtilityPaymentOperator {
-    
-    var getServicesForPayload: RootViewModelFactory.GetServicesForPayload {
-        
-        return .init(operatorID: id, type: type)
-    }
-}
-
-import RemoteServices
-
-extension RootViewModelFactory {
-    
-    typealias ProcessPaymentProviderDomain<Result> = VortexTests.ProcessPaymentProviderDomain<UtilityPaymentOperator, ServicePickerItem, Result>
-    
-    func processProvider<Result>(
-        payload: ProcessPaymentProviderDomain<Result>.Payload,
-        processService: @escaping (ServicePickerItem, @escaping (Result) -> Void) -> Void,
-        completion: @escaping (ProcessPaymentProviderDomain<Result>.Response) -> Void
-    ) {
-        loadServices(for: payload.getServicesForPayload) {
-            
-            switch ($0.first, MultiElementArray($0)) {
-            case (nil, _):
-                completion(.operatorFailure(payload))
-                
-            case let (.some(service), nil):
-                processService(service) { completion(.startPayment($0)) }
-                
-            case let (_, .some(services)):
-                completion(.services(services, for: payload))
-            }
-        }
-    }
-}
-
 @testable import Vortex
 import XCTest
 
