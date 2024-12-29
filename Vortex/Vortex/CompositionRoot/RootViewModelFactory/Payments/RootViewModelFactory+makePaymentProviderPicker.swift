@@ -284,8 +284,13 @@ extension RootViewModelFactory {
                 
             case let .success(success):
                 switch success {
-                case let .services(multi, for: utilityPaymentOperator):
-                    completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
+                case let .services(operatorServices):
+                    completion(.payment(.success(
+                        .services(.init(
+                            services: operatorServices.services,
+                            operator: operatorServices.operator
+                        ))
+                    )))
                     
                 case let .startPayment(transaction):
                     completion(makeNavigation(

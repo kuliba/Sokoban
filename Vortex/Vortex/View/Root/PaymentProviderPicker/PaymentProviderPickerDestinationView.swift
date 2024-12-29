@@ -68,9 +68,9 @@ private extension PaymentProviderPickerDestinationView {
             
         case let .success(success):
             switch success {
-            case let .services(milti, for: utilityPaymentOperator):
+            case let .services(operatorServices):
                 // components.makeAnywayServicePickerFlowView(<#T##AnywayServicePickerFlowModel#>)
-                Text("TBD: destination view \(String(describing: milti))")
+                Text("TBD: destination view \(String(describing: operatorServices))")
                 
             case let .startPayment(node):
                 let payload = node.model.state.content.state.transaction.context.outline.payload

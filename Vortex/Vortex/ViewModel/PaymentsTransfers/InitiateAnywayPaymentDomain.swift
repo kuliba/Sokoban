@@ -21,8 +21,14 @@ enum InitiateAnywayPaymentDomain<Latest, Operator, Service, StartPayment> {
     
     enum Success {
         
-        case services(MultiElementArray<Service>, for: Operator)
+        case services(OperatorServices)
         case startPayment(StartPayment)
+        
+        struct OperatorServices {
+            
+            let services: MultiElementArray<Service>
+            let `operator`: Operator
+        }
     }
     
     enum Failure: Error {
@@ -34,4 +40,5 @@ enum InitiateAnywayPaymentDomain<Latest, Operator, Service, StartPayment> {
 
 extension InitiateAnywayPaymentDomain.Select: Equatable where Latest: Equatable, Operator: Equatable, Service: Equatable {}
 extension InitiateAnywayPaymentDomain.Success: Equatable where Operator: Equatable, Service: Equatable, StartPayment: Equatable {}
+    extension InitiateAnywayPaymentDomain.Success.OperatorServices: Equatable where Operator: Equatable, Service: Equatable {}
 extension InitiateAnywayPaymentDomain.Failure: Equatable where Operator: Equatable {}
