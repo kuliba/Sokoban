@@ -54,10 +54,7 @@ extension RootViewModelFactory {
                 completion(.operatorFailure(payload))
                 
             case let (.some(service), nil):
-                processService(service) { _ in
-                    
-                    completion(.operatorFailure(payload))
-                }
+                processService(service) { completion(.startPayment($0)) }
                 
             case let (_, .some(services)):
                 completion(.services(services, for: payload))
@@ -73,7 +70,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     
     func test_shouldCallHTTPClientWithGetOperatorsListByParamOperatorOnlyFalseWithPayload() throws {
         
-        let (payload, response) = (makePayload(), makeServiceResponse)
+        let (payload, response) = (makePayload(), makeServiceResponse())
         let (sut, httpClient, _) = makeSUT()
         
         sut.processProvider(payload: payload, processService: { $1(response) }) { _ in }
@@ -121,7 +118,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         
         sut.processProvider(
             payload: payload,
-            processService: processServiceSpy.process
+            processService: processServiceSpy.processSuccess
         ) { _ in exp.fulfill() }
         
         httpClient.complete(withString: .singleServiceValidJSON)
@@ -134,15 +131,38 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         ])
     }
     
+    func test_shouldDeliverStartPaymentOnHTTPClientSuccessWithOneService() throws {
+        
+        let response = makeServiceResponse()
+        let (sut, httpClient, _) = makeSUT()
+        let processServiceSpy = ProcessServiceSpy()
+        
+        expect(
+            sut,
+            processService: processServiceSpy.processSuccess,
+            makePayload(),
+            toDeliver: .startPayment(response)
+        ) {
+            httpClient.complete(withString: .singleServiceValidJSON)
+            processServiceSpy.complete(with: response)
+        }
+    }
+    
     func test_shouldDeliverServicesOnHTTPClientSuccessWithTwoServices() throws {
         
         let payload = makePayload()
         let (sut, httpClient, _) = makeSUT()
         
-        expect(sut, payload, toDeliver: .services(.init(
-            .init(service: .mirnaya, isOneOf: true),
-            .init(service: .burash, isOneOf: true)
-        ), for: payload)
+        expect(
+            sut,
+            payload,
+            toDeliver: .services(
+                .init(
+                    .init(service: .mirnaya, isOneOf: true),
+                    .init(service: .burash, isOneOf: true)
+                ),
+                for: payload
+            )
         ) {
             httpClient.complete(withString: .multiServicesValidJSON)
         }
@@ -153,7 +173,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     private typealias Domain = SUT.ProcessPaymentProviderDomain<ServiceResponse>
     private typealias Payload = Domain.Payload
     private typealias Response = Domain.Response
-    private typealias ProcessServiceSpy = Spy<ServicePickerItem, ServiceResponse, Error>
+    private typealias ProcessServiceSpy = Spy<ServicePickerItem, ServiceResponse, Never>
     
     private func makePayload(
         id: String = anyMessage(),
@@ -180,6 +200,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     
     private func expect(
         _ sut: SUT,
+        processService: @escaping (ServicePickerItem, @escaping (ServiceResponse) -> Void) -> Void = { _,_ in },
         _ payload: Domain.Payload,
         toDeliver expectedResponse: Domain.Response,
         on action: () -> Void,
@@ -190,7 +211,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         
         sut.processProvider(
             payload: payload,
-            processService: { _,_ in }
+            processService: processService
         ) {
             XCTAssertNoDiff($0, expectedResponse)
             exp.fulfill()
