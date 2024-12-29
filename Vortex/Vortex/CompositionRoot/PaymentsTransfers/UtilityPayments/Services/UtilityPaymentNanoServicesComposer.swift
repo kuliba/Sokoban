@@ -254,10 +254,10 @@ private extension StartAnywayPaymentResult {
     }
 }
 
-typealias StartAnywayPayment = UtilityPaymentNanoServices.StartAnywayPayment
-typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaymentPayload
-typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
-typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
+private typealias StartAnywayPayment = UtilityPaymentNanoServices.StartAnywayPayment
+private typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaymentPayload
+private typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
+private typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
 /*private*/ extension RemoteServices.ResponseMapper.SberUtilityService {
     

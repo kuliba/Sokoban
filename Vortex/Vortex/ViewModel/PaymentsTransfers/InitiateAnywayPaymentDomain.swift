@@ -13,7 +13,7 @@ enum InitiateAnywayPaymentDomain<Latest, Operator, Service, StartPayment> {
         
         case lastPayment(Latest)
         case `operator`(Operator)
-        case oneOf(Service, for: Operator)
+        case oneOf(Service, for: Operator) // in case of multiple services the payment should have a field representing selected service
         case singleService(Service, for: Operator)
     }
     

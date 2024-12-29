@@ -212,7 +212,7 @@ extension RootViewModelFactory {
                 }
                 
             case let .success(transaction):
-                completion(self.makeCompletion(
+                completion(self.makeNavigation(
                     transaction: transaction,
                     notify: notify
                 ))
@@ -288,7 +288,7 @@ extension RootViewModelFactory {
                     completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
                     
                 case let .startPayment(transaction):
-                    completion(makeCompletion(
+                    completion(makeNavigation(
                         transaction: transaction,
                         notify: notify
                     ))
@@ -297,7 +297,8 @@ extension RootViewModelFactory {
         }
     }
     
-    func makeCompletion(
+    @inlinable
+    func makeNavigation(
         transaction: AnywayTransactionState.Transaction,
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void
     ) -> (PaymentProviderPickerDomain.Navigation) {
