@@ -40,9 +40,12 @@ import RemoteServices
 
 extension RootViewModelFactory {
     
-    func processProvider(
-        payload: ProcessPaymentProviderDomain.Payload,
-        completion: @escaping (ProcessPaymentProviderDomain.Response) -> Void
+    typealias ProcessPaymentProviderDomain<Result> = VortexTests.ProcessPaymentProviderDomain<UtilityPaymentOperator, ServicePickerItem, Result>
+    
+    func processProvider<Result>(
+        payload: ProcessPaymentProviderDomain<Result>.Payload,
+        processService: @escaping (ServicePickerItem, @escaping (Result) -> Void) -> Void,
+        completion: @escaping (ProcessPaymentProviderDomain<Result>.Response) -> Void
     ) {
         loadServices(for: payload.getServicesForPayload) {
             
@@ -58,8 +61,6 @@ extension RootViewModelFactory {
             }
         }
     }
-    
-    typealias ProcessPaymentProviderDomain = VortexTests.ProcessPaymentProviderDomain<UtilityPaymentOperator, ServicePickerItem, Result<Void, Error>>
 }
 
 @testable import Vortex
@@ -69,10 +70,10 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     
     func test_shouldCallHTTPClientWithGetOperatorsListByParamOperatorOnlyFalseWithPayload() throws {
         
-        let payload = makePayload()
+        let (payload, response) = (makePayload(), makeServiceResponse)
         let (sut, httpClient, _) = makeSUT()
         
-        sut.processProvider(payload: payload) { _ in }
+        sut.processProvider(payload: payload, processService: { $1(response) }) { _ in }
         
         XCTAssertNoDiff(
             httpClient.lastPathComponentsWithQueryValue(for: ""),
@@ -89,81 +90,41 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         
         let payload = makePayload()
         let (sut, httpClient, _) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.processProvider(payload: payload) {
+        expect(sut, payload, toDeliver: .operatorFailure(payload)) {
             
-            switch $0 {
-            case let .operatorFailure(`operator`):
-                XCTAssertNoDiff(`operator`, payload)
-                
-            default:
-                XCTFail("Expected `operatorFailure`, but got \($0) instead.")
-            }
-            
-            exp.fulfill()
+            httpClient.complete(with: anyError())
         }
-        
-        httpClient.complete(with: anyError())
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_shouldDeliverOperatorFailureOnHTTPClientSuccessWithNoServices() throws {
         
         let payload = makePayload()
         let (sut, httpClient, _) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.processProvider(payload: payload) {
+        expect(sut, payload, toDeliver: .operatorFailure(payload)) {
             
-            switch $0 {
-            case let .operatorFailure(`operator`):
-                XCTAssertNoDiff(`operator`, payload)
-                
-            default:
-                XCTFail("Expected `operatorFailure`, but got \($0) instead.")
-            }
-            
-            exp.fulfill()
+            httpClient.complete(withString: .emptyServicesValidJSON)
         }
-        
-        httpClient.complete(withString: .emptyServicesValidJSON)
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_shouldDeliverServicesOnHTTPClientSuccessWithTwoServices() throws {
         
         let payload = makePayload()
         let (sut, httpClient, _) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.processProvider(payload: payload) {
-            
-            switch $0 {
-            case let .services(services, for: `operator`):
-                XCTAssertNoDiff(`operator`, payload)
-                XCTAssertNoDiff(services, .init(
-                    .init(service: .mirnaya, isOneOf: true),
-                    .init(service: .burash, isOneOf: true)
-                ))
-                
-            default:
-                XCTFail("Expected `services`, but got \($0) instead.")
-            }
-            
-            exp.fulfill()
+        expect(sut, payload, toDeliver: .services(.init(
+            .init(service: .mirnaya, isOneOf: true),
+            .init(service: .burash, isOneOf: true)
+        ), for: payload)
+        ) {
+            httpClient.complete(withString: .multiServicesValidJSON)
         }
-        
-        httpClient.complete(withString: .multiServicesValidJSON)
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
     
-    private typealias Domain = SUT.ProcessPaymentProviderDomain
+    private typealias Domain = SUT.ProcessPaymentProviderDomain<ServiceResponse>
     private typealias Payload = Domain.Payload
     private typealias Response = Domain.Response
     
@@ -176,6 +137,41 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     ) -> Payload {
         
         return .init(id: id, inn: inn, title: title, icon: icon, type: type)
+    }
+    
+    private struct ServiceResponse: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeServiceResponse(
+        _ value: String = anyMessage()
+    ) -> ServiceResponse {
+        
+        return .init(value: value)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        _ payload: Domain.Payload,
+        toDeliver expectedResponse: Domain.Response,
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.processProvider(
+            payload: payload,
+            processService: { _,_ in }
+        ) {
+            XCTAssertNoDiff($0, expectedResponse)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
     }
 }
 
