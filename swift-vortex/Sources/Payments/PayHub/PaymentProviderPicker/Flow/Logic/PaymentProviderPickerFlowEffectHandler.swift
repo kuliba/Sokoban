@@ -41,8 +41,10 @@ public extension PaymentProviderPickerFlowEffectHandler {
 
 private extension PaymentProviderPickerFlowEffectHandler {
     
+    typealias Select = PaymentProviderPickerFlowSelect<Latest, Provider>
+    
     func handle(
-        _ select: Effect.Select,
+        _ select: Select,
         _ dispatch: @escaping Dispatch
     ) {
         let notify: MicroServices.Notify = dispatch
@@ -59,6 +61,9 @@ private extension PaymentProviderPickerFlowEffectHandler {
                 
                 dispatch(.receive(.destination($0)))
             }
+            
+        case let .outside(outside):
+            dispatch(.receive(.outside(outside)))
             
         case let .provider(provider):
             microServices.processProvider(provider, notify) {
