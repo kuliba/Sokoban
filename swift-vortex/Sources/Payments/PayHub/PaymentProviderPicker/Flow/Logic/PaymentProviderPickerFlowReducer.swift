@@ -24,6 +24,9 @@ public extension PaymentProviderPickerFlowReducer {
         case .dismiss:
             state.navigation = nil
             
+        case let .isLoading(isLoading):
+            state.isLoading = isLoading
+            
         case let .receive(navigation):
             switch navigation {
             case let .alert(serviceFailure):
@@ -53,10 +56,12 @@ public extension PaymentProviderPickerFlowReducer {
 
 private extension PaymentProviderPickerFlowReducer {
     
+    typealias Select = PaymentProviderPickerFlowSelect<Latest, Provider>
+    
     func select(
         _ state: inout State,
         _ effect: inout Effect?,
-        with select: Event.Select
+        with select: Select
     ) {
         switch select {
         case .detailPayment:

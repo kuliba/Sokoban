@@ -5,16 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public enum PaymentProviderPickerFlowEvent<Destination, Latest, Provider> {
-    
-    case dismiss
-    case receive(PaymentProviderPickerFlowNavigation<Destination>)
-    case select(Select)
-    
-    public typealias Select = PaymentProviderPickerFlowSelect<Latest, Provider>
-}
-
-extension PaymentProviderPickerFlowEvent: Equatable where Destination: Equatable, Latest: Equatable, Provider: Equatable {}
+public typealias PaymentProviderPickerFlowEvent<Destination, Latest, Provider> = FlowEvent<PaymentProviderPickerFlowSelect<Latest, Provider>, PaymentProviderPickerFlowNavigation<Destination>>
 
 public enum PaymentProviderPickerFlowSelect<Latest, Provider> {
     
