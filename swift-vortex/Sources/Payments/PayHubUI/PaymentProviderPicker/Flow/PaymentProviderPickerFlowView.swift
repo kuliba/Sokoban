@@ -71,7 +71,7 @@ private extension PaymentProviderPickerFlowView {
         backendFailure: BackendFailure
     ) -> Alert {
         
-        return backendFailure.alert { event(.select(.goToPayments)) }
+        return backendFailure.alert { event(.select(.outside(.payments))) }
     }
 }
 
@@ -348,12 +348,12 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("back") {
                     
-                    event(.select(.back))
+                    event(.select(.outside(.back)))
                 }
                 
                 Button("chat") {
                     
-                    event(.select(.chat))
+                    event(.select(.outside(.chat)))
                 }
                 
                 Button("latest") {
@@ -373,7 +373,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("qr") {
                     
-                    event(.select(.qr))
+                    event(.select(.outside(.qr)))
                 }
             } header: {
                 Text("Select")

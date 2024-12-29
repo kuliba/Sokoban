@@ -183,10 +183,10 @@ extension RootViewModelFactory {
             notify: { event in
                 switch event {
                 case .main:
-                    notify(.select(.main))
+                    notify(.select(.outside(.main)))
                     
                 case .payments:
-                    notify(.select(.goToPayments))
+                    notify(.select(.outside(.payments)))
                 }
             },
             completion: completion
@@ -243,10 +243,10 @@ extension RootViewModelFactory {
                 
                 switch event {
                 case .main:
-                    notify(.select(.main))
+                    notify(.select(.outside(.main)))
                     
                 case .payments:
-                    notify(.select(.goToPayments))
+                    notify(.select(.outside(.payments)))
                 }
             },
             completion: completion

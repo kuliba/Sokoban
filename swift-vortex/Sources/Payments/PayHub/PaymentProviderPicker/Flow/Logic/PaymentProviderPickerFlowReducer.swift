@@ -53,12 +53,6 @@ private extension PaymentProviderPickerFlowReducer {
         with select: Event.Select
     ) {
         switch select {
-        case .back:
-            state.navigation = .outside(.back)
-            
-        case .chat:
-            state.navigation = .outside(.chat)
-            
         case .detailPayment:
             effect = .select(.detailPayment)
             
@@ -66,18 +60,27 @@ private extension PaymentProviderPickerFlowReducer {
             state.isLoading = true
             effect = .select(.latest(latest))
             
+        case let .outside(outside):
+            switch outside {
+            case .back:
+                state.navigation = .outside(.back)
+                
+            case .chat:
+                state.navigation = .outside(.chat)
+                
+            case .main:
+                state.navigation = .outside(.main)
+                
+            case .payments:
+                state.navigation = .outside(.payments)
+                
+            case .qr:
+                state.navigation = .outside(.qr)
+            }
+            
         case let .provider(provider):
             state.isLoading = true
             effect = .select(.provider(provider))
-            
-        case .qr:
-            state.navigation = .outside(.qr)
-            
-        case .main:
-            state.navigation = .outside(.main)
-            
-        case .goToPayments:
-            state.navigation = .outside(.payments)
         }
     }
 }

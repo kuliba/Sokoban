@@ -72,7 +72,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldSetNavigationToOutsidePayments() {
         
-        assert(makeState(navigation: .alert(makeBackendFailure())), event: .select(.goToPayments)) {
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .select(.outside(.payments))) {
             
             $0.navigation = .outside(.payments)
         }
@@ -80,7 +80,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldNotDeliverEffect() {
         
-        assert(makeState(navigation: .alert(makeBackendFailure())), event: .select(.goToPayments), delivers: nil)
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .select(.outside(.payments)), delivers: nil)
     }
     
     // MARK: - destination
@@ -134,7 +134,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_select_chat_shouldSetStateChat() {
         
-        assert(makeState(), event: .select(.chat)) {
+        assert(makeState(), event: .select(.outside(.chat))) {
             
             $0.navigation = .outside(.chat)
         }
@@ -142,7 +142,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_select_chat_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .select(.chat), delivers: nil)
+        assert(makeState(), event: .select(.outside(.chat)), delivers: nil)
     }
     
     func test_select_detailPayment_shouldNotChangeState() {
@@ -157,7 +157,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_select_qr_shouldSetStateChat() {
         
-        assert(makeState(), event: .select(.qr)) {
+        assert(makeState(), event: .select(.outside(.qr))) {
             
             $0.navigation = .outside(.qr)
         }
@@ -165,12 +165,12 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_select_qr_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .select(.qr), delivers: nil)
+        assert(makeState(), event: .select(.outside(.qr)), delivers: nil)
     }
     
     func test_select_back_shouldSetStateChat() {
         
-        assert(makeState(), event: .select(.back)) {
+        assert(makeState(), event: .select(.outside(.back))) {
             
             $0.navigation = .outside(.back)
         }
@@ -178,7 +178,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_select_back_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .select(.back), delivers: nil)
+        assert(makeState(), event: .select(.outside(.back)), delivers: nil)
     }
     
     // MARK: - Helpers

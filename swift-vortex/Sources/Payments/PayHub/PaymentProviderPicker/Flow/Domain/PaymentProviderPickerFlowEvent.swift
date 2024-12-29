@@ -1,6 +1,6 @@
 //
 //  PaymentProviderPickerFlowEvent.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 31.08.2024.
 //
@@ -17,13 +17,18 @@ public extension PaymentProviderPickerFlowEvent {
     
     enum Select {
         
+        case detailPayment
+        case latest(Latest)
+        case outside(Outside)
+        case provider(Provider)
+    }
+    
+    enum Outside: Equatable {
+        
         case back
         case chat
         case main
-        case goToPayments
-        case detailPayment
-        case latest(Latest)
-        case provider(Provider)
+        case payments
         case qr
     }
 }
