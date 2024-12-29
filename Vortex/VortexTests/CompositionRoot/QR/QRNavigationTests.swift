@@ -156,18 +156,7 @@ class QRNavigationTests: XCTestCase {
         
         return .init(origin: origin ?? makeUtilityPaymentProvider(), segment: segment)
     }
-    
-    func makeUtilityPaymentProvider(
-        id: String = anyMessage(),
-        icon: String? = nil,
-        inn: String = anyMessage(),
-        title: String = anyMessage(),
-        type: String = anyMessage()
-    ) -> UtilityPaymentProvider {
         
-        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
-    }
-    
     func makeQR(
         original: String = anyMessage(),
         rawData: [String: String] = [anyMessage(): anyMessage()]
