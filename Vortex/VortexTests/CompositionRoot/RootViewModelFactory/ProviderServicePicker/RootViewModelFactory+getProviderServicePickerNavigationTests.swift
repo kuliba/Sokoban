@@ -10,13 +10,59 @@ import XCTest
 
 final class RootViewModelFactory_getProviderServicePickerNavigationTests: RootViewModelFactoryTests {
     
+    func test_shouldDeliverOutsideMainOnOutsideMain() {
+        
+        let (sut, _,_) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getProviderServicePickerNavigation(
+            select: .outside(.main),
+            notify: { _ in }
+        ) {
+            switch $0 {
+            case .outside(.main):
+                break
+                
+            default:
+                XCTFail("Expected outside main, but got \($0) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_shouldDeliverOutsidePaymentsOnOutsidePayments() {
+        
+        let (sut, _,_) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getProviderServicePickerNavigation(
+            select: .outside(.payments),
+            notify: { _ in }
+        ) {
+            switch $0 {
+            case .outside(.payments):
+                break
+                
+            default:
+                XCTFail("Expected outside payments, but got \($0) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_shouldDeliverFailureOnMissingProduct() {
         
         let (sut, _,_) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.getProviderServicePickerNavigation(
-            select: makeSelect(),
+            select: .service(makeServicePayload()),
             notify: { _ in }
         ) {
             switch $0 {
@@ -41,7 +87,7 @@ final class RootViewModelFactory_getProviderServicePickerNavigationTests: RootVi
         let exp = expectation(description: "wait for completion")
         
         sut.getProviderServicePickerNavigation(
-            select: makeSelect(),
+            select: .service(makeServicePayload()),
             notify: { _ in }
         ) {
             switch $0 {
@@ -68,7 +114,7 @@ final class RootViewModelFactory_getProviderServicePickerNavigationTests: RootVi
         let exp = expectation(description: "wait for completion")
         
         sut.getProviderServicePickerNavigation(
-            select: makeSelect(),
+            select: .service(makeServicePayload()),
             notify: { _ in }
         ) {
             switch $0 {
@@ -95,11 +141,11 @@ final class RootViewModelFactory_getProviderServicePickerNavigationTests: RootVi
         let exp = expectation(description: "wait for completion")
         
         sut.getProviderServicePickerNavigation(
-            select: makeSelect(),
+            select: .service(makeServicePayload()),
             notify: { _ in }
         ) {
             switch $0 {
-            case .ok:
+            case .payment:
                 break
 
             default:
@@ -120,11 +166,11 @@ final class RootViewModelFactory_getProviderServicePickerNavigationTests: RootVi
     private typealias Select = Domain.Select
     private typealias NotifySpy = CallSpy<Domain.NotifyEvent, Void>
     
-    private func makeSelect(
+    private func makeServicePayload(
         service: UtilityService? = nil,
         isOneOf: Bool = .random(),
         operator: UtilityPaymentOperator? = nil
-    ) -> Select {
+    ) -> Select.ServicePayload {
         
         return .init(
             item: .init(

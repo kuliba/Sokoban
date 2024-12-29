@@ -14,7 +14,7 @@ extension ProviderServicePickerDomain.Content {
     
     var navBar: Navbar { return provider.navBar }
     
-    var items: [Item] { services.elements.map(\.item) }
+    var items: [UIItem] { services.elements.map(\.item) }
     
     struct Navbar: Equatable {
         
@@ -23,10 +23,16 @@ extension ProviderServicePickerDomain.Content {
         let subtitle: String
     }
     
-    struct Item: Equatable {
+    struct UIItem: Equatable {
         
-        let icon: String?
-        let title: String
+        let label: Label
+        let item: ServicePickerItem
+        
+        struct Label: Equatable {
+            
+            let icon: String?
+            let title: String
+        }
     }
 }
 
@@ -40,9 +46,12 @@ private extension UtilityPaymentOperator {
 
 private extension UtilityService {
     
-    var item: ProviderServicePickerDomain.Content.Item {
+    var item: ProviderServicePickerDomain.Content.UIItem {
         
-        return .init(icon: icon, title: name)
+        return .init(
+            label: .init(icon: icon, title: name),
+            item: .init(service: self, isOneOf: true)
+        )
     }
 }
 
@@ -68,20 +77,41 @@ extension RootViewModelFactory {
         notify: @escaping ProviderServicePickerDomain.Notify,
         completion: @escaping (ProviderServicePickerDomain.Navigation) -> Void
     ) {
-        process(payload: select.payload) {
+        switch select {
+        case let .outside(outside):
+            completion(.outside(outside))
             
-            switch $0 {
-            case let .failure(failure):
-                completion(.failure(failure))
+        case let .service(servicePayload):
+            process(payload: servicePayload.payload) { [weak self] in
                 
-            case let .success(success):
-                completion(.ok)
+                guard let self else { return }
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(anywayFlowModel):
+                    completion(.payment(.init(
+                        model: anywayFlowModel,
+                        cancellable: bind(anywayFlowModel, to: notify)
+                    )))
+                }
             }
         }
     }
+    
+    func bind(
+        _ model: AnywayFlowModel,
+        to notify: @escaping ProviderServicePickerDomain.Notify
+    ) -> AnyCancellable {
+        
+        model.$state
+            .compactMap(\.outside?.event)
+            .sink { notify(.select(.outside($0))) }
+    }
 }
 
-private extension ProviderServicePickerDomain.Select {
+private extension ProviderServicePickerDomain.Select.ServicePayload {
     
     var payload: RootViewModelFactory.ProcessServicePayload {
         
@@ -94,6 +124,17 @@ private extension UtilityPaymentOperator {
     var provider: UtilityPaymentProvider {
         
         return .init(id: id, icon: icon, inn: inn, title: title, type: type)
+    }
+}
+
+private extension AnywayFlowState.Status.Outside {
+    
+    var event: ProviderServicePickerDomain.Outside {
+        
+        switch self {
+        case .main:     return .main
+        case .payments: return .payments
+        }
     }
 }
 
@@ -125,16 +166,28 @@ extension ProviderServicePickerDomain {
     typealias Notify = FlowDomain.Notify
     typealias NotifyEvent = FlowDomain.NotifyEvent
     
-    struct Select: Equatable {
+    enum Select: Equatable {
+    
+        case outside(Outside)
+        case service(ServicePayload)
         
-        let item: ServicePickerItem
-        let `operator`: UtilityPaymentOperator
+        struct ServicePayload: Equatable {
+            
+            let item: ServicePickerItem
+            let `operator`: UtilityPaymentOperator
+        }
+    }
+    
+    enum Outside: Equatable {
+        
+        case main, payments
     }
     
     enum Navigation {
         
+        case outside(Outside)
         case failure(ServiceFailureAlert.ServiceFailure)
-        case ok
+        case payment(Node<AnywayFlowModel>)
     }
 }
 
@@ -188,8 +241,14 @@ final class RootViewModelFactory_makeProviderServicePickerTests: RootViewModelFa
         let first = services.elements[0]
         let second = services.elements[1]
         XCTAssertNoDiff(binder.content.items, [
-            .init(icon: first.icon, title: first.name),
-            .init(icon: second.icon, title: second.name),
+            .init(
+                label: .init(icon: first.icon, title: first.name),
+                item: .init(service: first, isOneOf: true)
+            ),
+            .init(
+                label: .init(icon: second.icon, title: second.name),
+                item: .init(service: second, isOneOf: true)
+            ),
         ])
     }
     
