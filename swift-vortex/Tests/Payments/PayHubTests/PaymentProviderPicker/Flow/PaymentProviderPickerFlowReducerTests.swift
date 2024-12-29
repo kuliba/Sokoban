@@ -16,7 +16,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         
         let failure = makeBackendFailure()
         
-        assert(makeState(), event: .alert(failure)) {
+        assert(makeState(), event: .receive(.alert(failure))) {
             
             $0.navigation = .alert(failure)
         }
@@ -24,7 +24,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_alert_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .alert(makeBackendFailure()), delivers: nil)
+        assert(makeState(), event: .receive(.alert(makeBackendFailure())), delivers: nil)
     }
     
     // MARK: - dismiss
@@ -89,7 +89,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         
         let destination = makeDestination()
         
-        assert(makeState(), event: .destination(destination)) {
+        assert(makeState(), event: .receive(.destination(destination))) {
             
             $0.navigation = .destination(destination)
         }
@@ -97,7 +97,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_destination_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .destination(makeDestination()), delivers: nil)
+        assert(makeState(), event: .receive(.destination(makeDestination())), delivers: nil)
     }
     
     // MARK: - select

@@ -7,31 +7,39 @@
 
 public enum PaymentProviderPickerFlowEvent<Destination, Latest, Provider> {
     
-    case alert(BackendFailure)
-    case destination(Destination)
     case dismiss
+    case receive(PaymentProviderPickerFlowNavigation<Destination>)
     case select(Select)
-}
-
-public extension PaymentProviderPickerFlowEvent {
     
-    enum Select {
-        
-        case detailPayment
-        case latest(Latest)
-        case outside(Outside)
-        case provider(Provider)
-    }
-    
-    enum Outside: Equatable {
-        
-        case back
-        case chat
-        case main
-        case payments
-        case qr
-    }
+    public typealias Select = PaymentProviderPickerFlowSelect<Latest, Provider>
 }
 
 extension PaymentProviderPickerFlowEvent: Equatable where Destination: Equatable, Latest: Equatable, Provider: Equatable {}
-extension PaymentProviderPickerFlowEvent.Select: Equatable where Destination: Equatable, Latest: Equatable, Provider: Equatable {}
+
+public enum PaymentProviderPickerFlowSelect<Latest, Provider> {
+    
+    case detailPayment
+    case latest(Latest)
+    case outside(PaymentProviderPickerFlowOutside)
+    case provider(Provider)
+}
+
+public enum PaymentProviderPickerFlowNavigation<Destination> {
+    
+    case alert(BackendFailure)
+    case destination(Destination)
+    case outside(PaymentProviderPickerFlowOutside)
+}
+
+extension PaymentProviderPickerFlowNavigation: Equatable where Destination: Equatable {}
+
+extension PaymentProviderPickerFlowSelect: Equatable where Latest: Equatable, Provider: Equatable {}
+
+public enum PaymentProviderPickerFlowOutside: Equatable {
+    
+    case back
+    case chat
+    case main
+    case payments
+    case qr
+}

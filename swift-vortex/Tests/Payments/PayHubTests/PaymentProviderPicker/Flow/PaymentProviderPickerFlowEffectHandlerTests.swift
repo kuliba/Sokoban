@@ -39,7 +39,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let destination = makeDestination()
         let (sut, initiatePayment, _,_) = makeSUT()
         
-        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .destination(destination)) {
+        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .receive(.destination(destination))) {
             
             initiatePayment.complete(with: destination)
         }
@@ -50,7 +50,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let destination = makeDestination()
         let (sut, _, detailPaymentSpy,_) = makeSUT()
         
-        expect(sut, with: .select(.detailPayment), toDeliver: .destination(destination)) {
+        expect(sut, with: .select(.detailPayment), toDeliver: .receive(.destination(destination))) {
             
             detailPaymentSpy.complete(with: destination)
         }
@@ -71,7 +71,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let destination = makeDestination()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .destination(destination)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .receive(.destination(destination))) {
             
             providerProcess.complete(with: destination)
         }
@@ -82,7 +82,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let destination = makeDestination()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .destination(destination)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .receive(.destination(destination))) {
             
             providerProcess.complete(with: destination)
         }

@@ -21,21 +21,7 @@ public struct PaymentProviderPickerFlowState<Destination> {
 
 public extension PaymentProviderPickerFlowState {
     
-    enum Navigation {
-        
-        case alert(BackendFailure)
-        case destination(Destination)
-        case outside(Outside)
-    }
-}
-
-public extension PaymentProviderPickerFlowState.Navigation {
-    
-    enum Outside: Equatable {
-        
-        case back, chat, main, payments, qr
-    }
+    typealias Navigation = PaymentProviderPickerFlowNavigation<Destination>
 }
 
 extension PaymentProviderPickerFlowState: Equatable where Destination: Equatable {}
-extension PaymentProviderPickerFlowState.Navigation: Equatable where Destination: Equatable {}

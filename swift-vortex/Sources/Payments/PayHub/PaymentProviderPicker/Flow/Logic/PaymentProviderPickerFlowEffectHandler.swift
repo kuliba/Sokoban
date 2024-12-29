@@ -51,19 +51,19 @@ private extension PaymentProviderPickerFlowEffectHandler {
         case .detailPayment:
             microServices.makeDetailPayment {
                 
-                dispatch(.destination($0))
+                dispatch(.receive(.destination($0)))
             }
             
         case let .latest(latest):
             microServices.initiatePayment(latest, notify) {
                 
-                dispatch(.destination($0))
+                dispatch(.receive(.destination($0)))
             }
             
         case let .provider(provider):
             microServices.processProvider(provider, notify) {
                 
-                dispatch(.destination($0))
+                dispatch(.receive(.destination($0)))
             }
         }
     }

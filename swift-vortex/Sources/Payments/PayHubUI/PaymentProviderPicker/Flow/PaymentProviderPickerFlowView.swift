@@ -306,13 +306,13 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("failure") {
                     
-                    event(.alert(.server("Error initiating payment failure")))
+                    event(.receive(.alert(.server("Error initiating payment failure"))))
                 }
                 .foregroundColor(.red)
                 
                 Button("success") {
                     
-                    event(.destination(.payment(.init())))
+                    event(.receive(.destination(.payment(.init()))))
                 }
             } header: {
                 Text("Initiate Payment")
@@ -322,13 +322,13 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("failure") {
                     
-                    event(.destination(.servicesFailure(.init())))
+                    event(.receive(.destination(.servicesFailure(.init()))))
                 }
                 .foregroundColor(.red)
                 
                 Button("multi") {
                     
-                    event(.destination(.servicePicker(.init())))
+                    event(.receive(.destination(.servicePicker(.init()))))
                 }
             } header: {
                 Text("Load Services")
@@ -338,7 +338,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("Pay by Instructions") {
                     
-                    event(.destination(.detailPayment(.init())))
+                    event(.receive(.destination(.detailPayment(.init()))))
                 }
             } header: {
                 Text("Pay by Instructions")

@@ -21,14 +21,20 @@ public extension PaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
-        case let .alert(serviceFailure):
-            state.navigation = .alert(serviceFailure)
-            
-        case let .destination(destination):
-            state.navigation = .destination(destination)
-            
         case .dismiss:
             state.navigation = nil
+            
+        case let .receive(navigation):
+            switch navigation {
+            case let .alert(serviceFailure):
+                state.navigation = .alert(serviceFailure)
+                
+            case let .destination(destination):
+                state.navigation = .destination(destination)
+                
+            case let .outside(outside):
+                state.navigation = .outside(outside)
+            }
                         
         case let .select(select):
             self.select(&state, &effect, with: select)
