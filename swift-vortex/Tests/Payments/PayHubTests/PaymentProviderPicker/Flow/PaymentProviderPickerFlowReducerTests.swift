@@ -184,6 +184,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     // MARK: - Helpers
     
     private typealias SUT = PaymentProviderPickerFlowReducer<Destination, Latest, Provider>
+    private typealias Navigation = PaymentProviderPickerFlowNavigation<Destination>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -199,7 +200,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     private func makeState(
         isLoading: Bool = false,
-        navigation: SUT.State.Navigation? = nil
+        navigation: Navigation? = nil
     ) -> SUT.State {
         
         return .init(isLoading: isLoading, navigation: navigation)
