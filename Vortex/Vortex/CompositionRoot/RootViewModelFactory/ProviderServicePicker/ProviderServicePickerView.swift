@@ -11,6 +11,7 @@ import SwiftUI
 struct ProviderServicePickerView<AnywayFlowView: View>: View {
     
     let binder: Domain.Binder
+    @ViewBuilder
     let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
     let makeIconView: MakeIconView
     

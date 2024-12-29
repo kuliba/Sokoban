@@ -285,10 +285,11 @@ extension RootViewModelFactory {
             case let .success(success):
                 switch success {
                 case let .services(operatorServices):
+                    
                     completion(.payment(.success(
-                        .services(.init(
-                            services: operatorServices.services,
-                            operator: operatorServices.operator
+                        .services(makeProviderServicePicker(
+                            provider: operatorServices.operator.operator,
+                            services: operatorServices.services
                         ))
                     )))
                     
@@ -323,6 +324,14 @@ extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+private extension UtilityPaymentProvider {
+ 
+    var `operator`: UtilityPaymentOperator {
+        
+        return .init(id: id, inn: inn, title: title, icon: icon, type: type)
+    }
+}
 
 private extension RemoteServices.ResponseMapper.LatestPayment {
     
