@@ -68,7 +68,32 @@ extension RootViewModelFactory {
         notify: @escaping ProviderServicePickerDomain.Notify,
         completion: @escaping (ProviderServicePickerDomain.Navigation) -> Void
     ) {
+        process(payload: select.payload) {
+            
+            switch $0 {
+            case let .failure(failure):
+                completion(.failure(failure))
+                
+            case let .success(success):
+                completion(.ok)
+            }
+        }
+    }
+}
+
+private extension ProviderServicePickerDomain.Select {
+    
+    var payload: RootViewModelFactory.ProcessServicePayload {
         
+        return .init(item: item, operator: `operator`.provider)
+    }
+}
+
+private extension UtilityPaymentOperator {
+    
+    var provider: UtilityPaymentProvider {
+        
+        return .init(id: id, icon: icon, inn: inn, title: title, type: type)
     }
 }
 
@@ -85,8 +110,11 @@ extension ProviderServicePickerDomain {
     
     struct Content: Equatable {
         
-        let provider: UtilityPaymentOperator
-        let services: MultiElementArray<UtilityService>
+        let provider: Provider
+        let services: Services
+        
+        typealias Provider = UtilityPaymentOperator
+        typealias Services = MultiElementArray<UtilityService>
     }
     
     // MARK: - Flow
@@ -97,9 +125,17 @@ extension ProviderServicePickerDomain {
     typealias Notify = FlowDomain.Notify
     typealias NotifyEvent = FlowDomain.NotifyEvent
     
-    enum Select {}
+    struct Select: Equatable {
+        
+        let item: ServicePickerItem
+        let `operator`: UtilityPaymentOperator
+    }
     
-    enum Navigation {}
+    enum Navigation {
+        
+        case failure(ServiceFailureAlert.ServiceFailure)
+        case ok
+    }
 }
 
 @testable import Vortex
