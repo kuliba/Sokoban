@@ -213,7 +213,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
             payload: payload,
             processService: processService
         ) {
-            XCTAssertNoDiff($0, expectedResponse)
+            XCTAssertNoDiff($0, expectedResponse, file: file, line: line)
             exp.fulfill()
         }
         

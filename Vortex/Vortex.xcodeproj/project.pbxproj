@@ -1441,6 +1441,7 @@
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACEA7BA2CA82EDA00404DFF /* SelectedCategoryNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */; };
+		2ACED4BA2D215BD600F35C5F /* RootViewModelFactory+processServicePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACED4B92D215BD600F35C5F /* RootViewModelFactory+processServicePayload.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
 		2ACFD6512C5CC700003F08AE /* QRModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6502C5CC700003F08AE /* QRModelWrapper.swift */; };
@@ -5006,6 +5007,7 @@
 		2ACE0AB72B540697007AA2ED /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
 		2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryNavigation.swift; sourceTree = "<group>"; };
+		2ACED4B92D215BD600F35C5F /* RootViewModelFactory+processServicePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+processServicePayload.swift"; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
 		2ACFD6502C5CC700003F08AE /* QRModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelWrapper.swift; sourceTree = "<group>"; };
@@ -10716,6 +10718,7 @@
 				2AB5EBFB2D195D0500D32B4E /* RootViewModelFactory+getInfoRepeatPaymentNavigationTests.swift */,
 				2A887DDF2D16D4760094840E /* GetInfoRepeatPaymentTests.swift */,
 				2A8506072D212CBB0095DBE5 /* RootViewModelFactory+processProviderTests.swift */,
+				2ACED4B92D215BD600F35C5F /* RootViewModelFactory+processServicePayload.swift */,
 				2A86176C2D2083B400288B01 /* ProviderServicePicker */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 				A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */,
@@ -22600,6 +22603,7 @@
 				2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
 				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
+				2ACED4BA2D215BD600F35C5F /* RootViewModelFactory+processServicePayload.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
 				83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */,
 				2A8617702D211C3D00288B01 /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestWithPayloadTests.swift in Sources */,

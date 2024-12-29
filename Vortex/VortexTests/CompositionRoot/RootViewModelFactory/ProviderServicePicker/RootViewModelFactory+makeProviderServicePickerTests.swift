@@ -178,8 +178,11 @@ final class RootViewModelFactory_makeProviderServicePickerTests: RootViewModelFa
         
         return .init(first ?? makeUtilityService(), second ?? makeUtilityService(), tail)
     }
+}
+
+extension RootViewModelFactoryTests {
     
-    private func makeUtilityService(
+    func makeUtilityService(
         icon: String? = anyMessage(),
         name: String = anyMessage(),
         puref: String = anyMessage()
