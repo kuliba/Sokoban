@@ -46,11 +46,20 @@ extension RootViewModelFactory {
     ) {
         loadServices(for: payload.getServicesForPayload) {
             
-            _ in completion(.operatorFailure(payload))
+            switch ($0.first, MultiElementArray($0)) {
+            case (nil, _):
+                completion(.operatorFailure(payload))
+                
+            case let (.some(service), nil):
+                break
+                
+            case let (_, .some(services)):
+                completion(.services(services, for: payload))
+            }
         }
     }
     
-    typealias ProcessPaymentProviderDomain = VortexTests.ProcessPaymentProviderDomain<UtilityPaymentOperator, UtilityService, Result<Void, Error>>
+    typealias ProcessPaymentProviderDomain = VortexTests.ProcessPaymentProviderDomain<UtilityPaymentOperator, ServicePickerItem, Result<Void, Error>>
 }
 
 @testable import Vortex
@@ -100,6 +109,58 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_shouldDeliverOperatorFailureOnHTTPClientSuccessWithNoServices() throws {
+        
+        let payload = makePayload()
+        let (sut, httpClient, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.processProvider(payload: payload) {
+            
+            switch $0 {
+            case let .operatorFailure(`operator`):
+                XCTAssertNoDiff(`operator`, payload)
+                
+            default:
+                XCTFail("Expected `operatorFailure`, but got \($0) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        httpClient.complete(withString: .emptyServicesValidJSON)
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_shouldDeliverServicesOnHTTPClientSuccessWithTwoServices() throws {
+        
+        let payload = makePayload()
+        let (sut, httpClient, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.processProvider(payload: payload) {
+            
+            switch $0 {
+            case let .services(services, for: `operator`):
+                XCTAssertNoDiff(`operator`, payload)
+                XCTAssertNoDiff(services, .init(
+                    .init(service: .mirnaya, isOneOf: true),
+                    .init(service: .burash, isOneOf: true)
+                ))
+                
+            default:
+                XCTFail("Expected `services`, but got \($0) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        httpClient.complete(withString: .multiServicesValidJSON)
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private typealias Domain = SUT.ProcessPaymentProviderDomain
@@ -116,4 +177,18 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         
         return .init(id: id, inn: inn, title: title, icon: icon, type: type)
     }
+}
+
+private extension UtilityService {
+    
+    static let mirnaya: Self = .init(
+        icon: "ef7a4271cdec35cc20c4ca0bb4d43f93",
+        name: "КОММУНАЛЬНЫЕ УСЛУГИ-МИРНАЯ 3",
+        puref: "iVortexNKORR||55177"
+    )
+    static let burash: Self = .init(
+        icon: "ef7a4271cdec35cc20c4ca0bb4d43f93",
+        name: "КОММУНАЛЬНЫЕ УСЛУГИ-БУРАШЕВСКОЕ Ш 62",
+        puref: "iVortexNKORR||66659"
+    )
 }
