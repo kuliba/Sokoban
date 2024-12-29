@@ -13,12 +13,7 @@ enum ProcessPaymentProviderDomain<Operator, Service, StartPaymentResult> {}
 
 extension ProcessPaymentProviderDomain {
     
-    // de facto payload for createGetOperatorsListByParamOperatorOnlyFalseRequest without serial (which is intentionally ignored)
-    struct Payload: Equatable {
-        
-        let id: String
-        let type: String
-    }
+    typealias Payload = Operator
     
     enum Response {
         
@@ -31,13 +26,9 @@ extension ProcessPaymentProviderDomain {
     }
 }
 
-extension ProcessPaymentProviderDomain.Payload {
-    
-    /// - Warning: `serial` is intentionally ignored.
-    var getOperatorsPayload: Vortex.RequestFactory.GetOperatorsListByParamOperatorOnlyFalsePayload {
-        
-        return .init(operatorID: id, type: type, serial: nil)
-    }
+extension ProcessPaymentProviderDomain.Response: Equatable where Operator: Equatable, Service: Equatable, StartPaymentResult: Equatable {}
+
+extension UtilityPaymentOperator {
     
     var getServicesForPayload: RootViewModelFactory.GetServicesForPayload {
         
@@ -53,11 +44,13 @@ extension RootViewModelFactory {
         payload: ProcessPaymentProviderDomain.Payload,
         completion: @escaping (ProcessPaymentProviderDomain.Response) -> Void
     ) {
-        loadServices(for: payload.getServicesForPayload) { _ in }
+        loadServices(for: payload.getServicesForPayload) {
+            
+            _ in completion(.operatorFailure(payload))
+        }
     }
     
     typealias ProcessPaymentProviderDomain = VortexTests.ProcessPaymentProviderDomain<UtilityPaymentOperator, UtilityService, Result<Void, Error>>
-    
 }
 
 @testable import Vortex
@@ -83,6 +76,30 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         ]])
     }
     
+    func test_shouldDeliverOperatorFailureOnHTTPClientFailure() throws {
+        
+        let payload = makePayload()
+        let (sut, httpClient, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.processProvider(payload: payload) {
+            
+            switch $0 {
+            case let .operatorFailure(`operator`):
+                XCTAssertNoDiff(`operator`, payload)
+                
+            default:
+                XCTFail("Expected `operatorFailure`, but got \($0) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        httpClient.complete(with: anyError())
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private typealias Domain = SUT.ProcessPaymentProviderDomain
@@ -91,9 +108,12 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     
     private func makePayload(
         id: String = anyMessage(),
+        inn: String = anyMessage(),
+        title: String = anyMessage(),
+        icon: String? = anyMessage(),
         type: String = anyMessage()
     ) -> Payload {
         
-        return .init(id: id, type: type)
+        return .init(id: id, inn: inn, title: title, icon: icon, type: type)
     }
 }
