@@ -34,7 +34,7 @@ extension PaymentProviderPickerDomain {
     typealias FlowReducer = FlowDomain.Reducer
     typealias FlowEffectHandler = FlowDomain.EffectHandler
     
-    typealias Navigation = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
+    typealias Navigation = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
     
     typealias DetailPayment = ClosePaymentsViewModelWrapper
     typealias Payment = ProcessSelectionResult

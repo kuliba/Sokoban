@@ -46,7 +46,7 @@ public extension PaymentProviderPickerFlowView {
     typealias State = PaymentProviderPickerFlowState<Destination>
 #warning("could be improved and use less generics if scope just flow events, for example Latest is not used; and Provider too(?)")
     typealias Event = PaymentProviderPickerFlowEvent<Destination, Latest, Provider>
-    typealias Destination = PaymentProviderPickerNavigation<DetailPayment, Payment, Service, ServicesFailure>
+    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, Service, ServicesFailure>
 }
 
 private extension PaymentProviderPickerFlowView {
@@ -98,7 +98,7 @@ extension BackendFailure {
     }
 }
 
-extension PaymentProviderPickerNavigation: Identifiable {
+extension PaymentProviderPickerDestination: Identifiable {
     
     public var id: ID {
         
@@ -149,7 +149,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
             .previewDisplayName("outside(.chat)")
     }
     
-    typealias State = PaymentProviderPickerFlowState<PaymentProviderPickerNavigation<PreviewDetailPayment, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>>
+    typealias State = PaymentProviderPickerFlowState<PaymentProviderPickerDestination<PreviewDetailPayment, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>>
     
     private static func flowView(
         _ state: State
@@ -278,7 +278,7 @@ struct PaymentProviderPickerFlowDemoView: View {
         ))
     }
     
-    private typealias PreviewDestination = PaymentProviderPickerNavigation<PreviewDetailPayment, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>
+    private typealias PreviewDestination = PaymentProviderPickerDestination<PreviewDetailPayment, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>
     private typealias FlowState = PaymentProviderPickerFlowState<PreviewDestination>
     private typealias Event = PaymentProviderPickerFlowEvent<PreviewDestination, PreviewLatest, PreviewPaymentProvider>
     
