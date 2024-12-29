@@ -71,7 +71,7 @@ final class RootViewModelFactory_loadServicesTests: RootViewModelFactoryTests {
             exp.fulfill()
         }
         
-        httpClient.complete(with: .emptyServicesValidJSON)
+        httpClient.complete(withString: .emptyServicesValidJSON)
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -88,7 +88,7 @@ final class RootViewModelFactory_loadServicesTests: RootViewModelFactoryTests {
             exp.fulfill()
         }
         
-        httpClient.complete(with: .singleServiceValidJSON)
+        httpClient.complete(withString: .singleServiceValidJSON)
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -105,7 +105,7 @@ final class RootViewModelFactory_loadServicesTests: RootViewModelFactoryTests {
             exp.fulfill()
         }
         
-        httpClient.complete(with: .multiServicesValidJSON)
+        httpClient.complete(withString: .multiServicesValidJSON)
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -157,17 +157,17 @@ final class RootViewModelFactory_loadServicesTests: RootViewModelFactoryTests {
     }
 }
 
-private extension HTTPClientSpy {
+extension HTTPClientSpy {
     
     func complete(
-        with string: String,
+        withString string: String,
         response: HTTPURLResponse = anyHTTPURLResponse()
     ) {
         complete(with: (.init(string.utf8), response))
     }
 }
 
-private extension String {
+extension String {
     
     static let emptyServicesValidJSON = """
 {

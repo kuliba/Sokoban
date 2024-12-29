@@ -5,104 +5,8 @@
 //  Created by Igor Malyarov on 28.12.2024.
 //
 
-import Combine
-import PayHub
-import VortexTools
-
-#warning("move to UI")
-extension ProviderServicePickerDomain.Content {
-    
-    var navBar: Navbar { return provider.navBar }
-    
-    var items: [Item] { services.elements.map(\.item) }
-    
-    struct Navbar: Equatable {
-        
-        let icon: String?
-        let title: String
-        let subtitle: String
-    }
-    
-    struct Item: Equatable {
-        
-        let icon: String?
-        let title: String
-    }
-}
-
-private extension UtilityPaymentOperator {
-    
-    var navBar: ProviderServicePickerDomain.Content.Navbar {
-        
-        return .init(icon: icon, title: title, subtitle: subtitle)
-    }
-}
-
-private extension UtilityService {
-    
-    var item: ProviderServicePickerDomain.Content.Item {
-        
-        return .init(icon: icon, title: name)
-    }
-}
-
-extension RootViewModelFactory {
-    
-    func makeProviderServicePicker(
-        provider: UtilityPaymentOperator,
-        services: MultiElementArray<UtilityService>
-    ) -> ProviderServicePickerDomain.Binder {
-        
-        compose(
-            getNavigation: getProviderServicePickerNavigation,
-            content: .init(provider: provider, services: services),
-            witnesses: .init(
-                emitting: { _ in Empty().eraseToAnyPublisher() },
-                dismissing: { _ in {}}
-            )
-        )
-    }
-    
-    func getProviderServicePickerNavigation(
-        select: ProviderServicePickerDomain.Select,
-        notify: @escaping ProviderServicePickerDomain.Notify,
-        completion: @escaping (ProviderServicePickerDomain.Navigation) -> Void
-    ) {
-        
-    }
-}
-
-/// A nameSpace.
-enum ProviderServicePickerDomain {}
-
-extension ProviderServicePickerDomain {
-    
-    // MARK: - Binder
-    
-    typealias Binder = PayHub.Binder<Content, Flow>
-    
-    // MARK: - Content
-    
-    struct Content: Equatable {
-        
-        let provider: UtilityPaymentOperator
-        let services: MultiElementArray<UtilityService>
-    }
-    
-    // MARK: - Flow
-    
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
-    typealias Flow = FlowDomain.Flow
-    
-    typealias Notify = FlowDomain.Notify
-    typealias NotifyEvent = FlowDomain.NotifyEvent
-    
-    enum Select {}
-    
-    enum Navigation {}
-}
-
 @testable import Vortex
+import VortexTools
 import XCTest
 
 final class RootViewModelFactory_makeProviderServicePickerTests: RootViewModelFactoryTests {
@@ -152,8 +56,14 @@ final class RootViewModelFactory_makeProviderServicePickerTests: RootViewModelFa
         let first = services.elements[0]
         let second = services.elements[1]
         XCTAssertNoDiff(binder.content.items, [
-            .init(icon: first.icon, title: first.name),
-            .init(icon: second.icon, title: second.name),
+            .init(
+                label: .init(icon: first.icon, title: first.name),
+                item: .init(service: first, isOneOf: true)
+            ),
+            .init(
+                label: .init(icon: second.icon, title: second.name),
+                item: .init(service: second, isOneOf: true)
+            ),
         ])
     }
     
@@ -178,8 +88,11 @@ final class RootViewModelFactory_makeProviderServicePickerTests: RootViewModelFa
         
         return .init(first ?? makeUtilityService(), second ?? makeUtilityService(), tail)
     }
+}
+
+extension RootViewModelFactoryTests {
     
-    private func makeUtilityService(
+    func makeUtilityService(
         icon: String? = anyMessage(),
         name: String = anyMessage(),
         puref: String = anyMessage()
