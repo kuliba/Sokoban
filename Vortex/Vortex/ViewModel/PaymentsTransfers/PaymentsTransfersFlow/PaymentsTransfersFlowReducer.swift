@@ -413,7 +413,8 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, AnywayTransactionState.Transaction>
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    private typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, OperatorServices, AnywayTransactionState.Transaction>
     
     private func reduce(
         _ state: inout State,

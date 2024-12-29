@@ -44,7 +44,8 @@ extension PaymentProviderPickerDomain {
     typealias ServicesFailure = Void
     
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
-    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, Node<AnywayFlowModel>>
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, OperatorServices, Node<AnywayFlowModel>>
 }
 
 // MARK: - ProviderList
