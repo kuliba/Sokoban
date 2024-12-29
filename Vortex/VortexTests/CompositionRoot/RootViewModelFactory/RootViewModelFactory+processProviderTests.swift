@@ -54,7 +54,10 @@ extension RootViewModelFactory {
                 completion(.operatorFailure(payload))
                 
             case let (.some(service), nil):
-                break
+                processService(service) { _ in
+                    
+                    completion(.operatorFailure(payload))
+                }
                 
             case let (_, .some(services)):
                 completion(.services(services, for: payload))
@@ -108,6 +111,29 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
         }
     }
     
+    func test_shouldCallProcessServiceWithServiceOnHTTPClientSuccessWithOneService() throws {
+        
+        let payload = makePayload()
+        let (sut, httpClient, _) = makeSUT()
+        let processServiceSpy = ProcessServiceSpy()
+        
+        let exp = expectation(description: "wait for completion")
+        
+        sut.processProvider(
+            payload: payload,
+            processService: processServiceSpy.process
+        ) { _ in exp.fulfill() }
+        
+        httpClient.complete(withString: .singleServiceValidJSON)
+        processServiceSpy.complete(with: makeServiceResponse())
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(processServiceSpy.payloads, [
+            .init(service: .capremont, isOneOf: false)
+        ])
+    }
+    
     func test_shouldDeliverServicesOnHTTPClientSuccessWithTwoServices() throws {
         
         let payload = makePayload()
@@ -127,6 +153,7 @@ final class RootViewModelFactory_processProviderTests: RootViewModelFactoryTests
     private typealias Domain = SUT.ProcessPaymentProviderDomain<ServiceResponse>
     private typealias Payload = Domain.Payload
     private typealias Response = Domain.Response
+    private typealias ProcessServiceSpy = Spy<ServicePickerItem, ServiceResponse, Error>
     
     private func makePayload(
         id: String = anyMessage(),
@@ -186,5 +213,10 @@ private extension UtilityService {
         icon: "ef7a4271cdec35cc20c4ca0bb4d43f93",
         name: "КОММУНАЛЬНЫЕ УСЛУГИ-БУРАШЕВСКОЕ Ш 62",
         puref: "iVortexNKORR||66659"
+    )
+    static let capremont: Self = .init(
+        icon: "ef7a4271cdec35cc20c4ca0bb4d43f93",
+        name: "КАПРЕМОНТ (Р/С ...00024)",
+        puref: "iVortexNKORR||42358"
     )
 }
