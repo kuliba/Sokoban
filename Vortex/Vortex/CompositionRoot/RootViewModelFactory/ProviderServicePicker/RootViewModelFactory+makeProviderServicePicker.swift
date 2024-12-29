@@ -10,6 +10,7 @@ import VortexTools
 
 extension RootViewModelFactory {
     
+    @inlinable
     func makeProviderServicePicker(
         provider: UtilityPaymentOperator,
         services: MultiElementArray<UtilityService>
@@ -25,6 +26,7 @@ extension RootViewModelFactory {
         )
     }
     
+    @inlinable
     func getProviderServicePickerNavigation(
         select: ProviderServicePickerDomain.Select,
         notify: @escaping ProviderServicePickerDomain.Notify,
@@ -35,7 +37,9 @@ extension RootViewModelFactory {
             completion(.outside(outside))
             
         case let .service(servicePayload):
-            process(payload: servicePayload.payload) { [weak self] in
+            initiateAnywayPayment(
+                payload: servicePayload.source
+            ) { [weak self] in
                 
                 guard let self else { return }
                 
@@ -64,11 +68,17 @@ extension RootViewModelFactory {
     }
 }
 
+// MARK: - Adapters
+
 private extension ProviderServicePickerDomain.Select.ServicePayload {
     
-    var payload: RootViewModelFactory.ProcessServicePayload {
+    var source: AnywayPaymentSourceParser.Source {
         
-        return .init(item: item, operator: `operator`.provider)
+        if item.isOneOf {
+            return .oneOf(item.service, `operator`.provider)
+        } else {
+            return .single(item.service, `operator`.provider)
+        }
     }
 }
 
