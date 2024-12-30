@@ -23,19 +23,23 @@ struct RootWrapperView: View {
                 .opacity(flow.state.isLoading ? 1 : 0)
                 .zIndex(1.0)
             
-            RxWrapperView(model: flow) { state, event in
+            NavigationView {
                 
-                rootView()
-                    .fullScreenCoverInspectable(
-                        item: { state.navigation?.fullScreenCover },
-                        dismiss: { event(.dismiss) },
-                        content: fullScreenCoverContent
-                    )
-                    .navigationDestination(
-                        destination: state.navigation?.destination,
-                        // dismiss managed by flow, not SwiftUI
-                        content: destinationContent
-                    )
+                RxWrapperView(model: flow) { state, event in
+                    
+                    rootView()
+                        .fullScreenCoverInspectable(
+                            item: { state.navigation?.fullScreenCover },
+                            dismiss: { event(.dismiss) },
+                            content: fullScreenCoverContent
+                        )
+                        .navigationDestination(
+                            destination: state.navigation?.destination,
+                            // dismiss managed by flow, not SwiftUI
+                            content: destinationContent
+                        )
+                }
+                .navigationBarHidden(true)
             }
         }
     }

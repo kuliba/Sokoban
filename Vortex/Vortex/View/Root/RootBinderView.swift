@@ -14,11 +14,7 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        NavigationView {
-            
-            rootViewFactory.makeRootWrapperView(binder: binder)
-                .navigationBarHidden(true)
-        }
+        rootViewFactory.makeRootWrapperView(binder: binder)
     }
 }
 
