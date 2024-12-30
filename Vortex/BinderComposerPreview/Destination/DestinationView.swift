@@ -12,6 +12,8 @@ struct DestinationView: View {
     
     @ObservedObject var model: DestinationDomain.Content
     
+    let title: String
+    
     var body: some View {
         
         RxWrapperView(model: model) { state, event in
@@ -26,9 +28,16 @@ struct DestinationView: View {
                 .foregroundColor(.secondary.opacity(0.5))
                 .padding()
                 
-                Button("Next") { event(.select(.next)) }
-                    .font(.headline.bold())
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                VStack {
+                    
+                    Text(title)
+                        .font(.headline)
+                        .padding()
+                    
+                    Button("Next") { event(.select(.next)) }
+                        .font(.headline.bold())
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
             }
         }
     }

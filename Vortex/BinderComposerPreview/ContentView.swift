@@ -12,6 +12,7 @@ import UIPrimitives
 struct ContentView: View {
     
     @State private var delay: Delay = .ms200
+    @State private var mode: Mode = .both
     
     private var binder: RootDomain.Binder { .default(delay: delay.value) }
     
@@ -30,9 +31,9 @@ struct ContentView: View {
 private extension ContentView {
     
     func progressView() -> some View {
-    
+        
         RxWrapperView(model: binder.flow) { state, event in
-
+            
             ZStack {
                 
                 ProgressView()
@@ -55,27 +56,59 @@ private extension ContentView {
                 
                 RootFlowView(state: state, event: event) {
                     
-                    contentView(event: event)
-                        .navigationDestination(
-                            destination: state.navigation?.destination,
-                            dismiss: { event(.dismiss) },
-                            content: destinationView(destination:)
-                        )
-                        .sheet(
-                            modal: state.navigation?.sheet,
-                            dismiss: { event(.dismiss) },
-                            content: sheetView
-                        )
-                        .onChange(of: state.navigation?.destination?.id) {
-                            
-                            print("destination:", $0.map { $0 } ?? "nil")
-                        }
-                        .onChange(of: state.navigation?.sheet?.id) {
-                            
-                            print("sheet:", $0.map { $0 } ?? "nil")
-                        }
+                    flowView(state: state, event: event) {
+                        
+                        contentView(event: event)
+                    }
+                    .onChange(of: state.navigation?.destination?.id) {
+                        
+                        print("destination:", $0.map { $0 } ?? "nil")
+                    }
+                    .onChange(of: state.navigation?.sheet?.id) {
+                        
+                        print("sheet:", $0.map { $0 } ?? "nil")
+                    }
                 }
             }
+        }
+    }
+    
+    @ViewBuilder
+    func flowView<Content: View>(
+        state: RootDomain.FlowDomain.State,
+        event: @escaping (RootDomain.FlowDomain.Event) -> Void,
+        _ content: () -> Content
+    ) -> some View {
+        
+        switch mode {
+        case .both:
+            content()
+                .navigationDestination(
+                    destination: state.navigation?.destination,
+                    dismiss: { event(.dismiss) },
+                    content: destinationView(destination:)
+                )
+                .sheet(
+                    modal: state.navigation?.sheet,
+                    dismiss: { event(.dismiss) },
+                    content: sheetView
+                )
+            
+        case .destination:
+            content()
+                .navigationDestination(
+                    destination: state.navigation,
+                    dismiss: { event(.dismiss) },
+                    content: destinationView(navigation:)
+                )
+            
+        case .sheet:
+            content()
+                .sheet(
+                    modal: state.navigation,
+                    dismiss: { event(.dismiss) },
+                    content: destinationView(navigation:)
+                )
         }
     }
     
@@ -84,6 +117,14 @@ private extension ContentView {
     ) -> some View {
         
         VStack(spacing: 32) {
+            
+            Text("Using Sheets only could work no delay at all, Navigation Destination needs 500 ms.")
+            
+            Divider()
+            
+            modePicker()
+            
+            Divider()
             
             Text("Start flow with either `Destination` or `Sheet`. See how moving from Sheet to Destination on tapping `Next` briefly shows destination and dismisses it if delay is small.")
             
@@ -95,10 +136,22 @@ private extension ContentView {
             
             Divider()
             
-            picker()
+            delayPicker()
             note()
         }
         .padding(.horizontal)
+    }
+    
+    func modePicker() -> some View {
+        
+        Picker("Model", systemImage: "star", selection: $mode) {
+            
+            ForEach(Mode.allCases, id: \.self) {
+                
+                Text($0.rawValue)
+            }
+        }
+        .pickerStyle(.segmented)
     }
     
     private func button(
@@ -110,7 +163,7 @@ private extension ContentView {
             .frame(maxWidth: .infinity)
     }
     
-    func picker() -> some View {
+    func delayPicker() -> some View {
         
         Picker("Delay", systemImage: "clock", selection: $delay) {
             
@@ -131,12 +184,26 @@ private extension ContentView {
     
     @ViewBuilder
     func destinationView(
+        navigation: RootDomain.Navigation
+    ) -> some View {
+        
+        switch navigation {
+        case let .destination(node):
+            DestinationView(model: node.model, title: "Destination")
+            
+        case let .sheet(node):
+            DestinationView(model: node.model, title: "Sheet")
+        }
+    }
+    
+    @ViewBuilder
+    func destinationView(
         destination: RootDomain.Navigation.Destination
     ) -> some View {
         
         switch destination {
         case let .content(content):
-            DestinationView(model: content)
+            DestinationView(model: content, title: "Destination")
         }
     }
     
@@ -147,7 +214,7 @@ private extension ContentView {
         
         switch sheet {
         case let .content(content):
-            DestinationView(model: content)
+            DestinationView(model: content, title: "Sheet")
         }
     }
     
@@ -161,6 +228,11 @@ private extension ContentView {
         case ms600 = 600
         
         var value: RootDomain.BinderComposer.Delay { .milliseconds(rawValue) }
+    }
+    
+    enum Mode: String, CaseIterable {
+        
+        case both, destination, sheet
     }
 }
 
@@ -196,6 +268,26 @@ extension RootDomain.Navigation {
     enum Sheet {
         
         case content(DestinationDomain.Content)
+    }
+}
+
+extension RootDomain.Navigation: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .destination(node):
+            return .destination(.init(node.model))
+            
+        case let .sheet(node):
+            return .sheet(.init(node.model))
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case destination(ObjectIdentifier)
+        case sheet(ObjectIdentifier)
     }
 }
 
