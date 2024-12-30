@@ -30,7 +30,7 @@ extension RootViewModelFactory {
             ))))
             
         case let .latest(latest):
-            return
+            initiateAnywayPayment(latest: latest, notify: notify, completion: completion)
             
         case let .outside(outside):
             completion(.outside(outside))
@@ -73,6 +73,58 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
     }
     
     // MARK: - latest
+    
+    func test_latest_shouldSetBackendFailureDestinationOnMissingProduct() {
+        
+        let latest = makeServiceLatest()
+        let (sut, _,_) = makeSUT()
+        
+        expect(
+            sut,
+            select: .latest(latest),
+            toDeliver: .destination(.backendFailure(.init(
+                message: "connectivity failure",
+                source: .connectivity
+            )))
+        )
+    }
+    
+    func test_latest_shouldSetBackendFailureDestinationOnHTTPClientFailure() {
+        
+        let latest = makeServiceLatest()
+        let model: Model = .mockWithEmptyExcept()
+        model.addSberProduct()
+        let (sut, httpClient, _) = makeSUT(model: model)
+        
+        expect(
+            sut,
+            select: .latest(latest),
+            toDeliver: .destination(.backendFailure(.init(
+                message: "connectivity failure",
+                source: .connectivity
+            ))),
+            on: {
+                httpClient.complete(with: anyError())
+            }
+        )
+    }
+    
+    func test_latest_shouldSetStartPaymentDestinationOnHTTPClientSuccess() {
+        
+        let latest = makeServiceLatest()
+        let model: Model = .mockWithEmptyExcept()
+        model.addSberProduct()
+        let (sut, httpClient, _) = makeSUT(model: model)
+        
+        expect(
+            sut,
+            select: .latest(latest),
+            toDeliver: .destination(.payment(.success(.startPayment))),
+            on: {
+                httpClient.complete(withString: .createAnywayTransferIsNewPaymentTrueResponse)
+            }
+        )
+    }
     
     // MARK: - outside
     
@@ -268,5 +320,43 @@ private extension PaymentProviderPickerDomain.Navigation {
         }
         
         return detailPayment.model
+    }
+}
+
+// MARK: - Helpers
+
+extension RootViewModelFactoryTests {
+    
+    func makeServiceLatest(
+        additionalItems: [Latest.Service.AdditionalItem]? = nil,
+        amount: Decimal? = nil,
+        currency: String? = nil,
+        date: Int = .random(in: 1...100),
+        detail: Latest.PaymentOperationDetailType = .account2Account,
+        inn: String? = nil,
+        lpName: String? = nil,
+        md5Hash: String? = nil,
+        name: String? = nil,
+        paymentDate: Date = .init(),
+        paymentFlow: Latest.PaymentFlow? = nil,
+        puref: String = anyMessage(),
+        type: Latest.LatestType = .security
+    ) -> Latest {
+        
+        return .service(.init(
+            additionalItems: additionalItems,
+            amount: amount,
+            currency: currency,
+            date: date,
+            detail: detail,
+            inn: inn,
+            lpName: lpName,
+            md5Hash: md5Hash,
+            name: name,
+            paymentDate: paymentDate,
+            paymentFlow: paymentFlow,
+            puref: puref,
+            type: type
+        ))
     }
 }
