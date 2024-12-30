@@ -808,6 +808,11 @@
 		2A4C4B232C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C4B222C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift */; };
 		2A4CC47E2D21E96300F5C263 /* PaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC47D2D21E96200F5C263 /* PaymentProviderPickerFlowView.swift */; };
 		2A4CC4832D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */; };
+		2A4CC48B2D227E4A00F5C263 /* BinderComposerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC48A2D227E4A00F5C263 /* BinderComposerPreviewApp.swift */; };
+		2A4CC48D2D227E4A00F5C263 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC48C2D227E4A00F5C263 /* ContentView.swift */; };
+		2A4CC48F2D227E4B00F5C263 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */; };
+		2A4CC4922D227E4B00F5C263 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */; };
+		2A4CC49C2D227E4B00F5C263 /* BinderComposerPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC49B2D227E4B00F5C263 /* BinderComposerPreviewTests.swift */; };
 		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4D9ACE2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D9ACD2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift */; };
 		2A4D9AD02CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D9ACF2CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift */; };
@@ -3507,6 +3512,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2A4CC4982D227E4B00F5C263 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2A4CC4872D227E4A00F5C263;
+			remoteInfo = BinderComposerPreview;
+		};
 		84CA1BE92D06BAC10097BB93 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
@@ -4366,6 +4378,13 @@
 		2A4C4B222C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEffect.swift; sourceTree = "<group>"; };
 		2A4CC47D2D21E96200F5C263 /* PaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift"; sourceTree = "<group>"; };
+		2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BinderComposerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A4CC48A2D227E4A00F5C263 /* BinderComposerPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewApp.swift; sourceTree = "<group>"; };
+		2A4CC48C2D227E4A00F5C263 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BinderComposerPreviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A4CC49B2D227E4B00F5C263 /* BinderComposerPreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewTests.swift; sourceTree = "<group>"; };
 		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4D9ACD2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeAnywayFlowModel.swift"; sourceTree = "<group>"; };
 		2A4D9ACF2CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getOutlineProduct.swift"; sourceTree = "<group>"; };
@@ -7083,6 +7102,20 @@
 				2A96026C2BCC0EA9000D9B68 /* PaymentComponents in Frameworks */,
 				2AFE37F02BC972800079C401 /* ForaTools in Frameworks */,
 				2AFE37E22BC944B10079C401 /* RxViewModel in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4852D227E4A00F5C263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4942D227E4B00F5C263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9915,6 +9948,35 @@
 			path = Payments;
 			sourceTree = "<group>";
 		};
+		2A4CC4892D227E4A00F5C263 /* BinderComposerPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC48A2D227E4A00F5C263 /* BinderComposerPreviewApp.swift */,
+				2A4CC48C2D227E4A00F5C263 /* ContentView.swift */,
+				2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */,
+				2A4CC4902D227E4B00F5C263 /* Preview Content */,
+			);
+			name = BinderComposerPreview;
+			path = ../BinderComposerPreview;
+			sourceTree = "<group>";
+		};
+		2A4CC4902D227E4B00F5C263 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2A4CC49A2D227E4B00F5C263 /* BinderComposerPreviewTests */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC49B2D227E4B00F5C263 /* BinderComposerPreviewTests.swift */,
+			);
+			name = BinderComposerPreviewTests;
+			path = ../BinderComposerPreviewTests;
+			sourceTree = "<group>";
+		};
 		2A5190322A7E106D0014B0B7 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -12406,6 +12468,8 @@
 			children = (
 				2A2F88282BC942220097119C /* AnywayPaymentPreview */,
 				2A0F1E2A2C06E144006E1231 /* AutoScrollingListPreview */,
+				2A4CC4892D227E4A00F5C263 /* BinderComposerPreview */,
+				2A4CC49A2D227E4B00F5C263 /* BinderComposerPreviewTests */,
 				C1E07D962BFE2D2F00D07180 /* CalendarPreview */,
 				A7598A502CE766DC001980B1 /* CollateralLoanLandingPreview */,
 				2AFED9662C0F929A008F2F95 /* CachedModelsStatePreview */,
@@ -17464,6 +17528,8 @@
 				2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */,
 				2AF529CB2CC01C9A00D49804 /* RefreshableScrollViewPreview.app */,
 				A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */,
+				2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */,
+				2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -18415,6 +18481,41 @@
 			productReference = 2A2F88272BC942220097119C /* AnywayPaymentPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A4CC4B52D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreview" */;
+			buildPhases = (
+				2A4CC4842D227E4A00F5C263 /* Sources */,
+				2A4CC4852D227E4A00F5C263 /* Frameworks */,
+				2A4CC4862D227E4A00F5C263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BinderComposerPreview;
+			productName = BinderComposerPreview;
+			productReference = 2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2A4CC4962D227E4B00F5C263 /* BinderComposerPreviewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A4CC4B62D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreviewTests" */;
+			buildPhases = (
+				2A4CC4932D227E4B00F5C263 /* Sources */,
+				2A4CC4942D227E4B00F5C263 /* Frameworks */,
+				2A4CC4952D227E4B00F5C263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2A4CC4992D227E4B00F5C263 /* PBXTargetDependency */,
+			);
+			name = BinderComposerPreviewTests;
+			productName = BinderComposerPreviewTests;
+			productReference = 2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2A62E95F2BD94F870044EB39 /* FactoryBasedPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A62E96F2BD94F880044EB39 /* Build configuration list for PBXNativeTarget "FactoryBasedPreview" */;
@@ -19020,6 +19121,13 @@
 					2A2F88262BC942220097119C = {
 						CreatedOnToolsVersion = 15.3;
 					};
+					2A4CC4872D227E4A00F5C263 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					2A4CC4962D227E4B00F5C263 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = 2A4CC4872D227E4A00F5C263;
+					};
 					2A62E95F2BD94F870044EB39 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -19155,6 +19263,8 @@
 				2A0E31742C63D52800143969 /* SberNumericTextFieldPreview */,
 				2AF529CA2CC01C9A00D49804 /* RefreshableScrollViewPreview */,
 				A7598A5C2CE7671A001980B1 /* CollateralLoanLandingPreview */,
+				2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */,
+				2A4CC4962D227E4B00F5C263 /* BinderComposerPreviewTests */,
 			);
 		};
 /* End PBXProject section */
@@ -19210,6 +19320,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A2F88312BC942230097119C /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4862D227E4A00F5C263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC4922D227E4B00F5C263 /* Preview Assets.xcassets in Resources */,
+				2A4CC48F2D227E4B00F5C263 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4952D227E4B00F5C263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19904,6 +20030,23 @@
 				2A09E6EA2BCBBA52001A7089 /* Array+AnywayElement+preview.swift in Sources */,
 				2AD0F6992BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift in Sources */,
 				2AFE37F92BCA866C0079C401 /* ExpandablePickerState.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4842D227E4A00F5C263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC48D2D227E4A00F5C263 /* ContentView.swift in Sources */,
+				2A4CC48B2D227E4A00F5C263 /* BinderComposerPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4932D227E4B00F5C263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC49C2D227E4B00F5C263 /* BinderComposerPreviewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -22973,6 +23116,11 @@
 			isa = PBXTargetDependency;
 			productRef = 2A46300A2AC4550500020B73 /* ServerAgent */;
 		};
+		2A4CC4992D227E4B00F5C263 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */;
+			targetProxy = 2A4CC4982D227E4B00F5C263 /* PBXContainerItemProxy */;
+		};
 		84CA1BEA2D06BAC10097BB93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A515682B2821B927000D4455 /* VortexPushServiceExtension */;
@@ -23861,6 +24009,248 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Preprod;
+		};
+		2A4CC4A92D227E4B00F5C263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A4CC4AA2D227E4B00F5C263 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2A4CC4AB2D227E4B00F5C263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2A4CC4AC2D227E4B00F5C263 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
+		2A4CC4AD2D227E4B00F5C263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
+			};
+			name = Debug;
+		};
+		2A4CC4AE2D227E4B00F5C263 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
+			};
+			name = Mock;
+		};
+		2A4CC4AF2D227E4B00F5C263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
+			};
+			name = Release;
+		};
+		2A4CC4B02D227E4B00F5C263 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
 			};
 			name = Preprod;
 		};
@@ -27301,6 +27691,28 @@
 				2A2F88332BC942230097119C /* Mock */,
 				2A2F88342BC942230097119C /* Release */,
 				2A2F88352BC942230097119C /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2A4CC4B52D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A4CC4A92D227E4B00F5C263 /* Debug */,
+				2A4CC4AA2D227E4B00F5C263 /* Mock */,
+				2A4CC4AB2D227E4B00F5C263 /* Release */,
+				2A4CC4AC2D227E4B00F5C263 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2A4CC4B62D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreviewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A4CC4AD2D227E4B00F5C263 /* Debug */,
+				2A4CC4AE2D227E4B00F5C263 /* Mock */,
+				2A4CC4AF2D227E4B00F5C263 /* Release */,
+				2A4CC4B02D227E4B00F5C263 /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
