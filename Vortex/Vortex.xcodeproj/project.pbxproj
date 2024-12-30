@@ -808,11 +808,25 @@
 		2A4C4B232C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C4B222C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift */; };
 		2A4CC47E2D21E96300F5C263 /* PaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC47D2D21E96200F5C263 /* PaymentProviderPickerFlowView.swift */; };
 		2A4CC4832D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */; };
-		2A4CC48B2D227E4A00F5C263 /* BinderComposerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC48A2D227E4A00F5C263 /* BinderComposerPreviewApp.swift */; };
-		2A4CC48D2D227E4A00F5C263 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC48C2D227E4A00F5C263 /* ContentView.swift */; };
 		2A4CC48F2D227E4B00F5C263 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */; };
 		2A4CC4922D227E4B00F5C263 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */; };
-		2A4CC49C2D227E4B00F5C263 /* BinderComposerPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC49B2D227E4B00F5C263 /* BinderComposerPreviewTests.swift */; };
+		2A4CC4C12D2280A600F5C263 /* RootDomain.Binder+default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */; };
+		2A4CC4C22D2280A600F5C263 /* RootDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4B92D2280A500F5C263 /* RootDomain.swift */; };
+		2A4CC4C32D2280A600F5C263 /* RootFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BA2D2280A500F5C263 /* RootFlowView.swift */; };
+		2A4CC4C42D2280A600F5C263 /* BinderComposerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */; };
+		2A4CC4C52D2280A600F5C263 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BD2D2280A600F5C263 /* ContentView.swift */; };
+		2A4CC4C62D2280A600F5C263 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BE2D2280A600F5C263 /* Destination.swift */; };
+		2A4CC4C72D2280A600F5C263 /* DestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BF2D2280A600F5C263 /* DestinationView.swift */; };
+		2A4CC4C92D2280D500F5C263 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4C82D2280D500F5C263 /* RxViewModel */; };
+		2A4CC4CB2D2280E400F5C263 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4CA2D2280E400F5C263 /* UIPrimitives */; };
+		2A4CC4CD2D2280F300F5C263 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4CC2D2280F300F5C263 /* PayHub */; };
+		2A4CC4CF2D2280F300F5C263 /* PayHubUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4CE2D2280F300F5C263 /* PayHubUI */; };
+		2A4CC4D62D22816600F5C263 /* BinderComposerPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D02D22816600F5C263 /* BinderComposerPreviewTests.swift */; };
+		2A4CC4D72D22816600F5C263 /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D12D22816600F5C263 /* XCTAssertNoDiff.swift */; };
+		2A4CC4D82D22816600F5C263 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D32D22816600F5C263 /* ValueSpy.swift */; };
+		2A4CC4D92D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D42D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift */; };
+		2A4CC4DB2D22818800F5C263 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4DA2D22818800F5C263 /* CustomDump */; };
+		2A4CC4DD2D2281B500F5C263 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4DC2D2281B500F5C263 /* CombineSchedulers */; };
 		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4D9ACE2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D9ACD2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift */; };
 		2A4D9AD02CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D9ACF2CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift */; };
@@ -4379,12 +4393,20 @@
 		2A4CC47D2D21E96200F5C263 /* PaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift"; sourceTree = "<group>"; };
 		2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BinderComposerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A4CC48A2D227E4A00F5C263 /* BinderComposerPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewApp.swift; sourceTree = "<group>"; };
-		2A4CC48C2D227E4A00F5C263 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BinderComposerPreviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A4CC49B2D227E4B00F5C263 /* BinderComposerPreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewTests.swift; sourceTree = "<group>"; };
+		2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootDomain.Binder+default.swift"; sourceTree = "<group>"; };
+		2A4CC4B92D2280A500F5C263 /* RootDomain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootDomain.swift; sourceTree = "<group>"; };
+		2A4CC4BA2D2280A500F5C263 /* RootFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootFlowView.swift; sourceTree = "<group>"; };
+		2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewApp.swift; sourceTree = "<group>"; };
+		2A4CC4BD2D2280A600F5C263 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A4CC4BE2D2280A600F5C263 /* Destination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		2A4CC4BF2D2280A600F5C263 /* DestinationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DestinationView.swift; sourceTree = "<group>"; };
+		2A4CC4D02D22816600F5C263 /* BinderComposerPreviewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewTests.swift; sourceTree = "<group>"; };
+		2A4CC4D12D22816600F5C263 /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
+		2A4CC4D32D22816600F5C263 /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
+		2A4CC4D42D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4D9ACD2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeAnywayFlowModel.swift"; sourceTree = "<group>"; };
 		2A4D9ACF2CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getOutlineProduct.swift"; sourceTree = "<group>"; };
@@ -7109,6 +7131,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A4CC4CD2D2280F300F5C263 /* PayHub in Frameworks */,
+				2A4CC4CB2D2280E400F5C263 /* UIPrimitives in Frameworks */,
+				2A4CC4C92D2280D500F5C263 /* RxViewModel in Frameworks */,
+				2A4CC4CF2D2280F300F5C263 /* PayHubUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7116,6 +7142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A4CC4DB2D22818800F5C263 /* CustomDump in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7244,6 +7271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7598A7A2CE76A12001980B1 /* PayHub in Frameworks */,
+				2A4CC4DD2D2281B500F5C263 /* CombineSchedulers in Frameworks */,
 				A7598A782CE76848001980B1 /* CollateralLoanLandingShowCaseUI in Frameworks */,
 				A7598A762CE76848001980B1 /* CollateralLoanLandingShowCaseBackend in Frameworks */,
 				A7598A7C2CE76A34001980B1 /* PayHubUI in Frameworks */,
@@ -9951,8 +9979,10 @@
 		2A4CC4892D227E4A00F5C263 /* BinderComposerPreview */ = {
 			isa = PBXGroup;
 			children = (
-				2A4CC48A2D227E4A00F5C263 /* BinderComposerPreviewApp.swift */,
-				2A4CC48C2D227E4A00F5C263 /* ContentView.swift */,
+				2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */,
+				2A4CC4BD2D2280A600F5C263 /* ContentView.swift */,
+				2A4CC4C02D2280A600F5C263 /* Destination */,
+				2A4CC4BB2D2280A500F5C263 /* Root */,
 				2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */,
 				2A4CC4902D227E4B00F5C263 /* Preview Content */,
 			);
@@ -9971,10 +10001,48 @@
 		2A4CC49A2D227E4B00F5C263 /* BinderComposerPreviewTests */ = {
 			isa = PBXGroup;
 			children = (
-				2A4CC49B2D227E4B00F5C263 /* BinderComposerPreviewTests.swift */,
+				2A4CC4D02D22816600F5C263 /* BinderComposerPreviewTests.swift */,
+				2A4CC4D52D22816600F5C263 /* Helpers */,
+				2A4CC4D22D22816600F5C263 /* ThirdPartyDependencies */,
 			);
 			name = BinderComposerPreviewTests;
 			path = ../BinderComposerPreviewTests;
+			sourceTree = "<group>";
+		};
+		2A4CC4BB2D2280A500F5C263 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */,
+				2A4CC4B92D2280A500F5C263 /* RootDomain.swift */,
+				2A4CC4BA2D2280A500F5C263 /* RootFlowView.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		2A4CC4C02D2280A600F5C263 /* Destination */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4BE2D2280A600F5C263 /* Destination.swift */,
+				2A4CC4BF2D2280A600F5C263 /* DestinationView.swift */,
+			);
+			path = Destination;
+			sourceTree = "<group>";
+		};
+		2A4CC4D22D22816600F5C263 /* ThirdPartyDependencies */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4D12D22816600F5C263 /* XCTAssertNoDiff.swift */,
+			);
+			path = ThirdPartyDependencies;
+			sourceTree = "<group>";
+		};
+		2A4CC4D52D22816600F5C263 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4D32D22816600F5C263 /* ValueSpy.swift */,
+				2A4CC4D42D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		2A5190322A7E106D0014B0B7 /* RequestFactory */ = {
@@ -18494,6 +18562,12 @@
 			dependencies = (
 			);
 			name = BinderComposerPreview;
+			packageProductDependencies = (
+				2A4CC4C82D2280D500F5C263 /* RxViewModel */,
+				2A4CC4CA2D2280E400F5C263 /* UIPrimitives */,
+				2A4CC4CC2D2280F300F5C263 /* PayHub */,
+				2A4CC4CE2D2280F300F5C263 /* PayHubUI */,
+			);
 			productName = BinderComposerPreview;
 			productReference = 2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -18512,6 +18586,9 @@
 				2A4CC4992D227E4B00F5C263 /* PBXTargetDependency */,
 			);
 			name = BinderComposerPreviewTests;
+			packageProductDependencies = (
+				2A4CC4DA2D22818800F5C263 /* CustomDump */,
+			);
 			productName = BinderComposerPreviewTests;
 			productReference = 2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -18796,6 +18873,7 @@
 				A7598A772CE76848001980B1 /* CollateralLoanLandingShowCaseUI */,
 				A7598A792CE76A12001980B1 /* PayHub */,
 				A7598A7B2CE76A34001980B1 /* PayHubUI */,
+				2A4CC4DC2D2281B500F5C263 /* CombineSchedulers */,
 			);
 			productName = CollateralLoanLandingPreview;
 			productReference = A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */;
@@ -19123,9 +19201,11 @@
 					};
 					2A4CC4872D227E4A00F5C263 = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
 					};
 					2A4CC4962D227E4B00F5C263 = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
 						TestTargetID = 2A4CC4872D227E4A00F5C263;
 					};
 					2A62E95F2BD94F870044EB39 = {
@@ -20037,8 +20117,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A4CC48D2D227E4A00F5C263 /* ContentView.swift in Sources */,
-				2A4CC48B2D227E4A00F5C263 /* BinderComposerPreviewApp.swift in Sources */,
+				2A4CC4C42D2280A600F5C263 /* BinderComposerPreviewApp.swift in Sources */,
+				2A4CC4C72D2280A600F5C263 /* DestinationView.swift in Sources */,
+				2A4CC4C52D2280A600F5C263 /* ContentView.swift in Sources */,
+				2A4CC4C62D2280A600F5C263 /* Destination.swift in Sources */,
+				2A4CC4C12D2280A600F5C263 /* RootDomain.Binder+default.swift in Sources */,
+				2A4CC4C32D2280A600F5C263 /* RootFlowView.swift in Sources */,
+				2A4CC4C22D2280A600F5C263 /* RootDomain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -20046,7 +20131,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A4CC49C2D227E4B00F5C263 /* BinderComposerPreviewTests.swift in Sources */,
+				2A4CC4D62D22816600F5C263 /* BinderComposerPreviewTests.swift in Sources */,
+				2A4CC4D92D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				2A4CC4D82D22816600F5C263 /* ValueSpy.swift in Sources */,
+				2A4CC4D72D22816600F5C263 /* XCTAssertNoDiff.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -24019,6 +24107,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
@@ -24043,6 +24132,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -24055,6 +24145,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
@@ -24078,6 +24169,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -24090,6 +24182,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
@@ -24125,6 +24218,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
@@ -24160,6 +24254,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VRVJ9YNRQU;
@@ -24173,6 +24268,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
@@ -24186,6 +24282,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VRVJ9YNRQU;
@@ -24198,6 +24295,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.igor1309.BinderComposerPreviewTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
@@ -24211,6 +24309,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VRVJ9YNRQU;
@@ -24236,6 +24335,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VRVJ9YNRQU;
@@ -28299,6 +28399,32 @@
 		2A4863D22BB1DF5700BBCC76 /* RemoteServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RemoteServices;
+		};
+		2A4CC4C82D2280D500F5C263 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2A4CC4CA2D2280E400F5C263 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
+		};
+		2A4CC4CC2D2280F300F5C263 /* PayHub */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PayHub;
+		};
+		2A4CC4CE2D2280F300F5C263 /* PayHubUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PayHubUI;
+		};
+		2A4CC4DA2D22818800F5C263 /* CustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
+			productName = CustomDump;
+		};
+		2A4CC4DC2D2281B500F5C263 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2A5190302A7E0BE80014B0B7 /* URLRequestFactory */ = {
 			isa = XCSwiftPackageProductDependency;
