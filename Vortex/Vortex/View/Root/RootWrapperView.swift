@@ -19,33 +19,43 @@ struct RootWrapperView: View {
         
         ZStack {
             
-            SpinnerView(viewModel: .init())
-                .opacity(flow.state.isLoading ? 1 : 0)
+            spinnerView()
                 .zIndex(1.0)
             
-            NavigationView {
-                
-                RxWrapperView(model: flow) { state, event in
-                    
-                    rootView()
-                        .fullScreenCoverInspectable(
-                            item: { state.navigation?.fullScreenCover },
-                            dismiss: { event(.dismiss) },
-                            content: fullScreenCoverContent
-                        )
-                        .navigationDestination(
-                            destination: state.navigation?.destination,
-                            // dismiss managed by flow, not SwiftUI
-                            content: destinationContent
-                        )
-                }
-                .navigationBarHidden(true)
-            }
+            rootViewInNavigationView()
         }
     }
 }
 
 private extension RootWrapperView {
+    
+    func spinnerView() -> some View {
+        
+        SpinnerView(viewModel: .init())
+            .opacity(flow.state.isLoading ? 1 : 0)
+    }
+    
+    func rootViewInNavigationView() -> some View {
+        
+        NavigationView {
+            
+            RxWrapperView(model: flow) { state, event in
+                
+                rootView()
+                    .fullScreenCoverInspectable(
+                        item: { state.navigation?.fullScreenCover },
+                        dismiss: { event(.dismiss) },
+                        content: fullScreenCoverContent
+                    )
+                    .navigationDestination(
+                        destination: state.navigation?.destination,
+                        // dismiss managed by flow, not SwiftUI
+                        content: destinationContent
+                    )
+            }
+            .navigationBarHidden(true)
+        }
+    }
     
     // MARK: - Destination
     
@@ -165,15 +175,15 @@ extension RootViewNavigation {
                 return .makeStandardPaymentFailure(binder)
                 
             case .makeUserAccountFailure:
-                #warning("ADD ALERT")
+#warning("ADD ALERT")
                 return nil
                 
             case .missingCategoryOfType://(<#T##ServiceCategory.CategoryType#>):
-                #warning("ADD ALERT(?)")
+#warning("ADD ALERT(?)")
                 return nil
                 
             case let .makeProductProfileFailure(productID):
-                #warning("ADD ALERT(?)")
+#warning("ADD ALERT(?)")
                 return nil
             }
             

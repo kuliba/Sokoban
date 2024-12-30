@@ -14,23 +14,16 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        rootViewFactory.makeRootWrapperView(binder: binder)
-    }
-}
-
-extension RootViewFactory {
-    
-    func makeRootWrapperView(
-        binder: RootViewDomain.Binder
-    ) -> RootWrapperView {
-        
-        return .init(
+        RootWrapperView(
             flow: binder.flow,
             rootView: {
                 
-                .init(viewModel: binder.content, rootViewFactory: self)
+                return .init(
+                    viewModel: binder.content,
+                    rootViewFactory: rootViewFactory
+                )
             },
-            viewFactory: self
+            viewFactory: rootViewFactory
         )
     }
 }
