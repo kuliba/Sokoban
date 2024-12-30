@@ -19,12 +19,33 @@ struct ContentView: View {
         
         ZStack {
             
+            progressView()
+                .zIndex(1.0)
+            
             rootViewInNavigationView()
         }
     }
 }
 
 private extension ContentView {
+    
+    func progressView() -> some View {
+    
+        RxWrapperView(model: binder.flow) { state, event in
+
+            ZStack {
+                
+                ProgressView()
+                    .scaleEffect(3)
+                    .zIndex(1.0)
+                
+                Color.gray.opacity(0.5)
+            }
+            .ignoresSafeArea()
+            .opacity(state.isLoading ? 1 : 0)
+            .animation(.easeInOut, value: state.isLoading)
+        }
+    }
     
     func rootViewInNavigationView() -> some View {
         
