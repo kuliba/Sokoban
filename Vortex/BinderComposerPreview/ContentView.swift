@@ -85,7 +85,7 @@ private extension ContentView {
         
         VStack(spacing: 32) {
             
-            Text("Start flow with either `Destination` or `Sheet`. See how moving from Sheet to Destination on tapping `Next` briefly shows destination and dismisses it is delay is small.")
+            Text("Start flow with either `Destination` or `Sheet`. See how moving from Sheet to Destination on tapping `Next` briefly shows destination and dismisses it if delay is small.")
             
             HStack {
                 
@@ -153,8 +153,12 @@ private extension ContentView {
     
     enum Delay: Int, CaseIterable {
         
+        case ms0   = 0
+        case ms100 = 100
         case ms200 = 200
+        case ms300 = 300
         case ms500 = 500
+        case ms600 = 600
         
         var value: RootDomain.BinderComposer.Delay { .milliseconds(rawValue) }
     }

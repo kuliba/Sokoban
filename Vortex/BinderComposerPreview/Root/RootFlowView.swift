@@ -16,7 +16,6 @@ struct RootFlowView<ContentView: View>: View {
     var body: some View {
         
         contentView()
-        
     }
 }
 

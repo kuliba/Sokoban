@@ -58,6 +58,7 @@ extension RootDomain.Binder {
                         .sink { notify(.dismiss) }
                     
                     let next = share.compactMap(\.selection?.next)
+                       // .delay(for: delay, scheduler: schedulers.main)
                         .sink { notify(.select(next)) }
                     
                     return [close, next]
