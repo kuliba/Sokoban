@@ -32,8 +32,8 @@ extension RootViewModelFactory {
         case let .latest(latest):
             return
             
-        case let .outside(paymentProviderPickerFlowOutside):
-            return
+        case let .outside(outside):
+            completion(.outside(outside))
             
         case let .provider(provider):
             return
@@ -71,6 +71,47 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
             try? $0.detailPayment().action.send(PaymentsViewModelAction.ScanQrCode())
         }
     }
+    
+    // MARK: - latest
+    
+    // MARK: - outside
+    
+    func test_outside_back_shouldSetNavigation() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        expect(sut, select: .outside(.back), toDeliver: .outside(.back))
+    }
+    
+    func test_outside_chat_shouldSetNavigation() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        expect(sut, select: .outside(.chat), toDeliver: .outside(.chat))
+    }
+    
+    func test_outside_main_shouldSetNavigation() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        expect(sut, select: .outside(.main), toDeliver: .outside(.main))
+    }
+    
+    func test_outside_payments_shouldSetNavigation() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        expect(sut, select: .outside(.payments), toDeliver: .outside(.payments))
+    }
+    
+    func test_outside_qr_shouldSetNavigation() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        expect(sut, select: .outside(.qr), toDeliver: .outside(.qr))
+    }
+    
+    // MARK: - provider
     
     // MARK: - Helpers
     
