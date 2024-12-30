@@ -161,9 +161,10 @@ extension HTTPClientSpy {
     
     func complete(
         withString string: String,
-        response: HTTPURLResponse = anyHTTPURLResponse()
+        response: HTTPURLResponse = anyHTTPURLResponse(),
+        at index: Int = 0
     ) {
-        complete(with: (.init(string.utf8), response))
+        complete(with: (.init(string.utf8), response), at: index)
     }
 }
 

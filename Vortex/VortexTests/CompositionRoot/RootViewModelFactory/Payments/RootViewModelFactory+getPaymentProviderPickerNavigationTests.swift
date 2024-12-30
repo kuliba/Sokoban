@@ -36,7 +36,7 @@ extension RootViewModelFactory {
             completion(.outside(outside))
             
         case let .provider(provider):
-            return
+            processProvider(provider: provider, notify: notify, completion: completion)
         }
     }
 }
@@ -165,6 +165,86 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
     
     // MARK: - provider
     
+    func test_provider_shouldSetOperatorFailureDestinationOnHTTPClientFailure() {
+        
+        let provider = makeUtilityPaymentProvider()
+        let (sut, httpClient, _) = makeSUT()
+        
+        expect(
+            sut,
+            select: .provider(provider),
+            toDeliver: .destination(.payment(.failure(.operatorFailure(provider)))),
+            on: {
+                 httpClient.complete(with: anyError())
+            }
+        )
+    }
+
+    func test_provider_shouldSetServicesDestinationOnHTTPClientSuccessWithServices() {
+        
+        let provider = makeUtilityPaymentProvider()
+        let (sut, httpClient, _) = makeSUT()
+        
+        expect(
+            sut,
+            select: .provider(provider),
+            toDeliver: .destination(.payment(.success(.services))),
+            on: {
+                httpClient.complete(withString: .multiServicesValidJSON)
+            }
+        )
+    }
+
+    func test_provider_shouldSetFailureDestinationOnMissingProduct() {
+        
+        let provider = makeUtilityPaymentProvider()
+        let (sut, httpClient, _) = makeSUT()
+
+        expect(
+            sut,
+            select: .provider(provider),
+            toDeliver: .destination(.payment(.failure(.serviceFailure(.connectivityError)))),
+            on: {
+                httpClient.complete(withString: .singleServiceValidJSON)
+                httpClient.complete(withString: .createAnywayTransferIsNewPaymentTrueResponse, at: 1)
+                XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "operatorOnly"), [
+                    "getOperatorsListByParam-false",
+                    "createAnywayTransfer"
+                ])
+                XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "isNewPayment"), [
+                    "getOperatorsListByParam",
+                    "createAnywayTransfer-true"
+                ])
+            }
+        )
+    }
+
+    func test_provider_shouldSetStartPaymentDestinationOnHTTPClientSuccess() {
+        
+        let provider = makeUtilityPaymentProvider()
+        let model: Model = .mockWithEmptyExcept()
+        model.addSberProduct()
+        let (sut, httpClient, _) = makeSUT(model: model)
+
+        expect(
+            sut,
+            select: .provider(provider),
+            toDeliver: .destination(.payment(.success(.startPayment))),
+            on: {
+                httpClient.complete(withString: .singleServiceValidJSON)
+                httpClient.complete(withString: .createAnywayTransferIsNewPaymentTrueResponse, at: 1)
+                XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "operatorOnly"), [
+                    "getOperatorsListByParam-false",
+                    "createAnywayTransfer"
+                ])
+                XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "isNewPayment"), [
+                    "getOperatorsListByParam",
+                    "createAnywayTransfer-true"
+                ])
+            }
+        )
+    }
+
     // MARK: - Helpers
     
     private typealias Domain = PaymentProviderPickerDomain
