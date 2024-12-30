@@ -68,7 +68,7 @@ private extension PaymentProviderPickerView {
         
     @ViewBuilder
     func destinationView(
-        _ destination: PaymentProviderPickerDomain.Navigation
+        _ destination: PaymentProviderPickerDomain.Destination
     ) -> some View {
         
         PaymentProviderPickerDestinationView(

@@ -27,16 +27,13 @@ extension PaymentProviderPickerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.PaymentProviderPickerFlowDomain<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
-    
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias FlowReducer = FlowDomain.Reducer
     typealias FlowEffectHandler = FlowDomain.EffectHandler
     
-    typealias Navigation = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
-    
-    typealias DetailPayment = ClosePaymentsViewModelWrapper
+    typealias DetailPayment = Node<PaymentsViewModel>
     typealias Payment = ProcessSelectionResult
     typealias Provider = UtilityPaymentProvider
     typealias Service = Void
@@ -46,6 +43,39 @@ extension PaymentProviderPickerDomain {
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
     typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
     typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, ProviderServicePickerDomain.Binder, Node<AnywayFlowModel>>
+    
+    enum Select: Equatable {
+        
+        case detailPayment
+        case latest(Latest)
+        case outside(PaymentProviderPickerFlowOutside)
+        case provider(Provider)
+    }
+    
+    enum Navigation {
+        
+        case alert(BackendFailure)
+        case destination(Destination)
+        case outside(PaymentProviderPickerFlowOutside)
+    }
+    
+    enum PaymentProviderPickerFlowOutside: Equatable {
+        
+        case back
+        case chat
+        case main
+        case payments
+        case qr
+    }
+    
+    enum Destination {
+        
+        case backendFailure(BackendFailure)
+        case detailPayment(DetailPayment)
+        case payment(Payment)
+        case servicePicker(ServicePicker)
+        case servicesFailure(ServicesFailure)
+    }
 }
 
 // MARK: - ProviderList

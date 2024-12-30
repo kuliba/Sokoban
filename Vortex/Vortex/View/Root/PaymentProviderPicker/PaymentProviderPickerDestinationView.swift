@@ -12,7 +12,7 @@ struct PaymentProviderPickerDestinationView: View {
     
     let dismiss: () -> Void
     let detailPayment: () -> Void
-    let destination: PaymentProviderPickerDomain.Navigation
+    let destination: PaymentProviderPickerDomain.Destination
     let components: ViewComponents
     let makeIconView: MakeIconView
     
@@ -22,8 +22,8 @@ struct PaymentProviderPickerDestinationView: View {
         case let .backendFailure(backendFailure):
             Text("TBD: destination view \(String(describing: backendFailure))")
             
-        case let .detailPayment(wrapper):
-            components.makePaymentsView(wrapper.paymentsViewModel)
+        case let .detailPayment(node):
+            components.makePaymentsView(node.model)
             
         case let .payment(payment):
             paymentView(payment)
