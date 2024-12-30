@@ -44,6 +44,7 @@ final class BinderComposerPreviewTests: XCTestCase {
         XCTAssertNoDiff(navigationSpy.values, [nil, nil, .destination, nil, .sheet,])
         
         awaitThreadHop()
+        awaitThreadHop()
         
         XCTAssertNoDiff(navigationSpy.values, [nil, nil, .destination, nil, .sheet, nil, .destination])
     }
@@ -83,6 +84,7 @@ final class BinderComposerPreviewTests: XCTestCase {
         XCTAssertNoDiff(navigationSpy.values, [nil, nil, .destination, nil, .sheet])
         
         awaitThreadHop()
+        awaitThreadHop()
         
         XCTAssertNoDiff(navigationSpy.values, [nil, nil, .destination, nil, .sheet, nil])
         
@@ -108,6 +110,7 @@ final class BinderComposerPreviewTests: XCTestCase {
         XCTAssertNoDiff(sheetSpy.values, [nil, nil, nil])
         
         awaitThreadHop()
+        awaitThreadHop()
         
         XCTAssertNoDiff(navigationSpy.values, [nil, nil, .destination, nil, .sheet])
         XCTAssertNoDiff(destinationSpy.values, [nil, nil, .content, nil, nil])
@@ -119,6 +122,7 @@ final class BinderComposerPreviewTests: XCTestCase {
         XCTAssertNoDiff(destinationSpy.values, [nil, nil, .content, nil, nil])
         XCTAssertNoDiff(sheetSpy.values, [nil, nil, nil, nil, .content])
         
+        awaitThreadHop()
         awaitThreadHop()
         
         XCTAssertNoDiff(navigationSpy.values, [nil, nil, .destination, nil, .sheet, nil, .destination])

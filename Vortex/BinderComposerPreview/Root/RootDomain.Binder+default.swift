@@ -6,6 +6,8 @@
 //
 
 import Combine
+import CombineSchedulers
+import Foundation
 import PayHub
 import PayHubUI
 
@@ -18,56 +20,74 @@ extension RootDomain.Binder {
     ) -> RootDomain.Binder {
         
         let composer = RootDomain.BinderComposer(
-            elements: RootDomain.Select.allCases, 
-            delay: delay,
-            getNavigation: { select, notify, completion in
+            elements: RootDomain.Select.allCases,
+            delay: .zero, // delay,
+            getNavigation: {
                 
-                
-                switch select {
-                case .destination:
-                    completion(.destination(makeDestinationNode(next: .sheet)))
-                    
-                case .sheet:
-                    completion(.sheet(makeDestinationNode(next: .destination)))
-                }
-                
-                func makeDestinationNode(
-                    next: RootDomain.Select
-                ) -> Node<DestinationDomain.Content> {
-                    
-                    let composer = DestinationDomain.Composer(scheduler: .main)
-                    let destination = composer.compose(
-                        elements: DestinationDomain.Element.allCases
-                    )
-                    
-                    return .init(
-                        model: destination,
-                        cancellables: bind(destination, to: notify, next: next)
-                    )
-                }
-                
-                func bind(
-                    _ content: DestinationDomain.Content,
-                    to notify: @escaping RootDomain.Notify,
-                    next: RootDomain.Select
-                ) -> Set<AnyCancellable> {
-                    
-                    let share = content.$state.share()
-                    
-                    let close = share.compactMap(\.selection?.close)
-                        .sink { notify(.dismiss) }
-                    
-                    let next = share.compactMap(\.selection?.next)
-                       // .delay(for: delay, scheduler: schedulers.main)
-                        .sink { notify(.select(next)) }
-                    
-                    return [close, next]
-                }
+                getNavigation(withDelay: delay, select: $0, notify: $1, completion: $2)
             },
             schedulers: schedulers
         )
         
         return composer.compose()
+        
+        func getNavigation(
+            withDelay delay: RootDomain.BinderComposer.Delay,
+            select: RootDomain.Select,
+            notify: @escaping RootDomain.Notify,
+            completion: @escaping (RootDomain.Navigation) -> Void
+        ) {
+            schedulers.interactive.delay(for: delay) {
+                
+                getNavigation(select: select, notify: notify, completion: completion)
+            }
+        }
+        
+        func getNavigation(
+            select: RootDomain.Select,
+            notify: @escaping RootDomain.Notify,
+            completion: @escaping (RootDomain.Navigation) -> Void
+        ) {
+            switch select {
+            case .destination:
+                completion(.destination(makeDestinationNode(next: .sheet)))
+                
+            case .sheet:
+                completion(.sheet(makeDestinationNode(next: .destination)))
+            }
+            
+            func makeDestinationNode(
+                next: RootDomain.Select
+            ) -> Node<DestinationDomain.Content> {
+                
+                let composer = DestinationDomain.Composer(scheduler: .main)
+                let destination = composer.compose(
+                    elements: DestinationDomain.Element.allCases
+                )
+                
+                return .init(
+                    model: destination,
+                    cancellables: bind(destination, to: notify, next: next)
+                )
+            }
+            
+            func bind(
+                _ content: DestinationDomain.Content,
+                to notify: @escaping RootDomain.Notify,
+                next: RootDomain.Select
+            ) -> Set<AnyCancellable> {
+                
+                let share = content.$state.share()
+                
+                let close = share.compactMap(\.selection?.close)
+                    .sink { notify(.dismiss) }
+                
+                let next = share.compactMap(\.selection?.next)
+                    .sink { notify(.select(next)) }
+                
+                return [close, next]
+            }
+        }
     }
 }
 
@@ -86,3 +106,14 @@ private extension DestinationDomain.Element {
     }
 }
 
+extension AnySchedulerOf<DispatchQueue> {
+    
+    func delay(
+        for timeout: Delay,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: .init(.init(uptimeNanoseconds: 0)).advanced(by: timeout), action)
+    }
+    
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+}
