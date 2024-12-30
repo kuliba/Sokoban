@@ -9,38 +9,6 @@
 import PayHub
 import XCTest
 
-extension RootViewModelFactory {
-    
-    func getPaymentProviderPickerNavigation(
-        select: PaymentProviderPickerDomain.Select,
-        notify: @escaping PaymentProviderPickerDomain.FlowDomain.Notify,
-        completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
-    ) {
-        switch select {
-        case .detailPayment:
-            completion(.destination(.detailPayment(makePaymentsNode(
-                payload: .service(.requisites),
-                notify: { event in
-                    
-                    switch event {
-                    case .close:  notify(.dismiss)
-                    case .scanQR: notify(.select(.outside(.qr)))
-                    }
-                }
-            ))))
-            
-        case let .latest(latest):
-            initiateAnywayPayment(latest: latest, notify: notify, completion: completion)
-            
-        case let .outside(outside):
-            completion(.outside(outside))
-            
-        case let .provider(provider):
-            processProvider(provider: provider, notify: notify, completion: completion)
-        }
-    }
-}
-
 final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootViewModelFactoryTests {
     
     // MARK: - detailPayment
