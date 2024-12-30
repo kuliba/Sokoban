@@ -10,8 +10,7 @@ import SwiftUI
 
 struct RootWrapperView: View {
     
-    @ObservedObject var flow: RootViewDomain.Flow
-    
+    let flow: RootViewDomain.Flow
     let rootView: () -> RootView
     let viewFactory: RootViewFactory
     
@@ -31,8 +30,11 @@ private extension RootWrapperView {
     
     func spinnerView() -> some View {
         
-        SpinnerView(viewModel: .init())
-            .opacity(flow.state.isLoading ? 1 : 0)
+        RxWrapperView(model: flow) { state, event in
+    
+            SpinnerView(viewModel: .init())
+                .opacity(state.isLoading ? 1 : 0)
+        }
     }
     
     func rootViewInNavigationView() -> some View {
