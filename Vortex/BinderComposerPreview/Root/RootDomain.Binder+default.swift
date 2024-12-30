@@ -15,33 +15,24 @@ extension RootDomain.Binder {
     
     /// - Note: - Change `delay`to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.
     static func `default`(
-        delay: RootDomain.BinderComposer.Delay = .milliseconds(500),
+        delay: RootDomain.BinderComposer.Delay,
         schedulers: Schedulers = .init()
     ) -> RootDomain.Binder {
         
         let composer = RootDomain.BinderComposer(
             elements: RootDomain.Select.allCases,
             delay: .zero, // delay,
-            getNavigation: {
+            getNavigation: { select, notify, completion in
                 
-                getNavigation(withDelay: delay, select: $0, notify: $1, completion: $2)
+                schedulers.interactive.delay(for: delay) {
+                    
+                    getNavigation(select: select, notify: notify, completion: completion)
+                }
             },
             schedulers: schedulers
         )
         
         return composer.compose()
-        
-        func getNavigation(
-            withDelay delay: RootDomain.BinderComposer.Delay,
-            select: RootDomain.Select,
-            notify: @escaping RootDomain.Notify,
-            completion: @escaping (RootDomain.Navigation) -> Void
-        ) {
-            schedulers.interactive.delay(for: delay) {
-                
-                getNavigation(select: select, notify: notify, completion: completion)
-            }
-        }
         
         func getNavigation(
             select: RootDomain.Select,

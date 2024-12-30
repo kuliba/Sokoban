@@ -20,19 +20,21 @@ struct ContentView: View {
         
         ZStack {
             
-            progressView()
+            progressView(flow: binder.flow)
                 .zIndex(1.0)
             
-            rootViewInNavigationView()
+            rootViewInNavigationView(flow: binder.flow)
         }
     }
 }
 
 private extension ContentView {
     
-    func progressView() -> some View {
+    func progressView(
+        flow: RootDomain.Flow
+    ) -> some View {
         
-        RxWrapperView(model: binder.flow) { state, event in
+        RxWrapperView(model: flow) { state, event in
             
             ZStack {
                 
@@ -45,20 +47,34 @@ private extension ContentView {
             .ignoresSafeArea()
             .opacity(state.isLoading ? 1 : 0)
             .animation(.easeInOut, value: state.isLoading)
+            .onChange(of: state.isLoading) {
+                
+                print("state.isLoading: \($0)", #file, #line)
+            }
+            .onReceive(flow.$state) {
+                
+                print("## flow.$state: \(String(describing: $0).prefix(64))", #file, #line)
+            }
         }
     }
     
-    func rootViewInNavigationView() -> some View {
+    func rootViewInNavigationView(
+        flow: RootDomain.Flow
+    ) -> some View {
         
         NavigationView {
             
-            RxWrapperView(model: binder.flow) { state, event in
+            RxWrapperView(model: flow) { state, event in
                 
                 RootFlowView(state: state, event: event) {
                     
                     flowView(state: state, event: event) {
                         
                         contentView(event: event)
+                    }
+                    .onChange(of: state.isLoading) {
+                        
+                        print("isLoading: \($0)")
                     }
                     .onChange(of: state.navigation?.destination?.id) {
                         
