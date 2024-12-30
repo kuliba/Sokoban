@@ -17,35 +17,46 @@ struct ContentView: View {
     
     var body: some View {
         
-        RxWrapperView(model: binder.flow) { state, event in
+        ZStack {
             
-            RootFlowView(state: state, event: event) {
-                
-                contentView(event: event)
-                    .navigationDestination(
-                        destination: state.navigation?.destination,
-                        dismiss: { event(.dismiss) },
-                        content: destinationView(destination:)
-                    )
-                    .sheet(
-                        modal: state.navigation?.sheet,
-                        dismiss: { event(.dismiss) },
-                        content: sheetView
-                    )
-                    .onChange(of: state.navigation?.destination?.id) {
-                        
-                        print("destination:", $0.map { $0 } ?? "nil")
-                    }
-                    .onChange(of: state.navigation?.sheet?.id) {
-                        
-                        print("sheet:", $0.map { $0 } ?? "nil")
-                    }
-            }
+            rootViewInNavigationView()
         }
     }
 }
 
 private extension ContentView {
+    
+    func rootViewInNavigationView() -> some View {
+        
+        NavigationView {
+            
+            RxWrapperView(model: binder.flow) { state, event in
+                
+                RootFlowView(state: state, event: event) {
+                    
+                    contentView(event: event)
+                        .navigationDestination(
+                            destination: state.navigation?.destination,
+                            dismiss: { event(.dismiss) },
+                            content: destinationView(destination:)
+                        )
+                        .sheet(
+                            modal: state.navigation?.sheet,
+                            dismiss: { event(.dismiss) },
+                            content: sheetView
+                        )
+                        .onChange(of: state.navigation?.destination?.id) {
+                            
+                            print("destination:", $0.map { $0 } ?? "nil")
+                        }
+                        .onChange(of: state.navigation?.sheet?.id) {
+                            
+                            print("sheet:", $0.map { $0 } ?? "nil")
+                        }
+                }
+            }
+        }
+    }
     
     func contentView(
         event: @escaping (RootDomain.FlowDomain.Event) -> Void
