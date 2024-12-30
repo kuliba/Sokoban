@@ -812,7 +812,6 @@
 		2A4CC4922D227E4B00F5C263 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */; };
 		2A4CC4C12D2280A600F5C263 /* RootDomain.Binder+default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */; };
 		2A4CC4C22D2280A600F5C263 /* RootDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4B92D2280A500F5C263 /* RootDomain.swift */; };
-		2A4CC4C32D2280A600F5C263 /* RootFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BA2D2280A500F5C263 /* RootFlowView.swift */; };
 		2A4CC4C42D2280A600F5C263 /* BinderComposerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */; };
 		2A4CC4C52D2280A600F5C263 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BD2D2280A600F5C263 /* ContentView.swift */; };
 		2A4CC4C62D2280A600F5C263 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BE2D2280A600F5C263 /* Destination.swift */; };
@@ -4398,7 +4397,6 @@
 		2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BinderComposerPreviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootDomain.Binder+default.swift"; sourceTree = "<group>"; };
 		2A4CC4B92D2280A500F5C263 /* RootDomain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootDomain.swift; sourceTree = "<group>"; };
-		2A4CC4BA2D2280A500F5C263 /* RootFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootFlowView.swift; sourceTree = "<group>"; };
 		2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewApp.swift; sourceTree = "<group>"; };
 		2A4CC4BD2D2280A600F5C263 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A4CC4BE2D2280A600F5C263 /* Destination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
@@ -10014,7 +10012,6 @@
 			children = (
 				2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */,
 				2A4CC4B92D2280A500F5C263 /* RootDomain.swift */,
-				2A4CC4BA2D2280A500F5C263 /* RootFlowView.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -20122,7 +20119,6 @@
 				2A4CC4C52D2280A600F5C263 /* ContentView.swift in Sources */,
 				2A4CC4C62D2280A600F5C263 /* Destination.swift in Sources */,
 				2A4CC4C12D2280A600F5C263 /* RootDomain.Binder+default.swift in Sources */,
-				2A4CC4C32D2280A600F5C263 /* RootFlowView.swift in Sources */,
 				2A4CC4C22D2280A600F5C263 /* RootDomain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

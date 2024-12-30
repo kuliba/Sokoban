@@ -18,12 +18,15 @@ struct ContentView: View {
     
     var body: some View {
         
-        ZStack {
+        RxWrapperView(model: binder.flow) { state, event in
             
-            progressView(flow: binder.flow)
-                .zIndex(1.0)
-            
-            rootViewInNavigationView(flow: binder.flow)
+            ZStack {
+                
+                progressView(state: state)
+                    .zIndex(1.0)
+                
+                rootViewInNavigationView(state: state, event: event)
+            }
         }
     }
 }
@@ -31,60 +34,44 @@ struct ContentView: View {
 private extension ContentView {
     
     func progressView(
-        flow: RootDomain.Flow
+        state: RootDomain.FlowDomain.State
     ) -> some View {
         
-        RxWrapperView(model: flow) { state, event in
+        ZStack {
             
-            ZStack {
-                
-                ProgressView()
-                    .scaleEffect(3)
-                    .zIndex(1.0)
-                
-                Color.gray.opacity(0.5)
-            }
-            .ignoresSafeArea()
-            .opacity(state.isLoading ? 1 : 0)
-            .animation(.easeInOut, value: state.isLoading)
-            .onChange(of: state.isLoading) {
-                
-                print("state.isLoading: \($0)", #file, #line)
-            }
-            .onReceive(flow.$state) {
-                
-                print("## flow.$state: \(String(describing: $0).prefix(64))", #file, #line)
-            }
+            ProgressView()
+                .scaleEffect(3)
+                .zIndex(1.0)
+            
+            Color.gray.opacity(0.5)
+        }
+        .ignoresSafeArea()
+        .opacity(state.isLoading ? 1 : 0)
+        .animation(.easeInOut, value: state.isLoading)
+        .onChange(of: state.isLoading) {
+            
+            print("isLoading: \($0)")
         }
     }
     
     func rootViewInNavigationView(
-        flow: RootDomain.Flow
+        state: RootDomain.FlowDomain.State,
+        event: @escaping (RootDomain.FlowDomain.Event) -> Void
     ) -> some View {
         
         NavigationView {
             
-            RxWrapperView(model: flow) { state, event in
+            flowView(state: state, event: event) {
                 
-                RootFlowView(state: state, event: event) {
-                    
-                    flowView(state: state, event: event) {
-                        
-                        contentView(event: event)
-                    }
-                    .onChange(of: state.isLoading) {
-                        
-                        print("isLoading: \($0)")
-                    }
-                    .onChange(of: state.navigation?.destination?.id) {
-                        
-                        print("destination:", $0.map { $0 } ?? "nil")
-                    }
-                    .onChange(of: state.navigation?.sheet?.id) {
-                        
-                        print("sheet:", $0.map { $0 } ?? "nil")
-                    }
-                }
+                contentView(event: event)
+            }
+            .onChange(of: state.navigation?.destination?.id) {
+                
+                print("destination:", $0.map { $0 } ?? "nil")
+            }
+            .onChange(of: state.navigation?.sheet?.id) {
+                
+                print("sheet:", $0.map { $0 } ?? "nil")
             }
         }
     }
