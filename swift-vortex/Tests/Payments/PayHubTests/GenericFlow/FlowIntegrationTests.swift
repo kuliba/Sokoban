@@ -111,6 +111,7 @@ final class FlowIntegrationTests: XCTestCase {
         let (sut, spy, scheduler) = makeSUT(firstChildDelay: .milliseconds(100))
         
         sut.event(.select(.first))
+        
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
         
@@ -121,12 +122,41 @@ final class FlowIntegrationTests: XCTestCase {
         ])
         
         try first(sut).event(.select(.init()))
-
+        
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
             .init(isLoading: false, navigation: .first),
             .init(isLoading: true, navigation: .first),
+        ])
+    }
+    
+    func test_shouldSetParentIsLoadingToFalse_onFirstChildNavigation() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(firstChildDelay: .milliseconds(100))
+        
+        sut.event(.select(.first))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        try first(sut).event(.select(.init()))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .first),
+            .init(isLoading: true, navigation: .first),
+        ])
+        
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .first),
+            .init(isLoading: true, navigation: .first),
+            .init(isLoading: false, navigation: .first),
         ])
     }
     
@@ -204,7 +234,7 @@ final class FlowIntegrationTests: XCTestCase {
     ) -> EquatableState {
         
         return .init(
-            isLoading: state.isLoading, 
+            isLoading: state.isLoading,
             navigation: state.navigation.map(equatable)
         )
     }
@@ -290,7 +320,7 @@ private enum ParentDomain {
 private extension ParentDomain.FlowDomain.State {
     
     var first: ParentDomain.FirstChild? {
-    
+        
         guard case let .first(node) = navigation else { return nil }
         
         return node.model
@@ -343,9 +373,9 @@ extension ParentComposer {
         switch select {
         case .first:
             navigationScheduler.delay(for: firstChildDelay) { //[weak self] in
-                #warning("weakify!")
+#warning("weakify!")
                 // guard let self else { return }
-                                
+                
                 completion(.first(self.composeFirstChildNode(notify)))
             }
             
