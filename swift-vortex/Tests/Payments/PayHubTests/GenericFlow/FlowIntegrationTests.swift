@@ -13,7 +13,7 @@ final class FlowIntegrationTests: XCTestCase {
     
     func test_init_shouldSetInitialState() {
         
-        let initialState = makeState(isLoading: true)
+        let initialState = State(isLoading: true)
         let (_, spy, _) = makeSUT(initialState: initialState)
         
         XCTAssertNoDiff(spy.values, [initialState])
@@ -27,24 +27,24 @@ final class FlowIntegrationTests: XCTestCase {
         sut.event(.select(.first))
         
         XCTAssertNoDiff(spy.values, [
-            makeState(),
-            makeState(isLoading: true),
+            .init(),
+            .init(isLoading: true),
         ])
         
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(99))
         
         XCTAssertNoDiff(spy.values, [
-            makeState(),
-            makeState(isLoading: true),
+            .init(),
+            .init(isLoading: true),
         ])
         
         scheduler.advance(by: .milliseconds(1))
         
         XCTAssertNoDiff(spy.values, [
-            makeState(),
-            makeState(isLoading: true),
-            makeState(isLoading: false, navigation: .first),
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .first),
         ])
     }
     
@@ -56,24 +56,53 @@ final class FlowIntegrationTests: XCTestCase {
         sut.event(.select(.second))
         
         XCTAssertNoDiff(spy.values, [
-            makeState(),
-            makeState(isLoading: true),
+            .init(),
+            .init(isLoading: true),
         ])
         
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
-            makeState(),
-            makeState(isLoading: true),
+            .init(),
+            .init(isLoading: true),
         ])
         
         scheduler.advance(by: .milliseconds(1))
         
         XCTAssertNoDiff(spy.values, [
-            makeState(),
-            makeState(isLoading: true),
-            makeState(isLoading: false, navigation: .second),
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .second),
+        ])
+    }
+    
+    func test_shouldNotSetFirstChildNavigationBeforeDelay() {
+        
+        let delay = makeDelay(ms: 555)
+        let (sut, spy, scheduler) = makeSUT(delay: delay)
+        
+        sut.event(.select(.init()))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+        ])
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(554))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+        ])
+        
+        scheduler.advance(by: .milliseconds(1))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .init()),
         ])
     }
     
@@ -83,6 +112,7 @@ final class FlowIntegrationTests: XCTestCase {
     private typealias State = ParentDomain.FlowDomain.State
     private typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
+    /// `Parent`
     private func makeSUT(
         initialState: State = .init(),
         firstChildDelay: Delay = .zero,
@@ -112,12 +142,32 @@ final class FlowIntegrationTests: XCTestCase {
         return (sut, spy, scheduler)
     }
     
-    private func makeState(
-        isLoading: Bool = false,
-        navigation: ParentDomain.Navigation? = nil
-    ) -> State {
+    /// `FirstChild`
+    private func makeSUT(
+        initialState: FirstChildDomain.FlowDomain.State = .init(),
+        delay: Delay = .zero,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: FirstChildDomain.Flow,
+        spy: ValueSpy<FirstChildDomain.FlowDomain.State>,
+        scheduler: TestSchedulerOf<DispatchQueue>
+    ) {
+        let scheduler = DispatchQueue.test
+        let composer = FirstChildComposer(
+            delay: delay,
+            scheduler: .immediate,
+            navigationScheduler: scheduler.eraseToAnyScheduler()
+        )
+        let sut = composer.compose(initialState: initialState)
+        let spy = ValueSpy(sut.$state)
         
-        return .init(isLoading: isLoading, navigation: navigation)
+        trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(scheduler, file: file, line: line)
+        
+        return (sut, spy, scheduler)
     }
     
     private func makeDelay(ms milliseconds: Int) -> DispatchQueue.SchedulerTimeType.Stride {
@@ -125,6 +175,8 @@ final class FlowIntegrationTests: XCTestCase {
         return .milliseconds(milliseconds)
     }
 }
+
+// MARK: - Parent
 
 private enum ParentDomain {
     
@@ -173,9 +225,11 @@ private final class ParentComposer {
 
 extension ParentComposer {
     
+    typealias Domain = ParentDomain
+    
     func compose(
-        initialState: ParentDomain.FlowDomain.State
-    ) -> ParentDomain.Flow {
+        initialState: Domain.FlowDomain.State
+    ) -> Domain.Flow {
         
         let composer = FlowComposer(
             getNavigation: getNavigation,
@@ -186,9 +240,9 @@ extension ParentComposer {
     }
     
     func getNavigation(
-        select: ParentDomain.Select,
-        notify: @escaping ParentDomain.Notify,
-        completion: @escaping (ParentDomain.Navigation) -> Void
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
     ) {
         switch select {
         case .first:
@@ -215,4 +269,69 @@ private extension AnySchedulerOf<DispatchQueue> {
     }
     
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+}
+
+// MARK: - FirstChild
+
+private enum FirstChildDomain {
+    
+    // MARK: - Binder - no Binder
+    
+    // MARK: - Content - no Content
+    
+    // MARK: - Flow
+    
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias Flow = FlowDomain.Flow
+    typealias Notify = FlowDomain.Notify
+    
+    struct Select: Equatable {}
+    struct Navigation: Equatable {}
+}
+
+private final class FirstChildComposer {
+    
+    let delay: Delay
+    let scheduler: AnySchedulerOf<DispatchQueue>
+    let navigationScheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        delay: Delay,
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        navigationScheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.delay = delay
+        self.scheduler = scheduler
+        self.navigationScheduler = navigationScheduler
+    }
+    
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+}
+
+extension FirstChildComposer {
+    
+    typealias Domain = FirstChildDomain
+    
+    func compose(
+        initialState: Domain.FlowDomain.State
+    ) -> Domain.Flow {
+        
+        let composer = FlowComposer(
+            getNavigation: getNavigation,
+            scheduler: scheduler
+        )
+        
+        return composer.compose(initialState: initialState)
+    }
+    
+    func getNavigation(
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
+    ) {
+        navigationScheduler.delay(for: delay) {
+            
+            completion(.init())
+        }
+    }
 }
