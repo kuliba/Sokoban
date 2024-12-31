@@ -56,8 +56,9 @@ final class BinderComposerPreviewTests: XCTestCase {
             main: DispatchQueue.immediate.eraseToAnyScheduler(),
             interactive: interactiveScheduler.eraseToAnyScheduler()
         )
-        let delay: Delay = .milliseconds(1_000)
-        let (sut, navigationSpy, _,_) = makeSUT(delay: delay, schedulers: schedulers)
+        let delayPair: ContentView.DelayPair = .init(destination: .ms600, sheet: .ms600)
+        let delay = delayPair.destination.value
+        let (sut, navigationSpy, _,_) = makeSUT(delayPair: delayPair, schedulers: schedulers)
         
         XCTAssertNoDiff(navigationSpy.values, [nil])
         
@@ -139,7 +140,7 @@ final class BinderComposerPreviewTests: XCTestCase {
     private typealias SheetSpy = ValueSpy<EquatableSheet?>
     
     private func makeSUT(
-        delay: Delay = .milliseconds(100),
+        delayPair: ContentView.DelayPair = .init(destination: .ms100, sheet: .ms100),
         schedulers: Schedulers = .init(),
         file: StaticString = #file,
         line: UInt = #line
@@ -149,7 +150,7 @@ final class BinderComposerPreviewTests: XCTestCase {
         destinationSpy: DestinationSpy,
         sheetSpy: SheetSpy
     ) {
-        let sut = SUT.default(delay: delay, schedulers: schedulers)
+        let sut = SUT.default(delayPair: delayPair, schedulers: schedulers)
         
         let navigationPublisher = sut.flow.$state.map(\.navigation)
         let navigationSpy = NavigationSpy(navigationPublisher.map { $0.map(self.equatable) })

@@ -15,7 +15,7 @@ extension RootDomain.Binder {
     
     /// - Note: - Change `delay`to see correct and incorrect navigation behavior: if delay is small, SwiftUI writes `nil` destination when switching from sheet after destination is already set. Looks like 500 ms is ok.
     static func `default`(
-        delay: RootDomain.BinderComposer.Delay,
+        delayPair: ContentView.DelayPair,
         schedulers: Schedulers = .init()
     ) -> RootDomain.Binder {
         
@@ -24,9 +24,21 @@ extension RootDomain.Binder {
             delay: .zero, // delay,
             getNavigation: { select, notify, completion in
                 
-                schedulers.interactive.delay(for: delay) {
+                getNavigation(select: select, notify: notify) { navigation in
                     
-                    getNavigation(select: select, notify: notify, completion: completion)
+                    switch navigation {
+                    case let .destination(node):
+                        schedulers.interactive.delay(for: delayPair.destination.value) {
+                            
+                            completion(.destination(node))
+                        }
+                        
+                    case let .sheet(node):
+                        schedulers.interactive.delay(for: delayPair.sheet.value) {
+                            
+                            completion(.sheet(node))
+                        }
+                    }
                 }
             },
             schedulers: schedulers

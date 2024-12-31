@@ -11,10 +11,10 @@ import UIPrimitives
 
 struct ContentView: View {
     
-    @State private var delay: Delay = .ms200
+    @State private var delayPair: DelayPair = .both
     @State private var mode: Mode = .both
     
-    private var binder: RootDomain.Binder { .default(delay: delay.value) }
+    private var binder: RootDomain.Binder { .default(delayPair: delayPair) }
     
     var body: some View {
         
@@ -28,6 +28,7 @@ struct ContentView: View {
                 rootViewInNavigationView(state: state, event: event)
             }
         }
+        .onChange(of: mode) { delayPair = $0.delayPair }
     }
 }
 
@@ -121,9 +122,7 @@ private extension ContentView {
         
         VStack(spacing: 32) {
             
-            Text("Using Sheets only could work no delay at all, Navigation Destination needs 500 ms.")
-            
-            Divider()
+            Text("Using Sheets only could work with no delay at all, Navigation Destination needs 500ms.")
             
             modePicker()
             
@@ -131,15 +130,16 @@ private extension ContentView {
             
             Text("Start flow with either `Destination` or `Sheet`. See how moving from Sheet to Destination on tapping `Next` briefly shows destination and dismisses it if delay is small.")
             
-            HStack {
-                
-                button("Destination") { event(.select(.destination)) }
-                button("Sheet") { event(.select(.sheet)) }
-            }
+            Divider()
+            
+            button("Destination") { event(.select(.destination)) }
+            delayPicker(selection: $delayPair.destination)
             
             Divider()
             
-            delayPicker()
+            button("Sheet") { event(.select(.sheet)) }
+            delayPicker(selection: $delayPair.sheet)
+            
             note()
         }
         .padding(.horizontal)
@@ -166,9 +166,11 @@ private extension ContentView {
             .frame(maxWidth: .infinity)
     }
     
-    func delayPicker() -> some View {
+    func delayPicker(
+        selection: Binding<Delay>
+    ) -> some View {
         
-        Picker("Delay", systemImage: "clock", selection: $delay) {
+        Picker("Delay", systemImage: "clock", selection: selection) {
             
             ForEach(Delay.allCases, id: \.self) {
                 
@@ -220,6 +222,15 @@ private extension ContentView {
             DestinationView(model: content, title: "Sheet")
         }
     }
+}
+
+extension ContentView {
+    
+    struct DelayPair {
+        
+        var destination: Delay
+        var sheet: Delay
+    }
     
     enum Delay: Int, CaseIterable {
         
@@ -236,6 +247,25 @@ private extension ContentView {
     enum Mode: String, CaseIterable {
         
         case both, destination, sheet
+    }
+}
+
+extension ContentView.DelayPair {
+    
+    static let both: Self = .init(destination: .ms500, sheet: .ms100)
+    static let destination: Self = .init(destination: .ms500, sheet: .ms500)
+    static let sheet: Self = .init(destination: .ms0, sheet: .ms0)
+}
+
+extension ContentView.Mode {
+    
+    var delayPair: ContentView.DelayPair {
+        
+        switch self {
+        case .both:        return .both
+        case .destination: return .destination
+        case .sheet:       return .sheet
+        }
     }
 }
 
@@ -324,4 +354,9 @@ extension RootDomain.Navigation.Sheet: Identifiable {
         
         case content(ObjectIdentifier)
     }
+}
+
+#Preview {
+    
+    ContentView()
 }
