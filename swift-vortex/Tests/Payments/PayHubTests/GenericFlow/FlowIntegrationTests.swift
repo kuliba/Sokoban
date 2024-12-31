@@ -106,6 +106,30 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
+    func test_shouldSetParentIsLoadingToTrue_onFirstChildSelect() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(firstChildDelay: .milliseconds(100))
+        
+        sut.event(.select(.first))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .first),
+        ])
+        
+        try first(sut).event(.select(.init()))
+
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .first),
+            .init(isLoading: true, navigation: .first),
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ParentDomain.Flow
@@ -212,6 +236,31 @@ final class FlowIntegrationTests: XCTestCase {
 
 // MARK: - Parent
 
+import Combine
+
+#warning("original Node is located in PayHubUI module")
+struct Node<Model> {
+    
+    let model: Model
+    private let cancellables: Set<AnyCancellable>
+    
+    init(
+        model: Model,
+        cancellables: Set<AnyCancellable>
+    ) {
+        self.model = model
+        self.cancellables = cancellables
+    }
+    
+    init(
+        model: Model,
+        cancellable: AnyCancellable
+    ) {
+        self.model = model
+        self.cancellables = [cancellable]
+    }
+}
+
 private enum ParentDomain {
     
     // MARK: - Binder - no Binder
@@ -231,20 +280,20 @@ private enum ParentDomain {
     
     enum Navigation {
         
-        case first(FirstChild)
+        case first(Node<FirstChild>)
         case second
     }
     
-    typealias FirstChild = Void
+    typealias FirstChild = FirstChildDomain.Flow
 }
 
 private extension ParentDomain.FlowDomain.State {
     
     var first: ParentDomain.FirstChild? {
     
-        guard case let .first(first) = navigation else { return nil }
+        guard case let .first(node) = navigation else { return nil }
         
-        return first
+        return node.model
     }
 }
 
@@ -293,16 +342,39 @@ extension ParentComposer {
     ) {
         switch select {
         case .first:
-            navigationScheduler.delay(for: firstChildDelay) {
-                
-                completion(.first(()))
+            navigationScheduler.delay(for: firstChildDelay) { //[weak self] in
+                #warning("weakify!")
+                // guard let self else { return }
+                                
+                completion(.first(self.composeFirstChildNode(notify)))
             }
+            
         case .second:
             navigationScheduler.delay(for: secondChildDelay) {
                 
                 completion(.second)
             }
         }
+    }
+    
+    func composeFirstChildNode(
+        _ notify: @escaping Domain.Notify
+    ) -> Node<Domain.FirstChild> {
+        
+        let composer = FirstChildComposer(
+            delay: self.firstChildDelay,
+            scheduler: self.scheduler,
+            navigationScheduler: self.navigationScheduler
+        )
+        let first = composer.compose(initialState: .init())
+        
+        return .init(
+            model: first,
+            cancellable: first.$state
+                .dropFirst()
+                .project { _ in nil }
+                .sink { notify($0) }
+        )
     }
 }
 
