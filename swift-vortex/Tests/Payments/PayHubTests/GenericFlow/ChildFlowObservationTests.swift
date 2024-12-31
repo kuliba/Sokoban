@@ -11,7 +11,7 @@ extension Publisher where Failure == Never {
     
     /// Projects a FlowState into a FlowEvent based on `Navigation` mapping and `isLoading`.
     func project<Projection, Select>(
-        _ transform: @escaping (Projection) -> Select
+        _ transform: @escaping (Projection) -> Select?
     ) -> AnyPublisher<FlowEvent<Select, Never>, Never> where Output == FlowState<Projection> {
         
         map { $0.project(transform) }
@@ -22,13 +22,13 @@ extension Publisher where Failure == Never {
 extension FlowState {
     
     func project<Select>(
-        _ transform: @escaping (Navigation) -> Select
+        _ transform: @escaping (Navigation) -> Select?
     ) -> FlowEvent<Select, Never> {
         
         if isLoading {
             return .isLoading(true)
-        } else if let navigation {
-            return .select(transform(navigation))
+        } else if let navigation, let select = transform(navigation) {
+            return .select(select)
         } else {
             return .isLoading(false)
         }
@@ -104,6 +104,15 @@ final class ChildFlowObservationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [.select(.out(.l))])
     }
     
+    func test_shouldDeliverIsLoadingFalse_onNonProjectedChildState() {
+        
+        let (subject, spy) = makeSUT()
+        
+        subject.send(makeChildState(false, .somewhere))
+        
+        XCTAssertNoDiff(spy.values, [.isLoading(false)])
+    }
+    
     // MARK: - Helpers
     
     private typealias ChildState = FlowState<ChildNavigation>
@@ -137,7 +146,7 @@ final class ChildFlowObservationTests: XCTestCase {
     
     private func mapNavigation(
         _ navigation: ChildNavigation
-    ) -> ParentNavigation {
+    ) -> ParentNavigation? {
         
         switch navigation {
         case let .outside(outside):
@@ -145,12 +154,16 @@ final class ChildFlowObservationTests: XCTestCase {
             case .left: return .out(.l)
             case .right: return .out(.r)
             }
+            
+        case .somewhere:
+            return nil
         }
     }
     
     private enum ChildNavigation: Equatable {
         
         case outside(Outside)
+        case somewhere
         
         enum Outside: Equatable {
             
