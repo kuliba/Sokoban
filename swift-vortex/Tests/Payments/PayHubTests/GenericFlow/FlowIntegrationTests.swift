@@ -16,7 +16,7 @@ final class FlowIntegrationTests: XCTestCase {
         let initialState = State(isLoading: true)
         let (_, spy, _) = makeSUT(initialState: initialState)
         
-        XCTAssertNoDiff(spy.values, [initialState])
+        XCTAssertNoDiff(spy.values, [.init(isLoading: true)])
     }
     
     func test_shouldNotSetNavigationBeforeFirstChildDelay() {
@@ -121,7 +121,7 @@ final class FlowIntegrationTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: ValueSpy<State>,
+        spy: ValueSpy<EquatableState>,
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let scheduler = DispatchQueue.test
@@ -132,7 +132,7 @@ final class FlowIntegrationTests: XCTestCase {
             navigationScheduler: scheduler.eraseToAnyScheduler()
         )
         let sut = composer.compose(initialState: initialState)
-        let spy = ValueSpy(sut.$state)
+        let spy = ValueSpy(sut.$state.map(equatable))
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -174,6 +174,40 @@ final class FlowIntegrationTests: XCTestCase {
         
         return .milliseconds(milliseconds)
     }
+    
+    private func equatable(
+        _ state: ParentDomain.FlowDomain.State
+    ) -> EquatableState {
+        
+        return .init(
+            isLoading: state.isLoading, 
+            navigation: state.navigation.map(equatable)
+        )
+    }
+    
+    private func equatable(
+        _ navigation: ParentDomain.Navigation
+    ) -> EquatableNavigation {
+        
+        switch navigation {
+        case .first:  return .first
+        case .second: return .second
+        }
+    }
+    
+    typealias EquatableState = FlowState<EquatableNavigation>
+    
+    enum EquatableNavigation: Equatable {
+        
+        case first, second
+    }
+    
+    private func first(
+        _ sut: SUT
+    ) throws -> ParentDomain.FirstChild {
+        
+        try XCTUnwrap(sut.state.first)
+    }
 }
 
 // MARK: - Parent
@@ -195,9 +229,22 @@ private enum ParentDomain {
         case first, second
     }
     
-    enum Navigation: Equatable {
+    enum Navigation {
         
-        case first, second
+        case first(FirstChild)
+        case second
+    }
+    
+    typealias FirstChild = Void
+}
+
+private extension ParentDomain.FlowDomain.State {
+    
+    var first: ParentDomain.FirstChild? {
+    
+        guard case let .first(first) = navigation else { return nil }
+        
+        return first
     }
 }
 
@@ -248,7 +295,7 @@ extension ParentComposer {
         case .first:
             navigationScheduler.delay(for: firstChildDelay) {
                 
-                completion(.first)
+                completion(.first(()))
             }
         case .second:
             navigationScheduler.delay(for: secondChildDelay) {
