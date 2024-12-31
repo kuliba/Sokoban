@@ -21,8 +21,8 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
         case let .isLoading(isLoading):
             return .isLoading(isLoading)
 
-        case let .receive(receive):
-            return .receive(receive.equatable)
+        case let .navigation(navigation):
+            return .navigation(navigation.equatable)
             
         case let .select(select):
             return .select(select.equatable)
@@ -33,7 +33,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
         
         case dismiss
         case isLoading(Bool)
-        case receive(PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult)
+        case navigation(PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult)
         case select(PaymentsTransfersPersonalTransfersDomain.EquatableSelect)
     }
 }

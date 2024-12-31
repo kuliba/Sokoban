@@ -137,7 +137,7 @@ private extension FlowEffectHandler {
             
             scheduler.delay(for: delay) {
                 
-                dispatch(.receive(navigation))
+                dispatch(.navigation(navigation))
             }
         }
     }

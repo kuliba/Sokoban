@@ -27,7 +27,7 @@ public extension FlowReducer {
         case let .isLoading(isLoading):
             state.isLoading = isLoading
             
-        case let .receive(navigation):
+        case let .navigation(navigation):
             state.isLoading = false
             state.navigation = navigation
             
