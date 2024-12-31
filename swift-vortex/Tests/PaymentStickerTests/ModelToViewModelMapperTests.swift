@@ -77,7 +77,7 @@ final class ModelToViewModelMapperTests: XCTestCase {
     
     private final class Spy {
         
-        private (set) var events = [Event]()
+        private(set) var events = [Event]()
         
         func event(event: Event) {
             
