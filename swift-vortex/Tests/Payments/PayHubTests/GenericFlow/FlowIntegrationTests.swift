@@ -372,9 +372,9 @@ extension ParentComposer {
     ) {
         switch select {
         case .first:
-            navigationScheduler.delay(for: firstChildDelay) { //[weak self] in
-#warning("weakify!")
-                // guard let self else { return }
+            navigationScheduler.delay(for: firstChildDelay) { [weak self] in
+                
+                guard let self else { return }
                 
                 completion(.first(self.composeFirstChildNode(notify)))
             }
