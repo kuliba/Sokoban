@@ -376,7 +376,13 @@ extension ParentComposer {
                 
                 guard let self else { return }
                 
-                completion(.first(self.composeFirstChildNode(notify)))
+                completion(.first(
+                    composeFirstChild()
+                        .asNode(
+                            transform: { _ in nil },
+                            notify: notify
+                        )
+                ))
             }
             
         case .second:
@@ -387,24 +393,15 @@ extension ParentComposer {
         }
     }
     
-    func composeFirstChildNode(
-        _ notify: @escaping Domain.Notify
-    ) -> Node<Domain.FirstChild> {
+    func composeFirstChild() -> Domain.FirstChild {
         
         let composer = FirstChildComposer(
             delay: self.firstChildDelay,
             scheduler: self.scheduler,
             navigationScheduler: self.navigationScheduler
         )
-        let first = composer.compose(initialState: .init())
         
-        return .init(
-            model: first,
-            cancellable: first.$state
-                .dropFirst()
-                .project { _ in nil }
-                .sink { notify($0) }
-        )
+        return composer.compose(initialState: .init())
     }
 }
 
