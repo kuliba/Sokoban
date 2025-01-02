@@ -6,46 +6,6 @@
 //
 
 import Combine
-
-extension Publisher where Failure == Never {
-    
-    /// Projects a FlowState into a FlowEvent based on `Navigation` mapping and `isLoading`.
-    func project<Projection, Select>(
-        _ transform: @escaping (Projection) -> NavigationOutcome<Select>?
-    ) -> AnyPublisher<FlowEvent<Select, Never>, Never> where Output == FlowState<Projection> {
-        
-        map { $0.project(transform) }
-            .eraseToAnyPublisher()
-    }
-}
-
-extension FlowState {
-    
-    func project<Select>(
-        _ transform: @escaping (Navigation) -> NavigationOutcome<Select>?
-    ) -> FlowEvent<Select, Never> {
-        
-        if isLoading {
-            return .isLoading(true)
-        }
-        
-        if let navigation = navigation.map(transform) {
-            switch navigation {
-            case .dismiss:
-                return .dismiss
-                
-            case let .select(select):
-                return .select(select)
-                
-            case .none:
-                break
-            }
-        }
-        
-        return .isLoading(false)
-    }
-}
-
 import PayHub
 import XCTest
 
