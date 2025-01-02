@@ -168,14 +168,14 @@ final class FlowIntegrationTests: XCTestCase {
         
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(776))
-
+        
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
         ])
         
         scheduler.advance(by: .milliseconds(1))
-
+        
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
@@ -221,7 +221,29 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
-    func test_shouldResetParentNavigation_onWithOutsideChildSelectOutsideDismiss() throws {
+    func test_shouldSetParentIsLoadingToFalse_onWithOutsideChildNavigation_forward_withDelay() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: .milliseconds(888))
+        
+        sut.event(.select(.withOutside))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(888))
+        
+        try withOutside(sut).event(.select(.forward))
+        
+        scheduler.advance()
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+            .init(isLoading: true, navigation: .withOutside),
+            .init(isLoading: false, navigation: .withOutside),
+        ])
+    }
+    
+    func test_shouldResetParentNavigation_onWithOutsideChildSelectOutsideDismiss_withoutDelay() throws {
         
         let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: .milliseconds(888))
         
@@ -247,7 +269,7 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
-    func test_shouldSetParentIsLoadingFalseNavigationToMain_onWithOutsideChildSelectOutsideMain() throws {
+    func test_shouldSetParentIsLoadingFalseNavigationToMain_onWithOutsideChildSelectOutsideMain_withoutDelay() throws {
         
         let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: .milliseconds(888))
         
@@ -735,7 +757,7 @@ extension WithOutsideChildComposer {
         switch select {
         case .forward:
             navigationScheduler.delay(for: delay) {
-    
+                
                 completion(.forward)
             }
             
