@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PayHub
 
 public enum QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker> {
     

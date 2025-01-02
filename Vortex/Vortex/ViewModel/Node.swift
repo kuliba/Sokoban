@@ -5,6 +5,6 @@
 //  Created by Igor Malyarov on 31.07.2024.
 //
 
-import PayHubUI
+import PayHub
 
-typealias Node = PayHubUI.Node
+typealias Node = PayHub.Node
