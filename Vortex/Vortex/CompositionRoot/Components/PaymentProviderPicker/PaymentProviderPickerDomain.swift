@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 24.09.2024.
 //
 
-import VortexTools
 import PayHub
 import PayHubUI
+import VortexTools
 
 /// A namespace.
 enum PaymentProviderPickerDomain {}
@@ -16,7 +16,7 @@ extension PaymentProviderPickerDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     
@@ -27,7 +27,7 @@ extension PaymentProviderPickerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias FlowReducer = FlowDomain.Reducer
@@ -105,7 +105,7 @@ extension PaymentServicePicker {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     

@@ -6,7 +6,7 @@
 //
 
 import CombineSchedulers
-import PayHub
+import FlowCore
 import XCTest
 
 final class FlowIntegrationTests: XCTestCase {
@@ -448,7 +448,7 @@ private enum ParentDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     
@@ -631,7 +631,7 @@ private enum NoContentChildDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     
@@ -696,7 +696,7 @@ private enum WithOutsideChildDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     

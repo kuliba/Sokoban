@@ -7,7 +7,6 @@
 
 import LandingMapping
 import MarketShowcase
-import PayHub
 import RxViewModel
 
 enum MarketShowcaseDomain {}
@@ -16,7 +15,7 @@ extension MarketShowcaseDomain{
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     

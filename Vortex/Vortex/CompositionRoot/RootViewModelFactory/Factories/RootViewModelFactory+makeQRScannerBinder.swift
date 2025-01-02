@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 import Foundation
 import PayHub
 import PayHubUI
@@ -241,7 +242,7 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
 
 private extension QRScannerDomain.NotifyEvent {
     
-    typealias PickerFlowEvent = PayHub.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    typealias PickerFlowEvent = FlowCore.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
     
     init(_ event: PickerFlowEvent) {
         

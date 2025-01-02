@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.10.2024.
 //
 
-import PayHub
+import FlowCore
 
 /// A namespace/
 public enum QRDomain<Navigation, QR, QRResult> {}
@@ -14,7 +14,7 @@ public extension QRDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = FlowCore.Binder<Content, Flow>
     typealias Witnesses = ContentFlowWitnesses<Content, Flow, Select, Navigation>
     
     // MARK: - Content
@@ -23,7 +23,7 @@ public extension QRDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void

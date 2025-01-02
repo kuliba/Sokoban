@@ -1,14 +1,14 @@
 //
-//  FlowEffectHandlerTests.swift
+//  FlowEffectHandlerWithMicroServicesTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-import PayHub
+import FlowCore
 import XCTest
 
-final class FlowEffectHandlerWithMicroservicesTests: FlowTests {
+final class FlowEffectHandlerWithMicroServicesTests: FlowTests {
     
     // MARK: - init
     

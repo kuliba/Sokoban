@@ -642,7 +642,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "FlowCoreTests",
         "name" : "FlowCoreTests"
       }

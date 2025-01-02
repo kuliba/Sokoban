@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FlowCore
 import PayHub
 import PayHubUI
 import RxViewModel
@@ -26,7 +27,7 @@ extension RootViewModelFactory {
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         makeContent: @escaping () -> Content,
         witnesses: BinderComposer<Content, Select, Navigation>.Witnesses
-    ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
+    ) -> Binder<Content, RxViewModel<FlowCore.FlowState<Navigation>, FlowCore.FlowEvent<Select, Navigation>, FlowCore.FlowEffect<Select>>> {
         
         let composer = BinderComposer(
             getNavigation: getNavigation,
@@ -52,7 +53,7 @@ extension RootViewModelFactory {
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         content: Content,
         witnesses: BinderComposer<Content, Select, Navigation>.Witnesses
-    ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
+    ) -> Binder<Content, RxViewModel<FlowCore.FlowState<Navigation>, FlowCore.FlowEvent<Select, Navigation>, FlowCore.FlowEffect<Select>>> {
         
         return composeBinder(
             initialState: initialState,
@@ -84,7 +85,7 @@ extension RootViewModelFactory {
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         makeContent: @escaping () -> Content,
         witnesses: BinderComposer<Content, Select, Navigation>.Witnesses
-    ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
+    ) -> Binder<Content, RxViewModel<FlowCore.FlowState<Navigation>, FlowCore.FlowEvent<Select, Navigation>, FlowCore.FlowEffect<Select>>> {
         
         let composer = BinderComposer(
             delay: delay ?? settings.delay,
@@ -114,7 +115,7 @@ extension RootViewModelFactory {
         getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         content: Content,
         witnesses: BinderComposer<Content, Select, Navigation>.Witnesses
-    ) -> Binder<Content, RxViewModel<PayHub.FlowState<Navigation>, PayHub.FlowEvent<Select, Navigation>, PayHub.FlowEffect<Select>>> {
+    ) -> Binder<Content, RxViewModel<FlowCore.FlowState<Navigation>, FlowCore.FlowEvent<Select, Navigation>, FlowCore.FlowEffect<Select>>> {
         
         return compose(
             initialState: initialState, 

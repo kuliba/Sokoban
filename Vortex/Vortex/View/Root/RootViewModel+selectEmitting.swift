@@ -6,9 +6,9 @@
 //
 
 import Combine
-import PayHub
+import FlowCore
 
-typealias RootEvent = PayHub.FlowEvent<RootViewSelect, Never>
+typealias RootEvent = FlowCore.FlowEvent<RootViewSelect, Never>
 
 extension RootViewModel {
     

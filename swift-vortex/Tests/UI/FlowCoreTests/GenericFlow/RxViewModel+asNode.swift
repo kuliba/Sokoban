@@ -6,7 +6,7 @@
 //
 
 import Combine
-import PayHub
+import FlowCore
 import RxViewModel
 
 extension RxViewModel {
