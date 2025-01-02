@@ -24,12 +24,3 @@ extension Latest: Identifiable {
         }
     }
 }
-
-typealias OperationPickerState = PayHubUI.OperationPickerState<Latest>
-typealias OperationPickerEvent = PayHubUI.OperationPickerEvent<Latest>
-typealias OperationPickerEffect = PayHubUI.OperationPickerEffect
-
-typealias OperationPickerReducer = PayHubUI.OperationPickerReducer<Latest>
-typealias OperationPickerEffectHandler = PayHubUI.OperationPickerEffectHandler<Latest>
-
-typealias OperationPickerContent = RxViewModel<OperationPickerState, OperationPickerEvent, OperationPickerEffect>
