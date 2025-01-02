@@ -19,7 +19,7 @@ extension RxViewModel {
     ///
     /// - Returns: A `Node` containing this flow and a subscription to its state.
     func asNode<Select, Navigation, ParentSelect>(
-        transform: @escaping (Navigation) -> ParentSelect?,
+        transform: @escaping (Navigation) -> NavigationOutcome<ParentSelect>?,
         notify: @escaping (FlowEvent<ParentSelect, Never>) -> Void
     ) -> Node<RxViewModel>
     where State == FlowState<Navigation>,
@@ -34,3 +34,11 @@ extension RxViewModel {
               return Node(model: self, cancellable: cancellable)
           }
 }
+
+enum NavigationOutcome<Select> {
+    
+    case dismiss
+    case select(Select)
+}
+
+extension NavigationOutcome: Equatable where Select: Equatable {}

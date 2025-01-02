@@ -11,7 +11,7 @@ extension Publisher where Failure == Never {
     
     /// Projects a FlowState into a FlowEvent based on `Navigation` mapping and `isLoading`.
     func project<Projection, Select>(
-        _ transform: @escaping (Projection) -> Select?
+        _ transform: @escaping (Projection) -> NavigationOutcome<Select>?
     ) -> AnyPublisher<FlowEvent<Select, Never>, Never> where Output == FlowState<Projection> {
         
         map { $0.project(transform) }
@@ -22,16 +22,27 @@ extension Publisher where Failure == Never {
 extension FlowState {
     
     func project<Select>(
-        _ transform: @escaping (Navigation) -> Select?
+        _ transform: @escaping (Navigation) -> NavigationOutcome<Select>?
     ) -> FlowEvent<Select, Never> {
         
         if isLoading {
             return .isLoading(true)
-        } else if let navigation, let select = transform(navigation) {
-            return .select(select)
-        } else {
-            return .isLoading(false)
         }
+        
+        if let navigation = navigation.map(transform) {
+            switch navigation {
+            case .dismiss:
+                return .dismiss
+                
+            case let .select(select):
+                return .select(select)
+                
+            case .none:
+                break
+            }
+        }
+        
+        return .isLoading(false)
     }
 }
 
@@ -101,7 +112,7 @@ final class ChildFlowObservationTests: XCTestCase {
         
         subject.send(makeChildState(false, .outside(.left)))
         
-        XCTAssertNoDiff(spy.values, [.select(.out(.l))])
+        XCTAssertNoDiff(spy.values, [.select(.out(.left))])
     }
     
     func test_shouldDeliverIsLoadingFalse_onNonProjectedChildState() {
@@ -146,13 +157,13 @@ final class ChildFlowObservationTests: XCTestCase {
     
     private func mapNavigation(
         _ navigation: ChildNavigation
-    ) -> ParentNavigation? {
+    ) -> NavigationOutcome<ParentNavigation>? {
         
         switch navigation {
         case let .outside(outside):
             switch outside {
-            case .left: return .out(.l)
-            case .right: return .out(.r)
+            case .left: return .select(.out(.left))
+            case .right: return .select(.out(.right))
             }
             
         case .somewhere:
@@ -177,7 +188,7 @@ final class ChildFlowObservationTests: XCTestCase {
         
         enum Out: Equatable {
             
-            case l, r
+            case left, right
         }
     }
 }
