@@ -160,6 +160,42 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
+    func test_shouldSetWithOutsideChildForwardNavigationWithDelay() {
+        
+        let (sut, spy, scheduler) = makeWithOutsideChild(delay: .milliseconds(777))
+        
+        sut.event(.select(.forward))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(776))
+
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+        ])
+        
+        scheduler.advance(by: .milliseconds(1))
+
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .forward),
+        ])
+    }
+    
+    func test_shouldSetWithOutsideChildOutsideNavigationImmediately() {
+        
+        let (sut, spy, _) = makeWithOutsideChild(delay: .milliseconds(777))
+        
+        sut.event(.select(.outside(.dismiss)))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .outside(.dismiss)),
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ParentDomain.Flow
@@ -223,6 +259,33 @@ final class FlowIntegrationTests: XCTestCase {
         return (sut, spy, scheduler)
     }
     
+    private func makeWithOutsideChild(
+        initialState: WithOutsideChildDomain.FlowDomain.State = .init(),
+        delay: Delay = .zero,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: WithOutsideChildDomain.Flow,
+        spy: ValueSpy<WithOutsideChildDomain.FlowDomain.State>,
+        scheduler: TestSchedulerOf<DispatchQueue>
+    ) {
+        let scheduler = DispatchQueue.test
+        let composer = WithOutsideChildComposer(
+            delay: delay,
+            scheduler: .immediate,
+            navigationScheduler: scheduler.eraseToAnyScheduler()
+        )
+        let sut = composer.compose(initialState: initialState)
+        let spy = ValueSpy(sut.$state)
+        
+        trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(scheduler, file: file, line: line)
+        
+        return (sut, spy, scheduler)
+    }
+    
     private func makeDelay(ms milliseconds: Int) -> DispatchQueue.SchedulerTimeType.Stride {
         
         return .milliseconds(milliseconds)
@@ -264,31 +327,6 @@ final class FlowIntegrationTests: XCTestCase {
 }
 
 // MARK: - Parent
-
-import Combine
-
-#warning("original Node is located in PayHubUI module")
-struct Node<Model> {
-    
-    let model: Model
-    private let cancellables: Set<AnyCancellable>
-    
-    init(
-        model: Model,
-        cancellables: Set<AnyCancellable>
-    ) {
-        self.model = model
-        self.cancellables = cancellables
-    }
-    
-    init(
-        model: Model,
-        cancellable: AnyCancellable
-    ) {
-        self.model = model
-        self.cancellables = [cancellable]
-    }
-}
 
 private enum ParentDomain {
     
@@ -477,6 +515,87 @@ extension NoContentChildComposer {
         navigationScheduler.delay(for: delay) {
             
             completion(.init())
+        }
+    }
+}
+
+// MARK: - WithOutsideChild
+
+private enum WithOutsideChildDomain {
+    
+    // MARK: - Binder - no Binder
+    
+    // MARK: - Content - no Content
+    
+    // MARK: - Flow
+    
+    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias Flow = FlowDomain.Flow
+    typealias Notify = FlowDomain.Notify
+    
+    enum Select: Equatable {
+        
+        case forward
+        case outside(Outside)
+    }
+    
+    typealias Navigation = Select
+    
+    enum Outside: Equatable {
+        
+        case dismiss, main
+    }
+}
+
+private final class WithOutsideChildComposer {
+    
+    let delay: Delay
+    let scheduler: AnySchedulerOf<DispatchQueue>
+    let navigationScheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        delay: Delay,
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        navigationScheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.delay = delay
+        self.scheduler = scheduler
+        self.navigationScheduler = navigationScheduler
+    }
+    
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+}
+
+extension WithOutsideChildComposer {
+    
+    typealias Domain = WithOutsideChildDomain
+    
+    func compose(
+        initialState: Domain.FlowDomain.State
+    ) -> Domain.Flow {
+        
+        let composer = FlowComposer(
+            getNavigation: getNavigation,
+            scheduler: scheduler
+        )
+        
+        return composer.compose(initialState: initialState)
+    }
+    
+    func getNavigation(
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
+    ) {
+        switch select {
+        case .forward:
+            navigationScheduler.delay(for: delay) {
+    
+                completion(.forward)
+            }
+            
+        case let .outside(outside):
+            completion(.outside(outside))
         }
     }
 }
