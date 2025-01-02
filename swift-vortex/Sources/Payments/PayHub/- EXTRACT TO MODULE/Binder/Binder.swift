@@ -18,23 +18,20 @@ public final class Binder<Content, Flow> {
     /// The flow to be bound with the content. This is an immutable property.
     public let flow: Flow
     
-    /// A cancellable object that manages the lifecycle of the binding between `content` and `flow`.
-    /// This property is private, encapsulating the binding logic and ensuring that the cancellation
+    /// A set of cancellable objects that manage the lifecycle of the binding between `content` and `flow`.
+    /// This property is private, encapsulating the binding logic and ensuring that cancellation
     /// is handled internally.
     private let cancellables: Set<AnyCancellable>
     
-    /// Initialises a new `Binder` instance, binding the provided `content` and `flow` using the given
+    /// Initializes a new `Binder` instance, binding the provided `content` and `flow` using the given
     /// `bind` closure. The `bind` closure is expected to return an `AnyCancellable` that manages the
-    /// lifecycle of the binding, ensuring that resources are properly released when the binding is no
-    /// longer needed.
+    /// lifecycle of the binding.
     ///
     /// - Parameters:
     ///   - content: The content to be bound with the flow.
     ///   - flow: The flow to be bound with the content.
     ///   - bind: A closure that takes `content` and `flow` as arguments and returns an `AnyCancellable`
     ///           that manages the binding's lifecycle.
-    ///
-    /// - Returns: A new instance of `Binder` that encapsulates the binding between `content` and `flow`.
     public init(
         content: Content,
         flow: Flow,
@@ -45,18 +42,15 @@ public final class Binder<Content, Flow> {
         self.cancellables = [bind(content, flow)]
     }
     
-    /// Initialises a new `Binder` instance, binding the provided `content` and `flow` using the given
+    /// Initializes a new `Binder` instance, binding the provided `content` and `flow` using the given
     /// `bind` closure. The `bind` closure is expected to return a `Set<AnyCancellable>` that manages the
-    /// lifecycle of the binding, ensuring that resources are properly released when the binding is no
-    /// longer needed.
+    /// lifecycle of the binding.
     ///
     /// - Parameters:
     ///   - content: The content to be bound with the flow.
     ///   - flow: The flow to be bound with the content.
     ///   - bind: A closure that takes `content` and `flow` as arguments and returns a `Set<AnyCancellable>`
     ///           that manages the binding's lifecycle.
-    ///
-    /// - Returns: A new instance of `Binder` that encapsulates the binding between `content` and `flow`.
     public init(
         content: Content,
         flow: Flow,
