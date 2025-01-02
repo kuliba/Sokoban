@@ -247,6 +247,33 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
+    func test_shouldSetParentIsLoadingFalseNavigationToMain_onWithOutsideChildSelectOutsideMain() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: .milliseconds(888))
+        
+        sut.event(.select(.withOutside))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(888))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+        ])
+        
+        try withOutside(sut).event(.select(.outside(.main)))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+            .init(isLoading: true, navigation: .withOutside),
+            .init(isLoading: true, navigation: nil),
+            .init(isLoading: false, navigation: .main),
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ParentDomain.Flow
@@ -357,7 +384,8 @@ final class FlowIntegrationTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .noContent:  return .noContent
+        case .main:        return .main
+        case .noContent:   return .noContent
         case .withOutside: return .withOutside
         }
     }
@@ -366,7 +394,7 @@ final class FlowIntegrationTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
-        case noContent, withOutside
+        case main, noContent, withOutside
     }
     
     private func noContent(
@@ -400,11 +428,12 @@ private enum ParentDomain {
     
     enum Select {
         
-        case noContent, withOutside
+        case main, noContent, withOutside
     }
     
     enum Navigation {
         
+        case main
         case noContent(Node<NoContentChild>)
         case withOutside(Node<WithOutsideChild>)
     }
@@ -474,6 +503,9 @@ extension ParentComposer {
         completion: @escaping (Domain.Navigation) -> Void
     ) {
         switch select {
+        case .main:
+            completion(.main)
+            
         case .noContent:
             navigationScheduler.delay(for: noContentChildDelay) { [weak self] in
                 
@@ -543,7 +575,7 @@ private extension WithOutsideChildDomain.Navigation {
                 return .dismiss
                 
             case .main:
-                return nil
+                return .select(.main)
             }
         }
     }
