@@ -11,7 +11,8 @@ import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
-    private let makeImageView: MakeImageView
+    let makeImageView: MakeImageView
+    
     private let config: Config
     
     public init(
