@@ -19,12 +19,12 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [.init(isLoading: true)])
     }
     
-    func test_shouldNotSetNavigationBeforeFirstChildDelay() {
+    func test_shouldNotSetNavigationBeforeNoContentChildDelay() {
         
-        let firstChildDelay = makeDelay(ms: 100)
-        let (sut, spy, scheduler) = makeSUT(firstChildDelay: firstChildDelay)
+        let noContentChildDelay = makeDelay(ms: 100)
+        let (sut, spy, scheduler) = makeSUT(noContentChildDelay: noContentChildDelay)
         
-        sut.event(.select(.first))
+        sut.event(.select(.noContent))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
@@ -44,7 +44,7 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .first),
+            .init(isLoading: false, navigation: .noContent),
         ])
     }
     
@@ -77,10 +77,10 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
-    func test_shouldNotSetFirstChildNavigationBeforeDelay() {
+    func test_shouldNotSetNoContentChildNavigationBeforeDelay() {
         
         let delay = makeDelay(ms: 555)
-        let (sut, spy, scheduler) = makeSUT(delay: delay)
+        let (sut, spy, scheduler) = makeNoContentChild(delay: delay)
         
         sut.event(.select(.init()))
         
@@ -106,11 +106,11 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
-    func test_shouldSetParentIsLoadingToTrue_onFirstChildSelect() throws {
+    func test_shouldSetParentIsLoadingToTrue_onNoContentChildSelect() throws {
         
-        let (sut, spy, scheduler) = makeSUT(firstChildDelay: .milliseconds(100))
+        let (sut, spy, scheduler) = makeSUT(noContentChildDelay: .milliseconds(100))
         
-        sut.event(.select(.first))
+        sut.event(.select(.noContent))
         
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -118,35 +118,35 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .first),
+            .init(isLoading: false, navigation: .noContent),
         ])
         
-        try first(sut).event(.select(.init()))
+        try noContent(sut).event(.select(.init()))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .first),
-            .init(isLoading: true, navigation: .first),
+            .init(isLoading: false, navigation: .noContent),
+            .init(isLoading: true, navigation: .noContent),
         ])
     }
     
-    func test_shouldSetParentIsLoadingToFalse_onFirstChildNavigation() throws {
+    func test_shouldSetParentIsLoadingToFalse_onNoContentChildNavigation() throws {
         
-        let (sut, spy, scheduler) = makeSUT(firstChildDelay: .milliseconds(100))
+        let (sut, spy, scheduler) = makeSUT(noContentChildDelay: .milliseconds(100))
         
-        sut.event(.select(.first))
+        sut.event(.select(.noContent))
         
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
         
-        try first(sut).event(.select(.init()))
+        try noContent(sut).event(.select(.init()))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .first),
-            .init(isLoading: true, navigation: .first),
+            .init(isLoading: false, navigation: .noContent),
+            .init(isLoading: true, navigation: .noContent),
         ])
         
         scheduler.advance(by: .milliseconds(100))
@@ -154,9 +154,9 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .first),
-            .init(isLoading: true, navigation: .first),
-            .init(isLoading: false, navigation: .first),
+            .init(isLoading: false, navigation: .noContent),
+            .init(isLoading: true, navigation: .noContent),
+            .init(isLoading: false, navigation: .noContent),
         ])
     }
     
@@ -169,7 +169,7 @@ final class FlowIntegrationTests: XCTestCase {
     /// `Parent`
     private func makeSUT(
         initialState: State = .init(),
-        firstChildDelay: Delay = .zero,
+        noContentChildDelay: Delay = .zero,
         secondChildDelay: Delay = .zero,
         file: StaticString = #file,
         line: UInt = #line
@@ -180,7 +180,7 @@ final class FlowIntegrationTests: XCTestCase {
     ) {
         let scheduler = DispatchQueue.test
         let composer = ParentComposer(
-            firstChildDelay: firstChildDelay,
+            noContentChildDelay: noContentChildDelay,
             secondChildDelay: secondChildDelay,
             scheduler: .immediate,
             navigationScheduler: scheduler.eraseToAnyScheduler()
@@ -196,19 +196,18 @@ final class FlowIntegrationTests: XCTestCase {
         return (sut, spy, scheduler)
     }
     
-    /// `FirstChild`
-    private func makeSUT(
-        initialState: FirstChildDomain.FlowDomain.State = .init(),
+    private func makeNoContentChild(
+        initialState: NoContentChildDomain.FlowDomain.State = .init(),
         delay: Delay = .zero,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: FirstChildDomain.Flow,
-        spy: ValueSpy<FirstChildDomain.FlowDomain.State>,
+        sut: NoContentChildDomain.Flow,
+        spy: ValueSpy<NoContentChildDomain.FlowDomain.State>,
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let scheduler = DispatchQueue.test
-        let composer = FirstChildComposer(
+        let composer = NoContentChildComposer(
             delay: delay,
             scheduler: .immediate,
             navigationScheduler: scheduler.eraseToAnyScheduler()
@@ -244,7 +243,7 @@ final class FlowIntegrationTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .first:  return .first
+        case .noContent:  return .noContent
         case .second: return .second
         }
     }
@@ -253,14 +252,14 @@ final class FlowIntegrationTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
-        case first, second
+        case noContent, second
     }
     
-    private func first(
+    private func noContent(
         _ sut: SUT
-    ) throws -> ParentDomain.FirstChild {
+    ) throws -> ParentDomain.NoContentChild {
         
-        try XCTUnwrap(sut.state.first)
+        try XCTUnwrap(sut.state.noContent)
     }
 }
 
@@ -305,23 +304,23 @@ private enum ParentDomain {
     
     enum Select {
         
-        case first, second
+        case noContent, second
     }
     
     enum Navigation {
         
-        case first(Node<FirstChild>)
+        case noContent(Node<NoContentChild>)
         case second
     }
     
-    typealias FirstChild = FirstChildDomain.Flow
+    typealias NoContentChild = NoContentChildDomain.Flow
 }
 
 private extension ParentDomain.FlowDomain.State {
     
-    var first: ParentDomain.FirstChild? {
+    var noContent: ParentDomain.NoContentChild? {
         
-        guard case let .first(node) = navigation else { return nil }
+        guard case let .noContent(node) = navigation else { return nil }
         
         return node.model
     }
@@ -329,18 +328,18 @@ private extension ParentDomain.FlowDomain.State {
 
 private final class ParentComposer {
     
-    let firstChildDelay: Delay
+    let noContentChildDelay: Delay
     let secondChildDelay: Delay
     let scheduler: AnySchedulerOf<DispatchQueue>
     let navigationScheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        firstChildDelay: Delay,
+        noContentChildDelay: Delay,
         secondChildDelay: Delay,
         scheduler: AnySchedulerOf<DispatchQueue>,
         navigationScheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.firstChildDelay = firstChildDelay
+        self.noContentChildDelay = noContentChildDelay
         self.secondChildDelay = secondChildDelay
         self.scheduler = scheduler
         self.navigationScheduler = navigationScheduler
@@ -371,13 +370,13 @@ extension ParentComposer {
         completion: @escaping (Domain.Navigation) -> Void
     ) {
         switch select {
-        case .first:
-            navigationScheduler.delay(for: firstChildDelay) { [weak self] in
+        case .noContent:
+            navigationScheduler.delay(for: noContentChildDelay) { [weak self] in
                 
                 guard let self else { return }
                 
-                completion(.first(
-                    composeFirstChild()
+                completion(.noContent(
+                    composeNoContentChild()
                         .asNode(
                             transform: { _ in nil },
                             notify: notify
@@ -393,10 +392,10 @@ extension ParentComposer {
         }
     }
     
-    func composeFirstChild() -> Domain.FirstChild {
+    func composeNoContentChild() -> Domain.NoContentChild {
         
-        let composer = FirstChildComposer(
-            delay: self.firstChildDelay,
+        let composer = NoContentChildComposer(
+            delay: self.noContentChildDelay,
             scheduler: self.scheduler,
             navigationScheduler: self.navigationScheduler
         )
@@ -417,9 +416,9 @@ private extension AnySchedulerOf<DispatchQueue> {
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }
 
-// MARK: - FirstChild
+// MARK: - NoContentChild
 
-private enum FirstChildDomain {
+private enum NoContentChildDomain {
     
     // MARK: - Binder - no Binder
     
@@ -435,7 +434,7 @@ private enum FirstChildDomain {
     struct Navigation: Equatable {}
 }
 
-private final class FirstChildComposer {
+private final class NoContentChildComposer {
     
     let delay: Delay
     let scheduler: AnySchedulerOf<DispatchQueue>
@@ -454,9 +453,9 @@ private final class FirstChildComposer {
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }
 
-extension FirstChildComposer {
+extension NoContentChildComposer {
     
-    typealias Domain = FirstChildDomain
+    typealias Domain = NoContentChildDomain
     
     func compose(
         initialState: Domain.FlowDomain.State
