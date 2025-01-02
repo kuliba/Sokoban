@@ -16,6 +16,7 @@ final class FlowReducerTests: FlowTests {
         
         assert(makeState(isLoading: true, navigation: makeNavigation()), event: .dismiss) {
             
+            $0.isLoading = false
             $0.navigation = nil
         }
     }

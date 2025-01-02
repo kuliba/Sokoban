@@ -22,6 +22,7 @@ public extension FlowReducer {
         
         switch event {
         case .dismiss:
+            state.isLoading = false
             state.navigation = nil
             
         case let .isLoading(isLoading):
