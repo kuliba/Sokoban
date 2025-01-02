@@ -49,9 +49,9 @@ extension TemplatesListFlowModelComposer {
     }
 }
 
-extension AnywayFlowModel: FlowEventPublishing {
+extension AnywayFlowModel: DismissAndTabFlowEventPublishing {
     
-    var flowEventPublisher: AnyPublisher<FlowEvent, Never> {
+    var flowEventPublisher: AnyPublisher<DismissAndTabFlowEvent, Never> {
         
         $state
             .compactMap(\.flowEvent)
@@ -61,12 +61,12 @@ extension AnywayFlowModel: FlowEventPublishing {
 
 extension AnywayFlowState {
     
-    var flowEvent: FlowEvent? {
+    var flowEvent: DismissAndTabFlowEvent? {
         
         return .init(isLoading: isLoading, status: flowEventStatus)
     }
     
-    private var flowEventStatus: FlowEvent.Status? {
+    private var flowEventStatus: DismissAndTabFlowEvent.Status? {
         
         switch outside {
         case .none:     return .none
