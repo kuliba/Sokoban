@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import FlowCore
+import RxViewModel
 import XCTest
 
 final class FlowIntegrationTests: XCTestCase {
@@ -18,6 +19,8 @@ final class FlowIntegrationTests: XCTestCase {
         
         XCTAssertNoDiff(spy.values, [.init(isLoading: true)])
     }
+    
+    // MARK: - NoContentChild
     
     func test_shouldNotSetNavigationBeforeNoContentChildDelay() {
         
@@ -45,35 +48,6 @@ final class FlowIntegrationTests: XCTestCase {
             .init(),
             .init(isLoading: true),
             .init(isLoading: false, navigation: .noContent),
-        ])
-    }
-    
-    func test_shouldNotSetNavigationBeforeWithOutsideChildDelay() {
-        
-        let withOutsideChildDelay = makeDelay(ms: 1_000)
-        let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: withOutsideChildDelay)
-        
-        sut.event(.select(.withOutside))
-        
-        XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
-        ])
-        
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(999))
-        
-        XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
-        ])
-        
-        scheduler.advance(by: .milliseconds(1))
-        
-        XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
-            .init(isLoading: false, navigation: .withOutside),
         ])
     }
     
@@ -157,6 +131,37 @@ final class FlowIntegrationTests: XCTestCase {
             .init(isLoading: false, navigation: .noContent),
             .init(isLoading: true, navigation: .noContent),
             .init(isLoading: false, navigation: .noContent),
+        ])
+    }
+    
+    // MARK: - WithOutsideChild
+    
+    func test_shouldNotSetNavigationBeforeWithOutsideChildDelay() {
+        
+        let withOutsideChildDelay = makeDelay(ms: 1_000)
+        let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: withOutsideChildDelay)
+        
+        sut.event(.select(.withOutside))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+        ])
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(999))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+        ])
+        
+        scheduler.advance(by: .milliseconds(1))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
         ])
     }
     
@@ -296,11 +301,48 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
+    // MARK: - WithContentChild
+    
+    func test_withContentChildContentShouldSetInitialValue() {
+        
+        let initialState = WithContentChildContentState(
+            isLoading: true,
+            value: anyMessage()
+        )
+        let (_,_, spy) = makeWithContentChildContent(initialState: initialState)
+        
+        XCTAssertNoDiff(spy.values, [initialState])
+    }
+    
+    func test_withContentChildContentShouldChangeStateOnEvents() {
+        
+        let (sut, loadSpy, spy) = makeWithContentChildContent()
+        
+        XCTAssertNoDiff(spy.values, [.init()])
+        
+        sut.event(.load)
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+        ])
+        
+        let newValue = anyMessage()
+        loadSpy.complete(with: newValue)
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, value: newValue),
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ParentDomain.Flow
     private typealias State = ParentDomain.FlowDomain.State
     private typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+    private typealias LoadSpy = Spy<Void, String>
     
     /// `Parent`
     private func makeSUT(
@@ -384,6 +426,31 @@ final class FlowIntegrationTests: XCTestCase {
         trackForMemoryLeaks(scheduler, file: file, line: line)
         
         return (sut, spy, scheduler)
+    }
+    
+    private func makeWithContentChildContent(
+        initialState: WithContentChildContentState = .init(),
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: WithContentChildContent,
+        loadSpy: LoadSpy,
+        spy: ValueSpy<WithContentChildContentState>
+    ) {
+        let loadSpy = LoadSpy()
+        let composer = WithContentChildDomain.ContentComposer(
+            load: loadSpy.process,
+            scheduler: .immediate
+        )
+        let sut = composer.compose(initialState: initialState)
+        let spy = ValueSpy(sut.$state)
+        
+        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        
+        return (sut, loadSpy, spy)
     }
     
     private func makeDelay(ms milliseconds: Int) -> DispatchQueue.SchedulerTimeType.Stride {
@@ -764,5 +831,140 @@ extension WithOutsideChildComposer {
         case let .outside(outside):
             completion(.outside(outside))
         }
+    }
+}
+
+// MARK: - WithContentChild
+
+private typealias WithContentChildDomain = BinderDomain<WithContentChildContent, WithContentChildSelect, WithContentChildNavigation>
+
+private extension WithContentChildDomain {
+    
+    typealias Content = WithContentChildContent
+    typealias ContentComposer = WithContentChildContentComposer
+    
+    typealias Select = WithContentChildSelect
+    typealias Navigation = WithContentChildNavigation
+}
+
+private typealias WithContentChildContent = RxViewModel<WithContentChildContentState, WithContentChildContentEvent, WithContentChildContentEffect>
+
+private struct WithContentChildContentState: Equatable {
+    
+    var isLoading = false
+    var value: String? = nil
+}
+
+private enum WithContentChildContentEvent: Equatable {
+    
+    case load
+    case loaded(String)
+}
+
+private enum WithContentChildContentEffect: Equatable {
+    
+    case load
+}
+
+private enum WithContentChildSelect: Equatable {}
+private enum WithContentChildNavigation: Equatable {}
+
+private final class WithContentChildContentReducer {}
+
+extension WithContentChildContentReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case .load:
+            state.isLoading = true
+            effect = .load
+            
+        case let .loaded(value):
+            state.isLoading = false
+            state.value = value
+        }
+        
+        return (state, effect)
+    }
+}
+
+extension WithContentChildContentReducer {
+    
+    typealias State = WithContentChildContentState
+    typealias Event = WithContentChildContentEvent
+    typealias Effect = WithContentChildContentEffect
+}
+
+private final class WithContentChildContentEffectHandler {
+    
+    private let load: Load
+    
+    init(load: @escaping Load) {
+        
+        self.load = load
+    }
+    
+    typealias Load = (@escaping (String) -> Void) -> Void
+}
+
+extension WithContentChildContentEffectHandler {
+    
+    func handleEffect(
+        _ effect: Effect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        switch effect {
+        case .load:
+            load { dispatch(.loaded($0)) }
+        }
+    }
+}
+
+extension WithContentChildContentEffectHandler {
+    
+    typealias Dispatch = (Event) -> Void
+    
+    typealias Event = WithContentChildContentEvent
+    typealias Effect = WithContentChildContentEffect
+}
+
+private final class WithContentChildContentComposer {
+    
+    private let load: Load
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        load: @escaping Load,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.load = load
+        self.scheduler = scheduler
+    }
+    
+    typealias Load = (@escaping (String) -> Void) -> Void
+}
+
+extension WithContentChildContentComposer {
+    
+    func compose(
+        initialState: WithContentChildContentState = .init()
+    ) -> WithContentChildDomain.Content {
+        
+        let reducer = WithContentChildContentReducer()
+        let effectHandler = WithContentChildContentEffectHandler(load: load)
+        
+        return .init(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
     }
 }
