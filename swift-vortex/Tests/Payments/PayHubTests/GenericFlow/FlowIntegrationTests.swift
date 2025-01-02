@@ -398,17 +398,21 @@ final class FlowIntegrationTests: XCTestCase {
     }
     
     private func noContent(
-        _ sut: SUT
+        _ sut: SUT,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws -> ParentDomain.NoContentChild {
         
-        try XCTUnwrap(sut.state.noContent)
+        try XCTUnwrap(sut.state.noContent, "Expected `NoContentChild`, but got nil instead", file: file, line: line)
     }
     
     private func withOutside(
-        _ sut: SUT
+        _ sut: SUT,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws -> ParentDomain.WithOutsideChild {
         
-        try XCTUnwrap(sut.state.withOutside)
+        try XCTUnwrap(sut.state.withOutside, "Expected `WithOutsideChild`, but got nil instead", file: file, line: line)
     }
 }
 
