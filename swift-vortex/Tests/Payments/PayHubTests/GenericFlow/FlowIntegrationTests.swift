@@ -48,12 +48,12 @@ final class FlowIntegrationTests: XCTestCase {
         ])
     }
     
-    func test_shouldNotSetNavigationBeforeSecondChildDelay() {
+    func test_shouldNotSetNavigationBeforeWithOutsideChildDelay() {
         
-        let secondChildDelay = makeDelay(ms: 1_000)
-        let (sut, spy, scheduler) = makeSUT(secondChildDelay: secondChildDelay)
+        let withOutsideChildDelay = makeDelay(ms: 1_000)
+        let (sut, spy, scheduler) = makeSUT(withOutsideChildDelay: withOutsideChildDelay)
         
-        sut.event(.select(.second))
+        sut.event(.select(.withOutside))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
@@ -73,7 +73,7 @@ final class FlowIntegrationTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .second),
+            .init(isLoading: false, navigation: .withOutside),
         ])
     }
     
@@ -170,7 +170,7 @@ final class FlowIntegrationTests: XCTestCase {
     private func makeSUT(
         initialState: State = .init(),
         noContentChildDelay: Delay = .zero,
-        secondChildDelay: Delay = .zero,
+        withOutsideChildDelay: Delay = .zero,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -181,7 +181,7 @@ final class FlowIntegrationTests: XCTestCase {
         let scheduler = DispatchQueue.test
         let composer = ParentComposer(
             noContentChildDelay: noContentChildDelay,
-            secondChildDelay: secondChildDelay,
+            withOutsideChildDelay: withOutsideChildDelay,
             scheduler: .immediate,
             navigationScheduler: scheduler.eraseToAnyScheduler()
         )
@@ -244,7 +244,7 @@ final class FlowIntegrationTests: XCTestCase {
         
         switch navigation {
         case .noContent:  return .noContent
-        case .second: return .second
+        case .withOutside: return .withOutside
         }
     }
     
@@ -252,7 +252,7 @@ final class FlowIntegrationTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
-        case noContent, second
+        case noContent, withOutside
     }
     
     private func noContent(
@@ -304,13 +304,13 @@ private enum ParentDomain {
     
     enum Select {
         
-        case noContent, second
+        case noContent, withOutside
     }
     
     enum Navigation {
         
         case noContent(Node<NoContentChild>)
-        case second
+        case withOutside
     }
     
     typealias NoContentChild = NoContentChildDomain.Flow
@@ -329,18 +329,18 @@ private extension ParentDomain.FlowDomain.State {
 private final class ParentComposer {
     
     let noContentChildDelay: Delay
-    let secondChildDelay: Delay
+    let withOutsideChildDelay: Delay
     let scheduler: AnySchedulerOf<DispatchQueue>
     let navigationScheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         noContentChildDelay: Delay,
-        secondChildDelay: Delay,
+        withOutsideChildDelay: Delay,
         scheduler: AnySchedulerOf<DispatchQueue>,
         navigationScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.noContentChildDelay = noContentChildDelay
-        self.secondChildDelay = secondChildDelay
+        self.withOutsideChildDelay = withOutsideChildDelay
         self.scheduler = scheduler
         self.navigationScheduler = navigationScheduler
     }
@@ -384,10 +384,10 @@ extension ParentComposer {
                 ))
             }
             
-        case .second:
-            navigationScheduler.delay(for: secondChildDelay) {
+        case .withOutside:
+            navigationScheduler.delay(for: withOutsideChildDelay) {
                 
-                completion(.second)
+                completion(.withOutside)
             }
         }
     }
