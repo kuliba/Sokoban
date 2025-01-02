@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.12.2024.
 //
 
+import Combine
 import CombineSchedulers
 import FlowCore
 import RxViewModel
@@ -305,24 +306,24 @@ final class FlowIntegrationTests: XCTestCase {
     
     func test_withContentChildContentShouldSetInitialValue() {
         
-        let initialState = WithContentChildContentState(
+        let state = WithContentChildContentState(
             isLoading: true,
             value: anyMessage()
         )
-        let (_,_, spy) = makeWithContentChildContent(initialState: initialState)
+        let (_,_, contentSpy, _) = makeWithContentChild(initialState: state)
         
-        XCTAssertNoDiff(spy.values, [initialState])
+        XCTAssertNoDiff(contentSpy.values, [state])
     }
     
     func test_withContentChildContentShouldChangeStateOnEvents() {
         
-        let (sut, loadSpy, spy) = makeWithContentChildContent()
+        let (sut, loadSpy, contentSpy, _) = makeWithContentChild()
         
-        XCTAssertNoDiff(spy.values, [.init()])
+        XCTAssertNoDiff(contentSpy.values, [.init()])
         
-        sut.event(.load)
+        sut.content.event(.load)
         
-        XCTAssertNoDiff(spy.values, [
+        XCTAssertNoDiff(contentSpy.values, [
             .init(),
             .init(isLoading: true),
         ])
@@ -330,10 +331,32 @@ final class FlowIntegrationTests: XCTestCase {
         let newValue = anyMessage()
         loadSpy.complete(with: newValue)
         
-        XCTAssertNoDiff(spy.values, [
+        XCTAssertNoDiff(contentSpy.values, [
             .init(),
             .init(isLoading: true),
             .init(isLoading: false, value: newValue),
+        ])
+    }
+    
+    func test_withContentChildFlowShouldChangeStateOnContentEvents() {
+        
+        let (sut, loadSpy, _, flowSpy) = makeWithContentChild()
+        
+        XCTAssertNoDiff(flowSpy.values, [.init()])
+        
+        sut.content.event(.load)
+        
+        XCTAssertNoDiff(flowSpy.values, [
+            .init(),
+            .init(isLoading: true)
+        ])
+        
+        loadSpy.complete(with: anyMessage())
+        
+        XCTAssertNoDiff(flowSpy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(),
         ])
     }
     
@@ -428,29 +451,78 @@ final class FlowIntegrationTests: XCTestCase {
         return (sut, spy, scheduler)
     }
     
-    private func makeWithContentChildContent(
+    private func makeWithContentChild(
         initialState: WithContentChildContentState = .init(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: WithContentChildContent,
+        sut: WithContentChildDomain.Binder,
         loadSpy: LoadSpy,
-        spy: ValueSpy<WithContentChildContentState>
+        contentSpy: ValueSpy<WithContentChildContentState>,
+        flowSpy: ValueSpy<WithContentChildDomain.FlowDomain.State>
     ) {
         let loadSpy = LoadSpy()
-        let composer = WithContentChildDomain.ContentComposer(
+        let contentComposer = WithContentChildDomain.ContentComposer(
             load: loadSpy.process,
             scheduler: .immediate
         )
-        let sut = composer.compose(initialState: initialState)
-        let spy = ValueSpy(sut.$state)
+        let content = contentComposer.compose(initialState: initialState)
+        let contentSpy = ValueSpy(content.$state)
+        
+#warning("looks like bugs in `BinderComposer`: (1) can't compose with Select == Never, (2) `isLoading` is not passed(?)")
+        //        let composer = BinderComposer(
+        //            getNavigation: getWithContentChildNavigation,
+        //            makeContent: { content },
+        //            witnesses: .init(
+        //                emitting: {
+        //
+        //                    Empty().eraseToAnyPublisher()
+        //                },
+        //                dismissing: { _ in {}}
+        //            )
+        //        )
+        //        let sut = composer.compose()
+        
+        let flowComposer = WithContentChildDomain.FlowDomain.Composer(
+            getNavigation: getWithContentChildNavigation,
+            scheduler: .immediate
+        )
+        let flow = flowComposer.compose()
+        let flowSpy = ValueSpy(flow.$state)
+        
+        let sut = WithContentChildDomain.Binder(
+            content: content,
+            flow: flow,
+            bind: { content, flow in
+                
+                let isLoading = content.$state
+                    .map(\.isLoading)
+                    .dropFirst()
+                    .sink { [weak flow] in flow?.event(.isLoading($0)) }
+                
+                return [isLoading]
+            }
+        )
         
         trackForMemoryLeaks(loadSpy, file: file, line: line)
-        trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(contentComposer, file: file, line: line)
+        trackForMemoryLeaks(content, file: file, line: line)
+        trackForMemoryLeaks(contentSpy, file: file, line: line)
+        // trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(flowComposer, file: file, line: line)
+        trackForMemoryLeaks(flow, file: file, line: line)
+        trackForMemoryLeaks(flowSpy, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, loadSpy, spy)
+        return (sut, loadSpy, contentSpy, flowSpy)
+    }
+    
+    private func getWithContentChildNavigation(
+        select: WithContentChildDomain.Select,
+        notify: @escaping WithContentChildDomain.Notify,
+        completion: @escaping (WithContentChildDomain.Navigation) -> Void
+    ) {
+        
     }
     
     private func makeDelay(ms milliseconds: Int) -> DispatchQueue.SchedulerTimeType.Stride {
