@@ -6,9 +6,8 @@
 //
 
 import Combine
-import FlowCore
 
-typealias RootEvent = FlowCore.FlowEvent<RootViewSelect, Never>
+typealias RootEvent = Vortex.FlowEvent<RootViewSelect, Never>
 
 extension RootViewModel {
     

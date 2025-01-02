@@ -16,6 +16,9 @@ typealias BinderDomain = FlowCore.BinderDomain
 typealias ContentWitnesses = FlowCore.ContentWitnesses
 
 typealias FlowDomain = FlowCore.FlowDomain
+
 typealias FlowState = FlowCore.FlowState
+typealias FlowEvent = FlowCore.FlowEvent
+typealias FlowEffect = FlowCore.FlowEffect
 
 typealias Schedulers = FlowCore.Schedulers
