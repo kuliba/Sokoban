@@ -196,7 +196,7 @@ extension RootViewModelFactory {
 
 private extension ContentWitnesses
 where Content == QRScannerModel,
-      Select == QRScannerDomain.Select {
+      Select == FlowEvent<QRScannerDomain.Select, Never> {
     
     static var `default`: Self {
         
@@ -209,11 +209,12 @@ where Content == QRScannerModel,
 
 private extension QRScannerModel {
     
-    var selectPublisher: AnyPublisher<QRScannerDomain.Select, Never> {
+    var selectPublisher: AnyPublisher<FlowEvent<QRScannerDomain.Select, Never>, Never> {
         
         $state
             .compactMap(\.?.qrResult)
             .map(QRScannerDomain.Select.qrResult)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
 }

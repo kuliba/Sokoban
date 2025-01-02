@@ -42,7 +42,10 @@ extension RootViewModelFactory {
             ),
             witnesses: .init(
                 emitting: {
-                    $0.$state.compactMap(\.select)
+                    
+                    $0.$state
+                        .compactMap(\.select)
+                        .map { .select($0) }
                 },
                 dismissing: { content in
                     { content.event(.resetSelection) }

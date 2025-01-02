@@ -122,7 +122,7 @@ final class BinderComposerTests: XCTestCase {
             makeContent: { content },
             schedulers: schedulers ?? test,
             witnesses: .init(
-                emitting: { $0.selectPublisher },
+                emitting: { $0.eventPublisher },
                 dismissing: { $0.receive }
             )
         )
@@ -137,17 +137,24 @@ final class BinderComposerTests: XCTestCase {
     
     private final class Content {
         
-        private let selectSubject = PassthroughSubject<Select, Never>()
+        typealias Event = FlowEvent<Select, Never>
+        
+        private let eventSubject = PassthroughSubject<Event, Never>()
         private(set) var receiveCount = 0
         
-        var selectPublisher: AnyPublisher<Select, Never> {
+        var eventPublisher: AnyPublisher<Event, Never> {
             
-            selectSubject.eraseToAnyPublisher()
+            eventSubject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ event: Event) {
+            
+            eventSubject.send(event)
         }
         
         func emit(_ select: Select) {
             
-            selectSubject.send(select)
+            eventSubject.send(.select(select))
         }
         
         func receive() {

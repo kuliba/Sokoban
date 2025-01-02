@@ -29,8 +29,8 @@ public struct ContentFlowWitnesses<Content, Flow, Select, Navigation> {
 
 public extension ContentFlowWitnesses {
     
-    typealias ContentEmitting = (Content) -> AnyPublisher<Select, Never>
+    typealias ContentEmitting = (Content) -> AnyPublisher<FlowEvent<Select, Never>, Never>
     typealias ContentDismissing = (Content) -> () -> Void
     typealias FlowEmitting = (Flow) -> AnyPublisher<Navigation?, Never>
-    typealias FlowReceiving = (Flow) -> (Select) -> Void
+    typealias FlowReceiving = (Flow) -> (FlowEvent<Select, Never>) -> Void
 }

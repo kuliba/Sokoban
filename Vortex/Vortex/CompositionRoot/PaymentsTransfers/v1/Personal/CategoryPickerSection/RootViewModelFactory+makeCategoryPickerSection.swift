@@ -52,7 +52,12 @@ extension RootViewModelFactory {
     private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
         
         return .init(
-            emitting: { $0.$state.compactMap(\.selected) },
+            emitting: {
+                
+                $0.$state
+                    .compactMap(\.selected)
+                    .map { .select($0) }
+            },
             dismissing: { content in { content.event(.select(nil)) }}
         )
     }

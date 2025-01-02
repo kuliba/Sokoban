@@ -22,17 +22,20 @@ public extension ContentFlowBindingFactory {
         witnesses: ContentFlowWitnesses<Content, Flow, Select, Navigation>
     ) -> Set<AnyCancellable> {
         
-        let select = witnesses.contentEmitting(content)
-            .sink { witnesses.flowReceiving(flow)($0) }
+        // Process events emitted from the content.
+        let contentEvents = witnesses.contentEmitting(content)
+            .sink(receiveValue: witnesses.flowReceiving(flow))
         
+        // Handle dismissal when the flow's navigation changes from non-nil to nil.
         let flowEmitting = witnesses.flowEmitting(flow)
         let dismiss = flowEmitting
             .prepend(nil)
             .zip(flowEmitting)
             .filter { $0.0 != nil && $0.1 == nil }
-            .sink { _ in witnesses.contentDismissing(content)() }
+            .map { _ in () }
+            .sink(receiveValue: witnesses.contentDismissing(content))
         
-        return [select, dismiss]
+        return [contentEvents, dismiss]
     }
 }
 

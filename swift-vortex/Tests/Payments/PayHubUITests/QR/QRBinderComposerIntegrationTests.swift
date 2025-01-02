@@ -37,7 +37,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             contentEmitting: { $0.publisher },
             contentDismissing: { content in { content.dismiss() }},
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
+            flowReceiving: { flow in { flow.event(.init($0)) }}
         )
         
         let makeConfirmSberQR = MakeConfirmSberQR()

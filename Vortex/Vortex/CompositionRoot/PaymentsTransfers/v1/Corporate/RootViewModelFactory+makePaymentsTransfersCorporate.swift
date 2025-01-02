@@ -69,7 +69,7 @@ extension RootViewModelFactory {
 
 extension Domain.Content {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
         
         bannerPicker.eventPublisher
     }
@@ -84,7 +84,7 @@ extension Domain.Content {
 
 extension PayHubUI.CorporateBannerPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
         
         bannerBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -97,7 +97,7 @@ extension PayHubUI.CorporateBannerPicker {
 
 extension BannerPickerSectionBinder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
         
         flow.$state
             .compactMap { _ in return nil }

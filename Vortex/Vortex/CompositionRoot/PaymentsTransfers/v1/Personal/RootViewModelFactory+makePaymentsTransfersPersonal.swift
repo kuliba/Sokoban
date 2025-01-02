@@ -58,7 +58,7 @@ extension RootViewModelFactory {
     }
 }
 
-private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect, Never>
+private typealias EventPublisher = AnyPublisher<FlowEvent<PaymentsTransfersPersonalSelect, Never>, Never>
 
 // MARK: - Content
 
@@ -102,6 +102,7 @@ private extension CategoryPickerSectionDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     
@@ -155,6 +156,7 @@ private extension OperationPickerDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     
@@ -212,6 +214,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
                 
                 print($0)
             })
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     

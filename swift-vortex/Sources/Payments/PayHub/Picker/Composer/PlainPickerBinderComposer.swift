@@ -29,7 +29,12 @@ public extension PlainPickerBinderComposer {
             makeContent: { composer.compose(elements: elements) },
             schedulers: schedulers,
             witnesses: .init(
-                emitting: { $0.$state.compactMap(\.selection) },
+                emitting: {
+                    
+                    $0.$state
+                        .compactMap(\.selection)
+                        .map { .select($0) }
+                },
                 dismissing: { content in { content.event(.select(nil)) }}
             )
         )

@@ -76,8 +76,26 @@ public extension BinderComposer {
                 contentEmitting: witnesses.emitting,
                 contentDismissing: witnesses.dismissing,
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
+                flowReceiving: { flow in { flow.event(.init($0)) }}
             ))
         )
     }
 }
+
+public extension FlowEvent {
+    
+    init(_ event: FlowEvent<Select, Never>) {
+        
+        switch event {
+        case .dismiss:
+            self = .dismiss
+            
+        case let .isLoading(isLoading):
+            self = .isLoading(isLoading)
+            
+        case let .select(select):
+            self = .select(select)
+        }
+    }
+}
+

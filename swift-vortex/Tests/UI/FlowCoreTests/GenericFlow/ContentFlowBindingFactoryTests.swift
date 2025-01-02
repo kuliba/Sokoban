@@ -20,7 +20,7 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         
         content.send(select)
         
-        XCTAssertNoDiff(flow.payloads, [select])
+        XCTAssertNoDiff(flow.payloads, [.select(select)])
         XCTAssertNotNil(cancellables)
     }
     
@@ -54,10 +54,10 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ContentFlowBindingFactory
-    private typealias Content = PassthroughSubject<Select, Never>
+    private typealias Content = PassthroughSubject<FlowEvent<Select, Never>, Never>
     private typealias ContentSpy = CallSpy<Void, Void>
     private typealias Flow = PassthroughSubject<Navigation?, Never>
-    private typealias FlowSpy = CallSpy<Select, Void>
+    private typealias FlowSpy = CallSpy<FlowEvent<Select, Never>, Void>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -145,5 +145,15 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     ) -> Navigation {
         
         return .init(value: value)
+    }
+}
+
+private extension PassthroughSubject {
+    
+    func send<Select>(
+        _ select: Select
+    ) where Output == FlowEvent<Select, Never> {
+        
+        self.send(.select(select))
     }
 }

@@ -296,7 +296,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 contentEmitting: { $0.selectPublisher },
                 contentDismissing: { $0.dismiss },
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
+                flowReceiving: { flow in { flow.event(.init($0)) }}
             ),
             isClosedWitnesses: .init(
                 categoryPicker: { $0.isClosedPublisher },
