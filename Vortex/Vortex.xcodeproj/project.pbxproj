@@ -9989,8 +9989,7 @@
 				2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */,
 				2A4CC4902D227E4B00F5C263 /* Preview Content */,
 			);
-			name = BinderComposerPreview;
-			path = ../BinderComposerPreview;
+			path = BinderComposerPreview;
 			sourceTree = "<group>";
 		};
 		2A4CC4902D227E4B00F5C263 /* Preview Content */ = {
@@ -10008,8 +10007,7 @@
 				2A4CC4D52D22816600F5C263 /* Helpers */,
 				2A4CC4D22D22816600F5C263 /* ThirdPartyDependencies */,
 			);
-			name = BinderComposerPreviewTests;
-			path = ../BinderComposerPreviewTests;
+			path = BinderComposerPreviewTests;
 			sourceTree = "<group>";
 		};
 		2A4CC4BB2D2280A500F5C263 /* Root */ = {

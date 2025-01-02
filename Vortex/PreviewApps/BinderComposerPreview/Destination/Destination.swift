@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 14.12.2024.
 //
 
-import PayHubUI
+import PayHub
 
 /// A namespace.
 enum DestinationDomain {}
