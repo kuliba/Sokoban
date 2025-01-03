@@ -41,10 +41,10 @@ final class PaymentsSuccessTransferNumberViewModelTests: XCTestCase {
         sut.copyButtonDidTapped()
         XCTAssertNoDiff(spy.values, [.copy, .check])
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
+        scheduler.advance(by: .milliseconds(99))
         XCTAssertNoDiff(spy.values, [.copy, .check])
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(spy.values, [.copy, .check, .copy])
     }
     

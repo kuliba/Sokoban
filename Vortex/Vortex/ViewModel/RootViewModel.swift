@@ -176,7 +176,7 @@ class RootViewModel: ObservableObject, Resetable {
     }
     
     private func delay(
-        for timeout: DispatchTimeInterval,
+        for timeout: Delay,
         _ action: @escaping () -> Void
     ) {
         mainScheduler.delay(for: timeout, action)

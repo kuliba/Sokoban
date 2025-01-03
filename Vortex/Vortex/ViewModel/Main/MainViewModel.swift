@@ -1555,10 +1555,9 @@ private extension MainViewModel {
 extension MainViewModel {
     
     private func delay(
-        for timeout: DispatchTimeInterval,
+        for timeout: Delay,
         _ action: @escaping () -> Void
     ) {
-        // TODO: replace with scheduler
         scheduler.delay(for: timeout, action)
     }
 }
