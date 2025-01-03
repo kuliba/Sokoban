@@ -1,5 +1,5 @@
 //
-//  FlowIntegrationUseCases_NoContentChild_Tests.swift
+//  FlowIntegrationUseCases_WithOutsideChild_Tests.swift
 //
 //
 //  Created by Igor Malyarov on 31.12.2024.
@@ -11,13 +11,13 @@ import FlowCore
 import RxViewModel
 import XCTest
 
-final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
+final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
     
     func test_shouldNotSetNavigationBeforeChildDelay() {
         
-        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(100))
+        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(1_000))
         
-        sut.event(.select(.noContent))
+        sut.event(.select(.withOutside))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
@@ -25,7 +25,7 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
         ])
         
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(99))
+        scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
@@ -37,23 +37,18 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .noContent),
+            .init(isLoading: false, navigation: .withOutside),
         ])
     }
     
-    func test_shouldNotSetChildNavigationBeforeDelay() {
+    func test_shouldSetChildForwardNavigationWithDelay() {
         
-        let (sut, spy, scheduler) = makeChild(delay: .milliseconds(555))
+        let (sut, spy, scheduler) = makeChild(delay: .milliseconds(777))
         
-        sut.event(.select(.init()))
-        
-        XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
-        ])
+        sut.event(.select(.forward))
         
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(554))
+        scheduler.advance(by: .milliseconds(776))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
@@ -65,52 +60,58 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .init()),
+            .init(isLoading: false, navigation: .forward),
         ])
     }
     
-    func test_shouldSetParentIsLoadingToTrue_onChildSelect() throws {
+    func test_shouldSetChildOutsideNavigationImmediately() {
         
-        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(100))
+        let (sut, spy, _) = makeChild(delay: .milliseconds(777))
         
-        sut.event(.select(.noContent))
-        
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
+        sut.event(.select(.outside(.dismiss)))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .noContent),
-        ])
-        
-        try noContent(sut).event(.select(.init()))
-        
-        XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
-            .init(isLoading: false, navigation: .noContent),
-            .init(isLoading: true, navigation: .noContent),
+            .init(isLoading: false, navigation: .outside(.dismiss)),
         ])
     }
     
-    func test_shouldSetParentIsLoadingToFalse_onChildNavigation() throws {
+    func test_shouldSetParentIsLoadingToTrue_onChildSelect_forward() throws {
         
-        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(100))
+        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(888))
         
-        sut.event(.select(.noContent))
+        sut.event(.select(.withOutside))
         
         scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
-        
-        try noContent(sut).event(.select(.init()))
+        scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .noContent),
-            .init(isLoading: true, navigation: .noContent),
+            .init(isLoading: false, navigation: .withOutside),
         ])
+        
+        try withOutside(sut).event(.select(.forward))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+            .init(isLoading: true, navigation: .withOutside),
+        ])
+    }
+    
+    func test_shouldSetParentIsLoadingToFalse_onChildNavigation_forward_withDelay() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(888))
+        
+        sut.event(.select(.withOutside))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(888))
+        
+        try withOutside(sut).event(.select(.forward))
         
         #warning("why 1ms???")
         scheduler.advance(by: .milliseconds(1))
@@ -118,9 +119,62 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .init(),
             .init(isLoading: true),
-            .init(isLoading: false, navigation: .noContent),
-            .init(isLoading: true, navigation: .noContent),
-            .init(isLoading: false, navigation: .noContent),
+            .init(isLoading: false, navigation: .withOutside),
+            .init(isLoading: true, navigation: .withOutside),
+            .init(isLoading: false, navigation: .withOutside),
+        ])
+    }
+    
+    func test_shouldResetParentNavigation_onChildSelectOutsideDismiss_withoutDelay() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(888))
+        
+        sut.event(.select(.withOutside))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(888))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+        ])
+        
+        try withOutside(sut).event(.select(.outside(.dismiss)))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+            .init(isLoading: true, navigation: .withOutside),
+            .init(isLoading: false, navigation: nil),
+        ])
+    }
+    
+    func test_shouldSetParentIsLoadingFalseNavigationToMain_onChildSelectOutsideMain_withoutDelay() throws {
+        
+        let (sut, spy, scheduler) = makeSUT(childDelay: .milliseconds(888))
+        
+        sut.event(.select(.withOutside))
+        
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(888))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+        ])
+        
+        try withOutside(sut).event(.select(.outside(.main)))
+        
+        XCTAssertNoDiff(spy.values, [
+            .init(),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: .withOutside),
+            .init(isLoading: true, navigation: .withOutside),
+            .init(isLoading: true, navigation: nil),
+            .init(isLoading: false, navigation: .main),
         ])
     }
     
@@ -159,17 +213,17 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
     }
     
     private func makeChild(
-        initialState: NoContentChildDomain.FlowDomain.State = .init(),
+        initialState: WithOutsideChildDomain.FlowDomain.State = .init(),
         delay: Delay = .zero,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: NoContentChildDomain.Flow,
-        spy: ValueSpy<NoContentChildDomain.FlowDomain.State>,
+        sut: WithOutsideChildDomain.Flow,
+        spy: ValueSpy<WithOutsideChildDomain.FlowDomain.State>,
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let scheduler = DispatchQueue.test
-        let composer = NoContentChildComposer(
+        let composer = WithOutsideChildComposer(
             delay: delay,
             scheduler: .immediate,
             navigationScheduler: scheduler.eraseToAnyScheduler()
@@ -200,7 +254,8 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .noContent:   return .noContent
+        case .main:        return .main
+        case .withOutside: return .withOutside
         }
     }
     
@@ -208,16 +263,16 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
-        case main, noContent, withContent, withOutside
+        case main, withOutside
     }
     
-    private func noContent(
+    private func withOutside(
         _ sut: SUT,
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> ParentDomain.NoContentChild {
+    ) throws -> ParentDomain.WithOutsideChild {
         
-        try XCTUnwrap(sut.state.noContent, "Expected `NoContentChild`, but got nil instead", file: file, line: line)
+        try XCTUnwrap(sut.state.withOutside, "Expected `WithOutsideChild`, but got nil instead", file: file, line: line)
     }
 }
 
@@ -237,22 +292,23 @@ private enum ParentDomain {
     
     enum Select {
         
-        case noContent
+        case main, withOutside
     }
     
     enum Navigation {
         
-        case noContent(Node<NoContentChild>)
+        case main
+        case withOutside(Node<WithOutsideChild>)
     }
     
-    typealias NoContentChild = NoContentChildDomain.Flow
+    typealias WithOutsideChild = WithOutsideChildDomain.Flow
 }
 
 private extension ParentDomain.FlowDomain.State {
     
-    var noContent: ParentDomain.NoContentChild? {
+    var withOutside: ParentDomain.WithOutsideChild? {
         
-        guard case let .noContent(node) = navigation else { return nil }
+        guard case let .withOutside(node) = navigation else { return nil }
         
         return node.model
     }
@@ -299,15 +355,18 @@ extension ParentComposer {
         completion: @escaping (Domain.Navigation) -> Void
     ) {
         switch select {
-        case .noContent:
+        case .main:
+            completion(.main)
+            
+        case .withOutside:
             navigationScheduler.delay(for: childDelay) { [weak self] in
                 
                 guard let self else { return }
                 
-                completion(.noContent(
-                    composeChild()
+                completion(.withOutside(
+                    composeWithOutsideChild()
                         .asNode(
-                            transform: { _ in nil },
+                            transform: { $0.outcome },
                             notify: notify
                         )
                 ))
@@ -315,15 +374,37 @@ extension ParentComposer {
         }
     }
     
-    func composeChild() -> Domain.NoContentChild {
+    func composeWithOutsideChild() -> Domain.WithOutsideChild {
         
-        let composer = NoContentChildComposer(
+        let composer = WithOutsideChildComposer(
             delay: childDelay,
             scheduler: scheduler,
             navigationScheduler: navigationScheduler
         )
         
         return composer.compose(initialState: .init())
+    }
+}
+
+// MARK: - Adapters
+
+private extension WithOutsideChildDomain.Navigation {
+    
+    var outcome: NavigationOutcome<ParentDomain.Select>? {
+        
+        switch self {
+        case .forward:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .dismiss:
+                return .dismiss
+                
+            case .main:
+                return .select(.main)
+            }
+        }
     }
 }
 
@@ -341,9 +422,9 @@ private extension AnySchedulerOf<DispatchQueue> {
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }
 
-// MARK: - NoContentChild
+// MARK: - WithOutsideChild
 
-private enum NoContentChildDomain {
+private enum WithOutsideChildDomain {
     
     // MARK: - Binder - no Binder
     
@@ -355,11 +436,21 @@ private enum NoContentChildDomain {
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     
-    struct Select: Equatable {}
-    struct Navigation: Equatable {}
+    enum Select: Equatable {
+        
+        case forward
+        case outside(Outside)
+    }
+    
+    typealias Navigation = Select
+    
+    enum Outside: Equatable {
+        
+        case dismiss, main
+    }
 }
 
-private final class NoContentChildComposer {
+private final class WithOutsideChildComposer {
     
     let delay: Delay
     let scheduler: AnySchedulerOf<DispatchQueue>
@@ -378,9 +469,9 @@ private final class NoContentChildComposer {
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }
 
-extension NoContentChildComposer {
+extension WithOutsideChildComposer {
     
-    typealias Domain = NoContentChildDomain
+    typealias Domain = WithOutsideChildDomain
     
     func compose(
         initialState: Domain.FlowDomain.State
@@ -399,9 +490,15 @@ extension NoContentChildComposer {
         notify: @escaping Domain.Notify,
         completion: @escaping (Domain.Navigation) -> Void
     ) {
-        navigationScheduler.delay(for: delay) {
+        switch select {
+        case .forward:
+            navigationScheduler.delay(for: delay) {
+                
+                completion(.forward)
+            }
             
-            completion(.init())
+        case let .outside(outside):
+            completion(.outside(outside))
         }
     }
 }
