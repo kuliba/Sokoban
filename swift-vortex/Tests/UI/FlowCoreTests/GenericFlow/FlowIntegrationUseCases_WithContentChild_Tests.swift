@@ -96,7 +96,6 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
             .init(isLoading: true),
         ])
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(998))
         
         XCTAssertNoDiff(spy.values, [
@@ -119,7 +118,6 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         
         sut.event(.select(.withContent))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
@@ -144,7 +142,6 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         
         sut.event(.select(.withContent))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(999))
         
         try withContent(sut).content.event(.load)

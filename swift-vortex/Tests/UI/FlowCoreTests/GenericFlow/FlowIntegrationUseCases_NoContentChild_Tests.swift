@@ -24,7 +24,6 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
             .init(isLoading: true),
         ])
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(99))
         
         XCTAssertNoDiff(spy.values, [
@@ -52,7 +51,6 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
             .init(isLoading: true),
         ])
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(554))
         
         XCTAssertNoDiff(spy.values, [
@@ -75,7 +73,6 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
         
         sut.event(.select(.noContent))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
         
         XCTAssertNoDiff(spy.values, [
@@ -100,7 +97,6 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
         
         sut.event(.select(.noContent))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
         
         try noContent(sut).event(.select(.init()))
@@ -112,8 +108,7 @@ final class FlowIntegrationUseCases_NoContentChild_Tests: XCTestCase {
             .init(isLoading: true, navigation: .noContent),
         ])
         
-        #warning("why 1ms???")
-        scheduler.advance(by: .milliseconds(1))
+        scheduler.advance(by: .milliseconds(100))
         
         XCTAssertNoDiff(spy.values, [
             .init(),

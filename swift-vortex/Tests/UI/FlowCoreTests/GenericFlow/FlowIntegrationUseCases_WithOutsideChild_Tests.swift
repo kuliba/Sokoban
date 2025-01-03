@@ -24,7 +24,6 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
             .init(isLoading: true),
         ])
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
@@ -47,7 +46,6 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         
         sut.event(.select(.forward))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(776))
         
         XCTAssertNoDiff(spy.values, [
@@ -83,7 +81,6 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         
         sut.event(.select(.withOutside))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
@@ -108,13 +105,11 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         
         sut.event(.select(.withOutside))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(888))
         
         try withOutside(sut).event(.select(.forward))
         
-        #warning("why 1ms???")
-        scheduler.advance(by: .milliseconds(1))
+        scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
             .init(),
@@ -131,7 +126,6 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         
         sut.event(.select(.withOutside))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
@@ -157,7 +151,6 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         
         sut.event(.select(.withOutside))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
