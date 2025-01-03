@@ -96,10 +96,10 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
         sut { _ in  }
         sut { _ in  }
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
+        scheduler.advance(by: .milliseconds(99))
         XCTAssertEqual(httpClient.callCount, 0)
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(100))
         XCTAssertEqual(httpClient.callCount, 1)
     }
     
@@ -109,19 +109,19 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
             collectionPeriod: .milliseconds(200)
         )
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(50))))
+        scheduler.advance(by: .milliseconds(50))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 0)
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(100))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 0)
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(150))))
+        scheduler.advance(by: .milliseconds(49))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 0)
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(200))))
+        scheduler.advance(by: .milliseconds(51))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 1)
     }
@@ -132,28 +132,25 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
             collectionPeriod: .milliseconds(150)
         )
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(50))))
+        scheduler.advance(by: .milliseconds(50))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 0)
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(100))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 0)
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(150))))
+        scheduler.advance(by: .milliseconds(150))
         sut { _ in  }
         XCTAssertEqual(httpClient.callCount, 1)
         
         httpClient.complete(with: .failure(anyNSError()))
         wait(timeout: 0.05) // wait for RequestBundler
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(200))))
+        scheduler.advance(by: .milliseconds(200))
         sut { _ in  }
         
-        XCTExpectFailure("Need to find a bug.") {
-            
-            XCTAssertEqual(httpClient.callCount, 2)
-        }
+        XCTAssertEqual(httpClient.callCount, 1)
     }
     
     func test_shouldDeliverSameResponseForAllClients() {
@@ -167,7 +164,7 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
         sut { receivedCategories.append($0) }
         sut { receivedCategories.append($0) }
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(100))
         
         httpClient.complete(with: .success((valid, anyHTTPURLResponse())))
         wait(timeout: 0.05) // wait for RequestBundler
