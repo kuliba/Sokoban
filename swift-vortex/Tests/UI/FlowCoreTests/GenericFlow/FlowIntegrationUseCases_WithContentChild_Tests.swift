@@ -29,7 +29,7 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         XCTAssertEqual(loadSpy.callCount, 0)
     }
     
-    func test_childContentShouldSetInitialValue() {
+    func test_shouldSetChildContentInitialValue() {
         
         let state = WithContentChildContentState(
             isLoading: true,
@@ -40,30 +40,41 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         XCTAssertNoDiff(contentSpy.values, [state])
     }
     
-    func test_childContentShouldChangeStateOnEvents() {
+    func test_shouldSetChildContentIsLoadingToTrue_onLoad() {
         
-        let (sut, loadSpy, contentSpy, _) = makeChild()
+        let (sut, _, contentSpy, _) = makeChild()
         
         XCTAssertNoDiff(contentSpy.values, [.init()])
         
         sut.content.event(.load)
         
         XCTAssertNoDiff(contentSpy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, value: nil),
+            .init(isLoading: true, value: nil),
+        ])
+    }
+    
+    func test_shouldSetChildContentIsLoadingToFalse_onLoaded() {
+        
+        let (sut, loadSpy, contentSpy, _) = makeChild()
+        sut.content.event(.load)
+        
+        XCTAssertNoDiff(contentSpy.values, [
+            .init(isLoading: false, value: nil),
+            .init(isLoading: true, value: nil),
         ])
         
         let newValue = anyMessage()
         loadSpy.complete(with: newValue)
         
         XCTAssertNoDiff(contentSpy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, value: nil),
+            .init(isLoading: true, value: nil),
             .init(isLoading: false, value: newValue),
         ])
     }
     
-    func test_childFlowShouldChangeStateOnContentEvents() {
+    func test_shouldChangeChildFlowState_onContentEvents() {
         
         let (sut, loadSpy, _, flowSpy) = makeChild()
         
@@ -79,9 +90,9 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         loadSpy.complete(with: anyMessage())
         
         XCTAssertNoDiff(flowSpy.values, [
-            .init(),
-            .init(isLoading: true),
-            .init(),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
+            .init(isLoading: false, navigation: nil),
         ])
     }
     
@@ -92,22 +103,22 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         sut.event(.select(.withContent))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
         ])
         
         scheduler.advance(by: .milliseconds(998))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
         ])
         
         scheduler.advance(by: .milliseconds(1))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withContent),
         ])
     }
@@ -121,16 +132,16 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withContent),
         ])
         
         try withContent(sut).content.event(.load)
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withContent),
             .init(isLoading: true, navigation: .withContent),
         ])
@@ -149,8 +160,8 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         loadSpy.complete(with: anyMessage())
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withContent),
             .init(isLoading: true, navigation: .withContent),
             .init(isLoading: false, navigation: .withContent),

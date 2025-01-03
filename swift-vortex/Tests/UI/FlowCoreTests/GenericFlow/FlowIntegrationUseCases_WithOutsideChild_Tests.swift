@@ -20,22 +20,22 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         sut.event(.select(.withOutside))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
         ])
         
         scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
         ])
         
         scheduler.advance(by: .milliseconds(1))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
         ])
     }
@@ -49,15 +49,15 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         scheduler.advance(by: .milliseconds(776))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
         ])
         
         scheduler.advance(by: .milliseconds(1))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .forward),
         ])
     }
@@ -69,8 +69,8 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         sut.event(.select(.outside(.dismiss)))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .outside(.dismiss)),
         ])
     }
@@ -84,16 +84,16 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
         ])
         
         try withOutside(sut).event(.select(.forward))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
             .init(isLoading: true, navigation: .withOutside),
         ])
@@ -112,8 +112,8 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
             .init(isLoading: true, navigation: .withOutside),
             .init(isLoading: false, navigation: .withOutside),
@@ -129,16 +129,16 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
         ])
         
         try withOutside(sut).event(.select(.outside(.dismiss)))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
             .init(isLoading: true, navigation: .withOutside),
             .init(isLoading: false, navigation: nil),
@@ -154,16 +154,16 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
         scheduler.advance(by: .milliseconds(888))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
         ])
         
         try withOutside(sut).event(.select(.outside(.main)))
         
         XCTAssertNoDiff(spy.values, [
-            .init(),
-            .init(isLoading: true),
+            .init(isLoading: false, navigation: nil),
+            .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
             .init(isLoading: true, navigation: .withOutside),
             .init(isLoading: true, navigation: nil),
