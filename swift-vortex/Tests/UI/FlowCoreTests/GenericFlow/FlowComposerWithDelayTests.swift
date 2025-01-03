@@ -1,5 +1,5 @@
 //
-//  FlowComposerTests.swift
+//  FlowComposerWithDelayTests.swift
 //
 //
 //  Created by Igor Malyarov on 28.09.2024.
@@ -8,7 +8,7 @@
 import FlowCore
 import XCTest
 
-final class FlowComposerTests: XCTestCase {
+final class FlowComposerWithDelayTests: XCTestCase {
     
     func test_compose_shouldSetInitialState() {
         
@@ -63,7 +63,7 @@ final class FlowComposerTests: XCTestCase {
         XCTAssertNoDiff(getNavigation.payloads.map(\.0), [select])
     }
     
-    func test_composed_shouldDismissNavigationOnNotifyWithDismiss() throws {
+    func test_composed_shouldChangeStateOnNotifyWithDismiss() throws {
         
         let navigation = makeNavigation()
         let (sut, getNavigation) = makeSUT()
@@ -97,6 +97,7 @@ final class FlowComposerTests: XCTestCase {
     private typealias GetNavigationSpy = Spy<(Select, Notify), Navigation>
     
     private func makeSUT(
+        delay: SUT.Delay = .milliseconds(100),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -105,11 +106,13 @@ final class FlowComposerTests: XCTestCase {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(
+            delay: delay,
             getNavigation:  {
                 
                 getNavigation.process(($0, $1), completion: $2)
             },
-            scheduler: .immediate
+            scheduler: .immediate,
+            interactiveScheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
