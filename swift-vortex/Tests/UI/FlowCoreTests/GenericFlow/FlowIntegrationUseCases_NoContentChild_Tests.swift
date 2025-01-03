@@ -327,20 +327,6 @@ extension ParentComposer {
     }
 }
 
-// MARK: - Helpers
-
-private extension AnySchedulerOf<DispatchQueue> {
-    
-    func delay(
-        for timeout: Delay,
-        _ action: @escaping () -> Void
-    ) {
-        schedule(after: .init(.init(uptimeNanoseconds: 0)).advanced(by: timeout), action)
-    }
-    
-    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
-}
-
 // MARK: - NoContentChild
 
 private enum NoContentChildDomain {
