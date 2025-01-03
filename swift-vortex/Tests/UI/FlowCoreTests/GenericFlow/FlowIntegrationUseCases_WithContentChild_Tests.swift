@@ -210,55 +210,21 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         flowSpy: ValueSpy<WithContentChildDomain.FlowDomain.State>
     ) {
         let loadSpy = LoadSpy()
-        let contentComposer = WithContentChildDomain.ContentComposer(
-            load: loadSpy.process,
+        
+        let composer = WithContentChildComposer(
+            load: loadSpy.process(completion:),
             scheduler: .immediate
         )
-        let content = contentComposer.compose(initialState: initialState)
-        let contentSpy = ValueSpy(content.$state)
+        let sut = composer.compose(initialState: initialState)
         
-#warning("looks like bugs in `BinderComposer`: (1) can't compose with Select == Never, (2) `isLoading` is not passed(?)")
-        //        let composer = BinderComposer(
-        //            getNavigation: getWithContentChildNavigation,
-        //            makeContent: { content },
-        //            witnesses: .init(
-        //                emitting: {
-        //
-        //                    Empty().eraseToAnyPublisher()
-        //                },
-        //                dismissing: { _ in {}}
-        //            )
-        //        )
-        //        let sut = composer.compose()
-        
-        let flowComposer = WithContentChildDomain.FlowDomain.Composer(
-            getNavigation: getWithContentChildNavigation,
-            scheduler: .immediate
-        )
-        let flow = flowComposer.compose()
-        let flowSpy = ValueSpy(flow.$state)
-        
-        let sut = WithContentChildDomain.Binder(
-            content: content,
-            flow: flow,
-            bind: { content, flow in
-                
-                let isLoading = content.$state
-                    .map(\.isLoading)
-                    .dropFirst()
-                    .sink { [weak flow] in flow?.event(.isLoading($0)) }
-                
-                return [isLoading]
-            }
-        )
+        let contentSpy = ValueSpy(sut.content.$state)
+        let flowSpy = ValueSpy(sut.flow.$state)
         
         trackForMemoryLeaks(loadSpy, file: file, line: line)
-        trackForMemoryLeaks(contentComposer, file: file, line: line)
-        trackForMemoryLeaks(content, file: file, line: line)
+        trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(sut.content, file: file, line: line)
         trackForMemoryLeaks(contentSpy, file: file, line: line)
-        // trackForMemoryLeaks(composer, file: file, line: line)
-        trackForMemoryLeaks(flowComposer, file: file, line: line)
-        trackForMemoryLeaks(flow, file: file, line: line)
+        trackForMemoryLeaks(sut.flow, file: file, line: line)
         trackForMemoryLeaks(flowSpy, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -416,41 +382,15 @@ extension ParentComposer {
     
     func composeWithContentChild() -> Domain.WithContentChild {
         
-#warning("extract as Composer")
-        let contentComposer = WithContentChildDomain.ContentComposer(
+        let composer = WithContentChildComposer(
             load: load,
             scheduler: scheduler
         )
-        let content = contentComposer.compose()
         
-        func getWithContentChildNavigation(
-            select: WithContentChildDomain.Select,
-            notify: @escaping WithContentChildDomain.Notify,
-            completion: @escaping (WithContentChildDomain.Navigation) -> Void
-        ) {}
-        
-        let flowComposer = WithContentChildDomain.FlowDomain.Composer(
-            getNavigation: getWithContentChildNavigation,
-            scheduler: scheduler
-        )
-        let flow = flowComposer.compose()
-        
-        return .init(
-            content: content,
-            flow: flow,
-            bind: { content, flow in
-                
-                let isLoading = content.$state
-                    .map(\.isLoading)
-                    .dropFirst()
-                    .sink { [weak flow] in flow?.event(.isLoading($0)) }
-                
-                return [isLoading]
-            }
-        )
+        return composer.compose()
     }
 }
-    
+
 // MARK: - Helpers
 
 private extension AnySchedulerOf<DispatchQueue> {
@@ -596,6 +536,78 @@ extension WithContentChildContentComposer {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
+        )
+    }
+}
+
+private final class WithContentChildComposer {
+    
+    private let load: Load
+    let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        load: @escaping Load,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.load = load
+        self.scheduler = scheduler
+    }
+    
+    typealias Load = (@escaping (String) -> Void) -> Void
+}
+
+extension WithContentChildComposer {
+    
+    typealias Domain = WithContentChildDomain
+    
+    func compose(
+        initialState: WithContentChildContentState = .init()
+    ) -> Domain.Binder {
+        
+        let contentComposer = WithContentChildDomain.ContentComposer(
+            load: load,
+            scheduler: scheduler
+        )
+        let content = contentComposer.compose(initialState: initialState)
+        
+        func getWithContentChildNavigation(
+            select: WithContentChildDomain.Select,
+            notify: @escaping WithContentChildDomain.Notify,
+            completion: @escaping (WithContentChildDomain.Navigation) -> Void
+        ) {}
+        
+#warning("looks like bugs in `BinderComposer`: (1) can't compose with Select == Never, (2) `isLoading` is not passed(?)")
+        //        let composer = BinderComposer(
+        //            getNavigation: getWithContentChildNavigation,
+        //            makeContent: { content },
+        //            witnesses: .init(
+        //                emitting: {
+        //
+        //                    Empty().eraseToAnyPublisher()
+        //                },
+        //                dismissing: { _ in {}}
+        //            )
+        //        )
+        //        let sut = composer.compose()
+        
+        let flowComposer = WithContentChildDomain.FlowDomain.Composer(
+            getNavigation: getWithContentChildNavigation,
+            scheduler: scheduler
+        )
+        let flow = flowComposer.compose()
+        
+        return .init(
+            content: content,
+            flow: flow,
+            bind: { content, flow in
+                
+                let isLoading = content.$state
+                    .map(\.isLoading)
+                    .dropFirst()
+                    .sink { [weak flow] in flow?.event(.isLoading($0)) }
+                
+                return [isLoading]
+            }
         )
     }
 }
