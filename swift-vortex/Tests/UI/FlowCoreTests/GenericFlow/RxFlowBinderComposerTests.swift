@@ -143,10 +143,10 @@ final class RxFlowBinderComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Content = EmitterReceiver<FlowEvent<Select, Never>, Void>
-    private typealias SUT = RxFlowBinderComposer<Content, Select, Navigation>
-    private typealias Binder = SUT.Binder
+    private typealias SUT = RxFlowBinderComposer
+    private typealias Binder = FlowCore.Binder<Content, FlowDomain<Select, Navigation>.Flow>
     private typealias GetNavigationSpy = Spy<Select, Navigation>
-    private typealias FlowState = SUT.FlowDomain.State
+    private typealias FlowState = FlowDomain<Select, Navigation>.State
     
     private func makeSUT(
         initialState: FlowState = .init(),
@@ -159,12 +159,14 @@ final class RxFlowBinderComposerTests: XCTestCase {
         let getNavigation = GetNavigationSpy()
         let content = Content()
         let sut = SUT(
-            makeContent: { content },
-            getNavigation: { getNavigation.process($0, completion: $2) },
-            witnesses: content.witnesses(),
             scheduler: .immediate
         )
-        let binder = sut.compose(initialState: initialState)
+        let binder = sut.compose(
+            initialState: initialState,
+            makeContent: { content },
+            getNavigation: { getNavigation.process($0, completion: $2) },
+            witnesses: content.witnesses()
+        )
         
         trackForMemoryLeaks(getNavigation, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
