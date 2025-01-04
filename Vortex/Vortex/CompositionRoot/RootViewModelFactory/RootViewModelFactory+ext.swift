@@ -419,16 +419,23 @@ extension RootViewModelFactory {
         
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
-            delay: settings.delay * 2,
             dismiss: dismiss,
             getNavigation: { [weak self] select, notify, completion in
                 
-                self?.getRootNavigation(
-                    makeProductProfileByID: makeProductProfileByID,
-                    select: select,
-                    notify: notify,
-                    completion: completion
-                )
+                guard let self else { return }
+                
+                // TODO: - improve with fine-grained delays for different navigation cases
+                schedulers.interactive.delay(
+                    for: settings.delay * 2
+                ) { [weak self] in
+                    
+                    self?.getRootNavigation(
+                        makeProductProfileByID: makeProductProfileByID,
+                        select: select,
+                        notify: notify,
+                        completion: completion
+                    )
+                }
             },
             bindOutside: { $1.bindOutside(to: $0) },
             schedulers: schedulers,
