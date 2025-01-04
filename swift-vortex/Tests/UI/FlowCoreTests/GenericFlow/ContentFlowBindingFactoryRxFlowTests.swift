@@ -209,27 +209,4 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         
         return .init(value: value)
     }
-    
-    private final class EmitterReceiver<Emit, Receive> {
-        
-        private let subject = PassthroughSubject<Emit, Never>()
-        private(set) var received = [Receive]()
-        
-        var callCount: Int { received.count }
-        
-        var publisher: AnyPublisher<Emit, Never> {
-            
-            subject.eraseToAnyPublisher()
-        }
-        
-        func emit(_ emit: Emit) {
-            
-            subject.send(emit)
-        }
-        
-        func receive(_ receive: Receive) {
-            
-            received.append(receive)
-        }
-    }
 }

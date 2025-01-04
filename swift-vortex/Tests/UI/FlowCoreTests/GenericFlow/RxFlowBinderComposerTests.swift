@@ -7,7 +7,7 @@
 
 import CombineSchedulers
 
-final class RxFlowBinderComposer<Select, Navigation> {
+final class RxFlowBinderComposer<Content, Select, Navigation> {
     
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -22,6 +22,7 @@ extension RxFlowBinderComposer {
     
     func compose(
         initialState: FlowDomain.State = .init(),
+        makeContent: @escaping () -> Content,
         getNavigation: @escaping FlowDomain.Composer.GetNavigation
     ) -> Binder {
 
@@ -31,13 +32,12 @@ extension RxFlowBinderComposer {
         )
         
         return .init(
-            content: (),
+            content: makeContent(),
             flow: composer.compose(initialState: initialState),
             bind: { _,_ in [] }
         )
     }
     
-    typealias Content = Void
     typealias Binder = FlowCore.Binder<Content, Flow>
     typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
@@ -66,9 +66,19 @@ final class RxFlowBinderComposerTests: XCTestCase {
         XCTAssertNoDiff(binder.flow.state, initialState)
     }
     
+    func test_shouldNotMessageContentOnFlowNavigation() {
+        
+        let (binder, _) = makeSUT()
+        
+        binder.flow.event(.navigation(makeNavigation()))
+        
+        XCTAssertEqual(binder.content.callCount, 0)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = RxFlowBinderComposer<Select, Navigation>
+    private typealias Content = EmitterReceiver<Void, Void>
+    private typealias SUT = RxFlowBinderComposer<Content, Select, Navigation>
     private typealias Binder = SUT.Binder
     private typealias Select = Void
     private typealias GetNavigationSpy = Spy<Select, Navigation>
@@ -86,6 +96,7 @@ final class RxFlowBinderComposerTests: XCTestCase {
         let sut = SUT(scheduler: .immediate)
         let binder = sut.compose(
             initialState: initialState,
+            makeContent: Content.init,
             getNavigation: { _,_,_ in }
         )
         
