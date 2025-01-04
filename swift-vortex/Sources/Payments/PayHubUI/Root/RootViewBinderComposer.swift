@@ -68,8 +68,13 @@ private extension RootViewBinderComposer {
 
         var bindings = bindings.union(bindOutside(content, flow))
         
-        let factory = ContentFlowBindingFactory()
-        bindings.formUnion(factory.bind(content: content, flow: flow, witnesses: witnesses.content))
+        bindings.formUnion(
+            ContentFlowBindingFactory.bind(
+                content: content,
+                flow: flow,
+                witnesses: witnesses.content
+            )
+        )
         
         bindings.insert(bindDismiss(content: content))
         

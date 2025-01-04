@@ -155,7 +155,6 @@ final class ContentFlowBindingFactoryRxFlowSelectionOnlyTests: XCTestCase {
         getNavigation: GetNavigationSpy,
         cancellables: Set<AnyCancellable>
     ) {
-        let sut = SUT()
         let content = Content()
         
         let getNavigation = GetNavigationSpy()
@@ -166,14 +165,13 @@ final class ContentFlowBindingFactoryRxFlowSelectionOnlyTests: XCTestCase {
         let flow = composer.compose()
         let flowSpy = FlowSpy(flow.$state)
         
-        trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
         trackForMemoryLeaks(getNavigation, file: file, line: line)
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(flow, file: file, line: line)
         trackForMemoryLeaks(flowSpy, file: file, line: line)
         
-        let cancellables = sut.bind(content: content, flow: flow, witnesses: witnesses)
+        let cancellables = SUT.bind(content: content, flow: flow, witnesses: witnesses)
         
         return (content, flow, flowSpy, getNavigation, cancellables)
     }

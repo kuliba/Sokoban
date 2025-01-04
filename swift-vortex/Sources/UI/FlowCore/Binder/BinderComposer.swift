@@ -59,9 +59,7 @@ public extension BinderComposer {
     func compose(
         initialState: Domain.FlowDomain.State = .init()
     ) -> Domain.Binder {
-        
-        let factory = ContentFlowBindingFactory()
-        
+                
         let flowComposer = Domain.FlowDomain.Composer(
             delay: delay,
             getNavigation: getNavigation,
@@ -72,7 +70,7 @@ public extension BinderComposer {
         return .init(
             content: makeContent(),
             flow: flowComposer.compose(initialState: initialState),
-            bind: factory.bind(with: .init(
+            bind: ContentFlowBindingFactory.bind(with: .init(
                 contentEmitting: witnesses.emitting,
                 contentDismissing: witnesses.dismissing,
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },

@@ -32,7 +32,6 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         let mainScheduler: AnySchedulerOf<DispatchQueue> = .immediate
         let interactiveScheduler: AnySchedulerOf<DispatchQueue> = .immediate
         
-        let factory = ContentFlowBindingFactory()
         let witnesses = Witnesses(
             contentEmitting: { $0.publisher },
             contentDismissing: { content in { content.dismiss() }},
@@ -90,7 +89,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         )
         let sut = QRBinderComposer(
             microServices: .init(
-                bind: factory.bind(with: witnesses),
+                bind: ContentFlowBindingFactory.bind(with: witnesses),
                 getNavigation: getNavigationComposer.getNavigation,
                 makeQR: makeQR
             ),
@@ -99,7 +98,6 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(factory, file: file, line: line)
         trackForMemoryLeaks(makePayments, file: file, line: line)
         trackForMemoryLeaks(getNavigationComposer, file: file, line: line)
         // trackForMemoryLeaks(mainScheduler, file: file, line: line)
