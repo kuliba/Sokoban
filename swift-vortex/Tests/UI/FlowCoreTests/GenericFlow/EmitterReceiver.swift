@@ -42,4 +42,12 @@ extension EmitterReceiver where Receive == Void {
             dismissing: { content in { content.receive(()) }}
         )
     }
+    
+    func selectWitnesses() -> ContentWitnesses<EmitterReceiver, Emit> {
+        
+        return .init(
+            emitting: { $0.publisher },
+            dismissing: { content in { content.receive(()) }}
+        )
+    }
 }

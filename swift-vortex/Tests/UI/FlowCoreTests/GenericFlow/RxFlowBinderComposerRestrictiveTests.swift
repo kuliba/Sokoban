@@ -1,5 +1,5 @@
 //
-//  RxFlowBinderComposerTests.swift
+//  RxFlowBinderComposerRestrictiveTests.swift
 //  swift-vortex
 //
 //  Created by Igor Malyarov on 04.01.2025.
@@ -8,7 +8,7 @@
 import FlowCore
 import XCTest
 
-final class RxFlowBinderComposerTests: XCTestCase {
+final class RxFlowBinderComposerRestrictiveTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -82,39 +82,13 @@ final class RxFlowBinderComposerTests: XCTestCase {
     
     // MARK: - Content to Flow
     
-    func test_shouldSetFlowStateIsLoadingToTrue_onContentEmittingIsLoadingTrue() {
-        
-        let (binder, _) = makeSUT()
-        let flowSpy = ValueSpy(binder.flow.$state)
-        
-        binder.content.emit(.isLoading(true))
-        
-        XCTAssertNoDiff(flowSpy.values, [
-            .init(isLoading: false),
-            .init(isLoading: true),
-        ])
-    }
-    
-    func test_shouldSetFlowStateIsLoadingToFalse_onContentEmittingIsLoadingFalse() {
-        
-        let (binder, _) = makeSUT(initialState: .init(isLoading: true))
-        let flowSpy = ValueSpy(binder.flow.$state)
-        
-        binder.content.emit(.isLoading(false))
-        
-        XCTAssertNoDiff(flowSpy.values, [
-            .init(isLoading: true),
-            .init(isLoading: false),
-        ])
-    }
-    
     func test_shouldSetFlowStateIsLoadingToTrue_onContentEmittingSelect() {
         
         let select = makeSelect()
         let (binder, _) = makeSUT()
         let flowSpy = ValueSpy(binder.flow.$state)
         
-        binder.content.emit(.select(select))
+        binder.content.emit(select)
         
         XCTAssertNoDiff(flowSpy.values, [
             .init(isLoading: false, navigation: nil),
@@ -127,32 +101,14 @@ final class RxFlowBinderComposerTests: XCTestCase {
         let select = makeSelect()
         let (binder, getNavigation) = makeSUT()
         
-        binder.content.emit(.select(select))
+        binder.content.emit(select)
         
         XCTAssertNoDiff(getNavigation.payloads, [select])
     }
     
-    func test_shouldResetFlowState_onContentEmittingDismiss() {
-        
-        let navigation = makeNavigation()
-        let (binder, getNavigation) = makeSUT()
-        let flowSpy = ValueSpy(binder.flow.$state)
-        
-        binder.content.emit(.select(makeSelect()))
-        getNavigation.complete(with: navigation)
-        binder.content.emit(.dismiss)
-        
-        XCTAssertNoDiff(flowSpy.values, [
-            .init(isLoading: false, navigation: nil),
-            .init(isLoading: true, navigation: nil),
-            .init(isLoading: false, navigation: navigation),
-            .init(isLoading: false, navigation: nil),
-        ])
-    }
-    
     // MARK: - Helpers
     
-    private typealias Content = EmitterReceiver<FlowEvent<Select, Never>, Void>
+    private typealias Content = EmitterReceiver<Select, Void>
     private typealias SUT = RxFlowBinderComposer
     private typealias Binder = FlowCore.Binder<Content, FlowDomain<Select, Navigation>.Flow>
     private typealias GetNavigationSpy = Spy<Select, Navigation>
@@ -175,7 +131,7 @@ final class RxFlowBinderComposerTests: XCTestCase {
             initialState: initialState,
             makeContent: { content },
             getNavigation: { getNavigation.process($0, completion: $2) },
-            witnesses: content.witnesses()
+            witnesses: content.selectWitnesses()
         )
         
         trackForMemoryLeaks(getNavigation, file: file, line: line)
