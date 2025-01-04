@@ -1,5 +1,5 @@
 //
-//  ContentFlowBindingFactoryRxFlowTests.swift
+//  ContentFlowBindingFactoryRxFlowSelectionOnlyTests.swift
 //
 //
 //  Created by Igor Malyarov on 03.01.2025.
@@ -9,7 +9,7 @@ import Combine
 import FlowCore
 import XCTest
 
-final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
+final class ContentFlowBindingFactoryRxFlowSelectionOnlyTests: XCTestCase {
     
     func test_init_shouldNotMessage() {
         
@@ -78,7 +78,6 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         
         XCTAssertNoDiff(flowSpy.values, [
             .init(isLoading: false),
-            .init(isLoading: true),
         ])
         XCTAssertNotNil(cancellables)
     }
@@ -90,7 +89,6 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         content.emit(.isLoading(false))
         
         XCTAssertNoDiff(flowSpy.values, [
-            .init(isLoading: false),
             .init(isLoading: false),
         ])
         XCTAssertNotNil(cancellables)
@@ -134,7 +132,6 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
             .init(isLoading: false, navigation: nil),
             .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: navigation),
-            .init(isLoading: false, navigation: nil),
         ])
         XCTAssertNotNil(cancellables)
     }
@@ -181,8 +178,14 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         return (content, flow, flowSpy, getNavigation, cancellables)
     }
     
-    private let witnesses = ContentWitnesses<Content, FlowEvent<Select, Never>>(
-        emitting: { $0.publisher },
+    private let witnesses = ContentWitnesses<Content, Select>(
+        emitting: {
+            
+            $0.publisher.compactMap {
+                guard case let .select(select) = $0 else { return nil }
+                return select
+            }
+        },
         dismissing: { content in { content.receive(()) }}
     )
     
