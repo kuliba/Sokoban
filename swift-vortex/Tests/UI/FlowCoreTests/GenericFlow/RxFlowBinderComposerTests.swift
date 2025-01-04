@@ -5,53 +5,6 @@
 //  Created by Igor Malyarov on 04.01.2025.
 //
 
-import CombineSchedulers
-
-final class RxFlowBinderComposer<Content, Select, Navigation> {
-    
-    private let makeContent: () -> Content
-    private let getNavigation: FlowDomain.Composer.GetNavigation
-    private let scheduler: AnySchedulerOf<DispatchQueue>
-    private let witnesses: Witnesses
-    
-    init(
-        makeContent: @escaping () -> Content,
-        getNavigation: @escaping FlowDomain.Composer.GetNavigation,
-        witnesses: Witnesses,
-        scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
-        self.makeContent = makeContent
-        self.getNavigation = getNavigation
-        self.scheduler = scheduler
-        self.witnesses = witnesses
-    }
-    
-    typealias Witnesses = ContentWitnesses<Content, FlowEvent<Select, Never>>
-}
-
-extension RxFlowBinderComposer {
-    
-    func compose(
-        initialState: FlowDomain.State = .init()
-    ) -> Binder {
-        
-        let composer = FlowComposer(
-            getNavigation: getNavigation,
-            scheduler: scheduler
-        )
-        
-        return .init(
-            content: makeContent(),
-            flow: composer.compose(initialState: initialState),
-            bind: witnesses.bind(content:flow:)
-        )
-    }
-    
-    typealias Binder = FlowCore.Binder<Content, Flow>
-    typealias Flow = FlowDomain.Flow
-    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
-}
-
 import FlowCore
 import XCTest
 
