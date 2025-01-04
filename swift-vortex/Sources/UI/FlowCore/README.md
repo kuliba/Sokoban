@@ -1,6 +1,8 @@
 # Content-Flow-ChildFlow
 
-This document outlines how a `Flow` connects to `Content` and `ChildFlow`, the patterns enabling communication between them, and the task of creating ergonomic conveniences (factories) for generating `FlowEvent<Select, Never>`.
+This document outlines how a `Flow` connects to `Content` and `ChildFlow`, the patterns enabling communication between them, and the current state of ergonomic conveniences (factories) for generating `FlowEvent<Select, Never>`.
+
+---
 
 ## Overview
 
@@ -19,53 +21,58 @@ Each `Flow` can connect to:
 ## 1. Content ↔ Flow (via `Binder`)
 
 ### Connection Overview
-- **Bi-directional communication** is implemented using a `Binder` and `ContentFlowWitnesses`:
+- **Bi-directional communication** is implemented using a `Binder` approach alongside types like `ContentFlowWitnesses`:
   - `Content` can send navigation or state-change requests to the flow.
-  - The flow can notify the content of navigation dismissal or other changes.
-- `ContentFlowWitnesses` defines 4 witness functions that handle this interaction:
-  - **Content to Flow**: 
-    - `emitting`: Sends events from content to the flow.
-  - **Flow to Content**:
-    - `dismissing`: Handles flow dismissal events.
+  - The flow can notify the content of navigation dismissal or other updates.
+- `ContentFlowWitnesses` defines four witness functions:
+  - `contentEmitting`, `contentDismissing`, `flowEmitting`, `flowReceiving`.
+- These witnesses, combined with `ContentFlowBindingFactory` or `ContentWitnesses`, enable high-level `bind` methods for straightforward setup.
 
-### Potential Improvements
-- Add a `bind` method as an extension on `ContentFlowWitnesses` to simplify the process of setting up connections.
+### Implemented Features
+- **Factories for binding**: 
+  - `ContentFlowBindingFactory` now includes multiple `bind` methods to simplify linking content and flow.
+  - The factory supports scenarios with and without `isLoading` or `dismiss`.
 
 ---
 
 ## 2. Flow → ChildFlow (via `Node`)
 
 ### Connection Overview
-- **Uni-directional communication** is implemented using a `Node`:
-  - The parent flow reacts to changes in the child flow’s state.
-  - This connection does not allow the child flow to respond to parent flow changes.
-- The `Node` structure holds a reference to the child flow and subscribes to its state, enabling the parent flow to update itself as needed.
+- **Uni-directional communication** is implemented through a `Node`:
+  - The parent flow subscribes to the child flow’s state changes.
+  - The child flow does not observe or respond to the parent flow.
+- This structure allows the parent to update its own state whenever the child emits new navigation or loading events (if present).
 
 ---
 
 ## Using `FlowEvent<Select, Never>`
 
 ### Event Design
-- Both `Binder` and `Node` use `FlowEvent<Select, Never>` to communicate state changes or navigation events.
-- Clients can choose whether `FlowEvent` includes an `isLoading` case:
-  - **With `isLoading`**: Allows parent flows to update their `isLoading` property based on child or content events.
-  - **Without `isLoading`**: Keeps `isLoading` logic localized to the child or content.
+- Both the `Binder` approach and `Node` use `FlowEvent<Select, Never>` to signal navigation or loading updates.
+- Clients decide whether or not to use an `isLoading` case inside `FlowEvent`, based on their domain needs:
+  - **With `isLoading`**: Parent flows can reflect the child or content’s loading state.
+  - **Without `isLoading`**: The child or content handles loading state privately, and the parent focuses on navigation alone.
 
 ---
 
-## Goal: Ergonomic Factories
+## Factories and Bindings
 
-The current goal is to create **factories** for generating `FlowEvent<Select, Never>` instances. These factories will:
+### Implemented Factories
+- **`ContentFlowBindingFactory`**: Provides multiple `bind` methods to connect `Content` and `Flow`, including:
+  - Scenarios without `isLoading` or `dismiss`.
+  - Scenarios where `FlowEvent<Select, Never>` is used directly.
 
-1. Support creating events with `isLoading` toggles.
-2. Support creating events without `isLoading` toggles.
-
-### Benefits of Factories
-- **Reduce boilerplate**: Simplify creating and managing `FlowEvent` instances in both `Binder` and `Node`.
-- **Clarify intent**: Enable clients to explicitly opt in or out of parent-level `isLoading` behavior.
+### Benefits
+- **Reduced Boilerplate**: The `bind` methods handle typical streaming connections, so clients don’t need to manually set up Combine pipelines.
+- **Flexibility**: By allowing `FlowEvent` to include or exclude certain cases, each flow can opt into parent-level loading management or keep it local.
 
 ---
 
 ## Summary
 
-This framework ensures clean, modular communication between `Flow`, `Content`, and `ChildFlow`. The ergonomic factory functions for `FlowEvent<Select, Never>` will streamline client usage, making it easier to configure whether parent flows reflect child or content `isLoading` states. Clients retain flexibility by choosing the appropriate factory or implementing custom `Node` and `Binder` configurations.
+The **Content-Flow-ChildFlow** approach ensures clear, modular communication among `Flow`, `Content`, and `ChildFlow`. With the **`ContentFlowBindingFactory`** and corresponding `bind` extensions:
+- **Content** can effortlessly emit events (e.g., `select`, `isLoading`, `dismiss`) to the flow.
+- **Flow** can notify content of navigation dismissal or other changes.
+- **ChildFlow** remains a unidirectional source of state updates, observed by the parent flow via a `Node`.
+
+Clients retain control over how or whether `isLoading` is surfaced, enabling both minimal setups (pure navigation) and more complete setups (loading spinners, dismiss flows) through these factories.
