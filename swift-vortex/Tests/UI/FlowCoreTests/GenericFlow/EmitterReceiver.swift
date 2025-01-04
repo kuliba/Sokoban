@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 
 final class EmitterReceiver<Emit, Receive> {
     
@@ -27,5 +28,18 @@ final class EmitterReceiver<Emit, Receive> {
     func receive(_ receive: Receive) {
         
         received.append(receive)
+    }
+}
+
+extension EmitterReceiver where Receive == Void {
+    
+    func witnesses<Select>(
+    ) -> ContentWitnesses<EmitterReceiver, Emit>
+    where Emit == FlowEvent<Select, Never> {
+        
+        return .init(
+            emitting: { $0.publisher },
+            dismissing: { content in { content.receive(()) }}
+        )
     }
 }

@@ -70,7 +70,7 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
     
     // MARK: - Content to Flow
     
-    func test_shouldFlowStateIsLoadingTrue_onContentEmittingIsLoadingTrue() {
+    func test_shouldSetFlowStateIsLoadingToTrue_onContentEmittingIsLoadingTrue() {
         
         let (content, _, flowSpy, _, cancellables) = makeSUT()
         
@@ -83,14 +83,16 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         XCTAssertNotNil(cancellables)
     }
     
-    func test_shouldSetFlowStateIsLoadingFalse_onContentEmittingIsLoadingFalse() {
+    func test_shouldSetFlowStateIsLoadingToFalse_onContentEmittingIsLoadingFalse() {
         
         let (content, _, flowSpy, _, cancellables) = makeSUT()
         
+        content.emit(.isLoading(true))
         content.emit(.isLoading(false))
         
         XCTAssertNoDiff(flowSpy.values, [
             .init(isLoading: false),
+            .init(isLoading: true),
             .init(isLoading: false),
         ])
         XCTAssertNotNil(cancellables)
@@ -176,15 +178,13 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         trackForMemoryLeaks(flow, file: file, line: line)
         trackForMemoryLeaks(flowSpy, file: file, line: line)
         
-        let cancellables = sut.bind(content: content, flow: flow, witnesses: witnesses)
+        let cancellables = sut.bind(
+            content: content,
+            flow: flow,
+            witnesses: content.witnesses())
         
         return (content, flow, flowSpy, getNavigation, cancellables)
     }
-    
-    private let witnesses = ContentWitnesses<Content, FlowEvent<Select, Never>>(
-        emitting: { $0.publisher },
-        dismissing: { content in { content.receive(()) }}
-    )
     
     private struct Select: Equatable {
         
