@@ -131,7 +131,7 @@ final class RootViewBinderComposerTests: XCTestCase {
                 completion(navigation ?? self.makeNavigation())
             },
             bindOutside: bindOutside,
-            schedulers: .immediate,
+            scheduler: .immediate,
             witnesses: .init(
                 content: .init(
                     emitting: { $0.publisher },

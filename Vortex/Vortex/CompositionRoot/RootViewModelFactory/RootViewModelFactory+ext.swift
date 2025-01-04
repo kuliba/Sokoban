@@ -438,7 +438,7 @@ extension RootViewModelFactory {
                 }
             },
             bindOutside: { $1.bindOutside(to: $0) },
-            schedulers: schedulers,
+            scheduler: schedulers.main,
             witnesses: .init(content: witness, dismiss: .default)
         )
         

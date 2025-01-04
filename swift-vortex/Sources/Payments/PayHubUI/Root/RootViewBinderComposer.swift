@@ -17,7 +17,7 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
     private let getNavigation: RootDomain.GetNavigation
     // TODO: - move to witness
     private let bindOutside: BindOutside
-    private let schedulers: Schedulers
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     private let witnesses: RootDomain.Witnesses
     
     public init(
@@ -25,14 +25,14 @@ public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Nav
         dismiss: @escaping () -> Void,
         getNavigation: @escaping RootDomain.GetNavigation,
         bindOutside: @escaping BindOutside,
-        schedulers: Schedulers = .init(),
+        scheduler: AnySchedulerOf<DispatchQueue>,
         witnesses: RootDomain.Witnesses
     ) {
         self.bindings = bindings
         self.dismiss = dismiss
         self.getNavigation = getNavigation
         self.bindOutside = bindOutside
-        self.schedulers = schedulers
+        self.scheduler = scheduler
         self.witnesses = witnesses
     }
     
@@ -48,7 +48,7 @@ public extension RootViewBinderComposer {
         
         let flowComposer = RootDomain.FlowDomain.Composer(
             getNavigation: getNavigation,
-            scheduler: schedulers.main
+            scheduler: scheduler
         )
         
         return .init(
@@ -81,7 +81,7 @@ private extension RootViewBinderComposer {
         let reset = witnesses.dismiss.reset(content)
         
         return witnesses.dismiss.dismissAll(content)
-            .receive(on: schedulers.main)
+            .receive(on: scheduler)
             .sink { [dismiss] _ in
                 
                 dismiss()
