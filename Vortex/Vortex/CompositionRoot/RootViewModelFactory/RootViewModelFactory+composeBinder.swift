@@ -11,25 +11,62 @@ extension RootViewModelFactory {
     
     /// Composes a `Binder` using a dynamic content factory and custom navigation logic.
     ///
+    /// This method sets up a `Binder` that binds a dynamically created `Content` instance with a `Flow`,
+    /// resolving navigation logic and handling delays for transitions.
+    ///
     /// - Parameters:
     ///   - initialState: The initial state of the flow domain. Defaults to `.init()`.
-    ///   - getNavigation: A closure that resolves navigation logic.
-    ///   - makeContent: A closure to create the content dynamically.
-    ///   - witnesses: Defines how `Content` emits flow events and handles dismisses.
-    /// - Returns: A configured `Binder` for the provided parameters.
+    ///   - delayProvider: A closure that provides a delay for a given navigation. Delays allow smooth UI transitions.
+    ///   - getNavigation: A closure that resolves navigation logic based on `Select` events.
+    ///   - makeContent: A closure to dynamically create a `Content` instance.
+    ///   - witnesses: Defines how `Content` emits `FlowEvent<Select, Never>` events and handles dismiss actions.
+    /// - Returns: A configured `Binder` instance for the provided parameters that binds `Content` with the `Flow`.
     @inlinable
     func composeBinder<Content, Select, Navigation>(
-        initialState: BinderComposer<Content, Select, Navigation>.Domain.FlowDomain.State = .init(),
-        getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         makeContent: @escaping () -> Content,
+        initialState: FlowDomain<Select, Navigation>.State = .init(),
+        delayProvider: @escaping (Navigation) -> Delay,
+        getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
         witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
         
         let composer = RxFlowBinderComposer(scheduler: schedulers.main)
         
+        let decoratedGetNavigation = schedulers.interactive.decorateGetNavigation(delayProvider: delayProvider)(getNavigation)
+        
         return composer.compose(
             initialState: initialState,
             makeContent: makeContent,
+            getNavigation: decoratedGetNavigation,
+            witnesses: witnesses
+        )
+    }
+    
+    /// Composes a `Binder` using a content instance and custom navigation logic.
+    ///
+    /// This method sets up a `Binder` that binds a dynamically created `Content` instance with a `Flow`,
+    /// resolving navigation logic and handling delays for transitions.
+    ///
+    /// - Parameters:
+    ///   - initialState: The initial state of the flow domain. Defaults to `.init()`.
+    ///   - delayProvider: A closure that provides a delay for a given navigation. Delays allow smooth UI transitions.
+    ///   - getNavigation: A closure that resolves navigation logic based on `Select` events.
+    ///   - content: A `Content` instance.
+    ///   - witnesses: Defines how `Content` emits `FlowEvent<Select, Never>` events and handles dismiss actions.
+    /// - Returns: A configured `Binder` instance for the provided parameters that binds `Content` with the `Flow`.
+    @inlinable
+    func composeBinder<Content, Select, Navigation>(
+        content: Content,
+        initialState: FlowDomain<Select, Navigation>.State = .init(),
+        delayProvider: @escaping (Navigation) -> Delay,
+        getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
+        witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>
+    ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
+        
+        return composeBinder(
+            makeContent: { content },
+            initialState: initialState,
+            delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: witnesses
         )
@@ -37,30 +74,51 @@ extension RootViewModelFactory {
     
     /// Composes a `Binder` using a dynamic content factory and custom navigation logic with a more restrictive witness setup.
     ///
-    /// This overload supports only flow events of type `Select` from the `Content` and still provides
-    /// a dismissal action without exposing other flow events directly to the `Content`.
+    /// This method is designed for cases where `Content` only emits `Select` events and does not interact with other event types.
     ///
     /// - Parameters:
     ///   - initialState: The initial state of the flow domain. Defaults to `.init()`.
-    ///   - getNavigation: A closure that resolves navigation logic.
-    ///   - makeContent: A closure to create the content dynamically.
-    ///   - witnesses: Defines how `Content` emits flow events and handles dismisses.
-    /// - Returns: A configured `Binder` for the provided parameters.
+    ///   - delayProvider: A closure that provides a delay for a given navigation. Delays allow smooth UI transitions.
+    ///   - getNavigation: A closure that resolves navigation logic based on `Select` events.
+    ///   - makeContent: A closure to dynamically create a `Content` instance.
+    ///   - witnesses: Defines how `Content` emits `Select` flow events and handles dismisses.
+    /// - Returns: A configured `Binder` instance for the provided parameters that binds `Content` with the `Flow`.
+    ///
+    /// - Warning: This overload supports only flow events of type `Select` from the `Content` and still provides
+    /// a dismissal action without exposing other flow events directly to the `Content`.
     @inlinable
     func composeBinder<Content, Select, Navigation>(
-        initialState: BinderComposer<Content, Select, Navigation>.Domain.FlowDomain.State = .init(),
-        getNavigation: @escaping BinderComposer<Content, Select, Navigation>.GetNavigation,
         makeContent: @escaping () -> Content,
+        initialState: FlowDomain<Select, Navigation>.State = .init(),
+        delayProvider: @escaping (Navigation) -> Delay,
+        getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
         witnesses: ContentWitnesses<Content, Select>
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
         
-        let composer = RxFlowBinderComposer(scheduler: schedulers.main)
-        
-        return composer.compose(
-            initialState: initialState,
+        return composeBinder(
             makeContent: makeContent,
+            initialState: initialState,
+            delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: witnesses
+            witnesses: witnesses.wrappingAsFlowEvent()
+        )
+    }
+}
+
+private extension ContentWitnesses {
+    
+    /// Converts a `ContentWitnesses<Content, Select>` to `ContentWitnesses<Content, FlowEvent<Select, Never>>`.
+    ///
+    /// This function wraps `Select` events into the `FlowEvent.select` case, allowing `ContentWitnesses`
+    /// to interact with components expecting a broader event type. The original dismissing behavior is
+    /// preserved without modification.
+    ///
+    /// - Returns: A new `ContentWitnesses` instance with `FlowEvent<Select, Never>` as the event type.
+    func wrappingAsFlowEvent() -> ContentWitnesses<Content, FlowEvent<Select, Never>> {
+        
+        return .init(
+            emitting: { emitting($0).map(FlowEvent.select) },
+            dismissing: dismissing
         )
     }
 }
