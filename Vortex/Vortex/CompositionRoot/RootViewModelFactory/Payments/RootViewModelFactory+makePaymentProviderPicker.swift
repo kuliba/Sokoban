@@ -76,17 +76,27 @@ extension RootViewModelFactory {
         
         let content = makeContent(with: payload)
         
-        return compose(
-            getNavigation: getPaymentProviderPickerNavigation,
+        return composeBinder(
             content: content,
-            witnesses: .init(
-                emitting: { _ in Empty().eraseToAnyPublisher() },
-                dismissing: { _ in {}}
-            )
+            delayProvider: delayProvider,
+            getNavigation: getPaymentProviderPickerNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
     
     typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, UtilityPaymentProvider>
+    
+    @inlinable
+    func delayProvider(
+        navigation: PaymentProviderPickerDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .alert:       return .milliseconds(100)
+        case .destination: return settings.delay
+        case .outside:     return .milliseconds(100)
+        }
+    }
     
     @inlinable
     func getPaymentProviderPickerNavigation(
@@ -181,6 +191,22 @@ extension RootViewModelFactory {
     private func makeSearch() -> RegularFieldViewModel {
         
         makeSearch(placeholderText: "Наименование или ИНН")
+    }
+    
+    @inlinable
+    func emitting(
+        content: PaymentProviderPickerDomain.Content
+    ) -> some Publisher<FlowEvent<PaymentProviderPickerDomain.Select, Never>, Never> {
+        
+        Empty()
+    }
+    
+    @inlinable
+    func dismissing(
+        content: PaymentProviderPickerDomain.Content
+    ) -> () -> Void {
+        
+        return {}
     }
     
     // MARK: - Flow
@@ -328,7 +354,7 @@ extension RootViewModelFactory {
 // MARK: - Adapters
 
 private extension UtilityPaymentProvider {
- 
+    
     var `operator`: UtilityPaymentOperator {
         
         return .init(id: id, inn: inn, title: title, icon: icon, type: type)
