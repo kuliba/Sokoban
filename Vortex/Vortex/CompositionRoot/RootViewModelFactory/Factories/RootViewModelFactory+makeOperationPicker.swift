@@ -54,12 +54,26 @@ extension RootViewModelFactory {
             suffix: [],
             placeholderCount: settings.operationPickerPlaceholderCount
         )
-        
-        return compose(
-            getNavigation: getNavigation,
+                
+        return composeBinder(
             content: content,
-            witnesses: witnesses()
+            delayProvider: delayProvider,
+            getNavigation: getNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+    
+    private func delayProvider(
+        navigation: Domain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .exchange:        return settings.delay
+        case .exchangeFailure: return settings.delay
+        case .latest:          return settings.delay
+        case .outside:         return .milliseconds(100)
+        case .templates:       return settings.delay
+        }
     }
     
     private func getNavigation(
@@ -85,17 +99,20 @@ extension RootViewModelFactory {
         }
     }
     
-    private func witnesses() -> Domain.Composer.Witnesses {
+    @inlinable
+    func emitting(
+        content: OperationPickerDomain.Content
+    ) -> some Publisher<FlowEvent<OperationPickerDomain.Select, Never>, Never> {
         
-        return .init(
-            emitting: {
-                
-                $0.$state
-                    .compactMap(\.selected)
-                    .map { .select($0) }
-            },
-            dismissing: { content in { content.event(.select(nil)) }}
-        )
+        content.$state.compactMap(\.selected).map(FlowEvent.select)
+    }
+    
+    @inlinable
+    func dismissing(
+        content: OperationPickerDomain.Content
+    ) -> () -> Void {
+        
+        return { content.event(.select(nil)) }
     }
     
     @inlinable
