@@ -11,7 +11,12 @@ import RemoteServices
 
 extension RootViewModelFactory {
     
-    typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, UtilityPaymentProvider>
+    struct MakeSelectedCategorySuccessPayload {
+        
+        let category: ServiceCategory
+        let latest: [Latest]
+        let operators: [UtilityPaymentProvider]
+    }
     
     @inlinable
     func makePaymentProviderPicker(
