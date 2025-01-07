@@ -12,11 +12,14 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
     
     func test_shouldDeliverFailureOnLoadOperatorsFailure() {
         
-        let spies = makeSpies()
+        let category = makeServiceCategory()
+        let (sut, spies) = makeSUT()
+        let failure = makeFailure(sut: sut, category: category)
         
         expect(
+            sut: sut,
             spies: spies,
-            payload: makeServiceCategory(),
+            category: makeServiceCategory(),
             assert: {
                 switch $0 {
                 case .failure: break
@@ -25,18 +28,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             },
             on: {
                 spies.loadOperators.complete(with: .failure(anyError()))
-                spies.makeFailure.complete(with: .success(.init()))
+                spies.makeFailure.complete(with: failure)
             }
         )
     }
     
     func test_shouldDeliverFailureOnEmptyLoadedOperators() {
         
-        let spies = makeSpies()
+        let category = makeServiceCategory()
+        let (sut, spies) = makeSUT()
+        let failure = makeFailure(sut: sut, category: category)
         
         expect(
+            sut: sut,
             spies: spies,
-            payload: makeServiceCategory(),
+            category: makeServiceCategory(),
             assert: {
                 switch $0 {
                 case .failure: break
@@ -45,21 +51,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             },
             on: {
                 spies.loadOperators.complete(with: .success([]))
-                spies.makeFailure.complete(with: .success(.init()))
+                spies.makeFailure.complete(with: failure)
             }
         )
     }
     
     func test_shouldDeliverSuccessOnOneLoadedOperatorsEmptyLatest() {
         
-        let (sut, spies) = makeSUT()
         let payload = makePayload(latestCount: 0, operatorsCount: 1)
+        let (sut, spies) = makeSUT()
         let binder = makeBinder(sut: sut, payload: payload)
         
         expect(
             sut: sut,
             spies: spies,
-            payload: payload.category,
+            category: payload.category,
             assert: {
                 switch $0 {
                 case .success: break
@@ -69,21 +75,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             on: {
                 spies.loadOperators.complete(with: .success(payload.operators))
                 spies.loadLatest.complete(with: .success(payload.latest))
-                spies.makeSuccess.complete(with: .success(binder))
+                spies.makeSuccess.complete(with: binder)
             }
         )
     }
     
     func test_shouldDeliverSuccessOnOneLoadedOperatorsOneLatest() {
         
-        let (sut, spies) = makeSUT()
         let payload = makePayload(latestCount: 1, operatorsCount: 1)
+        let (sut, spies) = makeSUT()
         let binder = makeBinder(sut: sut, payload: payload)
         
         expect(
             sut: sut,
             spies: spies,
-            payload: payload.category,
+            category: payload.category,
             assert: {
                 switch $0 {
                 case .success: break
@@ -93,21 +99,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             on: {
                 spies.loadOperators.complete(with: .success(payload.operators))
                 spies.loadLatest.complete(with: .success(payload.latest))
-                spies.makeSuccess.complete(with: .success(binder))
+                spies.makeSuccess.complete(with: binder)
             }
         )
     }
     
     func test_shouldDeliverSuccessOnOneLoadedOperatorsTwoLatest() {
         
-        let (sut, spies) = makeSUT()
         let payload = makePayload(latestCount: 2, operatorsCount: 1)
+        let (sut, spies) = makeSUT()
         let binder = makeBinder(sut: sut, payload: payload)
         
         expect(
             sut: sut,
             spies: spies,
-            payload: payload.category,
+            category: payload.category,
             assert: {
                 switch $0 {
                 case .success: break
@@ -117,21 +123,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             on: {
                 spies.loadOperators.complete(with: .success(payload.operators))
                 spies.loadLatest.complete(with: .success(payload.latest))
-                spies.makeSuccess.complete(with: .success(binder))
+                spies.makeSuccess.complete(with: binder)
             }
         )
     }
     
     func test_shouldDeliverSuccessOnTwoLoadedOperatorsEmptyLatest() {
         
-        let (sut, spies) = makeSUT()
         let payload = makePayload(latestCount: 0, operatorsCount: 2)
+        let (sut, spies) = makeSUT()
         let binder = makeBinder(sut: sut, payload: payload)
         
         expect(
             sut: sut,
             spies: spies,
-            payload: payload.category,
+            category: payload.category,
             assert: {
                 switch $0 {
                 case .success: break
@@ -141,21 +147,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             on: {
                 spies.loadOperators.complete(with: .success(payload.operators))
                 spies.loadLatest.complete(with: .success(payload.latest))
-                spies.makeSuccess.complete(with: .success(binder))
+                spies.makeSuccess.complete(with: binder)
             }
         )
     }
     
     func test_shouldDeliverSuccessOnTwoLoadedOperatorsOneLatest() {
         
-        let (sut, spies) = makeSUT()
         let payload = makePayload(latestCount: 1, operatorsCount: 2)
+        let (sut, spies) = makeSUT()
         let binder = makeBinder(sut: sut, payload: payload)
         
         expect(
             sut: sut,
             spies: spies,
-            payload: payload.category,
+            category: payload.category,
             assert: {
                 switch $0 {
                 case .success: break
@@ -165,21 +171,21 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             on: {
                 spies.loadOperators.complete(with: .success(payload.operators))
                 spies.loadLatest.complete(with: .success(payload.latest))
-                spies.makeSuccess.complete(with: .success(binder))
+                spies.makeSuccess.complete(with: binder)
             }
         )
     }
     
     func test_shouldDeliverSuccessOnTwoLoadedOperatorsTwoLatest() {
         
-        let (sut, spies) = makeSUT()
         let payload = makePayload(latestCount: 2, operatorsCount: 2)
+        let (sut, spies) = makeSUT()
         let binder = makeBinder(sut: sut, payload: payload)
         
         expect(
             sut: sut,
             spies: spies,
-            payload: payload.category,
+            category: payload.category,
             assert: {
                 switch $0 {
                 case .success: break
@@ -189,7 +195,7 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
             on: {
                 spies.loadOperators.complete(with: .success(payload.operators))
                 spies.loadLatest.complete(with: .success(payload.latest))
-                spies.makeSuccess.complete(with: .success(binder))
+                spies.makeSuccess.complete(with: binder)
             }
         )
     }
@@ -199,7 +205,7 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
     private typealias Destination = StandardSelectedCategoryDestination
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias LoadOperatorSpy = Spy<Void, Result<[UtilityPaymentProvider], any Error>, Never>
-    private typealias MakeFailureSpy = Spy<Void, FailedPaymentProviderPicker, Never>
+    private typealias MakeFailureSpy = Spy<Void, ServiceCategoryFailureDomain.Binder, Never>
     private typealias MakeSuccessSpy = Spy<SUT.MakeSelectedCategorySuccessPayload, PaymentProviderPickerDomain.Binder, Never>
     
     private struct Spies {
@@ -261,18 +267,24 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
     
     private func makeBinder(
         sut: SUT,
-        payload: RootViewModelFactory.MakeSelectedCategorySuccessPayload,
-        file: StaticString = #file,
-        line: UInt = #line
+        payload: RootViewModelFactory.MakeSelectedCategorySuccessPayload
     ) -> PaymentProviderPickerDomain.Binder {
         
         return sut.makePaymentProviderPicker(payload: payload)
     }
     
+    private func makeFailure(
+        sut: SUT,
+        category: ServiceCategory
+    ) -> ServiceCategoryFailureDomain.Binder {
+        
+        sut.makeServiceCategoryFailure(category: category)
+    }
+    
     private func expect(
         sut: SUT? = nil,
         spies: Spies,
-        payload: ServiceCategory,
+        category: ServiceCategory,
         assert: @escaping (Destination) -> Void,
         on action: @escaping () -> Void,
         timeout: TimeInterval = 1.0,
@@ -282,7 +294,7 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
         let sut = sut ?? makeSUT(file: file, line: line).sut
         let exp = expectation(description: "wait for completion")
         
-        sut.makePaymentProviderPicker(for: payload, nanoServices: spies.nanoServices) {
+        sut.makePaymentProviderPicker(for: category, nanoServices: spies.nanoServices) {
             
             assert($0)
             exp.fulfill()

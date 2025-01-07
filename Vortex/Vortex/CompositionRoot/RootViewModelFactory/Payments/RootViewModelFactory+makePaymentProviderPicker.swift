@@ -9,9 +9,9 @@ import Combine
 import PayHub
 import RemoteServices
 
-typealias StandardSelectedCategoryDestination = Result<PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+typealias StandardSelectedCategoryDestination = Result<PaymentProviderPickerDomain.Binder, ServiceCategoryFailureDomain.Binder>
 
-final class FailedPaymentProviderPicker: Error {}
+extension ServiceCategoryFailureDomain.Binder: Error {}
 
 extension RootViewModelFactory {
     
@@ -57,7 +57,12 @@ extension RootViewModelFactory {
                 
                 self?.loadOperatorsForCategory(category: category, completion: $0)
             },
-            makeFailure: { $0(.init()) },
+            makeFailure: { [weak self] completion in
+                
+                guard let self else { return }
+                
+                completion(makeServiceCategoryFailure(category: category))
+            },
             makeSuccess: { [weak self] payload, completion in
                 
                 guard let self else { return }
@@ -67,7 +72,7 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, UtilityPaymentProvider, PaymentProviderPickerDomain.Binder, FailedPaymentProviderPicker>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, UtilityPaymentProvider, PaymentProviderPickerDomain.Binder, ServiceCategoryFailureDomain.Binder>
     
     @inlinable
     func makePaymentProviderPicker(
