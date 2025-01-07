@@ -20,11 +20,33 @@ extension RootViewModelFactory {
         _ category: ServiceCategory,
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
-        handleSelectedServiceCategory(
-            category,
-            nanoServices: makeNanoServices(for: category),
-            completion: completion
-        )
+        loadOperatorsAndLatest(for: category) { [weak self] in
+            
+            guard let self else { return }
+            
+            completion(makeDestination(for: category, and: $0))
+        }
+    }
+    
+    @inlinable
+    func makeDestination(
+        for category: ServiceCategory,
+        and payload: OperatorsAndLatest?
+    ) -> StandardSelectedCategoryDestination {
+        
+        switch payload {
+        case .none:
+            return .failure(makeServiceCategoryFailure(category: category))
+            
+        case let .some(operatorsAndLatest):
+            return .success(
+                makePaymentProviderPicker(payload: .init(
+                    category: category,
+                    latest: operatorsAndLatest.latest,
+                    operators: operatorsAndLatest.operators
+                ))
+            )
+        }
     }
     
     typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, UtilityPaymentProvider, PaymentProviderPickerDomain.Binder, ServiceCategoryFailureDomain.Binder>
@@ -72,5 +94,40 @@ extension RootViewModelFactory {
                 completion(makePaymentProviderPicker(payload: payload))
             }
         )
+    }
+    
+    @inlinable
+    func loadOperatorsAndLatest(
+        for category: ServiceCategory,
+        completion: @escaping (OperatorsAndLatest?) -> Void
+    ) {
+        let service = LoadNanoServices(
+            loadLatest: loadLatestPayments,
+            loadOperators: loadOperatorsForCategory
+        )
+        
+        service.load(category: category) {
+            
+            completion($0?.operatorsAndLatest)
+            _ = service
+        }
+    }
+    
+    struct OperatorsAndLatest: Equatable {
+        
+        let latest: [Latest]
+        let operators: [UtilityPaymentProvider]
+    }
+}
+
+// MARK: - Adapters
+
+private extension LoadNanoServices.Success
+where Latest == Vortex.Latest,
+      Operator == UtilityPaymentProvider {
+    
+    var operatorsAndLatest: RootViewModelFactory.OperatorsAndLatest {
+        
+        return .init(latest: latest, operators: operators)
     }
 }
