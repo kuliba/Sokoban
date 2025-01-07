@@ -49,53 +49,6 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, UtilityPaymentProvider, PaymentProviderPickerDomain.Binder, ServiceCategoryFailureDomain.Binder>
-    
-    @inlinable
-    func handleSelectedServiceCategory(
-        _ category: ServiceCategory,
-        nanoServices: StandardNanoServices,
-        completion: @escaping (StandardSelectedCategoryDestination) -> Void
-    ) {
-        let composer = StandardSelectedCategoryGetNavigationComposer(
-            nanoServices: nanoServices
-        )
-        
-        composer.makeDestination(category: category) {
-            
-            completion($0)
-            _ = composer
-        }
-    }
-    
-    private func makeNanoServices(
-        for category: ServiceCategory
-    ) -> StandardNanoServices {
-        
-        return .init(
-            loadLatest: { [weak self] in
-                
-                self?.loadLatestPayments(for: category, completion: $0)
-            },
-            loadOperators: { [weak self] in
-                
-                self?.loadOperatorsForCategory(category: category, completion: $0)
-            },
-            makeFailure: { [weak self] completion in
-                
-                guard let self else { return }
-                
-                completion(makeServiceCategoryFailure(category: category))
-            },
-            makeSuccess: { [weak self] payload, completion in
-                
-                guard let self else { return }
-                
-                completion(makePaymentProviderPicker(payload: payload))
-            }
-        )
-    }
-    
     @inlinable
     func loadOperatorsAndLatest(
         for category: ServiceCategory,
