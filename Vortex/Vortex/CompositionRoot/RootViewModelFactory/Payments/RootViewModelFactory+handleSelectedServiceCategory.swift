@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentProviderPicker.swift
+//  RootViewModelFactory+handleSelectedServiceCategory.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 03.12.2024.
@@ -16,20 +16,20 @@ extension ServiceCategoryFailureDomain.Binder: Error {}
 extension RootViewModelFactory {
     
     @inlinable
-    func makePaymentProviderPicker(
-        for category: ServiceCategory,
+    func handleSelectedServiceCategory(
+        _ category: ServiceCategory,
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
-        makePaymentProviderPicker(
-            for: category,
+        handleSelectedServiceCategory(
+            category,
             nanoServices: makeNanoServices(for: category),
             completion: completion
         )
     }
     
     @inlinable
-    func makePaymentProviderPicker(
-        for category: ServiceCategory,
+    func handleSelectedServiceCategory(
+        _ category: ServiceCategory,
         nanoServices: StandardNanoServices,
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {

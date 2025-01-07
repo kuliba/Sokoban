@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentProviderPickerTests.swift
+//  RootViewModelFactory+handleSelectedServiceCategoryTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 06.12.2024.
@@ -8,7 +8,7 @@
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_handleSelectedServiceCategoryTests: RootViewModelFactoryTests {
     
     func test_shouldDeliverFailureOnLoadOperatorsFailure() {
         
@@ -294,8 +294,10 @@ final class RootViewModelFactory_makePaymentProviderPickerTests: RootViewModelFa
         let sut = sut ?? makeSUT(file: file, line: line).sut
         let exp = expectation(description: "wait for completion")
         
-        sut.makePaymentProviderPicker(for: category, nanoServices: spies.nanoServices) {
-            
+        sut.handleSelectedServiceCategory(
+            category,
+            nanoServices: spies.nanoServices
+        ) {
             assert($0)
             exp.fulfill()
         }

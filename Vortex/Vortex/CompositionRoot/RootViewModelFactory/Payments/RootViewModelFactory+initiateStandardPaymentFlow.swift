@@ -22,7 +22,7 @@ extension RootViewModelFactory {
                 return completion(.failure(.missingCategoryOfType(type)))
             }
             
-            makePaymentProviderPicker(for: category) {
+            handleSelectedServiceCategory(category) {
                 
                 completion($0.standardPaymentResult)
             }
