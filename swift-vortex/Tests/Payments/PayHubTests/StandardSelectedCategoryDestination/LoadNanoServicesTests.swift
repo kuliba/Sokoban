@@ -5,11 +5,18 @@
 //  Created by Igor Malyarov on 07.01.2025.
 //
 
-final class LoadNanoServices<Latest, Operator> {
+/// `LoadNanoServices` provides a mechanism to load "latest" and "operators" data
+/// for a given category asynchronously. It handles error scenarios and ensures
+/// results are only delivered when valid operators are available.
+final class LoadNanoServices<Category, Latest, Operator> {
     
+    /// Callback for loading the latest items.
     let loadLatest: LoadLatest
+    
+    /// Callback for loading operators.
     let loadOperators: LoadOperators
     
+    /// Initializes with the required loaders.
     init(
         loadLatest: @escaping LoadLatest,
         loadOperators: @escaping LoadOperators
@@ -21,28 +28,44 @@ final class LoadNanoServices<Latest, Operator> {
 
 extension LoadNanoServices {
     
+    /// Completion handler for loading latest items.
     typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void
-    typealias LoadLatest = (@escaping LoadLatestCompletion) -> Void
     
+    /// Function type for loading latest items for a given category.
+    typealias LoadLatest = (Category, @escaping LoadLatestCompletion) -> Void
+    
+    /// Completion handler for loading operators.
     typealias LoadOperatorsCompletion = (Result<[Operator], Error>) -> Void
-    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
+    /// Function type for loading operators for a given category.
+    typealias LoadOperators = (Category, @escaping LoadOperatorsCompletion) -> Void
 }
 
 extension LoadNanoServices {
     
+    /// Represents a successful result containing latest items and operators.
     struct Success {
         
+        /// Non-empty list of latest items.
         let latest: [Latest]
+        
+        /// Non-empty list of operators.
         // TODO: enforce non-empty
         let operators: [Operator]
     }
     
+    /// Completion handler for the combined loading process.
     typealias LoadCompletion = (Success?) -> Void
     
+    /// Executes the combined loading process for a given category.
+    /// - Calls `loadOperators` first and validates results before calling `loadLatest`.
+    /// - Delivers `nil` if operators fail to load or are empty.
+    /// - Provides a `Success` object on valid results.
     func load(
+        category: Category,
         completion: @escaping LoadCompletion
     ) {
-        loadOperators { [weak self] in
+        loadOperators(category) { [weak self] in
             
             guard let self else { return }
             
@@ -50,7 +73,7 @@ extension LoadNanoServices {
                   !operators.isEmpty
             else { return completion(nil) }
             
-            loadLatest { [weak self] in
+            loadLatest(category) { [weak self] in
                 
                 guard self != nil else { return }
                 
@@ -78,12 +101,24 @@ final class LoadNanoServicesTests: XCTestCase {
         XCTAssertEqual(loadOperators.callCount, 0)
     }
     
+    func test_load_shouldCallLoadOperatorsWithCategory() {
+        
+        let category = makeCategory()
+        let (sut, _, loadOperators) = makeSUT()
+        
+        sut.load(category: category) { _ in }
+        
+        XCTAssertNoDiff(loadOperators.payloads, [category])
+    }
+    
     func test_load_shouldDeliverNil_onLoadOperatorsFailure() {
         
         let (sut, _, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: nil) {
-            
+        expect(
+            sut,
+            toDeliver: nil
+        ) {
             loadOperators.complete(with: .failure(anyError()))
         }
     }
@@ -95,7 +130,7 @@ final class LoadNanoServicesTests: XCTestCase {
         (sut, _, loadOperators) = makeSUT()
         var callCount = 0
         
-        sut?.load { _ in callCount += 1 }
+        sut?.load(category: makeCategory()) { _ in callCount += 1 }
         sut = nil
         loadOperators.complete(with: .failure(anyError()))
         
@@ -106,8 +141,10 @@ final class LoadNanoServicesTests: XCTestCase {
         
         let (sut, _, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: nil) {
-            
+        expect(
+            sut,
+            toDeliver: nil
+        ) {
             loadOperators.complete(with: .success([]))
         }
     }
@@ -117,8 +154,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let operators = [makeOperator()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: [], operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: [], operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .failure(anyError()))
         }
@@ -132,7 +171,7 @@ final class LoadNanoServicesTests: XCTestCase {
         (sut, loadLatest, loadOperators) = makeSUT()
         var callCount = 0
         
-        sut?.load { _ in callCount += 1 }
+        sut?.load(category: makeCategory()) { _ in callCount += 1 }
         loadOperators.complete(with: .success([makeOperator()]))
         sut = nil
         loadLatest.complete(with: .success([]))
@@ -140,13 +179,33 @@ final class LoadNanoServicesTests: XCTestCase {
         XCTAssertEqual(callCount, 0)
     }
     
+    func test_load_shouldCallLoadLatestWithCategory() {
+        
+        let category = makeCategory()
+        let operators = [makeOperator(), makeOperator()]
+        let (sut, loadLatest, loadOperators) = makeSUT()
+        
+        expect(
+            sut,
+            with: category,
+            toDeliver: .init(latest: [], operators: operators)
+        ) {
+            loadOperators.complete(with: .success(operators))
+            loadLatest.complete(with: .failure(anyError()))
+            
+            XCTAssertNoDiff(loadLatest.payloads, [category])
+        }
+    }
+    
     func test_load_shouldDeliverSuccessWithEmptyLatest_onTwoLoadOperatorsLoadLatestFailure() {
         
         let operators = [makeOperator(), makeOperator()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: [], operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: [], operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .failure(anyError()))
         }
@@ -157,8 +216,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let operators = [makeOperator()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: [], operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: [], operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .success([]))
         }
@@ -169,8 +230,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let operators = [makeOperator(), makeOperator()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: [], operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: [], operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .success([]))
         }
@@ -182,8 +245,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let latest = [makeLatest()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: latest, operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: latest, operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .success(latest))
         }
@@ -195,8 +260,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let latest = [makeLatest()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: latest, operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: latest, operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .success(latest))
         }
@@ -208,8 +275,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let latest = [makeLatest(), makeLatest()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: latest, operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: latest, operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .success(latest))
         }
@@ -221,8 +290,10 @@ final class LoadNanoServicesTests: XCTestCase {
         let latest = [makeLatest(), makeLatest()]
         let (sut, loadLatest, loadOperators) = makeSUT()
         
-        expect(sut, toDeliver: .init(latest: latest, operators: operators)) {
-            
+        expect(
+            sut,
+            toDeliver: .init(latest: latest, operators: operators)
+        ) {
             loadOperators.complete(with: .success(operators))
             loadLatest.complete(with: .success(latest))
         }
@@ -230,9 +301,9 @@ final class LoadNanoServicesTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = LoadNanoServices<Latest, Operator>
-    private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>>
-    private typealias LoadOperatorsSpy = Spy<Void, Result<[Operator], Error>>
+    private typealias SUT = LoadNanoServices<Category, Latest, Operator>
+    private typealias LoadLatestSpy = Spy<Category, Result<[Latest], Error>>
+    private typealias LoadOperatorsSpy = Spy<Category, Result<[Operator], Error>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -254,6 +325,18 @@ final class LoadNanoServicesTests: XCTestCase {
         trackForMemoryLeaks(loadOperators, file: file, line: line)
         
         return (sut, loadLatest, loadOperators)
+    }
+    
+    private struct Category: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeCategory(
+        _ value: String = anyMessage()
+    ) -> Category {
+        
+        return .init(value: value)
     }
     
     private struct Latest: Equatable {
@@ -282,6 +365,7 @@ final class LoadNanoServicesTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
+        with category: Category? = nil,
         toDeliver expected: SUT.Success?,
         on action: () -> Void,
         timeout: TimeInterval = 1.0,
@@ -290,7 +374,7 @@ final class LoadNanoServicesTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for load completion")
         
-        sut.load {
+        sut.load(category: category ?? makeCategory()) {
             
             XCTAssertNoDiff(
                 $0,
