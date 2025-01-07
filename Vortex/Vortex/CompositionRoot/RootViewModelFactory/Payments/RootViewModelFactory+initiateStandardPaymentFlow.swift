@@ -12,20 +12,24 @@ extension RootViewModelFactory {
         ofType type: ServiceCategory.CategoryType,
         completion: @escaping (StandardPaymentResult) -> Void
     ) {
-        loadServiceCategory(ofType: type) {
+        loadServiceCategory(ofType: type) { [weak self] in
+            
+            guard let self else { return }
             
             guard let category = $0
             else {
 
-                self.logger.log(level: .error, category: .cache, message: "Missing category \(type).", file: #file, line: #line)
+                logger.log(level: .error, category: .cache, message: "Missing category \(type).", file: #file, line: #line)
                 return completion(.failure(.missingCategoryOfType(type)))
             }
             
-            self.makePaymentProviderPicker(for: category) {
+            makePaymentProviderPicker(for: category) { [weak self] in
+                
+                guard let self else { return }
                 
                 switch $0 {
                 case .failure:
-                    let binder = self.makeServiceCategoryFailure(
+                    let binder = makeServiceCategoryFailure(
                         category: category
                     )
                     completion(.failure(.makeStandardPaymentFailure(binder)))
