@@ -324,6 +324,7 @@
 		2A0156EA2D2D31A100F23308 /* RootViewModelFactory+makePaymentProviderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0156E92D2D31A100F23308 /* RootViewModelFactory+makePaymentProviderPicker.swift */; };
 		2A0156F22D2D733100F23308 /* RootViewModelFactory+handleSelectedServiceCategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0156F12D2D733100F23308 /* RootViewModelFactory+handleSelectedServiceCategoryTests.swift */; };
 		2A0156F42D2E4B2E00F23308 /* RootViewModelFactory+initiateStandardPaymentFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0156F32D2E4B2E00F23308 /* RootViewModelFactory+initiateStandardPaymentFlowTests.swift */; };
+		2A0156F62D2E4F6000F23308 /* RootViewModelFactoryServiceCategoryTests+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0156F52D2E4F6000F23308 /* RootViewModelFactoryServiceCategoryTests+ext.swift */; };
 		2A0170432BDAAA6E0064FBA7 /* UtilityPrepaymentPickerMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0170422BDAAA6E0064FBA7 /* UtilityPrepaymentPickerMockView.swift */; };
 		2A0170452BDAAB190064FBA7 /* UtilityPrepaymentPickerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0170442BDAAB190064FBA7 /* UtilityPrepaymentPickerConfig.swift */; };
 		2A0170492BDAAC3C0064FBA7 /* UtilityServicePrepaymentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0170482BDAAC3C0064FBA7 /* UtilityServicePrepaymentEvent.swift */; };
@@ -3914,6 +3915,7 @@
 		2A0156E92D2D31A100F23308 /* RootViewModelFactory+makePaymentProviderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentProviderPicker.swift"; sourceTree = "<group>"; };
 		2A0156F12D2D733100F23308 /* RootViewModelFactory+handleSelectedServiceCategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+handleSelectedServiceCategoryTests.swift"; sourceTree = "<group>"; };
 		2A0156F32D2E4B2E00F23308 /* RootViewModelFactory+initiateStandardPaymentFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+initiateStandardPaymentFlowTests.swift"; sourceTree = "<group>"; };
+		2A0156F52D2E4F6000F23308 /* RootViewModelFactoryServiceCategoryTests+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactoryServiceCategoryTests+ext.swift"; sourceTree = "<group>"; };
 		2A0170422BDAAA6E0064FBA7 /* UtilityPrepaymentPickerMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentPickerMockView.swift; sourceTree = "<group>"; };
 		2A0170442BDAAB190064FBA7 /* UtilityPrepaymentPickerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentPickerConfig.swift; sourceTree = "<group>"; };
 		2A0170482BDAAC3C0064FBA7 /* UtilityServicePrepaymentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePrepaymentEvent.swift; sourceTree = "<group>"; };
@@ -9984,6 +9986,7 @@
 				2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */,
 				2A0156F32D2E4B2E00F23308 /* RootViewModelFactory+initiateStandardPaymentFlowTests.swift */,
 				2A0156F12D2D733100F23308 /* RootViewModelFactory+handleSelectedServiceCategoryTests.swift */,
+				2A0156F52D2E4F6000F23308 /* RootViewModelFactoryServiceCategoryTests+ext.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -22806,6 +22809,7 @@
 				A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */,
 				2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */,
 				2A89A11E2CAA804600276FEF /* SelectedCategoryGetNavigationComposerTests.swift in Sources */,
+				2A0156F62D2E4F6000F23308 /* RootViewModelFactoryServiceCategoryTests+ext.swift in Sources */,
 				2AF5299E2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift in Sources */,
 				2AF8B7DE2D056D0600776ACF /* LocalAgentMock.swift in Sources */,
 				2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */,

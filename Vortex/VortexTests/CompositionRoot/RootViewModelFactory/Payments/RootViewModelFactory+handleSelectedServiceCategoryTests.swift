@@ -8,7 +8,7 @@
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_handleSelectedServiceCategoryTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_handleSelectedServiceCategoryTests: RootViewModelFactoryServiceCategoryTests {
     
     func test_shouldDeliverServiceCategoryFailure() {
         
@@ -31,16 +31,6 @@ final class RootViewModelFactory_handleSelectedServiceCategoryTests: RootViewMod
     
     // MARK: - Helpers
     
-    private func makeModelWithOperator(
-        for category: ServiceCategory
-    ) -> Model {
-        
-        let (_, codable) = makeOperatorWithModel(type: category.type)
-        let localAgent = LocalAgentMock(values: [[codable]])
-        
-        return .mockWithEmptyExcept(localAgent: localAgent)
-    }
-    
     private enum EquatableDestination: Equatable {
         
         case paymentProviderPicker
@@ -55,25 +45,6 @@ final class RootViewModelFactory_handleSelectedServiceCategoryTests: RootViewMod
         case .failure: return .serviceCategoryFailure
         case .success: return .paymentProviderPicker
         }
-    }
-    
-    // from RootViewModelFactory+loadCachedOperatorsTests.swift:118
-    private func makeOperatorWithModel(
-        type: ServiceCategory.CategoryType = "repaymentLoansAndAccounts",
-        sortedOrder: Int = .random(in: 1...100)
-    ) -> (UtilityPaymentProvider, CodableServicePaymentOperator) {
-        
-        let `operator` = makePaymentServiceOperator(type: type)
-        
-        return (`operator`, codable(`operator`, sortedOrder: sortedOrder))
-    }
-    
-    private func codable(
-        _ `operator`: UtilityPaymentProvider,
-        sortedOrder: Int = .random(in: 1...100)
-    ) -> CodableServicePaymentOperator {
-        
-        return .init(id: `operator`.id, inn: `operator`.inn, md5Hash: `operator`.icon, name: `operator`.name, type: `operator`.type, sortedOrder: sortedOrder)
     }
     
     private func expect(
