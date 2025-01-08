@@ -58,10 +58,16 @@ private extension PaymentProviderPickerFlowView {
     
     var backendFailure: BackendFailure? {
         
-        guard case let .alert(backendFailure) = state
-        else { return nil }
-        
-        return backendFailure
+        switch state {
+        case let .alert(backendFailure):
+            return backendFailure
+            
+        case let .destination(.payment(.failure(.serviceFailure(serviceFailure)))):
+            return .init(serviceFailure, connectivityFailureMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
+            
+        default:
+            return nil
+        }
     }
     
     func alert(
@@ -76,7 +82,13 @@ private extension PaymentProviderPickerFlowView {
         guard case let .destination(destination) = state
         else { return nil }
         
-        return destination
+        switch destination {
+        case .payment(.failure(.serviceFailure)):
+            return nil
+            
+        default:
+            return destination
+        }
     }
 }
 
@@ -153,5 +165,24 @@ extension PaymentProviderPickerDomain.Destination: Identifiable {
         case startPayment(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
         case servicesFailure(ObjectIdentifier)
+    }
+}
+
+// MARK: - Adapters
+
+private extension BackendFailure {
+    
+    init(
+        _ failure: ServiceFailureAlert.ServiceFailure,
+        connectivityFailureMessage: String
+    ) {
+        
+        switch failure {
+        case .connectivityError:
+            self.init(message: connectivityFailureMessage, source: .connectivity)
+            
+        case let .serverError(message):
+            self.init(message: message, source: .server)
+        }
     }
 }

@@ -60,7 +60,7 @@ private extension PaymentProviderPickerDestinationView {
                 )
                 
             case let .serviceFailure(serviceFailure):
-                Text("TBD: destination view \(String(describing: serviceFailure))")
+                EmptyView()
             }
             
         case let .success(success):
