@@ -105,7 +105,7 @@ extension UtilityPaymentLastPayment {
     }
 }
 
-private extension Latest {
+extension Latest {
     
     var additionalItems: [UtilityPaymentLastPayment.AdditionalItem] {
         

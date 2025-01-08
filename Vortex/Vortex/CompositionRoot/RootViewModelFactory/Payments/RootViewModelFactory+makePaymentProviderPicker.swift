@@ -82,7 +82,7 @@ extension RootViewModelFactory {
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
         initiateAnywayPayment(
-            .latest(latest.latest)
+            .latest(latest.latestOutlinePayload)
         ) { [weak self] in
             
             guard let self else { return }
@@ -249,6 +249,20 @@ extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+private extension Latest {
+    
+    var latestOutlinePayload: LatestOutlinePayload {
+        
+        let pairs = additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
+        
+        return .init(md5Hash: md5Hash, name: name, fields: fields, puref: puref)
+    }
+}
 
 extension BackendFailure {
     
