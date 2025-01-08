@@ -36,9 +36,9 @@ extension PaymentProviderPickerDomain {
     typealias DetailPayment = Node<PaymentsViewModel>
     typealias Payment = ProcessSelectionResult
     typealias Provider = UtilityPaymentProvider
-    typealias Service = Void
+//    typealias Service = Void
     typealias ServicePicker = PaymentServicePicker.Binder
-    typealias ServicesFailure = Void
+    typealias ServicesFailure = ServiceCategoryFailureDomain.Binder
     
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
     typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>

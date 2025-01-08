@@ -28,8 +28,8 @@ struct PaymentProviderPickerDestinationView: View {
         case let .servicePicker(servicePicker):
             Text("TBD: destination view \(String(describing: servicePicker))")
             
-        case let .servicesFailure(servicesFailure):
-            Text("TBD: destination view \(String(describing: servicesFailure))")
+        case let .servicesFailure(binder):
+            components.serviceCategoryFailureView(binder: binder)
         }
     }
 }
