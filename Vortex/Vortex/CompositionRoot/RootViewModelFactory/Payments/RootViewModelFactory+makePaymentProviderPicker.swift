@@ -40,7 +40,7 @@ extension RootViewModelFactory {
         
         switch navigation {
         case .alert:       return .milliseconds(100)
-        case .destination: return settings.delay
+        case .destination: return .milliseconds(100)
         case .outside:     return .milliseconds(100)
         }
     }

@@ -32,7 +32,7 @@ enum RootViewSelect: Equatable {
 
 enum RootViewTab: Equatable {
     
-    case main, payments
+    case chat, main, payments
 }
 
 enum RootViewNavigation {

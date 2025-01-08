@@ -19,40 +19,49 @@ where ContentView: View,
     
     var body: some View {
         
-        contentView()
-            .alert(item: backendFailure, content: alert)
-            .navigationDestination(
-                destination: destination,
-                dismiss: { event(.dismiss) },
-                content: destinationView
-            )
+        ZStack {
+            
+            contentView()
+            
+            fixedFrameTinyClear()
+                .alert(item: backendFailure, content: alert)
+            //  .id(backendFailure?.id)
+            
+            fixedFrameTinyClear()
+                .navigationDestination(
+                    destination: destination,
+                    // dismiss: { event(.dismiss) },
+                    content: destinationView
+                )
+                .id(destination?.id) // hack to prevent double view redraw, downside: not smooth animation
+        }
     }
 }
 
 extension PaymentProviderPickerFlowView {
     
     typealias Domain = PaymentProviderPickerDomain.FlowDomain
-    typealias State = Domain.State
+    typealias State = PaymentProviderPickerDomain.Navigation?
     typealias Event = Domain.Event
     typealias Destination = PaymentProviderPickerDomain.Destination
 }
 
 private extension PaymentProviderPickerFlowView {
     
+    func fixedFrameTinyClear() -> some View {
+        
+        Color.clear.frame(width: 1, height: 1)
+    }
+}
+
+private extension PaymentProviderPickerFlowView {
+    
     var backendFailure: BackendFailure? {
         
-        guard case let .alert(backendFailure) = state.navigation
+        guard case let .alert(backendFailure) = state
         else { return nil }
         
         return backendFailure
-    }
-    
-    var destination: Destination? {
-        
-        guard case let .destination(destination) = state.navigation
-        else { return nil }
-        
-        return destination
     }
     
     func alert(
@@ -60,6 +69,14 @@ private extension PaymentProviderPickerFlowView {
     ) -> Alert {
         
         return backendFailure.alert { event(.select(.outside(.payments))) }
+    }
+    
+    var destination: Destination? {
+        
+        guard case let .destination(destination) = state
+        else { return nil }
+        
+        return destination
     }
 }
 
@@ -74,7 +91,11 @@ extension BackendFailure {
         action: @escaping () -> Void
     ) -> SwiftUI.Alert {
         
-        return .init(title: Text(title), message: Text(message), dismissButton: .default(Text("OK"), action: action))
+        return .init(
+            title: Text(title),
+            message: Text(message),
+            dismissButton: .default(Text("OK"), action: action)
+        )
     }
     
     private var title: String {
