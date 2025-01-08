@@ -15,7 +15,25 @@ extension RootViewModelFactoryServiceCategoryTests {
     ) -> Model {
         
         let (_, codable) = makeOperatorWithModel(type: category.type)
-        let localAgent = LocalAgentMock(values: [[codable]])
+        
+        return makeModelWithCache(cache: [[codable]])
+    }
+    
+    func makeCache(
+        category: ServiceCategory,
+        operatorType type: ServiceCategory.CategoryType
+    ) -> [any Decodable] {
+        
+        let (_, codableOperator) = makeOperatorWithModel(type: type)
+        
+        return [[category.codable], [codableOperator]]
+    }
+    
+    func makeModelWithCache(
+        cache: [any Decodable]
+    ) -> Model {
+        
+        let localAgent = LocalAgentMock(values: cache)
         
         return .mockWithEmptyExcept(localAgent: localAgent)
     }

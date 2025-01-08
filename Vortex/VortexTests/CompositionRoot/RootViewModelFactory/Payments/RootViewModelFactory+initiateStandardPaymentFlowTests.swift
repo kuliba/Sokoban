@@ -8,7 +8,7 @@
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_initiateStandardPaymentFlowTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_initiateStandardPaymentFlowTests: RootViewModelFactoryServiceCategoryTests {
     
     func test_shouldCallLogger_onMissingCategory() {
         
@@ -26,6 +26,29 @@ final class RootViewModelFactory_initiateStandardPaymentFlowTests: RootViewModel
         let (sut, _,_) = makeSUT()
         
         expect(sut: sut, with: type, toDeliver: .missingCategoryOfType(type))
+    }
+    
+    func test_shouldDeliverMakeStandardPaymentFailure_onMissingOperatorForCategory() {
+        
+        let category = makeServiceCategory(type: anyMessage())
+        let cache = makeCache(category: category, operatorType: anyMessage())
+        let model = makeModelWithCache(cache: cache)
+        let (sut, _,_) = makeSUT(model: model)
+        
+        expect(sut: sut, with: category.type, toDeliver: .makeStandardPaymentFailure)
+    }
+    
+    func test_shouldDeliverSuccess_onCachedOperatorForCategory() {
+        
+        let category = makeServiceCategory(type: .security)
+        let cache = makeCache(category: category, operatorType: category.type)
+        let model = makeModelWithCache(cache: cache)
+        let (sut, httpClient, _) = makeSUT(model: model)
+        
+        expect(sut: sut, with: category.type, toDeliver: .success) {
+            
+            httpClient.complete(with: anyError())
+        }
     }
     
     // MARK: - Helpers
