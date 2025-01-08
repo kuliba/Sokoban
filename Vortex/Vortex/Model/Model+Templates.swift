@@ -231,33 +231,34 @@ extension Model {
     static func reduce(images: [String: ImageData],
                        with data: [PaymentTemplateData])
     async -> [String: ImageData] {
-            
+        
         let prefixKey = "Template"
         let dataIds = data.map(\.id)
         let cacheIds = Set(images.keys
-                            .filter { $0.hasPrefix(prefixKey) }
-                            .compactMap { Int($0.dropFirst(prefixKey.count)) })
-            
+            .filter { $0.hasPrefix(prefixKey) }
+            .compactMap { Int($0.dropFirst(prefixKey.count)) })
+        
         let fullDiff = cacheIds.symmetricDifference(dataIds)
         let addDiff = fullDiff.intersection(dataIds)
         let delDiff = fullDiff.intersection(cacheIds)
-            
+        
         var localImages = images
-            
+        
         for id in delDiff { //delete images
-                
+            
             localImages.removeValue(forKey: "\(prefixKey)\(id)")
         }
-            
+        
         for id in addDiff { //add images
-                
+            
             if let template = data.first(where: { $0.id == id }),
-                let imgData = ImageData(with: template.svgImage) {
-                    
+               let svgImage = template.svgImage,
+               let imgData = ImageData(with: svgImage) {
+                
                 localImages["\(prefixKey)\(id)"] = imgData
             }
         }
-             
+        
         return localImages
     }
     
