@@ -134,13 +134,4 @@ private extension PaymentProviderListView {
     }
 }
 
-extension Latest: Identifiable {
-    
-    public var id: Int {
-        
-        switch origin {
-        case let .service(service):     return service.date
-        case let .withPhone(withPhone): return withPhone.date
-        }
-    }
-}
+extension Latest: Identifiable {}
