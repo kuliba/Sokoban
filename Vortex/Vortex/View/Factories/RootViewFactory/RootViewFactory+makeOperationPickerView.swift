@@ -105,7 +105,7 @@ extension OperationPickerView {
                 LastPaymentLabel(
                     amount: latest.amount.map { "\($0) ₽" } ?? "",
                     title: latest.name,
-                    config: .iVortex,
+                    config: .primary,
                     iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
                 )
             },
