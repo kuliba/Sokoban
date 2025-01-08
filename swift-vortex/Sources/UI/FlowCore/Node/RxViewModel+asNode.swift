@@ -1,16 +1,16 @@
 //
-//  Binder+asNode.swift
+//  RxViewModel+asNode.swift
 //
 //
-//  Created by Igor Malyarov on 02.01.2025.
+//  Created by Igor Malyarov on 01.01.2025.
 //
 
-import FlowCore
+import Combine
 import RxViewModel
 
-extension Binder {
+public extension RxViewModel {
     
-    /// Creates a `Node` holding this binder, with a subscription to its flow state using a "notify" pattern.
+    /// Creates a `Node` holding this flow, with a subscription to its state using a "notify" pattern.
     ///
     /// This method wires the child flow's state updates into a `FlowEvent<ParentSelect, Never>` stream,
     /// allowing a parent flow or other observers to receive:
@@ -23,19 +23,21 @@ extension Binder {
     ///                Return `nil` if no special event should be emitted for a given navigation state.
     ///   - notify: A callback that forwards the resulting `FlowEvent<ParentSelect, Never>` to the parent.
     ///
-    /// - Returns: A `Node` containing this binder instance and a subscription to its flow state updates.
+    /// - Returns: A `Node` containing this flow instance and a subscription to its state updates.
     ///            The subscription automatically stays alive for the lifetime of the node.
     func asNode<Select, Navigation, ParentSelect>(
         transform: @escaping (Navigation) -> NavigationOutcome<ParentSelect>?,
         notify: @escaping (FlowEvent<ParentSelect, Never>) -> Void
-    ) -> Node<Binder>
-    where Flow == RxViewModel<FlowState<Navigation>, FlowEvent<Select, Navigation>, FlowEffect<Select>> {
-        
-        let cancellable = flow.$state
-            .dropFirst()
-            .project(transform)
-            .sink(receiveValue: notify)
-        
-        return Node(model: self, cancellable: cancellable)
-    }
+    ) -> Node<RxViewModel>
+    where State == FlowState<Navigation>,
+          Event == FlowEvent<Select, Navigation>,
+          Effect == FlowEffect<Select> {
+              
+              let cancellable = $state
+                  .dropFirst()
+                  .project(transform)
+                  .sink(receiveValue: notify)
+              
+              return Node(model: self, cancellable: cancellable)
+          }
 }

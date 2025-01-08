@@ -1,64 +1,13 @@
 //
-//  RxViewModel+asNode.swift
+//  Publisher+project.swift
+//  
 //
-//
-//  Created by Igor Malyarov on 01.01.2025.
+//  Created by Igor Malyarov on 08.01.2025.
 //
 
 import Combine
-import FlowCore
-import RxViewModel
 
-extension RxViewModel {
-    
-    /// Creates a `Node` holding this flow, with a subscription to its state using a "notify" pattern.
-    ///
-    /// This method wires the child flow's state updates into a `FlowEvent<ParentSelect, Never>` stream,
-    /// allowing a parent flow or other observers to receive:
-    /// - Loading signals (`.isLoading(true)` / `.isLoading(false)`)
-    /// - Navigation signals translated into `.select(...)`
-    /// - Dismissal signals (`.dismiss`) when the child flow finishes or requests closure
-    ///
-    /// - Parameters:
-    ///   - transform: A closure mapping the child's `Navigation` to a `NavigationOutcome<ParentSelect>` (either `.dismiss` or `.select(...)`).
-    ///                Return `nil` if no special event should be emitted for a given navigation state.
-    ///   - notify: A callback that forwards the resulting `FlowEvent<ParentSelect, Never>` to the parent.
-    ///
-    /// - Returns: A `Node` containing this flow instance and a subscription to its state updates.
-    ///            The subscription automatically stays alive for the lifetime of the node.
-    func asNode<Select, Navigation, ParentSelect>(
-        transform: @escaping (Navigation) -> NavigationOutcome<ParentSelect>?,
-        notify: @escaping (FlowEvent<ParentSelect, Never>) -> Void
-    ) -> Node<RxViewModel>
-    where State == FlowState<Navigation>,
-          Event == FlowEvent<Select, Navigation>,
-          Effect == FlowEffect<Select> {
-              
-              let cancellable = $state
-                  .dropFirst()
-                  .project(transform)
-                  .sink(receiveValue: notify)
-              
-              return Node(model: self, cancellable: cancellable)
-          }
-}
-
-// MARK: - NavigationOutcome
-
-/// Represents an outcome of processing a child's navigation state.
-/// - `dismiss`: Indicates the child flow should be dismissed.
-/// - `select(Select)`: Indicates the child has triggered a selection, passing any relevant data.
-enum NavigationOutcome<Select> {
-    
-    case dismiss
-    case select(Select)
-}
-
-extension NavigationOutcome: Equatable where Select: Equatable {}
-
-// MARK: - Helpers
-
-extension Publisher where Failure == Never {
+public extension Publisher where Failure == Never {
     
     /// Projects each `FlowState<Projection>` emitted by the publisher into a `FlowEvent<Select, Never>`,
     /// based on a custom `transform` logic.
@@ -76,7 +25,9 @@ extension Publisher where Failure == Never {
     }
 }
 
-extension FlowState {
+// MARK: - Helpers
+
+private extension FlowState {
     
     /// Transforms a `FlowState<Navigation>` into a `FlowEvent<Select, Never>` by:
     /// 1. Sending `.isLoading(true)` if `isLoading == true`.
