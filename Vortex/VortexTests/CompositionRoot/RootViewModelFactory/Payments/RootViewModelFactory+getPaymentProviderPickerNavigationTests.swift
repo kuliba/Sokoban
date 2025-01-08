@@ -42,7 +42,7 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
     
     // MARK: - latest
     
-    func test_latest_shouldSetBackendFailureDestinationOnMissingProduct() {
+    func test_latest_shouldSetAlert_onMissingProduct() {
         
         let latest = makeServiceLatest()
         let (sut, _,_) = makeSUT()
@@ -50,14 +50,11 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
         expect(
             sut,
             select: .latest(latest),
-            toDeliver: .destination(.backendFailure(.init(
-                message: "connectivity failure",
-                source: .connectivity
-            )))
+            toDeliver: .alert(.paymentConnectivity)
         )
     }
     
-    func test_latest_shouldSetBackendFailureDestinationOnHTTPClientFailure() {
+    func test_latest_shouldSetAlert_onHTTPClientFailure() {
         
         let latest = makeServiceLatest()
         let model: Model = .mockWithEmptyExcept()
@@ -67,13 +64,8 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
         expect(
             sut,
             select: .latest(latest),
-            toDeliver: .destination(.backendFailure(.init(
-                message: "connectivity failure",
-                source: .connectivity
-            ))),
-            on: {
-                httpClient.complete(with: anyError())
-            }
+            toDeliver: .alert(.paymentConnectivity),
+            on: { httpClient.complete(with: anyError()) }
         )
     }
     
@@ -226,7 +218,6 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
         
         enum EquatableDestination: Equatable {
             
-            case backendFailure(BackendFailure)
             case detailPayment
             case payment(PaymentResult)
             case servicePicker
@@ -268,9 +259,6 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
     ) -> EquatableNavigation.EquatableDestination {
         
         switch destination {
-        case let .backendFailure(backendFailure):
-            return .backendFailure(backendFailure)
-            
         case .detailPayment:
             return .detailPayment
             

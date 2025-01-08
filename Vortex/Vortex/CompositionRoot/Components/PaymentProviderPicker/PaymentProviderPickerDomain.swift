@@ -70,7 +70,6 @@ extension PaymentProviderPickerDomain {
     
     enum Destination {
         
-        case backendFailure(BackendFailure)
         case detailPayment(DetailPayment)
         case payment(Payment)
         case servicePicker(ServicePicker)

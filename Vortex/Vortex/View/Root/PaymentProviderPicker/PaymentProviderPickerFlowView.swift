@@ -113,7 +113,6 @@ extension PaymentProviderPickerDomain.Destination: Identifiable {
         
         switch self {
             
-        case .backendFailure:  return .backendFailure
         case .detailPayment:   return .detailPayment
         case .payment:         return .payment
         case .servicePicker:   return .servicePicker
@@ -123,7 +122,6 @@ extension PaymentProviderPickerDomain.Destination: Identifiable {
     
     enum ID: Hashable {
         
-        case backendFailure
         case detailPayment
         case payment
         case servicePicker

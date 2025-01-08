@@ -18,10 +18,7 @@ struct PaymentProviderPickerDestinationView: View {
     
     var body: some View {
         
-        switch destination {
-        case let .backendFailure(backendFailure):
-            Text("TBD: destination view \(String(describing: backendFailure))")
-            
+        switch destination {            
         case let .detailPayment(node):
             components.makePaymentsView(node.model)
             

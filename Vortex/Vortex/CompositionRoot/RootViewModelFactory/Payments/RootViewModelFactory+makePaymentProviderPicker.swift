@@ -91,10 +91,10 @@ extension RootViewModelFactory {
             case let .failure(failure):
                 switch failure {
                 case .connectivityError:
-                    completion(.destination(.backendFailure(.connectivity("connectivity failure"))))
+                    completion(.alert(.paymentConnectivity))
                     
                 case let .serverError(message):
-                    completion(.destination(.backendFailure(.server(message))))
+                    completion(.alert(.server(message)))
                 }
                 
             case let .success(transaction):
@@ -249,6 +249,11 @@ extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+extension BackendFailure {
+    
+    static let paymentConnectivity: Self = .connectivity("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
+}
 
 private extension RemoteServices.ResponseMapper.LatestPayment {
     
