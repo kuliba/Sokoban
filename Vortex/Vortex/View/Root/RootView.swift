@@ -367,7 +367,7 @@ extension Latest: Named {
             return service.name ?? String(describing: service)
             
         case let .withPhone(withPhone):
-            return withPhone.name ?? String(describing: withPhone)
+            return withPhone.name ?? withPhone.phoneNumber
         }
     }
 }
