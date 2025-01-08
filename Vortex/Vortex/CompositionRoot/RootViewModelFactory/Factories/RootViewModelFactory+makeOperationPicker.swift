@@ -6,10 +6,10 @@
 //
 
 import Combine
-import VortexTools
 import Foundation
 import PayHub
 import PayHubUI
+import VortexTools
 
 private typealias Domain = OperationPickerDomain
 
@@ -166,11 +166,16 @@ private extension Latest {
     
     var additionalItems: [UtilityPaymentLastPayment.AdditionalItem] {
         
-        switch self {
+        switch origin {
         case let .service(service):
             return (service.additionalItems ?? []).map {
                 
-                return .init(fieldName: $0.fieldName, fieldValue: $0.fieldValue, fieldTitle: $0.fieldTitle, svgImage: $0.svgImage)
+                return .init(
+                    fieldName: $0.fieldName,
+                    fieldValue: $0.fieldValue,
+                    fieldTitle: $0.fieldTitle,
+                    svgImage: $0.svgImage
+                )
             }
             
         case .withPhone:

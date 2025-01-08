@@ -21,7 +21,7 @@ extension RootViewModelFactory {
         
         getLatestPayments(latestPaymentsCategories) {
             
-            completion($0)
+            completion($0.map { $0.map { .init(origin: $0) } })
             _ = getLatestPayments
         }
     }

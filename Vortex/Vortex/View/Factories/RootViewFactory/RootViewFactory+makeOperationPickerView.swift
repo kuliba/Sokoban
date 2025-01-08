@@ -6,6 +6,7 @@
 //
 
 import PayHubUI
+import RemoteServices
 import RxViewModel
 import SwiftUI
 import UtilityServicePrepaymentUI
@@ -170,7 +171,7 @@ private extension Latest {
     
     var label: LatestPaymentButtonLabel {
         
-        switch self {
+        switch origin {
         case let .service(service):
             return service.label
             
@@ -182,7 +183,7 @@ private extension Latest {
 
 // LatestPaymentsViewComponent.swift:204
 
-private extension Latest.Service {
+private extension RemoteServices.ResponseMapper.LatestPayment.Service {
     
     var label: LatestPaymentButtonLabel {
         
@@ -195,7 +196,7 @@ private extension Latest.Service {
     }
 }
 
-private extension Latest.WithPhone {
+private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var label: LatestPaymentButtonLabel {
         

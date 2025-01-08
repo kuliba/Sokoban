@@ -138,7 +138,7 @@ extension Latest: Identifiable {
     
     public var id: Int {
         
-        switch self {
+        switch origin {
         case let .service(service):     return service.date
         case let .withPhone(withPhone): return withPhone.date
         }

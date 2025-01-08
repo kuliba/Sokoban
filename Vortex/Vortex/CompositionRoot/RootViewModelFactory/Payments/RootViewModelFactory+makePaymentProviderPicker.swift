@@ -82,7 +82,7 @@ extension RootViewModelFactory {
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
         initiateAnywayPayment(
-            .latest(latest.latest)
+            .latest(latest.origin.latest)
         ) { [weak self] in
             
             guard let self else { return }
