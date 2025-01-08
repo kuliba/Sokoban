@@ -112,19 +112,46 @@ extension PaymentProviderPickerDomain.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .detailPayment(node):
+            return .detailPayment(.init(node.model))
             
-        case .detailPayment:   return .detailPayment
-        case .payment:         return .payment
-        case .servicePicker:   return .servicePicker
-        case .servicesFailure: return .servicesFailure
+        case let .payment(result):
+            switch result {
+            case let .failure(failure):
+                switch failure {
+                case let .operatorFailure(provider):
+                    return .operatorFailure(provider.id)
+                    
+                case let .serviceFailure(serviceFailure):
+                    return .serviceFailure(serviceFailure)
+                }
+                
+            case let .success(success):
+                switch success {
+                case let .services(binder):
+                    return .services(.init(binder))
+                    
+                case let .startPayment(node):
+                    return .startPayment(.init(node.model))
+                }
+            }
+            
+        case let .servicePicker(servicePicker):
+            return .servicePicker(.init(servicePicker))
+            
+        case let .servicesFailure(servicesFailure):
+            return .servicesFailure(.init(servicesFailure))
         }
     }
     
     enum ID: Hashable {
         
-        case detailPayment
-        case payment
-        case servicePicker
-        case servicesFailure
+        case detailPayment(ObjectIdentifier)
+        case operatorFailure(UtilityPaymentProvider.ID)
+        case serviceFailure(ServiceFailureAlert.ServiceFailure)
+        case services(ObjectIdentifier)
+        case startPayment(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
+        case servicesFailure(ObjectIdentifier)
     }
 }
