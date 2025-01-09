@@ -119,7 +119,7 @@ extension StickerViewFactory {
         let makeDetailButton = makeOperationDetailButton()
         
         let makeDocumentButton = makeDocumentButton(
-            printFormType: .sticker
+            printFormType: "sticker"
         )
         
         return make

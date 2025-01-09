@@ -51,5 +51,6 @@ extension AnywayTransactionEffectHandlerNanoServices {
         
         let status: DocumentStatus
         let detailID: OperationDetailID
+        let printForm: OperationDetailPrintFormType
     }
 }
