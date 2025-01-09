@@ -235,8 +235,8 @@ private extension TemplatesListViewModel {
                     .filter { $0.avatar.isPlaceholder }
                     .forEach { item in
                         
-                        if let img = images["Template\(item.id)"]?.image {
-                            item.avatar = .image(img)
+                        if let image = images["Template\(item.id)"]?.image {
+                            item.avatar = .image(image)
                         }
                     }
                 
