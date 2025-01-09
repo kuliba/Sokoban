@@ -163,7 +163,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             sut: sut,
             .standardPayment(.internet),
             toNotifyWith: [.select(.scanQR)],
-            on: { $0.standardPaymentFlow?.event(.select(.qr)) }
+            on: { $0.standardPaymentFlow?.event(.select(.outside(.qr))) }
         ) {
             httpClient.complete(with: anyError())
         }

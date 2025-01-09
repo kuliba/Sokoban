@@ -172,7 +172,10 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             
         default:
             if let services = MultiElementArray(services) {
-                completion(.success(.services(services, for: `operator`)))
+                completion(.success(.services(.init(
+                    services: services,
+                    operator: `operator`
+                ))))
             } else {
                 completion(.failure(.operatorFailure(`operator`)))
             }
@@ -194,8 +197,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         case let .failure(.serviceFailure(.serverError(message))):
             return .failure(.serviceFailure(.serverError(message)))
             
-        case let .success(.services(services, for: `operator`)):
-            return .success(.services(services, for: `operator`))
+        case let .success(.services(operatorServices)):
+            return .success(.services(.init(
+                services: operatorServices.services,
+                operator: operatorServices.operator
+            )))
             
         case let .success(.startPayment(response)):
             guard let transaction = composer.makeTransaction(from: response, with: payload)

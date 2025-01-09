@@ -62,7 +62,8 @@ extension UtilityPaymentNanoServices {
     
     // MARK: - StartAnywayPayment
     
-    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<LastPayment, Operator, Service, StartPaymentResponse>
+    typealias OperatorServices = Vortex.OperatorServices<Operator, Service>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<LastPayment, Operator, Service, OperatorServices, StartPaymentResponse>
     typealias StartPaymentResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
     
     enum StartAnywayPaymentPayload: Equatable {

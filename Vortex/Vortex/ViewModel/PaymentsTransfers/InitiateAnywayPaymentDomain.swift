@@ -7,7 +7,7 @@
 
 import VortexTools
 
-enum InitiateAnywayPaymentDomain<Latest, Operator, Service, StartPayment> {
+enum InitiateAnywayPaymentDomain<Latest, Operator, Service, OperatorServices, StartPayment> {
     
     enum Select {
         
@@ -21,7 +21,7 @@ enum InitiateAnywayPaymentDomain<Latest, Operator, Service, StartPayment> {
     
     enum Success {
         
-        case services(MultiElementArray<Service>, for: Operator)
+        case services(OperatorServices)
         case startPayment(StartPayment)
     }
     
@@ -33,5 +33,14 @@ enum InitiateAnywayPaymentDomain<Latest, Operator, Service, StartPayment> {
 }
 
 extension InitiateAnywayPaymentDomain.Select: Equatable where Latest: Equatable, Operator: Equatable, Service: Equatable {}
-extension InitiateAnywayPaymentDomain.Success: Equatable where Operator: Equatable, Service: Equatable, StartPayment: Equatable {}
+extension InitiateAnywayPaymentDomain.Success: Equatable where Operator: Equatable, Service: Equatable, OperatorServices: Equatable, StartPayment: Equatable {}
 extension InitiateAnywayPaymentDomain.Failure: Equatable where Operator: Equatable {}
+
+
+struct OperatorServices<Operator, Service> {
+    
+    let services: MultiElementArray<Service>
+    let `operator`: Operator
+}
+
+extension OperatorServices: Equatable where Operator: Equatable, Service: Equatable {}

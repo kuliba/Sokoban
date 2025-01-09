@@ -34,7 +34,7 @@ struct PaymentProviderPickerView: View {
             dismiss: { binder.flow.event(.dismiss) },
             rightItem: .barcodeScanner(action: {
                 
-                binder.flow.event(.select(.qr))
+                binder.flow.event(.select(.outside(.qr)))
             })
         )
     }
@@ -68,7 +68,7 @@ private extension PaymentProviderPickerView {
         
     @ViewBuilder
     func destinationView(
-        _ destination: PaymentProviderPickerDomain.Navigation
+        _ destination: PaymentProviderPickerDomain.Destination
     ) -> some View {
         
         PaymentProviderPickerDestinationView(

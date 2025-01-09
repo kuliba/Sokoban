@@ -12,7 +12,7 @@ struct PaymentProviderPickerDestinationView: View {
     
     let dismiss: () -> Void
     let detailPayment: () -> Void
-    let destination: PaymentProviderPickerDomain.Navigation
+    let destination: PaymentProviderPickerDomain.Destination
     let components: ViewComponents
     let makeIconView: MakeIconView
     
@@ -22,8 +22,8 @@ struct PaymentProviderPickerDestinationView: View {
         case let .backendFailure(backendFailure):
             Text("TBD: destination view \(String(describing: backendFailure))")
             
-        case let .detailPayment(wrapper):
-            components.makePaymentsView(wrapper.paymentsViewModel)
+        case let .detailPayment(node):
+            components.makePaymentsView(node.model)
             
         case let .payment(payment):
             paymentView(payment)
@@ -68,23 +68,50 @@ private extension PaymentProviderPickerDestinationView {
             
         case let .success(success):
             switch success {
-            case let .services(milti, for: utilityPaymentOperator):
-                // components.makeAnywayServicePickerFlowView(<#T##AnywayServicePickerFlowModel#>)
-                Text("TBD: destination view \(String(describing: milti))")
+            case let .services(binder):
+                let navbar = binder.content.navBar
+                
+                ProviderServicePickerView(
+                    binder: binder, 
+                    makeAnywayFlowView: { anywayFlowModel in
+                        
+                        makeAnywayFlowView(
+                            anywayFlowModel: anywayFlowModel,
+                            dismiss: { binder.flow.event(.dismiss) }
+                        )
+                    },
+                    makeIconView: makeIconView
+                )
+                .navigationBarWithAsyncIcon(
+                    title: navbar.title,
+                    subtitle: navbar.subtitle,
+                    dismiss: dismiss,
+                    icon: iconView(navbar.icon),
+                    style: .normal
+                )
                 
             case let .startPayment(node):
-                let payload = node.model.state.content.state.transaction.context.outline.payload
-                
-                components.makeAnywayFlowView(node.model)
-                    .navigationBarWithAsyncIcon(
-                        title: payload.title,
-                        subtitle: payload.subtitle,
-                        dismiss: dismiss,
-                        icon: iconView(payload.icon),
-                        style: .normal
-                    )
+                makeAnywayFlowView(anywayFlowModel: node.model, dismiss: dismiss)
             }
         }
+    }
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        anywayFlowModel: AnywayFlowModel,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        let payload = anywayFlowModel.state.content.state.transaction.context.outline.payload
+        
+        components.makeAnywayFlowView(anywayFlowModel)
+            .navigationBarWithAsyncIcon(
+                title: payload.title,
+                subtitle: payload.subtitle,
+                dismiss: dismiss,
+                icon: iconView(payload.icon),
+                style: .normal
+            )
     }
     
     func iconView(
