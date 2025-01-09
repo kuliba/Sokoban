@@ -108,7 +108,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             nanoServices.startAnywayPayment(
                 .lastPayment(lastPayment)
             ) {
-                completion(self.map($0, with: .lastPayment(lastPayment)))
+                completion(self.map($0, with: .lastPayment(lastPayment.latestOutlinePayload)))
             }
             
         case let .operator(`operator`):
@@ -214,7 +214,21 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     }
 }
 
-// MARK: - Helpers
+// MARK: - Adapters, Helpers
+
+extension RemoteServices.ResponseMapper.LatestServicePayment {
+    
+    var latestOutlinePayload: LatestOutlinePayload {
+        
+        let pairs = additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
+        
+        return .init(md5Hash: md5Hash, name: name, fields: fields, puref: puref)
+    }
+}
 
 private extension AnywayPaymentContext {
     

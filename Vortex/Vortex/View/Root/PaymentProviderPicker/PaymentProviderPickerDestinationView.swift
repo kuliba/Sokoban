@@ -18,10 +18,7 @@ struct PaymentProviderPickerDestinationView: View {
     
     var body: some View {
         
-        switch destination {
-        case let .backendFailure(backendFailure):
-            Text("TBD: destination view \(String(describing: backendFailure))")
-            
+        switch destination {            
         case let .detailPayment(node):
             components.makePaymentsView(node.model)
             
@@ -31,8 +28,8 @@ struct PaymentProviderPickerDestinationView: View {
         case let .servicePicker(servicePicker):
             Text("TBD: destination view \(String(describing: servicePicker))")
             
-        case let .servicesFailure(servicesFailure):
-            Text("TBD: destination view \(String(describing: servicesFailure))")
+        case let .servicesFailure(binder):
+            components.serviceCategoryFailureView(binder: binder)
         }
     }
 }
@@ -63,7 +60,7 @@ private extension PaymentProviderPickerDestinationView {
                 )
                 
             case let .serviceFailure(serviceFailure):
-                Text("TBD: destination view \(String(describing: serviceFailure))")
+                EmptyView()
             }
             
         case let .success(success):

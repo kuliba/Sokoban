@@ -477,11 +477,9 @@ private extension RootViewDomain.Flow {
                     event(.dismiss)
                     
                     switch tab {
-                    case .main:
-                        content.selected = .main
-                        
-                    case .payments:
-                        content.selected = .payments
+                    case .chat:     content.selected = .chat
+                    case .main:     content.selected = .main
+                    case .payments: content.selected = .payments
                     }
                 }
             }

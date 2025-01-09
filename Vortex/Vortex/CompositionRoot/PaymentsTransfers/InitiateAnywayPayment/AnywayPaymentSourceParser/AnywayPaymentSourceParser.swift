@@ -26,13 +26,13 @@ extension AnywayPaymentSourceParser {
     
     enum Source: Equatable {
         
-        case latest(Latest)
+        case latest(LatestOutlinePayload)
         case oneOf(Service, Operator)
         case picked(ServicePickerItem, PaymentProviderServicePickerPayload)
         case single(Service, Operator)
         case template(PaymentTemplateData)
         
-        typealias Latest = RemoteServices.ResponseMapper.LatestServicePayment
+        typealias Latest = LatestOutlinePayload
         typealias Operator = UtilityPaymentProvider
         typealias Service = UtilityService
     }
@@ -87,10 +87,7 @@ private extension AnywayPaymentSourceParser {
     ) -> Output {
         
         return .init(
-            outline: .init(
-                latestServicePayment: latest,
-                product: product
-            ),
+            outline: .init(payload: latest, product: product),
             firstField: nil
         )
     }

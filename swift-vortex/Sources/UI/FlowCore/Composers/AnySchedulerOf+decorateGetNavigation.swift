@@ -35,4 +35,13 @@ extension AnySchedulerOf<DispatchQueue> {
             }
         }
     }
+    
+    public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+    
+    func delay(
+        for timeout: Delay,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: now.advanced(by: timeout), action)
+    }
 }

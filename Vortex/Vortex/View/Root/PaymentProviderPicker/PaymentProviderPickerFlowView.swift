@@ -19,40 +19,55 @@ where ContentView: View,
     
     var body: some View {
         
-        contentView()
-            .alert(item: backendFailure, content: alert)
-            .navigationDestination(
-                destination: destination,
-                dismiss: { event(.dismiss) },
-                content: destinationView
-            )
+        ZStack {
+            
+            contentView()
+            
+            fixedFrameTinyClear()
+                .alert(item: backendFailure, content: alert)
+            //  .id(backendFailure?.id)
+            
+            fixedFrameTinyClear()
+                .navigationDestination(
+                    destination: destination,
+                    // dismiss: { event(.dismiss) },
+                    content: destinationView
+                )
+                .id(destination?.id) // hack to prevent double view redraw, downside: not smooth animation
+        }
     }
 }
 
 extension PaymentProviderPickerFlowView {
     
     typealias Domain = PaymentProviderPickerDomain.FlowDomain
-    typealias State = Domain.State
+    typealias State = PaymentProviderPickerDomain.Navigation?
     typealias Event = Domain.Event
     typealias Destination = PaymentProviderPickerDomain.Destination
 }
 
 private extension PaymentProviderPickerFlowView {
     
+    func fixedFrameTinyClear() -> some View {
+        
+        Color.clear.frame(width: 1, height: 1)
+    }
+}
+
+private extension PaymentProviderPickerFlowView {
+    
     var backendFailure: BackendFailure? {
         
-        guard case let .alert(backendFailure) = state.navigation
-        else { return nil }
-        
-        return backendFailure
-    }
-    
-    var destination: Destination? {
-        
-        guard case let .destination(destination) = state.navigation
-        else { return nil }
-        
-        return destination
+        switch state {
+        case let .alert(backendFailure):
+            return backendFailure
+            
+        case let .destination(.payment(.failure(.serviceFailure(serviceFailure)))):
+            return .paymentServiceFailure(serviceFailure)
+            
+        default:
+            return nil
+        }
     }
     
     func alert(
@@ -60,6 +75,20 @@ private extension PaymentProviderPickerFlowView {
     ) -> Alert {
         
         return backendFailure.alert { event(.select(.outside(.payments))) }
+    }
+    
+    var destination: Destination? {
+        
+        guard case let .destination(destination) = state
+        else { return nil }
+        
+        switch destination {
+        case .payment(.failure(.serviceFailure)):
+            return nil
+            
+        default:
+            return destination
+        }
     }
 }
 
@@ -74,7 +103,24 @@ extension BackendFailure {
         action: @escaping () -> Void
     ) -> SwiftUI.Alert {
         
-        return .init(title: Text(title), message: Text(message), dismissButton: .default(Text("OK"), action: action))
+        return .init(
+            title: Text(title),
+            message: Text(message),
+            dismissButton: .default(Text("OK"), action: action)
+        )
+    }
+    
+    static func paymentServiceFailure(
+        _ serviceFailure: ServiceFailureAlert.ServiceFailure
+    ) -> Self {
+        
+        switch serviceFailure {
+        case .connectivityError:
+            return .paymentConnectivity
+            
+        case let .serverError(message):
+            return .init(message: message, source: .server)
+        }
     }
     
     private var title: String {
@@ -91,21 +137,65 @@ extension PaymentProviderPickerDomain.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .detailPayment(node):
+            return .detailPayment(.init(node.model))
             
-        case .backendFailure:  return .backendFailure
-        case .detailPayment:   return .detailPayment
-        case .payment:         return .payment
-        case .servicePicker:   return .servicePicker
-        case .servicesFailure: return .servicesFailure
+        case let .payment(result):
+            switch result {
+            case let .failure(failure):
+                switch failure {
+                case let .operatorFailure(provider):
+                    return .operatorFailure(provider.id)
+                    
+                case let .serviceFailure(serviceFailure):
+                    return .serviceFailure(serviceFailure)
+                }
+                
+            case let .success(success):
+                switch success {
+                case let .services(binder):
+                    return .services(.init(binder))
+                    
+                case let .startPayment(node):
+                    return .startPayment(.init(node.model))
+                }
+            }
+            
+        case let .servicePicker(servicePicker):
+            return .servicePicker(.init(servicePicker))
+            
+        case let .servicesFailure(servicesFailure):
+            return .servicesFailure(.init(servicesFailure))
         }
     }
     
     enum ID: Hashable {
         
-        case backendFailure
-        case detailPayment
-        case payment
-        case servicePicker
-        case servicesFailure
+        case detailPayment(ObjectIdentifier)
+        case operatorFailure(UtilityPaymentProvider.ID)
+        case serviceFailure(ServiceFailureAlert.ServiceFailure)
+        case services(ObjectIdentifier)
+        case startPayment(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
+        case servicesFailure(ObjectIdentifier)
+    }
+}
+
+// MARK: - Adapters
+
+private extension BackendFailure {
+    
+    init(
+        _ failure: ServiceFailureAlert.ServiceFailure,
+        connectivityFailureMessage: String
+    ) {
+        
+        switch failure {
+        case .connectivityError:
+            self.init(message: connectivityFailureMessage, source: .connectivity)
+            
+        case let .serverError(message):
+            self.init(message: message, source: .server)
+        }
     }
 }

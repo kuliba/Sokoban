@@ -34,7 +34,7 @@ public extension ContentFlowBindingFactory {
     /// - Warning: This variant does not handle `isLoading` or `dismiss` events.
     static func bind<Content, Select, Navigation>(
         content: Content,
-        flow: RxViewModel<FlowState<Navigation>, FlowEvent<Select, Navigation>, FlowEffect<Select>>,
+        flow: FlowDomain<Select, Navigation>.Flow,
         witnesses: ContentWitnesses<Content, Select>
     ) -> Set<AnyCancellable> {
         
@@ -46,7 +46,7 @@ public extension ContentFlowBindingFactory {
     /// This variant can handle `isLoading` or `dismiss` as part of the `FlowEvent`.
     static func bind<Content, Select, Navigation>(
         content: Content,
-        flow: RxViewModel<FlowState<Navigation>, FlowEvent<Select, Navigation>, FlowEffect<Select>>,
+        flow: FlowDomain<Select, Navigation>.Flow,
         witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>
     ) -> Set<AnyCancellable> {
         
