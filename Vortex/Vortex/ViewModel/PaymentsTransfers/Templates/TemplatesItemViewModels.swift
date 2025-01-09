@@ -270,30 +270,36 @@ extension TemplatesListViewModel {
             }
         }
         
-        return .init(id: data.paymentTemplateId,
-                     sortOrder: data.sort,
-                     avatar: avatar,
-                     title: data.name,
-                     subTitle: data.groupName,
-                     topImage: topImage,
-                     amount: amount,
-                     tapAction: { [weak self] itemId in
-            self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
-                     deleteAction: { [weak self] itemId in
-            self?.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId)) },
-                     renameAction: { [weak self] itemId in
-            self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: itemId)) })
+        return .init(
+            id: data.paymentTemplateId,
+            sortOrder: data.sort,
+            avatar: avatar,
+            title: data.name,
+            subTitle: data.groupName,
+            topImage: topImage,
+            amount: amount,
+            tapAction: { [weak self] itemId in
+                
+                self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
+            deleteAction: { [weak self] itemId in
+                
+                self?.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId)) },
+            renameAction: { [weak self] itemId in
+                
+                self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: itemId)) }
+        )
     }
     
     func getItemAddNewTemplateModel() -> ItemViewModel {
         
-        return ItemViewModel(id: Int.max,
-                             sortOrder: Int.max,
-                             avatar: .image(.ic40Star),
-                             title: "Добавить шаблон",
-                             subTitle: "Из любой успешной операции в разделе «История»",
-                             tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
-                             kind: .add)
+        return ItemViewModel(
+            id: Int.max,
+            sortOrder: Int.max,
+            avatar: .image(.ic40Star),
+            title: "Добавить шаблон",
+            subTitle: "Из любой успешной операции в разделе «История»",
+            tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
+            kind: .add)
     }
     
     func getItemsMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
@@ -305,7 +311,6 @@ extension TemplatesListViewModel {
                 .init(icon: .ic32Edit2, subTitle: "Переименовать", action: { [weak self] id in
                     self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: id)) })
         ]
-        
     }
     
     class DeletingTimer {
