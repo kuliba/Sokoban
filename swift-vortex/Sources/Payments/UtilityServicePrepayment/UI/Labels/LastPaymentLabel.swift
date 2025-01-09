@@ -32,11 +32,11 @@ where IconView: View {
         VStack(spacing: 8) {
             
             iconView
-                .frame(width: 40, height: 40)
+                .frame(width: config.iconSize, height: config.iconSize)
             
             titleView()
         }
-        .frame(width: 80, height: 80)
+        .frame(width: 80, height: config.frameHeight)
         .contentShape(Rectangle())
     }
 }

@@ -6,10 +6,10 @@
 //
 
 import Combine
-import VortexTools
 import Foundation
 import PayHub
 import PayHubUI
+import VortexTools
 
 private typealias Domain = OperationPickerDomain
 
@@ -142,39 +142,6 @@ private extension AnywayFlowState.Status.Outside {
         switch self {
         case .main:     return .dismiss
         case .payments: return .dismiss
-        }
-    }
-}
-
-private extension UtilityPaymentLastPayment {
-    
-    init(_ latest: Latest) {
-        
-        self.init(
-            date: .init(),
-            amount: latest.amount ?? 0,
-            name: latest.name,
-            md5Hash: latest.md5Hash,
-            puref: latest.puref,
-            type: latest.type,
-            additionalItems: latest.additionalItems
-        )
-    }
-}
-
-private extension Latest {
-    
-    var additionalItems: [UtilityPaymentLastPayment.AdditionalItem] {
-        
-        switch self {
-        case let .service(service):
-            return (service.additionalItems ?? []).map {
-                
-                return .init(fieldName: $0.fieldName, fieldValue: $0.fieldValue, fieldTitle: $0.fieldTitle, svgImage: $0.svgImage)
-            }
-            
-        case .withPhone:
-            return []
         }
     }
 }

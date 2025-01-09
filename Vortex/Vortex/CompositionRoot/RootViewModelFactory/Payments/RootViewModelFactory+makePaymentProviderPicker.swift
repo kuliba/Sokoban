@@ -82,7 +82,7 @@ extension RootViewModelFactory {
         completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
     ) {
         initiateAnywayPayment(
-            .latest(latest.latest)
+            .latest(latest.latestOutlinePayload)
         ) { [weak self] in
             
             guard let self else { return }
@@ -250,47 +250,23 @@ extension RootViewModelFactory {
 
 // MARK: - Adapters
 
+private extension Latest {
+    
+    var latestOutlinePayload: LatestOutlinePayload {
+        
+        let pairs = additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
+        
+        return .init(md5Hash: md5Hash, name: name, fields: fields, puref: puref)
+    }
+}
+
 extension BackendFailure {
     
     static let paymentConnectivity: Self = .connectivity("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
-}
-
-private extension RemoteServices.ResponseMapper.LatestPayment {
-    
-    var latest: RemoteServices.ResponseMapper.LatestServicePayment {
-        
-        switch self {
-        case let .service(service):
-            return service.latest
-            
-        case let .withPhone(withPhone):
-            return withPhone.latest
-        }
-    }
-}
-
-private extension RemoteServices.ResponseMapper.LatestPayment.Service {
-    
-    var latest: RemoteServices.ResponseMapper.LatestServicePayment {
-        
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type.rawValue, additionalItems: additionalItems?.map(\.additional) ?? [])
-    }
-}
-
-private extension RemoteServices.ResponseMapper.LatestPayment.Service.AdditionalItem {
-    
-    var additional: RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem {
-        
-        return .init(fieldName: fieldName, fieldValue: fieldValue, fieldTitle: fieldTitle, svgImage: svgImage)
-    }
-}
-
-private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
-    
-    var latest: RemoteServices.ResponseMapper.LatestServicePayment {
-        
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type.rawValue, additionalItems: [])
-    }
 }
 
 private extension UtilityPaymentProvider {

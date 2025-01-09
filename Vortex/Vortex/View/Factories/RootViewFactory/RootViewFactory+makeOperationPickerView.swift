@@ -6,6 +6,7 @@
 //
 
 import PayHubUI
+import RemoteServices
 import RxViewModel
 import SwiftUI
 import UtilityServicePrepaymentUI
@@ -105,7 +106,7 @@ extension OperationPickerView {
                 LastPaymentLabel(
                     amount: latest.amount.map { "\($0) ₽" } ?? "",
                     title: latest.name,
-                    config: .iVortex,
+                    config: .primary,
                     iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
                 )
             },
@@ -163,47 +164,5 @@ extension LatestPaymentButtonLabelView {
         config: LatestPaymentButtonLabelConfig
     ) {
         self.init(label: latest.label, config: config)
-    }
-}
-
-private extension Latest {
-    
-    var label: LatestPaymentButtonLabel {
-        
-        switch self {
-        case let .service(service):
-            return service.label
-            
-        case let .withPhone(withPhone):
-            return withPhone.label
-        }
-    }
-}
-
-// LatestPaymentsViewComponent.swift:204
-
-private extension Latest.Service {
-    
-    var label: LatestPaymentButtonLabel {
-        
-        return .init(
-            amount: amount.map(String.init), 
-            avatar: .text(name ?? lpName ?? ""),
-            description: "",
-            topIcon: nil
-        )
-    }
-}
-
-private extension Latest.WithPhone {
-    
-    var label: LatestPaymentButtonLabel {
-        
-        return .init(
-            amount: amount.map(String.init),
-            avatar: .text(name ?? ""),
-            description: "",
-            topIcon: nil
-        )
     }
 }
