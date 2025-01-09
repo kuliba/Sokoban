@@ -13,13 +13,24 @@ struct UtilityServiceLabel<IconView: View>: View {
     let iconView: IconView
     
     var body: some View {
+       
+        NamedServiceLabel(name: service.name, iconView: iconView)
+    }
+}
+
+struct NamedServiceLabel<IconView: View>: View {
+    
+    let name: String
+    let iconView: IconView
+    
+    var body: some View {
         
         HStack {
             
             iconView
                 .frame(width: 32, height: 32)
             
-            Text(service.name)
+            Text(name)
                 .multilineTextAlignment(.leading)
                 .font(.body)
                 .frame(maxWidth: .infinity, alignment: .leading)

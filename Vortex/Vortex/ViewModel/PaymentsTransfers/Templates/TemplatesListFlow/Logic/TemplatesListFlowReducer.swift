@@ -58,7 +58,7 @@ private extension TemplatesListFlowReducer {
     private func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with flow: FlowEvent
+        with flow: DismissAndTabFlowEvent
     ) {
         state.isLoading = flow.isLoading
         

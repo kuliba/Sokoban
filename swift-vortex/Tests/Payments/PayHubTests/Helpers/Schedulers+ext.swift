@@ -7,10 +7,11 @@
 
 import Combine
 import CombineSchedulers
+import FlowCore
 import Foundation
 import PayHub
 
-extension PayHub.Schedulers {
+extension FlowCore.Schedulers {
     
     static let immediate: Self = .init(
         main: .immediate,

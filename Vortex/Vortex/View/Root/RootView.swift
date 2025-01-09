@@ -291,7 +291,7 @@ extension PaymentProviderPickerDomain.Flow {
     ) {
         switch event {
         case .addCompany:
-            self.event(.select(.chat))
+            self.event(.select(.outside(.chat)))
             
         case .payByInstruction:
             self.event(.select(.detailPayment))

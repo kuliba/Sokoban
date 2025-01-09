@@ -6,8 +6,8 @@
 //
 
 import Combine
+import FlowCore
 import Foundation
-import PayHub
 
 public final class QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
     

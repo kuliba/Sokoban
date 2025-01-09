@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 06.11.2024.
 //
 
-import PayHub
+import FlowCore
 
 /// A namespace.
 public enum QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment> {}
@@ -14,7 +14,7 @@ public extension QRFailureDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = FlowCore.Binder<Content, Flow>
     
     // MARK: - Content
     
@@ -22,7 +22,7 @@ public extension QRFailureDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias FlowComposer = FlowDomain.Composer
     

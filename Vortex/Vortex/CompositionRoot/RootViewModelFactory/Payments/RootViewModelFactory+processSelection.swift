@@ -9,7 +9,8 @@ extension RootViewModelFactory {
     
     typealias PrepaymentSelect = InitiateAnywayPaymentDomain.Select
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
-    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, AnywayTransactionState.Transaction>
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, OperatorServices, AnywayTransactionState.Transaction>
     
     @inlinable
     func processSelection(

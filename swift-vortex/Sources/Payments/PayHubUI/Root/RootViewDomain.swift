@@ -6,7 +6,7 @@
 //
 
 import Combine
-import PayHub
+import FlowCore
 
 /// A namespace.
 public enum RootViewDomain<RootViewModel, DismissAll, Select, Navigation> {}
@@ -15,7 +15,7 @@ public extension RootViewDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = FlowCore.Binder<Content, Flow>
     typealias BinderComposer = RootViewBinderComposer<Content, DismissAll, Select, Navigation>
     typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
     
@@ -47,7 +47,7 @@ public extension RootViewDomain {
         }
     }
     
-    typealias ContentWitnesses = PayHub.ContentWitnesses<Content, FlowDomain.NotifyEvent>
+    typealias ContentWitnesses = FlowCore.ContentWitnesses<Content, FlowDomain.NotifyEvent>
     
     // MARK: - Content
     
@@ -55,7 +55,7 @@ public extension RootViewDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void

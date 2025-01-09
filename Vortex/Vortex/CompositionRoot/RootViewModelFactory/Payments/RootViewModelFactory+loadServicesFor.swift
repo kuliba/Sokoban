@@ -20,11 +20,8 @@ extension RootViewModelFactory {
         )
         
         /// - Warning: request is serial, but serial is ignored
-        getOperatorsListByParamOperatorOnlyFalse(.init(
-            operatorID: payload.operatorID,
-            type: payload.type,
-            serial: nil
-        )) {
+        getOperatorsListByParamOperatorOnlyFalse(.init(payload)) {
+            
             completion($0.services)
             _ = getOperatorsListByParamOperatorOnlyFalse
         }
@@ -43,6 +40,19 @@ extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+private extension RequestFactory.GetOperatorsListByParamOperatorOnlyFalsePayload {
+    
+    /// - Warning: `serial` is intentionally ignored.
+    init(_ payload: RootViewModelFactory.GetServicesForPayload) {
+        
+        self.init(
+            operatorID: payload.operatorID,
+            type: payload.type,
+            serial: nil
+        )
+    }
+}
 
 private typealias SberUtilityService = RemoteServices.ResponseMapper.SberUtilityService
 

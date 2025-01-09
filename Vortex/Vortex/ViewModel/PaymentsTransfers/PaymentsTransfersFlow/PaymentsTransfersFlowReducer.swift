@@ -413,7 +413,8 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, AnywayTransactionState.Transaction>
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    private typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, OperatorServices, AnywayTransactionState.Transaction>
     
     private func reduce(
         _ state: inout State,
@@ -466,9 +467,12 @@ private extension PaymentsTransfersFlowReducer {
         with success: InitiateAnywayPaymentDomain.Success
     ) {
         switch success {
-        case let .services(services, `operator`):
+        case let .services(operatorServices):
             state.setUtilityPrepaymentDestination(to: .servicePicker(.init(
-                content: .init(services: services, operator: `operator`),
+                content: .init(
+                    services: operatorServices.services,
+                    operator: operatorServices.operator
+                ),
                 destination: nil
             )))
             

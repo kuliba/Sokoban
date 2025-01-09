@@ -23,5 +23,6 @@ extension UtilityPrepaymentFlowEffect {
     }
     
     typealias Select = Domain.Select
-    typealias Domain = InitiateAnywayPaymentDomain<LastPayment, Operator, Service, AnywayTransactionState.Transaction>
+    typealias Domain = InitiateAnywayPaymentDomain<LastPayment, Operator, Service, OperatorServices, AnywayTransactionState.Transaction>
+    typealias OperatorServices = Vortex.OperatorServices<Operator, Service>
 }

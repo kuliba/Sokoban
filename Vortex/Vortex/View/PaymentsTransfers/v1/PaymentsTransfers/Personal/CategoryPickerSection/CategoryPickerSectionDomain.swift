@@ -6,15 +6,14 @@
 //
 
 import Foundation
-import PayHub
 import PayHubUI
 
 enum CategoryPickerSectionDomain {
  
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias Composer = PayHub.BinderComposer<Content, Select, Navigation>
+    typealias Binder = Vortex.Binder<Content, Flow>
+    typealias Composer = Vortex.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -23,7 +22,7 @@ enum CategoryPickerSectionDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
         

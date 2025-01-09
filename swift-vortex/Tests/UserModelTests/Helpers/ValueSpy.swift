@@ -9,7 +9,7 @@ import Combine
 
 final class ValueSpy<Value> {
 
-    private (set) var events = [Event]()
+    private(set) var events = [Event]()
     private var cancellables: AnyCancellable?
     
     init<P>(_ publisher: P) where P: Publisher, P.Output == Value {
