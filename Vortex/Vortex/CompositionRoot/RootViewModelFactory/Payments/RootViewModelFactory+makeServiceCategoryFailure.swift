@@ -14,14 +14,23 @@ extension RootViewModelFactory {
         category: ServiceCategory
     ) -> ServiceCategoryFailureDomain.Binder {
         
-        compose(
-            getNavigation: getNavigation,
+        return composeBinder(
             content: category,
-            witnesses: .init(
-                emitting: { _ in Empty() },
-                dismissing: { _ in {} }
-            )
+            delayProvider: delayProvider,
+            getNavigation: getNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+
+    @inlinable
+    func delayProvider(
+        navigation: ServiceCategoryFailureDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .detailPayment: return settings.delay
+        case .scanQR:        return .milliseconds(200)
+        }
     }
     
     @inlinable
@@ -48,5 +57,21 @@ extension RootViewModelFactory {
         case .scanQR:
             completion(.scanQR)
         }
+    }
+    
+    @inlinable
+    func emitting(
+        content: ServiceCategoryFailureDomain.Content
+    ) -> some Publisher<FlowEvent<ServiceCategoryFailureDomain.Select, Never>, Never> {
+        
+        Empty()
+    }
+    
+    @inlinable
+    func dismissing(
+        content: ServiceCategoryFailureDomain.Content
+    ) -> () -> Void {
+        
+        return { }
     }
 }

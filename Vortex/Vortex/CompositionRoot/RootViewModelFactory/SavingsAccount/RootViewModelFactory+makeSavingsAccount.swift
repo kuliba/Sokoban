@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 09.12.2024.
 //
 
+import Combine
 import Foundation
 import GenericRemoteService
 import RemoteServices
@@ -34,24 +35,29 @@ extension RootViewModelFactory {
         nanoServices: SavingsAccountDomain.ComposerNanoServices
     ) -> SavingsAccountDomain.Binder {
         
-        return compose(
-            getNavigation: getSavingsAccountNavigation,
-            content: makeContent(
-                nanoServices: nanoServices,
-                status: .initiate
-            ),
-            witnesses: .init(
-                emitting: {
-                    
-                    $0.$state
-                        .compactMap(\.select)
-                        .map { .select($0) }
-                },
-                dismissing: { content in
-                    { content.event(.resetSelection) }
-                }
-            )
+        let content = makeContent(
+            nanoServices: nanoServices,
+            status: .initiate
         )
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getSavingsAccountNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+    }
+    
+    @inlinable
+    func delayProvider(
+        navigation: SavingsAccountDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .main:    return .milliseconds(100)
+        case .order:   return settings.delay
+        case .failure: return settings.delay
+        }
     }
     
     private func makeContent(
@@ -87,6 +93,22 @@ extension RootViewModelFactory {
         case .order:
             completion(.order)
         }
+    }
+    
+    @inlinable
+    func emitting(
+        content: SavingsAccountDomain.Content
+    ) -> some Publisher<FlowEvent<SavingsAccountDomain.Select, Never>, Never> {
+        
+        content.$state.compactMap(\.select).map(FlowEvent.select)
+    }
+    
+    @inlinable
+    func dismissing(
+        content: SavingsAccountDomain.Content
+    ) -> () -> Void {
+        
+        return { content.event(.resetSelection) }
     }
 }
 
