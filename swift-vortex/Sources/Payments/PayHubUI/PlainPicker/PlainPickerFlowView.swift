@@ -8,6 +8,7 @@
 import PayHub
 import SwiftUI
 
+/// - Warning: it's better (and simpler) to compose flow view(s) in main app target: more flexibility, less generics to work with.
 public struct PlainPickerFlowView<ContentView, DestinationView, Element, Destination>: View
 where ContentView: View,
       DestinationView: View,

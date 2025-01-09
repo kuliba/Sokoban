@@ -7,7 +7,6 @@
 
 import CombineSchedulers
 import PayHub
-import PayHubUI
 import XCTest
 
 final class PlainPickerBinderComposerTests: PlainPickerTests {

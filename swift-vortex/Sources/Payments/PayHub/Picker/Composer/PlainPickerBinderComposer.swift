@@ -8,7 +8,6 @@
 import Combine
 import CombineSchedulers
 import Foundation
-import PayHub
 
 public typealias PlainPickerBinderComposer<Element, Navigation> = BinderComposer<PlainPickerContent<Element>, Element, Navigation>
 
