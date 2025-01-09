@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
-import PayHub
+import FlowCore
 import SwiftUI
 
 /// - Warning: it's better (and simpler) to compose flow view(s) in main app target: more flexibility, less generics to work with.

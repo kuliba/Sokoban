@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7CC93923-E48D-4CE9-8DEB-AE8776E986D2",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FlowCoreTests",
+        "name" : "FlowCoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}

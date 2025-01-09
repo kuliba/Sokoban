@@ -7,6 +7,7 @@
 
 import Combine
 import CombineSchedulers
+import FlowCore
 import Foundation
 
 public typealias PlainPickerBinderComposer<Element, Navigation> = BinderComposer<PlainPickerContent<Element>, Element, Navigation>

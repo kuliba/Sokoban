@@ -7,7 +7,7 @@
 
 import Combine
 import CombineSchedulers
-import PayHub
+import FlowCore
 import PayHubUI
 import XCTest
 

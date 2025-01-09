@@ -6,6 +6,7 @@
 //
 
 @testable import Vortex
+import FlowCore
 import PayHub
 
 // MARK: - Equatable
@@ -141,7 +142,7 @@ extension PaymentsTransfersPersonalTransfersDomain {
         case successMeToMe(ObjectIdentifier)
     }
     
-    typealias EquatableNotifyEvent = PayHub.FlowEvent<EquatableSelect, Never>
+    typealias EquatableNotifyEvent = FlowCore.FlowEvent<EquatableSelect, Never>
 }
 
 extension PaymentsTransfersPersonalTransfersDomain.NotifyEvent {

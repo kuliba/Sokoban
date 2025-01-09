@@ -6,8 +6,8 @@
 //
 
 import Combine
-import VortexTools
 import PayHub
+import VortexTools
 
 extension RootViewModelFactory {
     
@@ -54,7 +54,7 @@ extension RootViewModelFactory {
 
 extension SegmentedPaymentProviderPickerFlowModel.State {
     
-    typealias NotifyEvent = PayHub.FlowEvent<Status.Outside, Never>
+    typealias NotifyEvent = Vortex.FlowEvent<Status.Outside, Never>
     
     var _notifyEvent: NotifyEvent? {
         

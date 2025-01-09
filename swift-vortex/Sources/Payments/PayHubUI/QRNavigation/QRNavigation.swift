@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import PayHub
+import FlowCore
 
 public enum QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker> {
     
