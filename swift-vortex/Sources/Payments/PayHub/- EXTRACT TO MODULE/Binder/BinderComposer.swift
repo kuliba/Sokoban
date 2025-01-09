@@ -9,13 +9,30 @@ import Foundation
 
 public final class BinderComposer<Content, Select, Navigation> {
     
-    private let delay: Delay
+    @available(*, deprecated, message: "Control delays in `getNavigation`.")
+    private let delay: Delay?
+    
     private let getNavigation: GetNavigation
     private let makeContent: MakeContent
     private let schedulers: Schedulers
     private let witnesses: Witnesses
     
     /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
+    public init(
+        getNavigation: @escaping GetNavigation,
+        makeContent: @escaping MakeContent,
+        schedulers: Schedulers = .init(),
+        witnesses: Witnesses
+    ) {
+        self.delay = nil
+        self.getNavigation = getNavigation
+        self.makeContent = makeContent
+        self.schedulers = schedulers
+        self.witnesses = witnesses
+    }
+    
+    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
+    @available(*, deprecated, message: "Control delays in `getNavigation`.")
     public init(
         delay: Delay,
         getNavigation: @escaping GetNavigation,

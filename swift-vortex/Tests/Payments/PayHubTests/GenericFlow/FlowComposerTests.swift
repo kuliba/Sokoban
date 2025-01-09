@@ -47,7 +47,7 @@ final class FlowComposerTests: XCTestCase {
         let (sut, getNavigation) = makeSUT()
         let flow = sut.compose()
         
-        flow.event(.receive(makeNavigation()))
+        flow.event(.navigation(makeNavigation()))
         
         XCTAssertNoDiff(getNavigation.payloads.map(\.0), [])
     }

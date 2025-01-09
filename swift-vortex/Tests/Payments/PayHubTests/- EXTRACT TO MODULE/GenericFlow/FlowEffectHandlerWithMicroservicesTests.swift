@@ -40,7 +40,7 @@ final class FlowEffectHandlerWithMicroservicesTests: FlowTests {
         expect(
             sut,
             with: .select(makeSelect()),
-            toDeliver: .receive(navigation),
+            toDeliver: .navigation(navigation),
             on: { getNavigation.complete(with: navigation) }
         )
     }

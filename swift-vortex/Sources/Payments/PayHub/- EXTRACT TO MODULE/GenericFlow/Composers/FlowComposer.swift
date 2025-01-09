@@ -10,14 +10,30 @@ import Foundation
 
 public final class FlowComposer<Select, Navigation> {
     
-    private let delay: Delay
     private let getNavigation: GetNavigation
     private let scheduler: AnySchedulerOf<DispatchQueue>
-    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
+    
+    @available(*, deprecated, message: "Control delays in `getNavigation`.")
+    private let delay: Delay?
+    
+    @available(*, deprecated, message: "Control delays in `getNavigation`.")
+    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>?
     
     /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
     public init(
-        delay: Delay,
+        getNavigation: @escaping GetNavigation,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.getNavigation = getNavigation
+        self.scheduler = scheduler
+        self.delay = nil
+        self.interactiveScheduler = nil
+    }
+    
+    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
+    @available(*, deprecated, message: "Control delays in `getNavigation`.")
+    public init(
+        delay: Delay?,
         getNavigation: @escaping GetNavigation,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
@@ -40,11 +56,19 @@ public extension FlowComposer {
     ) -> Domain.Flow {
         
         let reducer = Domain.Reducer()
-        let effectHandler = Domain.EffectHandler(
-            delay: delay,
-            getNavigation: getNavigation,
-            scheduler: interactiveScheduler
-        )
+        let effectHandler: Domain.EffectHandler
+        
+        if let delay, let interactiveScheduler {
+            
+            effectHandler = .init(
+                delay: delay,
+                getNavigation: getNavigation,
+                scheduler: interactiveScheduler
+            )
+        } else {
+            
+            effectHandler = .init(getNavigation: getNavigation)
+        }
         
         return .init(
             initialState: initialState,

@@ -7,7 +7,7 @@
 
 import RxViewModel
 
-/// A namespace.
+/// A namespace holding core flow types for handling navigation.
 public enum FlowDomain<Select, Navigation> {}
 
 public extension FlowDomain {
