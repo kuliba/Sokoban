@@ -205,7 +205,7 @@ private extension PaymentTemplateData {
                 puref: core.puref,
                 title: name,
                 subtitle: groupName,
-                icon: svgImage.description
+                icon: svgImage?.description // TODO: replace with fallback to md5Hash
             )
         )
     }

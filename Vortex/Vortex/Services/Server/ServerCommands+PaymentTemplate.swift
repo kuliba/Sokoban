@@ -47,7 +47,7 @@ enum ServerCommands {
         struct GetPaymentTemplateList: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/v2/getPaymentTemplateList"
+            let endpoint = "/rest/v3/getPaymentTemplateList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
