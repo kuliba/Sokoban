@@ -1636,7 +1636,7 @@
 		2AE34ACE2C655CE0004D5DDD /* OptionalSelectorViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iVortex.swift */; };
 		2AE350CB2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE350CA2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift */; };
 		2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */; };
-		2AE5972F29F918C20083F138 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972E29F918C20083F138 /* ContentView.swift */; };
+		2AE5972F29F918C20083F138 /* PhoneNumberTextContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972E29F918C20083F138 /* PhoneNumberTextContentView.swift */; };
 		2AE5973129F918C30083F138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973029F918C30083F138 /* Assets.xcassets */; };
 		2AE5973429F918C30083F138 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973329F918C30083F138 /* Preview Assets.xcassets */; };
 		2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779F71382A24FAE600D7FF26 /* PaymentsOperationViewModelTests.swift */; };
@@ -5230,7 +5230,7 @@
 		2AE350CA2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalContent.swift; sourceTree = "<group>"; };
 		2AE5972A29F918C20083F138 /* PhoneNumberTextViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneNumberTextViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextViewPreviewApp.swift; sourceTree = "<group>"; };
-		2AE5972E29F918C20083F138 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2AE5972E29F918C20083F138 /* PhoneNumberTextContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextContentView.swift; sourceTree = "<group>"; };
 		2AE5973029F918C30083F138 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2AE5973329F918C30083F138 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
@@ -12587,7 +12587,7 @@
 			isa = PBXGroup;
 			children = (
 				2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */,
-				2AE5972E29F918C20083F138 /* ContentView.swift */,
+				2AE5972E29F918C20083F138 /* PhoneNumberTextContentView.swift */,
 				2AE5973029F918C30083F138 /* Assets.xcassets */,
 				2AE5973229F918C30083F138 /* Preview Content */,
 			);
@@ -20408,7 +20408,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AE5972F29F918C20083F138 /* ContentView.swift in Sources */,
+				2AE5972F29F918C20083F138 /* PhoneNumberTextContentView.swift in Sources */,
 				2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

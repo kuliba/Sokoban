@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  PhoneNumberTextContentView.swift
 //  PhoneNumberTextViewPreview
 //
 //  Created by Igor Malyarov on 26.04.2023.
@@ -11,7 +11,7 @@ import TextFieldComponent
 
 typealias ViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
   
-struct ContentView: View {
+struct PhoneNumberTextContentView: View {
     
     @StateObject private var viewModel: ViewModel = .init(
         initialState: .placeholder("Enter phone number"),
@@ -138,7 +138,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        PhoneNumberTextContentView()
     }
 }
 
