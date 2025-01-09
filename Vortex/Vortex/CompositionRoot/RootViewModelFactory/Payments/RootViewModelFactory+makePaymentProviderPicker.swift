@@ -75,16 +75,48 @@ extension RootViewModelFactory {
     ) -> PaymentProviderPickerDomain.Binder {
         
         let content = makeContent(with: payload)
-        let flow = makeFlow()
         
-        return .init(
+        return compose(
+            getNavigation: getPaymentProviderPickerNavigation,
             content: content,
-            flow: flow,
-            bind: { _,_ in [] }
+            witnesses: .init(
+                emitting: { _ in Empty().eraseToAnyPublisher() },
+                dismissing: { _ in {}}
+            )
         )
     }
     
     typealias MakeSelectedCategorySuccessPayload = PayHub.MakeSelectedCategorySuccessPayload<ServiceCategory, Latest, UtilityPaymentProvider>
+    
+    @inlinable
+    func getPaymentProviderPickerNavigation(
+        select: PaymentProviderPickerDomain.Select,
+        notify: @escaping PaymentProviderPickerDomain.FlowDomain.Notify,
+        completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case .detailPayment:
+            completion(.destination(.detailPayment(makePaymentsNode(
+                payload: .service(.requisites),
+                notify: { event in
+                    
+                    switch event {
+                    case .close:  notify(.dismiss)
+                    case .scanQR: notify(.select(.outside(.qr)))
+                    }
+                }
+            ))))
+            
+        case let .latest(latest):
+            initiateAnywayPayment(latest: latest, notify: notify, completion: completion)
+            
+        case let .outside(outside):
+            completion(.outside(outside))
+            
+        case let .provider(provider):
+            processProvider(provider: provider, notify: notify, completion: completion)
+        }
+    }
     
     // MARK: - Content
     
@@ -153,25 +185,6 @@ extension RootViewModelFactory {
     
     // MARK: - Flow
     
-    private func makeFlow() -> PaymentProviderPickerDomain.Flow {
-        
-        let flowReducer = PaymentProviderPickerDomain.FlowReducer()
-        let flowEffectHandler = PaymentProviderPickerDomain.FlowEffectHandler(
-            microServices: .init(
-                initiatePayment: initiateAnywayPayment,
-                makeDetailPayment: makeDetailPayment,
-                processProvider: processProvider
-            )
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: flowReducer.reduce(_:_:),
-            handleEffect: flowEffectHandler.handleEffect(_:_:),
-            scheduler: schedulers.main
-        )
-    }
-    
     @inlinable
     func initiateAnywayPayment(
         latest: Latest,
@@ -183,10 +196,10 @@ extension RootViewModelFactory {
             notify: { event in
                 switch event {
                 case .main:
-                    notify(.select(.main))
+                    notify(.select(.outside(.main)))
                     
                 case .payments:
-                    notify(.select(.goToPayments))
+                    notify(.select(.outside(.payments)))
                 }
             },
             completion: completion
@@ -205,30 +218,19 @@ extension RootViewModelFactory {
             case let .failure(failure):
                 switch failure {
                 case .connectivityError:
-                    completion(.backendFailure(.connectivity("connectivity failure")))
+                    completion(.destination(.backendFailure(.connectivity("connectivity failure"))))
                     
                 case let .serverError(message):
-                    completion(.backendFailure(.server(message)))
+                    completion(.destination(.backendFailure(.server(message))))
                 }
                 
             case let .success(transaction):
-                completion(self.makeCompletion(
+                completion(self.makeNavigation(
                     transaction: transaction,
                     notify: notify
                 ))
             }
         }
-    }
-    
-    @inlinable
-    func makeDetailPayment(
-        completion: @escaping (PaymentProviderPickerDomain.Navigation) -> Void
-    ) {
-        completion(.detailPayment(.init(
-            model: self.model,
-            service: .requisites,
-            scheduler: self.schedulers.main
-        )))
     }
     
     @inlinable
@@ -243,10 +245,10 @@ extension RootViewModelFactory {
                 
                 switch event {
                 case .main:
-                    notify(.select(.main))
+                    notify(.select(.outside(.main)))
                     
                 case .payments:
-                    notify(.select(.goToPayments))
+                    notify(.select(.outside(.payments)))
                 }
             },
             completion: completion
@@ -263,32 +265,38 @@ extension RootViewModelFactory {
             
             guard let self else {
                 
-                return completion(.payment(.failure(.serviceFailure(.connectivityError))))
+                return completion(.destination(.payment(.failure(.serviceFailure(.connectivityError)))))
             }
             
             switch $0 {
             case let .failure(failure):
                 switch failure {
                 case let .operatorFailure(utilityPaymentOperator):
-                    completion(.payment(.failure(.operatorFailure(utilityPaymentOperator))))
+                    completion(.destination(.payment(.failure(.operatorFailure(utilityPaymentOperator)))))
                     
                 case let .serviceFailure(serviceFailure):
                     switch serviceFailure {
                     case .connectivityError:
-                        completion(.payment(.failure(.serviceFailure(.connectivityError))))
+                        completion(.destination(.payment(.failure(.serviceFailure(.connectivityError)))))
                         
                     case let .serverError(message):
-                        completion(.payment(.failure(.serviceFailure(.serverError(message)))))
+                        completion(.destination(.payment(.failure(.serviceFailure(.serverError(message))))))
                     }
                 }
                 
             case let .success(success):
                 switch success {
-                case let .services(multi, for: utilityPaymentOperator):
-                    completion(.payment(.success(.services(multi, for: utilityPaymentOperator))))
+                case let .services(operatorServices):
+                    
+                    completion(.destination(.payment(.success(
+                        .services(makeProviderServicePicker(
+                            provider: operatorServices.operator.operator,
+                            services: operatorServices.services
+                        ))
+                    ))))
                     
                 case let .startPayment(transaction):
-                    completion(makeCompletion(
+                    completion(makeNavigation(
                         transaction: transaction,
                         notify: notify
                     ))
@@ -297,7 +305,8 @@ extension RootViewModelFactory {
         }
     }
     
-    func makeCompletion(
+    @inlinable
+    func makeNavigation(
         transaction: AnywayTransactionState.Transaction,
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void
     ) -> (PaymentProviderPickerDomain.Navigation) {
@@ -307,16 +316,24 @@ extension RootViewModelFactory {
             .compactMap(\.outside)
             .sink { notify($0) }
         
-        return .payment(.success(
+        return .destination(.payment(.success(
             .startPayment(.init(
                 model: flowModel,
                 cancellable: cancellable
             ))
-        ))
+        )))
     }
 }
 
 // MARK: - Adapters
+
+private extension UtilityPaymentProvider {
+ 
+    var `operator`: UtilityPaymentOperator {
+        
+        return .init(id: id, inn: inn, title: title, icon: icon, type: type)
+    }
+}
 
 private extension RemoteServices.ResponseMapper.LatestPayment {
     

@@ -61,7 +61,7 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
         expect(
             sut,
             with: .select(makeSelect()),
-            toDeliver: .receive(navigation),
+            toDeliver: .navigation(navigation),
             on: { getNavigation.complete(with: navigation) }
         )
     }

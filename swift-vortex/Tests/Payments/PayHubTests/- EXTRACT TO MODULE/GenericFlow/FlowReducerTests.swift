@@ -61,7 +61,7 @@ final class FlowReducerTests: FlowTests {
         
         let navigation = makeNavigation()
         
-        assert(makeState(isLoading: true, navigation: nil), event: .receive(navigation)) {
+        assert(makeState(isLoading: true, navigation: nil), event: .navigation(navigation)) {
             
             $0.isLoading = false
             $0.navigation = navigation
@@ -72,7 +72,7 @@ final class FlowReducerTests: FlowTests {
         
         assert(
             makeState(navigation: nil),
-            event: .receive(makeNavigation()),
+            event: .navigation(makeNavigation()),
             delivers: nil
         )
     }
