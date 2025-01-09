@@ -9,7 +9,7 @@ public enum FlowEvent<Select, Navigation> {
     
     case dismiss
     case isLoading(Bool)
-    case receive(Navigation)
+    case navigation(Navigation)
     case select(Select)
 }
 
