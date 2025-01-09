@@ -17,7 +17,7 @@ public struct CreateDraftCollateralLoanApplicationFactory {
     
     public init(
             makeImageView: @escaping MakeImageView,
-            config: Config = .default
+            config: Config
         ) {
             self.makeImageView = makeImageView
             self.config = config
@@ -33,7 +33,8 @@ extension CreateDraftCollateralLoanApplicationFactory {
         makeImageView: { _ in .init(
             image: .iconPlaceholder,
             publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-        )}
+        )},
+        config: .preview
     )
 }
 

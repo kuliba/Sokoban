@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationHeaderView: View {
     
-    let config: Config
     let data: Data
-    let makeImageView: Factory.MakeImageView
-    
+    let config: Config
+    let factory: Factory
+
     var body: some View {
 
         ZStack {
@@ -42,7 +42,7 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
     
     private var iconView: some View {
         
-        makeImageView(data.icons.productName)
+        factory.makeImageView(data.icons.productName)
             .frame(
                 width: config.layouts.iconSize.width,
                 height: config.layouts.iconSize.height
@@ -83,9 +83,9 @@ struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationHeaderView(
-            config: .default,
             data: .preview,
-            makeImageView: Factory.preview.makeImageView
+            config: .preview,
+            factory: Factory.preview
         )
     }
     

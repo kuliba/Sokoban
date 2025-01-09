@@ -9,18 +9,18 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationView: View {
     
-    let factory: Factory
-    let config: Config
     let data: Data
+    let config: Config
+    let factory: Factory
     
     var body: some View {
 
         ScrollView {
             
             CreateDraftCollateralLoanApplicationHeaderView(
-                config: config,
                 data: data,
-                makeImageView: factory.makeImageView
+                config: config,
+                factory: factory
             )
             
             Spacer()
@@ -39,9 +39,9 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView(
-            factory: Factory.preview,
-            config: .default,
-            data: .preview
+            data: .preview,
+            config: .preview,
+            factory: Factory.preview
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
     }
