@@ -122,6 +122,7 @@ extension TemplatesListViewModel {
         }
         
         enum Avatar {
+            
             case image(Image)
             case text(String)
             case placeholder

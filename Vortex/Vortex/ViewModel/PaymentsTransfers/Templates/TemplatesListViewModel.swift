@@ -191,22 +191,22 @@ private extension TemplatesListViewModel {
         model.paymentTemplates
             .receive(on: scheduler)
             .sink { [unowned self] templates in
-                    
+                
                 if templates.isEmpty {
-                   
+                    
                     withAnimation {
                         
                         state = .emptyList(getEmptyTemplateListViewModel())
                         itemsRaw.value = []
                         categorySelector = nil
                     }
-                        
+                    
                 } else {
                     
                     let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
-                       
+                    
                     let selector = self.categorySelector?.selected
-                        
+                    
                     withAnimation {
                         
                         self.state = .normal
@@ -222,30 +222,36 @@ private extension TemplatesListViewModel {
                     }
                     
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.images
             .receive(on: scheduler)
-            .sink { [unowned self] images in
+            .sink { [weak self] images in
                 
-                itemsRaw.value.filter { $0.avatar.isPlaceholder }
-                     .forEach { item in
-                    
-                         if let img = images["Template\(item.id)"]?.image {
-                             item.avatar = .image(img)
-                         }
-                }
+                guard let self else { return }
+                
+                itemsRaw.value
+                    .filter { $0.avatar.isPlaceholder }
+                    .forEach { item in
+                        
+                        if let img = images["Template\(item.id)"]?.image {
+                            item.avatar = .image(img)
+                        }
+                    }
                 
                 withAnimation {
-                 
-                    self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                             isDataUpdating: false,
-                                             categorySelected: self.categorySelector?.selected,
-                                             searchText: self.navBarState.searchModel?.searchText,
-                                             isAddItemNeeded: !self.state.isSelect)
+                    
+                    self.items = self.reduceItems(
+                        rawItems: self.itemsRaw.value,
+                        isDataUpdating: false,
+                        categorySelected: self.categorySelector?.selected,
+                        searchText: self.navBarState.searchModel?.searchText,
+                        isAddItemNeeded: !self.state.isSelect
+                    )
                 }
-                
-        }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         $items
             .receive(on: scheduler)
@@ -269,8 +275,8 @@ private extension TemplatesListViewModel {
                     
                 default: break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
     // actions handlers
         action
@@ -288,11 +294,13 @@ private extension TemplatesListViewModel {
                     let sectionSettings = ProductsSectionsSettings(collapsed: ["CARD": true, "ACCOUNT": true] )
                     
                     let productSections = MyProductsViewModel
-                                            .updateViewModel(with: productsFilterred,
-                                                             sections: [],
-                                                             productsOpening: [],
-                                                             settingsProductsSections: sectionSettings,
-                                                             model: model)
+                        .updateViewModel(
+                            with: productsFilterred,
+                            sections: [],
+                            productsOpening: [],
+                            settingsProductsSections: sectionSettings,
+                            model: model
+                        )
                    
                     let productListViewModel = ProductListViewModel(sections: productSections)
                     bind(productListViewModel)
@@ -340,11 +348,13 @@ private extension TemplatesListViewModel {
                     
                     withAnimation {
                         
-                        self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                                 isDataUpdating: model.paymentTemplatesUpdating.value,
-                                                 categorySelected: self.categorySelector?.selected,
-                                                 searchText: payload.text,
-                                                 isAddItemNeeded: true)
+                        self.items = reduceItems(
+                            rawItems: self.itemsRaw.value,
+                            isDataUpdating: model.paymentTemplatesUpdating.value,
+                            categorySelected: self.categorySelector?.selected,
+                            searchText: payload.text,
+                            isAddItemNeeded: true
+                        )
                     }
                     
                 case _ as TemplatesListViewModelAction.ToggleStyle:
@@ -448,11 +458,13 @@ private extension TemplatesListViewModel {
                         self.selectedItemsIds.value = []
                         self.deletePanel = getDeletePanelModel(selectedCount: 0)
                         
-                        self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                                 isDataUpdating: false,
-                                                 categorySelected: self.categorySelector?.selected,
-                                                 searchText: nil,
-                                                 isAddItemNeeded: false)
+                        self.items = reduceItems(
+                            rawItems: self.itemsRaw.value,
+                            isDataUpdating: false,
+                            categorySelected: self.categorySelector?.selected,
+                            searchText: nil,
+                            isAddItemNeeded: false
+                        )
                         
                         for item in itemsRaw.value {
                             
@@ -546,17 +558,20 @@ private extension TemplatesListViewModel {
                     guard let timer = itemVM.timer else { return }
                     
                     let deletingViewModel = ItemViewModel.DeletingProgressViewModel
-                        .init(progress: timer.maxCount,
-                              countTitle: "\(timer.maxCount)",
-                              cancelButton: .init(title: "Отменить",
-                                                  action: { [unowned itemVM, unowned self] id in
+                        .init(
+                            progress: timer.maxCount,
+                            countTitle: "\(timer.maxCount)",
+                            cancelButton: .init(
+                                title: "Отменить",
+                                action: { [unowned itemVM, unowned self] id in
                                     itemVM.timer = nil
                                     self.action.send(
                                         TemplatesListViewModelAction.Delete.Selection.CancelDeleting())
-                                    }),
-                              title: itemVM.title,
-                              style: self.style,
-                              id: itemVM.id)
+                                }),
+                            title: itemVM.title,
+                            style: self.style,
+                            id: itemVM.id
+                        )
                     
                     itemVM.state = .deleting(deletingViewModel)
                     
@@ -565,6 +580,7 @@ private extension TemplatesListViewModel {
                         self.items.removeAll { deleteGroupItemsId.contains($0.id) }
                         self.items.insert(itemVM, at: 0)
                     }
+                    
                     self.idList = UUID() //focus on first item in list
                     
                     itemVM.timer?.timerPublisher
@@ -596,11 +612,13 @@ private extension TemplatesListViewModel {
                         
                         self.updateNavBar(event: .setRegular)
                             
-                        self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                                 isDataUpdating: model.paymentTemplatesUpdating.value,
-                                                 categorySelected: self.categorySelector?.selected,
-                                                 searchText: nil,
-                                                 isAddItemNeeded: true)
+                        self.items = reduceItems(
+                            rawItems: self.itemsRaw.value,
+                            isDataUpdating: model.paymentTemplatesUpdating.value,
+                            categorySelected: self.categorySelector?.selected,
+                            searchText: nil,
+                            isAddItemNeeded: true
+                        )
                     }
                     
             //Personal Item Delete start
@@ -696,11 +714,13 @@ private extension TemplatesListViewModel {
                 
                 withAnimation {
                  
-                    self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                             isDataUpdating: false,
-                                             categorySelected: selectedCategoryIndex,
-                                             searchText: self.navBarState.searchModel?.searchText,
-                                             isAddItemNeeded: !self.state.isSelect)
+                    self.items = reduceItems(
+                        rawItems: self.itemsRaw.value,
+                        isDataUpdating: false,
+                        categorySelected: selectedCategoryIndex,
+                        searchText: self.navBarState.searchModel?.searchText,
+                        isAddItemNeeded: !self.state.isSelect
+                    )
                 }
             }.store(in: &bindings)
     }
