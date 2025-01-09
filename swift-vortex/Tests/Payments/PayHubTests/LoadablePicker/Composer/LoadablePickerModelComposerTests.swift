@@ -1,23 +1,23 @@
 //
-//  LoadablePickerModelComposerNoReloadTests.swift
+//  LoadablePickerModelComposerTests.swift
 //
 //
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
 import PayHub
-import PayHubUI
 import XCTest
 
-final class LoadablePickerModelComposerNoReloadTests: XCTestCase {
+final class LoadablePickerModelComposerTests: XCTestCase {
     
     // MARK: - init
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, loadSpy, reloadSpy) = makeSUT()
         
-        XCTAssertEqual(spy.callCount, 0)
+        XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertEqual(reloadSpy.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -113,21 +113,21 @@ final class LoadablePickerModelComposerNoReloadTests: XCTestCase {
     
     func test_load_shouldCallLoad() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         let content = compose(sut)
         
         content.event(.load)
         
-        XCTAssertEqual(spy.callCount, 1)
+        XCTAssertEqual(loadSpy.callCount, 1)
     }
     
     func test_load_shouldDeliverEmptyLoaded() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         let content = compose(sut)
         
         content.event(.load)
-        spy.complete(with: [])
+        loadSpy.complete(with: [])
         
         XCTAssertEqual(content.state.items.count, 0)
     }
@@ -135,11 +135,11 @@ final class LoadablePickerModelComposerNoReloadTests: XCTestCase {
     func test_load_shouldDeliverOneLoaded() {
         
         let item = makeItem()
-        let (sut, spy) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         let content = compose(sut)
         
         content.event(.load)
-        spy.complete(with: [item])
+        loadSpy.complete(with: [item])
         
         XCTAssertEqual(content.state.items.count, 1)
         XCTAssertEqual(content.state.elements, [item])
@@ -148,11 +148,58 @@ final class LoadablePickerModelComposerNoReloadTests: XCTestCase {
     func test_load_shouldDeliverTwoLoaded() {
         
         let (item1, item2) = (makeItem(), makeItem())
-        let (sut, spy) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         let content = compose(sut)
         
         content.event(.load)
-        spy.complete(with: [item1, item2])
+        loadSpy.complete(with: [item1, item2])
+        
+        XCTAssertEqual(content.state.items.count, 2)
+        XCTAssertEqual(content.state.elements, [item1, item2])
+    }
+    
+    func test_reload_shouldCallReload() {
+        
+        let (sut, _, reloadSpy) = makeSUT()
+        let content = compose(sut)
+        
+        content.event(.reload)
+        
+        XCTAssertEqual(reloadSpy.callCount, 1)
+    }
+    
+    func test_reload_shouldDeliverEmptyLoaded() {
+        
+        let (sut, _, reloadSpy) = makeSUT()
+        let content = compose(sut)
+        
+        content.event(.reload)
+        reloadSpy.complete(with: [])
+        
+        XCTAssertEqual(content.state.items.count, 0)
+    }
+    
+    func test_reload_shouldDeliverOneLoaded() {
+        
+        let item = makeItem()
+        let (sut, _, reloadSpy) = makeSUT()
+        let content = compose(sut)
+        
+        content.event(.reload)
+        reloadSpy.complete(with: [item])
+        
+        XCTAssertEqual(content.state.items.count, 1)
+        XCTAssertEqual(content.state.elements, [item])
+    }
+    
+    func test_reload_shouldDeliverTwoLoaded() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let (sut, _, reloadSpy) = makeSUT()
+        let content = compose(sut)
+        
+        content.event(.reload)
+        reloadSpy.complete(with: [item1, item2])
         
         XCTAssertEqual(content.state.items.count, 2)
         XCTAssertEqual(content.state.elements, [item1, item2])
@@ -170,18 +217,22 @@ final class LoadablePickerModelComposerNoReloadTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: LoadSpy
+        loadSpy: LoadSpy,
+        reloadSpy: LoadSpy
     ) {
-        let spy = LoadSpy()
+        let loadSpy = LoadSpy()
+        let reloadSpy = LoadSpy()
         let sut = SUT(
-            load: spy.process(completion:),
+            load: loadSpy.process(completion:),
+            reload: reloadSpy.process(completion:),
             scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(reloadSpy, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, loadSpy, reloadSpy)
     }
     
     private func compose(
@@ -211,21 +262,5 @@ final class LoadablePickerModelComposerNoReloadTests: XCTestCase {
     ) -> Item {
         
         return .init(value: value)
-    }
-}
-
-// MARK: - DSL
-
-extension LoadablePickerState {
-    
-    var elements: [Element] {
-        
-        items.compactMap {
-            
-            guard case let .element(identified) = $0
-            else { return nil }
-            
-            return identified.element
-        }
     }
 }

@@ -74,7 +74,7 @@ extension OperationPickerView {
     }
     
     private func makeContentView(
-        _ content: OperationPickerContent
+        _ content: OperationPickerDomain.Content
     ) -> some View {
         
         RxWrapperView(
