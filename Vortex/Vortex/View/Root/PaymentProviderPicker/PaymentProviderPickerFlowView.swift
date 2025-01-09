@@ -63,7 +63,7 @@ private extension PaymentProviderPickerFlowView {
             return backendFailure
             
         case let .destination(.payment(.failure(.serviceFailure(serviceFailure)))):
-            return .init(serviceFailure, connectivityFailureMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
+            return .paymentServiceFailure(serviceFailure)
             
         default:
             return nil
@@ -108,6 +108,19 @@ extension BackendFailure {
             message: Text(message),
             dismissButton: .default(Text("OK"), action: action)
         )
+    }
+    
+    static func paymentServiceFailure(
+        _ serviceFailure: ServiceFailureAlert.ServiceFailure
+    ) -> Self {
+        
+        switch serviceFailure {
+        case .connectivityError:
+            return .paymentConnectivity
+            
+        case let .serverError(message):
+            return .init(message: message, source: .server)
+        }
     }
     
     private var title: String {

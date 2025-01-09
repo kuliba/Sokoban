@@ -36,7 +36,6 @@ extension PaymentProviderPickerDomain {
     typealias DetailPayment = Node<PaymentsViewModel>
     typealias Payment = ProcessSelectionResult
     typealias Provider = UtilityPaymentProvider
-//    typealias Service = Void
     typealias ServicePicker = PaymentServicePicker.Binder
     typealias ServicesFailure = ServiceCategoryFailureDomain.Binder
     
