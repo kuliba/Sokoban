@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PaymentComponents
 
 struct CreateDraftCollateralLoanApplicationHeaderView: View {
     
@@ -20,39 +21,24 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
                 .fill(config.colors.background)
                 .frame(maxWidth: .infinity)
             
-            content
+            InfoView(
+                info: .init(
+                    id: .other(UUID().uuidString),
+                    title: config.header.title,
+                    value: data.name,
+                    style: .expanded
+                ),
+                config: .init(title: config.fonts.title, value: config.fonts.value),
+                icon: factory.makeImageView
+            )
+            .padding(config.layouts.paddings.contentStack)
         }
         .padding(config.layouts.paddings.stack)
         .fixedSize(horizontal: false, vertical: true)
     }
-    
-    private var content: some View {
-        
-        HStack(spacing: config.layouts.contentHorizontalSpacing) {
-            
-            iconView
-            infoView
-        }
-        .padding(config.layouts.paddings.contentStack)
-    }
-    
-    private var iconView: some View {
-        
-        factory.makeImageView(data.icons.productName)
-            .frame(config.layouts.iconSize)
-    }
-    
-    private var infoView: some View {
-        
-        VStack(spacing: config.layouts.contentVerticalSpacing) {
-            
-            config.header.title.text(withConfig: config.fonts.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            data.name.text(withConfig: config.fonts.message)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
+}
+
+extension CreateDraftCollateralLoanApplicationHeaderView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig

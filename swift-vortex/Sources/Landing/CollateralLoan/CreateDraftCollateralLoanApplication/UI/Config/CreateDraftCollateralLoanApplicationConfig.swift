@@ -18,11 +18,12 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public struct Fonts {
         
         let title: TextConfig
-        let message: TextConfig
+        let value: TextConfig
         
-        public init(title: TextConfig, message: TextConfig) {
+        public init(title: TextConfig, value: TextConfig) {
+
             self.title = title
-            self.message = message
+            self.value = value
         }
     }
     
@@ -93,7 +94,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
     static let preview = Self(
         fonts: .init(
             title: .init(textFont: Font.system(size: 14), textColor: .title),
-            message: .init(textFont: Font.system(size: 16), textColor: .primary)
+            value: .init(textFont: Font.system(size: 16), textColor: .primary)
         ),
         colors: .init(
             background: .background
