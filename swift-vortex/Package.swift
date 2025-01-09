@@ -80,6 +80,7 @@ let package = Package(
         .c2bSubscriptionUI,
         .calendarUI,
         .clientInformList,
+        .flowCore,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -269,6 +270,8 @@ let package = Package(
         .clientInformListTests,
         .linkableText,
         .linkableTextTests,
+        .flowCore,
+        .flowCoreTests,
         .manageSubscriptionsUI,
         .otpInputComponent,
         .otpInputComponentTests,
@@ -561,6 +564,13 @@ private extension Product {
         name: .linkableText,
         targets: [
             .linkableText
+        ]
+    )
+    
+    static let flowCore = library(
+        name: .flowCore,
+        targets: [
+            .flowCore
         ]
     )
     
@@ -1785,6 +1795,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             // internal modules
+            .flowCore,
             .rxViewModel,
         ],
         path: "Sources/Payments/\(String.payHub)"
@@ -1807,6 +1818,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             // internal modules
+            .flowCore,
             .payHub,
             .rxViewModel,
             .uiPrimitives,
@@ -2537,7 +2549,6 @@ private extension Target {
         ],
         path: "Sources/UI/ProductProfile/\(String.cardGuardianUI)"
     )
-    
     static let cardGuardianUITests = testTarget(
         name: .cardGuardianUITests,
         dependencies: [
@@ -2556,7 +2567,6 @@ private extension Target {
         ],
         path: "Sources/UI/\(String.clientInformList)"
     )
-    
     static let clientInformListTests = testTarget(
         name: .clientInformListTests,
         dependencies: [
@@ -2569,7 +2579,6 @@ private extension Target {
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
     )
-    
     static let linkableTextTests = testTarget(
         name: .linkableTextTests,
         dependencies: [
@@ -2579,6 +2588,28 @@ private extension Target {
             .linkableText,
         ],
         path: "Tests/UI/\(String.linkableTextTests)"
+    )
+    
+    static let flowCore = target(
+        name: .flowCore,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .rxViewModel,
+        ],
+        path: "Sources/UI/\(String.flowCore)"
+    )
+    static let flowCoreTests = testTarget(
+        name: .flowCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .flowCore,
+            .rxViewModel,
+        ],
+        path: "Tests/UI/\(String.flowCoreTests)"
     )
     
     static let manageSubscriptionsUI = target(
@@ -3391,6 +3422,10 @@ private extension Target.Dependency {
         name: .linkableText
     )
     
+    static let flowCore = byName(
+        name: .flowCore
+    )
+    
     static let otpInputComponent = byName(
         name: .otpInputComponent
     )
@@ -3831,6 +3866,9 @@ private extension String {
     
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
+    
+    static let flowCore = "FlowCore"
+    static let flowCoreTests = "FlowCoreTests"
     
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
     

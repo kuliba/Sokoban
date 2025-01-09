@@ -241,7 +241,7 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
 
 private extension QRScannerDomain.NotifyEvent {
     
-    typealias PickerFlowEvent = PayHub.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
     
     init(_ event: PickerFlowEvent) {
         

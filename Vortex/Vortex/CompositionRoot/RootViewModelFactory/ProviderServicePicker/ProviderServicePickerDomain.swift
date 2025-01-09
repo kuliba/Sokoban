@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 29.12.2024.
 //
 
-import PayHub
 import VortexTools
 
 /// A nameSpace.
@@ -15,7 +14,7 @@ extension ProviderServicePickerDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     
@@ -30,7 +29,7 @@ extension ProviderServicePickerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = FlowDomain.Notify

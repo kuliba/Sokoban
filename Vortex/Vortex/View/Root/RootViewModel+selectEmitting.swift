@@ -6,9 +6,8 @@
 //
 
 import Combine
-import PayHub
 
-typealias RootEvent = PayHub.FlowEvent<RootViewSelect, Never>
+typealias RootEvent = Vortex.FlowEvent<RootViewSelect, Never>
 
 extension RootViewModel {
     

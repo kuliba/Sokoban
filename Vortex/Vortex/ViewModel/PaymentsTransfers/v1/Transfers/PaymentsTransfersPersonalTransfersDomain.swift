@@ -15,7 +15,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     typealias Binder = PlainPickerBinder<Select, NavigationResult>
     typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, NavigationResult>
+    typealias FlowDomain = Vortex.FlowDomain<Select, NavigationResult>
     
     // MARK: - Content
     

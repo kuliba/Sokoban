@@ -6,6 +6,5 @@
 //
 
 import Banners
-import PayHub
 
-typealias BannersBinder = PayHub.Binder<BannersContent, BannersFlow>
+typealias BannersBinder = Vortex.Binder<BannersContent, BannersFlow>

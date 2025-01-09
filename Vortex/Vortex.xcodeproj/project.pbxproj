@@ -507,7 +507,7 @@
 		2A248F3F2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */; };
 		2A248F472C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */; };
 		2A248F492C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F482C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift */; };
-		2A248F4B2C67A03C00082814 /* FlowEventPublishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F4A2C67A03C00082814 /* FlowEventPublishing.swift */; };
+		2A248F4B2C67A03C00082814 /* DismissAndTabFlowEventPublishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F4A2C67A03C00082814 /* DismissAndTabFlowEventPublishing.swift */; };
 		2A248F4D2C68791100082814 /* InitiateAnywayPaymentMicroServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F4C2C68791100082814 /* InitiateAnywayPaymentMicroServiceTests.swift */; };
 		2A248F552C68911400082814 /* AnywayPaymentSourceParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F542C68911400082814 /* AnywayPaymentSourceParserTests.swift */; };
 		2A248F5A2C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F592C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift */; };
@@ -808,6 +808,24 @@
 		2A4C4B232C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C4B222C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift */; };
 		2A4CC47E2D21E96300F5C263 /* PaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC47D2D21E96200F5C263 /* PaymentProviderPickerFlowView.swift */; };
 		2A4CC4832D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */; };
+		2A4CC48F2D227E4B00F5C263 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */; };
+		2A4CC4922D227E4B00F5C263 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */; };
+		2A4CC4C12D2280A600F5C263 /* RootDomain.Binder+default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */; };
+		2A4CC4C22D2280A600F5C263 /* RootDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4B92D2280A500F5C263 /* RootDomain.swift */; };
+		2A4CC4C42D2280A600F5C263 /* BinderComposerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */; };
+		2A4CC4C52D2280A600F5C263 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BD2D2280A600F5C263 /* ContentView.swift */; };
+		2A4CC4C62D2280A600F5C263 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BE2D2280A600F5C263 /* Destination.swift */; };
+		2A4CC4C72D2280A600F5C263 /* DestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4BF2D2280A600F5C263 /* DestinationView.swift */; };
+		2A4CC4C92D2280D500F5C263 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4C82D2280D500F5C263 /* RxViewModel */; };
+		2A4CC4CB2D2280E400F5C263 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4CA2D2280E400F5C263 /* UIPrimitives */; };
+		2A4CC4CD2D2280F300F5C263 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4CC2D2280F300F5C263 /* PayHub */; };
+		2A4CC4CF2D2280F300F5C263 /* PayHubUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4CE2D2280F300F5C263 /* PayHubUI */; };
+		2A4CC4D62D22816600F5C263 /* BinderComposerPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D02D22816600F5C263 /* BinderComposerPreviewTests.swift */; };
+		2A4CC4D72D22816600F5C263 /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D12D22816600F5C263 /* XCTAssertNoDiff.swift */; };
+		2A4CC4D82D22816600F5C263 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D32D22816600F5C263 /* ValueSpy.swift */; };
+		2A4CC4D92D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4CC4D42D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift */; };
+		2A4CC4DB2D22818800F5C263 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4DA2D22818800F5C263 /* CustomDump */; };
+		2A4CC4DD2D2281B500F5C263 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A4CC4DC2D2281B500F5C263 /* CombineSchedulers */; };
 		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4D9ACE2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D9ACD2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift */; };
 		2A4D9AD02CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D9ACF2CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift */; };
@@ -1221,6 +1239,8 @@
 		2A9D79DC2C81862F00A17677 /* PaymentsTransfersPersonalDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */; };
 		2A9D79E42C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79E32C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift */; };
 		2A9E054B2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E054A2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift */; };
+		2A9EA5D92D26AC0700DEC45C /* FlowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9EA5D82D26AC0700DEC45C /* FlowCore */; };
+		2A9EA5DB2D26AC1200DEC45C /* FlowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9EA5DA2D26AC1200DEC45C /* FlowCore */; };
 		2A9F82D92CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */; };
 		2AA09D552CF9AD400062415C /* RootViewFactory+transportPaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D542CF9AD400062415C /* RootViewFactory+transportPaymentsView.swift */; };
 		2AA09D572CF9AD770062415C /* RootViewFactory+qrDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA09D562CF9AD770062415C /* RootViewFactory+qrDestinationView.swift */; };
@@ -1460,7 +1480,7 @@
 		2ACFD6652C5CCF5B003F08AE /* OperatorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */; };
 		2ACFD6672C5CDDF2003F08AE /* QRScanResultMapperComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6662C5CDDF2003F08AE /* QRScanResultMapperComposer.swift */; };
 		2ACFD6692C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6682C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift */; };
-		2ACFD66B2C5D1F6A003F08AE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66A2C5D1F69003F08AE /* Node.swift */; };
+		2ACFD66B2C5D1F6A003F08AE /* CoreFlowTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66A2C5D1F69003F08AE /* CoreFlowTypes.swift */; };
 		2ACFD66E2C5DEDA8003F08AE /* UtilityPaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */; };
 		2ACFD6702C5DEDF9003F08AE /* SegmentedOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */; };
 		2ACFD6742C5DFBC6003F08AE /* QRScanResultMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */; };
@@ -3507,6 +3527,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2A4CC4982D227E4B00F5C263 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2A4CC4872D227E4A00F5C263;
+			remoteInfo = BinderComposerPreview;
+		};
 		84CA1BE92D06BAC10097BB93 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
@@ -4074,7 +4101,7 @@
 		2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServices.swift; sourceTree = "<group>"; };
 		2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceFailureAlert.ServiceFailure+ext.swift"; sourceTree = "<group>"; };
 		2A248F482C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTemplatesComposer.swift"; sourceTree = "<group>"; };
-		2A248F4A2C67A03C00082814 /* FlowEventPublishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowEventPublishing.swift; sourceTree = "<group>"; };
+		2A248F4A2C67A03C00082814 /* DismissAndTabFlowEventPublishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAndTabFlowEventPublishing.swift; sourceTree = "<group>"; };
 		2A248F4C2C68791100082814 /* InitiateAnywayPaymentMicroServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentMicroServiceTests.swift; sourceTree = "<group>"; };
 		2A248F4F2C6885FB00082814 /* InitiateAnywayPaymentMicroService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentMicroService.swift; sourceTree = "<group>"; };
 		2A248F542C68911400082814 /* AnywayPaymentSourceParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentSourceParserTests.swift; sourceTree = "<group>"; };
@@ -4366,6 +4393,20 @@
 		2A4C4B222C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEffect.swift; sourceTree = "<group>"; };
 		2A4CC47D2D21E96200F5C263 /* PaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A4CC4822D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift"; sourceTree = "<group>"; };
+		2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BinderComposerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BinderComposerPreviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootDomain.Binder+default.swift"; sourceTree = "<group>"; };
+		2A4CC4B92D2280A500F5C263 /* RootDomain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootDomain.swift; sourceTree = "<group>"; };
+		2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewApp.swift; sourceTree = "<group>"; };
+		2A4CC4BD2D2280A600F5C263 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A4CC4BE2D2280A600F5C263 /* Destination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		2A4CC4BF2D2280A600F5C263 /* DestinationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DestinationView.swift; sourceTree = "<group>"; };
+		2A4CC4D02D22816600F5C263 /* BinderComposerPreviewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinderComposerPreviewTests.swift; sourceTree = "<group>"; };
+		2A4CC4D12D22816600F5C263 /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
+		2A4CC4D32D22816600F5C263 /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
+		2A4CC4D42D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4D9ACD2CF1B0DA0092908E /* RootViewModelFactory+makeAnywayFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeAnywayFlowModel.swift"; sourceTree = "<group>"; };
 		2A4D9ACF2CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getOutlineProduct.swift"; sourceTree = "<group>"; };
@@ -4799,6 +4840,7 @@
 		2A9D79D12C81835800A17677 /* PaymentsTransfersPersonalDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalDomain.swift; sourceTree = "<group>"; };
 		2A9D79E32C819B9400A17677 /* ProductsData+hasCorporateCardsOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductsData+hasCorporateCardsOnly.swift"; sourceTree = "<group>"; };
 		2A9E054A2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeNavigationStateManager.swift"; sourceTree = "<group>"; };
+		2A9EA5D72D26A50100DEC45C /* FlowCore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = FlowCore.xctestplan; sourceTree = "<group>"; };
 		2A9F82D82CF5950D00EB0EAC /* RootViewModelFactory+getRootNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getRootNavigationTests.swift"; sourceTree = "<group>"; };
 		2AA09D542CF9AD400062415C /* RootViewFactory+transportPaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+transportPaymentsView.swift"; sourceTree = "<group>"; };
 		2AA09D562CF9AD770062415C /* RootViewFactory+qrDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+qrDestinationView.swift"; sourceTree = "<group>"; };
@@ -5032,7 +5074,7 @@
 		2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorProvider.swift; sourceTree = "<group>"; };
 		2ACFD6662C5CDDF2003F08AE /* QRScanResultMapperComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperComposer.swift; sourceTree = "<group>"; };
 		2ACFD6682C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperMicroServices.swift; sourceTree = "<group>"; };
-		2ACFD66A2C5D1F69003F08AE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		2ACFD66A2C5D1F69003F08AE /* CoreFlowTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreFlowTypes.swift; sourceTree = "<group>"; };
 		2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentProvider.swift; sourceTree = "<group>"; };
 		2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedOperator.swift; sourceTree = "<group>"; };
 		2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperTests.swift; sourceTree = "<group>"; };
@@ -7086,6 +7128,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2A4CC4852D227E4A00F5C263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC4CD2D2280F300F5C263 /* PayHub in Frameworks */,
+				2A4CC4CB2D2280E400F5C263 /* UIPrimitives in Frameworks */,
+				2A9EA5DB2D26AC1200DEC45C /* FlowCore in Frameworks */,
+				2A4CC4C92D2280D500F5C263 /* RxViewModel in Frameworks */,
+				2A4CC4CF2D2280F300F5C263 /* PayHubUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4942D227E4B00F5C263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC4DB2D22818800F5C263 /* CustomDump in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A62E95D2BD94F870044EB39 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -7211,6 +7273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7598A7A2CE76A12001980B1 /* PayHub in Frameworks */,
+				2A4CC4DD2D2281B500F5C263 /* CombineSchedulers in Frameworks */,
 				A7598A782CE76848001980B1 /* CollateralLoanLandingShowCaseUI in Frameworks */,
 				A7598A762CE76848001980B1 /* CollateralLoanLandingShowCaseBackend in Frameworks */,
 				A7598A7C2CE76A34001980B1 /* PayHubUI in Frameworks */,
@@ -7346,6 +7409,7 @@
 				84CA1BE52D06BAB50097BB93 /* VortexCrypto in Frameworks */,
 				83C6F1162B9601BE00EA892A /* ProductProfileComponents in Frameworks */,
 				2A3947182A19E84500EB9757 /* TextFieldComponent in Frameworks */,
+				2A9EA5D92D26AC0700DEC45C /* FlowCore in Frameworks */,
 				8330E12F2CEF405B00694AD0 /* SavingsServices in Frameworks */,
 				83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */,
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
@@ -9915,6 +9979,72 @@
 			path = Payments;
 			sourceTree = "<group>";
 		};
+		2A4CC4892D227E4A00F5C263 /* BinderComposerPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4BC2D2280A500F5C263 /* BinderComposerPreviewApp.swift */,
+				2A4CC4BD2D2280A600F5C263 /* ContentView.swift */,
+				2A4CC4C02D2280A600F5C263 /* Destination */,
+				2A4CC4BB2D2280A500F5C263 /* Root */,
+				2A4CC48E2D227E4B00F5C263 /* Assets.xcassets */,
+				2A4CC4902D227E4B00F5C263 /* Preview Content */,
+			);
+			path = BinderComposerPreview;
+			sourceTree = "<group>";
+		};
+		2A4CC4902D227E4B00F5C263 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4912D227E4B00F5C263 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2A4CC49A2D227E4B00F5C263 /* BinderComposerPreviewTests */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4D02D22816600F5C263 /* BinderComposerPreviewTests.swift */,
+				2A4CC4D52D22816600F5C263 /* Helpers */,
+				2A4CC4D22D22816600F5C263 /* ThirdPartyDependencies */,
+			);
+			path = BinderComposerPreviewTests;
+			sourceTree = "<group>";
+		};
+		2A4CC4BB2D2280A500F5C263 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4B82D2280A500F5C263 /* RootDomain.Binder+default.swift */,
+				2A4CC4B92D2280A500F5C263 /* RootDomain.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		2A4CC4C02D2280A600F5C263 /* Destination */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4BE2D2280A600F5C263 /* Destination.swift */,
+				2A4CC4BF2D2280A600F5C263 /* DestinationView.swift */,
+			);
+			path = Destination;
+			sourceTree = "<group>";
+		};
+		2A4CC4D22D22816600F5C263 /* ThirdPartyDependencies */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4D12D22816600F5C263 /* XCTAssertNoDiff.swift */,
+			);
+			path = ThirdPartyDependencies;
+			sourceTree = "<group>";
+		};
+		2A4CC4D52D22816600F5C263 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2A4CC4D32D22816600F5C263 /* ValueSpy.swift */,
+				2A4CC4D42D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		2A5190322A7E106D0014B0B7 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -10036,6 +10166,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A9EA5D72D26A50100DEC45C /* FlowCore.xctestplan */,
 				834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */,
 				84F97D682D141DA70049937A /* VortexCrypto.xctestplan */,
 				83C6A1EA2CFF47670076BC25 /* SavingsAccount.xctestplan */,
@@ -11195,7 +11326,7 @@
 			children = (
 				2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */,
 				2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */,
-				2A248F4A2C67A03C00082814 /* FlowEventPublishing.swift */,
+				2A248F4A2C67A03C00082814 /* DismissAndTabFlowEventPublishing.swift */,
 				2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */,
 			);
 			path = Logic;
@@ -12406,6 +12537,8 @@
 			children = (
 				2A2F88282BC942220097119C /* AnywayPaymentPreview */,
 				2A0F1E2A2C06E144006E1231 /* AutoScrollingListPreview */,
+				2A4CC4892D227E4A00F5C263 /* BinderComposerPreview */,
+				2A4CC49A2D227E4B00F5C263 /* BinderComposerPreviewTests */,
 				C1E07D962BFE2D2F00D07180 /* CalendarPreview */,
 				A7598A502CE766DC001980B1 /* CollateralLoanLandingPreview */,
 				2AFED9662C0F929A008F2F95 /* CachedModelsStatePreview */,
@@ -14755,7 +14888,7 @@
 				0CCF9123281C1E5900C6322F /* Chat */,
 				834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */,
 				C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */,
-				2ACFD66A2C5D1F69003F08AE /* Node.swift */,
+				2ACFD66A2C5D1F69003F08AE /* CoreFlowTypes.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -17464,6 +17597,8 @@
 				2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */,
 				2AF529CB2CC01C9A00D49804 /* RefreshableScrollViewPreview.app */,
 				A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */,
+				2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */,
+				2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -18415,6 +18550,51 @@
 			productReference = 2A2F88272BC942220097119C /* AnywayPaymentPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A4CC4B52D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreview" */;
+			buildPhases = (
+				2A4CC4842D227E4A00F5C263 /* Sources */,
+				2A4CC4852D227E4A00F5C263 /* Frameworks */,
+				2A4CC4862D227E4A00F5C263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BinderComposerPreview;
+			packageProductDependencies = (
+				2A4CC4C82D2280D500F5C263 /* RxViewModel */,
+				2A4CC4CA2D2280E400F5C263 /* UIPrimitives */,
+				2A4CC4CC2D2280F300F5C263 /* PayHub */,
+				2A4CC4CE2D2280F300F5C263 /* PayHubUI */,
+				2A9EA5DA2D26AC1200DEC45C /* FlowCore */,
+			);
+			productName = BinderComposerPreview;
+			productReference = 2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2A4CC4962D227E4B00F5C263 /* BinderComposerPreviewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A4CC4B62D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreviewTests" */;
+			buildPhases = (
+				2A4CC4932D227E4B00F5C263 /* Sources */,
+				2A4CC4942D227E4B00F5C263 /* Frameworks */,
+				2A4CC4952D227E4B00F5C263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2A4CC4992D227E4B00F5C263 /* PBXTargetDependency */,
+			);
+			name = BinderComposerPreviewTests;
+			packageProductDependencies = (
+				2A4CC4DA2D22818800F5C263 /* CustomDump */,
+			);
+			productName = BinderComposerPreviewTests;
+			productReference = 2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2A62E95F2BD94F870044EB39 /* FactoryBasedPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A62E96F2BD94F880044EB39 /* Build configuration list for PBXNativeTarget "FactoryBasedPreview" */;
@@ -18695,6 +18875,7 @@
 				A7598A772CE76848001980B1 /* CollateralLoanLandingShowCaseUI */,
 				A7598A792CE76A12001980B1 /* PayHub */,
 				A7598A7B2CE76A34001980B1 /* PayHubUI */,
+				2A4CC4DC2D2281B500F5C263 /* CombineSchedulers */,
 			);
 			productName = CollateralLoanLandingPreview;
 			productReference = A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */;
@@ -18945,6 +19126,7 @@
 				83C6A1E82CFF43540076BC25 /* SavingsAccount */,
 				84CA1BE42D06BAB50097BB93 /* VortexCrypto */,
 				847321062D11A6740009C721 /* VortexTools */,
+				2A9EA5D82D26AC0700DEC45C /* FlowCore */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -19019,6 +19201,15 @@
 					};
 					2A2F88262BC942220097119C = {
 						CreatedOnToolsVersion = 15.3;
+					};
+					2A4CC4872D227E4A00F5C263 = {
+						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
+					};
+					2A4CC4962D227E4B00F5C263 = {
+						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
+						TestTargetID = 2A4CC4872D227E4A00F5C263;
 					};
 					2A62E95F2BD94F870044EB39 = {
 						CreatedOnToolsVersion = 15.3;
@@ -19155,6 +19346,8 @@
 				2A0E31742C63D52800143969 /* SberNumericTextFieldPreview */,
 				2AF529CA2CC01C9A00D49804 /* RefreshableScrollViewPreview */,
 				A7598A5C2CE7671A001980B1 /* CollateralLoanLandingPreview */,
+				2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */,
+				2A4CC4962D227E4B00F5C263 /* BinderComposerPreviewTests */,
 			);
 		};
 /* End PBXProject section */
@@ -19210,6 +19403,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A2F88312BC942230097119C /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4862D227E4A00F5C263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC4922D227E4B00F5C263 /* Preview Assets.xcassets in Resources */,
+				2A4CC48F2D227E4B00F5C263 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4952D227E4B00F5C263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19904,6 +20113,30 @@
 				2A09E6EA2BCBBA52001A7089 /* Array+AnywayElement+preview.swift in Sources */,
 				2AD0F6992BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift in Sources */,
 				2AFE37F92BCA866C0079C401 /* ExpandablePickerState.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4842D227E4A00F5C263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC4C42D2280A600F5C263 /* BinderComposerPreviewApp.swift in Sources */,
+				2A4CC4C72D2280A600F5C263 /* DestinationView.swift in Sources */,
+				2A4CC4C52D2280A600F5C263 /* ContentView.swift in Sources */,
+				2A4CC4C62D2280A600F5C263 /* Destination.swift in Sources */,
+				2A4CC4C12D2280A600F5C263 /* RootDomain.Binder+default.swift in Sources */,
+				2A4CC4C22D2280A600F5C263 /* RootDomain.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A4CC4932D227E4B00F5C263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A4CC4D62D22816600F5C263 /* BinderComposerPreviewTests.swift in Sources */,
+				2A4CC4D92D22816600F5C263 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				2A4CC4D82D22816600F5C263 /* ValueSpy.swift in Sources */,
+				2A4CC4D72D22816600F5C263 /* XCTAssertNoDiff.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -21019,7 +21252,7 @@
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				2AB87C592C1360280013EFFE /* InputWrapperView.swift in Sources */,
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
-				2ACFD66B2C5D1F6A003F08AE /* Node.swift in Sources */,
+				2ACFD66B2C5D1F6A003F08AE /* CoreFlowTypes.swift in Sources */,
 				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
 				2AEFDF742C8C95F500401496 /* Logger+decorate.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,
@@ -22332,7 +22565,7 @@
 				830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */,
 				77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */,
 				2AC2FB192C510475001972CB /* PaymentProviderServicePickerFlowEffectHandler.swift in Sources */,
-				2A248F4B2C67A03C00082814 /* FlowEventPublishing.swift in Sources */,
+				2A248F4B2C67A03C00082814 /* DismissAndTabFlowEventPublishing.swift in Sources */,
 				2AB109AD2C2C193200325D3A /* OTPWarningViewConfig.swift in Sources */,
 				C1CCFC3A29828EF30059212C /* Model+Abroad.swift in Sources */,
 				77517FD027A97AE8005CFB77 /* ProductData.swift in Sources */,
@@ -22972,6 +23205,11 @@
 		2A46300B2AC4550500020B73 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 2A46300A2AC4550500020B73 /* ServerAgent */;
+		};
+		2A4CC4992D227E4B00F5C263 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */;
+			targetProxy = 2A4CC4982D227E4B00F5C263 /* PBXContainerItemProxy */;
 		};
 		84CA1BEA2D06BAC10097BB93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -23861,6 +24099,260 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Preprod;
+		};
+		2A4CC4A92D227E4B00F5C263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A4CC4AA2D227E4B00F5C263 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2A4CC4AB2D227E4B00F5C263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2A4CC4AC2D227E4B00F5C263 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/BinderComposerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
+		2A4CC4AD2D227E4B00F5C263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
+			};
+			name = Debug;
+		};
+		2A4CC4AE2D227E4B00F5C263 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
+			};
+			name = Mock;
+		};
+		2A4CC4AF2D227E4B00F5C263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
+			};
+			name = Release;
+		};
+		2A4CC4B02D227E4B00F5C263 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.BinderComposerPreviewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BinderComposerPreview.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BinderComposerPreview";
 			};
 			name = Preprod;
 		};
@@ -27305,6 +27797,28 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		2A4CC4B52D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A4CC4A92D227E4B00F5C263 /* Debug */,
+				2A4CC4AA2D227E4B00F5C263 /* Mock */,
+				2A4CC4AB2D227E4B00F5C263 /* Release */,
+				2A4CC4AC2D227E4B00F5C263 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2A4CC4B62D227E4C00F5C263 /* Build configuration list for PBXNativeTarget "BinderComposerPreviewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A4CC4AD2D227E4B00F5C263 /* Debug */,
+				2A4CC4AE2D227E4B00F5C263 /* Mock */,
+				2A4CC4AF2D227E4B00F5C263 /* Release */,
+				2A4CC4B02D227E4B00F5C263 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2A62E96F2BD94F880044EB39 /* Build configuration list for PBXNativeTarget "FactoryBasedPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -27888,6 +28402,32 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RemoteServices;
 		};
+		2A4CC4C82D2280D500F5C263 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2A4CC4CA2D2280E400F5C263 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
+		};
+		2A4CC4CC2D2280F300F5C263 /* PayHub */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PayHub;
+		};
+		2A4CC4CE2D2280F300F5C263 /* PayHubUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PayHubUI;
+		};
+		2A4CC4DA2D22818800F5C263 /* CustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
+			productName = CustomDump;
+		};
+		2A4CC4DC2D2281B500F5C263 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
 		2A5190302A7E0BE80014B0B7 /* URLRequestFactory */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = URLRequestFactory;
@@ -27984,6 +28524,14 @@
 		2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UtilityServicePrepayment;
+		};
+		2A9EA5D82D26AC0700DEC45C /* FlowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlowCore;
+		};
+		2A9EA5DA2D26AC1200DEC45C /* FlowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlowCore;
 		};
 		2AA70FBC2B52B1940061F5DD /* Tagged */ = {
 			isa = XCSwiftPackageProductDependency;

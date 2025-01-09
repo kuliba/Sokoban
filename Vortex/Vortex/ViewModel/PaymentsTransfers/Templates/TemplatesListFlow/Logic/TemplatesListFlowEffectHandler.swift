@@ -6,7 +6,7 @@
 //
 
 final class TemplatesListFlowEffectHandler<PaymentFlow>
-where PaymentFlow: FlowEventPublishing {
+where PaymentFlow: DismissAndTabFlowEventPublishing {
     
     private let microServices: MicroServices
     
