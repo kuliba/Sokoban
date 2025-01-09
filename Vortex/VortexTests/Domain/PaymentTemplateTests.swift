@@ -30,7 +30,7 @@ class PaymentTemplateTests: XCTestCase {
         XCTAssertNotNil(result.parameterList.first! as? TransferGeneralData)
         XCTAssertEqual(result.paymentTemplateId, 1)
         XCTAssertEqual(result.sort, 1)
-        XCTAssertEqual(result.svgImage.description, "string")
+        XCTAssertEqual(result.svgImage?.description, "string")
         XCTAssertEqual(result.type, .sfp)
     }
     

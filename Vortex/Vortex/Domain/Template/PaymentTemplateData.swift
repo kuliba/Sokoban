@@ -9,15 +9,47 @@ import Foundation
 
 struct PaymentTemplateData: Identifiable, Equatable {
     
-    var id: Int { paymentTemplateId }
     let groupName: String
     let name: String
     let parameterList: [TransferData]
     let paymentTemplateId: Int
     let productTemplate: ProductTemplateData?
     let sort: Int
-    let svgImage: SVGImageData
+    let svgImage: SVGImageData?
     let type: Kind
+    
+    // New fields
+    let inn: String?
+    let md5hash: String?
+    let paymentFlow: String? // TODO: - change to enum or add strong type property with optional value
+    
+    init(
+        groupName: String,
+        name: String,
+        parameterList: [TransferData],
+        paymentTemplateId: Int,
+        productTemplate: ProductTemplateData?,
+        sort: Int,
+        svgImage: SVGImageData? = nil,
+        type: Kind,
+        inn: String? = nil,
+        md5hash: String? = nil,
+        paymentFlow: String? = nil
+    ) {
+        self.groupName = groupName
+        self.name = name
+        self.parameterList = parameterList
+        self.paymentTemplateId = paymentTemplateId
+        self.productTemplate = productTemplate
+        self.sort = sort
+        self.svgImage = svgImage
+        self.type = type
+        self.inn = inn
+        self.md5hash = md5hash
+        self.paymentFlow = paymentFlow
+    }
+    
+    var id: Int { paymentTemplateId }
 }
 
 //MARK: - Types
@@ -84,8 +116,19 @@ extension PaymentTemplateData {
 
 extension PaymentTemplateData: Codable {
     
-    private enum CodingKeys : String, CodingKey {
-        case groupName, name, parameterList, paymentTemplateId, productTemplate, sort, svgImage, type
+    private enum CodingKeys: String, CodingKey {
+        
+        case groupName
+        case name
+        case parameterList
+        case paymentTemplateId
+        case productTemplate
+        case sort
+        case svgImage
+        case type
+        case inn
+        case md5hash
+        case paymentFlow
     }
     
     init(from decoder: Decoder) throws {
@@ -97,18 +140,13 @@ extension PaymentTemplateData: Codable {
         var parameterListContainer = try container.nestedUnkeyedContainer(forKey: .parameterList)
         var parameterListDecoded = [TransferData]()
         
-        while parameterListContainer.isAtEnd == false {
+        while !parameterListContainer.isAtEnd {
             
             if let transferAnyway = try? parameterListContainer.decode(TransferAnywayData.self) {
-                
                 parameterListDecoded.append(transferAnyway)
-                
             } else if let transferMe2Me = try? parameterListContainer.decode(TransferMe2MeData.self) {
-                
                 parameterListDecoded.append(transferMe2Me)
-                
             } else {
-                
                 let transfer = try parameterListContainer.decode(TransferGeneralData.self)
                 parameterListDecoded.append(transfer)
             }
@@ -118,9 +156,31 @@ extension PaymentTemplateData: Codable {
         paymentTemplateId = try container.decode(Int.self, forKey: .paymentTemplateId)
         productTemplate = try container.decodeIfPresent(ProductTemplateData.self, forKey: .productTemplate)
         sort = try container.decode(Int.self, forKey: .sort)
-        svgImage = try container.decode(SVGImageData.self, forKey: .svgImage)
+        svgImage = try container.decodeIfPresent(SVGImageData.self, forKey: .svgImage)
         let typeString = try container.decode(String.self, forKey: .type)
         type = Kind(rawValue: typeString) ?? .unknown
+        
+        // Decode the new optional fields
+        inn = try container.decodeIfPresent(String.self, forKey: .inn)
+        md5hash = try container.decodeIfPresent(String.self, forKey: .md5hash)
+        paymentFlow = try container.decodeIfPresent(String.self, forKey: .paymentFlow)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(groupName, forKey: .groupName)
+        try container.encode(name, forKey: .name)
+        try container.encode(parameterList, forKey: .parameterList)
+        try container.encode(paymentTemplateId, forKey: .paymentTemplateId)
+        try container.encodeIfPresent(productTemplate, forKey: .productTemplate)
+        try container.encode(sort, forKey: .sort)
+        try container.encodeIfPresent(svgImage, forKey: .svgImage)
+        try container.encode(type.rawValue, forKey: .type)
+        
+        // Encode the new optional fields
+        try container.encodeIfPresent(inn, forKey: .inn)
+        try container.encodeIfPresent(md5hash, forKey: .md5hash)
+        try container.encodeIfPresent(paymentFlow, forKey: .paymentFlow)
     }
 }
 
