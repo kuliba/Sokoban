@@ -6546,6 +6546,7 @@
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
 		A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsModel.swift; sourceTree = "<group>"; };
 		A70BE3F82CF724A000083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend.xctestplan; sourceTree = "<group>"; };
+		A72955C22D304A3A0076A5F3 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan; sourceTree = "<group>"; };
 		A73E21F02CB6CF8A00BD6D3B /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CollateralLoanLanding.xctestplan; path = ../CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A73E430C2CF868700060A548 /* CollateralLoanLandingGetCollateralLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingBackend.xctestplan; sourceTree = "<group>"; };
 		A73E430D2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCollateralLandingRequest.swift"; sourceTree = "<group>"; };
@@ -10180,6 +10181,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				A72955C22D304A3A0076A5F3 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan */,
 				2A9EA5D72D26A50100DEC45C /* FlowCore.xctestplan */,
 				834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */,
 				84F97D682D141DA70049937A /* VortexCrypto.xctestplan */,
