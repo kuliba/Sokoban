@@ -227,15 +227,20 @@ private extension TemplatesListViewModel {
         
         model.images
             .receive(on: scheduler)
-            .sink { [weak self] images in
+            .sink { [weak self, weak model] images in
                 
-                guard let self else { return }
+                guard let self, let model else { return }
                 
                 itemsRaw.value
                     .filter { $0.avatar.isPlaceholder }
                     .forEach { item in
                         
-                        if let image = images["Template\(item.id)"]?.image {
+                        guard let template = model.paymentTemplates.value.first(matching: item.id)
+                        else { return }
+                        
+                        if template.svgImage != nil,
+                           let image = images["Template\(item.id)"]?.image {
+                            
                             item.avatar = .image(image)
                         }
                     }

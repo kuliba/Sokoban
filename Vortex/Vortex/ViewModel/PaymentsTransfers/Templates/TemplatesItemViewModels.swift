@@ -124,8 +124,9 @@ extension TemplatesListViewModel {
         enum Avatar {
             
             case image(Image)
-            case text(String)
+            case md5Hash(AnyPublisher<Image, Never>)
             case placeholder
+            case text(String)
             
             var isPlaceholder: Bool {
                 if case .placeholder = self {
@@ -249,25 +250,35 @@ extension TemplatesListViewModel {
         
         var mainImage: Image? = nil
         if data.svgImage != nil,
-           let imgData = model.images.value["Template\(data.id)"],
-           let img = imgData.image {
+           let image = model.images.value["Template\(data.id)"]?.image {
             
-            mainImage = img
+            mainImage = image
+            
+        } else if let md5hash = data.md5hash {
+            
+            if let imgData = model.images.value[md5hash],
+               let image = imgData.image {
+                
+                mainImage = image
+            } else {
+                let publisher = model.imageCache()
+                    .image(forKey: .init(md5hash))
+                    .eraseToAnyPublisher()
+                avatar = .md5Hash(publisher)
+            }
         }
         
+        if let mainImage {
+            
+            avatar = .image(mainImage)
+        }
+
         if let phoneNumber = getPhoneNumber(for: data),
            let contact = model.contact(for: phoneNumber),
            let img = contact.avatar?.image {
             
             avatar = .image(img)
             topImage = mainImage
-            
-        } else {
-            
-            if let img = mainImage {
-                
-                avatar = .image(img)
-            }
         }
         
         return .init(
