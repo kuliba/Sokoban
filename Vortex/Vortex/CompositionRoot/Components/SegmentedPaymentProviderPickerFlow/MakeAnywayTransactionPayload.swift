@@ -7,9 +7,17 @@
 
 enum MakeAnywayTransactionPayload {
     
-    case lastPayment(LastPayment)
+    case lastPayment(LatestOutlinePayload)
     case oneOf(Service, Operator)
     case singleService(Service, Operator)
+}
+
+struct LatestOutlinePayload: Equatable {
+    
+    let md5Hash: String?
+    let name: String
+    let fields: [String: String]
+    let puref: String
 }
 
 extension MakeAnywayTransactionPayload {

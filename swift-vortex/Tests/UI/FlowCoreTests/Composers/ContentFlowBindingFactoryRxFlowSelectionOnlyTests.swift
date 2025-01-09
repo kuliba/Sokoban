@@ -1,5 +1,5 @@
 //
-//  ContentFlowBindingFactoryRxFlowTests.swift
+//  ContentFlowBindingFactoryRxFlowSelectionOnlyTests.swift
 //
 //
 //  Created by Igor Malyarov on 03.01.2025.
@@ -9,7 +9,7 @@ import Combine
 import FlowCore
 import XCTest
 
-final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
+final class ContentFlowBindingFactoryRxFlowSelectionOnlyTests: XCTestCase {
     
     func test_init_shouldNotMessage() {
         
@@ -70,7 +70,7 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
     
     // MARK: - Content to Flow
     
-    func test_shouldSetFlowStateIsLoadingToTrue_onContentEmittingIsLoadingTrue() {
+    func test_shouldFlowStateIsLoadingTrue_onContentEmittingIsLoadingTrue() {
         
         let (content, _, flowSpy, _, cancellables) = makeSUT()
         
@@ -78,21 +78,17 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         
         XCTAssertNoDiff(flowSpy.values, [
             .init(isLoading: false),
-            .init(isLoading: true),
         ])
         XCTAssertNotNil(cancellables)
     }
     
-    func test_shouldSetFlowStateIsLoadingToFalse_onContentEmittingIsLoadingFalse() {
+    func test_shouldSetFlowStateIsLoadingFalse_onContentEmittingIsLoadingFalse() {
         
         let (content, _, flowSpy, _, cancellables) = makeSUT()
         
-        content.emit(.isLoading(true))
         content.emit(.isLoading(false))
         
         XCTAssertNoDiff(flowSpy.values, [
-            .init(isLoading: false),
-            .init(isLoading: true),
             .init(isLoading: false),
         ])
         XCTAssertNotNil(cancellables)
@@ -136,7 +132,6 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
             .init(isLoading: false, navigation: nil),
             .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: navigation),
-            .init(isLoading: false, navigation: nil),
         ])
         XCTAssertNotNil(cancellables)
     }
@@ -160,7 +155,6 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         getNavigation: GetNavigationSpy,
         cancellables: Set<AnyCancellable>
     ) {
-        let sut = SUT()
         let content = Content()
         
         let getNavigation = GetNavigationSpy()
@@ -171,20 +165,27 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
         let flow = composer.compose()
         let flowSpy = FlowSpy(flow.$state)
         
-        trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
         trackForMemoryLeaks(getNavigation, file: file, line: line)
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(flow, file: file, line: line)
         trackForMemoryLeaks(flowSpy, file: file, line: line)
         
-        let cancellables = sut.bind(
-            content: content,
-            flow: flow,
-            witnesses: content.witnesses())
+        let cancellables = SUT.bind(content: content, flow: flow, witnesses: witnesses)
         
         return (content, flow, flowSpy, getNavigation, cancellables)
     }
+    
+    private let witnesses = ContentWitnesses<Content, Select>(
+        emitting: {
+            
+            $0.publisher.compactMap {
+                guard case let .select(select) = $0 else { return nil }
+                return select
+            }
+        },
+        dismissing: { content in { content.receive(()) }}
+    )
     
     private struct Select: Equatable {
         
@@ -208,5 +209,28 @@ final class ContentFlowBindingFactoryRxFlowTests: XCTestCase {
     ) -> Navigation {
         
         return .init(value: value)
+    }
+    
+    private final class EmitterReceiver<Emit, Receive> {
+        
+        private let subject = PassthroughSubject<Emit, Never>()
+        private(set) var received = [Receive]()
+        
+        var callCount: Int { received.count }
+        
+        var publisher: AnyPublisher<Emit, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ emit: Emit) {
+            
+            subject.send(emit)
+        }
+        
+        func receive(_ receive: Receive) {
+            
+            received.append(receive)
+        }
     }
 }

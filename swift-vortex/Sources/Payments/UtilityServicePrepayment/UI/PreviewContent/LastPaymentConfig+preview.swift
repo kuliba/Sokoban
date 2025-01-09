@@ -8,13 +8,9 @@
 extension LastPaymentLabelConfig {
     
     static let preview: Self = .init(
-        amount: .init(
-            textFont: .title3,
-            textColor: .black
-        ),
-        title: .init(
-            textFont: .body,
-            textColor: .gray
-        )
+        amount: .init(textFont: .title3, textColor: .black),
+        frameHeight: 80,
+        iconSize: 40,
+        title: .init(textFont: .body, textColor: .gray)
     )
 }

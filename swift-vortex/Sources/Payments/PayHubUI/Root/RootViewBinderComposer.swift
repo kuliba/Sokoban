@@ -13,34 +13,29 @@ import Foundation
 public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Navigation> {
     
     private let bindings: Set<AnyCancellable>
-    private let delay: Delay
     private let dismiss: () -> Void
     private let getNavigation: RootDomain.GetNavigation
     // TODO: - move to witness
     private let bindOutside: BindOutside
-    private let schedulers: Schedulers
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     private let witnesses: RootDomain.Witnesses
     
-    /// `delay` is needed to handle SwiftUI writing nil to navigation destination after new destination is already set.
     public init(
         bindings: Set<AnyCancellable>,
-        delay: Delay,
         dismiss: @escaping () -> Void,
         getNavigation: @escaping RootDomain.GetNavigation,
         bindOutside: @escaping BindOutside,
-        schedulers: Schedulers = .init(),
+        scheduler: AnySchedulerOf<DispatchQueue>,
         witnesses: RootDomain.Witnesses
     ) {
-        self.delay = delay
         self.bindings = bindings
         self.dismiss = dismiss
         self.getNavigation = getNavigation
         self.bindOutside = bindOutside
-        self.schedulers = schedulers
+        self.scheduler = scheduler
         self.witnesses = witnesses
     }
     
-    public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     public typealias RootDomain = RootViewDomain<RootViewModel, DismissAll, Select, Navigation>
     public typealias BindOutside = (RootDomain.Content, RootDomain.Flow) -> Set<AnyCancellable>
 }
@@ -52,10 +47,8 @@ public extension RootViewBinderComposer {
     ) -> RootDomain.Binder {
         
         let flowComposer = RootDomain.FlowDomain.Composer(
-            delay: delay,
             getNavigation: getNavigation,
-            scheduler: schedulers.main,
-            interactiveScheduler: schedulers.interactive
+            scheduler: scheduler
         )
         
         return .init(
@@ -72,34 +65,17 @@ private extension RootViewBinderComposer {
         content: RootDomain.Content,
         flow: RootDomain.Flow
     ) -> Set<AnyCancellable> {
+
+        var bindings = bindings.union(bindOutside(content, flow))
         
-        let factory = ContentFlowBindingFactory()
-        let bind = factory.bind(with: .init(
-            contentEmitting: witnesses.content.emitting,
-            contentDismissing: witnesses.content.dismissing,
-            flowEmitting: { (flow: RootDomain.Flow) in
-                
-                flow.$state
-                    .map(\RootDomain.FlowDomain.State.navigation)
-                    .eraseToAnyPublisher()
-            },
-            flowReceiving: { flow in {
-                
-                switch $0 {
-                case .dismiss:
-                    flow.event(.dismiss)
-                    
-                case let .isLoading(isLoading):
-                    flow.event(.isLoading(isLoading))
-                    
-                case let .select(select):
-                    flow.event(.select(select))
-                }
-            }}
-        ))
+        bindings.formUnion(
+            ContentFlowBindingFactory.bind(
+                content: content,
+                flow: flow,
+                witnesses: witnesses.content
+            )
+        )
         
-        var bindings = bindings.union(bind(content, flow))
-        bindings.formUnion(bindOutside(content, flow))
         bindings.insert(bindDismiss(content: content))
         
         return bindings
@@ -110,7 +86,7 @@ private extension RootViewBinderComposer {
         let reset = witnesses.dismiss.reset(content)
         
         return witnesses.dismiss.dismissAll(content)
-            .receive(on: schedulers.main)
+            .receive(on: scheduler)
             .sink { [dismiss] _ in
                 
                 dismiss()

@@ -22,7 +22,7 @@ struct PaymentProviderPickerView: View {
             makeContentView: { state, event in
                 
                 PaymentProviderPickerFlowView(
-                    state: state,
+                    state: state.navigation,
                     event: event,
                     contentView: contentView,
                     destinationView: destinationView

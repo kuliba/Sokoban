@@ -123,15 +123,13 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         flow: Flow,
         cancellables: Set<AnyCancellable>
     ) {
-        let sut = SUT()
         let content = Content()
         let flow = Flow()
         
-        trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
         trackForMemoryLeaks(flow, file: file, line: line)
         
-        let bind = sut.bind(with: witnesses)
+        let bind = SUT.bind(with: witnesses)
         let cancellables = bind(content, flow)
         
         return (content, flow, cancellables)
