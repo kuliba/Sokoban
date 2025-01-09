@@ -155,6 +155,7 @@ let package = Package(
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingBackendTests,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -1409,7 +1410,16 @@ private extension Target {
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
-    
+
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = testTarget(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
+        dependencies: [
+            .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
+    )
+
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
@@ -3822,7 +3832,8 @@ private extension String {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUI"
-
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
+    
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
