@@ -16,14 +16,26 @@ extension RootViewModelFactory {
         services: MultiElementArray<UtilityService>
     ) -> ProviderServicePickerDomain.Binder {
         
-        compose(
+        let content = ProviderServicePickerDomain.Content(provider: provider, services: services)
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
             getNavigation: getProviderServicePickerNavigation,
-            content: .init(provider: provider, services: services),
-            witnesses: .init(
-                emitting: { _ in Empty().eraseToAnyPublisher() },
-                dismissing: { _ in {}}
-            )
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+    
+    @inlinable
+    func delayProvider(
+        navigation: ProviderServicePickerDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .outside: return .milliseconds(100)
+        case .failure: return settings.delay
+        case .payment: return settings.delay
+        }
     }
     
     @inlinable
@@ -65,6 +77,22 @@ extension RootViewModelFactory {
         model.$state
             .compactMap(\.outside?.event)
             .sink { notify(.select(.outside($0))) }
+    }
+    
+    @inlinable
+    func emitting(
+        content: ProviderServicePickerDomain.Content
+    ) -> some Publisher<FlowEvent<ProviderServicePickerDomain.Select, Never>, Never> {
+        
+        Empty()
+    }
+    
+    @inlinable
+    func dismissing(
+        content: ProviderServicePickerDomain.Content
+    ) -> () -> Void {
+        
+        return { }
     }
 }
 

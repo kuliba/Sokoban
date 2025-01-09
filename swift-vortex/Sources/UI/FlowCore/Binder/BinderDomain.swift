@@ -17,7 +17,7 @@ public extension BinderDomain {
     
     typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
     
-    typealias Witnesses = ContentWitnesses<Content, Select>
+    typealias Witnesses = ContentWitnesses<Content, FlowEvent<Select, Never>>
     
     // MARK: - Flow
     

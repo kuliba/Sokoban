@@ -50,22 +50,22 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     func test_composed_payWithDetails_shouldCallMakeDetailPaymentWithQRCode() {
         
         let qrCode = makeQRCode()
-        let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
+        let (sut, spies, scheduler) = makeSUT()
         
         let composed = sut.compose(with: qrCode)
         composed.content.emit(.payWithDetails(qrCode))
-        scheduler.advance(by: .seconds(500))
+        scheduler.advance()
         
         XCTAssertNoDiff(spies.makeDetailPayment.payloads, [qrCode])
     }
     
     func test_composed_payWithDetails_shouldCallMakeDetailPaymentWithoutQRCodeOnNilQRCode() {
         
-        let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
+        let (sut, spies, scheduler) = makeSUT()
         
         let composed = sut.compose(with: nil)
         composed.content.emit(.payWithDetails(nil))
-        scheduler.advance(by: .seconds(500))
+        scheduler.advance()
         
         XCTAssertNoDiff(spies.makeDetailPayment.payloads, [nil])
     }
@@ -81,8 +81,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let composed = sut.compose(with: qrCode)
         composed.content.emit(.payWithDetails(qrCode))
-        scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
@@ -102,8 +100,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let composed = sut.compose(with: nil)
         composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
@@ -117,8 +113,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let composed = sut.compose(with: makeQRCode())
         composed.content.emit(.payWithDetails(makeQRCode()))
-        scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .seconds(500))
         
         try composed.flow.detailPayment.scanQR()
@@ -137,8 +131,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let composed = sut.compose(with: nil)
         composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .seconds(500))
         
         try composed.flow.detailPayment.scanQR()
         scheduler.advance(by: .seconds(500))
@@ -156,12 +148,10 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let composed = sut.compose(with: makeQRCode())
         composed.content.emit(.payWithDetails(makeQRCode()))
         scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .seconds(500))
         XCTAssertNotNil(composed.flow.state.navigation)
         
         try composed.flow.detailPayment.close()
-        scheduler.advance(by: .seconds(500))
+        scheduler.advance()
         
         XCTAssertNil(composed.flow.state.navigation)
     }
@@ -173,12 +163,10 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let composed = sut.compose(with: makeQRCode())
         composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .seconds(500))
         XCTAssertNotNil(composed.flow.state.navigation)
         
         try composed.flow.detailPayment.close()
-        scheduler.advance(by: .seconds(500))
+        scheduler.advance()
         
         XCTAssertNil(composed.flow.state.navigation)
     }
@@ -188,11 +176,11 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     func test_composed_search_shouldCallMakeCategoryPickerWithQRCode() {
         
         let qrCode = makeQRCode()
-        let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
+        let (sut, spies, scheduler) = makeSUT()
         
         let composed = sut.compose(with: qrCode)
         composed.content.emit(.search(qrCode))
-        scheduler.advance(by: .seconds(500))
+        scheduler.advance()
         
         XCTAssertNoDiff(spies.makeCategoryPicker.payloads, [qrCode])
     }
@@ -208,8 +196,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let composed = sut.compose(with: makeQRCode())
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
@@ -223,8 +209,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let composed = sut.compose(with: makeQRCode())
         composed.content.emit(.search(makeQRCode()))
-        scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .seconds(500))
         
         try composed.flow.categoryPicker.scanQR()
@@ -243,12 +227,10 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let composed = sut.compose(with: makeQRCode())
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .seconds(500))
         XCTAssertNotNil(composed.flow.state.navigation)
         
         try composed.flow.categoryPicker.close()
-        scheduler.advance(by: .seconds(500))
+        scheduler.advance()
         
         XCTAssertNil(composed.flow.state.navigation)
     }
@@ -296,7 +278,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 contentEmitting: { $0.selectPublisher },
                 contentDismissing: { $0.dismiss },
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
+                flowReceiving: { flow in { flow.event(.init($0)) }}
             ),
             isClosedWitnesses: .init(
                 categoryPicker: { $0.isClosedPublisher },

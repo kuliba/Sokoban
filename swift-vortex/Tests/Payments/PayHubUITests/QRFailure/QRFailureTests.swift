@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 import PayHubUI
 import XCTest
 
@@ -31,16 +32,23 @@ class QRFailureTests: XCTestCase {
     
     struct QRFailure {
         
-        private let subject = PassthroughSubject<Select, Never>()
+        typealias Event = FlowEvent<Select, Never>
         
-        var selectPublisher: AnyPublisher<Select, Never> {
+        private let subject = PassthroughSubject<Event, Never>()
+        
+        var selectPublisher: AnyPublisher<Event, Never> {
             
             subject.eraseToAnyPublisher()
         }
         
+        func emit(_ event: Event) {
+            
+            subject.send(event)
+        }
+        
         func emit(_ select: Select) {
             
-            subject.send(select)
+            subject.send(.select(select))
         }
         
         func dismiss() {

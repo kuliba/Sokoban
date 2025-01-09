@@ -47,18 +47,49 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonalDomain.Binder {
         
-        return compose(
+        let content = makePaymentsTransfersPersonalContent(nanoServices)
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersPersonalNavigation,
-            content: makePaymentsTransfersPersonalContent(nanoServices),
-            witnesses: .init(
-                emitting: { $0.eventPublisher },
-                dismissing: { $0.dismiss }
-            )
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+    
+    @inlinable
+    func delayProvider(
+        navigation: PaymentsTransfersPersonalDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .byPhoneTransfer: return .milliseconds(100)
+        case .main:            return .milliseconds(100)
+        case .scanQR:          return .milliseconds(100)
+        case .standardPayment: return settings.delay
+        case .templates:       return settings.delay
+        case .userAccount:     return settings.delay
+        }
+    }
+    
+    @inlinable
+    func emitting(
+        content: PaymentsTransfersPersonalDomain.Content
+    ) -> some Publisher<FlowEvent<PaymentsTransfersPersonalDomain.Select, Never>, Never> {
+        
+        content.eventPublisher
+    }
+    
+    @inlinable
+    func dismissing(
+        content: PaymentsTransfersPersonalDomain.Content
+    ) -> () -> Void {
+        
+        return { content.dismiss() }
     }
 }
 
-private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect, Never>
+private typealias EventPublisher = AnyPublisher<FlowEvent<PaymentsTransfersPersonalSelect, Never>, Never>
 
 // MARK: - Content
 
@@ -102,6 +133,7 @@ private extension CategoryPickerSectionDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     
@@ -155,6 +187,7 @@ private extension OperationPickerDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     
@@ -212,6 +245,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
                 
                 print($0)
             })
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     

@@ -72,6 +72,21 @@ import UtilityServicePrepaymentUI
             textFont: .textBodySR12160() ,
             textColor: .textRed
         ),
+        frameHeight: 80,
+        iconSize: 40,
+        title: .init(
+            textFont: .textBodySR12160(),
+            textColor: .textSecondary
+        )
+    )
+    
+    static let primary: Self = .init(
+        amount: .init(
+            textFont: .textBodySR12160() ,
+            textColor: .textRed
+        ),
+        frameHeight: 96,
+        iconSize: 56,
         title: .init(
             textFont: .textBodySR12160(),
             textColor: .textSecondary

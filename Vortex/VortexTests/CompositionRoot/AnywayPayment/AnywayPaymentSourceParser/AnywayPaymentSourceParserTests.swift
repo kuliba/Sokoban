@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import RemoteServices
 @testable import Vortex
 import XCTest
 
@@ -713,6 +714,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     private typealias SUT = AnywayPaymentSourceParser
     private typealias OutlineProduct = AnywayPaymentOutline.Product
     private typealias Latest = AnywayPaymentSourceParser.Source.Latest
+    private typealias RemoteLatest = RemoteServices.ResponseMapper.LatestServicePayment
     
     private func makeSUT(
         outlineProduct: OutlineProduct? = makeOutlineProduct(),
@@ -728,7 +730,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     }
     
     private func latest(
-        additionalItems: [Latest.AdditionalItem] = [],
+        additionalItems: [RemoteLatest.AdditionalItem] = [],
         amount: Decimal = anyAmount(),
         icon: String? = nil,
         puref: String = anyMessage(),
@@ -742,18 +744,18 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
             icon: icon,
             puref: puref,
             title: title
-        ))
+        ).latestOutlinePayload)
     }
     
     private func makeLatestPayment(
-        additionalItems: [Latest.AdditionalItem] = [],
+        additionalItems: [RemoteLatest.AdditionalItem] = [],
         amount: Decimal = anyAmount(),
         date: Date = .init(),
         icon: String? = anyMessage(),
         puref: String = anyMessage(),
         type: String = anyMessage(),
         title: String = anyMessage()
-    ) -> Latest {
+    ) -> RemoteLatest {
         
         return .init(
             date: date,
@@ -771,7 +773,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         fieldValue: String = anyMessage(),
         fieldTitle: String? = nil,
         svgImage: String? = nil
-    ) -> Latest.AdditionalItem {
+    ) -> RemoteLatest.AdditionalItem {
         
         return .init(
             fieldName: fieldName,

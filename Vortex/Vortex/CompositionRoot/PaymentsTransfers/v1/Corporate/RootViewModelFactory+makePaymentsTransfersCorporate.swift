@@ -43,40 +43,41 @@ extension RootViewModelFactory {
         
         let content = Domain.Content(
             bannerPicker: bannerPicker,
-            reload: {
-                
-                bannerPicker.content.event(.load)
-            }
+            reload: { bannerPicker.content.event(.load) }
         )
         
-        return compose(
+        return composeBinder(
+            content: content ,
+            delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersCorporateNavigation,
-            content: content,
-            witnesses: witnesses()
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
     
-    private func witnesses() -> Domain.Witnesses {
+    @inlinable
+    func delayProvider(
+        navigation: PaymentsTransfersCorporateDomain.Navigation
+    ) -> Delay {
         
-        return .init(
-            emitting: { $0.eventPublisher },
-            dismissing: { $0.dismissing }
-        )
-    }
-}
-
-// MARK: - Content
-
-extension Domain.Content {
-    
-    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
-        
-        bannerPicker.eventPublisher
+        switch navigation {
+        case .userAccount: return settings.delay
+        }
     }
     
-    func dismissing() {
+    @inlinable
+    func emitting(
+        content: PaymentsTransfersCorporateDomain.Content
+    ) -> some Publisher<FlowEvent<PaymentsTransfersCorporateDomain.Select, Never>, Never> {
         
-        bannerPicker.dismissing()
+        content.bannerPicker.eventPublisher
+    }
+    
+    @inlinable
+    func dismissing(
+        content: PaymentsTransfersCorporateDomain.Content
+    ) -> () -> Void {
+        
+        return content.bannerPicker.dismissing
     }
 }
 
@@ -84,7 +85,7 @@ extension Domain.Content {
 
 extension PayHubUI.CorporateBannerPicker {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
         
         bannerBinder?.eventPublisher ?? Empty().eraseToAnyPublisher()
     }
@@ -97,7 +98,7 @@ extension PayHubUI.CorporateBannerPicker {
 
 extension BannerPickerSectionBinder {
     
-    var eventPublisher: AnyPublisher<PaymentsTransfersCorporateSelect, Never> {
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
         
         flow.$state
             .compactMap { _ in return nil }
