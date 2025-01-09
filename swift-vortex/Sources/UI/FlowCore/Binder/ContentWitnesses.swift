@@ -9,8 +9,9 @@ import Combine
 
 /// A container that holds emitting and dismissing functions for content of type `Content`.
 ///
-/// The `emitting` function produces a publisher of `Select` values given a `Content`.
-/// The `dismissing` function produces an action (closure) to be performed given a `Content`.
+/// The `emitting` function exposes a publisher of `Select` values emitted by the `Content`.
+/// The `dismissing` function provides a closure that can be invoked to dismiss or unwind the `Content`.
+/// Note that the `Content` does not receive Flow events; it only receives a dismiss action when required.
 public struct ContentWitnesses<Content, Select> {
     
     /// A function that takes `Content` and returns a publisher emitting `Select` values.
