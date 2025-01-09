@@ -371,6 +371,10 @@ extension TemplatesListView {
                         .clipShape(Circle())
                         .frame(height: side.main)
                     
+                case let .md5Hash(publisher):
+                    AsyncImage(image: .ic24MoreHorizontal, publisher: publisher)
+                        .frame(width: side.main, height: side.main)
+                    
                 case let .text(text):
                     
                     Circle()
