@@ -19,5 +19,5 @@ extension CreateDraftCollateralLoanApplicationConfig {
 
 extension CreateDraftCollateralLoanApplicationConfig.Header {
     
-    static let `default` = Self(title: "Наименование кредита")
+    static let preview = Self(title: "Наименование кредита")
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationConfig {
         
@@ -16,10 +17,10 @@ public struct CreateDraftCollateralLoanApplicationConfig {
 
     public struct Fonts {
         
-        let title: FontConfig
-        let message: FontConfig
+        let title: TextConfig
+        let message: TextConfig
         
-        public init(title: FontConfig, message: FontConfig) {
+        public init(title: TextConfig, message: TextConfig) {
             self.title = title
             self.message = message
         }
@@ -58,27 +59,13 @@ public struct CreateDraftCollateralLoanApplicationConfig {
         
         public struct Paddings {
             
-            public let leading: CGFloat
-            public let trailing: CGFloat
-            public let vertical: CGFloat
-            public let contentLeading: CGFloat
-            public let contentTrailing: CGFloat
-            public let contentVertical: CGFloat
+            public let stack: EdgeInsets
+            public let contentStack: EdgeInsets
 
-            public init(
-                leading: CGFloat,
-                trailing: CGFloat,
-                vertical: CGFloat,
-                contentLeading: CGFloat,
-                contentTrailing: CGFloat,
-                contentVertical: CGFloat
-            ) {
-                self.leading = leading
-                self.trailing = trailing
-                self.vertical = vertical
-                self.contentLeading = contentLeading
-                self.contentTrailing = contentTrailing
-                self.contentVertical = contentVertical
+            public init(stack: EdgeInsets, contentStack: EdgeInsets) {
+                
+                self.stack = stack
+                self.contentStack = contentStack
             }
         }
     }
@@ -105,8 +92,8 @@ extension CreateDraftCollateralLoanApplicationConfig {
     
     static let preview = Self(
         fonts: .init(
-            title: .init(Font.system(size: 14), foreground: .title),
-            message: .init(Font.system(size: 16))
+            title: .init(textFont: Font.system(size: 14), textColor: .title),
+            message: .init(textFont: Font.system(size: 16), textColor: .primary)
         ),
         colors: .init(
             background: .background
@@ -117,15 +104,21 @@ extension CreateDraftCollateralLoanApplicationConfig {
             contentHorizontalSpacing: 12,
             contentVerticalSpacing: 4,
             paddings: .init(
-                leading: 16,
-                trailing: 15,
-                vertical: 16,
-                contentLeading: 12,
-                contentTrailing: 16,
-                contentVertical: 13
+                stack: .init(
+                    top: 16,
+                    leading: 16,
+                    bottom: 16,
+                    trailing: 15
+                ),
+                contentStack: .init(
+                    top: 13,
+                    leading: 12,
+                    bottom: 13,
+                    trailing: 16
+                )
             )
         ),
-        header: .default
+        header: .preview
     )
 }
 

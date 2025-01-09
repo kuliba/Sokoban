@@ -12,19 +12,17 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
     let data: Data
     let config: Config
     let factory: Factory
-
+    
     var body: some View {
-
+        
         ZStack {
             RoundedRectangle(cornerRadius: config.layouts.cornerRadius)
                 .fill(config.colors.background)
                 .frame(maxWidth: .infinity)
-
+            
             content
         }
-        .padding(.leading, config.layouts.paddings.leading)
-        .padding(.trailing, config.layouts.paddings.trailing)
-        .padding(.vertical, config.layouts.paddings.vertical)
+        .padding(config.layouts.paddings.stack)
         .fixedSize(horizontal: false, vertical: true)
     }
     
@@ -35,39 +33,24 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
             iconView
             infoView
         }
-        .padding(.leading, config.layouts.paddings.contentLeading)
-        .padding(.trailing, config.layouts.paddings.contentTrailing)
-        .padding(.vertical, config.layouts.paddings.contentVertical)
+        .padding(config.layouts.paddings.contentStack)
     }
     
     private var iconView: some View {
         
         factory.makeImageView(data.icons.productName)
-            .frame(
-                width: config.layouts.iconSize.width,
-                height: config.layouts.iconSize.height
-            )
+            .frame(config.layouts.iconSize)
     }
     
     private var infoView: some View {
         
         VStack(spacing: config.layouts.contentVerticalSpacing) {
             
-            config.header.title.text(
-                withConfig: .init(
-                    textFont: config.fonts.title.font,
-                    textColor: config.fonts.title.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
+            config.header.title.text(withConfig: config.fonts.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            data.name.text(
-                withConfig: .init(
-                    textFont: config.fonts.message.font,
-                    textColor: config.fonts.message.foreground
-                )
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
+            data.name.text(withConfig: config.fonts.message)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
