@@ -41,7 +41,7 @@ final class ResourceLoaderComposerTests: XCTestCase {
             
             local.complete(with: .failure(anyError()))
             remote.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             remote.complete(with: .success(response), at: 1)
             cache.complete(with: .success(()))
         }
@@ -60,9 +60,9 @@ final class ResourceLoaderComposerTests: XCTestCase {
             
             local.complete(with: .failure(anyError()))
             remote.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             remote.complete(with: .failure(anyLoadFailure()), at: 1)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             remote.complete(with: .failure(failure), at: 2)
         }
         XCTAssertEqual(remote.callCount, maxRetries + 1, "Remote call count should be is one plus retry attempts.")
@@ -80,7 +80,7 @@ final class ResourceLoaderComposerTests: XCTestCase {
             
             local.complete(with: .failure(anyError()), at: 0)
             remote.complete(with: .failure(anyLoadFailure("0")), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             remote.complete(with: .failure(anyLoadFailure("1")), at: 1)
         }
         XCTAssertEqual(remote.callCount, 2)

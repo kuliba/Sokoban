@@ -96,7 +96,6 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
             .init(isLoading: true),
         ])
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(998))
         
         XCTAssertNoDiff(spy.values, [
@@ -119,7 +118,6 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         
         sut.event(.select(.withContent))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(999))
         
         XCTAssertNoDiff(spy.values, [
@@ -144,7 +142,6 @@ final class FlowIntegrationUseCases_WithContentChild_Tests: XCTestCase {
         
         sut.event(.select(.withContent))
         
-        scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(999))
         
         try withContent(sut).content.event(.load)
@@ -389,20 +386,6 @@ extension ParentComposer {
         
         return composer.compose()
     }
-}
-
-// MARK: - Helpers
-
-private extension AnySchedulerOf<DispatchQueue> {
-    
-    func delay(
-        for timeout: Delay,
-        _ action: @escaping () -> Void
-    ) {
-        schedule(after: .init(.init(uptimeNanoseconds: 0)).advanced(by: timeout), action)
-    }
-    
-    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }
 
 // MARK: - WithContentChild

@@ -40,7 +40,7 @@ final class BlacklistCacheRetryDecoratorTests: XCTestCase {
         assert(sut, with: anyPayload(), toDeliver: .success(response)) {
             
             decoratee.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .success(response), at: 1)
             cache.complete(with: .failure(anyError()))
             XCTAssertNoDiff(cache.payloads, [response])
@@ -55,7 +55,7 @@ final class BlacklistCacheRetryDecoratorTests: XCTestCase {
         assert(sut, with: anyPayload(), toDeliver: .success(response)) {
             
             decoratee.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .success(response), at: 1)
             cache.complete(with: .failure(anyError()))
         }
@@ -73,9 +73,9 @@ final class BlacklistCacheRetryDecoratorTests: XCTestCase {
         assert(sut, with: anyPayload(), toDeliver: .failure(.loadFailure(failure))) {
             
             decoratee.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure()), at: 1)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(failure), at: 2)
         }
         XCTAssertEqual(decoratee.callCount, maxRetries + 1, "Remote call count is one plus retry attempts.")
@@ -92,20 +92,20 @@ final class BlacklistCacheRetryDecoratorTests: XCTestCase {
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
             
             decoratee.complete(with: .failure(anyLoadFailure("0")), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure("1")), at: 1)
         }
         XCTAssertEqual(decoratee.callCount, 2)
         
         assertNoCompletion(sut, with: payload) {
             
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure("2")), at: 2)
         }
         
         assertNoCompletion(sut, with: payload) {
             
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure("3")), at: 3)
         }
     }
@@ -120,21 +120,21 @@ final class BlacklistCacheRetryDecoratorTests: XCTestCase {
         
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("0")))) {
             
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure("0")), at: 0)
             XCTAssertEqual(decoratee.callCount, 1)
         }
         
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
             
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure("1")), at: 1)
             XCTAssertEqual(decoratee.callCount, 2)
         }
         
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("2")))) {
             
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             decoratee.complete(with: .failure(anyLoadFailure("2")), at: 2)
             XCTAssertEqual(decoratee.callCount, 3)
         }

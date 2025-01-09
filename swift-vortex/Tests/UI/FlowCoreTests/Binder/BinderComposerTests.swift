@@ -60,12 +60,11 @@ final class BinderComposerTests: XCTestCase {
         XCTAssertNil(binder.flow.state.navigation)
         
         binder.content.emit(select)
-        schedulers.interactive.advance(to: .init(.now()).advanced(by: .milliseconds(500)))
         
         XCTAssertNil(binder.flow.state.navigation)
         
         schedulers.main.advance()
-        schedulers.interactive.advance(by: .milliseconds(1))
+        schedulers.interactive.advance(by: .milliseconds(500))
         schedulers.main.advance()
         
         XCTAssertNoDiff(binder.flow.state.navigation, select)
@@ -79,20 +78,20 @@ final class BinderComposerTests: XCTestCase {
         XCTAssertEqual(binder.content.receiveCount, 0)
         
         binder.content.emit(select)
-        schedulers.main.advance()
-        schedulers.interactive.advance(to: .init(.now()).advanced(by: .milliseconds(500)))
 
-        schedulers.interactive.advance(by: .milliseconds(1))
+        XCTAssertNil(binder.flow.state.navigation)
+        
+        schedulers.main.advance()
+        schedulers.interactive.advance(by: .milliseconds(500))
         schedulers.main.advance()
         
         XCTAssertNoDiff(binder.flow.state.navigation, select)
         
         binder.content.emit(select)
+        
         XCTAssertNoDiff(binder.flow.state.navigation, select)
         
         binder.flow.event(.dismiss)
-        schedulers.main.advance()
-        schedulers.interactive.advance(by: .milliseconds(500))
         schedulers.main.advance()
         
         XCTAssertEqual(binder.content.receiveCount, 1)
