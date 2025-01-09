@@ -6,7 +6,7 @@
 //
 
 import Combine
-import PayHub
+import FlowCore
 import PayHubUI
 import XCTest
 
@@ -161,7 +161,7 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private final class RootViewModel {
         
-        typealias NotifyEvent = PayHub.FlowEvent<Select, Never>
+        typealias NotifyEvent = FlowEvent<Select, Never>
         
         private let selectSubject = PassthroughSubject<NotifyEvent, Never>()
         private(set) var dismissCount = 0

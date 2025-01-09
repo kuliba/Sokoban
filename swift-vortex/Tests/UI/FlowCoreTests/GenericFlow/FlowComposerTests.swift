@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.09.2024.
 //
 
-import PayHub
+import FlowCore
 import XCTest
 
 final class FlowComposerTests: XCTestCase {

@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 22.11.2024.
 //
 
-import PayHub
 import PayHubUI
 import RxViewModel
 
@@ -16,7 +15,7 @@ extension OperationPickerDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     typealias Composer = BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
@@ -25,7 +24,7 @@ extension OperationPickerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     

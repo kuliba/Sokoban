@@ -12,8 +12,8 @@ public extension BinderDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = PayHub.BinderComposer<Content, Select, Navigation>
+    typealias Binder = FlowCore.Binder<Content, Flow>
+    typealias BinderComposer = FlowCore.BinderComposer<Content, Select, Navigation>
     
     typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
     
@@ -21,7 +21,7 @@ public extension BinderDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void

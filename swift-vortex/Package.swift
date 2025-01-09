@@ -1792,6 +1792,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             // internal modules
+            .flowCore,
             .rxViewModel,
         ],
         path: "Sources/Payments/\(String.payHub)"
@@ -1814,6 +1815,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             // internal modules
+            .flowCore,
             .payHub,
             .rxViewModel,
             .uiPrimitives,

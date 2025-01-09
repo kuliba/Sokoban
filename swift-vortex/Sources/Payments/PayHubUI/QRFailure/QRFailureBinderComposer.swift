@@ -7,8 +7,8 @@
 
 import Combine
 import CombineSchedulers
+import FlowCore
 import Foundation
-import PayHub
 
 public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, DetailPayment> {
     
@@ -43,7 +43,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, De
     
     public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<CategoryPicker, DetailPayment>
     
-    public typealias ContentFlowWitnesses = PayHub.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
+    public typealias ContentFlowWitnesses = FlowCore.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
     public typealias Domain = QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment>
 }
 

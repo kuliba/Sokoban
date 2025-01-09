@@ -1,5 +1,5 @@
 //
-//  FlowEventPublishing.swift
+//  DismissAndTabFlowEventPublishing.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 10.08.2024.
@@ -7,12 +7,12 @@
 
 import Combine
 
-protocol FlowEventPublishing {
+protocol DismissAndTabFlowEventPublishing {
     
-    var flowEventPublisher: AnyPublisher<FlowEvent, Never> { get }
+    var flowEventPublisher: AnyPublisher<DismissAndTabFlowEvent, Never> { get }
 }
 
-struct FlowEvent: Equatable {
+struct DismissAndTabFlowEvent: Equatable {
     
     let isLoading: Bool
     let status: Status?
