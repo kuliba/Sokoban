@@ -8,7 +8,7 @@
 struct TransactionCompleteState {
     
     let details: Details?
-    let documentID: DocumentID?
+    let documentID: (DocumentID, String)?
     let status: Status
     
     typealias Details = TransactionDetailButton.Details

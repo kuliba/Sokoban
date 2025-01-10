@@ -10,11 +10,17 @@ import Fetcher
 import Foundation
 import GenericRemoteService
 import PDFKit
+import RemoteServices
 import SwiftUI
 import Tagged
 
 typealias DocumentID = Tagged<_DocumentID, Int>
 enum _DocumentID {}
+
+extension RequestFactory {
+    
+    typealias PrintFormType = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse.PrintFormType
+}
 
 extension StickerViewFactory {
     

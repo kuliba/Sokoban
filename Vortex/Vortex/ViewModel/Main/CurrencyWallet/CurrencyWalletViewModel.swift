@@ -795,7 +795,13 @@ class CurrencyWalletViewModel: ObservableObject {
                     switch action {
                     case _ as CurrencyExchangeSuccessAction.Button.Document:
                         
-                        let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: model)
+                        let printViewModel: PrintFormView.ViewModel = .init(
+                            type: .operation(
+                                paymentOperationDetailId: paymentOperationDetailId,
+                                printFormType: "internal"
+                            ),
+                            model: model
+                        )
                         
                         sheet = .init(type: .printForm(printViewModel))
                         

@@ -192,7 +192,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             paymentMethod: paymentMethod,
             paymentOperationDetailID: 57723,
             paymentTemplateID: paymentTemplateID,
-            printFormType: .housingAndCommunalService,
+            printFormType: "housingAndCommunalService",
             puref: puref,
             requestDate: "17.04.2023 17:13:36",
             responseDate: "17.04.2023 17:13:38",
