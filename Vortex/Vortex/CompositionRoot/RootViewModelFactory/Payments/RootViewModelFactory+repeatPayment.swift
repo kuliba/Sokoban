@@ -37,12 +37,12 @@ extension RootViewModelFactory {
     }
     
     func processPayments(
-        lastPayment: UtilityPaymentLastPayment,
+        repeatPayment: RepeatPayment,
         close: @escaping () -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
         processPayments(
-            lastPayment: lastPayment,
+            repeatPayment: repeatPayment,
             notify: { _ in close() },
             completion: completion
         )
@@ -90,8 +90,8 @@ extension RootViewModelFactory {
                     return completion(nil)
                     
                 case .standard:
-                    guard let utilityPaymentLastPayment = makeUtilityPaymentLastPayment(
-                        info, 
+                    guard let utilityPaymentLastPayment = makeRepeatPayment(
+                        info,
                         name: payload.operatorName,
                         md5Hash: payload.operatorIcon
                     )
@@ -114,11 +114,11 @@ extension RootViewModelFactory {
         }
     }
     
-    func makeUtilityPaymentLastPayment(
+    func makeRepeatPayment(
         _ info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         name: String,
         md5Hash: String?
-    ) -> UtilityPaymentLastPayment? {
+    ) -> RepeatPayment? {
         
         guard let puref = info.parameterList.puref,
               let amount = info.parameterList.amount

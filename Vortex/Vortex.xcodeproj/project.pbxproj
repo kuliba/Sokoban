@@ -2753,6 +2753,7 @@
 		835741C22C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835741C12C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift */; };
 		8357E3312B6809540065E581 /* OperationDetailFactoryl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3302B6809540065E581 /* OperationDetailFactoryl.swift */; };
 		8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */; };
+		8359680F2D311D6800F572D0 /* RepeatPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8359680E2D311D6800F572D0 /* RepeatPayment.swift */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
 		835D0DF32BEA576300FFE90B /* Services+makeUnblockCardServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835D0DF22BEA576300FFE90B /* Services+makeUnblockCardServices.swift */; };
 		835D0DF52BEA583A00FFE90B /* RequestFactory+createUnblockCardRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835D0DF42BEA583A00FFE90B /* RequestFactory+createUnblockCardRequest.swift */; };
@@ -6331,6 +6332,7 @@
 		8357E3302B6809540065E581 /* OperationDetailFactoryl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailFactoryl.swift; sourceTree = "<group>"; };
 		8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGuardianConfig.swift; sourceTree = "<group>"; };
 		8357E33D2B6CF77B0065E581 /* CardGuardianPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardGuardianPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8359680E2D311D6800F572D0 /* RepeatPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatPayment.swift; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
 		835D0DF22BEA576300FFE90B /* Services+makeUnblockCardServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeUnblockCardServices.swift"; sourceTree = "<group>"; };
 		835D0DF42BEA583A00FFE90B /* RequestFactory+createUnblockCardRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createUnblockCardRequest.swift"; sourceTree = "<group>"; };
@@ -12503,6 +12505,7 @@
 			isa = PBXGroup;
 			children = (
 				2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */,
+				8359680E2D311D6800F572D0 /* RepeatPayment.swift */,
 				2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */,
 				2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */,
 				2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */,
@@ -20843,6 +20846,7 @@
 				2ABB63122C640B6300541DE7 /* TextInputConfig+iVortex.swift in Sources */,
 				2A8221532CE5EF3600887367 /* QRFailedViewModelWrapperView.swift in Sources */,
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
+				8359680F2D311D6800F572D0 /* RepeatPayment.swift in Sources */,
 				2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */,
 				2AA3A9322BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift in Sources */,
 				6806FAAC27E9424D00EA005A /* CircleSegmentedBarView.swift in Sources */,

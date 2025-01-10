@@ -7,7 +7,7 @@
 
 enum MakeAnywayTransactionPayload {
     
-    case lastPayment(LatestOutlinePayload)
+    case payment(LatestOutlinePayload)
     case oneOf(Service, Operator)
     case singleService(Service, Operator)
 }

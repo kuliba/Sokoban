@@ -61,6 +61,16 @@ extension UtilityPaymentNanoServicesComposer {
         )
     }
     
+    func compose() -> NanoServices {
+        
+        return .init(
+            getAllLatestPayments: getAllLatestPayments,
+            getOperatorsListByParam: { _ in },
+            getServicesFor: getServicesFor,
+            startAnywayPayment: startAnywayPayment
+        )
+    }
+
     typealias NanoServices = UtilityPaymentNanoServices
 }
 

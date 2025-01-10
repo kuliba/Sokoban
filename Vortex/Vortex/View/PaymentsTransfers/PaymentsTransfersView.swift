@@ -981,7 +981,7 @@ private extension UtilityPrepaymentCompletionEvent {
         case let .select(select):
             switch select {
             case let .lastPayment(lastPayment):
-                return .select(.lastPayment(lastPayment))
+                return .select(.payment(lastPayment))
                 
             case let .operator(`operator`):
                 return .select(.operator(`operator`))

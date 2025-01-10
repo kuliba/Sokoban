@@ -71,7 +71,7 @@ extension AnywayTransactionComposer {
         else { return nil }
 
         switch payload {
-        case let .lastPayment(payload):
+        case let .payment(payload):
             return makeTransaction(
                 update: update,
                 product: product,
