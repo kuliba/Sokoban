@@ -37,12 +37,12 @@ extension RootViewModelFactory {
     }
     
     func processPayments(
-        lastPayment: UtilityPaymentLastPayment,
+        repeatPayment: UtilityPaymentLastPayment,
         close: @escaping () -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
         processPayments(
-            lastPayment: lastPayment,
+            repeatPayment: repeatPayment,
             notify: { _ in close() },
             completion: completion
         )

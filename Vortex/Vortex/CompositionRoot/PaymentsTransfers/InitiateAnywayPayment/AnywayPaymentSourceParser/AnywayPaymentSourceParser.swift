@@ -29,15 +29,12 @@ extension AnywayPaymentSourceParser {
         case latest(LatestOutlinePayload)
         case oneOf(Service, Operator)
         case picked(ServicePickerItem, PaymentProviderServicePickerPayload)
-        case `repeat`(Repeat)
         case single(Service, Operator)
         case template(PaymentTemplateData)
         
         typealias Latest = LatestOutlinePayload
         typealias Operator = UtilityPaymentProvider
         typealias Service = UtilityService
-        
-        typealias Repeat = LatestOutlinePayload
     }
     
     struct Output: Equatable {
@@ -54,9 +51,6 @@ extension AnywayPaymentSourceParser {
         switch source {
         case let .latest(latest):
             return self.latest(latest, product)
-            
-        case let .`repeat`(`repeat`):
-            return self.latest(`repeat`, product)
             
         case let .oneOf(service, `operator`):
             return oneOf(service, `operator`, product)
