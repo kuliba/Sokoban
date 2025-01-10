@@ -3253,6 +3253,8 @@ private extension Target {
             .remoteServices,
             .rxViewModel,
             .serialComponents,
+            .textFieldDomain,
+            .textFieldModel,
             .vortexTools,
         ]
     )
