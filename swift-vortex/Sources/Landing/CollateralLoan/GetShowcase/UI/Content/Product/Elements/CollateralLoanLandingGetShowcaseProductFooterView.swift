@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CollateralLoanLandingGetShowcaseProductFooterView: View {
     
+    let landingId: String
+    let event: (String) -> Void
     let config: Config
     let theme: Theme
 
@@ -26,7 +28,7 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
             .foregroundColor(theme.foregroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             
-            HStack {
+            Button(action: { event(landingId) }) {
 
                 Text("Получить")
                     .font(config.fonts.body)

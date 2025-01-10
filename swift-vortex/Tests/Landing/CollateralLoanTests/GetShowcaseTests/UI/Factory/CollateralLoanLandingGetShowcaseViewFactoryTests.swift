@@ -50,7 +50,7 @@ final class CollateralLoanLandingGetShowcaseViewFactoryTests: XCTestCase {
         let theme = ModelTheme.validRandom
         let mappedTheme = theme.map()
         let stub = Product.makeStub(theme: theme)
-        let result = sut.makeFooterView(with: stub)
+        let result = sut.makeFooterView(with: stub, event: { _ in })
         
         XCTAssertNoDiff(result.theme, mappedTheme)
     }
@@ -95,7 +95,7 @@ final class CollateralLoanLandingGetShowcaseViewFactoryTests: XCTestCase {
             featuresHeader: featuresHeader
         )
         
-        let result = sut.makeView(with: stub)
+        let result = sut.makeView(with: stub, event: { _ in })
         
         let mustBeEqual = [
             (title, result.headerView.title),

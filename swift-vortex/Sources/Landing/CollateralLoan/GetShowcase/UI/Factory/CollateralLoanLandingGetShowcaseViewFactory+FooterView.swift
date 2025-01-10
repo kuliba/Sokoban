@@ -7,10 +7,15 @@
 
 extension CollateralLoanLandingGetShowcaseViewFactory {
 
-    func makeFooterView(with model: CollateralLoanLandingGetShowcaseData.Product)
+    func makeFooterView(
+        with model: CollateralLoanLandingGetShowcaseData.Product,
+        event: @escaping (String) -> Void
+    )
         -> CollateralLoanLandingGetShowcaseProductFooterView {
 
             .init(
+                landingId: model.landingId,
+                event: event,
                 config: config,
                 theme: model.theme.map()
             )

@@ -11,12 +11,16 @@ extension GetShowcaseDomain {
         
         var isLoading = false
         var result: Result?
-        var selected: String?
+        var selectedLandingId: String?
 
-        public init(isLoading: Bool = false, result: Result? = nil, selected: String? = nil) {
+        public init(
+            isLoading: Bool = false,
+            result: Result? = nil,
+            selectedLandingId: String? = nil
+        ) {
             self.isLoading = isLoading
             self.result = result
-            self.selected = selected
+            self.selectedLandingId = selectedLandingId
         }
     }
 }

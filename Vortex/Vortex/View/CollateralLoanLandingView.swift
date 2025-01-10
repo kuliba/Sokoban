@@ -11,11 +11,21 @@ import RxViewModel
 
 struct CollateralLoanLandingView: View {
     
-    let viewModel: GetShowcaseDomain.ViewModel
+    let binder: GetShowcaseDomain.Binder
     
     var body: some View {
     
-        RxWrapperView(model: viewModel, makeContentView: content(state:event:))
+        RxWrapperView(model: binder.flow) { state, event in
+            
+            RxWrapperView(
+                model: binder.content,
+                makeContentView: content(state:event:)
+            )
+            .navigationDestination(
+                destination: state.navigation,
+                content: destinationView
+            )
+        }
     }
     
     private func content(
@@ -24,16 +34,47 @@ struct CollateralLoanLandingView: View {
     ) -> some View {
         
         Group {
+            
             switch state.showcase {
             case .none:
                 SpinnerView(viewModel: .init())
                 
             case let .some(showcase):
-                CollateralLoanLandingGetShowcaseView(data: showcase)
+                CollateralLoanLandingGetShowcaseView(
+                    data: showcase,
+                    event: { binder.flow.event(.select(.landing($0))) }
+                )
             }
         }
         .onFirstAppear { event(.load) }
     }
     
+    @ViewBuilder
+    private func destinationView(
+        navigation: Domain.Navigation
+    ) -> some View {
+        
+        switch navigation {
+        case let .landing(landingId):
+            Text(landingId)
+        }
+    }
+    
     typealias Domain = GetShowcaseDomain
+}
+
+extension GetShowcaseDomain.Navigation: Identifiable {
+
+    var id: ID {
+        
+        switch self {
+        case let .landing(landingId):
+            return .landing(landingId)
+        }
+    }
+    
+    enum ID: Hashable {
+     
+        case landing(String)
+    }
 }

@@ -10,14 +10,17 @@ import SwiftUI
 
 extension CollateralLoanLandingGetShowcaseViewFactory {
     
-    public func makeView(with model: CollateralLoanLandingGetShowcaseData.Product)
+    func makeView(
+        with model: CollateralLoanLandingGetShowcaseData.Product,
+        event: @escaping (String) -> Void
+    )
     -> CollateralLoanLandingGetShowcaseProductView {
 
         let headerView = makeHeaderView(with: model)
         let termsView = makeTermsView(with: model)
         let bulletsView = makeBulletsView(with: model)
         let imageView = makeImageView(with: model)
-        let footerView = makeFooterView(with: model)
+        let footerView = makeFooterView(with: model, event: event)
         
         return .init(
             headerView: headerView,

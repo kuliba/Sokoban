@@ -8,13 +8,19 @@
 import SwiftUI
 
 public struct CollateralLoanLandingGetShowcaseView: View {
-    
-    public let data: CollateralLoanLandingGetShowcaseData
-    
-    private let factory = Factory()
-    
-    public init(data: CollateralLoanLandingGetShowcaseData) {
+        
+    private let data: Data
+    private let event: (String) -> Void
+    private let factory: Factory
+
+    public init(
+        data: Data,
+        event: @escaping (String) -> Void,
+        factory: Factory = Factory.init()
+    ) {
         self.data = data
+        self.event = event
+        self.factory = factory
     }
     
     public var body: some View {
@@ -22,13 +28,13 @@ public struct CollateralLoanLandingGetShowcaseView: View {
         ScrollView(showsIndicators: false) {
             
             ForEach(data.products, id: \.landingId) {
-                factory.makeView(with: $0)
+                factory.makeView(with: $0, event: event)
             }
         }
     }
 }
 
-extension CollateralLoanLandingGetShowcaseView {
+public extension CollateralLoanLandingGetShowcaseView {
     
     typealias Data = CollateralLoanLandingGetShowcaseData
     typealias Factory = CollateralLoanLandingGetShowcaseViewFactory

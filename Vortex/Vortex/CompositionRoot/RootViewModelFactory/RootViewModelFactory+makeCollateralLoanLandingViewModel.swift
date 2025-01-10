@@ -10,11 +10,23 @@ import CollateralLoanLandingGetShowcaseUI
 import RemoteServices
 import RxViewModel
 import Foundation
+import Combine
 
 extension RootViewModelFactory {
     
-    func makeCollateralLoanLandingViewModel(
-    ) -> GetShowcaseDomain.ViewModel {
+    func makeCollateralLoanLandingBinder() -> GetShowcaseDomain.Binder {
+        
+        composeBinder(
+            makeContent: makeContent,
+            delayProvider: delayProvider,
+            getNavigation: getNavigation,
+            witnesses: witnesses()
+        )
+    }
+        
+    // MARK: - Content
+    
+    private func makeContent() -> GetShowcaseDomain.Content {
         
         let reducer = GetShowcaseDomain.Reducer()
         let effectHandler = GetShowcaseDomain.EffectHandler(load: loadCollateralLoanLanding)
@@ -44,6 +56,40 @@ extension RootViewModelFactory {
             completion(.init(result: $0))
             _ = load
         }
+    }
+    
+    // MARK: - Flow
+    
+    private func delayProvider(
+        navigation: GetShowcaseDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .landing:
+            return .microseconds(600)
+        }
+    }
+    
+    private func getNavigation(
+        select: GetShowcaseDomain.Select,
+        notify: @escaping GetShowcaseDomain.Notify,
+        completion: @escaping (GetShowcaseDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case let .landing(landingId):
+            // TODO: replace productID to binder in the future
+            completion(.landing(landingId))
+        }
+    }
+    
+    private func witnesses() -> ContentWitnesses<
+        GetShowcaseDomain.Content,
+        FlowEvent<GetShowcaseDomain.Select, Never>
+    > {
+        .init(
+            emitting: { _ in Empty() },
+            dismissing: { _ in {} }
+        )
     }
 }
 
