@@ -7,6 +7,7 @@
 
 import Foundation
 import RemoteServices
+import SwiftUI
 
 typealias LatestOrigin = RemoteServices.ResponseMapper.LatestPayment
 
@@ -14,14 +15,33 @@ struct Latest: Equatable {
     
     private let origin: LatestOrigin
     // let name: String or label: LatestPaymentButtonLabel
+    private let avatar: Avatar
     
-    init(origin: LatestOrigin) {
+    init(
+        origin: LatestOrigin,
+        avatar: Avatar
+    ) {
      
         self.origin = origin
+        self.avatar = avatar
+    }
+    
+    struct Avatar: Equatable {
+        
+        let fullName: String
+        let image: Image?
+        let topIcon: Image?
     }
 }
 
 extension Latest {
+    
+    func updating(
+        with image: Image
+    ) -> Self {
+        
+        return .init(origin: origin, avatar: .init(fullName: avatar.fullName, image: image, topIcon: avatar.topIcon))
+    }
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment { origin.latest }
     
@@ -62,7 +82,8 @@ extension Latest {
             return service.name ?? String(describing: service)
             
         case let .withPhone(withPhone):
-            return withPhone.name ?? withPhone.phoneNumber
+                        
+            return withPhone.name ?? avatar.fullName
         }
     }
 
@@ -171,10 +192,29 @@ extension Latest {
         
         switch origin {
         case let .service(service):
-            return service.label
-            
+            return .init(
+                amount: "",
+                avatar: .image(avatar.image ?? .ic24MoreHorizontal),
+                description: avatar.fullName,
+                topIcon: avatar.topIcon
+            )
+
         case let .withPhone(withPhone):
-            return withPhone.label
+            
+            let image: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar = {
+                
+                if let image = avatar.image {
+                    return .image(image)
+                }
+                return .icon(.ic24Smartphone, .iconGray)
+            }()
+
+            return .init(
+                amount: "",
+                avatar: image,
+                description: avatar.fullName,
+                topIcon: avatar.topIcon
+            )
         }
     }
 }

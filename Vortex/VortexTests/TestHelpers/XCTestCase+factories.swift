@@ -11,10 +11,11 @@ import XCTest
 extension XCTestCase {
     
     func makeServiceLatest(
-        origin: LatestOrigin? = nil
+        origin: LatestOrigin? = nil,
+        avatar: Latest.Avatar? = nil
     ) -> Latest {
         
-        return .init(origin: origin ?? .service(makeLatestService()))
+        return .init(origin: origin ?? .service(makeLatestService()), avatar: avatar ?? .init(fullName: "", image: nil, topIcon: nil))
     }
 
     func makeLatestService(

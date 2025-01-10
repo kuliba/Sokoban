@@ -122,10 +122,32 @@ extension RootViewModelFactory {
         
         ReactiveFetchingUpdater(
             fetcher: AnyOptionalFetcher(fetch: fetch),
-            updater: AnyReactiveUpdater {
+            updater: AnyReactiveUpdater { latest in
                 
             // TODO: reuse/extract mapping from LatestPaymentsView.ViewModel.bind() - see LatestPaymentsViewComponent.swift:41
-                Just($0.map { .latest($0) })
+                
+                let md5Hashes = latest.compactMap(\.md5Hash)
+                let imageCache = self.model.imageCache()
+                
+                let publishers = md5Hashes.map { md5Hash in
+                    
+                    imageCache.image(forKey: .init(md5Hash))
+                        .map { (md5Hash, $0) }
+                }
+                                
+                let updating = Publishers.MergeMany(publishers)
+                    .scan((latest)) { old, new in
+                        old.map {
+                            if $0.md5Hash == new.0 {
+                                return $0.updating(with: new.1)
+                            } else {
+                                return $0
+                            }
+                        }
+                    }
+                
+                return updating
+                    .map { $0.map { .latest($0) }}
                     .handleEvents(receiveOutput: { print("===== latest", $0.count) })
                     .eraseToAnyPublisher()
             }
