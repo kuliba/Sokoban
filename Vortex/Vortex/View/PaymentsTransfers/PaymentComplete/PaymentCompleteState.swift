@@ -15,6 +15,7 @@ struct PaymentCompleteState {
         
         let detailID: Int
         let details: Details?
+        let printFormType: String
         let status: DocumentStatus
         
         typealias Details = TransactionCompleteState.Details
