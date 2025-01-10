@@ -26,7 +26,7 @@ extension RootViewModelFactory {
             }
             
             processSelection(
-                select: (.lastPayment(lastPayment), categoryType)
+                select: (.payment(lastPayment), categoryType)
             ) { [weak self] in
                 
                 guard let self,
@@ -46,13 +46,13 @@ extension RootViewModelFactory {
     }
     
     func processPayments(
-        repeatPayment: UtilityPaymentLastPayment,
+        repeatPayment: RepeatPayment,
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
         
         processSelection(
-            select: .lastPayment(repeatPayment)
+            select: .payment(repeatPayment)
         ) { [weak self] in
             
             guard let self,

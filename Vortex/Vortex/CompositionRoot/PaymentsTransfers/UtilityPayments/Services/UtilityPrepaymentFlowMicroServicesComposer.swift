@@ -104,11 +104,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ completion: @escaping ProcessSelectionCompletion
     ) {
         switch payload {
-        case let .lastPayment(lastPayment):
+        case let .payment(payment):
             nanoServices.startAnywayPayment(
-                .lastPayment(lastPayment)
+                .lastPayment(payment)
             ) {
-                completion(self.map($0, with: .lastPayment(lastPayment.latestOutlinePayload)))
+                completion(self.map($0, with: .payment(payment.latestOutlinePayload)))
             }
             
         case let .operator(`operator`):

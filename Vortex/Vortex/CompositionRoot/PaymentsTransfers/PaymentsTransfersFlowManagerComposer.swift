@@ -148,7 +148,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 return
             }
             
-            microServices.processSelection(.lastPayment(lastPayment)) {
+            microServices.processSelection(.payment(lastPayment)) {
                 
                 switch $0 {
                 case let .failure(failure):
