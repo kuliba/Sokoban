@@ -646,6 +646,13 @@
         "identifier" : "FlowCoreTests",
         "name" : "FlowCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
+      }
     }
   ],
   "version" : 1

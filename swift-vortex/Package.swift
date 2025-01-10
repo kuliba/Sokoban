@@ -155,6 +155,7 @@ let package = Package(
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingBackendTests,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -1343,7 +1344,7 @@ private extension Target {
             .collateralLoanLandingGetShowcaseBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)/Backend"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)Tests/Backend"
     )
     
     static let collateralLoanLandingGetShowcaseUI = target(
@@ -1360,7 +1361,7 @@ private extension Target {
             .collateralLoanLandingGetShowcaseUI,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)/UI"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)Tests/UI"
     )
 
     static let collateralLoanLandingGetConsentsBackend = target(
@@ -1379,7 +1380,7 @@ private extension Target {
             .customDump,
             .vortexTools
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetConsentsName)/Backend",
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetConsentsName)Tests/Backend",
         resources: [
             .copy("Resources/valid.pdf")
         ]
@@ -1399,7 +1400,7 @@ private extension Target {
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)Tests/Backend/V1"
     )
 
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
@@ -1409,7 +1410,16 @@ private extension Target {
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
-    
+
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = testTarget(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
+        dependencies: [
+            .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)Tests/UI"
+    )
+
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
@@ -1425,7 +1435,7 @@ private extension Target {
             .collateralLoanLandingGetCollateralLandingBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)/Backend/V1"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/Backend/V1"
     )
 
     static let collateralLoanLandingGetCollateralLandingUI = target(
@@ -1446,7 +1456,7 @@ private extension Target {
             .collateralLoanLandingGetCollateralLandingUI,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)/UI"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/UI"
     )
 
     static let collateralLoanLandingSaveConsentsBackend = target(
@@ -1464,7 +1474,7 @@ private extension Target {
             .collateralLoanLandingSaveConsentsBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.SaveConsents)/Backend"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.SaveConsents)Tests/Backend"
     )
     
     // MARK: - Infra
@@ -3822,7 +3832,8 @@ private extension String {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUI"
-
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
+    
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
