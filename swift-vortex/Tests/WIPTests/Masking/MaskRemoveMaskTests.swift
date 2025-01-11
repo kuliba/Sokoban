@@ -1,5 +1,5 @@
 //
-//  MaskUnmaskTests.swift
+//  MaskRemoveMaskTests.swift
 //  swift-vortex
 //
 //  Created by Igor Malyarov on 11.01.2025.
@@ -8,7 +8,7 @@
 @testable import TextFieldDomain
 import XCTest
 
-final class MaskUnmaskTests: MaskTests {
+final class MaskRemoveMaskTests: MaskTests {
     
     func test_unmask_empty_shouldDeliverEmpty_onEmptyState() {
         
@@ -113,7 +113,7 @@ final class MaskUnmaskTests: MaskTests {
         
         let mask = Mask(pattern: pattern)
         
-        return mask.unmask(state)
+        return mask.removeMask(from: state)
     }
     
     private func assertUnmask(

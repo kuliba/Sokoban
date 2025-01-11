@@ -41,8 +41,8 @@ extension Mask {
     /// - Parameter state: The unmasked `TextState` containing raw text and cursor position.
     /// - Returns: A `TextState` with the mask applied to the text and the cursor correctly positioned.
     @inlinable
-    func mask(
-        _ state: TextState
+    func applyMask(
+        to state: TextState
     ) -> TextState {
         
         guard !pattern.isEmpty else { return state }
@@ -85,8 +85,8 @@ extension Mask {
     /// - Parameter state: The current `TextState` containing masked text and cursor position.
     /// - Returns: A `TextState` with static characters removed and the cursor correctly positioned.
     @inlinable
-    func unmask(
-        _ state: TextState
+    func removeMask(
+        from state: TextState
     ) -> TextState {
         
         guard !pattern.isEmpty else { return state }
@@ -142,7 +142,7 @@ extension Mask {
         
         guard !pattern.isEmpty else { return range }
         
-        var maskedToUnmasked: [Int] = []
+        var maskIndexMap: [Int] = []
         var unmaskedIndex = 0
         
         // Step 1: Build a mapping from masked indices to unmasked indices
@@ -150,22 +150,22 @@ extension Mask {
             
             if patternChar.isPlaceholder {
                 // Placeholder character contributes to the unmasked text
-                maskedToUnmasked.append(unmaskedIndex)
+                maskIndexMap.append(unmaskedIndex)
                 unmaskedIndex += 1
             } else {
                 // Static character does not contribute
-                maskedToUnmasked.append(unmaskedIndex)
+                maskIndexMap.append(unmaskedIndex)
             }
         }
         
         // Step 2: Clamp the input range to the bounds of the mapping
-        let clampedLowerBound = max(0, min(range.lowerBound, maskedToUnmasked.count - 1))
-        let clampedUpperBound = max(0, min(range.upperBound, maskedToUnmasked.count))
+        let clampedLowerBound = max(0, min(range.lowerBound, maskIndexMap.count - 1))
+        let clampedUpperBound = max(0, min(range.upperBound, maskIndexMap.count))
         
         // Step 3: Map the clamped range to the unmasked range
-        let startUnmaskedIndex = maskedToUnmasked[clampedLowerBound]
+        let startUnmaskedIndex = maskIndexMap[clampedLowerBound]
         let endUnmaskedIndex = clampedUpperBound > 0
-        ? maskedToUnmasked[clampedUpperBound - 1] + (patternChars[clampedUpperBound - 1].isPlaceholder ? 1 : 0)
+        ? maskIndexMap[clampedUpperBound - 1] + (patternChars[clampedUpperBound - 1].isPlaceholder ? 1 : 0)
         : startUnmaskedIndex
         
         return startUnmaskedIndex..<endUnmaskedIndex
