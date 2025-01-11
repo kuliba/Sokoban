@@ -12,6 +12,7 @@ import TextFieldDomain
 struct Mask {
     
     private let pattern: String
+    private let patternChars: [Character]
     
     /// Initializes a mask with a given pattern.
     ///
@@ -20,6 +21,7 @@ struct Mask {
     init(pattern: String) {
         
         self.pattern = pattern
+        self.patternChars = Array(pattern)
     }
 }
 
@@ -33,6 +35,50 @@ extension Character {
 }
 
 extension Mask {
+    
+    /// Applies the mask pattern to the provided unmasked `TextState`.
+    ///
+    /// - Parameter state: The unmasked `TextState` containing raw text and cursor position.
+    /// - Returns: A `TextState` with the mask applied to the text and the cursor correctly positioned.
+    @inlinable
+    func mask(
+        _ state: TextState
+    ) -> TextState {
+        
+        guard !pattern.isEmpty else { return state }
+        guard !state.text.isEmpty else { return .empty }
+        
+        let rawChars = Array(state.text)
+        
+        var rawIndex = 0
+        var maskedText = ""
+        
+        for patternChar in patternChars {
+            
+            if patternChar.isPlaceholder {
+                
+                if rawIndex < rawChars.count {
+                    
+                    maskedText.append(rawChars[rawIndex])
+                    rawIndex += 1
+                    
+                } else {
+                    break
+                }
+                
+            } else {
+                
+                // Reveal static characters only when there's preceding input
+                maskedText.append(patternChar)
+            }
+        }
+        
+        let maskedCursorPosition = pattern.maskedIndex(
+            for: state.cursorPosition
+        )
+        
+        return .init(maskedText, cursorPosition: maskedCursorPosition)
+    }
     
     /// Removes static characters from the masked input and adjusts the cursor position.
     ///
@@ -52,7 +98,6 @@ extension Mask {
         var rawCursorPosition = 0
         
         let maskedChars = Array(maskedText)
-        let patternChars = Array(pattern)
         
         var rawIndex = 0
         
@@ -91,11 +136,11 @@ extension Mask {
     /// - Parameter range: The range in the masked text.
     /// - Returns: The corresponding range in the unmasked text.
     @inlinable
-    func unmask(_ range: Range<Int>) -> Range<Int> {
+    func unmask(
+        _ range: Range<Int>
+    ) -> Range<Int> {
         
         guard !pattern.isEmpty else { return range }
-        
-        let patternChars = Array(pattern)
         
         var maskedToUnmasked: [Int] = []
         var unmaskedIndex = 0
@@ -124,50 +169,5 @@ extension Mask {
         : startUnmaskedIndex
         
         return startUnmaskedIndex..<endUnmaskedIndex
-    }
-    
-    /// Applies the mask pattern to the provided unmasked `TextState`.
-    ///
-    /// - Parameter state: The unmasked `TextState` containing raw text and cursor position.
-    /// - Returns: A `TextState` with the mask applied to the text and the cursor correctly positioned.
-    @inlinable
-    func mask(
-        _ state: TextState
-    ) -> TextState {
-        
-        guard !pattern.isEmpty else { return state }
-        guard !state.text.isEmpty else { return .empty }
-        
-        let patternChars = Array(pattern)
-        let rawChars = Array(state.text)
-        
-        var rawIndex = 0
-        var maskedText = ""
-        
-        for patternChar in patternChars {
-            
-            if patternChar.isPlaceholder {
-                
-                if rawIndex < rawChars.count {
-                    
-                    maskedText.append(rawChars[rawIndex])
-                    rawIndex += 1
-                    
-                } else {
-                    break
-                }
-                
-            } else {
-                
-                // Reveal static characters only when there's preceding input
-                maskedText.append(patternChar)
-            }
-        }
-        
-        let maskedCursorPosition = pattern.maskedIndex(
-            for: state.cursorPosition
-        )
-        
-        return .init(maskedText, cursorPosition: maskedCursorPosition)
     }
 }
