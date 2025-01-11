@@ -7,13 +7,17 @@
 
 extension String {
     
-    /// Returns the masked index in the pattern for a given unmasked index.
-    func maskedIndex(
+    /// Returns the index in the masked pattern that corresponds to a given unmasked index.
+    ///
+    /// - Parameter unmaskedIndex: The index of the unmasked input value.
+    /// - Returns: The corresponding index in the masked pattern, or `nil` if not found.
+    @inlinable
+    public func maskedIndex(
         for unmaskedIndex: Int
     ) -> Int? {
         
         // Step 1: Generate the mask map from the pattern
-        let maskMapping = maskMap()
+        let maskMapping = generateMaskMap()
         
         // Step 2: Use chunkify to group non-masker values with trailing maskers
         let chunkified = maskMapping.chunkify()
@@ -22,8 +26,13 @@ extension String {
         return chunkified[unmaskedIndex]
     }
     
-    // Step 1: Build the initial map
-    func maskMap() -> [Int] {
+    /// Generates a mapping of the pattern where placeholders are mapped to their unmasked indices,
+    /// and static characters are marked with `-1`.
+    ///
+    /// - Returns: An array where unmasked characters are mapped to their indices,
+    ///            and static characters are marked with `-1`.
+    @usableFromInline
+    func generateMaskMap() -> [Int] {
         
         var mapping = [Int]()
         var unmaskedIndex = 0
@@ -44,8 +53,13 @@ extension String {
 
 extension Array where Element == Int {
     
+    /// Groups non-masker values with their trailing maskers into chunks.
+    ///
+    /// - Parameter masker: The value representing masked elements (default is `-1`).
+    /// - Returns: A dictionary where the key is a non-masker value, and the value is the last index in its chunk.
+    @usableFromInline
     func chunkify(
-        masker: Int = .masker
+        masker: Int = .maskPlaceholder
     ) -> [Int: Int] {
         
         guard !isEmpty else { return [:] }
@@ -83,7 +97,9 @@ extension Array where Element == Int {
     }
 }
 
-private extension Int {
+extension Int {
     
-    static let masker = -1
+    /// The default value representing a masked character in the pattern.
+    @usableFromInline
+    static let maskPlaceholder = -1
 }

@@ -62,13 +62,13 @@ final class MaskedIndexHelperTests: XCTestCase {
         ])
     }
 
-    // MARK: - maskMap
+    // MARK: - generateMaskMap
     
     func test_maskMap_phone() {
         
         let pattern = "+7(___)-___-__-__"
         
-        XCTAssertEqual(pattern.maskMap(), phone)
+        XCTAssertEqual(pattern.generateMaskMap(), phone)
     }
     
     func test_maskMap_shortDate() {
@@ -76,7 +76,7 @@ final class MaskedIndexHelperTests: XCTestCase {
         //            "01.23"
         let pattern = "__.__"
         
-        XCTAssertEqual(pattern.maskMap(), [0, 1, -1, 2, 3])
+        XCTAssertEqual(pattern.generateMaskMap(), [0, 1, -1, 2, 3])
     }
     
     func test_maskMap_longDate() {
@@ -84,7 +84,7 @@ final class MaskedIndexHelperTests: XCTestCase {
         //            "01.2345"
         let pattern = "__.____"
         
-        XCTAssertEqual(pattern.maskMap(), [0, 1, -1, 2, 3, 4, 5])
+        XCTAssertEqual(pattern.generateMaskMap(), [0, 1, -1, 2, 3, 4, 5])
     }
 
     // MARK: - Helpers
