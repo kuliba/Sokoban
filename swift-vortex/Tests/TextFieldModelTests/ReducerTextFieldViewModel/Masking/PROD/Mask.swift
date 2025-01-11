@@ -7,8 +7,6 @@
 
 import TextFieldDomain
 
-#warning("edge case: deleting before first character in unmasked text should have no effect if unmasked text is not empty and set to empty masked text if unmasked text is empty -??")
-
 struct Mask {
     
     private let pattern: String
