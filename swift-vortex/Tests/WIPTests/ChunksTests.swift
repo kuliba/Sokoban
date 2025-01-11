@@ -189,12 +189,27 @@ func maskMap(pattern: String) -> [Int] {
 
 final class MapTests: MaskingTests {
     
-    func testMap() {
+    func test_map_phone() {
         
         let pattern = "+7(___)-___-__-__"
-        let mapping = maskMap(pattern: pattern)
         
-        XCTAssertEqual(mapping, phone)
+        XCTAssertEqual(maskMap(pattern: pattern), phone)
+    }
+    
+    func test_map_shortDate() {
+        
+        //            "01.23"
+        let pattern = "__.__"
+        
+        XCTAssertEqual(maskMap(pattern: pattern), [0, 1, -1, 2, 3])
+    }
+    
+    func test_map_longDate() {
+        
+        //            "01.2345"
+        let pattern = "__.____"
+        
+        XCTAssertEqual(maskMap(pattern: pattern), [0, 1, -1, 2, 3, 4, 5])
     }
 }
 
@@ -237,6 +252,7 @@ final class MaskedIndexTests: MaskingTests {
     
     func test_phone() {
         
+        //            "01234567890123456"
         //            "+7(012)-345-67-89"
         let pattern = "+7(___)-___-__-__"
         
@@ -256,6 +272,7 @@ final class MaskedIndexTests: MaskingTests {
     
     func test_shortDate() {
         
+        //            "01234"
         //            "01.23"
         let pattern = "__.__"
         
@@ -269,6 +286,7 @@ final class MaskedIndexTests: MaskingTests {
     
     func test_longDate() {
         
+        //            "0123456"
         //            "01.2345"
         let pattern = "__.____"
         
@@ -283,7 +301,7 @@ final class MaskedIndexTests: MaskingTests {
     }
     
     func test_placeholderOnly() {
-
+        
         //            "0123456"
         let pattern = "NNN_NNN"
         
@@ -292,7 +310,6 @@ final class MaskedIndexTests: MaskingTests {
         XCTAssertEqual(pattern.maskedIndex(for: 2), 2)
         XCTAssertEqual(pattern.maskedIndex(for: 3), 3)
         XCTAssertEqual(pattern.maskedIndex(for: 4), 4)
-        XCTAssertEqual(pattern.maskedIndex(for: 5), 5)
         XCTAssertEqual(pattern.maskedIndex(for: 5), 5)
         XCTAssertEqual(pattern.maskedIndex(for: 6), 6)
         
@@ -308,6 +325,7 @@ final class MaskedIndexTests: MaskingTests {
     
     func test_staticAndPlaceholderMix() {
         
+        //            "123456"
         //            "AB012C"
         let pattern = "AB_N_C"
         
@@ -315,11 +333,12 @@ final class MaskedIndexTests: MaskingTests {
         XCTAssertEqual(pattern.maskedIndex(for: 1), 3)
         XCTAssertEqual(pattern.maskedIndex(for: 2), 5)
         
-        XCTAssertNil(pattern.maskedIndex(for: 4))
+        XCTAssertNil(pattern.maskedIndex(for: 3))
     }
     
     func test_edgeCases() {
         
+        //            "0123456"
         //            "(01)-23"
         let pattern = "(__)-__"
         
@@ -333,6 +352,7 @@ final class MaskedIndexTests: MaskingTests {
     
     func test_alternatingStaticAndPlaceholder() {
         
+        //            "01234567890"
         //            "A012B345C67"
         let pattern = "A_N_B_N_C_N"
         
