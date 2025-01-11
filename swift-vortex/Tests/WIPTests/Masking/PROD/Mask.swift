@@ -13,6 +13,9 @@ struct Mask {
     
     private let pattern: String
     
+    /// Initializes a mask with a given pattern.
+    ///
+    /// - Parameter pattern: A string pattern where placeholders are `"N"` or `"_"`.
     @inlinable
     init(pattern: String) {
         
@@ -22,13 +25,19 @@ struct Mask {
 
 extension Character {
     
+    /// Indicates if the character is a placeholder in the mask.
+    ///
+    /// - Returns: `true` if the character is `"N"` or `"_"`, otherwise `false`.
     @usableFromInline
     var isPlaceholder: Bool { self == "N" || self == "_" }
 }
 
 extension Mask {
     
-    /// Removes static characters from masked input and adjusts the cursor accordingly.
+    /// Removes static characters from the masked input and adjusts the cursor position.
+    ///
+    /// - Parameter state: The current `TextState` containing masked text and cursor position.
+    /// - Returns: A `TextState` with static characters removed and the cursor correctly positioned.
     @inlinable
     func unmask(
         _ state: TextState
@@ -50,8 +59,7 @@ extension Mask {
         for (index, char) in maskedChars.enumerated() {
             
             if index >= patternChars.count {
-                // Ignore any extra characters beyond the mask
-                break
+                break // Ignore any extra characters beyond the mask
             }
             
             let patternChar = patternChars[index]
@@ -79,6 +87,9 @@ extension Mask {
     }
     
     /// Maps a range in the masked text to the corresponding range in the unmasked text.
+    ///
+    /// - Parameter range: The range in the masked text.
+    /// - Returns: The corresponding range in the unmasked text.
     @inlinable
     func unmask(_ range: Range<Int>) -> Range<Int> {
         
@@ -116,6 +127,9 @@ extension Mask {
     }
     
     /// Applies the mask pattern to the provided unmasked `TextState`.
+    ///
+    /// - Parameter state: The unmasked `TextState` containing raw text and cursor position.
+    /// - Returns: A `TextState` with the mask applied to the text and the cursor correctly positioned.
     @inlinable
     func mask(
         _ state: TextState
