@@ -6,6 +6,7 @@
 //
 
 @testable import TextFieldDomain
+@testable import TextFieldModel
 import XCTest
 
 final class MaskRemoveMaskTests: MaskTests {

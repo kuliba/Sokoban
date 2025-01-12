@@ -45,7 +45,11 @@ extension TextFieldFactory {
         keyboardType: KeyboardType
     ) -> ViewModel {
         
-        let reducer = TransformingReducer(placeholderText: placeholder)
+        let reducer = ChangingReducer.mask(
+            placeholderText: placeholder,
+            pattern: mask
+     //       isNumeric: keyboardType != .default
+        )
         
         return .init(
             initialState: .placeholder(placeholder),

@@ -8,7 +8,8 @@
 import Foundation
 import TextFieldDomain
 
-public struct Mask {
+@usableFromInline
+struct Mask {
     
     @usableFromInline
     let pattern: String
@@ -19,7 +20,7 @@ public struct Mask {
     /// Initializes a mask with a given pattern.
     ///
     /// - Parameter pattern: A string pattern where placeholders are `"N"` or `"_"`.
-    @inlinable
+    @usableFromInline
     init(pattern: String) {
         
         self.pattern = pattern
@@ -42,7 +43,7 @@ extension Mask {
     ///
     /// - Parameter state: The unmasked `TextState` containing raw text and cursor position.
     /// - Returns: A `TextState` with the mask applied to the text and the cursor correctly positioned.
-    @inlinable
+    @usableFromInline
     func applyMask(
         to state: TextState
     ) -> TextState {
@@ -86,7 +87,7 @@ extension Mask {
     ///
     /// - Parameter state: The current `TextState` containing masked text and cursor position.
     /// - Returns: A `TextState` with static characters removed and the cursor correctly positioned.
-    @inlinable
+    @usableFromInline
     func removeMask(
         from state: TextState
     ) -> TextState {
@@ -137,7 +138,7 @@ extension Mask {
     ///
     /// - Parameter range: The range in the masked text.
     /// - Returns: The corresponding range in the unmasked text.
-    @inlinable
+    @usableFromInline
     func unmask(
         _ range: NSRange
     ) -> NSRange {
@@ -187,7 +188,7 @@ extension Mask {
     }
     
     // remove characters that are not allowed by mask pattern - this is over-simplified (precise should be done in `applyMask`) but could work for `digits-only` masks
-    @inlinable
+    @usableFromInline
     func clean(
         _ text: String
     ) -> String {
@@ -196,7 +197,7 @@ extension Mask {
     }
     
     @usableFromInline
-    func isAllowedByPattern(
+    internal func isAllowedByPattern(
         _ character: Character
     ) -> Bool {
         

@@ -7,7 +7,6 @@
 
 import Foundation
 import TextFieldDomain
-import TextFieldModel
 
 #warning("add documentation")
 public extension ChangingReducer {

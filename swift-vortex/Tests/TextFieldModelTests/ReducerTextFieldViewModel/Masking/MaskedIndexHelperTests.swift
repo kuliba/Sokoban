@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 11.01.2025.
 //
 
+@testable import TextFieldModel
 import XCTest
 
 final class MaskedIndexHelperTests: XCTestCase {
