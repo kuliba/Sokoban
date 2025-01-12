@@ -17,6 +17,9 @@ struct Mask {
     @usableFromInline
     let patternChars: [Character]
     
+    @usableFromInline
+    let maskIndexMap: [(lower: Int, upper: Int)]
+    
     /// Initializes a mask with a given pattern.
     ///
     /// - Parameter pattern: A string pattern where placeholders are `"N"` or `"_"`.
@@ -25,6 +28,7 @@ struct Mask {
         
         self.pattern = pattern
         self.patternChars = Array(pattern)
+        self.maskIndexMap = patternChars.buildMapping()
     }
 }
 
@@ -133,6 +137,9 @@ extension Mask {
         
         return .init(rawText, cursorPosition: rawCursorPosition)
     }
+}
+
+extension Mask {
     
     /// Maps a range in the masked text to the corresponding range in the unmasked text.
     ///
@@ -145,35 +152,52 @@ extension Mask {
         
         guard !pattern.isEmpty else { return range }
         
-        var maskIndexMap: [Int] = []
-        var unmaskedIndex = 0
-        
-        // Step 1: Build a mapping from masked indices to unmasked indices
-        for patternChar in patternChars {
-            
-            if patternChar.isPlaceholder {
-                // Placeholder character contributes to the unmasked text
-                maskIndexMap.append(unmaskedIndex)
-                unmaskedIndex += 1
-            } else {
-                // Static character does not contribute
-                maskIndexMap.append(unmaskedIndex)
-            }
-        }
-        
-        // Step 2: Clamp the input range to the bounds of the mapping
+        // Step 1: Clamp the input range to the bounds of the mapping
         let clampedLowerBound = max(0, min(range.location, maskIndexMap.count - 1))
         let clampedUpperBound = max(0, min(range.upperBound, maskIndexMap.count))
         
-        // Step 3: Map the clamped range to the unmasked range
-        let startUnmaskedIndex = maskIndexMap[clampedLowerBound]
+        // Step 2: Use `lower` for the start, `upper` for the end
+        let startUnmaskedIndex = maskIndexMap[clampedLowerBound].lower
         let endUnmaskedIndex = clampedUpperBound > 0
-        ? maskIndexMap[clampedUpperBound - 1] + (patternChars[clampedUpperBound - 1].isPlaceholder ? 1 : 0)
+        ? maskIndexMap[clampedUpperBound - 1].upper
         : startUnmaskedIndex
         
+        // Step 3: Construct the new range
         return .init(location: startUnmaskedIndex, length: endUnmaskedIndex - startUnmaskedIndex)
     }
+}
+
+extension Array where Element == Character {
     
+    /// Builds a mapping from masked indices to unmasked index ranges.
+    ///
+    /// Each masked character maps to a tuple `(lower, upper)` in the unmasked text.
+    /// - Placeholders increment the unmasked index.
+    /// - Static characters map to the same index for both `lower` and `upper`.
+    @inlinable
+    func buildMapping() -> [(lower: Int, upper: Int)] {
+        
+        var maskIndexMap: [(lower: Int, upper: Int)] = []
+        var unmaskedIndex = 0
+        
+        for patternChar in self {
+            
+            if patternChar.isPlaceholder {
+                // Placeholder contributes to unmasked text, so advance the index
+                maskIndexMap.append((unmaskedIndex, unmaskedIndex + 1))
+                unmaskedIndex += 1
+            } else {
+                // Static characters do not contribute to unmasked text
+                maskIndexMap.append((unmaskedIndex, unmaskedIndex))
+            }
+        }
+        
+        return maskIndexMap
+    }
+}
+
+extension Mask {
+
     // remove characters that are not allowed by mask pattern - this is over-simplified (precise should be done in `applyMask`) but could work for `digits-only` masks
     @usableFromInline
     func clean(
