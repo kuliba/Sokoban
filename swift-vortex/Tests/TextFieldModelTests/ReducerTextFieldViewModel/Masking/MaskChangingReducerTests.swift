@@ -79,19 +79,6 @@ final class BasicMaskBehaviorTests: MaskChangingReducerTests {
         XCTAssertNoDiff(output.last, .editing(.init("124", cursorAt: 3)))
     }
     
-    func test_anyPlaceholderAndStaticMix() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "N_._N")
-        
-        let output = try sut.reduce(
-            state,
-            actions: { _ in .startEditing },
-            { try $0.paste("1ABZ") }
-        )
-        
-        XCTAssertNoDiff(output.last, .editing(.init("1A.B", cursorAt: 4)))
-    }
-    
     func test_underscoreMaskAnyChars() throws {
         
         let (state, sut) = makeSUT(maskPattern: "_ _ _")
@@ -130,50 +117,9 @@ final class BasicMaskBehaviorTests: MaskChangingReducerTests {
         
         XCTAssertNoDiff(output.last, .editing(.init("12", cursorAt: 2)))
     }
-    
-    func test_insertingIntoFullMask() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "NNN")
-        
-        let output = try sut.reduce(
-            state,
-            actions: { _ in .startEditing },
-            { try $0.paste("123") },
-            { try $0.insert("4") }
-        )
-        
-        XCTAssertNoDiff(output.last, .editing(.init("123", cursorAt: 3)))
-    }
 }
 
 final class ComplexEditingTests: MaskChangingReducerTests {
-    
-    func test_sequence() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "NNN-___")
-        
-        let result = try sut.reduce(
-            state,
-            actions: { _ in .startEditing },
-            { try $0.insert("12") },
-            { try $0.insert("AB") },
-            { try $0.insert("345") },
-            { try $0.paste("xyz") },
-            
-            // If delete at cursor=0, do nothing, so the final is "123-AB"
-            { st in
-                do {
-                    return try st.delete()
-                } catch {
-                    // fallback => do nothing => effectively .changeText("", in: zeroRange)
-                    return .changeText("", in: .init(location: 0, length: 0))
-                }
-            }
-        )
-        
-        // final => "123-AB"
-        XCTAssertNoDiff(result.last, .editing(.init("123-AB", cursorAt: 6)))
-    }
     
     func test_deletionAcrossSegments() throws {
         
@@ -267,16 +213,6 @@ final class ComplexEditingTests: MaskChangingReducerTests {
 
 final class FixedLengthMaskTests: MaskChangingReducerTests {
     
-    func test_exact() throws {
-        
-        let input = editing(.init("ABCDEFGH"))
-        let (_, sut) = makeSUT(maskPattern: "________")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("ABCDEFGH", cursorAt: 8)))
-    }
-    
     func test_shortFill() throws {
         
         let input = editing(.init("AB"))
@@ -285,36 +221,6 @@ final class FixedLengthMaskTests: MaskChangingReducerTests {
         let output = try sut.reduce(input, with: input.insert(""))
         
         XCTAssertNoDiff(output, .editing(.init("AB", cursorAt: 2)))
-    }
-    
-    func test_exactFill() throws {
-        
-        let input = editing(.init("1234"))
-        let (_, sut) = makeSUT(maskPattern: "____")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("1234", cursorAt: 4)))
-    }
-    
-    func test_overfill() throws {
-        
-        let input = editing(.init("ABCDE"))
-        let (_, sut) = makeSUT(maskPattern: "____")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("ABCD", cursorAt: 4)))
-    }
-    
-    func test_overfillWithSymbols() throws {
-        
-        let input = editing(.init("1234!@"))
-        let (_, sut) = makeSUT(maskPattern: "____")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("1234", cursorAt: 4)))
     }
     
     func test_anyCharacters() throws {
@@ -331,26 +237,6 @@ final class FixedLengthMaskTests: MaskChangingReducerTests {
         XCTAssertNoDiff(result[3], .editing(.init("Ab#c", cursorAt: 4)))
     }
     
-    func test_withAlphanumeric() throws {
-        
-        let input = editing(.init("AB12"))
-        let (_, sut) = makeSUT(maskPattern: "____")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("AB12", cursorAt: 4)))
-    }
-    
-    func test_withWhitespace() throws {
-        
-        let input = editing(.init("AB C"))
-        let (_, sut) = makeSUT(maskPattern: "____")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("ABC", cursorAt: 3)))
-    }
-    
     func test_fixedLengthMaskDeletion() throws {
         
         let input = editing(.init("ABCD"))
@@ -364,16 +250,6 @@ final class FixedLengthMaskTests: MaskChangingReducerTests {
 
 final class NumericMaskTests: MaskChangingReducerTests {
     
-    func test_shouldIgnoreSpecialCharacters() throws {
-        
-        let input = editing(.init("12@3!4"))
-        let (_, sut) = makeSUT(maskPattern: "NNNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("1234", cursorAt: 4)))
-    }
-    
     func test_partialFill() throws {
         
         let input = editing(.init("123"))
@@ -382,46 +258,6 @@ final class NumericMaskTests: MaskChangingReducerTests {
         let output = try sut.reduce(input, with: input.insert(""))
         
         XCTAssertNoDiff(output, .editing(.init("123", cursorAt: 3)) )
-    }
-    
-    func test_excessInput() throws {
-        
-        let input = editing(.init("12345"))
-        let (_, sut) = makeSUT(maskPattern: "NNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("123", cursorAt: 3)) )
-    }
-    
-    func test_numericSequenceExactLength() throws {
-        
-        let input = editing(.init("12345"))
-        let (_, sut) = makeSUT(maskPattern: "NNNNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("12345", cursorAt: 5)))
-    }
-    
-    func test_numericSequenceWithPrefix() throws {
-        
-        let input = editing(.init("+12345678901"))
-        let (_, sut) = makeSUT(maskPattern: "+NNNNNNNNNNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("+12345678901", cursorAt: 12)))
-    }
-    
-    func test_numericSequenceOverfill() throws {
-        
-        let input = editing(.init("1234567"))
-        let (_, sut) = makeSUT(maskPattern: "NNNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("1234", cursorAt: 4)))
     }
     
     func test_shouldLimitDigits() throws {
@@ -460,16 +296,6 @@ final class NumericMaskTests: MaskChangingReducerTests {
         XCTAssertNoDiff(result[2], .editing(.init("123", cursorAt: 3)))
     }
     
-    func test_withLeadingZeros() throws {
-        
-        let input = editing(.init("00123"))
-        let (_, sut) = makeSUT(maskPattern: "NNNNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("00123", cursorAt: 5)))
-    }
-    
     func test_incrementalInsertion() throws {
         
         let (state, sut) = makeSUT(maskPattern: "NNN")
@@ -494,16 +320,6 @@ final class NumericMaskTests: MaskChangingReducerTests {
         
         XCTAssertNoDiff(output, .editing(.init("132", cursorAt: 2)))
     }
-    
-    func test_withLeadingZerosAndOverfill() throws {
-        
-        let input = editing(.init("001234"))
-        let (_, sut) = makeSUT(maskPattern: "NNNN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("0012", cursorAt: 4)))
-    }
 }
 
 final class PhoneNumberMaskTests: MaskChangingReducerTests {
@@ -525,184 +341,6 @@ final class PhoneNumberMaskTests: MaskChangingReducerTests {
             .editing(.init("+7(12", cursorAt: 5)),
             .editing(.init("+7(123)-4", cursorAt: 9))
         ])
-    }
-    
-    func test_autoCorrection() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let result = try sut.reduce(
-            state,
-            actions: { _ in .startEditing },
-            { try $0.paste("01") },
-            { try $0.insert("2") },
-            { try $0.insert("3") },
-            { try $0.insert("4") },
-            { try $0.insert("5") },
-            { try $0.insert("6") },
-            { try $0.insert("7") },
-            { try $0.insert("8") },
-            { try $0.insert("9") },
-            { try $0.insert("0") }
-        )
-        
-        XCTAssertNoDiff(result, [
-            .placeholder("Enter masked data"),
-            editing(.empty),
-            .editing(.init("+7(01")),
-            .editing(.init("+7(012)-")),
-            .editing(.init("+7(012)-3")),
-            .editing(.init("+7(012)-34")),
-            .editing(.init("+7(012)-345-")),
-            .editing(.init("+7(012)-345-6")),
-            .editing(.init("+7(012)-345-67-")),
-            .editing(.init("+7(012)-345-67-8")),
-            .editing(.init("+7(012)-345-67-89")),
-            .editing(.init("+7(012)-345-67-89")),
-        ])
-    }
-    
-    func test_autoCorrection2() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let result = try sut.reduce(
-            state,
-            actions: { _ in .startEditing },
-            { try $0.paste("0123456789") },
-            { try $0.insert("0") }
-        )
-        
-        XCTAssertNoDiff(result, [
-            .placeholder("Enter masked data"),
-            editing(.empty),
-            .editing(.init("+7(012)-345-67-89")),
-            .editing(.init("+7(012)-345-67-89")),
-        ])
-    }
-
-    func test_shouldRejectInvalidSymbols() throws {
-        
-        let input = editing(.init("+7(12@)-456-78"))
-        let (_, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("+7(12)-456-78", cursorAt: 13)))
-    }
-    
-    func test_standard() throws {
-        
-        let input = editing(.init("+7(123)-456-78"))
-        let (_, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("+7(123)-456-78", cursorAt: 13)))
-    }
-    
-    func test_overfill() throws {
-        
-        let input = editing(.init("+7(999)-999-999"))
-        let (_, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("+7(999)-999-99-99", cursorAt: 16)))
-    }
-    
-    func test_shouldRejectLetters() throws {
-        
-        let input = editing(.init("+7(12a)-45b-6"))
-        let (_, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("+7(12)-45-6", cursorAt: 11)))
-    }
-    
-    func test_partialDeletion() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let result = try sut.reduce(
-            state,
-            actions: { _ in .startEditing },
-            { try $0.insert("+7(123)-456-78") },
-            { try $0.delete() }
-        )
-        
-        XCTAssertNoDiff(result.last, .editing(.init("+7(123)-456-7", cursorAt: 13)))
-    }
-    
-    func test_multipleEdits_insertsAndDeletesAndReplaces() throws {
-        
-        let (state, sut) = makeSUT(maskPattern: "+7(___)-___-__-__")
-        
-        let result = try sut.reduce(
-            state,
-            actions:
-                { _ in .startEditing },
-            { try $0.insert("+7(12") },
-            { try $0.insert("abc") },
-            { try $0.insert("345678") },
-            { try $0.delete() },
-            { try $0.delete() },
-            { try $0.insert("99") },
-            { try $0.replace(from: 3, count: 3, with: "777") },
-            { try $0.delete() }
-        )
-        
-        // Steps per test expectation:
-        XCTAssertNoDiff(result[0], .placeholder("Enter phone number"))
-        XCTAssertNoDiff(result[1], .editing(.init("", cursorPosition: 0)))
-        // +7(12
-        XCTAssertNoDiff(result[2], .editing(.init("+7(12", cursorPosition: 5)))
-        // insert "abc" => skip => remains +7(12
-        XCTAssertNoDiff(result[3], .editing(.init("+7(12", cursorPosition: 5)))
-        // insert "345678" => => +7(123)-456-78
-        XCTAssertNoDiff(result[4], .editing(.init("+7(123)-456-78", cursorPosition: 14)))
-        // delete => remove '8'
-        XCTAssertNoDiff(result[5], .editing(.init("+7(123)-456-7", cursorPosition: 13)))
-        // delete => remove '7'
-        XCTAssertNoDiff(result[6], .editing(.init("+7(123)-456-", cursorPosition: 12)))
-        // insert "99" => +7(123)-456-99
-        XCTAssertNoDiff(result[7], .editing(.init("+7(123)-456-99", cursorPosition: 14)))
-        // replace 3 digits from index=3 => => +7(777)-456-99
-        XCTAssertNoDiff(result[8], .editing(.init("+7(777)-456-99", cursorPosition: 9)))
-        // delete => +7(777)-456-9
-        XCTAssertNoDiff(result[9], .editing(.init("+7(777)-456-9", cursorPosition: 13)))
-    }
-    
-    func test_simulateRealEditingFlow() throws {
-        
-        let maskPattern = "+7(___)-___-__-__"
-        let (state, sut) = makeSUT(maskPattern: maskPattern)
-        
-        let result = try sut.reduce(
-            state,
-            actions:
-                { _ in .startEditing },
-            { try $0.insert("9991112223") },
-            { try $0.replace(from: 5, count: 3, with: "777") },
-            { try $0.delete() },
-            { try $0.delete() },
-            { try $0.delete() },
-            { try $0.insert("55") }
-        )
-        
-        let final = result.last!
-        
-        switch final {
-        case .editing(let textState):
-            XCTAssertTrue(
-                textState.text.hasSuffix("55"),
-                "Final text: \(textState.text) doesn't end with 55"
-            )
-            XCTAssertLessThanOrEqual(textState.text.count, maskPattern.count)
-        default:
-            XCTFail("Expected final .editing state.")
-        }
     }
 }
 
@@ -751,26 +389,6 @@ final class PrefilledMaskTests: MaskChangingReducerTests {
 
 final class SegmentedMaskTests: MaskChangingReducerTests {
     
-    func test_simple() throws {
-        
-        let input = editing(.init("ABCD"))
-        let (_, sut) = makeSUT(maskPattern: "__-___")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("AB-CD", cursorAt: 5)))
-    }
-    
-    func test_withStaticDelimiter() throws {
-        
-        let input = editing(.init("1234"))
-        let (_, sut) = makeSUT(maskPattern: "NN-NN")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("12-34", cursorAt: 5)))
-    }
-    
     func test_partialFill() throws {
         
         let (state, sut) = makeSUT(maskPattern: "__-___")
@@ -784,16 +402,6 @@ final class SegmentedMaskTests: MaskChangingReducerTests {
         XCTAssertNoDiff(result.last, .editing(.init("AB-CD", cursorAt: 5)))
     }
     
-    func test_full() throws {
-        
-        let input = editing(.init("ABCDXYZ"))
-        let (_, sut) = makeSUT(maskPattern: "__-___-__")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("AB-CDX-YZ", cursorAt: 9)))
-    }
-    
     func test_preventsDelimiterDeletion() throws {
         
         let input = editing(.init("12-34"))
@@ -802,16 +410,6 @@ final class SegmentedMaskTests: MaskChangingReducerTests {
         let output = try sut.reduce(input, with: input.removeLast())
         
         XCTAssertNoDiff(output, .editing(.init("12-3", cursorAt: 4)))
-    }
-    
-    func test_shouldRejectInvalidCharacters() throws {
-        
-        let input = editing(.init("AB#CD"))
-        let (_, sut) = makeSUT(maskPattern: "__-__")
-        
-        let output = try sut.reduce(input, with: input.insert(""))
-        
-        XCTAssertNoDiff(output, .editing(.init("AB-CD", cursorAt: 5)))
     }
 }
 

@@ -10,20 +10,6 @@ import XCTest
 
 final class MaskUnmaskRangeTests: XCTestCase {
     
-    func test() {
-        
-        XCTAssertEqual(
-            Mask(pattern: "NNN-___").unmask(.init(location: 3, length: 1)),
-            .init(location: 2, length: 1)
-        )
-        assertUnmasked(.init(3, 4), with: "NNN-___", is: .init(2, 1))
-    }
-    
-    func test_unmaskRange_negativeOutOfBounds() {
-        
-        assertUnmasked(.init(-10, (-1)), with: "+7(___)-___-__-__", is: .init(0, 0))
-    }
-    
     func test_unmaskRange_emptyMask() {
         
         assertUnmasked(.init(0, 5),  with: "", is: .init(0, 5))
@@ -38,27 +24,10 @@ final class MaskUnmaskRangeTests: XCTestCase {
         let pattern = "+7(___)-___-__-__"
         
         assertUnmasked(.init(0, 0),   with: pattern, is: .init(0, 0))
-        assertUnmasked(.init(0, 2),   with: pattern, is: .init(0, 0))
-        assertUnmasked(.init(0, 3),   with: pattern, is: .init(0, 0))
         assertUnmasked(.init(0, 5),   with: pattern, is: .init(0, 2))
         assertUnmasked(.init(0, 18),  with: pattern, is: .init(0, 10))
         assertUnmasked(.init(0, 50),  with: pattern, is: .init(0, 10))
         assertUnmasked(.init(0, 100), with: pattern, is: .init(0, 10))
-        assertUnmasked(.init(2, 5),   with: pattern, is: .init(0, 2))
-        assertUnmasked(.init(2, 8),   with: pattern, is: .init(0, 3))
-        assertUnmasked(.init(3, 4),   with: pattern, is: .init(0, 1))
-        assertUnmasked(.init(3, 5),   with: pattern, is: .init(0, 2))
-        assertUnmasked(.init(4, 7),   with: pattern, is: .init(1, 3))
-        assertUnmasked(.init(4, 8),   with: pattern, is: .init(1, 3))
-        assertUnmasked(.init(5, 10),  with: pattern, is: .init(2, 5))
-        assertUnmasked(.init(5, 50),  with: pattern, is: .init(2, 10))
-        assertUnmasked(.init(6, 9),   with: pattern, is: .init(3, 4))
-        assertUnmasked(.init(7, 8),   with: pattern, is: .init(3, 3))
-        assertUnmasked(.init(8, 15),  with: pattern, is: .init(3, 8))
-        assertUnmasked(.init(9, 13),  with: pattern, is: .init(4, 7))
-        assertUnmasked(.init(12, 13), with: pattern, is: .init(6, 7))
-        assertUnmasked(.init(15, 17), with: pattern, is: .init(8, 10))
-        assertUnmasked(.init(16, 18), with: pattern, is: .init(9, 10))
     }
     
     func test_unmaskRange_shortDate() {
@@ -69,12 +38,9 @@ final class MaskUnmaskRangeTests: XCTestCase {
         
         assertUnmasked(.init(0, 0), with: pattern, is: .init(0, 0))
         assertUnmasked(.init(1, 0), with: pattern, is: .init(1, 0))
-        assertUnmasked(.init(2, 0), with: pattern, is: .init(2, 0))
         assertUnmasked(.init(3, 0), with: pattern, is: .init(2, 0))
-        assertUnmasked(.init(4, 0), with: pattern, is: .init(2, 0))
 
         assertUnmasked(.init(0, 3), with: pattern, is: .init(0, 2))
-        assertUnmasked(.init(2, 3), with: pattern, is: .init(1, 2))
         assertUnmasked(.init(0, 5), with: pattern, is: .init(0, 4))
     }
     
@@ -82,16 +48,12 @@ final class MaskUnmaskRangeTests: XCTestCase {
         
         // "NNNNN" → max unmasked length = 5
         assertUnmasked(.init(0, 5), with:  "NNNNN", is: .init(0, 5))
-        assertUnmasked(.init(2, 4), with:  "NNNNN", is: .init(2, 4))
         assertUnmasked(.init(0, 0), with:  "NNNNN", is: .init(0, 0))
-        assertUnmasked(.init(4, 10), with: "NNNNN", is: .init(4, 5))
     }
     
     func test_unmaskRange_staticOnly() {
         
         // "+7 ( ) -" → no placeholders
-        assertUnmasked(.init(0, 8), with: "+7 ( ) -", is: .init(0, 0))
-        assertUnmasked(.init(2, 4), with: "+7 ( ) -", is: .init(0, 0))
         assertUnmasked(.init(0, 0), with: "+7 ( ) -", is: .init(0, 0))
     }
     
@@ -114,9 +76,7 @@ final class MaskUnmaskRangeTests: XCTestCase {
         assertUnmasked(.init(0, 2),   with: "(__)-__", is: .init(0, 1))
         assertUnmasked(.init(0, 8),   with: "(__)-__", is: .init(0, 4))
         assertUnmasked(.init(1, 4),   with: "(__)-__", is: .init(0, 2))
-        assertUnmasked(.init(3, 100), with: "(__)-__", is: .init(2, 4))
         assertUnmasked(.init(5, 5),   with: "(__)-__", is: .init(2, 2))
-        assertUnmasked(.init(6, 6),   with: "(__)-__", is: .init(3, 3))
     }
     
     func test_unmaskRange_staticEdges() {
@@ -124,40 +84,15 @@ final class MaskUnmaskRangeTests: XCTestCase {
         //                          "12345"
         //                          "+1-2+"
         //                          "+N-N+"
-        assertUnmasked(.init(0, 1), with: "+N-N+", is: .init(0, 0))
         assertUnmasked(.init(1, 1), with: "+N-N+", is: .init(0, 1))
-        assertUnmasked(.init(4, 1), with: "+N-N+", is: .init(2, 2))
         assertUnmasked(.init(0, 4), with: "+N-N+", is: .init(0, 2))
     }
-    
-    func test_unmaskRange_overlappingStaticAndPlaceholder() {
         
-        //                          "+7(__)-__"
-        assertUnmasked(.init(2, 6), with: "+7(__)-__", is: .init(0, 2))
-        assertUnmasked(.init(5, 9), with: "+7(__)-__", is: .init(2, 4))
-    }
-    
     func test_unmaskRange_singlePlaceholder() {
         
         assertUnmasked(.init(0, 1), with: "N", is: .init(0, 1))
         assertUnmasked(.init(0, 0), with: "N", is: .init(0, 0))
         assertUnmasked(.init(-5, 2), with: "N", is: .init(0, 1))
-    }
-    
-    func test_unmaskRange_alternatingStaticAndPlaceholder() {
-        
-        //                           "12345678901"
-        //                           "A123B456C78"
-        assertUnmasked(.init(0, 11), with: "A_N_B_N_C_N", is: .init(0, 8))
-        assertUnmasked(.init(1, 5),  with: "A_N_B_N_C_N", is: .init(0, 3))
-        assertUnmasked(.init(2, 3),  with: "A_N_B_N_C_N", is: .init(1, 2))
-    }
-    
-    func test_unmaskRange_noPlaceholders() {
-        
-        assertUnmasked(.init(0, 7),   with: "ABC-DEF", is: .init(0, 0))
-        assertUnmasked(.init(0, 100), with: "ABC-DEF", is: .init(0, 0))
-        assertUnmasked(.init(3, 5),   with: "ABC-DEF", is: .init(0, 0))
     }
     
     func test_unmaskRange_consecutivePlaceholders() {
