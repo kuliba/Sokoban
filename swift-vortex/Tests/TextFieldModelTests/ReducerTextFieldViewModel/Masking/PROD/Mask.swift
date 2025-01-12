@@ -172,4 +172,34 @@ extension Mask {
         
         return .init(location: startUnmaskedIndex, length: endUnmaskedIndex - startUnmaskedIndex)
     }
+    
+    // remove characters that are not allowed by mask pattern - this is over-simplified (precise should be done in `applyMask`) but could work for `digits-only` masks
+    @inlinable
+    func clean(
+        _ text: String
+    ) -> String {
+        
+        return text.filter(isAllowedByPattern)
+    }
+    
+    @usableFromInline
+    func isAllowedByPattern(
+        _ character: Character
+    ) -> Bool {
+        
+        guard !pattern.isEmpty else { return true }
+        
+        guard !pattern.isDigitsOnlyPattern
+        else { return character.isNumber }
+        
+        return true
+    }
+}
+
+private extension String {
+    
+    var isDigitsOnlyPattern: Bool {
+        
+        !contains("_") && contains("N")
+    }
 }
