@@ -41,13 +41,14 @@ extension MaskedTextFieldWrapperView {
     
     enum Mask: String, CaseIterable {
         
-        case dateShort, dateLong, phone
+        case dateShort, dateLong, fixed, phone
         
         var title: String {
             
             switch self {
             case .dateShort: return "short date"
             case .dateLong:  return "long date"
+            case .fixed:     return "fixed (6)"
             case .phone:     return "phone number"
             }
         }
@@ -57,6 +58,7 @@ extension MaskedTextFieldWrapperView {
             switch self {
             case .dateShort: return "__.__"
             case .dateLong:  return "__.____"
+            case .fixed:     return "______"
             case .phone:     return "+7(___)-___-__-__"
             }
         }
