@@ -149,7 +149,6 @@ extension Mask {
         
         // Step 1: Build a mapping from masked indices to unmasked indices
         for patternChar in patternChars {
-            
             if patternChar.isPlaceholder {
                 // Placeholder character contributes to the unmasked text
                 maskIndexMap.append(unmaskedIndex)
@@ -160,17 +159,31 @@ extension Mask {
             }
         }
         
-        // Step 2: Clamp the input range to the bounds of the mapping
-        let clampedLowerBound = max(0, min(range.location, maskIndexMap.count - 1))
-        let clampedUpperBound = max(0, min(range.upperBound, maskIndexMap.count))
+        var adjustedLocation = range.location
         
-        // Step 3: Map the clamped range to the unmasked range
+        // If deletion targets a static character, shift the range to the previous placeholder
+        if range.length == 1
+            && range.location < patternChars.count
+            && !patternChars[range.location].isPlaceholder {
+            
+            // Move backward to find the nearest placeholder
+            while adjustedLocation > 0 && !patternChars[adjustedLocation].isPlaceholder {
+                adjustedLocation -= 1
+            }
+        }
+        
+        // Step 2: Clamp the adjusted range to the bounds of the mapping
+        let clampedLowerBound = max(0, min(adjustedLocation, maskIndexMap.count - 1))
+        let clampedUpperBound = max(0, min(range.upperBound, maskIndexMap.count - 1))
+        
+        // Step 3: Map both the start and end of the range directly
         let startUnmaskedIndex = maskIndexMap[clampedLowerBound]
-        let endUnmaskedIndex = clampedUpperBound > 0
-        ? maskIndexMap[clampedUpperBound - 1] + (patternChars[clampedUpperBound - 1].isPlaceholder ? 1 : 0)
-        : startUnmaskedIndex
+        let endUnmaskedIndex = maskIndexMap[clampedUpperBound]
         
-        return .init(location: startUnmaskedIndex, length: endUnmaskedIndex - startUnmaskedIndex)
+        // Step 4: The difference gives the correct length
+        let length = max(0, endUnmaskedIndex - startUnmaskedIndex)
+        
+        return .init(location: startUnmaskedIndex, length: length)
     }
     
     // remove characters that are not allowed by mask pattern - this is over-simplified (precise should be done in `applyMask`) but could work for `digits-only` masks
