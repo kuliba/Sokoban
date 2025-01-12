@@ -33,8 +33,8 @@ final class MaskUnmaskRangeTests: XCTestCase {
     
     func test_unmaskRange_phone() {
         
-        //     0..<18 "12345678901234567
-        //     0..<18 "+7(123)-456-78-90", is: 0..<10
+        //     0..<17 "01234567890123456
+        //     0..<17 "+7(012)-345-67-89", is: 0..<10
         let pattern = "+7(___)-___-__-__"
         
         assertUnmasked(.init(0, 0),   with: pattern, is: .init(0, 0))
@@ -63,12 +63,19 @@ final class MaskUnmaskRangeTests: XCTestCase {
     
     func test_unmaskRange_shortDate() {
         
-        //                          "01234"
-        //                          "01.23"
-        //                          "__.__"
-        assertUnmasked(.init(0, 3), with: "__.__", is: .init(0, 2))
-        assertUnmasked(.init(2, 3), with: "__.__", is: .init(1, 2))
-        assertUnmasked(.init(0, 5), with: "__.__", is: .init(0, 4))
+        //            "01234"
+        //            "01.23"
+        let pattern = "__.__"
+        
+        assertUnmasked(.init(0, 0), with: pattern, is: .init(0, 0))
+        assertUnmasked(.init(1, 0), with: pattern, is: .init(1, 0))
+        assertUnmasked(.init(2, 0), with: pattern, is: .init(2, 0))
+        assertUnmasked(.init(3, 0), with: pattern, is: .init(2, 0))
+        assertUnmasked(.init(4, 0), with: pattern, is: .init(2, 0))
+
+        assertUnmasked(.init(0, 3), with: pattern, is: .init(0, 2))
+        assertUnmasked(.init(2, 3), with: pattern, is: .init(1, 2))
+        assertUnmasked(.init(0, 5), with: pattern, is: .init(0, 4))
     }
     
     func test_unmaskRange_placeholderOnly() {
