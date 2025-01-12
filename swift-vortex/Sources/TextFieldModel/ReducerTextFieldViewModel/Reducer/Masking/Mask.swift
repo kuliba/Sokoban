@@ -19,8 +19,11 @@ struct Mask {
     
     /// For each `i` in `patternChars`, store `(lower, upper)` to be used in `unmask(_:)`.
     ///
-    /// - lower: unmasked index if `i` is used as the **start** (lower bound).
-    /// - upper: unmasked index if `i` is used as the **end** (exclusive).
+    /// - lower: The unmasked index to use if `i` is the **start** (lower bound) of a range.
+    /// - upper: The unmasked index to use if `i` is the **end** (exclusive) of a range.
+    ///
+    /// This allows single-character deletions over static characters to remove the preceding placeholder
+    /// if the mask logic requires that behavior.
     @usableFromInline
     let boundMap: [(lower: Int, upper: Int)]
     
@@ -35,10 +38,14 @@ struct Mask {
 
 extension Mask {
     
-    /// Applies the mask pattern to the provided unmasked `TextState`.
+    /// Applies the mask pattern to the given unmasked `TextState`.
     ///
-    /// - Parameter state: The unmasked `TextState` containing raw text and cursor position.
-    /// - Returns: A `TextState` with the mask applied to the text and the cursor correctly positioned.
+    /// Transforms raw text and the cursor position into their masked equivalents.
+    /// For instance, in a phone number mask, a static prefix might appear after typing
+    /// enough digits in the unmasked string.
+    ///
+    /// - Parameter state: The unmasked `TextState` (raw text and cursor position).
+    /// - Returns: A new `TextState` with the mask applied to the text and the cursor.
     @usableFromInline
     func applyMask(
         to state: TextState
@@ -67,11 +74,12 @@ extension Mask {
                 
             } else {
                 
-                // Reveal static characters only when there's preceding input
+                // Reveal static characters only when there's preceding input.
                 maskedText.append(patternChar)
             }
         }
         
+        // Convert the raw cursor position to the masked domain.
         let maskedCursorPosition = pattern.maskedIndex(
             for: state.cursorPosition
         )
@@ -79,10 +87,13 @@ extension Mask {
         return .init(maskedText, cursorPosition: maskedCursorPosition)
     }
     
-    /// Removes static characters from the masked input and adjusts the cursor position.
+    /// Removes non-placeholder (static) characters from the masked input and adjusts the cursor.
     ///
-    /// - Parameter state: The current `TextState` containing masked text and cursor position.
-    /// - Returns: A `TextState` with static characters removed and the cursor correctly positioned.
+    /// This strips out all static characters, leaving only the placeholder-driven text,
+    /// and repositions the cursor so it aligns with the unmasked text.
+    ///
+    /// - Parameter state: The current `TextState` (masked text and cursor).
+    /// - Returns: A `TextState` with static characters removed and the cursor corrected.
     @usableFromInline
     func removeMask(
         from state: TextState
@@ -103,7 +114,7 @@ extension Mask {
         for (index, char) in maskedChars.enumerated() {
             
             if index >= patternChars.count {
-                break // Ignore any extra characters beyond the mask
+                break // Ignore extra characters beyond the mask
             }
             
             let patternChar = patternChars[index]
@@ -119,9 +130,9 @@ extension Mask {
                 rawIndex += 1
             } else {
                 
-                // Skip non-placeholder
+                // Skip non-placeholder; if the cursor was beyond a static character,
+                // shift it back to align with the unmasked content.
                 if index < cursorPosition {
-                    // If cursor was after this static character, shift left
                     rawCursorPosition = rawIndex
                 }
             }
@@ -130,35 +141,39 @@ extension Mask {
         return .init(rawText, cursorPosition: rawCursorPosition)
     }
     
-    /// Converts a masked range to the corresponding range in the unmasked text.
+    /// Converts a masked `NSRange` into the corresponding range in unmasked text.
     ///
-    /// - For empty masked ranges (length=0), returns a zero-length unmasked range at `boundMap[loc].lower`.
-    /// - For non-empty, uses `boundMap[start].lower` and `boundMap[end-1].upper`.
+    /// - If the `range.length` is zero, we return a zero-length unmasked range at `boundMap[loc].lower`.
+    /// - Otherwise, we use `boundMap[start].lower` for the unmasked start,
+    ///   and `boundMap[end-1].upper` for the unmasked end (exclusive).
+    ///
+    /// This approach allows single-character deletions at static positions
+    /// to target the nearest placeholder instead of the static character.
+    ///
+    /// - Parameter range: The range in masked coordinates.
+    /// - Returns: The equivalent range in unmasked coordinates.
     @usableFromInline
     func unmask(_ range: NSRange) -> NSRange {
         
         let count = patternChars.count
         guard count > 0 else { return range }
         
-        // If zero-length, just map location to `.lower`.
+        // Zero-length => map location to `.lower` for an empty unmasked range.
         if range.length == 0 {
             let clampedLoc = min(range.location, count - 1)
             let lower = boundMap[clampedLoc].lower
             return NSRange(location: lower, length: 0)
         }
         
-        // Start = range.location
-        // End   = range.location + range.length (exclusive)
+        // The masked range's start + end (exclusive).
         let maskedStart = range.location
         let maskedEnd   = range.location + range.length
         
-        // Clamp to [0, count]
+        // Clamp both to [0, count].
         let s = max(0, min(maskedStart, count - 1))
         let e = max(s+1, min(maskedEnd, count)) // ensure e > s
         
-        // Translate:
-        //  - start → .lower
-        //  - end-1 → .upper
+        // Translate the start => .lower, and (end - 1) => .upper.
         let unmaskedStart = boundMap[s].lower
         let unmaskedEnd   = boundMap[e - 1].upper
         
@@ -169,48 +184,47 @@ extension Mask {
 
 extension Character {
     
-    /// Indicates if the character is a placeholder in the mask.
+    /// Indicates if this character is a placeholder in the mask.
     ///
-    /// - Returns: `true` if the character is `"N"` or `"_"`, otherwise `false`.
+    /// Example placeholders might be `"N"` or `"_"`. Adjust as needed.
     @usableFromInline
     var isPlaceholder: Bool { self == "N" || self == "_" }
 }
 
 extension Array where Element == Character {
     
-    /// Builds `(lower, upper)` for each character in `chars`.
+    /// Builds `(lower, upper)` for each character in `self`.
     ///
-    /// - Placeholders (`isPlaceholder == true`) each consume one unmasked slot,
-    ///   so `(lower = next, upper = next+1)`, then increment `next`.
-    /// - Static characters do not consume a new slot. They use `(lower = lastPlaceholder, upper = lastPlaceholder + 1)`.
-    ///   This ensures single-char deletions at static positions remove the preceding placeholder.
+    /// - Placeholders each consume one unmasked index (e.g. `N` or `_`).
+    ///   We store `(nextPlaceholderIndex, nextPlaceholderIndex+1)` then increment `nextPlaceholderIndex`.
+    /// - Static characters do not advance the unmasked index. We store
+    ///   `(lastPlaceholderIndex, lastPlaceholderIndex + 1)` so that
+    ///   if a user deletes a static char, they effectively remove the preceding placeholder.
     ///
+    /// This mapping is fundamental for single-character deletions that skip static characters
+    /// and remove the intended placeholder in unmasked space.
     func buildBoundMap() -> [(Int, Int)] {
         
         var result: [(Int, Int)] = []
         result.reserveCapacity(count)
         
-        var lastPlaceholderIndex = 0 // track the last used unmasked index
-        var nextPlaceholderIndex = 0 // how many placeholders we've seen
+        var lastPlaceholderIndex = 0
+        var nextPlaceholderIndex = 0
         
         for ch in self {
             
             if ch.isPlaceholder {
                 
-                // Each placeholder consumes one unmasked slot
+                // Each placeholder consumes one unmasked index
                 result.append((nextPlaceholderIndex, nextPlaceholderIndex + 1))
                 lastPlaceholderIndex = nextPlaceholderIndex
                 nextPlaceholderIndex += 1
                 
             } else {
                 
-                // Static char => to allow single-character deletion removing the *preceding* placeholder,
-                // set upper = lastPlaceholderIndex + 1
-                // lower = lastPlaceholderIndex
-                // So if user "deletes" the dash, we actually remove the preceding placeholder in unmasked text.
+                // Static char => allow single-char deletion to remove the prior placeholder
                 let lower = lastPlaceholderIndex
-                let upper = lastPlaceholderIndex + 1  // crucial for removing preceding digit
-                
+                let upper = lastPlaceholderIndex + 1
                 result.append((lower, upper))
             }
         }
@@ -221,7 +235,9 @@ extension Array where Element == Character {
 
 extension Mask {
     
-    // remove characters that are not allowed by mask pattern - this is over-simplified (precise should be done in `applyMask`) but work for `digits-only` masks
+    /// Filters out any characters in `text` disallowed by the mask pattern.
+    ///
+    /// This is a simplified approach that can be extended in `applyMask` for precise behavior.
     @usableFromInline
     func clean(
         _ text: String
@@ -246,6 +262,7 @@ extension Mask {
 
 private extension String {
     
+    /// Checks if the mask is digits-only, typically recognized by `'N'` placeholders and no underscores.
     var isDigitsOnlyPattern: Bool {
         
         !contains("_") && contains("N")
