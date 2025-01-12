@@ -138,12 +138,16 @@ final class ComplexEditingTests: MaskChangingReducerTests {
     
     func test_removeLastOverStatic() throws {
         
-        let input = editing(.init("123-", cursorPosition: 4))
-        let (_, sut) = makeSUT(maskPattern: "NNN-___")
+        let (state, sut) = makeSUT(maskPattern: "NNN-___")
         
-        let output = try sut.reduce(input, with: .changeText("", in: .init(location: 3, length: 1)))
+        let result = try sut.reduce(
+            state,
+            actions: { _ in .startEditing },
+            { try $0.paste("123") },
+            { try $0.removeLast() }
+        )
         
-        XCTAssertNoDiff(output, .editing(.init("12", cursorPosition: 2)))
+        XCTAssertNoDiff(result.last, .editing(.init("12", cursorAt: 2)))
     }
     
     func test_undoRedo() throws {
@@ -348,12 +352,19 @@ final class PrefilledMaskTests: MaskChangingReducerTests {
     
     func test_overfill() throws {
         
-        let input = editing(.init("abc-12-ABCDE-XYZP"))
-        let (_, sut) = makeSUT(maskPattern: "abc-__-_____-___")
+        let (state, sut) = makeSUT(maskPattern: "abc-__-_____-___")
         
-        let output = try sut.reduce(input, with: input.insert(""))
+        let result = try sut.reduce(
+            state,
+            actions: { _ in .startEditing },
+            { try $0.paste("12ABCDEXYZP") }
+        )
         
-        XCTAssertNoDiff(output, .editing(.init("abc-12-ABCDE-XYZ", cursorAt: 15)))
+        XCTAssertNoDiff(result, [
+            .placeholder("Enter masked data"),
+            .editing(.empty),
+            .editing(.init("abc-12-ABCDE-XYZ", cursorAt: 16))
+        ])
     }
     
     func test_withStaticText() throws {

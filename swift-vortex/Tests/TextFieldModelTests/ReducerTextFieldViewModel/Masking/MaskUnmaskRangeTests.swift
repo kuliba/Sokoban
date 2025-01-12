@@ -95,6 +95,8 @@ final class MaskUnmaskRangeTests: XCTestCase {
     
     func test_unmaskRange_staticEdges() {
         
+        //                          "12345"
+        //                          "+1-2+"
         //                          "+N-N+"
         assertUnmasked(0..<1, with: "+N-N+", is: 0..<0)
         assertUnmasked(1..<2, with: "+N-N+", is: 0..<1)
@@ -153,19 +155,27 @@ final class MaskUnmaskRangeTests: XCTestCase {
         let unmasked = mask.unmask(range.toNSRange())
         
         XCTAssertNoDiff(
-            unmasked,
-            expected.toNSRange(),
-            "Expected \(expected) range, but got \(unmasked) instead.",
+            unmasked.toRange(),
+            expected,
+            "Expected \(expected) for \"\(pattern)\" and range \(range), but got \(unmasked.toRange()) instead.",
             file: file,
             line: line
         )
     }
 }
 
-extension Range where Bound == Int {
+private extension Range where Bound == Int {
     
     func toNSRange() -> NSRange {
         
         return NSRange(location: lowerBound, length: upperBound - lowerBound)
+    }
+}
+
+private extension NSRange {
+    
+    func toRange() -> Range<Int> {
+        
+        return location..<location + length
     }
 }
