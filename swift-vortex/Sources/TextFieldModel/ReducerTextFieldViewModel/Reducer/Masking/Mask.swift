@@ -29,68 +29,7 @@ struct Mask {
         self.pattern = pattern
         self.patternChars = Array(pattern)
         
-        // Build the boundMap by counting placeholders
-        // 'lower' uses the current unmasked index
-        // 'upper' uses unmasked index + 1 for placeholders
-        // static chars keep the same unmasked index for lower & upper
-        var map: [(lower: Int, upper: Int)] = []
-        map.reserveCapacity(patternChars.count)
-        
-        var unmaskedIndex = 0
-        
-        for ch in patternChars {
-            if ch.isPlaceholder {
-                // E.g. 'N' or '_'
-                map.append((lower: unmaskedIndex, upper: unmaskedIndex + 1))
-                unmaskedIndex += 1
-            } else {
-                // Static char => both bounds are the *same*
-                map.append((lower: unmaskedIndex, upper: unmaskedIndex))
-            }
-        }
-        
-        self.boundMap = map
-    }
-    
-    /// Translates an NSRange in the *masked* text to the corresponding range in the *unmasked* text,
-    /// using the distinct lower/upper bounds in `boundMap`.
-    @usableFromInline
-    func unmask(_ range: NSRange) -> NSRange {
-        
-        guard !patternChars.isEmpty else { return range }
-        
-        let maxMaskedIndex = patternChars.count // One past the last valid index
-        
-        // 1) Zero-length => map location to 'lower' and produce zero-length
-        if range.length == 0 {
-            let clampedLoc = min(range.location, maxMaskedIndex - 1)
-            let mappedLoc = boundMap[clampedLoc].lower
-            return NSRange(location: mappedLoc, length: 0)
-        }
-        
-        // 2) Compute the masked start and end
-        //    Masked end = location + length (exclusive)
-        let maskedStart = range.location
-        let maskedEnd   = range.location + range.length
-        
-        // 3) Clamp them
-        let clampedStart = max(0, min(maskedStart, maxMaskedIndex - 1))
-        let clampedEnd   = max(clampedStart + 1, min(maskedEnd, maxMaskedIndex))
-        // We do `+1` on clampedStart if we're ensuring we never do an empty end below it.
-        // (But at least we want end > start)
-        
-        // 4) Translate:
-        //    - The start => use 'lower'
-        //    - The end   => use 'upper', but note it’s exclusive, so index is (clampedEnd - 1)
-        let startUnmasked = boundMap[clampedStart].lower
-        
-        // If clampedEnd is exactly patternChars.count, then we do (clampedEnd - 1) = last valid index
-        let endIndex = clampedEnd - 1 // safe, because clampedEnd ≤ maxMaskedIndex
-        let endUnmasked   = boundMap[endIndex].upper
-        
-        // 5) Build the unmasked range
-        let length = max(0, endUnmasked - startUnmasked)
-        return NSRange(location: startUnmasked, length: length)
+        self.boundMap = Array(pattern).buildBoundMap()
     }
 }
 
@@ -199,9 +138,88 @@ extension Mask {
         
         return .init(rawText, cursorPosition: rawCursorPosition)
     }
+    
+    @usableFromInline
+    func unmask(
+        _ range: NSRange
+    ) -> NSRange {
+        
+        // If empty, short-circuit or map to zero-length:
+        if range.length == 0 {
+            let loc = min(range.location, boundMap.count - 1)
+            let start = boundMap[loc].lower
+            return NSRange(location: start, length: 0)
+        }
+        
+        // The masked start
+        let maskedStart = range.location
+        // The masked end (exclusive)
+        let maskedEnd   = range.location + range.length
+        
+        // Clamp them
+        let s = max(0, min(maskedStart, boundMap.count - 1))
+        let e = max(s+1, min(maskedEnd, boundMap.count))
+        
+        // Lower bound uses `boundMap[s].lower`
+        let startUnmasked = boundMap[s].lower
+        
+        // Upper bound uses `boundMap[e - 1].upper`
+        let endUnmasked   = boundMap[e - 1].upper
+        
+        let length = max(0, endUnmasked - startUnmasked)
+        return .init(location: startUnmasked, length: length)
+    }
 }
 
 extension Array where Element == Character {
+    
+    /// Builds a bound map for each mask index i -> (lower, upper).
+    /// - lower: unmasked index if used as start of the range
+    /// - upper: unmasked index if used as end (exclusive)
+    ///
+    func buildBoundMap() -> [(lower: Int, upper: Int)] {
+        
+        var result: [(lower: Int, upper: Int)] = []
+        result.reserveCapacity(count)
+        
+        var lastPlaceholderIndex = 0   // track the *last used* unmasked index
+        var nextPlaceholderIndex = 0   // track how many placeholders we've seen so far
+        
+        for ch in self {
+            
+            if ch.isPlaceholder {
+                
+                // This character consumes one unmasked slot
+                // lower bound is nextPlaceholderIndex
+                // upper bound is nextPlaceholderIndex+1
+                result.append((lower: nextPlaceholderIndex, upper: nextPlaceholderIndex + 1))
+                
+                lastPlaceholderIndex = nextPlaceholderIndex
+                nextPlaceholderIndex += 1
+                
+            } else {
+                
+                // Static character:
+                // For the *start* of a range, we probably want to *stay* at lastPlaceholderIndex
+                // (so if we pick masked index of a dash, we interpret it as "start" = the last placeholder)
+                //
+                // For the *end* of a range, we might want to “include” that placeholder if used as an exclusive bound
+                // so we do upper = lastPlaceholderIndex + 1
+                // This ensures that if dash is used as an upper bound, it effectively deletes the previous placeholder.
+                
+                // Tweak logic based on your exact desired deletion behavior:
+                let lower = lastPlaceholderIndex
+                let upper = lastPlaceholderIndex    // naive approach: no shift if used as end
+                
+                // Alternatively, if you want "dash" to remove the preceding placeholder, do:
+                // let upper = lastPlaceholderIndex + 1
+                
+                result.append((lower, upper))
+            }
+        }
+        
+        return result
+    }
     
     /// Builds a precise mapping using `chunkify()` to map masked indices to unmasked index ranges.
     ///
