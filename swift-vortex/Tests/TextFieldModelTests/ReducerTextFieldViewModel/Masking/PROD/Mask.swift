@@ -5,12 +5,16 @@
 //  Created by Igor Malyarov on 11.01.2025.
 //
 
+import Foundation
 import TextFieldDomain
 
-struct Mask {
+public struct Mask {
     
-    private let pattern: String
-    private let patternChars: [Character]
+    @usableFromInline
+    let pattern: String
+    
+    @usableFromInline
+    let patternChars: [Character]
     
     /// Initializes a mask with a given pattern.
     ///
@@ -135,8 +139,8 @@ extension Mask {
     /// - Returns: The corresponding range in the unmasked text.
     @inlinable
     func unmask(
-        _ range: Range<Int>
-    ) -> Range<Int> {
+        _ range: NSRange
+    ) -> NSRange {
         
         guard !pattern.isEmpty else { return range }
         
@@ -157,7 +161,7 @@ extension Mask {
         }
         
         // Step 2: Clamp the input range to the bounds of the mapping
-        let clampedLowerBound = max(0, min(range.lowerBound, maskIndexMap.count - 1))
+        let clampedLowerBound = max(0, min(range.location, maskIndexMap.count - 1))
         let clampedUpperBound = max(0, min(range.upperBound, maskIndexMap.count))
         
         // Step 3: Map the clamped range to the unmasked range
@@ -166,6 +170,6 @@ extension Mask {
         ? maskIndexMap[clampedUpperBound - 1] + (patternChars[clampedUpperBound - 1].isPlaceholder ? 1 : 0)
         : startUnmaskedIndex
         
-        return startUnmaskedIndex..<endUnmaskedIndex
+        return .init(location: startUnmaskedIndex, length: endUnmaskedIndex - startUnmaskedIndex)
     }
 }

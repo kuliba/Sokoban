@@ -149,8 +149,22 @@ final class MaskUnmaskRangeTests: XCTestCase {
         line: UInt = #line
     ) {
         let mask = Mask(pattern: pattern)
-        let unmasked = mask.unmask(range)
+        let unmasked = mask.unmask(range.toNSRange())
         
-        XCTAssertNoDiff(unmasked, expected, "Expected \(expected) range, but got \(unmasked) instead.", file: file, line: line)
+        XCTAssertNoDiff(
+            unmasked,
+            expected.toNSRange(),
+            "Expected \(expected) range, but got \(unmasked) instead.",
+            file: file,
+            line: line
+        )
+    }
+}
+
+extension Range where Bound == Int {
+    
+    func toNSRange() -> NSRange {
+        
+        return NSRange(location: lowerBound, length: upperBound - lowerBound)
     }
 }
