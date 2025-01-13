@@ -29,7 +29,7 @@ extension RootViewModelFactory {
         case .back:          return .milliseconds(100)
         case .detailPayment: return .milliseconds(500)
         case .manualSearch:  return .milliseconds(500)
-        case .scanQR:        return .milliseconds(300)
+        case .scanQR:        return .milliseconds(100)
         }
     }
     
