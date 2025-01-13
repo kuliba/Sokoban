@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "FA9EF11D-C63C-4E9F-8AF8-DB78B52591F4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
