@@ -140,11 +140,6 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                .init(
-                    makeImageView: { _ in self.previewAsyncImage }
-                )
-            },
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -773,11 +768,6 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: showcaseSpy.call,
-            makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                .init(
-                    makeImageView: { _ in self.previewAsyncImage }
-                )
-            },
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -907,11 +897,6 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                .init(
-                    makeImageView: { _ in self.previewAsyncImage }
-                )
-            },
             makeOpenNewProductButtons: { _ in buttons }
         )
         
@@ -955,11 +940,6 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                .init(
-                    makeImageView: { _ in self.previewAsyncImage }
-                )
-            },
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -1031,11 +1011,6 @@ final class MainViewModelTests: XCTestCase {
             sections: makeSections(),
             bannersBinder: .preview,
             makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-            makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                .init(
-                    makeImageView: { _ in self.previewAsyncImage }
-                )
-            },
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -1202,7 +1177,7 @@ private extension MainViewModel {
     var getShowcaseDomainViewModel: GetShowcaseDomain.ViewModel? {
         
         switch route.destination {
-        case let .collateralLoanLanding(viewModel, _):
+        case let .collateralLoanLanding(viewModel):
             return viewModel
             
         default:

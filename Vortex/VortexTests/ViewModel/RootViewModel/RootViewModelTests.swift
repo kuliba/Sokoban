@@ -495,11 +495,6 @@ final class RootViewModelTests: XCTestCase {
                     sections: [],
                     bannersBinder: .preview,
                     makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-                    makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                        .init(
-                            makeImageView: { _ in self.previewAsyncImage }
-                        )
-                    },
                     makeOpenNewProductButtons: { _ in [] }, scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(
@@ -577,11 +572,6 @@ final class RootViewModelTests: XCTestCase {
                     sections: makeSections(),
                     bannersBinder: .immediate,
                     makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-                    makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                        .init(
-                            makeImageView: { _ in self.previewAsyncImage }
-                        )
-                    },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -728,8 +718,7 @@ final class RootViewModelTests: XCTestCase {
     
     var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
         image: .init(systemName: "car"),
-        publisher: Just(.init(systemName: "house"))
-            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+        publisher: Empty()
             .eraseToAnyPublisher()
     )}
 }

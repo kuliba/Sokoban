@@ -130,8 +130,7 @@ final class CollateralLoanLandingGetShowcaseViewFactoryTests: XCTestCase {
     
     var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
         image: .init(systemName: "car"),
-        publisher: Just(.init(systemName: "house"))
-            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+        publisher: Empty()
             .eraseToAnyPublisher()
     )}
 }

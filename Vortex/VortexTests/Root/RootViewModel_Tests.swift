@@ -56,11 +56,6 @@ class RootViewModel_Tests: XCTestCase {
                     sections: makeSections(),
                     bannersBinder: .preview,
                     makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
-                    makeCollateralLoanLandingGetShowcaseFactory: { [unowned self] in
-                        .init(
-                            makeImageView: { _ in self.previewAsyncImage }
-                        )
-                    },
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,

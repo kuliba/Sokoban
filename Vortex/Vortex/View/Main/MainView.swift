@@ -30,6 +30,7 @@ struct MainView<NavigationOperationView: View>: View {
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
+    let makeImageView: (Md5hash) -> UIPrimitives.AsyncImage
     
     var body: some View {
         
@@ -266,7 +267,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        case let .collateralLoanLanding(viewModel, factory):
+        case let .collateralLoanLanding(viewModel):
+            let factory = CollateralLoanLandingGetShowcaseViewFactory(makeImageView: makeImageView)
             CollateralLoanLandingView(viewModel: viewModel, factory: factory)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
@@ -517,10 +519,17 @@ struct MainView_Previews: PreviewProvider {
                 makeHistoryButton: { .init(event: $0, isFiltered: $1, isDateFiltered: $2, clearOptions: $3) },
                 makeRepeatButtonView: { _ in .init(action: {}) }
             ),
-            getUImage: { _ in nil }
+            getUImage: { _ in nil },
+            makeImageView: { _ in previewAsyncImage }
         )
     }
 }
+
+private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+    image: .init(systemName: "car"),
+    publisher: Empty()
+        .eraseToAnyPublisher()
+)}
 
 extension MainViewFactory {
     
@@ -583,8 +592,7 @@ extension MainViewModel {
     
     static private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
         image: .init(systemName: "car"),
-        publisher: Just(.init(systemName: "house"))
-            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+        publisher: Empty()
             .eraseToAnyPublisher()
     )}
     
@@ -607,11 +615,6 @@ extension MainViewModel {
                 initialState: .init(),
                 reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
                 handleEffect: { _,_ in }
-            )
-        },
-        makeCollateralLoanLandingGetShowcaseFactory: {
-            .init(
-                makeImageView: { _ in previewAsyncImage }
             )
         },
         makeOpenNewProductButtons: { _ in [] }

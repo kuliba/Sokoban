@@ -71,7 +71,8 @@ struct RootView: View {
                 viewFactory: rootViewFactory.mainViewFactory,
                 paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
-                getUImage: { viewModel.model.images.value[$0]?.uiImage }
+                getUImage: { viewModel.model.images.value[$0]?.uiImage },
+                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)

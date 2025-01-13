@@ -11,8 +11,16 @@ import RxViewModel
 
 struct CollateralLoanLandingView: View {
     
-    let viewModel: GetShowcaseDomain.ViewModel
-    let factory: CollateralLoanLandingGetShowcaseViewFactory
+    private let viewModel: GetShowcaseDomain.ViewModel
+    private let factory: Factory
+    
+    init(
+        viewModel: GetShowcaseDomain.ViewModel,
+        factory: Factory
+    ) {
+        self.viewModel = viewModel
+        self.factory = factory
+    }
     
     var body: some View {
     
@@ -37,4 +45,5 @@ struct CollateralLoanLandingView: View {
     }
     
     typealias Domain = GetShowcaseDomain
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

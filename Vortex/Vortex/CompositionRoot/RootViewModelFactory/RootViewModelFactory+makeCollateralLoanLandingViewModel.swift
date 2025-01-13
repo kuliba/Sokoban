@@ -28,13 +28,6 @@ extension RootViewModelFactory {
         )
     }
     
-    func makeCollateralLoanLandingGetShowcaseFactory() -> CollateralLoanLandingGetShowcaseViewFactory {
-        
-        .init(
-            makeImageView: model.generalImageCache().makeIconView(for:)
-        )
-    }
-    
     private func loadCollateralLoanLanding(
         completion: @escaping(GetShowcaseDomain.Result) -> Void
     ) {

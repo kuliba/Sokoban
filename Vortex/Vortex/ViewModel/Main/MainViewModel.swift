@@ -21,7 +21,6 @@ class MainViewModel: ObservableObject, Resetable {
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeCollateralLoanLandingGetShowcaseFactory = () -> CollateralLoanLandingGetShowcaseViewFactory
     typealias MakeCollateralLoanLandingViewModel = () -> GetShowcaseDomain.ViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -54,7 +53,6 @@ class MainViewModel: ObservableObject, Resetable {
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let makeCollateralLoanLandingViewModel: MakeCollateralLoanLandingViewModel
-    private let makeCollateralLoanLandingGetShowcaseFactory: MakeCollateralLoanLandingGetShowcaseFactory
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
@@ -79,7 +77,6 @@ class MainViewModel: ObservableObject, Resetable {
         sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
         makeCollateralLoanLandingViewModel: @escaping MakeCollateralLoanLandingViewModel,
-        makeCollateralLoanLandingGetShowcaseFactory: @escaping MakeCollateralLoanLandingGetShowcaseFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
@@ -98,7 +95,6 @@ class MainViewModel: ObservableObject, Resetable {
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
         self.makeCollateralLoanLandingViewModel = makeCollateralLoanLandingViewModel
-        self.makeCollateralLoanLandingGetShowcaseFactory = makeCollateralLoanLandingGetShowcaseFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
@@ -948,8 +944,7 @@ private extension MainViewModel {
     func openCollateralLoanLanding() {
         
         let viewModel = makeCollateralLoanLandingViewModel()
-        let factory = makeCollateralLoanLandingGetShowcaseFactory()
-        route.destination = .collateralLoanLanding(viewModel, factory)
+        route.destination = .collateralLoanLanding(viewModel)
     }
 
     private func openDeposit() {
@@ -1694,7 +1689,7 @@ extension MainViewModel {
         case paymentSticker
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
-        case collateralLoanLanding(GetShowcaseDomain.ViewModel, CollateralLoanLandingGetShowcaseViewFactory)
+        case collateralLoanLanding(GetShowcaseDomain.ViewModel)
         
         var id: Case {
             
