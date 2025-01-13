@@ -65,6 +65,14 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
+    
+    @inlinable
+    func initiatePaymentFromTemplate(
+        template: PaymentTemplateData,
+        completion: @escaping (Result<AnywayFlowModel, ServiceFailureAlert.ServiceFailure>) -> Void
+    ) {
+        initiateAnywayPayment(payload: .template(template), completion: completion)
+    }
 }
 
 private extension PaymentTemplateData {

@@ -9,7 +9,7 @@
 import PayHub
 import XCTest
 
-final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryServiceCategoryTests {
     
     func test_init_shouldNotCallLocalAgent() {
         
@@ -31,25 +31,25 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         
         expect(withLoadStub: nil, payload: makePayload(), toDeliver: [])
     }
-        
+    
     func test_loadCachedOperators_shouldDeliverEmptyOnEmptyValue() {
         
         expect(withLoadStub: [], payload: makePayload(), toDeliver: [])
     }
-        
+    
     func test_loadCachedOperators_shouldDeliverEmptyOnNonMatchingCategoryType() {
         
         let (_, model) = makeOperatorWithModel(type: "charity")
         let (sut, _) = makeSUT(loadStub: [model])
         
         expect(
-            sut: sut, 
+            sut: sut,
             withLoadStub: [model],
             payload: makePayload(for: "digitalWallets"),
             toDeliver: []
         )
     }
-        
+    
     func test_loadCachedOperators_shouldDeliverOneOnValueOfOneForMatchingCategoryType() {
         
         let categoryType: CategoryType = "networkMarketing"
@@ -57,13 +57,13 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         let (sut, _) = makeSUT(loadStub: [model])
         
         expect(
-            sut: sut, 
+            sut: sut,
             withLoadStub: [model],
             payload: makePayload(for: categoryType),
             toDeliver: [`operator`]
         )
     }
-        
+    
     func test_loadCachedOperators_shouldDeliverTwoOnValueOfOneForMatchingCategoryType() {
         
         let categoryType: CategoryType = "socialAndGames"
@@ -72,13 +72,13 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
         let (sut, _) = makeSUT(loadStub: [model1, model2])
         
         expect(
-            sut: sut, 
+            sut: sut,
             withLoadStub: [model1, model2],
             payload: makePayload(for: categoryType),
             toDeliver: [operator1, operator2]
         )
     }
-        
+    
     // MARK: - Helpers
     
     private typealias LocalAgent = LocalAgentSpy<[CodableServicePaymentOperator]>
@@ -113,24 +113,6 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryT
     ) -> Payload {
         
         return .init(categoryType: type, operatorID: id, searchText: searchText, pageSize: pageSize)
-    }
-    
-    private func codable(
-        _ `operator`: UtilityPaymentProvider,
-        sortedOrder: Int = .random(in: 1...100)
-    ) -> CodableServicePaymentOperator {
-        
-        return .init(id: `operator`.id, inn: `operator`.inn, md5Hash: `operator`.icon, name: `operator`.name, type: `operator`.type, sortedOrder: sortedOrder)
-    }
-    
-    private func makeOperatorWithModel(
-        type: ServiceCategory.CategoryType = "repaymentLoansAndAccounts",
-        sortedOrder: Int = .random(in: 1...100)
-    ) -> (UtilityPaymentProvider, CodableServicePaymentOperator) {
-        
-        let `operator` = makePaymentServiceOperator(type: type)
-        
-        return (`operator`, codable(`operator`, sortedOrder: sortedOrder))
     }
     
     private func expect(

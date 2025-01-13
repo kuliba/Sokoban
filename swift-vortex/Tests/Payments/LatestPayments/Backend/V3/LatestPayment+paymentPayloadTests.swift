@@ -519,7 +519,7 @@ final class LatestPayment_paymentPayloadTests: XCTestCase {
         amount: Decimal? = nil,
         currency: String? = nil,
         date: Int = .random(in: 1...100),
-        detail: ResponseMapper.LatestPayment.PaymentOperationDetailType? = nil,
+        detail: ResponseMapper.LatestPayment.PaymentOperationDetailType = .addressless,
         inn: String? = nil,
         lpName: String? = nil,
         md5Hash: String? = nil,

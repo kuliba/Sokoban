@@ -72,10 +72,10 @@ final class PrepaymentOptionsEffectHandlerTests: XCTestCase {
         
         XCTAssertNil(event)
         
-        scheduler.advance(to: .init(.now() + .milliseconds(149)))
+        scheduler.advance(by: .milliseconds(149))
         XCTAssertNil(event)
         
-        scheduler.advance(to: .init(.now() + .milliseconds(150)))
+        scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(event, .search(.updated("abc")))
         
         wait(for: [exp], timeout: 1)

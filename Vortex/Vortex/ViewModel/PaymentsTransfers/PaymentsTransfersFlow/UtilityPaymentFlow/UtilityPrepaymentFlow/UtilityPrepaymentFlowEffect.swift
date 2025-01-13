@@ -22,6 +22,7 @@ extension UtilityPrepaymentFlowEffect {
         let requisites: () -> Void
     }
     
-    typealias Select = Event.Select
-    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias Select = Domain.Select
+    typealias Domain = InitiateAnywayPaymentDomain<LastPayment, Operator, Service, OperatorServices, AnywayTransactionState.Transaction>
+    typealias OperatorServices = Vortex.OperatorServices<Operator, Service>
 }

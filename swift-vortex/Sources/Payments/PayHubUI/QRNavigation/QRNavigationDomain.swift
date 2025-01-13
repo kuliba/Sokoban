@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.11.2024.
 //
 
+import FlowCore
 import PayHub
 
 /// A namespace.
@@ -13,7 +14,7 @@ public enum QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Opera
 
 public extension QRNavigationDomain {
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     enum Select {

@@ -51,6 +51,7 @@ extension RequestFactory {
     }
     
     // TODO: combine with above, improve API (strong types for type & operatorID)
+    @available(*, deprecated, message: "Use `static RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(payload:)`")
     static func createGetOperatorsListByParamOperatorOnlyFalseRequest(
         `operator`: UtilityPaymentProvider
     ) throws -> URLRequest {
@@ -65,6 +66,43 @@ extension RequestFactory {
             ("operatorOnly", "false"),
             ("type", `operator`.type)
         ]
+        
+        let endpoint = Services.Endpoint.getOperatorsListByParam
+        let url = try! endpoint.url(
+            withBase: Config.serverAgentEnvironment.baseURL,
+            parameters: parameters
+        )
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        return request
+    }
+    
+    struct GetOperatorsListByParamOperatorOnlyFalsePayload: Equatable, WithSerial {
+        
+        let operatorID: String
+        let type: String
+        let serial: String?
+    }
+    
+    static func createGetOperatorsListByParamOperatorOnlyFalseRequest(
+        payload: GetOperatorsListByParamOperatorOnlyFalsePayload
+    ) throws -> URLRequest {
+        
+        guard !payload.operatorID.isEmpty,
+              !payload.type.isEmpty
+        else {
+            struct EmptyPayloadFieldError: Error {}
+            throw EmptyPayloadFieldError()
+        }
+        
+        let parameters: [(String, String)] = [
+            ("operatorOnly", "false"),
+            ("customerId", payload.operatorID),
+            ("type", payload.type),
+            payload.serial.map { ("serial", $0) }
+        ].compactMap { $0 }
         
         let endpoint = Services.Endpoint.getOperatorsListByParam
         let url = try! endpoint.url(

@@ -7,8 +7,8 @@
 
 import Combine
 import CombineSchedulers
+import FlowCore
 import Foundation
-import PayHub
 
 public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, DetailPayment> {
     
@@ -43,15 +43,13 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, De
     
     public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<CategoryPicker, DetailPayment>
     
-    public typealias ContentFlowWitnesses = PayHub.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
+    public typealias ContentFlowWitnesses = FlowCore.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
     public typealias Domain = QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment>
 }
 
 public extension QRFailureBinderComposer {
     
     func compose(with qrCode: QRCode?) -> Domain.Binder {
-        
-        let factory = ContentFlowBindingFactory()
         
         let composer = Domain.FlowComposer(
             delay: delay,
@@ -63,7 +61,7 @@ public extension QRFailureBinderComposer {
         return .init(
             content: microServices.makeQRFailure(qrCode),
             flow: composer.compose(),
-            bind: factory.bind(with: contentFlowWitnesses)
+            bind: ContentFlowBindingFactory.bind(with: contentFlowWitnesses)
         )
     }
 }

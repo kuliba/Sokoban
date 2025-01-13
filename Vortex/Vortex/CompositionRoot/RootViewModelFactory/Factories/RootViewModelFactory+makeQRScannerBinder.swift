@@ -16,11 +16,33 @@ extension RootViewModelFactory {
     @inlinable
     func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
-        return compose(getNavigation: getQRNavigation, makeContent: makeQRScannerModel, witnesses: .default)
+        return composeBinder(
+            makeContent: makeQRScannerModel,
+            delayProvider: delayProvider,
+            getNavigation: getQRNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
     }
 }
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func delayProvider(
+        navigation: QRScannerDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .failure:               return settings.delay
+        case .operatorSearch:        return settings.delay
+        case .operatorView:          return settings.delay
+        case .outside:               return .zero
+        case .payments:              return settings.delay
+        case .providerPicker:        return settings.delay
+        case .providerServicePicker: return settings.delay
+        case .sberQR:                return settings.delay
+        }
+    }
     
     @inlinable
     func getQRNavigation(
@@ -190,33 +212,28 @@ extension RootViewModelFactory {
             return .providerServicePicker(picker)
         }
     }
+    
+    @inlinable
+    func emitting(
+        content: QRScannerModel
+    ) -> some Publisher<FlowEvent<QRScannerDomain.Select, Never>, Never> {
+        
+        content.$state
+            .compactMap(\.?.qrResult)
+            .map(QRScannerDomain.Select.qrResult)
+            .map(FlowEvent.select)
+    }
+    
+    @inlinable
+    func dismissing(
+        content: QRScannerModel
+    ) -> () -> Void {
+        
+        return { content.event(.reset) }
+    }
 }
 
 // MARK: - Adapters
-
-private extension ContentWitnesses
-where Content == QRScannerModel,
-      Select == QRScannerDomain.Select {
-    
-    static var `default`: Self {
-        
-        return .init(
-            emitting: { $0.selectPublisher },
-            dismissing: { content in { content.event(.reset) }}
-        )
-    }
-}
-
-private extension QRScannerModel {
-    
-    var selectPublisher: AnyPublisher<QRScannerDomain.Select, Never> {
-        
-        $state
-            .compactMap(\.?.qrResult)
-            .map(QRScannerDomain.Select.qrResult)
-            .eraseToAnyPublisher()
-    }
-}
 
 private extension QRModelWrapperState {
     
@@ -241,7 +258,7 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
 
 private extension QRScannerDomain.NotifyEvent {
     
-    typealias PickerFlowEvent = PayHub.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
     
     init(_ event: PickerFlowEvent) {
         

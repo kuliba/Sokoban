@@ -8,9 +8,9 @@
 import Combine
 import CombineSchedulers
 import Foundation
-import PayHub
+import FlowCore
 
-extension PayHub.Schedulers {
+extension FlowCore.Schedulers {
     
     static let immediate: Self = .init(
         main: .immediate,

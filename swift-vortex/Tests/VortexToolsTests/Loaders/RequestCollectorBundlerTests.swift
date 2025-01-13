@@ -34,7 +34,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
         sut.process(request) { _ in }
         sut.process(request) { _ in }
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
+        scheduler.advance(by: .milliseconds(99))
         
         XCTAssertEqual(performRequest.callCount, 0)
     }
@@ -52,7 +52,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
         sut.process(request) { _ in }
         sut.process(request) { _ in }
         
-        scheduler.advance(to: .init(.now().advanced(by: collectionPeriod)))
+        scheduler.advance(by: .init(collectionPeriod))
         
         XCTAssertEqual(performRequest.callCount, 1)
     }
@@ -65,22 +65,22 @@ final class RequestCollectorBundlerTests: XCTestCase {
             collectionPeriod: collectionPeriod
         )
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(50))))
+        scheduler.advance(by: .milliseconds(50))
         sut.process(request) { _ in }
 
         XCTAssertEqual(performRequest.callCount, 0)
 
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(100))
         sut.process(request) { _ in }
 
         XCTAssertEqual(performRequest.callCount, 1)
 
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(150))))
+        scheduler.advance(by: .milliseconds(150))
         sut.process(request) { _ in }
 
         XCTAssertEqual(performRequest.callCount, 1)
 
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(200))))
+        scheduler.advance(by: .milliseconds(200))
         sut.process(request) { _ in }
                 
         XCTAssertEqual(performRequest.callCount, 1)
@@ -94,12 +94,12 @@ final class RequestCollectorBundlerTests: XCTestCase {
             collectionPeriod: collectionPeriod
         )
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(50))))
+        scheduler.advance(by: .milliseconds(50))
         sut.process(request) { _ in }
 
         XCTAssertEqual(performRequest.callCount, 0)
 
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        scheduler.advance(by: .milliseconds(100))
         sut.process(request) { _ in }
 
         XCTAssertEqual(performRequest.callCount, 1)
@@ -107,12 +107,12 @@ final class RequestCollectorBundlerTests: XCTestCase {
         performRequest.complete(with: makeResponse())
         wait(timeout: 0.01) // wait for RequestBundler queue
 
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(150))))
+        scheduler.advance(by: .milliseconds(150))
         sut.process(request) { _ in }
 
         XCTAssertEqual(performRequest.callCount, 1)
 
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(200))))
+        scheduler.advance(by: .milliseconds(200))
         sut.process(request) { _ in }
                 
         XCTAssertEqual(performRequest.callCount, 2)
@@ -129,7 +129,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
         sut.process(makeRequest()) { _ in }
         sut.process(makeRequest()) { _ in }
         
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
+        scheduler.advance(by: .milliseconds(99))
         
         XCTAssertEqual(performRequest.callCount, 0)
     }
@@ -145,7 +145,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
         sut.process(request1) { _ in }
         sut.process(request2) { _ in }
         
-        scheduler.advance(to: .init(.now().advanced(by: collectionPeriod)))
+        scheduler.advance(by: .init(collectionPeriod))
         
         XCTAssertNoDiff(Set(performRequest.payloads), [request1, request2])
     }
@@ -163,7 +163,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
         sut.process(request) { receivedResponses.append($0) }
         sut.process(request) { receivedResponses.append($0) }
         
-        scheduler.advance(to: .init(.now().advanced(by: collectionPeriod)))
+        scheduler.advance(by: .init(collectionPeriod))
         
         performRequest.complete(with: response)
         wait(timeout: 0.01) // wait for RequestBundler queue

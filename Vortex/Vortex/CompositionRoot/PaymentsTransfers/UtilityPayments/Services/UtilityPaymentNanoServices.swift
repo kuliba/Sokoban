@@ -34,18 +34,25 @@ struct UtilityPaymentNanoServices {
 
 extension UtilityPaymentNanoServices {
     
+    // MARK: - GetAllLatestPayments
+    
     typealias GetAllLatestPaymentsCompletion = ([LastPayment]) -> Void
     /// `c`
     /// Получение последних платежей по ЖКХ
     /// rest/v2/getAllLatestPayments?isServicePayments=true
     typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
     
+    // MARK: - GetOperatorsListByParam
+    
     typealias GetOperatorsListByParamCompletion = ([Operator]) -> Void
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
     typealias GetOperatorsListByParam = (@escaping GetOperatorsListByParamCompletion) -> Void
     
+    // MARK: - GetServicesFor
+    
     struct GetServicesForError: Error, Equatable {}
+    
     typealias GetServicesForResult = Result<[Service], GetServicesForError>
     typealias GetServicesForCompletion = (GetServicesForResult) -> Void
     /// `d`
@@ -53,8 +60,11 @@ extension UtilityPaymentNanoServices {
     /// dict/getOperatorsListByParam?customerId=8798&operatorOnly=false&type=housingAndCommunalService
     typealias GetServicesFor = (Operator, @escaping GetServicesForCompletion) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
-    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    // MARK: - StartAnywayPayment
+    
+    typealias OperatorServices = Vortex.OperatorServices<Operator, Service>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<LastPayment, Operator, Service, OperatorServices, StartPaymentResponse>
+    typealias StartPaymentResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
     
     enum StartAnywayPaymentPayload: Equatable {
         
@@ -62,28 +72,9 @@ extension UtilityPaymentNanoServices {
         case service(Service, for: Operator)
     }
     
-    typealias StartAnywayPaymentResult = Result<StartAnywayPaymentSuccess, StartAnywayPaymentFailure>
-    
-    enum StartAnywayPaymentSuccess {
-        
-        case services(MultiElementArray<Service>, for: Operator)
-        case startPayment(StartPaymentResponse)
-        
-        typealias StartPaymentResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
-    }
-    
-    enum StartAnywayPaymentFailure: Error {
-        
-        case operatorFailure(Operator)
-        case serviceFailure(ServiceFailure)
-        
-#warning("extract…")
-        enum ServiceFailure: Error, Hashable {
-            
-            case connectivityError
-            case serverError(String)
-        }
-    }
+    typealias StartAnywayPaymentResult = InitiateAnywayPaymentDomain.Result
+    typealias StartAnywayPaymentSuccess = InitiateAnywayPaymentDomain.Success
+    typealias StartAnywayPaymentFailure = InitiateAnywayPaymentDomain.Failure
     
     typealias StartAnywayPaymentCompletion = (StartAnywayPaymentResult) -> Void
     /// `e`
@@ -91,7 +82,8 @@ extension UtilityPaymentNanoServices {
     /// POST
     /// /rest/transfer/createAnywayTransfer?isNewPayment=true
     typealias StartAnywayPayment = (StartAnywayPaymentPayload, @escaping StartAnywayPaymentCompletion) -> Void
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
+    
+    // MARK: - Domain
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentProvider

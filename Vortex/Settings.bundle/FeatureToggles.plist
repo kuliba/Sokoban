@@ -62,6 +62,16 @@
 			<key>DefaultValue</key>
 			<false/>
 			<key>Title</key>
+			<string>Заставка</string>
+			<key>Key</key>
+			<string>splashScreen</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Title</key>
 			<string>Заказ Карты</string>
 			<key>Key</key>
 			<string>orderCard</string>

@@ -22,7 +22,7 @@ final class ServicePaymentFlowEffectHandlerTests: ServicePaymentFlowTests {
         
         XCTAssertNil(receivedEvent)
         
-        scheduler.advance(to: .init(.now() + interval))
+        scheduler.advance(by: .init(interval))
         
         XCTAssertNoDiff(receivedEvent, delayedEvent)
         XCTAssertNotNil(sut)

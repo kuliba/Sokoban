@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.12.2024.
 //
 
+import FlowCore
 import PayHub
 import PayHubUI
 
@@ -15,8 +16,8 @@ extension RootDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = PayHub.BinderComposer<Content, Select, Navigation>
+    typealias Binder = FlowCore.Binder<Content, Flow>
+    typealias BinderComposer = FlowCore.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -24,7 +25,7 @@ extension RootDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     

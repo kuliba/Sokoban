@@ -13,7 +13,7 @@ struct GetCollateralLandingConditionsView: View {
     
     let config: Config
     let state: GetCollateralLandingState
-    let makeIconView: Factory.MakeIconView
+    let makeImageView: Factory.MakeImageView
     
     var body: some View {
         
@@ -55,7 +55,7 @@ struct GetCollateralLandingConditionsView: View {
                     GetCollateralLandingConditionView(
                         condition: $0,
                         config: config,
-                        makeIconView: makeIconView
+                        makeImageView: makeImageView
                     )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
@@ -128,7 +128,7 @@ struct GetCollateralLandingConditionsView_Previews: PreviewProvider {
             GetCollateralLandingConditionsView(
                 config: .default,
                 state: .init(product: .carStub),
-                makeIconView: Factory.preview.makeIconView
+                makeImageView: Factory.preview.makeImageView
             )
             .frame(height: 100)
     }

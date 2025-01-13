@@ -98,7 +98,7 @@ private extension AnywayFlowModel {
     ) {
         switch effect {
         case let .delay(event, for: interval):
-            scheduler.schedule(after: .init(.now() + interval)) {
+            scheduler.delay(for: .init(interval)) {
                 
                 dispatch(event)
             }

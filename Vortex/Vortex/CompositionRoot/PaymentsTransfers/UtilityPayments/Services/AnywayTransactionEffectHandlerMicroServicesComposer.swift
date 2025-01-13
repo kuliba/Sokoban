@@ -115,7 +115,7 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferRespons
         case .none:
             return .init(
                 status: status,
-                info: .detailID(detailID)
+                info: .detailID(.init(operationDetailID: detailID, operationDetailPrintFormType: ""))
             )
             
         case let .some(operationDetails):

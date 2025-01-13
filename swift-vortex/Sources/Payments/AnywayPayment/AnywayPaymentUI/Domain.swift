@@ -12,9 +12,21 @@ public typealias AnywayTransactionEvent<DocumentStatus, Response> = TransactionE
 public typealias AnywayTransactionEffect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
 
 public typealias AnywayStatus<DocumentStatus, Response> = TransactionStatus<AnywayPaymentContext, AnywayPaymentUpdate, Report<DocumentStatus, Response>>
-public typealias Report<DocumentStatus, Response> = TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails<Response>>>
+public typealias Report<DocumentStatus, Response> = TransactionReport<DocumentStatus, OperationInfo<OperationDetailInfo, OperationDetails<Response>>>
 
 public typealias OperationDetailID = Int
+public typealias OperationDetailPrintFormType = String
+
+public struct OperationDetailInfo: Equatable {
+    
+    public let operationDetailID: OperationDetailID
+    public let operationDetailPrintFormType: OperationDetailPrintFormType
+    
+    public init(operationDetailID: OperationDetailID, operationDetailPrintFormType: OperationDetailPrintFormType) {
+        self.operationDetailID = operationDetailID
+        self.operationDetailPrintFormType = operationDetailPrintFormType
+    }
+}
 
 public struct OperationDetails<Response> {
     

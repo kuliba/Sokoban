@@ -2,10 +2,8 @@
 //  DeleteMe.swift
 //
 //
-//  Created by Valentin Ozerov on 17.12.2024.
+//  Created by Valentin Ozerov on 09.01.2025.
 //
-
-import Foundation
 
 public struct DeleteMe {
     

@@ -9,24 +9,49 @@ import SwiftUI
 
 public struct CollateralLoanLandingGetShowcaseProductView: View {
     
-    let headerView: HeaderView
-    let termsView: TermsView
-    let bulletsView: BulletsView
-    let imageView: ImageView
-    let footerView: FooterView
-    let theme: Theme
+    let product: Product
+    let event: (GetShowcaseViewEvent.External) -> Void
+    let config: Config
+    let factory: Factory
     
     public var body: some View {
 
         VStack {
             
-            headerView
-            termsView
-            bulletsView
-            imageView
-            footerView
+            HeaderView(
+                title: product.name,
+                config: config,
+                theme: product.theme.map()
+            )
+            
+            TermsView(
+                params: product.keyMarketingParams,
+                config: config,
+                theme: product.theme.map()
+            )
+            
+            BulletsView(
+                header: product.features.header,
+                bulletsData: product.features.list.map { ($0.bullet, $0.text) },
+                config: config,
+                theme: product.theme.map()
+            )
+
+            ImageView(
+                url: product.image,
+                config: config,
+                makeImageView: factory.makeImageView
+            )
+            
+            FooterView(
+                landingId: product.landingId,
+                termsUrl: product.terms,
+                event: event,
+                config: config,
+                theme: product.theme.map()
+            )
         }
-        .background(theme.backgroundColor)
+        .background(product.theme.map().backgroundColor)
     }
 }
 
@@ -38,4 +63,8 @@ extension CollateralLoanLandingGetShowcaseProductView {
     typealias ImageView = CollateralLoanLandingGetShowcaseProductImageView
     typealias FooterView = CollateralLoanLandingGetShowcaseProductFooterView
     typealias Theme = CollateralLoanLandingGetShowcaseTheme
+    typealias Product = CollateralLoanLandingGetShowcaseData.Product
+    typealias Config = CollateralLoanLandingGetShowcaseViewConfig
+    typealias Event = GetShowcaseDomain.Event
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

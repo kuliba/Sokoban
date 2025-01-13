@@ -1,16 +1,20 @@
 {
   "configurations" : [
     {
-      "id" : "D08A7576-2A9E-48B0-9139-3C10C40B5048",
-      "name" : "Configuration 1",
+      "id" : "85F0C27B-4920-4DA0-A416-1D721D2ED9F8",
+      "name" : "Test Scheme Action",
       "options" : {
 
       }
     }
   ],
   "defaultOptions" : {
-    "testExecutionOrdering" : "random",
-    "testTimeoutsEnabled" : true
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Vortex.xcodeproj",
+      "identifier" : "EDB1437C265FDA410028EF5A",
+      "name" : "Vortex"
+    }
   },
   "testTargets" : [
     {

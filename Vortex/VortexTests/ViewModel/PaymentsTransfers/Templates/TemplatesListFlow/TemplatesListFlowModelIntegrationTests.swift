@@ -361,16 +361,16 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         }
     }
     
-    private final class PaymentFlow: FlowEventPublishing {
+    private final class PaymentFlow: DismissAndTabFlowEventPublishing {
         
-        private let subject = PassthroughSubject<FlowEvent, Never>()
+        private let subject = PassthroughSubject<DismissAndTabFlowEvent, Never>()
         
-        var flowEventPublisher: AnyPublisher<FlowEvent, Never> {
+        var flowEventPublisher: AnyPublisher<DismissAndTabFlowEvent, Never> {
             
             subject.eraseToAnyPublisher()
         }
         
-        func emit(_ event: FlowEvent) {
+        func emit(_ event: DismissAndTabFlowEvent) {
             
             subject.send(event)
         }
@@ -380,7 +380,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     
     private func paymentFlowEmit(
         _ sut: SUT,
-        event: FlowEvent,
+        event: DismissAndTabFlowEvent,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
