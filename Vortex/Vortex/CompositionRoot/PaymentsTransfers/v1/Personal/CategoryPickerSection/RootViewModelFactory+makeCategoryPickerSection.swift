@@ -27,6 +27,32 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerSection(
+    ) -> CategoryPickerSectionDomain.Binder {
+        
+        let content = makeContent(.init(
+            loadCategories: getServiceCategoriesWithoutQR,
+            reloadCategories: { $0(nil) },
+            loadAllLatest: { $0(nil) }
+        ))
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getNavigation(
+                makeStandard: { [weak self] category, completion in
+                    
+                    self?.handleSelectedServiceCategory(category) {
+                        
+                        completion(.destination($0))
+                    }
+                }
+            ),
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+    }
+    
+    @inlinable
+    func makeCategoryPickerSection(
         nanoServices: PaymentsTransfersPersonalNanoServices,
         makeStandard: @escaping MakeStandard
     ) -> ReloadableCategoryPicker {

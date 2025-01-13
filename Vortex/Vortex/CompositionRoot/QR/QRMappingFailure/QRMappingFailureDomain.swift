@@ -41,7 +41,7 @@ extension QRMappingFailureDomain {
         
         case back
         case detailPayment(Node<PaymentsViewModel>)
-        case categoryPicker(CategoryPicker)
+        case categoryPicker(Node<CategoryPickerSectionDomain.Binder>)
         case scanQR
     }
 }

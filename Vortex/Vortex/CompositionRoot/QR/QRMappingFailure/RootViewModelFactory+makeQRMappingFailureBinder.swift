@@ -5,6 +5,9 @@
 //  Created by Igor Malyarov on 13.01.2025.
 //
 
+import FlowCore
+import PayHubUI
+
 extension RootViewModelFactory {
     
     @inlinable
@@ -60,20 +63,11 @@ extension RootViewModelFactory {
                 
             case .manualSearch:
                 completion(.categoryPicker(
-                    makeCategoryPickerSection(
-                        nanoServices: .init(
-                            loadCategories: getServiceCategoriesWithoutQR,
-                            reloadCategories: { $0(nil) },
-                            loadAllLatest: { $0(nil) }
-                        ),
-                        makeStandard: { [weak self] category, completion in
-                            
-                            self?.handleSelectedServiceCategory(category) {
-                                
-                                completion(.destination($0))
-                            }
-                        }
-                    )
+                    makeCategoryPickerSection()
+                        .asNode(
+                            transform: { $0.outcome },
+                            notify: notify
+                        )
                 ))
                 
             case .scanQR:
@@ -94,6 +88,8 @@ extension RootViewModelFactory {
     }
 }
 
+// MARK: - Adapters
+
 private extension PaymentsViewModel.Payload {
     
     init(qrCode: QRCode?) {
@@ -109,6 +105,20 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
         switch self {
         case .close: return .dismiss
         case .scanQR: return .select(.scanQR)
+        }
+    }
+}
+
+private extension SelectedCategoryNavigation {
+    
+    var outcome: NavigationOutcome<QRMappingFailureDomain.Select>? {
+        
+        switch self {
+        case let .failure(failure):
+            return nil
+        
+        case let .paymentFlow(paymentFlow):
+            return nil
         }
     }
 }

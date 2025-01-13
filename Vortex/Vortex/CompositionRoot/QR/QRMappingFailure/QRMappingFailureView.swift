@@ -75,8 +75,8 @@ extension QRMappingFailureDomain.Navigation {
         case let .detailPayment(node):
             return .detailPayment(node.model)
             
-        case let .categoryPicker(binder):
-            return .categoryPicker(binder)
+        case let .categoryPicker(node):
+            return .categoryPicker(node.model)
             
         case .scanQR:
             return nil
@@ -85,7 +85,7 @@ extension QRMappingFailureDomain.Navigation {
     
     enum Destination {
         
-        case categoryPicker(CategoryPicker)
+        case categoryPicker(CategoryPickerSectionDomain.Binder)
         case detailPayment(PaymentsViewModel)
     }
 }
