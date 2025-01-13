@@ -491,7 +491,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: [],
                     bannersBinder: .preview,
-                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanLandingBinder: { .preview },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -569,7 +569,7 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
-                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanLandingBinder: { .preview },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -701,16 +701,34 @@ final class RootViewModelTests: XCTestCase {
             cardType: cardType,
             idParent: nil
         )
-    }
+    }    
+}
+
+private extension GetShowcaseDomain.Binder {
     
-    private func makeCollateralLoanLandingViewModel() -> GetShowcaseDomain.ViewModel {
-        
-        .init(
-            initialState: .init(),
-            reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
-            handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
-        )
-    }
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview = GetShowcaseDomain.Content(
+        initialState: .init(),
+        reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
+        handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+    )
 }
 
 // MARK: - DSL

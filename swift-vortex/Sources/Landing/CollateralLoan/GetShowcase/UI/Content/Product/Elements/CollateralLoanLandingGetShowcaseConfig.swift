@@ -121,18 +121,22 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
 
         public let height: CGFloat
         public let topPadding: CGFloat
+        public let spacing: CGFloat
+        public let buttonForegroundColor: Color
 
-        public init(height: CGFloat, topPadding: CGFloat) {
+        public init(height: CGFloat, topPadding: CGFloat, spacing: CGFloat, buttonForegroundColor: Color) {
 
             self.height = height
             self.topPadding = topPadding
+            self.spacing = spacing
+            self.buttonForegroundColor = buttonForegroundColor
         }
     }
 }
 
 extension CollateralLoanLandingGetShowcaseViewConfig {
 
-    static let base = Self(
+    public static let base = Self(
 
         fonts: .init(
             header: Font.system(size: 32).bold(),
@@ -150,6 +154,11 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
         termsView: .init(height: 24),
         bulletsView: .init(itemSpacing: 4, height: 84),
         imageView: .init(height: 236, сornerRadius: 12),
-        footerView: .init(height: 48, topPadding: 12)
+        footerView: .init(
+            height: 48,
+            topPadding: 12,
+            spacing: 12,
+            buttonForegroundColor: .white
+        )
     )
 }
