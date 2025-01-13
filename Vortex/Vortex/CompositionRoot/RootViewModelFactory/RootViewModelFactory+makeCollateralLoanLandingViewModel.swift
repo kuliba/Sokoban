@@ -66,7 +66,7 @@ extension RootViewModelFactory {
         
         switch navigation {
         case .landing:
-            return .microseconds(600)
+            return .milliseconds(100)
         }
     }
     
@@ -82,6 +82,7 @@ extension RootViewModelFactory {
         }
     }
     
+    // Управление производится через Flow напрямую
     private func witnesses() -> ContentWitnesses<
         GetShowcaseDomain.Content,
         FlowEvent<GetShowcaseDomain.Select, Never>

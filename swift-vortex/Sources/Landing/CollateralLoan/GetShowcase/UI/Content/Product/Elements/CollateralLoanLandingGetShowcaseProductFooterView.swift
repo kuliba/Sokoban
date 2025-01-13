@@ -10,7 +10,8 @@ import SwiftUI
 struct CollateralLoanLandingGetShowcaseProductFooterView: View {
     
     let landingId: String
-    let event: (String) -> Void
+    let termsUrl: String
+    let event: (GetShowcaseViewEvent.External) -> Void
     let config: Config
     let theme: Theme
 
@@ -18,21 +19,25 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
 
         HStack(spacing: 4) {
             
-            HStack(spacing: 12) {
+            Button(action: { event(.showTerms(termsUrl)) }) {
 
-                Image(systemName: "info.circle")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                Text("Подробные условия")
+                HStack(spacing: config.footerView.spacing) {
+                    
+                    Image(systemName: "info.circle")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    Text("Подробные условия")
+                        .multilineTextAlignment(.leading)
+                }
             }
             .foregroundColor(theme.foregroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             
-            Button(action: { event(landingId) }) {
+            Button(action: { event(.showLanding(landingId)) }) {
 
                 Text("Получить")
                     .font(config.fonts.body)
-                    .foregroundColor(theme.foregroundColor)
+                    .foregroundColor(config.footerView.buttonForegroundColor)
                     .padding(.vertical, 6)
                     .padding(.horizontal, 15)
             }
@@ -56,4 +61,5 @@ extension CollateralLoanLandingGetShowcaseProductFooterView {
     
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Theme = CollateralLoanLandingGetShowcaseTheme
+    typealias Event = GetShowcaseDomain.Event
 }

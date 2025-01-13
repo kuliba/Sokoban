@@ -11,6 +11,8 @@ import RxViewModel
 
 struct CollateralLoanLandingView: View {
     
+    @Environment(\.openURL) var openURL
+
     let binder: GetShowcaseDomain.Binder
     
     var body: some View {
@@ -42,7 +44,17 @@ struct CollateralLoanLandingView: View {
             case let .some(showcase):
                 CollateralLoanLandingGetShowcaseView(
                     data: showcase,
-                    event: { binder.flow.event(.select(.landing($0))) }
+                    event: {
+                        switch $0 {
+                        case let .showLanding(landingId):
+                            binder.flow.event(.select(.landing(landingId)))
+                            
+                        case let .showTerms(urlString):
+                            if let url = URL(string: urlString) {
+                                openURL(url)
+                            }
+                        }
+                    }
                 )
             }
         }

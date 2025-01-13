@@ -266,6 +266,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
+        // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
         case let .collateralLoanLanding(binder):
             CollateralLoanLandingView(binder: binder)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
