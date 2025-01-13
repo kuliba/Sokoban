@@ -266,8 +266,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        case let .collateralLoanLanding(viewModel):
-            CollateralLoanLandingView(viewModel: viewModel)
+        // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
+        case let .collateralLoanLanding(binder):
+            CollateralLoanLandingView(binder: binder)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
@@ -595,14 +596,32 @@ extension MainViewModel {
         },
         sections: [],
         bannersBinder: .preview,
-        makeCollateralLoanLandingViewModel: { .preview },
+        makeCollateralLoanLandingBinder: { .preview },
         makeOpenNewProductButtons: { _ in [] }
     )
 }
 
-private extension GetShowcaseDomain.ViewModel {
+private extension GetShowcaseDomain.Binder {
     
-    static let preview: GetShowcaseDomain.ViewModel = .init(
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview: GetShowcaseDomain.Content = .init(
         initialState: .init(),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }

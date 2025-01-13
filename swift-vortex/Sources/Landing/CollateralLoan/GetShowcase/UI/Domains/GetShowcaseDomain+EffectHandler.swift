@@ -20,7 +20,6 @@ extension GetShowcaseDomain {
         public func handleEffect(_ effect: Effect, dispatch: @escaping Dispatch) {
             
             switch effect {
-                
             case .load:
                 load { dispatch(.loaded($0)) }
             }

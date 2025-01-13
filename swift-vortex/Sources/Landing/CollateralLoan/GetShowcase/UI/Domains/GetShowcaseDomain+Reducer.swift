@@ -26,11 +26,6 @@ extension GetShowcaseDomain {
             case let .loaded(result):
                 state.isLoading = false
                 state.result = result
-                
-            case let .productTap(productType):
-                // TODO: Need to realize
-                print(productType)
-                break
             }
             
             return (state, effect)
