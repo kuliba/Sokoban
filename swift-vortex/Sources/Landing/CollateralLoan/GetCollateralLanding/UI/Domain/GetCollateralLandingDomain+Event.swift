@@ -9,6 +9,8 @@ extension GetCollateralLandingDomain {
     
     public enum Event: Equatable {
         
+        case load
+        case loaded(Result)
         case changeDesiredAmount(UInt)
         case closeBottomSheet
         case createDraftApplication

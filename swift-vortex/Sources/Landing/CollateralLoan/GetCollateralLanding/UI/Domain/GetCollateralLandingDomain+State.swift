@@ -11,6 +11,8 @@ extension GetCollateralLandingDomain {
     
     public struct State: Equatable {
         
+        var isLoading = false
+        var result: Result?
         var bottomSheet: BottomSheet?
         let product: Product
     }

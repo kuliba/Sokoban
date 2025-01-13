@@ -7,5 +7,8 @@
 
 extension GetCollateralLandingDomain {
     
-    public enum Effect: Equatable {}
+    public enum Effect: Equatable {
+        
+        case load
+    }
 }
