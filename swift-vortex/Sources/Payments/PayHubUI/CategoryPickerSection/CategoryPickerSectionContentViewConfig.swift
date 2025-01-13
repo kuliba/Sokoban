@@ -11,14 +11,14 @@ import SwiftUI
 public struct CategoryPickerSectionContentViewConfig: Equatable {
     
     public let failure: LabelConfig
-    public let headerHeight: CGFloat
+    public let headerHeight: CGFloat?
     public let spacing: CGFloat
     public let title: TitleConfig
     public let titlePlaceholder: TitlePlaceholder
     
     public init(
         failure: LabelConfig,
-        headerHeight: CGFloat,
+        headerHeight: CGFloat?,
         spacing: CGFloat,
         title: TitleConfig,
         titlePlaceholder: TitlePlaceholder

@@ -13,6 +13,7 @@ import SwiftUI
 
 extension RootViewFactory {
     
+    /// Renders `Category Picker Section` with header on `Payments Tab`
     @ViewBuilder
     func makeCategoryPickerSectionView(
         categoryPicker: CategoryPicker
@@ -20,7 +21,30 @@ extension RootViewFactory {
         
         if let binder = categoryPicker.sectionBinder {
             
-            makeCategoryPickerSectionView(binder: binder)
+            makeCategoryPickerSectionView(
+                binder: binder,
+                headerHeight: 24
+            )
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
+    /// Renders `Category Picker` without header,
+    @ViewBuilder
+    func makeCategoryPickerView(
+        categoryPicker: CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(
+                binder: binder,
+                headerHeight: nil
+            )
             
         } else {
             
@@ -30,7 +54,8 @@ extension RootViewFactory {
     }
     
     private func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionDomain.Binder
+        binder: CategoryPickerSectionDomain.Binder,
+        headerHeight: CGFloat?
     ) -> some View {
         
         RxWrapperView(
@@ -42,7 +67,13 @@ extension RootViewFactory {
                     event: $1,
                     factory: .init(
                         makeAlert: makeAlert(binder: binder),
-                        makeContentView: { makeContentView(binder.content) },
+                        makeContentView: {
+                            
+                            makeContentView(
+                                binder.content,
+                                headerHeight: headerHeight
+                            )
+                        },
                         makeDestinationView: makeDestinationView
                     )
                 )
@@ -52,7 +83,8 @@ extension RootViewFactory {
     }
     
     private func makeContentView(
-        _ content: CategoryPickerSectionDomain.Content
+        _ content: CategoryPickerSectionDomain.Content,
+        headerHeight: CGFloat?
     ) -> some View {
         
         RxWrapperView(
@@ -62,7 +94,7 @@ extension RootViewFactory {
                 CategoryPickerSectionContentView(
                     state: state,
                     event: event,
-                    config: .iVortex,
+                    config: .iVortex(headerHeight: headerHeight),
                     itemLabel: itemLabel
                 )
             }
