@@ -96,7 +96,31 @@ private extension AnywayElement.Parameter.Masking {
     
     var composedMask: String? {
         
-        inputMask ?? mask
+        (inputMask ?? mask).map(\.expandingNs)
+    }
+}
+
+private extension String {
+    
+    /// Expands a string formatted as "<number>N" into a string of repeated "N" characters.
+    ///
+    /// Examples:
+    ///
+    ///     ```
+    ///     expandNStrings("5N")    // "NNNNN"
+    ///     expandNStrings("12N")   // "NNNNNNNNNNNN"
+    ///     expandNStrings("abcN")  // "abcN"
+    ///     ```
+    ///
+    /// - Parameter input: A string containing a number followed by "N" (e.g., "5N").
+    /// - Returns: A string with "N" repeated the specified number of times.
+    ///            Returns the original input if the format is invalid.
+    var expandingNs: String {
+        
+        guard last == "N", let numberPart = Int(dropLast())
+        else { return self }
+        
+        return String(repeating: "N", count: numberPart)
     }
 }
 
