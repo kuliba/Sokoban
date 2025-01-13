@@ -63,7 +63,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
     ) -> Outline {
         
         return .init(
-            latestServicePayment: latestPayment, 
+            payload: latestPayment.latestOutlinePayload, 
             product: product ?? makeOutlineProduct()
         )
     }

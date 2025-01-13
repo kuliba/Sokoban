@@ -13,7 +13,7 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
     func test_createRequest_shouldThrowOnEmptyOperatorID() throws {
         
         try XCTAssertThrowsError(createRequest(
-            makeUtilityPaymentOperator(id: "")
+            makeUtilityPaymentProvider(id: "")
         ))
     }
     
@@ -21,7 +21,7 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
         
         let operatorID = UUID().uuidString
         let type = "housingAndCommunalService"
-        let request = try createRequest(makeUtilityPaymentOperator(
+        let request = try createRequest(makeUtilityPaymentProvider(
             id: operatorID,
             type: type
         ))
@@ -53,7 +53,7 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
     ) throws -> URLRequest {
         
         try RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(
-            operator: `operator` ?? makeUtilityPaymentOperator()
+            operator: `operator` ?? makeUtilityPaymentProvider()
         )
     }
 }
@@ -61,6 +61,17 @@ final class RequestFactory_createGetOperatorsListByParamOperatorOnlyFalseRequest
 extension XCTestCase {
     
     func makeUtilityPaymentOperator(
+        id: String = anyMessage(),
+        inn: String = anyMessage(),
+        title: String = anyMessage(),
+        icon: String? = anyMessage(),
+        type: String = anyMessage()
+    ) -> UtilityPaymentOperator {
+        
+        return .init(id: id, inn: inn, title: title, icon: icon, type: type)
+    }
+    
+    func makeUtilityPaymentProvider(
         id: String = anyMessage(),
         inn: String = anyMessage(),
         title: String = anyMessage(),

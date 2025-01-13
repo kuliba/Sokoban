@@ -12,22 +12,33 @@ struct DestinationView: View {
     
     @ObservedObject var model: DestinationDomain.Content
     
+    let title: String
+    
     var body: some View {
         
         RxWrapperView(model: model) { state, event in
             
-            Button("Next") { event(.select(.next)) }
-                .font(.headline.bold())
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .toolbar {
-                    
-                    Button {
-                        event(.select(.close))
-                    } label: {
-                        Label("Close", systemImage: "xmark.circle.fill")
-                    }
-                    .foregroundColor(.secondary.opacity(0.7))
+            ZStack(alignment: .topTrailing) {
+                
+                Button {
+                    event(.select(.close))
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
                 }
+                .foregroundColor(.secondary.opacity(0.5))
+                .padding()
+                
+                VStack {
+                    
+                    Text(title)
+                        .font(.headline)
+                        .padding()
+                    
+                    Button("Next") { event(.select(.next)) }
+                        .font(.headline.bold())
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
         }
     }
 }

@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 24.09.2024.
 //
 
-import VortexTools
 import PayHub
 import PayHubUI
+import VortexTools
 
 /// A namespace.
 enum PaymentProviderPickerDomain {}
@@ -16,7 +16,7 @@ extension PaymentProviderPickerDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     
@@ -26,44 +26,53 @@ extension PaymentProviderPickerDomain {
     typealias Search = RegularFieldViewModel
     
     // MARK: - Flow
-
-    typealias FlowDomain = PayHub.PaymentProviderPickerFlowDomain<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
     
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias FlowReducer = FlowDomain.Reducer
     typealias FlowEffectHandler = FlowDomain.EffectHandler
     
-    typealias Navigation = PaymentProviderPickerNavigation<DetailPayment, Payment, ServicePicker, ServicesFailure>
-    
-    typealias DetailPayment = ClosePaymentsViewModelWrapper
+    typealias DetailPayment = Node<PaymentsViewModel>
     typealias Payment = ProcessSelectionResult
     typealias Provider = UtilityPaymentProvider
-    typealias Service = Void
     typealias ServicePicker = PaymentServicePicker.Binder
-    typealias ServicesFailure = Void
+    typealias ServicesFailure = ServiceCategoryFailureDomain.Binder
     
-    typealias _ProcessSelectionResult = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService>.ProcessSelectionResult
+    typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, ProviderServicePickerDomain.Binder, Node<AnywayFlowModel>>
     
-    typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
-    
-    enum ProcessSelectionSuccess {
+    enum Select: Equatable {
         
-        case services(MultiElementArray<UtilityService>, for: UtilityPaymentProvider)
-        case anywayPayment(Node<AnywayFlowModel>)
+        case detailPayment
+        case latest(Latest)
+        case outside(PaymentProviderPickerFlowOutside)
+        case provider(Provider)
     }
     
-    enum ProcessSelectionFailure: Error {
+    enum Navigation {
         
-        case operatorFailure(UtilityPaymentProvider)
-        case serviceFailure(ServiceFailure)
+        case alert(BackendFailure)
+        case destination(Destination)
+        case outside(PaymentProviderPickerFlowOutside)
+    }
+    
+    enum PaymentProviderPickerFlowOutside: Equatable {
         
-#warning("extract…")
-        enum ServiceFailure: Error, Hashable {
-            
-            case connectivityError
-            case serverError(String)
-        }
+        case back
+        case chat
+        case main
+        case payments
+        case qr
+    }
+    
+    enum Destination {
+        
+        case detailPayment(DetailPayment)
+        case payment(Payment)
+        case servicePicker(ServicePicker)
+        case servicesFailure(ServicesFailure)
     }
 }
 
@@ -94,7 +103,7 @@ extension PaymentServicePicker {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     

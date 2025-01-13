@@ -19,23 +19,23 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:ForaBank.xcodeproj",
-        "identifier" : "2A9C79682D0D71F5004479B0",
-        "name" : "BinderComposerPreviewTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "PayHubTests",
         "name" : "PayHubTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "PayHubUITests",
         "name" : "PayHubUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Vortex.xcodeproj",
+        "identifier" : "2A4CC4962D227E4B00F5C263",
+        "name" : "BinderComposerPreviewTests"
       }
     }
   ],

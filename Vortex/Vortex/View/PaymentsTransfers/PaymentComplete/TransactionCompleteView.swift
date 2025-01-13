@@ -60,7 +60,10 @@ private extension TransactionCompleteView {
             HStack {
                 
                 factory.makeTemplateButton()
-                state.documentID.map(factory.makeDocumentButton)
+                
+                state.documentID.map {
+                    factory.makeDocumentButton($0.0, $0.1)
+                }
                 state.details.map(factory.makeDetailButton)
             }
             
@@ -120,7 +123,7 @@ struct TransactionCompleteView_Previews: PreviewProvider {
             repeat: {},
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
-                makeDocumentButton: { _ in .init(getDocument: { $0(nil) }) },
+                makeDocumentButton: { _,_  in .init(getDocument: { $0(nil) }) },
                 makeTemplateButton: { nil }
             ),
             content: { Text("Content") }
@@ -135,14 +138,16 @@ private extension TransactionCompleteState {
     static let completedWithDocumentID: Self = .completed(documentID: 1)
     static let completedWithDetailsAndDocumentID: Self = .completed(
         details: .empty,
-        documentID: 1
+        documentID: 1,
+        printForm: ""
     )
     private static func completed(
         details: Details? = nil,
-        documentID: DocumentID? = nil
+        documentID: DocumentID = 1,
+        printForm: String = ""
     ) -> Self {
         
-        return .init(details: details, documentID: documentID, status: .completed)
+        return .init(details: details, documentID: (documentID, printForm), status: .completed)
     }
     
     static let inflight: Self = .init(details: .empty, .inflight)
@@ -151,10 +156,11 @@ private extension TransactionCompleteState {
     
     private init(
         details: Details? = nil,
-        documentID: DocumentID? = nil,
+        documentID: DocumentID = 1,
+        printForm: String = "",
         _ status: Status
     ) {
-        self.init(details: details, documentID: documentID, status: status)
+        self.init(details: details, documentID: (documentID, printForm), status: status)
     }
 }
 

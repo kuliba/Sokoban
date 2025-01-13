@@ -419,19 +419,26 @@ extension RootViewModelFactory {
         
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
-            delay: settings.delay * 2,
             dismiss: dismiss,
             getNavigation: { [weak self] select, notify, completion in
                 
-                self?.getRootNavigation(
-                    makeProductProfileByID: makeProductProfileByID,
-                    select: select,
-                    notify: notify,
-                    completion: completion
-                )
+                guard let self else { return }
+                
+                // TODO: - improve with fine-grained delays for different navigation cases
+                schedulers.interactive.delay(
+                    for: settings.delay * 2
+                ) { [weak self] in
+                    
+                    self?.getRootNavigation(
+                        makeProductProfileByID: makeProductProfileByID,
+                        select: select,
+                        notify: notify,
+                        completion: completion
+                    )
+                }
             },
             bindOutside: { $1.bindOutside(to: $0) },
-            schedulers: schedulers,
+            scheduler: schedulers.main,
             witnesses: .init(content: witness, dismiss: .default)
         )
         
@@ -470,11 +477,9 @@ private extension RootViewDomain.Flow {
                     event(.dismiss)
                     
                     switch tab {
-                    case .main:
-                        content.selected = .main
-                        
-                    case .payments:
-                        content.selected = .payments
+                    case .chat:     content.selected = .chat
+                    case .main:     content.selected = .main
+                    case .payments: content.selected = .payments
                     }
                 }
             }
@@ -761,7 +766,7 @@ private extension RootViewModelFactory {
             onRegister: onRegister,
             sections: sections,
             bannersBinder: bannersBinder,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )

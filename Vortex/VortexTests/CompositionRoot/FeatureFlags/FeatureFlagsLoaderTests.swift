@@ -180,6 +180,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    // MARK: - SplashScreenFlag
+    
+    func test_load_shouldDeliverActiveSplashScreenFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .splashScreenFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            splashScreenFlag: .active
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveSplashScreenFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            splashScreenFlag: .inactive
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -203,6 +227,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         savingsAccountFlag: SavingsAccountFlag? = nil,
         collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil,
+        splashScreenFlag: SplashScreenFlag? = nil,
         orderCardFlag: OrderCardFlag? = nil
     ) -> FeatureFlags {
         
@@ -212,6 +237,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,
             collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive,
+            splashScreenFlag: splashScreenFlag?.map { $0 } ?? .inactive,
             orderCardFlag: orderCardFlag?.map { $0 } ?? .inactive
         )
     }

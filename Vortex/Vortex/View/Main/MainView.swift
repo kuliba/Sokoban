@@ -7,18 +7,19 @@
 
 import ActivateSlider
 import Banners
+import ClientInformList
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import FooterComponent
-import VortexTools
 import InfoComponent
 import LandingUIComponent
 import PaymentSticker
+import RxViewModel
 import SberQR
 import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
-import ClientInformList
-import RxViewModel
+import VortexTools
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -29,6 +30,7 @@ struct MainView<NavigationOperationView: View>: View {
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
+    let makeImageView: (Md5hash) -> UIPrimitives.AsyncImage
     
     var body: some View {
         
@@ -265,8 +267,12 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        case let .collateralLoanLanding(viewModel):
-            CollateralLoanLandingView(viewModel: viewModel)
+        // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
+        case let .collateralLoanLanding(binder):
+            let factory = CollateralLoanLandingGetShowcaseViewFactory(
+                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
+            )
+            CollateralLoanLandingView(binder: binder, factory: factory)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
@@ -516,10 +522,17 @@ struct MainView_Previews: PreviewProvider {
                 makeHistoryButton: { .init(event: $0, isFiltered: $1, isDateFiltered: $2, clearOptions: $3) },
                 makeRepeatButtonView: { _ in .init(action: {}) }
             ),
-            getUImage: { _ in nil }
+            getUImage: { _ in nil },
+            makeImageView: { _ in previewAsyncImage }
         )
     }
 }
+
+private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+    image: .init(systemName: "car"),
+    publisher: Empty()
+        .eraseToAnyPublisher()
+)}
 
 extension MainViewFactory {
     
@@ -580,6 +593,12 @@ extension ProductProfileViewModel  {
 
 extension MainViewModel {
     
+    static private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Empty()
+            .eraseToAnyPublisher()
+    )}
+    
     static let sample = MainViewModel(
         .emptyMock,
         makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
@@ -594,14 +613,35 @@ extension MainViewModel {
         },
         sections: [],
         bannersBinder: .preview,
-        makeCollateralLoanLandingViewModel: {
-            _ in .init(
-                initialState: .init(),
-                reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
-                handleEffect: { _,_ in }
-            )
-        },
+        makeCollateralLoanLandingBinder: { .preview },
         makeOpenNewProductButtons: { _ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Binder {
+    
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview: GetShowcaseDomain.Content = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

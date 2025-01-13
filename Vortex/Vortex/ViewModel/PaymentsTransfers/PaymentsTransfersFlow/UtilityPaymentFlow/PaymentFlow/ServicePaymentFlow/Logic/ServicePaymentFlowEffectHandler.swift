@@ -26,7 +26,7 @@ extension ServicePaymentFlowEffectHandler {
     ) {
         switch effect {
         case let .delay(event, for: interval):
-            scheduler.delay(for: interval) { dispatch(event) }
+            scheduler.delay(for: .init(interval)) { dispatch(event) }
         }
     }
 }

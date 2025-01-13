@@ -61,6 +61,16 @@ extension UtilityPaymentNanoServicesComposer {
         )
     }
     
+    func compose() -> NanoServices {
+        
+        return .init(
+            getAllLatestPayments: getAllLatestPayments,
+            getOperatorsListByParam: { _ in },
+            getServicesFor: getServicesFor,
+            startAnywayPayment: startAnywayPayment
+        )
+    }
+
     typealias NanoServices = UtilityPaymentNanoServices
 }
 
@@ -130,7 +140,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ completion: @escaping NanoServices.GetServicesForCompletion
     ) {
         let fetch = Vortex.NanoServices.adaptedLoggingFetch(
-            createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
+            createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest(operator:),
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
             mapOutput: { $0.map(\.service) },
@@ -254,10 +264,10 @@ private extension StartAnywayPaymentResult {
     }
 }
 
-typealias StartAnywayPayment = UtilityPaymentNanoServices.StartAnywayPayment
-typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaymentPayload
-typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
-typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
+private typealias StartAnywayPayment = UtilityPaymentNanoServices.StartAnywayPayment
+private typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaymentPayload
+private typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
+private typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
 /*private*/ extension RemoteServices.ResponseMapper.SberUtilityService {
     

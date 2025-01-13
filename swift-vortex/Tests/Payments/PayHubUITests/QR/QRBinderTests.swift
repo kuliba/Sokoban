@@ -6,9 +6,10 @@
 //
 
 import Combine
-import VortexTools
+import FlowCore
 import PayHub
 import PayHubUI
+import VortexTools
 import XCTest
 
 class QRBinderTests: XCTestCase {
@@ -294,18 +295,25 @@ class QRBinderTests: XCTestCase {
     
     final class QR {
         
-        private let subject = PassthroughSubject<Select, Never>()
+        typealias Event = FlowEvent<Select, Never>
+        
+        private let subject = PassthroughSubject<Event, Never>()
         
         private(set) var callCount = 0
         
-        var publisher: AnyPublisher<Select, Never> {
+        var publisher: AnyPublisher<Event, Never> {
             
             subject.eraseToAnyPublisher()
         }
         
-        func emit(_ value: Select) {
+        func emit(_ event: Event) {
             
-            self.subject.send(value)
+            self.subject.send(event)
+        }
+        
+        func emit(_ select: Select) {
+            
+            self.subject.send(.select(select))
         }
         
         func dismiss() {

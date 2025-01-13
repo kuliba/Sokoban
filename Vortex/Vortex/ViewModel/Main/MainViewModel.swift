@@ -6,22 +6,23 @@
 //
 
 import CalendarUI
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import CombineSchedulers
-import VortexTools
 import Foundation
 import LandingUIComponent
 import PaymentSticker
 import SberQR
 import SwiftUI
+import VortexTools
 
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeCollateralLoanLandingViewModel = (CollateralLoanLandingDomain.State) -> CollateralLoanLandingDomain.ViewModel
-    
+    typealias MakeCollateralLoanLandingBinder = () -> GetShowcaseDomain.Binder
+
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
     
@@ -51,7 +52,7 @@ class MainViewModel: ObservableObject, Resetable {
 
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
-    private let makeCollateralLoanLandingViewModel: MakeCollateralLoanLandingViewModel
+    private let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
@@ -75,7 +76,7 @@ class MainViewModel: ObservableObject, Resetable {
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
-        makeCollateralLoanLandingViewModel: @escaping MakeCollateralLoanLandingViewModel,
+        makeCollateralLoanLandingBinder: @escaping MakeCollateralLoanLandingBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
@@ -93,7 +94,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.route = route
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
-        self.makeCollateralLoanLandingViewModel = makeCollateralLoanLandingViewModel
+        self.makeCollateralLoanLandingBinder = makeCollateralLoanLandingBinder
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
@@ -497,8 +498,9 @@ private extension MainViewModel {
                 openProductSection.action
                     .receive(on: scheduler)
                     .sink { [weak self] action in
+                        
                         guard let self else { return }
-
+                        
                         switch action {
                         case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
                             
@@ -522,18 +524,17 @@ private extension MainViewModel {
                                 
                             default:
                                 //MARK: Action for Sticker Product
-                                
                                 handleLandingAction(.sticker)
                             }
                             
-                        case _ as MainSectionViewModelAction.OpenProduct.openCollateralLoanLanding:
+                        case _ as MainSectionViewModelAction.OpenProduct.OpenCollateralLoanLanding:
                             openCollateralLoanLanding()
                             
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
             case let fastPayment as MainSectionFastOperationView.ViewModel:
                 fastPayment.action
@@ -942,8 +943,8 @@ private extension MainViewModel {
     
     func openCollateralLoanLanding() {
         
-        let viewModel = makeCollateralLoanLandingViewModel(.init())
-        route.destination = .collateralLoanLanding(viewModel)
+        let binder = makeCollateralLoanLandingBinder()
+        route.destination = .collateralLoanLanding(binder)
     }
 
     private func openDeposit() {
@@ -1554,10 +1555,9 @@ private extension MainViewModel {
 extension MainViewModel {
     
     private func delay(
-        for timeout: DispatchTimeInterval,
+        for timeout: Delay,
         _ action: @escaping () -> Void
     ) {
-        // TODO: replace with scheduler
         scheduler.delay(for: timeout, action)
     }
 }
@@ -1688,7 +1688,7 @@ extension MainViewModel {
         case paymentSticker
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
-        case collateralLoanLanding(CollateralLoanLandingDomain.ViewModel)
+        case collateralLoanLanding(GetShowcaseDomain.Binder)
         
         var id: Case {
             

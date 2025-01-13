@@ -314,7 +314,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         awaitActorThreadHop()
         
         httpClient.complete(with: anyError(), at: 3)
-        userInitiatedScheduler.advance(to: .init(.now().advanced(by: RootViewModelFactorySettings.prod.batchDelay.timeInterval)))
+        userInitiatedScheduler.advance(by: RootViewModelFactorySettings.prod.batchDelay)
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
@@ -421,7 +421,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             historyFilterFlag: true,
             paymentsTransfersFlag: .active,
             savingsAccountFlag: .active,
-            collateralLoanLandingFlag: .active
+            collateralLoanLandingFlag: .active,
+            splashScreenFlag: .inactive
         )
     }
 }

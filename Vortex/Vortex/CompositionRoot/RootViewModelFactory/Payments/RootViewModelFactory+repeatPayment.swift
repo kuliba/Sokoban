@@ -37,12 +37,12 @@ extension RootViewModelFactory {
     }
     
     func processPayments(
-        lastPayment: UtilityPaymentLastPayment,
+        repeatPayment: RepeatPayment,
         close: @escaping () -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
         processPayments(
-            lastPayment: lastPayment,
+            repeatPayment: repeatPayment,
             notify: { _ in close() },
             completion: completion
         )
@@ -74,24 +74,12 @@ extension RootViewModelFactory {
                 let paymentFlow = info.paymentFlow(info.paymentFlow)
                 
                 switch paymentFlow {
-                case .none:
-                    guard let paymentsPayload = info.paymentsPayload(activeProductID: payload.activeProductID, getProduct: model.product(productId:))
-                    else { return completion(nil) }
-                    
-                    return completion(getPaymentsNavigation(
-                        from: paymentsPayload,
-                        closeAction: closeAction
-                    ))
-                    
-                case .mobile:
-                    return completion(nil)
-                    
                 case .qr:
                     return completion(nil)
                     
                 case .standard:
-                    guard let utilityPaymentLastPayment = makeUtilityPaymentLastPayment(
-                        info, 
+                    guard let utilityPaymentLastPayment = makeRepeatPayment(
+                        info,
                         name: payload.operatorName,
                         md5Hash: payload.operatorIcon
                     )
@@ -99,11 +87,15 @@ extension RootViewModelFactory {
                     
                     makeStandardFlow(utilityPaymentLastPayment, closeAction, completion)
                     
-                case .taxAndStateServices:
-                    return completion(nil)
+                default: // .none,  .mobile, .taxAndStateServices, .transport
+
+                    guard let paymentsPayload = info.paymentsPayload(activeProductID: payload.activeProductID, getProduct: model.product(productId:))
+                    else { return completion(nil) }
                     
-                case .transport:
-                    return completion(nil)
+                    return completion(getPaymentsNavigation(
+                        from: paymentsPayload,
+                        closeAction: closeAction
+                    ))
                 }
                 
             case .failure:
@@ -114,19 +106,17 @@ extension RootViewModelFactory {
         }
     }
     
-    func makeUtilityPaymentLastPayment(
+    func makeRepeatPayment(
         _ info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         name: String,
         md5Hash: String?
-    ) -> UtilityPaymentLastPayment? {
+    ) -> RepeatPayment? {
         
-        guard let puref = info.parameterList.puref,
-              let amount = info.parameterList.amount
-        else { return nil }
+        guard let puref = info.parameterList.puref else { return nil }
         
         return .init(
             date: .now,
-            amount: Decimal(amount),
+            amount: Decimal(info.parameterList.amount ?? 0),
             name: name,
             md5Hash: md5Hash,
             puref: puref,

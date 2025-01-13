@@ -77,8 +77,8 @@ private extension RetryLoader {
                     var remainingIntervals = retryIntervals
                     let nextInterval = remainingIntervals.removeFirst()
                     
-                    scheduler.schedule(
-                        after: .init(.now() + nextInterval)
+                    scheduler.delay(
+                        for: .init(nextInterval)
                     ) { [weak self] in
                         
                         self?.load(payload, with: remainingIntervals, completion)
@@ -90,4 +90,16 @@ private extension RetryLoader {
             }
         }
     }
+}
+
+extension AnySchedulerOfDispatchQueue {
+    
+    func delay(
+        for timeout: Delay,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: now.advanced(by: timeout), action)
+    }
+    
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
 }

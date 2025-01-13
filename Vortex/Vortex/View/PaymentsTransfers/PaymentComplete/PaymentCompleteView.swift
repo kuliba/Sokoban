@@ -49,7 +49,7 @@ private extension PaymentCompleteView {
         case let .success(report):
             return .init(
                 details: report.details,
-                documentID: .init(report.detailID),
+                documentID: (.init(report.detailID), report.printFormType),
                 status: {
                     
                     switch report.status {
@@ -176,12 +176,14 @@ extension PaymentCompleteState.Report {
     private static func preview(
         detailID: Int = 1,
         details: Details? = nil,
+        printFormType: String = "abc",
         _ status: DocumentStatus
     ) -> Self {
         
         return .init(
             detailID: detailID,
-            details: details,
+            details: details, 
+            printFormType: printFormType,
             status: status
         )
     }
@@ -191,7 +193,7 @@ extension PaymentCompleteViewFactory {
     
     static let preview: Self = .init(
         makeDetailButton: { _ in .init(details: .init(logo: nil, cells: [])) },
-        makeDocumentButton: { _ in .init(getDocument: { _ in }) },
+        makeDocumentButton: { _,_  in .init(getDocument: { _ in }) },
         makeTemplateButton: {
             
             return .init(

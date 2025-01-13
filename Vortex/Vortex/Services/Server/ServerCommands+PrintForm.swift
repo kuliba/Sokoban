@@ -25,6 +25,8 @@ extension ServerCommands {
             
             struct Payload: Encodable {
                 
+                typealias PrintFormType = String
+                
                 let paymentOperationDetailId: Int
                 let printFormType: PrintFormType
             }

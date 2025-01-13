@@ -43,10 +43,10 @@ final class RequestCollectorTests: XCTestCase {
         sut.process(request2) { _ in }
         XCTAssertTrue(spy.payloads.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(99))))
+        scheduler.advance(by: .seconds(99))
         XCTAssertTrue(spy.payloads.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(100))))
+        scheduler.advance(by: .seconds(100))
         XCTAssertNoDiff(spy.payloads.map { Set($0) }, [[request, request2]])
     }
     
@@ -60,7 +60,7 @@ final class RequestCollectorTests: XCTestCase {
         sut.process(request) { _ in }
         XCTAssertTrue(spy.payloads.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(100))))
+        scheduler.advance(by: .seconds(100))
         XCTAssertNoDiff(spy.payloads, [[request]])
         
         sut.process(request) { _ in }
@@ -78,15 +78,15 @@ final class RequestCollectorTests: XCTestCase {
         sut.process(request) { _ in }
         XCTAssertTrue(spy.payloads.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(100))))
+        scheduler.advance(by: .seconds(100))
         XCTAssertNoDiff(spy.payloads, [[request]])
         spy.complete(with: [request: anyResponse()])
         
         sut.process(request) { _ in }
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(99))))
+        scheduler.advance(by: .seconds(99))
         XCTAssertNoDiff(spy.payloads, [[request]])
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(100))))
+        scheduler.advance(by: .seconds(100))
         XCTAssertNoDiff(spy.payloads, [[request], [request]])
     }
     
@@ -105,10 +105,10 @@ final class RequestCollectorTests: XCTestCase {
         sut.process(request) { responses.append($0) }
         XCTAssertTrue(responses.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(99))))
+        scheduler.advance(by: .seconds(99))
         XCTAssertTrue(responses.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(100))))
+        scheduler.advance(by: .seconds(100))
         spy.complete(with: [request: response])
         
         XCTAssertNoDiff(responses, [response, response, response])
@@ -130,7 +130,7 @@ final class RequestCollectorTests: XCTestCase {
         sut.process(request3) { responses[request3] = $0 }
         XCTAssertTrue(responses.isEmpty)
         
-        scheduler.advance(to: .init(.now().advanced(by: .seconds(1))))
+        scheduler.advance(by: .seconds(1))
         spy.complete(with: [request1: response1, request2: response2, request3: response3])
         
         XCTAssertNoDiff(responses, [request1: response1, request2: response2, request3: response3])

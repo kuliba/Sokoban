@@ -39,34 +39,11 @@ extension UtilityPrepaymentFlowEvent {
         case addCompany
     }
     
-    enum Select {
-        
-        case lastPayment(LastPayment)
-        case `operator`(Operator)
-        case oneOf(Service, for: Operator)
-        case singleService(Service, for: Operator)
-    }
+    typealias Select = InitiateAnywayPaymentDomain.Select
+    typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
     
-    typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
-    
-    enum ProcessSelectionSuccess {
-        
-        case services(MultiElementArray<Service>, for: Operator)
-        case startPayment(AnywayTransactionState.Transaction)
-    }
-    
-    enum ProcessSelectionFailure: Error {
-        
-        case operatorFailure(Operator)
-        case serviceFailure(ServiceFailure)
-        
-#warning("extract…")
-        enum ServiceFailure: Error, Hashable {
-            
-            case connectivityError
-            case serverError(String)
-        }
-    }
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, OperatorServices, AnywayTransactionState.Transaction>
 }
 
 extension UtilityPrepaymentFlowEvent.Initiated: Equatable where LastPayment: Equatable, Operator: Equatable {
@@ -97,7 +74,4 @@ extension UtilityPrepaymentFlowEvent.Initiated {
 }
 
 extension UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
-extension UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
-extension UtilityPrepaymentFlowEvent.ProcessSelectionSuccess: Equatable where Operator: Equatable, Service: Equatable {}
-extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure: Equatable where Operator: Equatable {}
 extension UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
