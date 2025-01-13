@@ -1,0 +1,90 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "qrcId": "AS10006QJQ2789N79JVP19G0KEK4LSGU",
+        "parameters": [{
+            "type": "HEADER",
+            "id": "title",
+            "value": "Оплата по QR-коду"
+        },
+            {
+                "type": "PRODUCT_SELECT",
+                "id": "debit_account",
+                "value": null,
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "brandName",
+                "value": "Кофейня у Артема",
+                "title": "Получатель",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "c896aba73a67de2bfc69de70209eb3f3"
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "paymentPurpose",
+                "value": "Букет цветов (paymentPurpos)",
+                "title": "Назначение платежа",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "amount",
+                "value": "10 000 ₽",
+                "title": "Сумма",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "recipientBank",
+                "value": "Сбер",
+                "title": "Банк получателя",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "c896aba73a67de2bfc69de70209eb3f3"
+                }
+            },
+            {
+                "type": "CHECK",
+                "id": "terms_check",
+                "value": true,
+                "link": {
+                    "title": "Включить переводы через СБП,",
+                    "subtitle": "принять условия обслуживания",
+                    "url": "https://www.vortex.ru/dkbo/dkbo.pdf"
+                }
+            },
+            {
+                "type": "BUTTON",
+                "id": "button_pay",
+                "value": "Оплатить",
+                "action": "PAY",
+                "color": "RED",
+                "placement": "BOTTOM"
+            },
+            {
+                "type": "ICON",
+                "id": "sfp_logo",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            }
+        ],
+        "required": ["debit_account"]
+    }
+}
