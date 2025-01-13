@@ -135,21 +135,36 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: SelectedCategoryNavigation.Destination
+        destination: SelectedCategoryNavigation.PaymentFlow
     ) -> some View {
         
         switch destination {
-        case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case let .mobile(mobile):
-                components.makePaymentsView(mobile.paymentsViewModel)
+        case let .mobile(mobile):
+            components.makePaymentsView(mobile.paymentsViewModel)
+            
+        case .qr:
+            EmptyView()
+            
+        case let .standard(standard):
+            switch standard {
+            case let .destination(destination):
+                switch destination {
+                case let .failure(binder):
+                    components.serviceCategoryFailureView(binder: binder)
+                    
+                case let .success(binder):
+                    makePaymentProviderPickerView(binder)
+                }
                 
-            case let .taxAndStateServices(wrapper):
-                components.makePaymentsView( wrapper.paymentsViewModel)
-                
-            case let .transport(transport):
-                transportPaymentsView(transport)
+            case .category:
+                EmptyView()
             }
+            
+        case let .taxAndStateServices(wrapper):
+            components.makePaymentsView( wrapper.paymentsViewModel)
+            
+        case let .transport(transport):
+            transportPaymentsView(transport)
         }
     }
 }

@@ -60,11 +60,20 @@ extension RootViewModelFactory {
                 
             case .manualSearch:
                 completion(.categoryPicker(
-                    makeCategoryPickerSection(.init(
-                        loadCategories: getServiceCategoriesWithoutQR,
-                        reloadCategories: { $0(nil) },
-                        loadAllLatest: { $0(nil) }
-                    ))
+                    makeCategoryPickerSection(
+                        nanoServices: .init(
+                            loadCategories: getServiceCategoriesWithoutQR,
+                            reloadCategories: { $0(nil) },
+                            loadAllLatest: { $0(nil) }
+                        ),
+                        makeStandard: { [weak self] category, completion in
+                            
+                            self?.handleSelectedServiceCategory(category) {
+                                
+                                completion(.destination($0))
+                            }
+                        }
+                    )
                 ))
                 
             case .scanQR:

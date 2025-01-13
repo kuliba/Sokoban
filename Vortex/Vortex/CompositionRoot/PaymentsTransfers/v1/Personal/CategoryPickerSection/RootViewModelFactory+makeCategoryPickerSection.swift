@@ -16,16 +16,19 @@ protocol ReloadableCategoryPicker: CategoryPicker {
 extension CategoryPickerSectionDomain.Binder: ReloadableCategoryPicker {
     
     func reload() {
-         
+        
         content.event(.reload)
     }
 }
 
 extension RootViewModelFactory {
     
+    typealias MakeStandard = (ServiceCategory, @escaping (SelectedCategoryNavigation.Standard) -> Void) -> Void
+    
     @inlinable
     func makeCategoryPickerSection(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
+        nanoServices: PaymentsTransfersPersonalNanoServices,
+        makeStandard: @escaping MakeStandard
     ) -> ReloadableCategoryPicker {
         
         let content = makeContent(nanoServices)
@@ -33,7 +36,7 @@ extension RootViewModelFactory {
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation,
+            getNavigation: getNavigation(makeStandard: makeStandard),
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
@@ -85,24 +88,31 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select: CategoryPickerSectionDomain.Select,
-        notify: @escaping CategoryPickerSectionDomain.Notify,
-        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
-    ) {
+        makeStandard: @escaping MakeStandard
+    ) -> (
+        CategoryPickerSectionDomain.Select,
+        @escaping CategoryPickerSectionDomain.Notify,
+        @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) -> Void {
+        
         let composer = SelectedCategoryGetNavigationComposer(
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
+                makeStandard: makeStandard,
                 makeTax: makeTaxPayment,
                 makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
         
-        composer.getNavigation(select, notify) {
+        return { select, notify, completion in
             
-            completion($0)
-            _ = composer
+            composer.getNavigation(select, notify) {
+                
+                completion($0)
+                _ = composer
+            }
         }
     }
 }

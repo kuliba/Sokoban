@@ -156,8 +156,11 @@ private extension FlowState<SelectedCategoryNavigation> {
             case .qr(()):
                 return .scanQR
                 
-            case let .standard(category):
+            case let .standard(.category(category)):
                 return .standardPayment(category.type)
+                
+            case .standard(.destination):
+                return nil
             }
             
         default:
