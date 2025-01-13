@@ -71,11 +71,11 @@ extension AnywayTransactionComposer {
         else { return nil }
 
         switch payload {
-        case let .lastPayment(lastPayment):
+        case let .payment(payload):
             return makeTransaction(
                 update: update,
                 product: product,
-                lastPayment: lastPayment
+                payload: payload
             )
                         
         case let .oneOf(utilityService, `operator`):
@@ -102,11 +102,11 @@ private extension AnywayTransactionComposer {
     func makeTransaction(
         update: AnywayPaymentUpdate,
         product: AnywayPaymentOutline.Product,
-        lastPayment: UtilityPaymentLastPayment
+        payload: LatestOutlinePayload
     ) -> AnywayTransactionState.Transaction? {
         
         let outline = AnywayPaymentOutline(
-            latestServicePayment: lastPayment,
+            payload: payload,
             product: product
         )
         let context = AnywayPaymentContext(
@@ -298,24 +298,18 @@ extension AnywayPaymentContext {
 extension AnywayPaymentOutline {
     
     init(
-        latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment,
+        payload: LatestOutlinePayload,
         product: AnywayPaymentOutline.Product
     ) {
-        let pairs = latest.additionalItems.map {
-            
-            ($0.fieldName, $0.fieldValue)
-        }
-        let fields = Dictionary(uniqueKeysWithValues: pairs)
-        
         self.init(
             amount: nil,
             product: product,
-            fields: fields,
+            fields: payload.fields,
             payload: .init(
-                puref: latest.puref,
-                title: latest.name,
+                puref: payload.puref,
+                title: payload.name,
                 subtitle: nil,
-                icon: latest.md5Hash
+                icon: payload.md5Hash
             )
         )
     }

@@ -13,6 +13,5 @@ extension GetShowcaseDomain {
         
         case load
         case loaded(Result)
-        case productTap(String)
     }
 }

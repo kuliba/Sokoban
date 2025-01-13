@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 01.10.2024.
 //
 
+import Combine
 import PayHubUI
 
 protocol ReloadableCategoryPicker: CategoryPicker {
@@ -27,11 +28,25 @@ extension RootViewModelFactory {
         _ nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> ReloadableCategoryPicker {
         
-        return compose(
+        let content = makeContent(nanoServices)
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
             getNavigation: getNavigation,
-            content: makeContent(nanoServices),
-            witnesses: witnesses()
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+    
+    @inlinable
+    func delayProvider(
+        navigation: CategoryPickerSectionDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .failure:     return .milliseconds(100)
+        case .paymentFlow: return settings.delay
+        }
     }
     
     @inlinable
@@ -49,12 +64,20 @@ extension RootViewModelFactory {
         )
     }
     
-    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
+    @inlinable
+    func emitting(
+        content: CategoryPickerSectionDomain.Content
+    ) -> some Publisher<FlowEvent<CategoryPickerSectionDomain.Select, Never>, Never> {
         
-        return .init(
-            emitting: { $0.$state.compactMap(\.selected) },
-            dismissing: { content in { content.event(.select(nil)) }}
-        )
+        content.$state.compactMap(\.selected).map(FlowEvent.select)
+    }
+    
+    @inlinable
+    func dismissing(
+        content: CategoryPickerSectionDomain.Content
+    ) -> () -> Void {
+        
+        return { content.event(.select(nil)) }
     }
 }
 

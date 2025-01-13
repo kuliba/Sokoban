@@ -292,7 +292,7 @@ extension PaymentProviderPickerDomain.Flow {
     ) {
         switch event {
         case .addCompany:
-            self.event(.select(.chat))
+            self.event(.select(.outside(.chat)))
             
         case .payByInstruction:
             self.event(.select(.detailPayment))
@@ -312,66 +312,7 @@ extension PaymentProviderPickerDomain.Flow {
     }
 }
 
-extension Latest {
-    
-    var amount: Decimal? {
-        
-        switch self {
-        case let .service(service):
-            return service.amount
-            
-        case let .withPhone(withPhone):
-            return withPhone.amount
-        }
-    }
-    
-    var md5Hash: String? {
-        
-        switch self {
-        case let .service(service):
-            return service.md5Hash
-            
-        case let .withPhone(withPhone):
-            return withPhone.md5Hash
-        }
-    }
-    
-    var puref: String {
-        
-        switch self {
-        case let .service(service):
-            return service.puref
-            
-        case let .withPhone(withPhone):
-            return withPhone.puref
-        }
-    }
-    
-    var type: String {
-        
-        switch self {
-        case let .service(service):
-            return service.type.rawValue
-            
-        case let .withPhone(withPhone):
-            return withPhone.type.rawValue
-        }
-    }
-}
-
-extension Latest: Named {
-    
-    public var name: String {
-        
-        switch self {
-        case let .service(service):
-            return service.name ?? String(describing: service)
-            
-        case let .withPhone(withPhone):
-            return withPhone.name ?? String(describing: withPhone)
-        }
-    }
-}
+extension Latest: Named {}
 
 extension ServiceCategory: Named {}
 

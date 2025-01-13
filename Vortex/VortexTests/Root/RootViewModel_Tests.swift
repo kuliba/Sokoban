@@ -55,7 +55,7 @@ class RootViewModel_Tests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .preview,
-                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanLandingBinder: { .preview },
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,
@@ -134,24 +134,33 @@ class RootViewModel_Tests: XCTestCase {
         
         try sut.tapLegacyPaymentsSectionQRButton()
     }
+}
+
+private extension GetShowcaseDomain.Binder {
     
-    private func makeCollateralLoanLandingViewModel() -> GetShowcaseDomain.ViewModel {
-        
-        .init(
-            initialState: .init(),
-            reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
-            handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
-        )
-    }
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
     
-    // MARK: Helpers
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
     
-    private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
-        image: .init(systemName: "car"),
-        publisher: Just(.init(systemName: "house"))
-            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
-            .eraseToAnyPublisher()
-    )}
+    static let preview = GetShowcaseDomain.Content(
+        initialState: .init(),
+        reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
+        handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+    )
 }
 
 // MARK: - DSL

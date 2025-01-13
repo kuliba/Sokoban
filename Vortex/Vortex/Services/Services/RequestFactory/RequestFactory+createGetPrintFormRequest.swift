@@ -11,7 +11,7 @@ import Tagged
 extension RequestFactory {
     
     static func createGetPrintFormRequest(
-        printFormType: PrintFormType
+        printFormType: String
     ) -> (DocumentID) throws -> URLRequest {
         
         return { documentID in
@@ -25,16 +25,10 @@ extension RequestFactory {
             request.httpMethod = "POST"
             request.httpBody = try JSONSerialization.data(withJSONObject: [
                 "paymentOperationDetailId": "\(documentID.rawValue)",
-                "printFormType": "\(printFormType.rawValue)"
+                "printFormType": "\(printFormType)"
             ] as [String: String])
             
             return request
         }
-    }
-    
-    enum PrintFormType: String {
-        
-        case sticker = "sticker"
-        case service = "housingAndCommunalService"
     }
 }

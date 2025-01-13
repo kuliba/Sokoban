@@ -9,7 +9,8 @@ extension RootViewModelFactory {
     
     typealias PrepaymentSelect = InitiateAnywayPaymentDomain.Select
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
-    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, AnywayTransactionState.Transaction>
+    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
+    typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, OperatorServices, AnywayTransactionState.Transaction>
     
     @inlinable
     func processSelection(
@@ -42,5 +43,37 @@ extension RootViewModelFactory {
         let processSelection = microComposer.compose().processSelection
         
         processSelection(select.0) { completion($0); _ = microComposer }
+    }
+    
+    func processSelection(
+        select: PrepaymentSelect,
+        completion: @escaping (ProcessSelectionResult) -> Void
+    ) {
+        let nanoComposer = UtilityPaymentNanoServicesComposer(
+            model: model,
+            httpClient: httpClient,
+            log: logger.log(level:category:message:file:line:),
+            loadOperators: { $1([]) } // not used in this case of ...!!!!!!!
+        )
+        let composer = AnywayTransactionComposer(
+            model: model,
+            validator: .init()
+        )
+        let servicesComposer = PaymentsServicesViewModelComposer(
+            model: model
+        )
+        let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
+            composer: composer,
+            nanoServices: nanoComposer.compose(),
+            makeLegacyPaymentsServicesViewModel: {
+                
+                // also not used
+                return servicesComposer.compose(payload: $0)
+            }
+        )
+        
+        let processSelection = microComposer.compose().processSelection
+        
+        processSelection(select) { completion($0); _ = microComposer }
     }
 }

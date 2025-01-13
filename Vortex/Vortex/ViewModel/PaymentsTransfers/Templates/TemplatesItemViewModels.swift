@@ -122,9 +122,11 @@ extension TemplatesListViewModel {
         }
         
         enum Avatar {
+            
             case image(Image)
-            case text(String)
+            case md5Hash(AnyPublisher<Image, Never>)
             case placeholder
+            case text(String)
             
             var isPlaceholder: Bool {
                 if case .placeholder = self {
@@ -194,7 +196,7 @@ extension TemplatesListViewModel {
                 self.style = style
                 self.maxCount = maxCount
             }
-
+            
             var height: CGFloat {
                 
                 switch style {
@@ -232,73 +234,94 @@ extension TemplatesListViewModel {
 //Reduce
 extension TemplatesListViewModel {
     
-    func getItemViewModel(with data: PaymentTemplateData, model: Model) -> ItemViewModel? {
+    func getItemViewModel(
+        with data: PaymentTemplateData,
+        model: Model
+    ) -> ItemViewModel? {
         
-        guard let amount = amount(for: data,
-                                  amountFormatted: model.amountFormatted(amount:currencyCode:style:))
+        guard let amount = amount(
+            for: data,
+            amountFormatted: model.amountFormatted(amount:currencyCode:style:)
+        )
         else { return nil }
         
         var avatar: ItemViewModel.Avatar = .placeholder
         var topImage: Image? = nil
         
         var mainImage: Image? = nil
-        if let imgData = model.images.value["Template\(data.id)"],
-           let img = imgData.image {
+        if data.svgImage != nil,
+           let image = model.images.value["Template\(data.id)"]?.image {
             
-            mainImage = img
-        }
-        
-        if let phoneNumber = getPhoneNumber(for: data),
-           let contact = model.contact(for: phoneNumber),
-           let img = contact.avatar?.image {
-           
-                avatar = .image(img)
-                topImage = mainImage
+            mainImage = image
             
-        } else {
+        } else if let md5hash = data.md5hash {
             
-            if let img = mainImage {
+            if let imgData = model.images.value[md5hash],
+               let image = imgData.image {
                 
-                avatar = .image(img)
+                mainImage = image
+            } else {
+                let publisher = model.imageCache()
+                    .image(forKey: .init(md5hash))
+                    .eraseToAnyPublisher()
+                avatar = .md5Hash(publisher)
             }
         }
         
-        return .init(id: data.paymentTemplateId,
-                     sortOrder: data.sort,
-                     avatar: avatar,
-                     title: data.name,
-                     subTitle: data.groupName,
-                     topImage: topImage,
-                     amount: amount,
-                     tapAction: { [weak self] itemId in
-                        self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
-                     deleteAction: { [weak self] itemId in
-                        self?.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId)) },
-                     renameAction: { [weak self] itemId in
-                        self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: itemId)) })
+        if let mainImage {
+            
+            avatar = .image(mainImage)
+        }
+
+        if let phoneNumber = getPhoneNumber(for: data),
+           let contact = model.contact(for: phoneNumber),
+           let img = contact.avatar?.image {
+            
+            avatar = .image(img)
+            topImage = mainImage
+        }
+        
+        return .init(
+            id: data.paymentTemplateId,
+            sortOrder: data.sort,
+            avatar: avatar,
+            title: data.name,
+            subTitle: data.groupName,
+            topImage: topImage,
+            amount: amount,
+            tapAction: { [weak self] itemId in
+                
+                self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
+            deleteAction: { [weak self] itemId in
+                
+                self?.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId)) },
+            renameAction: { [weak self] itemId in
+                
+                self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: itemId)) }
+        )
     }
     
     func getItemAddNewTemplateModel() -> ItemViewModel {
         
-        return ItemViewModel(id: Int.max,
-                             sortOrder: Int.max,
-                             avatar: .image(.ic40Star),
-                             title: "Добавить шаблон",
-                             subTitle: "Из любой успешной операции в разделе «История»",
-                             tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
-                             kind: .add)
+        return ItemViewModel(
+            id: Int.max,
+            sortOrder: Int.max,
+            avatar: .image(.ic40Star),
+            title: "Добавить шаблон",
+            subTitle: "Из любой успешной операции в разделе «История»",
+            tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
+            kind: .add)
     }
     
     func getItemsMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
-            
+        
         [
             .init(icon: .ic32Trash, subTitle: "Удалить", action: { [weak self] id in
                 self?.action.send(TemplatesListViewModelAction.Item.Delete(itemId: id)) }),
             
                 .init(icon: .ic32Edit2, subTitle: "Переименовать", action: { [weak self] id in
-                self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: id)) })
-            ]
-
+                    self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: id)) })
+        ]
     }
     
     class DeletingTimer {
@@ -306,58 +329,21 @@ extension TemplatesListViewModel {
         let timerPublisher = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         let startDate = Date()
         let maxCount = 5
-
+        
         deinit {
-
+            
             timerPublisher.upstream.connect().cancel()
         }
     }
     
-    func getPhoneNumber(for data: PaymentTemplateData) -> String? {
+    func getPhoneNumber(
+        for data: PaymentTemplateData
+    ) -> String? {
         
-        let phone: String? = {
-            switch data.type {
-            case .mobile:
-                
-                guard let parameterList = data.parameterList.first as? TransferAnywayData,
-                      let phoneField = parameterList.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
-                else { return nil }
-                
-                return phoneField.fieldvalue
-                
-            case .sfp:
-                
-                guard let parameterList = data.parameterList.first as? TransferAnywayData,
-                      let phoneField = parameterList.additional.first(where: { $0.fieldname == "RecipientID" })
-                else { return nil }
-                
-                return phoneField.fieldvalue
-                
-            case .byPhone:
-                
-                guard let transfer = data.parameterList.first as? TransferGeneralData,
-                      let phoneNumber = transfer.payeeInternal?.phoneNumber
-                else { return nil }
-                
-                return phoneNumber
-                
-            case .direct, .newDirect:
-                
-                guard let parameterList = data.parameterList.first as? TransferAnywayData,
-                      let phoneField = parameterList.additional.first(where: { $0.fieldname == "RECP" })
-                else { return nil }
-                
-                return phoneField.fieldvalue
-                
-            default: return nil
-            }
-        }()
+        guard let phone = data.correctedPhoneNumber else { return nil }
         
-        if let phone {
-            return PhoneNumberKitFormater().format( phone.count == 10 ? "7\(phone)" : phone)
-        } else {
-            return nil
-        }
+        let formatter = PhoneNumberKitFormater()
+        return formatter.format(phone)
     }
     
     func amount(for template: PaymentTemplateData,
@@ -404,5 +390,55 @@ extension TemplatesListViewModel {
             }
         }
     }
-  
+}
+
+// MARK: - Helpers
+
+extension PaymentTemplateData {
+    
+    var correctedPhoneNumber: String? {
+        
+        guard let phone = rawPhoneNumber else { return nil }
+        
+        return phone.count == 10 ? "7\(phone)" : phone
+    }
+    
+    var rawPhoneNumber: String? {
+        
+        switch type {
+        case .mobile:
+            
+            guard let parameterList = parameterList.first as? TransferAnywayData,
+                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
+            else { return nil }
+            
+            return phoneField.fieldvalue
+            
+        case .sfp:
+            
+            guard let parameterList = parameterList.first as? TransferAnywayData,
+                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "RecipientID" })
+            else { return nil }
+            
+            return phoneField.fieldvalue
+            
+        case .byPhone:
+            
+            guard let transfer = parameterList.first as? TransferGeneralData,
+                  let phoneNumber = transfer.payeeInternal?.phoneNumber
+            else { return nil }
+            
+            return phoneNumber
+            
+        case .direct, .newDirect:
+            
+            guard let parameterList = parameterList.first as? TransferAnywayData,
+                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "RECP" })
+            else { return nil }
+            
+            return phoneField.fieldvalue
+            
+        default: return nil
+        }
+    }
 }

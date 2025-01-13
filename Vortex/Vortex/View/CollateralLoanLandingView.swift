@@ -11,8 +11,9 @@ import RxViewModel
 
 struct CollateralLoanLandingView: View {
     
-    private let viewModel: GetShowcaseDomain.ViewModel
-    private let factory: Factory
+    @Environment(\.openURL) var openURL
+
+    let binder: GetShowcaseDomain.Binder
     
     init(
         viewModel: GetShowcaseDomain.ViewModel,
@@ -24,7 +25,17 @@ struct CollateralLoanLandingView: View {
     
     var body: some View {
     
-        RxWrapperView(model: viewModel, makeContentView: content(state:event:))
+        RxWrapperView(model: binder.flow) { state, event in
+            
+            RxWrapperView(
+                model: binder.content,
+                makeContentView: content(state:event:)
+            )
+            .navigationDestination(
+                destination: state.navigation,
+                content: destinationView
+            )
+        }
     }
     
     private func content(
@@ -33,17 +44,58 @@ struct CollateralLoanLandingView: View {
     ) -> some View {
         
         Group {
+            
             switch state.showcase {
             case .none:
                 SpinnerView(viewModel: .init())
                 
             case let .some(showcase):
-                CollateralLoanLandingGetShowcaseView(data: showcase, factory: factory)
+                CollateralLoanLandingGetShowcaseView(
+                    data: showcase,
+                    event: {
+                        switch $0 {
+                        case let .showLanding(landingId):
+                            binder.flow.event(.select(.landing(landingId)))
+                            
+                        case let .showTerms(urlString):
+                            if let url = URL(string: urlString) {
+                                openURL(url)
+                            }
+                        }
+                    }
+                )
             }
         }
         .onFirstAppear { event(.load) }
     }
     
+    @ViewBuilder
+    private func destinationView(
+        navigation: Domain.Navigation
+    ) -> some View {
+        
+        switch navigation {
+        case let .landing(landingId):
+            Text(landingId)
+        }
+    }
+    
     typealias Domain = GetShowcaseDomain
     typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+}
+
+extension GetShowcaseDomain.Navigation: Identifiable {
+
+    var id: ID {
+        
+        switch self {
+        case let .landing(landingId):
+            return .landing(landingId)
+        }
+    }
+    
+    enum ID: Hashable {
+     
+        case landing(String)
+    }
 }

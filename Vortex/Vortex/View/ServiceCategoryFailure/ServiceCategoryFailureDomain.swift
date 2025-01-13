@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 09.12.2024.
 //
 
-import PayHub
-
 /// A namespace.
 enum ServiceCategoryFailureDomain {}
 
@@ -14,8 +12,8 @@ extension ServiceCategoryFailureDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = PayHub.BinderComposer
+    typealias Binder = Vortex.Binder<Content, Flow>
+    typealias BinderComposer = Vortex.BinderComposer
     
     // MARK: - Content
     
@@ -23,7 +21,7 @@ extension ServiceCategoryFailureDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias Notify = FlowDomain.Notify

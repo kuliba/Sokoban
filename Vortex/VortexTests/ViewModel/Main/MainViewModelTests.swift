@@ -139,7 +139,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingBinder: { .preview },
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -732,7 +732,7 @@ final class MainViewModelTests: XCTestCase {
     // MARK: - Helpers
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
-    private typealias ShowcaseSpy = CallSpy<Void, GetShowcaseDomain.ViewModel>
+    private typealias ShowcaseSpy = CallSpy<Void, GetShowcaseDomain.Binder>
     
     private func makeSUT(
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
@@ -767,7 +767,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeCollateralLoanLandingViewModel: showcaseSpy.call,
+            makeCollateralLoanLandingBinder: showcaseSpy.call,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -896,7 +896,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingBinder: { .preview },
             makeOpenNewProductButtons: { _ in buttons }
         )
         
@@ -939,7 +939,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingBinder: { .preview },
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -951,15 +951,6 @@ final class MainViewModelTests: XCTestCase {
         return (sut, model)
     }
     
-    private func makeCollateralLoanLandingViewModel() -> GetShowcaseDomain.ViewModel {
-        
-        .init(
-            initialState: .init(),
-            reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
-            handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
-        )
-    }
-
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = ProductCarouselView.StickerViewModel
     
@@ -1010,7 +1001,7 @@ final class MainViewModelTests: XCTestCase {
             onRegister: {},
             sections: makeSections(),
             bannersBinder: .preview,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanLandingBinder: { .preview },
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -1119,6 +1110,33 @@ private func anySberQRError() -> MainViewModelTests.SberQRError {
     .createRequest(anyError("SberQRPayment Failure"))
 }
 
+private extension GetShowcaseDomain.Binder {
+    
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview: GetShowcaseDomain.Content = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
 // MARK: - DSL
 
 private extension MainViewModel {
@@ -1168,17 +1186,6 @@ private extension MainViewModel {
         switch route.destination {
         case let .landing(landingViewModel, _):
             return landingViewModel
-            
-        default:
-            return nil
-        }
-    }
-
-    var getShowcaseDomainViewModel: GetShowcaseDomain.ViewModel? {
-        
-        switch route.destination {
-        case let .collateralLoanLanding(viewModel):
-            return viewModel
             
         default:
             return nil

@@ -24,14 +24,16 @@ typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandler
 
 typealias AnywayTransactionStatus = AnywayPaymentUI.AnywayStatus<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionReport = AnywayPaymentUI.Report<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
-typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails<RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>>
+typealias _OperationInfo = OperationInfo<OperationDetailInfo, OperationDetails<RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>>
 
 enum DocumentStatus {
     
     case completed, inflight, rejected
 }
 
+typealias OperationDetailInfo = AnywayPaymentUI.OperationDetailInfo
 typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
+typealias OperationDetailPrintFormType = AnywayPaymentUI.OperationDetailPrintFormType
 
 struct AnywayCompleted: Equatable {
     

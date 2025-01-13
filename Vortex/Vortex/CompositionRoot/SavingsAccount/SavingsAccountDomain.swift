@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import PayHub
-import PayHubUI
 import RemoteServices
 import RxViewModel
 import SavingsAccount
@@ -42,7 +40,7 @@ extension SavingsAccountDomain {
     
     // MARK: - Binder
     
-    typealias BinderDomain = PayHub.BinderDomain<Content, Select, Navigation>
+    typealias BinderDomain = Vortex.BinderDomain<Content, Select, Navigation>
     typealias Binder = BinderDomain.Binder
         
     // MARK: - Flow

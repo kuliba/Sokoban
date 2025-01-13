@@ -14,10 +14,7 @@ struct BinderComposerPreviewApp: App {
         
         WindowGroup {
             
-            NavigationView {
-                
-                ContentView()
-            }
+            ContentView()
         }
     }
 }

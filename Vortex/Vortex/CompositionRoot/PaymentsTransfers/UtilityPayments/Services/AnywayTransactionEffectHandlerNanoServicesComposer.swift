@@ -308,7 +308,7 @@ private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
     
     var response: AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
         
-        .init(status: self.status, detailID: operationDetailID)
+        .init(status: self.status, detailID: operationDetailID, printForm: "")
     }
 }
 

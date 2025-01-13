@@ -8,13 +8,22 @@
 import SwiftUI
 
 public struct CollateralLoanLandingGetShowcaseView: View {
+        
+    private let data: Data
+    private let event: (GetShowcaseViewEvent.External) -> Void
+    private let config: Config
+    private let theme: Theme
     
-    private let data: CollateralLoanLandingGetShowcaseData
-    private let factory: Factory
-
-    public init(data: Data, factory: Factory) {
+    public init(
+        data: Data,
+        event: @escaping (GetShowcaseViewEvent.External) -> Void,
+        config: Config = .base,
+        theme: Theme = .white
+    ) {
         self.data = data
-        self.factory = factory
+        self.event = event
+        self.config = config
+        self.theme = theme
     }
     
     public var body: some View {
@@ -22,14 +31,33 @@ public struct CollateralLoanLandingGetShowcaseView: View {
         ScrollView(showsIndicators: false) {
             
             ForEach(data.products, id: \.landingId) {
-                factory.makeView(with: $0)
+                
+                CollateralLoanLandingGetShowcaseProductView(
+                    product: $0,
+                    event: event,
+                    config: config
+                )
             }
         }
     }
 }
 
-extension CollateralLoanLandingGetShowcaseView {
+public enum GetShowcaseViewEvent: Equatable {
     
-    public typealias Data = CollateralLoanLandingGetShowcaseData
-    public typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    case domainEvent(GetShowcaseDomain.Event)
+    case external(External)
+    
+    public enum External: Equatable {
+        
+        case showTerms(String)
+        case showLanding(String)
+    }
+}
+
+public extension CollateralLoanLandingGetShowcaseView {
+    
+    typealias Data = CollateralLoanLandingGetShowcaseData
+    typealias Config = CollateralLoanLandingGetShowcaseViewConfig
+    typealias Theme = CollateralLoanLandingGetShowcaseTheme
+    typealias Event = GetShowcaseDomain.Event
 }

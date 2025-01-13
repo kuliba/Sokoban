@@ -8,7 +8,7 @@
 enum TemplatesListFlowEvent<PaymentFlow> {
     
     case dismiss(Dismiss)
-    case flow(FlowEvent)
+    case flow(DismissAndTabFlowEvent)
     case payment(PaymentResult)
     case select(Select)
 }

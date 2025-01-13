@@ -6,7 +6,7 @@
 //
 
 import Combine
-import PayHub
+import FlowCore
 import PayHubUI
 import XCTest
 
@@ -111,7 +111,6 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
-        delay: SUT.Delay = .milliseconds(100),
         dismiss: @escaping () -> Void = {},
         bindOutside: @escaping (Domain.Content, Domain.Flow) -> Set<AnyCancellable> = { _,_ in [] },
         reset: @escaping () -> Void = {},
@@ -126,14 +125,13 @@ final class RootViewBinderComposerTests: XCTestCase {
         
         let sut = SUT(
             bindings: bindings,
-            delay: delay,
             dismiss: dismiss,
             getNavigation: { select, notify, completion in
                 
                 completion(navigation ?? self.makeNavigation())
             },
             bindOutside: bindOutside,
-            schedulers: .immediate,
+            scheduler: .immediate,
             witnesses: .init(
                 content: .init(
                     emitting: { $0.publisher },
@@ -161,7 +159,7 @@ final class RootViewBinderComposerTests: XCTestCase {
     
     private final class RootViewModel {
         
-        typealias NotifyEvent = PayHub.FlowEvent<Select, Never>
+        typealias NotifyEvent = FlowEvent<Select, Never>
         
         private let selectSubject = PassthroughSubject<NotifyEvent, Never>()
         private(set) var dismissCount = 0
