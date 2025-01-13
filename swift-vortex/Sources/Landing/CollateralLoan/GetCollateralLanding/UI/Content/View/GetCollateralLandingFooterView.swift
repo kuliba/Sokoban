@@ -10,7 +10,7 @@ import SwiftUI
 struct GetCollateralLandingFooterView: View {
     
     let config: Config.Footer
-    let state: GetCollateralLandingState
+    let state: State
     let event: (Event) -> Void
 
     var body: some View {
@@ -37,7 +37,8 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias Event = GetCollateralLandingEvent
+    typealias Event = GetCollateralLandingDomain.Event
+    typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews

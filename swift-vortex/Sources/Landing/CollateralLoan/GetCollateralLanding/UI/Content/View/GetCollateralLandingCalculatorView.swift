@@ -14,9 +14,9 @@ struct GetCollateralLandingCalculatorView: View {
     @State private var toggleIsOn = false
     @State private var sliderCurrentValue: Double = 6.0
     
+    let state: GetCollateralLandingDomain.State
     let config: Config
     let event: (Event) -> Void
-    let state: GetCollateralLandingState
 
     var body: some View {
         
@@ -345,7 +345,7 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias Event = GetCollateralLandingEvent
+    typealias Event = GetCollateralLandingDomain.Event
 }
 
 // MARK: - Previews
@@ -355,9 +355,9 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
     static var previews: some View {
         
         GetCollateralLandingCalculatorView(
+            state: .init(product: .carStub),
             config: .default,
-            event: { print($0) },
-            state: .init(product: .carStub)
+            event: { print($0) }
         )
     }
 }

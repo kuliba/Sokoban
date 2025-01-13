@@ -1,5 +1,5 @@
 //
-//  GetCollateralLandingState.swift
+//  GetCollateralLandingDomain+State.swift
 //
 //
 //  Created by Valentin Ozerov on 12.12.2024.
@@ -7,13 +7,16 @@
 
 import Foundation
 
-public struct GetCollateralLandingState: Equatable {
+extension GetCollateralLandingDomain {
     
-    var bottomSheet: BottomSheet?
-    let product: Product
+    public struct State: Equatable {
+        
+        var bottomSheet: BottomSheet?
+        let product: Product
+    }
 }
 
-extension GetCollateralLandingState {
+extension GetCollateralLandingDomain.State {
 
     public struct BottomSheet: Equatable, Identifiable {
         
@@ -36,7 +39,7 @@ extension GetCollateralLandingState {
     }
 }
 
-public extension GetCollateralLandingState {
+public extension GetCollateralLandingDomain.State {
     
     typealias Product = GetCollateralLandingProduct
     typealias Period = GetCollateralLandingProduct.Calc.Rate
