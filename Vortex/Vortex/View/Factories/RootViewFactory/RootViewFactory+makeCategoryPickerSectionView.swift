@@ -36,7 +36,7 @@ extension RootViewFactory {
     /// Renders `Category Picker` without header,
     @ViewBuilder
     func makeCategoryPickerView(
-        categoryPicker: CategoryPicker
+        _ categoryPicker: CategoryPicker
     ) -> some View {
         
         if let binder = categoryPicker.sectionBinder {

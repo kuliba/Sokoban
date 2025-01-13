@@ -99,6 +99,10 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        composer.getNavigation(select, notify, completion)
+        composer.getNavigation(select, notify) {
+            
+            completion($0)
+            _ = composer
+        }
     }
 }

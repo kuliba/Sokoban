@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.01.2025.
 //
 
+import PayHubUI
 import RxViewModel
 import SwiftUI
 
@@ -74,8 +75,8 @@ extension QRMappingFailureDomain.Navigation {
         case let .detailPayment(node):
             return .detailPayment(node.model)
             
-        case let .manualSearch(text):
-            return .manualSearch(text)
+        case let .categoryPicker(binder):
+            return .categoryPicker(binder)
             
         case .scanQR:
             return nil
@@ -84,7 +85,7 @@ extension QRMappingFailureDomain.Navigation {
     
     enum Destination {
         
-        case manualSearch(String)
+        case categoryPicker(CategoryPicker)
         case detailPayment(PaymentsViewModel)
     }
 }
@@ -94,8 +95,8 @@ extension QRMappingFailureDomain.Navigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case .manualSearch:  
-            return .manualSearch
+        case .categoryPicker:
+            return .categoryPicker
             
         case let .detailPayment(detailPayment):
             return .detailPayment(.init(detailPayment))
@@ -104,7 +105,7 @@ extension QRMappingFailureDomain.Navigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
-        case manualSearch
+        case categoryPicker
         case detailPayment(ObjectIdentifier)
     }
 }

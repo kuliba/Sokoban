@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 13.01.2025.
 //
 
+import PayHubUI
+
 /// A namespace.
 enum QRMappingFailureDomain {}
 
@@ -39,7 +41,7 @@ extension QRMappingFailureDomain {
         
         case back
         case detailPayment(Node<PaymentsViewModel>)
-        case manualSearch(String)
+        case categoryPicker(CategoryPicker)
         case scanQR
     }
 }

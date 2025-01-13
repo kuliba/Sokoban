@@ -30,7 +30,21 @@ extension RootViewModelFactory {
             
             guard let model else { return }
             
+            // TODO: replace with reading from ephemeral store/local load
             completion(model.loadServiceCategory(ofType: type).map(\.type))
+        }
+    }
+    
+    @inlinable
+    func getServiceCategories(
+        completion: @escaping ([ServiceCategory]) -> Void
+    ) {
+        schedulers.interactive.schedule { [weak model] in
+            
+            guard let model else { return }
+            
+            // TODO: replace with reading from ephemeral store/local load
+            completion(model.loadServiceCategories() ?? [])
         }
     }
 }

@@ -41,6 +41,7 @@ struct QRWrapperViewFactory {
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
     let paymentsViewFactory: PaymentsViewFactory
+    let rootViewFactory: RootViewFactory
     
     typealias MakeOperatorView = (InternetTVDetailsViewModel) -> InternetTVDetailsView
 }
@@ -55,13 +56,25 @@ extension QRWrapperViewFactory {
             
             switch destination {
             case let .detailPayment(viewModel):
+                // TODO: - replace with factory call
                 PaymentsView(
                     viewModel: viewModel,
                     viewFactory: paymentsViewFactory
                 )
                 
-            case let .manualSearch(text):
-                Text("TBD: Category Picker \(text.utf8)")
+            case let .categoryPicker(categoryPicker):
+                rootViewFactory.makeCategoryPickerView(categoryPicker)
+                    .onFirstAppear {
+                        
+                        categoryPicker.sectionBinder?.content.event(.load)
+                    }
+                    .navigationBarWithBack(
+                        title: "Оплатить",
+                        dismiss: { binder.flow.event(.dismiss) },
+                        rightItem: .barcodeScanner(
+                            action: { binder.flow.event(.select(.scanQR)) }
+                        )
+                    )
             }
         }
     }

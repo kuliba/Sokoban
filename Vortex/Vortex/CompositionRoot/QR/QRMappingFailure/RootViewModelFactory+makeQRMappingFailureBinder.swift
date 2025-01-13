@@ -28,7 +28,7 @@ extension RootViewModelFactory {
         switch navigation {
         case .back:          return .milliseconds(100)
         case .detailPayment: return .milliseconds(500)
-        case .manualSearch:  return .milliseconds(500)
+        case .categoryPicker:  return .milliseconds(500)
         case .scanQR:        return .milliseconds(100)
         }
     }
@@ -59,11 +59,28 @@ extension RootViewModelFactory {
                 ))
                 
             case .manualSearch:
-                completion(.manualSearch("abc"))
+                completion(.categoryPicker(
+                    makeCategoryPickerSection(.init(
+                        loadCategories: getServiceCategoriesWithoutQR,
+                        reloadCategories: { $0(nil) },
+                        loadAllLatest: { $0(nil) }
+                    ))
+                ))
                 
             case .scanQR:
                 completion(.scanQR)
             }
+        }
+    }
+    
+    @inlinable
+    func getServiceCategoriesWithoutQR(
+        completion: @escaping ([ServiceCategory]) -> Void
+    ) {
+        // TODO: replace with reading from ephemeral store
+        getServiceCategories {
+            
+            completion($0.filter { $0.paymentFlow != .qr })
         }
     }
 }
