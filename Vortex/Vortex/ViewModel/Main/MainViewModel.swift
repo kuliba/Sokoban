@@ -978,11 +978,6 @@ private extension MainViewModel {
             route.destination = .openCard(authProductsViewModel)
         }
     }
-        
-    private func openCollateralLoanLanding() {
-        
-        route.destination = .collateralLoanLanding
-    }
     
     private func openOrderCardLanding() {
         
