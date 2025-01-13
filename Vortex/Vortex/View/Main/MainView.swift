@@ -269,7 +269,10 @@ struct MainView<NavigationOperationView: View>: View {
             
         // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
         case let .collateralLoanLanding(binder):
-            CollateralLoanLandingView(binder: binder)
+            let factory = CollateralLoanLandingGetShowcaseViewFactory(
+                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
+            )
+            CollateralLoanLandingView(binder: binder, factory: factory)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
