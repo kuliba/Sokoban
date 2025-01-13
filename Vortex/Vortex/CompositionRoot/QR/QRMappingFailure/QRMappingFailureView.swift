@@ -16,17 +16,17 @@ struct QRMappingFailureView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            Image(.ic24MoreHorizontal)
-                .resizable()
-                .frame(width: 200, height: 200)
-                .navigationBarWithBack(
-                    title: "",
-                    dismiss: { event(.dismiss) }
-                )
-                .navigationDestination(
-                    destination: state.navigation?.destination,
-                    content: destinationView
-                )
+            QRFailedContentView(
+                event: { event(.select($0)) }
+            )
+            .navigationBarWithBack(
+                title: "",
+                dismiss: { event(.dismiss) }
+            )
+            .navigationDestination(
+                destination: state.navigation?.destination,
+                content: destinationView
+            )
         }
     }
 }
@@ -34,6 +34,30 @@ struct QRMappingFailureView: View {
 extension QRMappingFailureView {
     
     typealias Domain = QRMappingFailureDomain
+}
+
+private extension QRFailedContentView {
+    
+    init(
+        event: @escaping (QRMappingFailureDomain.Select) -> Void
+    ) {
+        self.init(
+            title: "Не удалось распознать QR-код",
+            subtitle: "Воспользуйтесь другими способами оплаты",
+            buttons: [
+                .init(
+                    title: "Найти поставщика вручную",
+                    style: .gray,
+                    action: { event(.manualSearch) }
+                ),
+                .init(
+                    title: "Оплатить по реквизитам",
+                    style: .gray,
+                    action: { event(.detailPayment) }
+                ),
+            ]
+        )
+    }
 }
 
 private extension QRMappingFailureView {
