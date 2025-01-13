@@ -1,0 +1,17 @@
+{
+    "statusCode": 0,
+    "errorMessage": "string",
+    "data":{
+        "serial": "serial",
+        "BannerCatalogList":[
+            {
+                "productName": "Переводы МИГ",
+                "txtСondition": ["Мгновенные переводы в Армению Комиссия 1%"],
+                "imageLink": "dict/getBannerCatalogImage?image=banner_1",
+                "orderLink": "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/",
+                "conditionLink": "https://www.vortex.ru/private/cards/sezonnoe-predlozhenie/",
+                "action": {
+                    "type": "LANDING"
+                }
+            }
+        ]}}

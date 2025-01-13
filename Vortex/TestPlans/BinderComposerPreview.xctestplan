@@ -1,0 +1,43 @@
+{
+  "configurations" : [
+    {
+      "id" : "F1770860-CA8D-4CED-8FF2-C2DEB46859AE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "2A9C793F2D0D452B004479B0",
+      "name" : "BinderComposerPreview"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "PayHubUITests",
+        "name" : "PayHubUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Vortex.xcodeproj",
+        "identifier" : "2A4CC4962D227E4B00F5C263",
+        "name" : "BinderComposerPreviewTests"
+      }
+    }
+  ],
+  "version" : 1
+}
