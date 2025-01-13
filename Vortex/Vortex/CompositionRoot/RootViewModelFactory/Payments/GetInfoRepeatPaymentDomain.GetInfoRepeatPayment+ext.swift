@@ -275,8 +275,53 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     }
 }
 
+extension Array {
+    
+    //func amount<Value>(keypath: KeyPath<Element>) -> Double? {
+    func value<Value>(keypath: KeyPath<Element, Value?>) -> Value? {
+        
+        for element in self {
+            
+            if let value = element[keyPath: keypath] {
+                
+                return value
+            }
+        }
+        
+        return nil
+    }
+    
+    func value<Value: Numeric & Comparable>(keypath: KeyPath<Element, Value?>) -> Value? {
+        
+        for element in self {
+            
+            if let value = element[keyPath: keypath], value > 0 {
+                
+                return value
+            }
+        }
+        
+        return nil
+    }
+}
+
+protocol _Amountable {
+    
+    var amount: Double? { get }
+}
+
+extension Array where Element: _Amountable {
+    
+    var amount: Double? { value(keypath: \.amount) }
+}
+
+extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer: _Amountable {}
+
 extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     
+    var _amount: Double? { value(keypath: \.amount) }
+    var _puref: String? { value(keypath: \.puref) }
+        
     var amount: Double? {
         
         for transfer in self {
@@ -303,6 +348,11 @@ extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
         return nil
     }
     
+//    var _additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
+//        
+//        value(keypath: \.additional).last ?? []
+//    }
+    
     var additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
         
         if let additional = last?.additional, !additional.isEmpty {
@@ -312,6 +362,8 @@ extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
         
         return first?.additional ?? []
     }
+    
+    var _payerCardId: Int? { value(keypath: \.payer?.cardId) }
     
     var payerCardId: Int? {
         

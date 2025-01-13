@@ -43,7 +43,19 @@ extension RootViewModelFactory {
         
         switch origin {
         case let .service(service):
-            return nil
+            switch service.type {
+            case "outside":
+                guard let countryId = service.additionalItems?.country,
+                      let country = model.countriesList.value.first(where: { $0.id == countryId } ),
+                      let image = country.svgImage?.image else {
+                    
+                    return nil
+                }
+                
+                return image
+                
+            default: return nil
+            }
             
         case let .withPhone(withPhone):
             switch withPhone.type {
@@ -51,10 +63,7 @@ extension RootViewModelFactory {
                 guard let bankID = withPhone.bankID else { return nil }
                 
                 return model.dictionaryBank(for: bankID)?.svgImage.image
-                
-            case "outside":
-                return nil // add image
-            
+                            
             case "mobile":
                 return model.dictionaryAnywayOperator(for: withPhone.puref)?
                     .logotypeList.first?.svgImage?.image
@@ -133,5 +142,18 @@ extension RootViewModelFactory {
         completion: @escaping (Result<[Latest], Error>) -> Void
     ) {
         loadLatestPayments(for: category.latestPaymentsCategory, completion: completion)
+    }
+}
+
+private extension Array where Element == LatestOrigin.Service.AdditionalItem {
+    
+    var country: String? {
+        
+        for item in self {
+            if item.fieldName == "trnPickupPoint" {
+                return item.fieldValue
+            }
+        }
+        return nil
     }
 }

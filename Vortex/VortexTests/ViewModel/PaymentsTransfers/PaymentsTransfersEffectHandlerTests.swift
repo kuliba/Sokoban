@@ -189,10 +189,11 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         _ icon: String = UUID().uuidString,
         _ puref: String = UUID().uuidString,
         _ type: String = anyMessage(),
+        _ paymentFlow: String? = nil,
         additionalItems: [RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem] = []
     ) -> LatestPayment {
         
-        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, type: type, additionalItems: additionalItems)
+        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, paymentFlow: paymentFlow, puref: UUID().uuidString, type: type, additionalItems: additionalItems)
     }
     
     private func makeStartPaymentPayload(

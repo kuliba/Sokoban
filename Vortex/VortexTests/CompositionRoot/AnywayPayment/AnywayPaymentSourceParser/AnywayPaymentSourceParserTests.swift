@@ -752,6 +752,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         amount: Decimal = anyAmount(),
         date: Date = .init(),
         icon: String? = anyMessage(),
+        paymentFlow: String? = anyMessage(),
         puref: String = anyMessage(),
         type: String = anyMessage(),
         title: String = anyMessage()
@@ -762,6 +763,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
             amount: amount,
             name: title,
             md5Hash: icon,
+            paymentFlow: paymentFlow,
             puref: puref,
             type: type,
             additionalItems: additionalItems
