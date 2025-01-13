@@ -30,14 +30,14 @@ extension QRMappingFailureDomain {
     enum Select: Equatable {
         
         case back
-        case manualSearch
         case detailPayment
+        case manualSearch
     }
     
     enum Navigation {
         
         case back
-        case manualSearch
         case detailPayment
+        case manualSearch
     }
 }
