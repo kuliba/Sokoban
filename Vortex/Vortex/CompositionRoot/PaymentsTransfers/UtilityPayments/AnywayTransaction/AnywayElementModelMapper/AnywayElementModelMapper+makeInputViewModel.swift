@@ -9,9 +9,8 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import Foundation
 import InputComponent
-import TextFieldComponent
-import TextFieldModel
 import RxViewModel
+import TextFieldComponent
 
 extension AnywayElementModelMapper {
     
@@ -76,12 +75,28 @@ private extension AnywayElement.Parameter {
     
     func textFieldReducer(
         placeholderText: String
-    ) -> TransformingReducer {
+    ) -> TextFieldModel.Reducer {
         
-        guard case .number = uiAttributes.dataType
-        else { return .init(placeholderText: placeholderText) }
+        switch (uiAttributes.dataType, masking.composedMask) {
+        case (.number, .none):
+            return TransformingReducer.sberNumericReducer(
+                placeholderText: placeholderText
+            )
+            
+        default:
+            return ChangingReducer.mask(
+                placeholderText: placeholderText,
+                pattern: masking.composedMask ?? ""
+            )
+        }
+    }
+}
+
+private extension AnywayElement.Parameter.Masking {
+    
+    var composedMask: String? {
         
-        return .sberNumericReducer(placeholderText: placeholderText)
+        inputMask ?? mask
     }
 }
 
