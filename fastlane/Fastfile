@@ -48,7 +48,7 @@ platform :ios do
     ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "1120"
 
     run_tests(
-      project: ENV["XCODE_PROJECT"],
+      project: ENV["XCODE_PROJECT1"],
       scheme: ENV["XCODE_SCHEME_TESTS"],
       devices: ['iPhone 11'],
       clean: true,
@@ -59,7 +59,7 @@ platform :ios do
   lane :build do |options|
 
     # get project's version and store it to VERSION_NUMBER
-    get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
+    get_version_number(xcodeproj: ENV["XCODE_PROJECT1"])
 
     # get latest project build number on testflight and store it to LATEST_TESTFLIGHT_BUILD_NUMBER
     latest_testflight_build_number(
@@ -69,19 +69,19 @@ platform :ios do
     # increment project's build number
     increment_build_number(
       build_number: Actions.lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1,
-      xcodeproj: ENV["XCODE_PROJECT"])
+      xcodeproj: ENV["XCODE_PROJECT1"])
 
     # turn on auto signing for the project
     update_code_signing_settings(
       use_automatic_signing: true,
-      path: ENV["XCODE_PROJECT"])
+      path: ENV["XCODE_PROJECT1"])
 
     # build and sign app for appstore
     build_app(scheme: ENV["XCODE_SCHEME"],
-              project: ENV["XCODE_PROJECT"],
+              project: ENV["XCODE_PROJECT1"],
               output_directory: "./fastlane/build",
               export_method: "app-store",
-              output_name: "#{ENV["APP_NAME"]}.ipa",
+              output_name: "#{ENV["APP_NAME1"]}.ipa",
               clean: true,
               configuration: ENV["BUILD_CONFIG"],
               include_bitcode: true,
@@ -95,7 +95,7 @@ platform :ios do
     upload_to_testflight(
       api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
       changelog: last_git_commit[:message],
-      ipa: "./fastlane/build/#{ENV["APP_NAME"]}.ipa")
+      ipa: "./fastlane/build/#{ENV["APP_NAME1"]}.ipa")
 
   end
 

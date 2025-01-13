@@ -1,0 +1,96 @@
+//
+//  RootViewBinderComposer.swift
+//  Vortex
+//
+//  Created by Igor Malyarov on 08.11.2024.
+//
+
+import Combine
+import CombineSchedulers
+import FlowCore
+import Foundation
+
+public final class RootViewBinderComposer<RootViewModel, DismissAll, Select, Navigation> {
+    
+    private let bindings: Set<AnyCancellable>
+    private let dismiss: () -> Void
+    private let getNavigation: RootDomain.GetNavigation
+    // TODO: - move to witness
+    private let bindOutside: BindOutside
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    private let witnesses: RootDomain.Witnesses
+    
+    public init(
+        bindings: Set<AnyCancellable>,
+        dismiss: @escaping () -> Void,
+        getNavigation: @escaping RootDomain.GetNavigation,
+        bindOutside: @escaping BindOutside,
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        witnesses: RootDomain.Witnesses
+    ) {
+        self.bindings = bindings
+        self.dismiss = dismiss
+        self.getNavigation = getNavigation
+        self.bindOutside = bindOutside
+        self.scheduler = scheduler
+        self.witnesses = witnesses
+    }
+    
+    public typealias RootDomain = RootViewDomain<RootViewModel, DismissAll, Select, Navigation>
+    public typealias BindOutside = (RootDomain.Content, RootDomain.Flow) -> Set<AnyCancellable>
+}
+
+public extension RootViewBinderComposer {
+    
+    func compose(
+        with rootViewModel: RootViewModel
+    ) -> RootDomain.Binder {
+        
+        let flowComposer = RootDomain.FlowDomain.Composer(
+            getNavigation: getNavigation,
+            scheduler: scheduler
+        )
+        
+        return .init(
+            content: rootViewModel,
+            flow: flowComposer.compose(),
+            bind: bind
+        )
+    }
+}
+
+private extension RootViewBinderComposer {
+    
+    func bind(
+        content: RootDomain.Content,
+        flow: RootDomain.Flow
+    ) -> Set<AnyCancellable> {
+
+        var bindings = bindings.union(bindOutside(content, flow))
+        
+        bindings.formUnion(
+            ContentFlowBindingFactory.bind(
+                content: content,
+                flow: flow,
+                witnesses: witnesses.content
+            )
+        )
+        
+        bindings.insert(bindDismiss(content: content))
+        
+        return bindings
+    }
+    
+    func bindDismiss(content: RootDomain.Content) -> AnyCancellable {
+        
+        let reset = witnesses.dismiss.reset(content)
+        
+        return witnesses.dismiss.dismissAll(content)
+            .receive(on: scheduler)
+            .sink { [dismiss] _ in
+                
+                dismiss()
+                reset()
+            }
+    }
+}
