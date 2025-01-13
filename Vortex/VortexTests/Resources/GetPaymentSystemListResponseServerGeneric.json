@@ -1,0 +1,1733 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "38d140db35f90081e3cf928220940400",
+        "paymentSystemList": [
+            {
+                "code": "CONTACT",
+                "name": "Contact",
+                "md5hash": "178a385607bc45fc30bd66573d4d2c67",
+                "svgImage": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 26 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M22.7021 7.40712C23.662 7.13286 24.6905 7.68138 24.8962 8.6413C25.1704 9.66979 25.3076 10.6983 25.3076 11.7953C25.3076 18.5148 19.8223 24 13.0343 24C6.24632 24 0.692505 18.5148 0.692505 11.7953C0.692505 6.31007 4.46361 1.44191 9.8803 0.0706002C10.8402 -0.203662 11.8687 0.344863 12.0744 1.30478C12.3487 2.2647 11.8001 3.22462 10.8402 3.49888C7.00054 4.52737 4.32648 7.95565 4.32648 11.8639C4.32648 13.9209 5.0807 15.9093 6.31489 17.4177C6.17775 16.9377 6.10919 16.5263 6.10919 16.0464C6.10919 13.578 8.09759 11.5211 10.6345 11.5211C13.1714 11.5211 15.1598 13.5095 15.1598 16.0464C15.1598 18.1719 13.6514 19.9546 11.663 20.4346C12.0744 20.5032 12.5544 20.5032 12.9657 20.5032C17.7653 20.5032 21.6736 16.5949 21.6736 11.8639C21.6736 11.1097 21.5365 10.3554 21.3993 9.60122C21.1936 8.6413 21.7421 7.68138 22.7021 7.40712ZM18.3824 0.961953C19.9594 1.30478 20.9879 2.95036 20.5765 4.52737C20.1651 6.10437 18.5881 7.06429 17.0111 6.72147C15.4341 6.37864 14.4056 4.73306 14.817 3.15605C15.2284 1.51048 16.8054 0.55056 18.3824 0.961953Z\" fill=\"#FF8C00\"/>\n</svg>\n",
+                "purefList": [
+                    {
+                        "CONTACT": [
+                            {
+                                "puref": "iVortex||Addressless",
+                                "type": "addressless"
+                            },
+                            {
+                                "puref": "iVortex||Addressing",
+                                "type": "addressing"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "code": "DIRECT",
+                "name": "МИГ",
+                "md5hash": "78b2b59214122149c9f8f9595a828f77",
+                "svgImage": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"32\" height=\"32\" rx=\"16\" fill=\"#E6232E\"/>\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M15.4596 13.0782C10.6404 14.0968 6.58094 15.0469 6.43836 15.1894C6.28427 15.3435 6.60279 15.6319 7.22287 15.8998C10.4107 17.2762 10.145 17.0293 10.7036 19.1376C11.4726 22.0417 11.4056 22.0003 13.1198 20.6356C14.5954 19.4607 14.6544 19.4415 15.7192 19.7931C16.3186 19.9908 17.0539 20.0667 17.3532 19.9618C17.6524 19.8569 19.0616 18.41 20.4846 16.7467C21.9076 15.0834 23.5672 13.1495 24.1723 12.4492C25.0399 11.4451 25.1615 11.1812 24.7473 11.201C24.4584 11.2148 20.2788 12.0597 15.4596 13.0782Z\" fill=\"white\"/>\n</svg>\n",
+                "purefList": [
+                    {
+                        "ID": [
+                            {
+                                "puref": "iVortex||TransferIDClientA",
+                                "type": "account"
+                            },
+                            {
+                                "puref": "iVortex||TransferIDClientC",
+                                "type": "card"
+                            },
+                            {
+                                "puref": "iVortex||TransferIDClientP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "EVOCA": [
+                            {
+                                "puref": "iVortex||TransferEvocaClientC",
+                                "type": "card"
+                            },
+                            {
+                                "puref": "iVortex||TransferEvocaClientA",
+                                "type": "account"
+                            },
+                            {
+                                "puref": "iVortex||TransferEvocaClientP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "ARMBB": [
+                            {
+                                "puref": "iVortex||TransferArmBBClientA",
+                                "type": "account"
+                            },
+                            {
+                                "puref": "iVortex||TransferArmBBClientC",
+                                "type": "card"
+                            },
+                            {
+                                "puref": "iVortex||TransferArmBBClientP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "ARDSHIN": [
+                            {
+                                "puref": "iVortex||TransferArdshinClientA",
+                                "type": "account"
+                            },
+                            {
+                                "puref": "iVortex||TransferArdshinClientC",
+                                "type": "card"
+                            },
+                            {
+                                "puref": "iVortex||TransferArdshinClientP",
+                                "type": "phone"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "code": "SFP",
+                "name": "СБП",
+                "md5hash": "5b9810785a58850c4271352fdded4530",
+                "svgImage": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0)\">\n<path d=\"M6.25 9.224L9.1425 14.419V17.5878L6.25338 22.7726L6.25 9.224Z\" fill=\"#5B57A2\"/>\n<path d=\"M17.3561 12.5286L20.0665 10.8594L25.6134 10.8542L17.3561 15.937V12.5286Z\" fill=\"#D90751\"/>\n<path d=\"M17.3407 9.1934L17.3561 16.0714L14.4568 14.2814V4L17.3409 9.1934H17.3407Z\" fill=\"#FAB718\"/>\n<path d=\"M25.6134 10.8542L20.0662 10.8594L17.3407 9.1934L14.4568 4L25.6132 10.8542H25.6134Z\" fill=\"#ED6F26\"/>\n<path d=\"M17.3561 22.8014V19.4644L14.4568 17.7084L14.4584 28L17.3561 22.8014Z\" fill=\"#63B22F\"/>\n<path d=\"M20.0596 21.1474L9.1423 14.419L6.25 9.224L25.6016 21.1406L20.0594 21.1474H20.0596Z\" fill=\"#1487C9\"/>\n<path d=\"M14.4586 28L17.3558 22.8014L20.0594 21.1474L25.6014 21.1406L14.4586 28Z\" fill=\"#017F36\"/>\n<path d=\"M6.25336 22.7726L14.4804 17.7086L11.7145 16.0034L9.14248 17.5878L6.25336 22.7726Z\" fill=\"#984995\"/>\n</g>\n<defs>\n<clipPath id=\"clip0\">\n<rect width=\"19.5\" height=\"24\" fill=\"white\" transform=\"translate(6.25 4)\"/>\n</clipPath>\n</defs>\n</svg>\n",
+                "purefList": [
+                    {
+                        "100000000196": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000246": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000133": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000084": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000055": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000130": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000144": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000149": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000092": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000102": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000256": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000123": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000125": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000142": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000170": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000148": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000065": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000247": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000143": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000069": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000227": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000136": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000255": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000184": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000199": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000206": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000248": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000052": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000231": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000166": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000090": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000216": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000099": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000103": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000093": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000098": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000174": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000223": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000243": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000189": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000083": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000200": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000091": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000072": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000164": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000171": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000222": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000218": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000191": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000106": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000003": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000230": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000232": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000167": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000203": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000175": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000146": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000042": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000204": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000205": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000178": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000187": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000182": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000002": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000118": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000080": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000239": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000043": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000078": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000109": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000240": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000087": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000121": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000139": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000228": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000147": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000202": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000234": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000126": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000235": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000070": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000163": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000050": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000172": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000169": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000135": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000180": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000160": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000158": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000140": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000088": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000176": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000219": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000241": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000105": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000081": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000094": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000041": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000207": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000236": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000086": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000110": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000229": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000107": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000150": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000009": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000165": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000173": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000213": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000056": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000037": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000040": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000226": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000211": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000212": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000134": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000112": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000183": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000192": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000067": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000159": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000017": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000185": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000197": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000198": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000124": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000233": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000225": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000066": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000245": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000151": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000152": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000153": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000022": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000027": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000138": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000127": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000201": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000062": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000064": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000033": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000208": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000044": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000181": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000115": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000117": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000122": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000053": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000061": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000129": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000113": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000054": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000193": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000194": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000195": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000071": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000057": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000058": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000059": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000154": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000259": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000007": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000250": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000018": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000011": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000111": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000001": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000095": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000161": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000128": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000028": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000177": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000012": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000034": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000005": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000031": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000047": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000020": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000014": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000008": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000082": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000221": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000025": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000010": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000220": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000016": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000045": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000215": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000030": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000108": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000032": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000049": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000036": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000013": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000046": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000006": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000024": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000004": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000026": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000217": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000015": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "100000000029": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    },
+                    {
+                        "1crt88888881": [
+                            {
+                                "puref": "iVortex||TransferC2CSTEP",
+                                "type": "phone"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

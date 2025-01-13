@@ -1,0 +1,85 @@
+//
+//  PreviewContent.swift
+//  Vortex
+//
+//  Created by Nikolay Pochekuev on 08.10.2024.
+//
+
+import SwiftUI
+
+extension ClientInformListConfig.Colors {
+    
+    static let preview: Self = .init(
+
+        bgIconRedLight: Color(red: 1.00, green: 0.62, blue: 0.62)
+    )
+}
+
+extension Image {
+    
+    static let clock: Self = .init(systemName: "clock")
+    static let infoCircle: Self = .init(systemName: "info.circle")
+}
+
+extension ClientInformListConfig.Strings {
+    
+    static let preview: Self = .init(
+        titlePlaceholder: "Информация",
+        vortexLink: "https://www.innovation.ru"
+    )
+}
+
+extension ClientInformListDataState {
+    
+//    static let preview: Self = ClientInformListDataState.single(.init(label: .init(image: .clock, title: "Urgent Info"), text: "please drop your phone! Alarm!"))
+
+    static let preview: Self = ClientInformListDataState.multiple(.init(
+        title: Label(image: .infoCircle, title: "Информация", url: nil),
+        items: [
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil),
+            Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00", url: URL(string: "www.ya.ru")),
+            Label(image: .infoCircle, title: "Информация на главном портале обновилась", url: nil)
+        ]
+    ))
+}
+
+extension ClientInformListConfig {
+    
+    static let `default`: Self = .init(
+        colors: .preview,
+        strings: .preview,
+        titleConfig: .init(
+            textFont: .title,
+            textColor: .black
+        ),
+        textConfig: .init(
+            textFont: .caption2,
+            textColor: .black
+        ),
+        sizes: .init(
+            iconSize: 40,
+            iconBackgroundSize: 64,
+            rowIconSize: 40,
+            navBarHeight: 59,
+            navBarMaxWidth: 48,
+            spacing: 24, 
+            bigSpacing: 32
+        ),
+        paddings: .init(
+            topImage: 20,
+            horizontal: 20,
+            vertical: 12,
+            bottom: 80
+        ),
+        image: .infoCircle
+    )
+}
