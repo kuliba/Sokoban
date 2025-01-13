@@ -21,21 +21,10 @@ struct QRFailedView: View {
         
         VStack(spacing: 32) {
             
-            VStack(spacing: 28) {
-             
-                avatarView
-                
-                VStack(spacing: 8) {
-                    
-                    Text(viewModel.title)
-                        .font(Font.textH3Sb18240())
-                        .foregroundColor(Color.textSecondary)
-                    
-                    Text(viewModel.content)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(Color.textPlaceholder)
-                }
-            }
+            QRFailedAvatarView(
+                title: viewModel.title,
+                subtitle: viewModel.content
+            )
             
             VStack(spacing: 8) {
                 
@@ -63,8 +52,36 @@ struct QRFailedView: View {
             }
         }
     }
+}
+
+struct QRFailedAvatarView: View {
     
-    var avatarView: some View {
+    let title: String
+    let subtitle: String
+    
+    var body: some View {
+        
+        VStack(spacing: 28) {
+            
+            avatarView()
+            
+            VStack(spacing: 8) {
+                
+                Text(title)
+                    .font(.textH3Sb18240())
+                    .foregroundColor(.textSecondary)
+                
+                Text(subtitle)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
+            }
+        }
+    }
+}
+
+private extension QRFailedAvatarView {
+    
+    func avatarView() -> some View {
         
         ZStack {
             
@@ -92,4 +109,3 @@ struct QRFailedView: View {
         }
     }
 }
-
