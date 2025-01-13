@@ -12,6 +12,7 @@ public struct CollateralLoanLandingGetShowcaseProductView: View {
     let product: Product
     let event: (GetShowcaseViewEvent.External) -> Void
     let config: Config
+    let factory: Factory
     
     public var body: some View {
 
@@ -38,7 +39,8 @@ public struct CollateralLoanLandingGetShowcaseProductView: View {
 
             ImageView(
                 url: product.image,
-                config: config
+                config: config,
+                makeImageView: factory.makeImageView
             )
             
             FooterView(
@@ -64,4 +66,5 @@ extension CollateralLoanLandingGetShowcaseProductView {
     typealias Product = CollateralLoanLandingGetShowcaseData.Product
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Event = GetShowcaseDomain.Event
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

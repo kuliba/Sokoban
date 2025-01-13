@@ -14,6 +14,15 @@ struct CollateralLoanLandingView: View {
     @Environment(\.openURL) var openURL
 
     let binder: GetShowcaseDomain.Binder
+    let factory: Factory
+    
+    init(
+        binder: GetShowcaseDomain.Binder,
+        factory: Factory
+    ) {
+        self.binder = binder
+        self.factory = factory
+    }
     
     var body: some View {
     
@@ -54,7 +63,8 @@ struct CollateralLoanLandingView: View {
                                 openURL(url)
                             }
                         }
-                    }
+                    },
+                    factory: factory
                 )
             }
         }
@@ -73,6 +83,7 @@ struct CollateralLoanLandingView: View {
     }
     
     typealias Domain = GetShowcaseDomain
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }
 
 extension GetShowcaseDomain.Navigation: Identifiable {

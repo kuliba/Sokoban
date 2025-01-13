@@ -13,17 +13,20 @@ public struct CollateralLoanLandingGetShowcaseView: View {
     private let event: (GetShowcaseViewEvent.External) -> Void
     private let config: Config
     private let theme: Theme
+    private let factory: Factory
     
     public init(
         data: Data,
         event: @escaping (GetShowcaseViewEvent.External) -> Void,
         config: Config = .base,
+        factory: Factory,
         theme: Theme = .white
     ) {
         self.data = data
         self.event = event
         self.config = config
         self.theme = theme
+        self.factory = factory
     }
     
     public var body: some View {
@@ -35,7 +38,8 @@ public struct CollateralLoanLandingGetShowcaseView: View {
                 CollateralLoanLandingGetShowcaseProductView(
                     product: $0,
                     event: event,
-                    config: config
+                    config: config,
+                    factory: factory
                 )
             }
         }
@@ -60,4 +64,5 @@ public extension CollateralLoanLandingGetShowcaseView {
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Theme = CollateralLoanLandingGetShowcaseTheme
     typealias Event = GetShowcaseDomain.Event
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

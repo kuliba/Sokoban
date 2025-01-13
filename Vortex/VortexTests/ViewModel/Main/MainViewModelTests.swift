@@ -11,6 +11,8 @@ import LandingUIComponent
 import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
+import UIPrimitives
+import Combine
 
 final class MainViewModelTests: XCTestCase {
     
@@ -1092,6 +1094,15 @@ final class MainViewModelTests: XCTestCase {
             file: file, line: line
         )
     }
+    
+    // MARK: Helpers
+        
+    var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Just(.init(systemName: "house"))
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    )}
 }
 
 private func anySberQRError() -> MainViewModelTests.SberQRError {
