@@ -1,0 +1,402 @@
+import UIKit
+import SwiftUI
+import AVFoundation
+import IQKeyboardManagerSwift
+
+protocol IMsg {
+    func handleMsg(what: Int)
+}
+
+class InternetTVMainController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, IMsg {
+
+    let model = Model.shared
+    var operatorsViewModel: OperatorsViewModel?
+    public static var iMsg: IMsg? = nil
+    public static let msgHideLatestOperation = 1
+    public static let msgShowLatestOperation = 3
+    public static let msgPerformSegue = 2
+    public static var latestOpIsEmpty = false
+    public static func storyboardInstance() -> InternetTVMainController? {
+        let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "InternetTVMain") as? InternetTVMainController
+    }
+
+    @IBOutlet weak var reqView: UIView!
+    @IBOutlet weak var zayavka: UIView!
+    
+    @IBOutlet weak var historyView: UIView!
+
+    @IBOutlet weak var tableView: UITableView!
+
+    var viewModel = InternetTVMainViewModel()
+    var alertController: UIAlertController?
+    var searching = false
+    let searchController = UISearchController(searchResultsController: nil)
+    let latestOperationView = InternetTVLatestOperationsView()
+    var template: PaymentTemplateData?
+    
+    func handleMsg(what: Int) {
+        switch (what) {
+        case InternetTVMainController.msgHideLatestOperation:
+            historyView?.isHidden = true
+            //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            break
+        case InternetTVMainController.msgShowLatestOperation:
+            historyView?.isHidden = false
+            //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            break
+        case InternetTVMainController.msgPerformSegue:
+            if "\(Config.puref)||AVDТ;\(Config.puref)||AVDD".contains(InternetTVMainViewModel.latestOp?.op.puref ?? "-1" ) == true {
+                performSegue(withIdentifier: "avtodor", sender: self)
+            } else if InternetTVMainViewModel.latestOp?.op.puref == "\(Config.puref)||5173" {
+                performSegue(withIdentifier: "gbdd", sender: self)
+            } else {
+                performSegue(withIdentifier: "input", sender: self)
+            }
+            break
+        default:
+            break
+        }
+    }
+
+    func setTitle(title: String, subtitle: String) -> UIView {
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
+        titleLabel.backgroundColor = .clear
+        titleLabel.textColor = .black
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(systemName: "chevron.down")
+        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
+        let attachmentString = NSAttributedString(attachment: imageAttachment)
+        let completeText = NSMutableAttributedString(string: "")
+        let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)])
+        completeText.append(text)
+        completeText.append(attachmentString)
+        titleLabel.attributedText = completeText
+        titleLabel.numberOfLines = 2
+        titleLabel.sizeToFit()
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width, height: 15))
+        titleView.addSubview(titleLabel)
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(titleDidTaped))
+        titleView.addGestureRecognizer(gesture)
+        return titleView
+    }
+
+    func changeTitle(_ text: String) {
+        DispatchQueue.main.async {
+            self.navigationItem.titleView = self.setTitle(title: text, subtitle: "")
+        }
+    }
+
+    func setupNavBar() {
+        navigationItem.titleView = setTitle(title: "Все регионы", subtitle: "")
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Поиск"
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.automaticallyShowsCancelButton = false
+        searchController.searchBar.delegate = self
+        definesPresentationContext = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(backAction))
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .normal)
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .highlighted)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "qr_Icon"), style: .plain, target: self, action: #selector(onQR))
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .normal)
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .highlighted)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        InternetTVMainController.iMsg = self
+        let presentRequisitsView = UITapGestureRecognizer(target: self, action: #selector(presentRequisitsView))
+        reqView.addGestureRecognizer(presentRequisitsView)
+        reqView.isUserInteractionEnabled = true
+        InternetTVApiRequests.getClientInfo()
+        if  InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
+            InternetTVApiRequests.getMosParkingList()
+        }
+        viewModel.controller = self
+        if historyView != nil {
+            latestOperationView.frame = historyView.frame
+            historyView.addSubview(latestOperationView)
+        }
+        if InternetTVMainController.latestOpIsEmpty {
+            historyView?.isHidden = true
+            historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        }
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        navigationController?.isNavigationBarHidden = false
+        reqView.add_CornerRadius(5)
+        zayavka.add_CornerRadius(5)
+        tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
+        setupNavBar()
+        NotificationCenter.default.addObserver(forName: .city, object: nil, queue: .none) { [weak self] (value) in
+            self?.searching = true
+            let value = value.userInfo?["key"] as? String ?? ""
+            if value == InternetTVCitySearchController.ALL_REGION {
+                self?.searching = false
+                self?.viewModel.arrSearchedOrganizations = self?.viewModel.arrOrganizations ?? [GKHOperatorsModel]()
+            } else {
+                self?.viewModel.arrSearchedOrganizations = self?.viewModel.arrOrganizations.filter {
+                    ($0.region?.lowercased().contains(value.lowercased()) ?? false)
+                            || ($0.region?.lowercased().contains(InternetTVCitySearchController.ALL_REGION.lowercased()) ?? false)
+                } ?? [GKHOperatorsModel]()
+            }
+            self?.navigationItem.titleView = self?.setTitle(title: value, subtitle: "")
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        navigationController?.isNavigationBarHidden = false
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        navigationItem.searchController = searchController
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        checkQREvent()
+        if InternetTVMainViewModel.latestOp != nil {
+            handleMsg(what: InternetTVMainController.msgPerformSegue)
+        }
+    }
+
+    @objc func presentRequisitsView() {
+        
+        do {
+            
+            try operatorsViewModel?.requisitsViewAction()
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Requisits: with error: \(error.localizedDescription)")
+
+        }
+    }
+    
+    @objc func titleDidTaped() {
+        performSegue(withIdentifier: "citySearch", sender: self)
+    }
+
+    @objc func backAction() {
+        //self.delegate?.goToBack()
+        if self.operatorsViewModel != nil {
+            
+            self.operatorsViewModel?.closeAction()
+            
+        } else {
+            
+            navigationController?.popViewController(animated: true)
+            dismiss(animated: true)
+        }
+    }
+
+    @objc func onQR() {
+                
+        self.operatorsViewModel?.qrAction()
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !doStringContainsNumber(_string: searchText) {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
+                $0.name?.lowercased().contains(searchText.lowercased()) == true
+            }
+        } else {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
+                $0.synonymList.first?.lowercased().contains(searchText.lowercased()) == true
+            }
+        }
+        if searchText.isEmpty {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations
+        }
+        searching = true
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searching = false
+        searchBar.text = ""
+        tableView.reloadData()
+    }
+
+    func doStringContainsNumber(_string: String) -> Bool {
+        let numberRegEx = ".*[0-9]+.*"
+        let testCase = NSPredicate(format: "SELF MATCHES %@", numberRegEx)
+        let containsNumber = testCase.evaluate(with: _string)
+        return containsNumber
+    }
+
+    var qrDataDictionary = [String: String]()
+    func checkQREvent() {
+
+        if qrDataDictionary.isEmpty {
+            
+            guard case .qr( let qrCode) = operatorsViewModel?.mode, let mapping = model.qrMapping.value else { return }
+            
+            for ( key, value ) in qrCode.rawData {
+                
+                qrDataDictionary.updateValue(value, forKey: key)
+                
+            }
+            
+            qrDataDictionary.updateValue("qwe", forKey: "qwe")
+            
+            viewModel.qrData = qrCode.rawData
+
+            let inn = qrCode.stringValue(type: .general(.inn), mapping: mapping)
+            var operatorsModel = GKHOperatorsModel()
+            let operatorsList = InternetTVMainController.getOperatorsList(model: model)
+            operatorsList.forEach( { operators in
+                if operators.synonymList.first == inn {
+                    operatorsModel = operators
+                }
+            })
+            
+            viewModel.operatorFromQR = operatorsModel
+            performSegue(withIdentifier: "input", sender: self)
+        }
+        
+//        if let qrDataUnw = GlobalModule.qrData, let operatorModelUnw = GlobalModule.qrOperator {
+//            if operatorModelUnw.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
+//                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+//            }
+//            if operatorModelUnw.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
+//                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+//            }
+//            viewModel.qrData = qrDataUnw
+//            viewModel.operatorFromQR = operatorModelUnw
+//            GlobalModule.qrData = nil
+//            GlobalModule.qrOperator = nil
+//            performSegue(withIdentifier: "input", sender: self)
+//        }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        var customGroup: CustomGroup? = nil
+        if let index = tableView.indexPathForSelectedRow?.row {
+            customGroup = viewModel.arrCustomOrg[index]
+        }
+        InternetTVDetailsFormViewModel.additionalDic.removeAll()
+        InternetTVInputCell.spinnerValuesSelected.removeAll()
+        
+        switch segue.identifier {
+        case "avtodor":
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? AvtodorDetailsFormController {
+                
+                targetController.customGroup = customGroup
+                if let latestOp = InternetTVMainViewModel.latestOp {
+                    targetController.operatorData = latestOp.op
+                    targetController.latestOperation = latestOp
+                    InternetTVMainViewModel.latestOp = nil
+                }
+            }
+            
+        case "mosparking":
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? MosParkingViewController {
+                targetController.operatorData = customGroup?.op
+            }
+            
+        case "input":
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? InternetTVDetailsFormController {
+                if let latestOp = InternetTVMainViewModel.latestOp {
+                    targetController.operatorData = latestOp.op
+                    targetController.latestOperation = latestOp
+                    targetController.operatorsViewModel = operatorsViewModel
+                    InternetTVMainViewModel.latestOp = nil
+                } else {
+                    targetController.operatorData = customGroup?.op
+                    // Переход по QR
+                    if viewModel.qrData.count != 0 {
+                        let controller = dc.topViewController as! InternetTVDetailsFormController
+                        controller.operatorData = viewModel.operatorFromQR
+                        controller.qrData = viewModel.qrData
+                        controller.operatorsViewModel = operatorsViewModel
+                    }
+                }
+                viewModel.qrData.removeAll()
+            }
+            
+        case "qr":
+            let dc = segue.destination as! QRViewController
+            
+        case "gbdd":
+            
+            InternetTVApiRequests.getClientInfo()
+            
+            let targetController = segue.destination as? GIBDDFineDetailsFormController
+            if let latestOp = InternetTVMainViewModel.latestOp {
+                targetController?.operatorData = latestOp.op
+                targetController?.latestOperation = latestOp
+                InternetTVMainViewModel.latestOp = nil
+            } else {
+                targetController?.operatorData = customGroup?.op
+            }
+            
+        case .none:
+            break
+        case .some(_):
+            break
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        navigationItem.searchController = nil
+    }
+    
+    static func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
+        
+        let operators = (model.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let operatorsList = GKHOperatorsModel.childOperators(with: operators, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+        return operatorsList
+    }
+}
+
+extension InternetTVMainController {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.arrCustomOrg.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
+        let item = viewModel.arrCustomOrg[indexPath.row]
+        cell.set(item: item)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        searchController.searchBar.searchTextField.endEditing(true)
+        
+        let item = viewModel.arrCustomOrg[indexPath.row]
+        if (item.op?.puref == "\(Config.puref)||4990") {
+            performSegue(withIdentifier: "mosparking", sender: self)
+        } else if item.puref == "avtodor" {
+            performSegue(withIdentifier: "avtodor", sender: self)
+        } else if item.op?.puref == "\(Config.puref)||5173" {
+            performSegue(withIdentifier: "gbdd", sender: self)
+        } else {
+            performSegue(withIdentifier: "input", sender: self)
+        }
+    }
+}
