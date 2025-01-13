@@ -19,16 +19,41 @@ struct QRFailedView: View {
     
     var body: some View {
         
+        QRFailedContentView(
+            title: viewModel.title,
+            subtitle: viewModel.content,
+            buttons: viewModel.searchOperatorButton
+        )
+        
+        NavigationLink("", isActive: $viewModel.isLinkActive) {
+            
+            if let link = viewModel.link  {
+                
+                switch link {
+                    
+                case let .failedView(viewModel):
+                    viewFactory.makeQRSearchOperatorView(viewModel)
+                }
+            }
+        }
+    }
+}
+
+struct QRFailedContentView: View {
+    
+    let title: String
+    let subtitle: String
+    let buttons: [ButtonSimpleView.ViewModel]
+    
+    var body: some View {
+        
         VStack(spacing: 32) {
             
-            QRFailedAvatarView(
-                title: viewModel.title,
-                subtitle: viewModel.content
-            )
+            QRFailedAvatarView(title: title, subtitle: subtitle)
             
             VStack(spacing: 8) {
                 
-                ForEach(viewModel.searchOperatorButton) { buttons in
+                ForEach(buttons) { buttons in
                     
                     ButtonSimpleView(viewModel: buttons)
                         .frame(height: 56)
@@ -39,18 +64,6 @@ struct QRFailedView: View {
             Spacer()
         }
         .padding(.top, 80)
-        
-        NavigationLink("", isActive: $viewModel.isLinkActive) {
-            
-            if let link = viewModel.link  {
-                
-                switch link {
-
-                case let .failedView(viewModel):
-                    viewFactory.makeQRSearchOperatorView(viewModel)
-                }
-            }
-        }
     }
 }
 
