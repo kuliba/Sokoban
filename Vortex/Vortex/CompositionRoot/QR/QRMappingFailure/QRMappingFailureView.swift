@@ -69,6 +69,7 @@ extension QRMappingFailureDomain.Navigation {
         case .back:          return nil
         case .detailPayment: return .detailPayment
         case .manualSearch:  return.manualSearch
+        case .scanQR:        return nil
         }
     }
     

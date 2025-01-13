@@ -990,6 +990,8 @@
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
 		2A65F1F62D35027400C0D724 /* QRMappingFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1F52D35027400C0D724 /* QRMappingFailureDomain.swift */; };
 		2A65F1F82D3504F400C0D724 /* QRMappingFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1F72D3504F400C0D724 /* QRMappingFailureView.swift */; };
+		2A65F1FA2D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1F92D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift */; };
+		2A65F1FC2D350EC500C0D724 /* ContentWitnesses+empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */; };
 		2A65FB3C2B4E62DF00A84F9E /* View+loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */; };
 		2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */; };
 		2A65FB412B4E85BD00A84F9E /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB402B4E85BD00A84F9E /* Reducer.swift */; };
@@ -4602,6 +4604,8 @@
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
 		2A65F1F52D35027400C0D724 /* QRMappingFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingFailureDomain.swift; sourceTree = "<group>"; };
 		2A65F1F72D3504F400C0D724 /* QRMappingFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingFailureView.swift; sourceTree = "<group>"; };
+		2A65F1F92D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRMappingFailureBinder.swift"; sourceTree = "<group>"; };
+		2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentWitnesses+empty.swift"; sourceTree = "<group>"; };
 		2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+loader.swift"; sourceTree = "<group>"; };
 		2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsWrapperView.swift; sourceTree = "<group>"; };
 		2A65FB402B4E85BD00A84F9E /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
@@ -10619,6 +10623,7 @@
 			isa = PBXGroup;
 			children = (
 				2A65F1F52D35027400C0D724 /* QRMappingFailureDomain.swift */,
+				2A65F1F92D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift */,
 				2A65F1F72D3504F400C0D724 /* QRMappingFailureView.swift */,
 			);
 			path = QRMappingFailure;
@@ -10861,6 +10866,7 @@
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingViewModel.swift */,
 				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
+				2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */,
 				2A9CC0C52D1BE09E0071F30E /* Factories */,
 				842C42362D11FD2B006A307D /* SavingsAccount */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
@@ -20798,6 +20804,7 @@
 				2A4C4B232C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift in Sources */,
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
 				C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */,
+				2A65F1FC2D350EC500C0D724 /* ContentWitnesses+empty.swift in Sources */,
 				C139D9182AFCB175008B5F5E /* MainViewModelSamples.swift in Sources */,
 				EDB165602667A569007E6030 /* VortexInput.swift in Sources */,
 				2A9499222B73E13000C67F05 /* UserAccountEffectHandler.swift in Sources */,
@@ -22171,6 +22178,7 @@
 				2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				2A65F1FA2D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift in Sources */,
 				C179D4002CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift in Sources */,
 				2A07B9B72CFDAB5E00A3399E /* RootViewModelFactory+updateAlerts.swift in Sources */,
 				2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */,

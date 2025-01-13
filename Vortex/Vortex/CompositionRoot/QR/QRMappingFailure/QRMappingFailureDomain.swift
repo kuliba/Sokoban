@@ -32,12 +32,14 @@ extension QRMappingFailureDomain {
         case back
         case detailPayment
         case manualSearch
+        case scanQR
     }
     
     enum Navigation {
         
         case back
-        case detailPayment
+        case detailPayment(Node<PaymentsViewModel>)
         case manualSearch
+        case scanQR
     }
 }
