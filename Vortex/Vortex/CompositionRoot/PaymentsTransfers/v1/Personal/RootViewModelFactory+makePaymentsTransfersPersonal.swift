@@ -114,7 +114,7 @@ extension PaymentsTransfersPersonalDomain.Content {
 
 // MARK: - CategoryPicker
 
-private extension PayHubUI.CategoryPicker {
+private extension CategoryPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -168,7 +168,7 @@ private extension FlowState<SelectedCategoryNavigation> {
 
 // MARK: - OperationPicker
 
-private extension PayHubUI.OperationPicker {
+private extension OperationPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -222,7 +222,7 @@ private extension OperationPickerDomain.FlowDomain.State {
 
 // MARK: - TransfersPicker
 
-private extension PayHubUI.TransfersPicker {
+private extension TransfersPicker {
     
     var eventPublisher: EventPublisher {
         

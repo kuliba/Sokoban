@@ -15,7 +15,7 @@ extension RootViewFactory {
     
     @ViewBuilder
     func makeCategoryPickerSectionView(
-        categoryPicker: PayHubUI.CategoryPicker
+        categoryPicker: CategoryPicker
     ) -> some View {
         
         if let binder = categoryPicker.sectionBinder {
@@ -111,7 +111,7 @@ extension RootViewFactory {
             switch paymentFlow {
             case let .mobile(mobile):
                 components.makePaymentsView(mobile.paymentsViewModel)
-                                
+                
             case let .taxAndStateServices(wrapper):
                 components.makePaymentsView( wrapper.paymentsViewModel)
                 
