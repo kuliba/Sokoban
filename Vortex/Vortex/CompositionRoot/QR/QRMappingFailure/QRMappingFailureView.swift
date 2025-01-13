@@ -8,9 +8,10 @@
 import RxViewModel
 import SwiftUI
 
-struct QRMappingFailureView: View {
+struct QRMappingFailureView<DestinationView: View>: View {
     
     let binder: Domain.Binder
+    let destinationView: (Domain.Navigation.Destination) -> DestinationView
     
     var body: some View {
         
@@ -57,23 +58,6 @@ private extension QRFailedContentView {
                 ),
             ]
         )
-    }
-}
-
-private extension QRMappingFailureView {
-    
-    @ViewBuilder
-    func destinationView(
-        destination: Domain.Navigation.Destination
-    ) -> some View {
-        
-        switch destination {
-        case .manualSearch:
-            Text("TBD: manualSearch")
-            
-        case .detailPayment:
-            Text("TBD: detailPayment")
-        }
     }
 }
 
