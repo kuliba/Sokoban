@@ -59,7 +59,7 @@ extension RootViewModelFactory {
                 ))
                 
             case .manualSearch:
-                completion(.manualSearch)
+                completion(.manualSearch("abc"))
                 
             case .scanQR:
                 completion(.scanQR)

@@ -11,6 +11,8 @@ import SwiftUI
 struct QRMappingFailureView<DestinationView: View>: View {
     
     let binder: Domain.Binder
+    
+    @ViewBuilder
     let destinationView: (Domain.Navigation.Destination) -> DestinationView
     
     var body: some View {
@@ -66,16 +68,24 @@ extension QRMappingFailureDomain.Navigation {
     var destination: Destination? {
         
         switch self {
-        case .back:          return nil
-        case .detailPayment: return .detailPayment
-        case .manualSearch:  return.manualSearch
-        case .scanQR:        return nil
+        case .back:
+            return nil
+            
+        case let .detailPayment(node):
+            return .detailPayment(node.model)
+            
+        case let .manualSearch(text):
+            return .manualSearch(text)
+            
+        case .scanQR:
+            return nil
         }
     }
     
     enum Destination {
         
-        case manualSearch, detailPayment
+        case manualSearch(String)
+        case detailPayment(PaymentsViewModel)
     }
 }
 
@@ -84,13 +94,17 @@ extension QRMappingFailureDomain.Navigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case .manualSearch:  return .manualSearch
-        case .detailPayment: return .detailPayment
+        case .manualSearch:  
+            return .manualSearch
+            
+        case let .detailPayment(detailPayment):
+            return .detailPayment(.init(detailPayment))
         }
     }
     
     enum ID: Hashable {
         
-        case manualSearch, detailPayment
+        case manualSearch
+        case detailPayment(ObjectIdentifier)
     }
 }

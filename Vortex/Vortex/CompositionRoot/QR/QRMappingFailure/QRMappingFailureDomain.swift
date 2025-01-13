@@ -39,7 +39,7 @@ extension QRMappingFailureDomain {
         
         case back
         case detailPayment(Node<PaymentsViewModel>)
-        case manualSearch
+        case manualSearch(String)
         case scanQR
     }
 }
