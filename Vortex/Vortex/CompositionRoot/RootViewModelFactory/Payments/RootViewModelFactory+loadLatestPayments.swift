@@ -92,7 +92,10 @@ extension RootViewModelFactory {
                 return model.dictionaryBank(for: bankID)?.svgImage.image
                             
             case "mobile":
-                return model.dictionaryAnywayOperator(for: withPhone.puref)?
+                
+                guard let puref = withPhone.puref else { return nil }
+                
+                return model.dictionaryAnywayOperator(for: puref)?
                     .logotypeList.first?.svgImage?.image
                 
             default:
