@@ -236,6 +236,7 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
         amount: Decimal,
         name: String,
         md5Hash: String?,
+        paymentFlow: String? = nil,
         puref: String,
         type: String,
         additionalItems: [ResponseMapper.LatestServicePayment.AdditionalItem]
@@ -246,7 +247,8 @@ final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCa
             amount: amount,
             name: name,
             md5Hash: md5Hash,
-            puref: puref, 
+            paymentFlow: paymentFlow,
+            puref: puref,
             type: type,
             additionalItems: additionalItems
         )

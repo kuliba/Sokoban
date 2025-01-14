@@ -126,6 +126,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
             model: .mockWithEmptyExcept(),
             nanoServices: .init(
                 makeMobile: makeMobile,
+                makeStandard: { $1(.category($0)) },
                 makeTax: makeTax,
                 makeTransport: { transport }
             ),

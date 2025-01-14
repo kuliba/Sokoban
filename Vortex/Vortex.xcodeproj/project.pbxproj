@@ -574,7 +574,6 @@
 		2A2EE9152CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */; };
 		2A2EE9172CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */; };
 		2A2EE9192CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */; };
-		2A2EE91B2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */; };
 		2A2F882A2BC942220097119C /* AnywayPaymentPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2F88292BC942220097119C /* AnywayPaymentPreviewApp.swift */; };
 		2A2F882C2BC942220097119C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2F882B2BC942220097119C /* ContentView.swift */; };
 		2A2F88312BC942230097119C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A2F88302BC942230097119C /* Preview Assets.xcassets */; };
@@ -989,6 +988,10 @@
 		2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */; };
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
+		2A65F1F62D35027400C0D724 /* QRMappingFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1F52D35027400C0D724 /* QRMappingFailureDomain.swift */; };
+		2A65F1F82D3504F400C0D724 /* QRMappingFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1F72D3504F400C0D724 /* QRMappingFailureView.swift */; };
+		2A65F1FA2D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1F92D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift */; };
+		2A65F1FC2D350EC500C0D724 /* ContentWitnesses+empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */; };
 		2A65FB3C2B4E62DF00A84F9E /* View+loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */; };
 		2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */; };
 		2A65FB412B4E85BD00A84F9E /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB402B4E85BD00A84F9E /* Reducer.swift */; };
@@ -4179,7 +4182,6 @@
 		2A2EE9142CF0B3780019FC31 /* RootViewModelFactory+getSberQRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getSberQRData.swift"; sourceTree = "<group>"; };
 		2A2EE9162CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift"; sourceTree = "<group>"; };
 		2A2EE9182CF0B4A90019FC31 /* RootViewModelFactory+makeAnywayServicePickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeAnywayServicePickerFlowModel.swift"; sourceTree = "<group>"; };
-		2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getQRNavigation.swift"; sourceTree = "<group>"; };
 		2A2F88272BC942220097119C /* AnywayPaymentPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnywayPaymentPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A2F88292BC942220097119C /* AnywayPaymentPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentPreviewApp.swift; sourceTree = "<group>"; };
 		2A2F882B2BC942220097119C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -4603,6 +4605,10 @@
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
 		2A65D8AA2A333123003B3FEA /* TaxCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxCodes.swift; sourceTree = "<group>"; };
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
+		2A65F1F52D35027400C0D724 /* QRMappingFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingFailureDomain.swift; sourceTree = "<group>"; };
+		2A65F1F72D3504F400C0D724 /* QRMappingFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingFailureView.swift; sourceTree = "<group>"; };
+		2A65F1F92D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRMappingFailureBinder.swift"; sourceTree = "<group>"; };
+		2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentWitnesses+empty.swift"; sourceTree = "<group>"; };
 		2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+loader.swift"; sourceTree = "<group>"; };
 		2A65FB3E2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsWrapperView.swift; sourceTree = "<group>"; };
 		2A65FB402B4E85BD00A84F9E /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
@@ -10619,6 +10625,16 @@
 			path = SupportingTypes;
 			sourceTree = "<group>";
 		};
+		2A65F1F42D35025900C0D724 /* QRMappingFailure */ = {
+			isa = PBXGroup;
+			children = (
+				2A65F1F52D35027400C0D724 /* QRMappingFailureDomain.swift */,
+				2A65F1F92D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift */,
+				2A65F1F72D3504F400C0D724 /* QRMappingFailureView.swift */,
+			);
+			path = QRMappingFailure;
+			sourceTree = "<group>";
+		};
 		2A65FB3D2B4E6F6700A84F9E /* FastPaymentsSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -10695,7 +10711,6 @@
 			isa = PBXGroup;
 			children = (
 				2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */,
-				2A2EE91A2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift */,
 				2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */,
 				2AFF32062D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift */,
 				2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */,
@@ -10835,6 +10850,7 @@
 				2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */,
 				2A945B3F2CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift */,
 				2A3345902CB13FAA00EBF33E /* QRNavigation */,
+				2A65F1F42D35025900C0D724 /* QRMappingFailure */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -10857,6 +10873,7 @@
 				A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingViewModel.swift */,
 				A7930E6D2D3577B8003D3BB8 /* RootViewModelFactory+makeGetCollateralLandingViewModel.swift */,
 				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
+				2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */,
 				2A9CC0C52D1BE09E0071F30E /* Factories */,
 				842C42362D11FD2B006A307D /* SavingsAccount */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
@@ -20820,6 +20837,7 @@
 				2A4C4B232C1AEF4E00F4D465 /* UtilityPrepaymentFlowEffect.swift in Sources */,
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
 				C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */,
+				2A65F1FC2D350EC500C0D724 /* ContentWitnesses+empty.swift in Sources */,
 				C139D9182AFCB175008B5F5E /* MainViewModelSamples.swift in Sources */,
 				EDB165602667A569007E6030 /* VortexInput.swift in Sources */,
 				2A9499222B73E13000C67F05 /* UserAccountEffectHandler.swift in Sources */,
@@ -22195,6 +22213,7 @@
 				2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				2A65F1FA2D350DB600C0D724 /* RootViewModelFactory+makeQRMappingFailureBinder.swift in Sources */,
 				C179D4002CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift in Sources */,
 				2A07B9B72CFDAB5E00A3399E /* RootViewModelFactory+updateAlerts.swift in Sources */,
 				2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */,
@@ -22311,6 +22330,7 @@
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
 				2A35DDA52C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift in Sources */,
 				77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */,
+				2A65F1F82D3504F400C0D724 /* QRMappingFailureView.swift in Sources */,
 				2A7183BC2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift in Sources */,
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				0BE0BE03290F30BA0064549E /* QROperator.swift in Sources */,
@@ -22493,6 +22513,7 @@
 				0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */,
 				777460EF291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift in Sources */,
 				777167D627CE858500655D60 /* SettingsAgentMock.swift in Sources */,
+				2A65F1F62D35027400C0D724 /* QRMappingFailureDomain.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				2AD8243D2C87249F0007B8DF /* CategoryPickerSectionDomain.swift in Sources */,
 				5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */,
@@ -22608,7 +22629,6 @@
 				77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */,
 				831EB3D42CCE382400896BD4 /* StickerViewFactory.swift in Sources */,
 				777460E0291E509900D3FF46 /* ContactsSectionViewModel.swift in Sources */,
-				2A2EE91B2CF0B6360019FC31 /* RootViewModelFactory+getQRNavigation.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				2A4300802C5217F6002FF8C7 /* ServicePaymentFlowEffect.swift in Sources */,
 				2A89A5182CCD84D30070131F /* RootViewModelFactorySettings.swift in Sources */,

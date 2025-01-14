@@ -16,7 +16,15 @@ enum SelectedCategoryNavigation {
     typealias PaymentFlow = PayHub.PaymentFlow<Mobile, QR, Standard, Tax, Transport>
     
     typealias Mobile = ClosePaymentsViewModelWrapper
-    typealias Standard = ServiceCategory // it's up to root to handle it
+    
+    enum Standard {
+        
+        // picker view will handle destination
+        case destination(StandardSelectedCategoryDestination)
+        // root will handle it from category picker section
+        case category(ServiceCategory)
+    }
+    
     typealias QR = Void // it's up to root to handle QR
     typealias Tax = ClosePaymentsViewModelWrapper
     typealias Transport = TransportPaymentsViewModel
