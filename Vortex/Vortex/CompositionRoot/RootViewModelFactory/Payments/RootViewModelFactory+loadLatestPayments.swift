@@ -111,7 +111,7 @@ extension RootViewModelFactory {
         case let .withPhone(withPhone):
             
             let phoneNumber = withPhone.phoneNumber
-            return getContact(for: phoneNumber)?.fullName ?? format(phoneNumber: phoneNumber)
+            return getContact(for: phoneNumber)?.fullName ?? format(phoneNumber: phoneNumber.addCodeRuIfNeeded())
         }
     }
     
