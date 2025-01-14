@@ -25,7 +25,7 @@ where Footer: FooterInterface & Receiver<Decimal>,
     private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
     
-    private let stateSubject = PassthroughSubject<State, Never>()
+    private let eventQueue = PassthroughSubject<Event, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
     private var cancellables = Set<AnyCancellable>()
     
@@ -55,10 +55,11 @@ where Footer: FooterInterface & Receiver<Decimal>,
         // Update state with the initial transaction when `self` is avail
         self.state = updating(state, with: transaction)
         
-        stateSubject
+        eventQueue
             .receive(on: scheduler)
-            .assign(to: &$state)
-        
+            .sink { [weak self] in self?.processEvent($0) }
+            .store(in: &cancellables)
+
         bind(footer)
     }
 }
@@ -67,20 +68,7 @@ public extension AnywayTransactionViewModel {
     
     func event(_ event: Event) {
         
-        let (transaction, effect) = reduce(state.transaction, event)
-        
-        if transaction != state.transaction {
-            let state = updating(state, with: transaction)
-            stateSubject.send(state)            
-
-            updateValues(state, with: transaction)
-            sendOTPWarning(state)
-        }
-        
-        if let effect {
-            
-            handleEffect(effect) { [weak self] in self?.event($0) }
-        }
+        eventQueue.send(event)
     }
 }
 
@@ -107,6 +95,25 @@ public extension AnywayTransactionViewModel {
 }
 
 private extension AnywayTransactionViewModel {
+    
+    private func processEvent(_ event: Event) {
+        
+        let (transaction, effect) = reduce(state.transaction, event)
+        
+        if transaction != state.transaction {
+            
+            let state = updating(state, with: transaction)
+            updateValues(state, with: transaction)
+            sendOTPWarning(state)
+            
+            self.state = state
+        }
+        
+        if let effect {
+            
+            handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
     
     func updateValues(
         _ state: State,
