@@ -9,6 +9,6 @@ extension GetCollateralLandingDomain {
     
     public enum Effect: Equatable {
         
-        case load
+        case load(String)
     }
 }

@@ -7,10 +7,20 @@
 
 extension GetCollateralLandingDomain {
     
+    public enum ViewEvent: Equatable {
+        
+        case domainEvent(Event)
+        case uiEvent(UIEvent)
+    }
+
     public enum Event: Equatable {
         
-        case load
+        case load(String)
         case loaded(Result)
+    }
+        
+    public enum UIEvent: Equatable {
+        
         case changeDesiredAmount(UInt)
         case createDraftApplication
         case selectCollateral(String)

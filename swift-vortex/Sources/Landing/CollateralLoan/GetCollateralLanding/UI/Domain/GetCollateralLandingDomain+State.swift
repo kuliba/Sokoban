@@ -15,6 +15,18 @@ extension GetCollateralLandingDomain {
         var result: Result?
         var bottomSheet: BottomSheet?
         let product: Product
+        
+        public init(
+            isLoading: Bool = false,
+            result: Result? = nil,
+            bottomSheet: BottomSheet? = nil,
+            product: Product = .empty
+        ) {
+            self.isLoading = isLoading
+            self.result = result
+            self.bottomSheet = bottomSheet
+            self.product = product
+        }
     }
 }
 

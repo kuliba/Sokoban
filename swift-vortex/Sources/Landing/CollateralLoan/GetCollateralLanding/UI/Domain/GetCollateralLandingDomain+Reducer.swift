@@ -17,11 +17,11 @@ extension GetCollateralLandingDomain {
             var effect: Effect?
             
             switch event {
-            case .load:
+            case let .load(landingId):
                 guard !state.isLoading else { break }
                         
                 state.isLoading = true
-                effect = .load
+                effect = .load(landingId)
                 
             case let .loaded(result):
                 state.isLoading = false

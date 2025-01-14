@@ -14,7 +14,7 @@ import Combine
 
 extension RootViewModelFactory {
     
-    func makeCollateralLoanLandingBinder() -> GetShowcaseDomain.Binder {
+    func makeCollateralLoanLandingShowcaseBinder() -> GetShowcaseDomain.Binder {
         
         composeBinder(
             makeContent: makeContent,
