@@ -55,7 +55,7 @@ final class ContactChangingReducerTests: XCTestCase {
         XCTAssertNoDiff(result, [
             .placeholder("Enter contact name or phone"),
             .editing(.empty),
-            .editing(.init("#", cursorAt: 1)),
+            .editing(.init("#",    cursorAt: 1)),
             .editing(.init("####", cursorAt: 4)),
         ])
     }
@@ -134,12 +134,12 @@ final class ContactChangingReducerTests: XCTestCase {
         XCTAssertNoDiff(result, [
             .placeholder("Enter contact name or phone"),
             .editing(.empty),
-            .editing(.init("~3",        cursorAt: 2)),
-            .editing(.init("~3456789",  cursorAt: 8)),
+            .editing(.init("~3",          cursorAt: 2)),
+            .editing(.init("~3456789",    cursorAt: 8)),
             .editing(.init("~8",          cursorAt: 2)),
             .editing(.init("~83",         cursorAt: 3)),
             .editing(.init("~83123456",   cursorAt: 9)),
-            .editing(.init("~9",        cursorAt: 2)),
+            .editing(.init("~9",          cursorAt: 2)),
             .editing(.init("~7916",       cursorAt: 5)),
             .editing(.init("Abc def 123", cursorAt: 11)),
             .editing(.init("+-Abc 123",   cursorAt: 9)),
@@ -225,12 +225,12 @@ final class ContactChangingReducerTests: XCTestCase {
         XCTAssertNoDiff(result, [
             .placeholder("Enter contact name or phone"),
             .editing(.empty),
-            .editing(.init("~3",        cursorAt: 2)),
-            .editing(.init("~3456789",  cursorAt: 8)),
+            .editing(.init("~3",          cursorAt: 2)),
+            .editing(.init("~3456789",    cursorAt: 8)),
             .editing(.init("~8",          cursorAt: 2)),
             .editing(.init("~83",         cursorAt: 3)),
             .editing(.init("~83123456",   cursorAt: 9)),
-            .editing(.init("~9",        cursorAt: 2)),
+            .editing(.init("~9",          cursorAt: 2)),
             .editing(.init("~8916",       cursorAt: 5)),
             .editing(.init("Abc def 123", cursorAt: 11)),
             .editing(.init("+-Abc 123",   cursorAt: 9)),
@@ -262,10 +262,10 @@ final class ContactChangingReducerTests: XCTestCase {
             .editing(.empty),
             .editing(.init("$",          cursorAt: 1)),
             .editing(.init("-",          cursorAt: 1)),
-            .editing(.init("~3",       cursorAt: 2)),
-            .editing(.init("~345678",  cursorAt: 7)),
-            .editing(.init("~3456789", cursorAt: 8)),
-            .editing(.init("~31",       cursorAt: 3)),
+            .editing(.init("~3",         cursorAt: 2)),
+            .editing(.init("~345678",    cursorAt: 7)),
+            .editing(.init("~3456789",   cursorAt: 8)),
+            .editing(.init("~31",        cursorAt: 3)),
         ])
     }
     
@@ -289,10 +289,10 @@ final class ContactChangingReducerTests: XCTestCase {
             .editing(.empty),
             .editing(.init("$",          cursorAt: 1)),
             .editing(.init("$-",         cursorAt: 2)),
-            .editing(.init("~3",       cursorAt: 2)),
-            .editing(.init("~345678",  cursorAt: 7)),
-            .editing(.init("~3456789", cursorAt: 8)),
-            .editing(.init("~31",       cursorAt: 3)),
+            .editing(.init("~3",         cursorAt: 2)),
+            .editing(.init("~345678",    cursorAt: 7)),
+            .editing(.init("~3456789",   cursorAt: 8)),
+            .editing(.init("~31",        cursorAt: 3)),
         ])
     }
     

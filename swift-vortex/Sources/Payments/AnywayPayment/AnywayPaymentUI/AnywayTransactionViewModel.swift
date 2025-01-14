@@ -25,7 +25,7 @@ where Footer: FooterInterface & Receiver<Decimal>,
     private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
     
-    private let stateSubject = PassthroughSubject<State, Never>()
+    private let eventQueue = PassthroughSubject<Event, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
     private var cancellables = Set<AnyCancellable>()
     
@@ -55,10 +55,11 @@ where Footer: FooterInterface & Receiver<Decimal>,
         // Update state with the initial transaction when `self` is avail
         self.state = updating(state, with: transaction)
         
-        stateSubject
+        eventQueue
             .receive(on: scheduler)
-            .assign(to: &$state)
-        
+            .sink { [weak self] in self?.processEvent($0) }
+            .store(in: &cancellables)
+
         bind(footer)
     }
 }
@@ -67,20 +68,7 @@ public extension AnywayTransactionViewModel {
     
     func event(_ event: Event) {
         
-        let (transaction, effect) = reduce(state.transaction, event)
-        
-        if transaction != state.transaction {
-            let state = updating(state, with: transaction)
-            stateSubject.send(state)            
-
-            updateValues(with: transaction)
-            sendOTPWarning(state)
-        }
-        
-        if let effect {
-            
-            handleEffect(effect) { [weak self] in self?.event($0) }
-        }
+        eventQueue.send(event)
     }
 }
 
@@ -108,12 +96,34 @@ public extension AnywayTransactionViewModel {
 
 private extension AnywayTransactionViewModel {
     
+    private func processEvent(_ event: Event) {
+        
+        let (transaction, effect) = reduce(state.transaction, event)
+        
+        if transaction != state.transaction {
+            
+            let state = updating(state, with: transaction)
+            updateValues(state, with: transaction)
+            sendOTPWarning(state)
+            
+            self.state = state
+        }
+        
+        if let effect {
+            
+            handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
+    
     func updateValues(
+        _ state: State,
         with transaction: State.Transaction
     ) {
-        transaction.context.payment.elements.forEach { element in
+        let diff = state.transaction.diff(transaction)
+        
+        diff.forEach { element in
             
-            guard let model = state.models[element.id],
+            guard let model = state.models[element.key],
                   let value = element.value
             else { return }
             
@@ -205,5 +215,41 @@ private extension CachedModelsTransaction {
         else { return nil }
         
         return warning
+    }
+}
+
+// MARK: - for debugging
+
+extension CachedModelsTransaction {
+    
+    func stateOf(parameterID: String) -> Projection {
+        
+        return .init(
+            valueInTransaction: transaction.valueOf(parameterID: parameterID),
+            model: models[.parameterID(parameterID)]
+        )
+    }
+    
+    struct Projection {
+        
+        let valueInTransaction: String?
+        let model: Model?
+    }
+}
+
+extension Transaction where Context == AnywayPaymentContext {
+    
+    func valueOf(parameterID: String) -> String? {
+        
+        let id = AnywayElement.ID.parameterID(parameterID)
+        
+        return context.payment.elements.first(matching: id)?.value
+    }
+    
+    func diff(
+        _ other: Self
+    ) -> [AnywayElement.ID: AnywayElement.Field.Value?] {
+        
+        context.payment.elements.diff(other.context.payment.elements, keyPath: \.value)
     }
 }

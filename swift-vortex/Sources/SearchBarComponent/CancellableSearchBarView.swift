@@ -93,7 +93,7 @@ struct CancellableSearchBarView_Previews: PreviewProvider {
             
             CancellableSearchBarView(
                 viewModel: viewModel,
-                textFieldConfig: .preview,
+                textFieldConfig: .preview(),
                 clearButtonLabel: PreviewClearButton.init,
                 cancelButton: PreviewCancelButton.init
             )

@@ -456,7 +456,8 @@ struct PaymentsAmountView: View {
             if let alertViewModel = viewModel.alert {
                 
                 AlertView(viewModel: alertViewModel)
-                    .frame(width: .infinity, height: 32)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 32)
             }
             
             Group {

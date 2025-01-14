@@ -183,7 +183,8 @@ public struct SelectView: View {
                 }
                 
                 Color.gray
-                    .frame(width: .infinity, height: 1, alignment: .center)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 1, alignment: .center)
                     .opacity(0.2)
             }
         }
