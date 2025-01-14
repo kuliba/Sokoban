@@ -10,6 +10,42 @@ import Combine
 
 extension TemplatesListViewModel {
     
+    var md5Hashes: [String] {
+        
+        items.compactMap(\.avatar.md5Hash)
+    }
+}
+
+extension TemplatesListViewModel.ItemViewModel.Avatar {
+    
+    var md5Hash: String? {
+     
+        guard case let .md5Hash(md5Hash) = self
+        else { return nil }
+
+        return md5Hash
+    }
+}
+
+extension TemplatesListViewModel.ItemViewModel {
+    
+    func update(
+        image: Image,
+        forMD5Hash md5Hash: String
+    ) {
+        guard case let .md5Hash(expecting) = avatar,
+              expecting == md5Hash
+        else { return }
+        
+        DispatchQueue.main.async { [weak self] in
+         
+            self?.avatar = .image(image)
+        }
+    }
+}
+
+extension TemplatesListViewModel {
+    
     class ItemViewModel: Identifiable, ObservableObject {
         
         let id: Int
@@ -124,7 +160,7 @@ extension TemplatesListViewModel {
         enum Avatar {
             
             case image(Image)
-            case md5Hash(AnyPublisher<Image, Never>)
+            case md5Hash(String)
             case placeholder
             case text(String)
             
@@ -258,13 +294,10 @@ extension TemplatesListViewModel {
             
             if let imgData = model.images.value[md5hash],
                let image = imgData.image {
-                
                 mainImage = image
             } else {
-                let publisher = model.imageCache()
-                    .image(forKey: .init(md5hash))
-                    .eraseToAnyPublisher()
-                avatar = .md5Hash(publisher)
+                model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [md5hash]))
+                avatar = .md5Hash(md5hash)
             }
         }
         
