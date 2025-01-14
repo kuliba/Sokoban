@@ -88,24 +88,7 @@ private extension TemplatesListView {
                 
                 switch viewModel.style {
                 case .list:
-                    
-                    List {
-                        
-                        ForEach(viewModel.items, content: itemView)
-                            .onMove { indexes, destination in
-                                
-                                guard let first = indexes.first else { return }
-                                
-                                viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
-                                    .init(move: (first, destination)))
-                            }
-                            .moveDisabled(viewModel.editModeState != .active)
-                    }
-                    .listStyle(.plain)
-                    .environment(\.editMode, $viewModel.editModeState)
-                    .padding(.horizontal)
-                    .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
-                    
+                    list()
                     
                 case .tiles:
                     
@@ -152,6 +135,26 @@ private extension TemplatesListView {
                 .padding(.top, 16)
                 .padding(.horizontal)
         }
+    }
+    
+    func list() -> some View {
+        
+        List {
+            
+            ForEach(viewModel.items, content: itemView)
+                .onMove { indexes, destination in
+                    
+                    guard let first = indexes.first else { return }
+                    
+                    viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
+                        .init(move: (first, destination)))
+                }
+                .moveDisabled(viewModel.editModeState != .active)
+        }
+        .listStyle(.plain)
+        .environment(\.editMode, $viewModel.editModeState)
+        .padding(.horizontal)
+        .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
     }
     
     @ViewBuilder
