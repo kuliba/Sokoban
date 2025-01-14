@@ -18,34 +18,6 @@ extension RootViewModelFactory {
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
-       /* getServiceCategoryType(ofType: lastPayment.type) { [weak self] categoryType in
-            
-            guard let self, let categoryType
-            else {
-            
-                self?.errorLog(category: .cache, message: "Can't find categoryType for \"\(lastPayment.type)\"")
-                return completion(nil)
-            }
-            
-            processSelection(
-                select: (.payment(lastPayment), categoryType)
-            ) { [weak self] in
-                
-                guard let self,
-                      case let .success(.startPayment(transaction)) = $0
-                else { return completion(nil) }
-                
-                let flowModel = makeAnywayFlowModel(transaction: transaction)
-                let cancellable = flowModel.$state.compactMap(\.outside)
-                    .sink { notify($0) }
-                
-                completion(.anywayPayment(.init(
-                    model: flowModel,
-                    cancellable: cancellable
-                )))
-            }
-        }*/
-        
         let paymentFlow = lastPayment.paymentFlow
         
         switch paymentFlow {
@@ -67,7 +39,6 @@ extension RootViewModelFactory {
                 closeAction: { notify(.main) }
             ))
         }
-
     }
     
     func processPayments(
@@ -205,7 +176,6 @@ private extension UtilityPaymentLastPayment {
     ) -> Payments.Operation.Source? {
         
         guard type == "outside",
-             // let phone = transfer.directPhone,
               let countryId = countryID
         else { return nil }
         
@@ -351,36 +321,11 @@ private extension UtilityPaymentLastPayment {
         
         additionalItems.first(where: { $0.fieldName == "P1"})?.fieldValue
     }
-    
-    /*var payerOrInternalPayerProductID: Int? {
-        
-        payerProductID ?? internalPayeeProductID
-    }
-    
-    var payerProductID: Int? {
-        
-        payer?.cardId ?? payer?.accountId
-    }
-    
-    private var externalPayeeProductID: Int? {
-        
-        payeeExternal?.cardId ?? payeeExternal?.accountId
-    }
-    
-    private var internalPayeeProductID: Int? {
-        
-        payeeInternal?.cardId ?? payeeInternal?.accountId
-    }*/
 }
 
 
 extension Array where Element == UtilityPaymentLastPayment {
         
-//    var _additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
-//
-//        value(keypath: \.additional).last ?? []
-//    }
-    
     var additional: [UtilityPaymentLastPayment.AdditionalItem] {
         
         if let additional = last?.additionalItems, !additional.isEmpty {
