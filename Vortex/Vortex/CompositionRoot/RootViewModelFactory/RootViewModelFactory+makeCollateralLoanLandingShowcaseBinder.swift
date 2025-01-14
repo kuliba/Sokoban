@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeCollateralLoanLandingViewModel.swift
+//  RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift
 //  Vortex
 //
 //  Created by Valentin Ozerov on 23.12.2024.
@@ -77,8 +77,8 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .landing(landingId):
-            // TODO: replace productID to binder in the future
-            completion(.landing(landingId))
+            let collateralLoanLandingBinder = makeCollateralLoanLandingBinder(landingId: landingId)
+            completion(.landing(collateralLoanLandingBinder))
         }
     }
     

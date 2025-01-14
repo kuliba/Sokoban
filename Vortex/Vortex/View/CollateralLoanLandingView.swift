@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
 import RxViewModel
 
 struct CollateralLoanLandingView: View {
@@ -77,8 +78,8 @@ struct CollateralLoanLandingView: View {
     ) -> some View {
         
         switch navigation {
-        case let .landing(landingId):
-            Text(landingId)
+        case let .landing(landing):
+            Text(String(describing: landing))
         }
     }
     
@@ -91,13 +92,13 @@ extension GetShowcaseDomain.Navigation: Identifiable {
     var id: ID {
         
         switch self {
-        case let .landing(landingId):
-            return .landing(landingId)
+        case let .landing(landing):
+            return .landing(.init(landing))
         }
     }
     
     enum ID: Hashable {
      
-        case landing(String)
+        case landing(ObjectIdentifier)
     }
 }

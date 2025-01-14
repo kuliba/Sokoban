@@ -6,6 +6,7 @@
 //
 
 import CalendarUI
+import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetShowcaseUI
 import Combine
 import CombineSchedulers
@@ -21,7 +22,8 @@ class MainViewModel: ObservableObject, Resetable {
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeCollateralLoanLandingBinder = () -> GetShowcaseDomain.Binder
+    typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
+    typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
 
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -52,6 +54,7 @@ class MainViewModel: ObservableObject, Resetable {
 
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
+    private let makeCollateralLoanShowcaseBinder: MakeCollateralLoanShowcaseBinder
     private let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
@@ -76,6 +79,7 @@ class MainViewModel: ObservableObject, Resetable {
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
+        makeCollateralLoanShowcaseBinder: @escaping MakeCollateralLoanShowcaseBinder,
         makeCollateralLoanLandingBinder: @escaping MakeCollateralLoanLandingBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
@@ -94,6 +98,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.route = route
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
+        self.makeCollateralLoanShowcaseBinder = makeCollateralLoanShowcaseBinder
         self.makeCollateralLoanLandingBinder = makeCollateralLoanLandingBinder
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
@@ -943,7 +948,7 @@ private extension MainViewModel {
     
     func openCollateralLoanLanding() {
         
-        let binder = makeCollateralLoanLandingBinder()
+        let binder = makeCollateralLoanShowcaseBinder()
         route.destination = .collateralLoanLanding(binder)
     }
 
