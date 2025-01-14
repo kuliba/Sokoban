@@ -170,7 +170,9 @@ extension RootViewFactory {
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
                 makeQRView: components.makeQRView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView
+                makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView,
+                paymentsViewFactory: paymentsViewFactory,
+                rootViewFactory: self
             )
         )
     }

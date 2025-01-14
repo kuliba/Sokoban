@@ -37,8 +37,11 @@ where ItemLabel: View,
         
         VStack(spacing: config.spacing) {
             
-            headerTitle()
-                .frame(height: config.headerHeight)
+            config.headerHeight.map {
+             
+                headerTitle()
+                    .frame(height: $0)
+            }
             
             if state.isLoadingFailed {
                 
@@ -171,7 +174,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
         CategoryPickerSectionContentView(
             state: .init(prefix: [], suffix: items),
             event: { print($0) },
-            config: .preview,
+            config: .preview(),
             itemLabel: { item in
                 
                 HStack(spacing: 16) {

@@ -5,28 +5,34 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
+import Foundation
 import SharedConfigs
 
 extension CategoryPickerSectionContentViewConfig {
     
-    static let preview: Self = .init(
-        failure: .preview,
-        headerHeight: 24,
-        spacing: 16,
-        title: .init(
-            text: "Make a Payment",
-            config: .init(
-                textFont: .title3.bold(),
-                textColor: .primary
+    static func preview(
+        headerHeight: CGFloat? = 24
+    ) -> Self {
+        
+        return .init(
+            failure: .preview,
+            headerHeight: headerHeight,
+            spacing: 16,
+            title: .init(
+                text: "Make a Payment",
+                config: .init(
+                    textFont: .title3.bold(),
+                    textColor: .primary
+                ),
+                leadingPadding: 20
             ),
-            leadingPadding: 20
-        ),
-        titlePlaceholder: .init(
-            color: .gray.opacity(0.5),
-            radius: 12,
-            size: .init(width: 148, height: 18)
+            titlePlaceholder: .init(
+                color: .gray.opacity(0.5),
+                radius: 12,
+                size: .init(width: 148, height: 18)
+            )
         )
-    )
+    }
 }
 
 extension LabelConfig {

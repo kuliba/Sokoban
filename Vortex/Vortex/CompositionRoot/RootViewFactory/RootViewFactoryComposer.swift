@@ -79,6 +79,7 @@ extension RootViewFactoryComposer {
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(),
+            paymentsViewFactory: makePaymentsViewFactory(),
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
         )
     }

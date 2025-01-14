@@ -462,6 +462,7 @@ private extension RootViewFactory {
             },
             makeMarketShowcaseView: { _,_,_   in .none },
             components: .preview,
+            paymentsViewFactory: .preview,
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)

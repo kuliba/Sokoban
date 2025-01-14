@@ -9,9 +9,9 @@ import PayHubUI
 
 // MARK: - CategoryPicker
 
-extension CategoryPickerSectionDomain.Binder: PayHubUI.CategoryPicker {}
+extension CategoryPickerSectionDomain.Binder: CategoryPicker {}
 
-extension PayHubUI.CategoryPicker {
+extension CategoryPicker {
     
     var sectionBinder: CategoryPickerSectionDomain.Binder? {
         
@@ -21,9 +21,9 @@ extension PayHubUI.CategoryPicker {
 
 // MARK: - OperationPicker
 
-extension OperationPickerDomain.Binder: PayHubUI.OperationPicker {}
+extension OperationPickerDomain.Binder: OperationPicker {}
 
-extension PayHubUI.OperationPicker {
+extension OperationPicker {
     
     var operationBinder: OperationPickerDomain.Binder? {
         
@@ -33,9 +33,9 @@ extension PayHubUI.OperationPicker {
 
 // MARK: - TransfersPicker
 
-extension PaymentsTransfersPersonalTransfersDomain.Binder: PayHubUI.TransfersPicker {}
+extension PaymentsTransfersPersonalTransfersDomain.Binder: TransfersPicker {}
 
-extension PayHubUI.TransfersPicker {
+extension TransfersPicker {
     
     var transfersBinder: PaymentsTransfersPersonalTransfersDomain.Binder? {
         

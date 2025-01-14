@@ -19,27 +19,41 @@ struct QRFailedView: View {
     
     var body: some View {
         
-        VStack(spacing: 32) {
+        QRFailedContentView(
+            title: viewModel.title,
+            subtitle: viewModel.content,
+            buttons: viewModel.searchOperatorButton
+        )
+        
+        NavigationLink("", isActive: $viewModel.isLinkActive) {
             
-            VStack(spacing: 28) {
-             
-                avatarView
+            if let link = viewModel.link  {
                 
-                VStack(spacing: 8) {
+                switch link {
                     
-                    Text(viewModel.title)
-                        .font(Font.textH3Sb18240())
-                        .foregroundColor(Color.textSecondary)
-                    
-                    Text(viewModel.content)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(Color.textPlaceholder)
+                case let .failedView(viewModel):
+                    viewFactory.makeQRSearchOperatorView(viewModel)
                 }
             }
+        }
+    }
+}
+
+struct QRFailedContentView: View {
+    
+    let title: String
+    let subtitle: String
+    let buttons: [ButtonSimpleView.ViewModel]
+    
+    var body: some View {
+        
+        VStack(spacing: 32) {
+            
+            QRFailedAvatarView(title: title, subtitle: subtitle)
             
             VStack(spacing: 8) {
                 
-                ForEach(viewModel.searchOperatorButton) { buttons in
+                ForEach(buttons) { buttons in
                     
                     ButtonSimpleView(viewModel: buttons)
                         .frame(height: 56)
@@ -50,21 +64,37 @@ struct QRFailedView: View {
             Spacer()
         }
         .padding(.top, 80)
-        
-        NavigationLink("", isActive: $viewModel.isLinkActive) {
-            
-            if let link = viewModel.link  {
-                
-                switch link {
+    }
+}
 
-                case let .failedView(viewModel):
-                    viewFactory.makeQRSearchOperatorView(viewModel)
-                }
+struct QRFailedAvatarView: View {
+    
+    let title: String
+    let subtitle: String
+    
+    var body: some View {
+        
+        VStack(spacing: 28) {
+            
+            avatarView()
+            
+            VStack(spacing: 8) {
+                
+                Text(title)
+                    .font(.textH3Sb18240())
+                    .foregroundColor(.textSecondary)
+                
+                Text(subtitle)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
             }
         }
     }
+}
+
+private extension QRFailedAvatarView {
     
-    var avatarView: some View {
+    func avatarView() -> some View {
         
         ZStack {
             
@@ -92,4 +122,3 @@ struct QRFailedView: View {
         }
     }
 }
-
