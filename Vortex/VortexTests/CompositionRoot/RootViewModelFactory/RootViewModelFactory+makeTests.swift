@@ -422,7 +422,8 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             paymentsTransfersFlag: .active,
             savingsAccountFlag: .active,
             collateralLoanLandingFlag: .active,
-            splashScreenFlag: .inactive
+            splashScreenFlag: .inactive, 
+            orderCardFlag: .inactive
         )
     }
 }
