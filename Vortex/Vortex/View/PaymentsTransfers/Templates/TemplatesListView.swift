@@ -149,7 +149,6 @@ private extension TemplatesListView {
         
         switch item.kind {
         case .regular, .deleting:
-            
             TemplateItemView(
                 viewModel: item,
                 style: .constant(.list),
@@ -163,17 +162,12 @@ private extension TemplatesListView {
                 item: item))
             
         case .add:
-            
-            AddNewItemView(
-                viewModel: item,
-                style: .constant(.list)
-            )
-            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-            .listRowBackground(BackgroundListView())
-            .modifier(Self.listRowSeparatorTint())
+            AddNewItemView(viewModel: item, style: .constant(.list))
+                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                .listRowBackground(BackgroundListView())
+                .modifier(Self.listRowSeparatorTint())
             
         case .placeholder:
-            
             PlaceholderItemView(style: .constant(.list))
                 .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
                 .shimmering(bounce: true)
@@ -223,11 +217,9 @@ private extension TemplatesListView {
             }
             
         case .add:
-            
             AddNewItemView(viewModel: item, style: .constant(.tiles))
             
         case .placeholder:
-            
             PlaceholderItemView(style: .constant(.tiles))
                 .shimmering(bounce: true)
         }
@@ -235,13 +227,10 @@ private extension TemplatesListView {
     
     @ViewBuilder
     func destination(
-        link: TemplatesListViewModel.Link?
+        link: TemplatesListViewModel.Link
     ) -> some View {
         
         switch link {
-        case nil:
-            EmptyView()
-            
         case let .payment(paymentsViewModel):
             viewFactory.makePaymentsView(paymentsViewModel)
         }
@@ -275,23 +264,17 @@ private extension TemplatesListView {
         
         switch sheet.type {
         case let .meToMe(viewModel):
-            
             viewFactory.makePaymentsMeToMeView(viewModel)
-                .fullScreenCover(item: $viewModel.success) { successViewModel in
-                    
-                    viewFactory.makePaymentsSuccessView(successViewModel)
-                }
-                .transaction { transaction in
-                    
-                    transaction.disablesAnimations = false
-                }
+                .fullScreenCover(
+                    item: $viewModel.success,
+                    content: viewFactory.makePaymentsSuccessView
+                )
+                .transaction { $0.disablesAnimations = false }
             
         case let .renameItem(renameViewModel):
-            
             RenameTemplateItemView(viewModel: renameViewModel)
             
         case let .productList(productListViewModel):
-            
             ProductListView(viewModel: productListViewModel, parentHeight: height)
         }
     }
@@ -343,11 +326,11 @@ extension TemplatesListView {
                                 .font(.textH3Sb18240())
                                 .foregroundColor(.textWhite)
                         }
-                }.disabled(viewModel.isNameNotValid)
+                }
+                .disabled(viewModel.isNameNotValid)
             }
             .frame(height: 210)
             .padding()
-            
         }
     }
     
@@ -377,8 +360,10 @@ extension TemplatesListView {
                         
                         ForEach(viewModel.sections) { sectionVM in
                             
-                            MyProductsSectionView(viewModel: sectionVM,
-                                                  editMode: .constant(.inactive))
+                            MyProductsSectionView(
+                                viewModel: sectionVM,
+                                editMode: .constant(.inactive)
+                            )
                             .onAppear {
                                 
                                 if ProductType(rawValue: sectionVM.id) == .card {
@@ -439,8 +424,8 @@ extension TemplatesListView {
                 }
                 .frame(height: 48)
                 .padding(.top, 24)
-                
-            }.padding()
+            }
+            .padding()
         }
     }
     
@@ -536,8 +521,7 @@ extension TemplatesListView {
         
         var body: some View {
             
-            Button { viewModel.action()
-            } label: {
+            Button(action: viewModel.action) {
                 
                 VStack(spacing: 4) {
                     
@@ -566,7 +550,6 @@ extension TemplatesListView {
                 .background(Color.white)
         }
     }
-    
 }
 
 //MARK: - Helpers
@@ -574,6 +557,7 @@ extension TemplatesListView {
 extension TemplatesListView {
     
     struct listRowSeparatorTint: ViewModifier {
+        
         func body(content: Content) -> some View {
             
             if #available(iOS 15.0, *) {
@@ -620,8 +604,9 @@ extension TemplatesListView {
             }
         }
     }
-    
 }
+
+// MARK: - Previews
 
 struct TemplatesListView_Previews: PreviewProvider {
     
@@ -671,5 +656,3 @@ extension TemplatesListViewFactory {
         makePaymentsView: {_ in fatalError() }
     )
 }
-
-
