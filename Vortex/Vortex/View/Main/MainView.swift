@@ -274,7 +274,10 @@ struct MainView<NavigationOperationView: View>: View {
                 makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
             )
             CollateralLoanLandingView(binder: binder, factory: factory)
-                .navigationBarTitle("Кредиты", displayMode: .inline)
+                .navigationBarWithBack(
+                    title: "Кредиты",
+                    dismiss: viewModel.resetDestination
+                )
                 .edgesIgnoringSafeArea(.bottom)
         }
     }
