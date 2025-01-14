@@ -425,6 +425,7 @@ extension TemplatesListView {
             ZStack(alignment: .topTrailing)  {
                 
                 avatarView()
+                    .animated(initialScale: 0.8, scaleEffectAnchor: .center)
                 topImageView()
             }
         }
