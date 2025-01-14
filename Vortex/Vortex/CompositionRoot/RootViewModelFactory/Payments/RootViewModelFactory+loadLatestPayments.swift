@@ -42,27 +42,19 @@ extension RootViewModelFactory {
         origin: LatestOrigin
     ) -> LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar? {
         
-        switch origin {
-        case let .service(service):
-            return nil
+        guard let phoneNumber = origin.phoneNumber, let contact = getContact(for: phoneNumber)
+        else { return nil }
+                        
+        if let avatar = contact.avatar, let avatarImg = Image(data: avatar.data) {
             
-        case let .withPhone(withPhone):
+            return .image(avatarImg)
             
-            let phoneNumber = withPhone.phoneNumber
-            if let contact = getContact(for: phoneNumber) {
-                if let avatar = contact.avatar,
-                   let avatarImg = Image(data: avatar.data) {
-                    
-                    return .image(avatarImg)
-                    
-                } else if let initials = contact.initials {
-                    
-                    return .text(initials)
-                }
-            }
+        } else if let initials = contact.initials {
+            
+            return .text(initials)
         }
         
-        return .icon(.ic24Smartphone, .iconGray)
+        return nil
     }
     
     @inlinable
@@ -109,14 +101,15 @@ extension RootViewModelFactory {
         origin: LatestOrigin
     ) -> String? {
         
-        switch origin {
-        case let .service(service):
-            return service.name ?? service.lpName ?? ""
+        if let phoneNumber = origin.phoneNumber {
             
-        case let .withPhone(withPhone):
-            
-            let phoneNumber = withPhone.phoneNumber
             return getContact(for: phoneNumber)?.fullName ?? format(phoneNumber: phoneNumber.addCodeRuIfNeeded())
+        } else {
+            
+            switch origin {
+            case let .service(service):     return service.name ?? service.lpName ?? ""
+            case let .withPhone(withPhone): return withPhone.name ?? ""
+            }
         }
     }
     
@@ -189,5 +182,30 @@ private extension Array where Element == LatestOrigin.Service.AdditionalItem {
             }
         }
         return nil
+    }
+    
+    var phoneNumber: String? {
+        
+        for item in self {
+            
+            if item.fieldName == "a3_NUMBER_1_2" {
+                return item.fieldValue
+            }
+        }
+        return nil
+    }
+}
+
+private extension LatestOrigin {
+    
+    var phoneNumber: String? {
+       
+        switch self {
+        case let .service(service):
+            return service.additionalItems?.phoneNumber
+            
+        case let .withPhone(withPhone):
+            return withPhone.phoneNumber
+        }
     }
 }
