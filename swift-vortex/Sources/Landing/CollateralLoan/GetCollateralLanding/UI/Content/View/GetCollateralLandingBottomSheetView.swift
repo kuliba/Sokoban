@@ -183,10 +183,10 @@ struct GetCollateralLandingBottomSheetView: View {
         )
     }
     
-    typealias Item = GetCollateralLandingState.BottomSheet.Item
+    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
     typealias Config = GetCollateralLandingConfig.BottomSheet
     typealias Factory = GetCollateralLandingFactory
-    typealias Event = GetCollateralLandingEvent
+    typealias Event = GetCollateralLandingDomain.Event
 }
 
 // MARK: - Previews
@@ -250,5 +250,5 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
     }
     
     typealias Factory = GetCollateralLandingFactory
-    typealias Item = GetCollateralLandingState.BottomSheet.Item
+    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
 }

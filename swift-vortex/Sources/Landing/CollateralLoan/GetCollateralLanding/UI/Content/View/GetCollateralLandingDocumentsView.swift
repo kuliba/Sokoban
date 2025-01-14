@@ -10,7 +10,7 @@ import SwiftUI
 struct GetCollateralLandingDocumentsView: View {
 
     let config: Config
-    let state: GetCollateralLandingState
+    let state: State
     let makeImageView: Factory.MakeImageView
     
     var body: some View {
@@ -73,6 +73,7 @@ extension GetCollateralLandingDocumentsView {
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
     typealias Factory = GetCollateralLandingFactory
+    typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
