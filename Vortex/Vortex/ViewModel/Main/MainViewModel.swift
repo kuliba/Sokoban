@@ -979,11 +979,6 @@ private extension MainViewModel {
         }
     }
         
-    private func openCollateralLoanLanding() {
-        
-        route.destination = .collateralLoanLanding
-    }
-    
     private func openOrderCardLanding() {
         
         route.destination = .orderCard
