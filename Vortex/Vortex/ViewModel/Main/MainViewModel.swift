@@ -978,7 +978,7 @@ private extension MainViewModel {
             route.destination = .openCard(authProductsViewModel)
         }
     }
-    
+        
     private func openOrderCardLanding() {
         
         route.destination = .orderCard
