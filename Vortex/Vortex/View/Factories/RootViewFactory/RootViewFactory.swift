@@ -47,6 +47,7 @@ struct RootViewFactory {
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
     let components: ViewComponents
+    let paymentsViewFactory: PaymentsViewFactory
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel

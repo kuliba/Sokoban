@@ -47,7 +47,10 @@ extension SelectedCategoryGetNavigationComposer {
             completion(.paymentFlow(.qr(())))
             
         case .standard:
-            completion(.paymentFlow(.standard(category)))
+            nanoServices.makeStandard(category) {
+                
+                completion(.paymentFlow(.standard($0)))
+            }
             
         case .taxAndStateServices:
             completion(.paymentFlow(.taxAndStateServices(nanoServices.makeTax())))

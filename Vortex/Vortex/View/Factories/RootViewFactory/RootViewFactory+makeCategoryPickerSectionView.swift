@@ -13,14 +13,38 @@ import SwiftUI
 
 extension RootViewFactory {
     
+    /// Renders `Category Picker Section` with header on `Payments Tab`
     @ViewBuilder
     func makeCategoryPickerSectionView(
-        categoryPicker: PayHubUI.CategoryPicker
+        categoryPicker: CategoryPicker
     ) -> some View {
         
         if let binder = categoryPicker.sectionBinder {
             
-            makeCategoryPickerSectionView(binder: binder)
+            makeCategoryPickerSectionView(
+                binder: binder,
+                headerHeight: 24
+            )
+            
+        } else {
+            
+            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
+                .foregroundColor(.red)
+        }
+    }
+    
+    /// Renders `Category Picker` without header,
+    @ViewBuilder
+    func makeCategoryPickerView(
+        _ categoryPicker: CategoryPicker
+    ) -> some View {
+        
+        if let binder = categoryPicker.sectionBinder {
+            
+            makeCategoryPickerSectionView(
+                binder: binder,
+                headerHeight: nil
+            )
             
         } else {
             
@@ -30,7 +54,8 @@ extension RootViewFactory {
     }
     
     private func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionDomain.Binder
+        binder: CategoryPickerSectionDomain.Binder,
+        headerHeight: CGFloat?
     ) -> some View {
         
         RxWrapperView(
@@ -42,7 +67,13 @@ extension RootViewFactory {
                     event: $1,
                     factory: .init(
                         makeAlert: makeAlert(binder: binder),
-                        makeContentView: { makeContentView(binder.content) },
+                        makeContentView: {
+                            
+                            makeContentView(
+                                binder.content,
+                                headerHeight: headerHeight
+                            )
+                        },
                         makeDestinationView: makeDestinationView
                     )
                 )
@@ -52,7 +83,8 @@ extension RootViewFactory {
     }
     
     private func makeContentView(
-        _ content: CategoryPickerSectionDomain.Content
+        _ content: CategoryPickerSectionDomain.Content,
+        headerHeight: CGFloat?
     ) -> some View {
         
         RxWrapperView(
@@ -62,7 +94,7 @@ extension RootViewFactory {
                 CategoryPickerSectionContentView(
                     state: state,
                     event: event,
-                    config: .iVortex,
+                    config: .iVortex(headerHeight: headerHeight),
                     itemLabel: itemLabel
                 )
             }
@@ -103,21 +135,36 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: SelectedCategoryNavigation.Destination
+        destination: SelectedCategoryNavigation.PaymentFlow
     ) -> some View {
         
         switch destination {
-        case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case let .mobile(mobile):
-                components.makePaymentsView(mobile.paymentsViewModel)
-                                
-            case let .taxAndStateServices(wrapper):
-                components.makePaymentsView( wrapper.paymentsViewModel)
+        case let .mobile(mobile):
+            components.makePaymentsView(mobile.paymentsViewModel)
+            
+        case .qr:
+            EmptyView()
+            
+        case let .standard(standard):
+            switch standard {
+            case let .destination(destination):
+                switch destination {
+                case let .failure(binder):
+                    components.serviceCategoryFailureView(binder: binder)
+                    
+                case let .success(binder):
+                    makePaymentProviderPickerView(binder)
+                }
                 
-            case let .transport(transport):
-                transportPaymentsView(transport)
+            case .category:
+                EmptyView()
             }
+            
+        case let .taxAndStateServices(wrapper):
+            components.makePaymentsView( wrapper.paymentsViewModel)
+            
+        case let .transport(transport):
+            transportPaymentsView(transport)
         }
     }
 }

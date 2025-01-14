@@ -43,7 +43,7 @@ extension CategoryPickerSectionFlowView {
 
 private extension CategoryPickerSectionDomain.FlowDomain.State {
     
-    var destination: SelectedCategoryNavigation.Destination? {
+    var destination: SelectedCategoryNavigation.PaymentFlow? {
         
         navigation?.destination
     }
@@ -58,26 +58,14 @@ private extension CategoryPickerSectionDomain.FlowDomain.State {
 
 private extension SelectedCategoryNavigation {
     
-    var destination: Destination? {
+    var destination: SelectedCategoryNavigation.PaymentFlow? {
         
         switch self {
         case .failure:
             return nil
             
         case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case let .mobile(mobile):
-                return .paymentFlow(.mobile(mobile))
-                
-            case .qr, .standard:
-                return nil
-                
-            case let .taxAndStateServices(taxAndStateServices):
-                return .paymentFlow(.taxAndStateServices(taxAndStateServices))
-                
-            case let .transport(transport):
-                return .paymentFlow(.transport(transport))
-            }
+            return paymentFlow
         }
     }
     
@@ -93,28 +81,4 @@ private extension SelectedCategoryNavigation {
     }
 }
 
-extension SelectedCategoryNavigation {
-    
-    enum Destination {
-        
-        case paymentFlow(PaymentFlowDestination)
-        
-        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Never, Tax, Transport>
-    }
-}
-
-extension SelectedCategoryNavigation.Destination: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case let .paymentFlow(paymentFlow):
-            return .paymentFlow(paymentFlow.id)
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case paymentFlow(PaymentFlowDestinationID)
-    }
-}
+extension SelectedCategoryNavigation.PaymentFlow: Identifiable {}

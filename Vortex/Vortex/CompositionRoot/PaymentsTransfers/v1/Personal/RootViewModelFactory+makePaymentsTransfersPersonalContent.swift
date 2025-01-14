@@ -14,7 +14,10 @@ extension RootViewModelFactory {
         
         // MARK: - CategoryPicker
         
-        let categoryPicker = makeCategoryPickerSection(nanoServices)
+        let categoryPicker = makeCategoryPickerSection(
+            nanoServices: nanoServices,
+            makeStandard: { $1(.category($0)) }
+        )
         
         // MARK: - OperationPicker
         
