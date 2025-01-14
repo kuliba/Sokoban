@@ -91,49 +91,22 @@ private extension TemplatesListView {
                     
                     List {
                         
-                        ForEach(viewModel.items) { item in
-                            
-                            switch item.kind {
-                            case .regular, .deleting:
+                        ForEach(viewModel.items, content: itemView)
+                            .onMove { indexes, destination in
                                 
-                                TemplateItemView(viewModel: item,
-                                                 style: .constant(.list),
-                                                 editMode: $viewModel.editModeState)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .listRowBackground(BackgroundListView())
-                                .modifier(Self.listRowSeparatorTint())
-                                .modifier(Self.trailingSwipeAction(
-                                    viewModel: viewModel.getItemsMenuViewModel(),
-                                    item: item))
-                            case .add:
+                                guard let first = indexes.first else { return }
                                 
-                                AddNewItemView(viewModel: item, style: .constant(.list))
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                                    .listRowBackground(BackgroundListView())
-                                    .modifier(Self.listRowSeparatorTint())
-                                
-                            case .placeholder:
-                                
-                                PlaceholderItemView(style: .constant(.list))
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                                    .shimmering(bounce: true)
-                                
-                            } //swich kind
-                        }//ForEach
-                        .onMove { indexes, destination in
-                            
-                            guard let first = indexes.first else { return }
-                            viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
-                                .init(move: (first, destination)))
-                        }
-                        .moveDisabled(viewModel.editModeState != .active)
-                    } //List
+                                viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
+                                    .init(move: (first, destination)))
+                            }
+                            .moveDisabled(viewModel.editModeState != .active)
+                    }
                     .listStyle(.plain)
                     .environment(\.editMode, $viewModel.editModeState)
                     .padding(.horizontal)
                     .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
                     
-                    // TilesView
+                    
                 case .tiles:
                     
                     ScrollView {
@@ -211,6 +184,44 @@ private extension TemplatesListView {
                 .frame(height: 32)
                 .padding(.top, 16)
                 .padding(.horizontal)
+        }
+    }
+    
+    @ViewBuilder
+    func itemView(
+        item: TemplatesListViewModel.ItemViewModel
+    ) -> some View {
+        
+        switch item.kind {
+        case .regular, .deleting:
+            
+            TemplateItemView(
+                viewModel: item,
+                style: .constant(.list),
+                editMode: $viewModel.editModeState
+            )
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(BackgroundListView())
+            .modifier(Self.listRowSeparatorTint())
+            .modifier(Self.trailingSwipeAction(
+                viewModel: viewModel.getItemsMenuViewModel(),
+                item: item))
+            
+        case .add:
+            
+            AddNewItemView(
+                viewModel: item,
+                style: .constant(.list)
+            )
+            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+            .listRowBackground(BackgroundListView())
+            .modifier(Self.listRowSeparatorTint())
+            
+        case .placeholder:
+            
+            PlaceholderItemView(style: .constant(.list))
+                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                .shimmering(bounce: true)
         }
     }
     
