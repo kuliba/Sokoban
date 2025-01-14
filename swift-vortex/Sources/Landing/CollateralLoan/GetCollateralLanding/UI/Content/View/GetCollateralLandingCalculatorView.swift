@@ -157,10 +157,6 @@ struct GetCollateralLandingCalculatorView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
-        .onTapGesture {
-            
-            event(.showPeriodBottomSheet)
-        }
     }
     
     private func percentView(config: Config.Calculator) -> some View {
@@ -195,10 +191,6 @@ struct GetCollateralLandingCalculatorView: View {
                 chevron(config: config)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .onTapGesture {
-            
-            event(.showCollateralBottomSheet)
         }
     }
     

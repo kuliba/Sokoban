@@ -64,7 +64,7 @@ public struct GetCollateralLandingView: View {
         
     .init(
         get: { state.bottomSheet },
-        set: { if $0 == nil { event(.closeBottomSheet) } })
+        set: { _ in })
     }
 
     var backgroundImageView: some View {

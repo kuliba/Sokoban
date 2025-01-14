@@ -12,12 +12,9 @@ extension GetCollateralLandingDomain {
         case load
         case loaded(Result)
         case changeDesiredAmount(UInt)
-        case closeBottomSheet
         case createDraftApplication
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
-        case showCollateralBottomSheet
-        case showPeriodBottomSheet
         case toggleIHaveSalaryInCompany(Bool)
     }
 }
