@@ -2230,6 +2230,11 @@ extension ProductProfileViewModel {
         }
     }
 
+    func orderCard() {
+        
+        productProfileViewModelFactory.makeOrderCardViewModel()
+    }
+    
     func orderSticker() {
         
         if let controlPanelViewModel {
@@ -2393,8 +2398,8 @@ extension ProductProfileViewModel {
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
             
             case .cardOrder:
-                //TODO: send action to landing
-                break
+                orderCard()
+                
             }
         case let .listVerticalRoundImageAction(action):
             switch action {

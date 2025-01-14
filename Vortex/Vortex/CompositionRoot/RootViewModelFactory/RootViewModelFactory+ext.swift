@@ -258,6 +258,10 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
         
+        let makeOrderCardViewModel = {
+            //TODO: implement makeOrderCardViewModel composer
+        }
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -278,7 +282,8 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            makeOrderCardViewModel: makeOrderCardViewModel
         )
         
         let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
@@ -532,6 +537,7 @@ extension ProductProfileViewModel {
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeOrderCardViewModel = () -> Void
     
     static func make(
         with model: Model,
@@ -553,7 +559,8 @@ extension ProductProfileViewModel {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
+        makeOrderCardViewModel: @escaping MakeOrderCardViewModel
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -578,7 +585,8 @@ extension ProductProfileViewModel {
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
-                makeOpenNewProductButtons: makeOpenNewProductButtons
+                makeOpenNewProductButtons: makeOpenNewProductButtons,
+                makeOrderCardViewModel: makeOrderCardViewModel
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -641,6 +649,7 @@ extension ProductProfileViewModel {
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
+                makeOrderCardViewModel: makeOrderCardViewModel,
                 model: model
             )
             
