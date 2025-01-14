@@ -133,10 +133,10 @@ private extension UtilityPaymentLastPayment {
         if let source = directSource() {
             return source
         }
-        /*if let source = mobileSource() {
+        if let source = mobileSource(activeProductID: activeProductID) {
             return source
         }
-        if let source = repeatPaymentRequisitesSource() {
+        /*if let source = repeatPaymentRequisitesSource() {
             return source
         }
         if let source = servicePaymentSource() {
@@ -202,20 +202,20 @@ private extension UtilityPaymentLastPayment {
         )
     }
     
-    /*func mobileSource() -> Payments.Operation.Source? {
+    func mobileSource(
+        activeProductID: ProductData.ID
+    ) -> Payments.Operation.Source? {
         
-        guard type.paymentType == .mobile,
-              let transfer = additionalItems.last,
-              let phone = transfer.mobilePhone,
-              let amount = transfer.amount
+        guard type == "mobile",
+              let phone = mobilePhone
         else { return nil }
         
         return .mobile(
-            phone: "7\(phone)", // ?? or only phone
+            phone: "7\(phone)",
             amount: amount.description,
-            productId: transfer.payerProductID
+            productId: activeProductID
         )
-    }*/
+    }
     
     /*func repeatPaymentRequisitesSource() -> Payments.Operation.Source? {
         
