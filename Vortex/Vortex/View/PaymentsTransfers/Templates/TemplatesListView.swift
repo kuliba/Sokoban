@@ -46,7 +46,7 @@ struct TemplatesListView: View {
         }
     }
 }
- 
+
 private extension View {
     
     @ViewBuilder
@@ -84,13 +84,7 @@ private extension TemplatesListView {
             switch viewModel.state {
             case .normal, .select:
                 
-                if let categorySelectorViewModel = viewModel.categorySelector {
-                    
-                    viewFactory.makeOptionSelectorView(categorySelectorViewModel)
-                        .frame(height: 32)
-                        .padding(.top, 16)
-                        .padding(.horizontal)
-                }
+                categorySelector()
                 
                 switch viewModel.style {
                 case .list:
@@ -209,6 +203,18 @@ private extension TemplatesListView {
     }
     
     @ViewBuilder
+    func categorySelector() -> some View {
+        
+        if let categorySelectorViewModel = viewModel.categorySelector {
+            
+            viewFactory.makeOptionSelectorView(categorySelectorViewModel)
+                .frame(height: 32)
+                .padding(.top, 16)
+                .padding(.horizontal)
+        }
+    }
+    
+    @ViewBuilder
     func destination(
         link: TemplatesListViewModel.Link?
     ) -> some View {
@@ -271,7 +277,7 @@ private extension TemplatesListView {
         }
     }
 }
- 
+
 extension TemplatesListView {
     
     struct RenameTemplateItemView: View {
@@ -312,7 +318,7 @@ extension TemplatesListView {
                     RoundedRectangle(cornerRadius: 12)
                         .frame(height: 56)
                         .foregroundColor(viewModel.isNameNotValid ? Color.buttonPrimaryDisabled
-                                                                  : Color.buttonPrimary)
+                                         : Color.buttonPrimary)
                         .overlay13 {
                             Text(viewModel.saveButtonText)
                                 .font(.textH3Sb18240())
@@ -322,7 +328,7 @@ extension TemplatesListView {
             }
             .frame(height: 210)
             .padding()
-    
+            
         }
     }
     
@@ -340,16 +346,16 @@ extension TemplatesListView {
         var body: some View {
             
             VStack(alignment: .leading, spacing: 15) {
-
+                
                 Text(viewModel.title)
                     .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
                     .padding(.leading)
                 
                 ScrollView {
-                
-                    VStack(spacing: 16) {
                     
+                    VStack(spacing: 16) {
+                        
                         ForEach(viewModel.sections) { sectionVM in
                             
                             MyProductsSectionView(viewModel: sectionVM,
@@ -414,7 +420,7 @@ extension TemplatesListView {
                 }
                 .frame(height: 48)
                 .padding(.top, 24)
-
+                
             }.padding()
         }
     }
@@ -425,20 +431,20 @@ extension TemplatesListView {
         let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
         
         var body: some View {
-                
+            
             VStack(alignment: .leading, spacing: 0) {
-                   
+                
                 HStack(spacing: 8) {
-                        
+                    
                     ForEach(0..<3) { _ in
-                           
+                        
                         RoundedRectangle(cornerRadius: 90)
                             .frame(width: 100, height: 32)
                             .shimmering(bounce: true)
                     }
                 }
                 .padding(.bottom, 20)
-                    
+                
                 switch style {
                 case .list:
                     
@@ -496,7 +502,7 @@ extension TemplatesListView {
                     
                     TemplatesListView
                         .PanelButtonView(viewModel: viewModel.deleteButton)
-                            .padding(.trailing, 30)
+                        .padding(.trailing, 30)
                     
                 }
                 .background(Color.barsBars.opacity(0.82))
@@ -510,7 +516,7 @@ extension TemplatesListView {
         let viewModel: TemplatesListViewModel.PanelButtonViewModel
         
         var body: some View {
-        
+            
             Button { viewModel.action()
             } label: {
                 
@@ -541,7 +547,7 @@ extension TemplatesListView {
                 .background(Color.white)
         }
     }
-
+    
 }
 
 //MARK: - Helpers
@@ -615,7 +621,7 @@ struct TemplatesListView_Previews: PreviewProvider {
             NavigationView {
                 TemplatesListView(viewModel: .sampleComplete, viewFactory: .preview)
                     .environment(\.mainViewSize, CGSize(width: 414, height: 800))
-                    
+                
             }
             .previewDisplayName("TemplatesView List")
             
