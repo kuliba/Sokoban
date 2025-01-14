@@ -94,10 +94,7 @@ private extension TemplatesListView {
                     tiles()
                 }
                 
-                if let deletePannelViewModel = viewModel.deletePanel {
-                    
-                    DeletePannelView(viewModel: deletePannelViewModel)
-                }
+                viewModel.deletePanel.map(DeletePannelView.init)
                 
             case let .emptyList(emptyTemplateListViewModel):
                 EmptyTemplateListView(viewModel: emptyTemplateListViewModel)
@@ -116,9 +113,9 @@ private extension TemplatesListView {
     @ViewBuilder
     func categorySelector() -> some View {
         
-        if let categorySelectorViewModel = viewModel.categorySelector {
+        viewModel.categorySelector.map {
             
-            viewFactory.makeOptionSelectorView(categorySelectorViewModel)
+            viewFactory.makeOptionSelectorView($0)
                 .frame(height: 32)
                 .padding(.top, 16)
                 .padding(.horizontal)
