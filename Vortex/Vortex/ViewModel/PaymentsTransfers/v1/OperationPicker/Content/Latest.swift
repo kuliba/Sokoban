@@ -14,7 +14,6 @@ typealias LatestOrigin = RemoteServices.ResponseMapper.LatestPayment
 struct Latest: Equatable {
     
     private let origin: LatestOrigin
-    // let name: String or label: LatestPaymentButtonLabel
     private let avatar: Avatar
     
     init(
@@ -97,7 +96,7 @@ extension Latest {
             return service.puref
             
         case let .withPhone(withPhone):
-            return withPhone.puref
+            return withPhone.puref ?? ""
         }
     }
     
@@ -235,7 +234,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, paymentFlow: flow, puref: puref, type: type.rawValue, additionalItems: [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, paymentFlow: flow, puref: puref ?? "", type: type.rawValue, additionalItems: [])
     }
 }
 
