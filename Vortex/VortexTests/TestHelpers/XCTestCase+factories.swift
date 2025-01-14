@@ -15,7 +15,7 @@ extension XCTestCase {
         avatar: Latest.Avatar? = nil
     ) -> Latest {
         
-        return .init(origin: origin ?? .service(makeLatestService()), avatar: avatar ?? .init(fullName: "", image: nil, topIcon: nil))
+        return .init(origin: origin ?? .service(makeLatestService()), avatar: avatar ?? .init(fullName: "", image: nil, topIcon: nil, icon: nil))
     }
 
     func makeLatestService(

@@ -34,7 +34,33 @@ extension RootViewModelFactory {
         origin: LatestOrigin
     ) -> Latest.Avatar {
         
-        return .init(fullName: fullName(origin: origin) ?? "", image: nil, topIcon: topIcon(origin: origin))
+        return .init(fullName: fullName(origin: origin) ?? "", image: nil, topIcon: topIcon(origin: origin), icon: icon(origin: origin))
+    }
+    
+    func icon(
+        origin: LatestOrigin
+    ) -> LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar? {
+        switch origin {
+        case let .service(service):
+            return nil
+            
+        case let .withPhone(withPhone):
+            
+            let phoneNumber = withPhone.phoneNumber
+            if let contact = getContact(for: phoneNumber) {
+                if let avatar = contact.avatar,
+                   let avatarImg = Image(data: avatar.data) {
+                    
+                    return .image(avatarImg)
+                    
+                } else if let initials = contact.initials {
+                    
+                    return .text(initials)
+                    
+                }
+            }
+        }
+        return .icon(.ic24Smartphone, .iconGray)
     }
     
     func topIcon(
@@ -99,7 +125,8 @@ extension RootViewModelFactory {
         let phoneNumbers = [
             phoneNumber.addCodeRuIfNeeded(),
             phoneNumber.add8IfNeeded(),
-            phoneNumber.replace7To8IfNeeded()
+            phoneNumber.replace7To8IfNeeded(),
+            format(phoneNumber: phoneNumber)
         ]
 
         for phoneNumber in phoneNumbers {

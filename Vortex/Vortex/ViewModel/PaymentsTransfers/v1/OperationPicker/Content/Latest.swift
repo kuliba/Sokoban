@@ -31,6 +31,30 @@ struct Latest: Equatable {
         let fullName: String
         let image: Image?
         let topIcon: Image?
+        let icon: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar?
+    }
+}
+
+extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar: Identifiable, Equatable {
+    
+    static func == (lhs: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar, rhs: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    var id: _Case { _case }
+    
+    var _case: _Case {
+        
+        switch self {
+        case .icon:     return .icon
+        case .image:    return .image
+        case .text:     return .text
+        }
+    }
+    
+    enum _Case: Equatable {
+        
+        case image, text, icon
     }
 }
 
@@ -40,7 +64,7 @@ extension Latest {
         with image: Image
     ) -> Self {
         
-        return .init(origin: origin, avatar: .init(fullName: avatar.fullName, image: image, topIcon: avatar.topIcon))
+        return .init(origin: origin, avatar: .init(fullName: avatar.fullName, image: image, topIcon: avatar.topIcon, icon: avatar.icon))
     }
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment { origin.latest }
@@ -179,8 +203,23 @@ extension Latest {
                 )
             }
             
-        case .withPhone:
-            return []
+        case let .withPhone(withPhone):
+            
+            return [
+                .init(fieldName: withPhone.detail == .sfp ? "RecipientID" : "a3_NUMBER_1_2", fieldValue: withPhone.phoneNumber, fieldTitle: nil, svgImage: nil),
+                .init(fieldName: withPhone.detail == .sfp ? "BankRecipientID" : "", fieldValue: withPhone.bankID ?? "", fieldTitle: nil, svgImage: nil)
+            ]
+        }
+    }
+    
+    var phoneNumber: String? {
+        
+        switch origin {
+        case .service:
+            return nil
+            
+        case let .withPhone(withPhone):
+            return withPhone.phoneNumber
         }
     }
 }
@@ -237,6 +276,9 @@ extension Latest {
                 return .icon(.ic24MoreHorizontal, .iconGray)
                 
             case .withPhone:
+                if let icon = avatar.icon {
+                    return icon
+                }
                 if let image = avatar.image {
                     return .image(image)
                 }
