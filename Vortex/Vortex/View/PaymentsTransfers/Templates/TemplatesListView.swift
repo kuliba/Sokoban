@@ -91,17 +91,8 @@ private extension TemplatesListView {
                     list()
                     
                 case .tiles:
-                    
-                    ScrollView {
-                        
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            
-                            ForEach(viewModel.items, content: tileView)
-                        }
-                        .padding(.horizontal)
-                        .padding(.top)
-                    }
-                } //case style
+                    tiles()
+                }
                 
                 if let deletePannelViewModel = viewModel.deletePanel {
                     
@@ -109,14 +100,11 @@ private extension TemplatesListView {
                 }
                 
             case let .emptyList(emptyTemplateListViewModel):
-                
                 EmptyTemplateListView(viewModel: emptyTemplateListViewModel)
                 
             case .placeholder:
-                
                 PlaceholderView(style: viewModel.style)
-                
-            } //main stateSwitch
+            }
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -192,6 +180,19 @@ private extension TemplatesListView {
             PlaceholderItemView(style: .constant(.list))
                 .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
                 .shimmering(bounce: true)
+        }
+    }
+    
+    func tiles() -> some View {
+        
+        ScrollView {
+            
+            LazyVGrid(columns: columns, spacing: 16) {
+                
+                ForEach(viewModel.items, content: tileView)
+            }
+            .padding(.horizontal)
+            .padding(.top)
         }
     }
     
