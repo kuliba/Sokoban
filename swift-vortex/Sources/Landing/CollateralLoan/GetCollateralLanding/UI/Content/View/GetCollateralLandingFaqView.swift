@@ -10,8 +10,8 @@ import DropDownTextListComponent
 
 struct GetCollateralLandingFaqView: View {
     
+    let state: State
     let config: Config
-    let state: GetCollateralLandingState
 
     var body: some View {
         
@@ -29,6 +29,7 @@ extension GetCollateralLandingFaqView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Product = GetCollateralLandingProduct
+    typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
@@ -38,8 +39,8 @@ struct GetCollateralLandingFaqView_Previews: PreviewProvider {
     static var previews: some View {
         
         GetCollateralLandingFaqView(
-            config: .default,
-            state: .init(product: carData)
+            state: .init(product: carData),
+            config: .default
         )
     }
     

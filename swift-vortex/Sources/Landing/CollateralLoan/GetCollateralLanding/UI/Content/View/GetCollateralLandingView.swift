@@ -64,7 +64,7 @@ public struct GetCollateralLandingView: View {
         
     .init(
         get: { state.bottomSheet },
-        set: { if $0 == nil { event(.closeBottomSheet) } })
+        set: { _ in })
     }
 
     var backgroundImageView: some View {
@@ -90,21 +90,21 @@ public struct GetCollateralLandingView: View {
             state.product.conditions.nilIfEmpty.map { _ in
                 
                 ConditionsView(
-                    config: factory.config,
                     state: state,
+                    config: factory.config,
                     makeImageView: factory.makeImageView
                 )
             }
             
             CalculatorView(
+                state: state,
                 config: factory.config,
-                event: { event($0) },
-                state: state
+                event: { event($0) }
             )
             
             state.product.faq.nilIfEmpty.map { _ in
 
-                FaqView(config: factory.config, state: state)
+                FaqView(state: state, config: factory.config)
             }
 
             state.product.documents.nilIfEmpty.map { _ in
@@ -139,8 +139,8 @@ extension GetCollateralLandingView {
     typealias BottomSheetView = GetCollateralLandingBottomSheetView
     
     typealias Factory = GetCollateralLandingFactory
-    typealias State = GetCollateralLandingState
-    typealias Event = GetCollateralLandingEvent
+    typealias State = GetCollateralLandingDomain.State
+    typealias Event = GetCollateralLandingDomain.Event
 }
 
 // MARK: - Previews
@@ -177,6 +177,6 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
 
     static let carStub = GetCollateralLandingProduct.carStub
 
-    typealias State = GetCollateralLandingState
+    typealias State = GetCollateralLandingDomain.State
     typealias Factory = GetCollateralLandingFactory
 }

@@ -11,6 +11,8 @@ import LandingUIComponent
 import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
+import UIPrimitives
+import Combine
 
 final class RootViewModelTests: XCTestCase {
     
@@ -472,6 +474,7 @@ final class RootViewModelTests: XCTestCase {
         let infoDictionary: [String : Any]? = appVersion.map {
             ["CFBundleShortVersionString": $0]
         }
+        
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
             stickerViewFactory: .preview,

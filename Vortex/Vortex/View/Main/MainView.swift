@@ -30,6 +30,7 @@ struct MainView<NavigationOperationView: View>: View {
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
+    let makeImageView: (Md5hash) -> UIPrimitives.AsyncImage
     
     var body: some View {
         
@@ -268,7 +269,10 @@ struct MainView<NavigationOperationView: View>: View {
             
         // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
         case let .collateralLoanLanding(binder):
-            CollateralLoanLandingView(binder: binder)
+            let factory = CollateralLoanLandingGetShowcaseViewFactory(
+                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
+            )
+            CollateralLoanLandingView(binder: binder, factory: factory)
                 .navigationBarTitle("Кредиты", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
         }
@@ -518,10 +522,17 @@ struct MainView_Previews: PreviewProvider {
                 makeHistoryButton: { .init(event: $0, isFiltered: $1, isDateFiltered: $2, clearOptions: $3) },
                 makeRepeatButtonView: { _ in .init(action: {}) }
             ),
-            getUImage: { _ in nil }
+            getUImage: { _ in nil },
+            makeImageView: { _ in previewAsyncImage }
         )
     }
 }
+
+private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+    image: .init(systemName: "car"),
+    publisher: Empty()
+        .eraseToAnyPublisher()
+)}
 
 extension MainViewFactory {
     
@@ -581,6 +592,12 @@ extension ProductProfileViewModel  {
 }
 
 extension MainViewModel {
+    
+    static private var previewAsyncImage: UIPrimitives.AsyncImage { AsyncImage(
+        image: .init(systemName: "car"),
+        publisher: Empty()
+            .eraseToAnyPublisher()
+    )}
     
     static let sample = MainViewModel(
         .emptyMock,
