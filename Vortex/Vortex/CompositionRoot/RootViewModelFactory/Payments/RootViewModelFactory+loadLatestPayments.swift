@@ -37,9 +37,11 @@ extension RootViewModelFactory {
         return .init(fullName: fullName(origin: origin) ?? "", image: nil, topIcon: topIcon(origin: origin), icon: icon(origin: origin))
     }
     
+    @inlinable
     func icon(
         origin: LatestOrigin
     ) -> LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar? {
+        
         switch origin {
         case let .service(service):
             return nil
@@ -56,13 +58,14 @@ extension RootViewModelFactory {
                 } else if let initials = contact.initials {
                     
                     return .text(initials)
-                    
                 }
             }
         }
+        
         return .icon(.ic24Smartphone, .iconGray)
     }
     
+    @inlinable
     func topIcon(
         origin: LatestOrigin
     ) -> Image? {
@@ -73,10 +76,8 @@ extension RootViewModelFactory {
             case "outside":
                 guard let countryId = service.additionalItems?.country,
                       let country = model.countriesList.value.first(where: { $0.id == countryId } ),
-                      let image = country.svgImage?.image else {
-                    
-                    return nil
-                }
+                      let image = country.svgImage?.image 
+                else { return nil }
                 
                 return image
                 
@@ -100,6 +101,7 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
     func fullName(
         origin: LatestOrigin
     ) -> String? {
@@ -130,6 +132,7 @@ extension RootViewModelFactory {
         ]
 
         for phoneNumber in phoneNumbers {
+            
             if let contact = model.contact(for: phoneNumber) {
                 return contact
             }
@@ -177,6 +180,7 @@ private extension Array where Element == LatestOrigin.Service.AdditionalItem {
     var country: String? {
         
         for item in self {
+            
             if item.fieldName == "trnPickupPoint" {
                 return item.fieldValue
             }

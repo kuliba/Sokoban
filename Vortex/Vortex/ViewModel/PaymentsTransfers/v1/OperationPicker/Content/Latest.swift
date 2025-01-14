@@ -35,29 +35,6 @@ struct Latest: Equatable {
     }
 }
 
-extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar: Identifiable, Equatable {
-    
-    static func == (lhs: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar, rhs: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    var id: _Case { _case }
-    
-    var _case: _Case {
-        
-        switch self {
-        case .icon:     return .icon
-        case .image:    return .image
-        case .text:     return .text
-        }
-    }
-    
-    enum _Case: Equatable {
-        
-        case image, text, icon
-    }
-}
-
 extension Latest {
     
     func updating(
