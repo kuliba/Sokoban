@@ -207,3 +207,32 @@ private extension CachedModelsTransaction {
         return warning
     }
 }
+
+// MARK: - for debugging
+
+extension CachedModelsTransaction {
+    
+    func stateOf(parameterID: String) -> Projection {
+        
+        return .init(
+            valueInTransaction: transaction.valueOf(parameterID: parameterID),
+            model: models[.parameterID(parameterID)]
+        )
+    }
+    
+    struct Projection {
+        
+        let valueInTransaction: String?
+        let model: Model?
+    }
+}
+
+extension Transaction where Context == AnywayPaymentContext {
+    
+    func valueOf(parameterID: String) -> String? {
+        
+        let id = AnywayElement.ID.parameterID(parameterID)
+        
+        return context.payment.elements.first(matching: id)?.value
+    }
+}
