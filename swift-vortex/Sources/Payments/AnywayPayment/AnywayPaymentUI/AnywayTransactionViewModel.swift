@@ -73,7 +73,7 @@ public extension AnywayTransactionViewModel {
             let state = updating(state, with: transaction)
             stateSubject.send(state)            
 
-            updateValues(with: transaction)
+            updateValues(state, with: transaction)
             sendOTPWarning(state)
         }
         
@@ -109,6 +109,7 @@ public extension AnywayTransactionViewModel {
 private extension AnywayTransactionViewModel {
     
     func updateValues(
+        _ state: State,
         with transaction: State.Transaction
     ) {
         transaction.context.payment.elements.forEach { element in
