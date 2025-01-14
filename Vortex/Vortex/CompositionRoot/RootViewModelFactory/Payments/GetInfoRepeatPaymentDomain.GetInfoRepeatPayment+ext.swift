@@ -275,33 +275,50 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     }
 }
 
+extension Array {
+    
+    func value<Value>(keypath: KeyPath<Element, Value?>) -> Value? {
+        
+        for element in self {
+            
+            if let value = element[keyPath: keypath] {
+                
+                return value
+            }
+        }
+        
+        return nil
+    }
+    
+    func value<Value: Numeric & Comparable>(keypath: KeyPath<Element, Value?>) -> Value? {
+        
+        for element in self {
+            
+            if let value = element[keyPath: keypath], value > 0 {
+                
+                return value
+            }
+        }
+        
+        return nil
+    }
+}
+
+protocol _Amountable {
+    
+    var amount: Double? { get }
+}
+
+extension Array where Element: _Amountable {
+    
+    var amount: Double? { value(keypath: \.amount) }
+}
+
+extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer: _Amountable {}
+
 extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer {
     
-    var amount: Double? {
-        
-        for transfer in self {
-            
-            if let amount = transfer.amount, amount > 0 {
-                
-                return amount
-            }
-        }
-        
-        return nil
-    }
-    
-    var puref: String? {
-        
-        for transfer in self {
-            
-            if let puref = transfer.puref, !puref.isEmpty {
-                
-                return puref
-            }
-        }
-        
-        return nil
-    }
+    var puref: String? { value(keypath: \.puref) }
     
     var additional: [GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Additional] {
         
@@ -313,31 +330,9 @@ extension Array where Element == GetInfoRepeatPaymentDomain.GetInfoRepeatPayment
         return first?.additional ?? []
     }
     
-    var payerCardId: Int? {
+    var payerCardId: Int? { value(keypath: \.payer?.cardId) }
         
-        for transfer in self {
-            
-            if let payerCardId = transfer.payer?.cardId {
-                
-                return payerCardId
-            }
-        }
-        
-        return nil
-    }
-    
-    var payerAccountId: Int? {
-        
-        for transfer in self {
-            
-            if let accountId = transfer.payer?.accountId {
-                
-                return accountId
-            }
-        }
-        
-        return nil
-    }
+    var payerAccountId: Int? { value(keypath: \.payer?.accountId) }
     
     var productId: Int? {
         

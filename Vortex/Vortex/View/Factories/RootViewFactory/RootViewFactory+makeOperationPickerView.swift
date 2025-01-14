@@ -102,13 +102,7 @@ extension OperationPickerView {
             config: .iVortex,
             latestView: { latest in
                 
-                // TODO: replace `LastPaymentLabel` with `LatestPaymentButtonLabelView(latest: latest, config: .prod())` - see below
-                LastPaymentLabel(
-                    amount: latest.amount.map { "\($0) ₽" } ?? "",
-                    title: latest.name,
-                    config: .primary,
-                    iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
-                )
+                LatestPaymentButtonLabelView(latest: latest, config: .prod())
             },
             placeholderView:  {
                 

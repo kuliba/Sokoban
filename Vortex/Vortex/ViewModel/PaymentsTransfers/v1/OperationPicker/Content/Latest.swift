@@ -7,6 +7,7 @@
 
 import Foundation
 import RemoteServices
+import SwiftUI
 
 typealias LatestOrigin = RemoteServices.ResponseMapper.LatestPayment
 
@@ -14,14 +15,34 @@ struct Latest: Equatable {
     
     private let origin: LatestOrigin
     // let name: String or label: LatestPaymentButtonLabel
+    private let avatar: Avatar
     
-    init(origin: LatestOrigin) {
+    init(
+        origin: LatestOrigin,
+        avatar: Avatar
+    ) {
      
         self.origin = origin
+        self.avatar = avatar
+    }
+    
+    struct Avatar: Equatable {
+        
+        let fullName: String
+        let image: Image?
+        let topIcon: Image?
+        let icon: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar?
     }
 }
 
 extension Latest {
+    
+    func updating(
+        with image: Image
+    ) -> Self {
+        
+        return .init(origin: origin, avatar: .init(fullName: avatar.fullName, image: image, topIcon: avatar.topIcon, icon: avatar.icon))
+    }
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment { origin.latest }
     
@@ -62,10 +83,13 @@ extension Latest {
             return service.name ?? String(describing: service)
             
         case let .withPhone(withPhone):
-            return withPhone.name ?? withPhone.phoneNumber
+                        
+            return withPhone.name ?? avatar.fullName
         }
     }
-
+    
+    typealias PaymentFlow = LatestOrigin.PaymentFlow
+    
     var puref: String {
         
         switch origin {
@@ -87,6 +111,40 @@ extension Latest {
             return withPhone.type.rawValue
         }
     }
+    
+    var flow: String? {
+        
+        switch origin {
+        case let .service(service):
+            return service.flow
+            
+        case let .withPhone(withPhone):
+            return withPhone.flow
+        }
+    }
+}
+
+private extension LatestOrigin.PaymentFlow {
+    
+    var flow: String? {
+        switch self {
+        case .mobile:               return "mobile"
+        case .qr:                   return "qr"
+        case .standard:             return "standard"
+        case .taxAndStateServices:  return "taxAndStateServices"
+        case .transport:            return "transport"
+        }
+    }
+}
+
+private extension RemoteServices.ResponseMapper.LatestPayment.Service {
+    
+    var flow: String? { paymentFlow?.flow }
+}
+
+private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
+    
+    var flow: String? { paymentFlow?.flow }
 }
 
 extension UtilityPaymentLastPayment {
@@ -98,6 +156,7 @@ extension UtilityPaymentLastPayment {
             amount: latest.amount ?? 0,
             name: latest.name,
             md5Hash: latest.md5Hash,
+            paymentFlow: latest.flow,
             puref: latest.puref,
             type: latest.type,
             additionalItems: latest.additionalItems
@@ -121,8 +180,23 @@ extension Latest {
                 )
             }
             
-        case .withPhone:
-            return []
+        case let .withPhone(withPhone):
+            
+            return [
+                .init(fieldName: withPhone.detail == .sfp ? "RecipientID" : "a3_NUMBER_1_2", fieldValue: withPhone.phoneNumber, fieldTitle: nil, svgImage: nil),
+                .init(fieldName: withPhone.detail == .sfp ? "BankRecipientID" : "", fieldValue: withPhone.bankID ?? "", fieldTitle: nil, svgImage: nil)
+            ]
+        }
+    }
+    
+    var phoneNumber: String? {
+        
+        switch origin {
+        case .service:
+            return nil
+            
+        case let .withPhone(withPhone):
+            return withPhone.phoneNumber
         }
     }
 }
@@ -145,7 +219,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.Service {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type.rawValue, additionalItems: additionalItems?.map(\.additional) ?? [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, paymentFlow: flow, puref: puref, type: type.rawValue, additionalItems: additionalItems?.map(\.additional) ?? [])
     }
 }
 
@@ -161,7 +235,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, puref: puref, type: type.rawValue, additionalItems: [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, paymentFlow: flow, puref: puref, type: type.rawValue, additionalItems: [])
     }
 }
 
@@ -169,40 +243,31 @@ extension Latest {
     
     var label: LatestPaymentButtonLabel {
         
-        switch origin {
-        case let .service(service):
-            return service.label
+        let image: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar = {
             
-        case let .withPhone(withPhone):
-            return withPhone.label
-        }
-    }
-}
-
-// LatestPaymentsViewComponent.swift:204
-
-private extension RemoteServices.ResponseMapper.LatestPayment.Service {
-    
-    var label: LatestPaymentButtonLabel {
+            switch origin {
+            case .service:
+                if let image = avatar.image {
+                    return .image(image)
+                }
+                return .icon(.ic24MoreHorizontal, .iconGray)
+                
+            case .withPhone:
+                if let icon = avatar.icon {
+                    return icon
+                }
+                if let image = avatar.image {
+                    return .image(image)
+                }
+                return .icon(.ic24Smartphone, .iconGray)
+            }
+        }()
         
         return .init(
-            amount: amount.map(String.init),
-            avatar: .text(name ?? lpName ?? ""),
-            description: "",
-            topIcon: nil
-        )
-    }
-}
-
-private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
-    
-    var label: LatestPaymentButtonLabel {
-        
-        return .init(
-            amount: amount.map(String.init),
-            avatar: .text(name ?? ""),
-            description: "",
-            topIcon: nil
+            amount: "",
+            avatar: image,
+            description: avatar.fullName,
+            topIcon: avatar.topIcon
         )
     }
 }
