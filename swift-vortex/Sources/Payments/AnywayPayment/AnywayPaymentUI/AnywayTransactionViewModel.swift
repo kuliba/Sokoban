@@ -119,9 +119,11 @@ private extension AnywayTransactionViewModel {
         _ state: State,
         with transaction: State.Transaction
     ) {
-        transaction.context.payment.elements.forEach { element in
+        let diff = state.transaction.diff(transaction)
+        
+        diff.forEach { element in
             
-            guard let model = state.models[element.id],
+            guard let model = state.models[element.key],
                   let value = element.value
             else { return }
             
@@ -242,5 +244,12 @@ extension Transaction where Context == AnywayPaymentContext {
         let id = AnywayElement.ID.parameterID(parameterID)
         
         return context.payment.elements.first(matching: id)?.value
+    }
+    
+    func diff(
+        _ other: Self
+    ) -> [AnywayElement.ID: AnywayElement.Field.Value?] {
+        
+        context.payment.elements.diff(other.context.payment.elements, keyPath: \.value)
     }
 }
