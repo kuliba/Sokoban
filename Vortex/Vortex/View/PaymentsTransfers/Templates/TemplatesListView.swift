@@ -113,45 +113,12 @@ private extension TemplatesListView {
                         
                         LazyVGrid(columns: columns, spacing: 16) {
                             
-                            ForEach(viewModel.items) { item in
-                                
-                                switch item.kind {
-                                case .regular, .deleting:
-                                    
-                                    TemplateItemView(viewModel: item,
-                                                     style: .constant(.tiles),
-                                                     editMode: $viewModel.editModeState)
-                                    .contextMenu {
-                                        
-                                        if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
-                                            
-                                            ForEach(itemsMenuViewModel) { button in
-                                                
-                                                Button(action: { button.action(item.id) }) {
-                                                    Text(button.subTitle)
-                                                    button.icon.renderingMode(.original)
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
-                                case .add:
-                                    
-                                    AddNewItemView(viewModel: item, style: .constant(.tiles))
-                                    
-                                case .placeholder:
-                                    
-                                    PlaceholderItemView(style: .constant(.tiles))
-                                        .shimmering(bounce: true)
-                                    
-                                } //kind swith
-                            }
+                            ForEach(viewModel.items, content: tileView)
                         }
                         .padding(.horizontal)
                         .padding(.top)
-                    }//ScrollView
+                    }
                 } //case style
-                
                 
                 if let deletePannelViewModel = viewModel.deletePanel {
                     
@@ -221,6 +188,46 @@ private extension TemplatesListView {
             
             PlaceholderItemView(style: .constant(.list))
                 .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                .shimmering(bounce: true)
+        }
+    }
+    
+    @ViewBuilder
+    func tileView(
+        item: TemplatesListViewModel.ItemViewModel
+    ) -> some View {
+        
+        switch item.kind {
+            
+        case .regular, .deleting:
+            TemplateItemView(
+                viewModel: item,
+                style: .constant(.tiles),
+                editMode: $viewModel.editModeState
+            )
+            .contextMenu {
+                
+                if let itemsMenuViewModel = viewModel.getItemsMenuViewModel(),
+                   !item.state.isProcessing {
+                    
+                    ForEach(itemsMenuViewModel) { button in
+                        
+                        Button(action: { button.action(item.id) }) {
+                            
+                            Text(button.subTitle)
+                            button.icon.renderingMode(.original)
+                        }
+                    }
+                }
+            }
+            
+        case .add:
+            
+            AddNewItemView(viewModel: item, style: .constant(.tiles))
+            
+        case .placeholder:
+            
+            PlaceholderItemView(style: .constant(.tiles))
                 .shimmering(bounce: true)
         }
     }
