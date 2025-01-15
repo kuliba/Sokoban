@@ -42,14 +42,14 @@ extension RootViewModelFactory {
         origin: LatestOrigin
     ) -> LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar? {
         
-        guard let phoneNumber = origin.phoneNumber, let contact = getContact(for: phoneNumber)
+        guard let contact = origin.phoneNumber.map(getContact)
         else { return nil }
-                        
-        if let avatar = contact.avatar, let avatarImg = Image(data: avatar.data) {
+        
+        if let data = contact?.avatar?.data, let avatarImg = Image(data: data) {
             
             return .image(avatarImg)
             
-        } else if let initials = contact.initials {
+        } else if let initials = contact?.initials {
             
             return .text(initials)
         }
