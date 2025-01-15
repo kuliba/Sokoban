@@ -21,7 +21,7 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.\(Config.domen)/dbo/api/v3/rest/v1/pages/collateral/getCollateralLanding?landingTypes=\(landingType.rawValue)&serial=\(serial)"
+            "https://pl.\(Config.domen)/dbo/api/v3/rest/v1/pages/collateral/getCollateralLanding?landingTypes=\(landingType)&serial=\(serial)"
         )
     }
 
@@ -32,7 +32,7 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
         let queryItems = try getQueryItems(serial: nil, landingType: landingType)
 
         XCTAssertNil(queryItems.first { $0.name == "serial" }?.value)
-        XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType.rawValue)
+        XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType)
     }
 
     func test_createGetCollateralLandingRequest_shouldBeEqualParams() throws {
@@ -43,19 +43,19 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
         let queryItems = try getQueryItems(serial: serial, landingType: landingType)
 
         XCTAssertNoDiff(queryItems.first { $0.name == "serial" }?.value, serial)
-        XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType.rawValue)
+        XCTAssertNoDiff(queryItems.first { $0.name == "landingTypes" }?.value, landingType)
     }
 
     func test_createGetCollateralLandingRequest_shouldSetRequestMethodToGet() throws {
         
-        let request = try createRequest()
+        let request = try createRequest(landingType: randomLandingType)
         
         XCTAssertEqual(request.httpMethod, "GET")
     }
     
     func test_createGetCollateralLandingRequest_shouldSetRequestBodyToNil() throws {
         
-        let request = try createRequest()
+        let request = try createRequest(landingType: randomLandingType)
         
         XCTAssertNil(request.httpBody)
     }
@@ -64,12 +64,12 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
     
     private func createRequest(
         serial: String? = UUID().uuidString,
-        landingType: LandingType = [LandingType.car, LandingType.realEstate].randomElement() ?? .car
+        landingType: LandingType
     ) throws -> URLRequest {
         
         try RequestFactory.createGetCollateralLandingRequest(
             serial: serial,
-            landingType: landingType
+            landingId: landingType
         )
     }
     
@@ -84,10 +84,12 @@ final class RequestFactory_createGetCollateralLandingRequestTests: XCTestCase {
         return queryItems
     }
 
-    private var randomLandingType: LandingType {
+    private var randomLandingType: String {
         
-        [LandingType.car, LandingType.realEstate].randomElement() ?? .car
+        [carLoan, estateLoan].randomElement() ?? carLoan
     }
     
-    typealias LandingType = RemoteServices.RequestFactory.CollateralLoanLandingType
+    typealias LandingType = String
+    let carLoan = "COLLATERAL_LOAN_CALC_CAR"
+    let estateLoan = "COLLATERAL_LOAN_CALC_REAL_ESTATE"
 }

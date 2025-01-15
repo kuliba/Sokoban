@@ -12,7 +12,8 @@ import Combine
 public struct CollateralLoanLandingGetShowcaseViewFactory {
 
     let config: CollateralLoanLandingGetShowcaseViewConfig = .base
-    let makeImageView: MakeImageView
+
+    public let makeImageView: MakeImageView
 
     public init(
         makeImageView: @escaping MakeImageView

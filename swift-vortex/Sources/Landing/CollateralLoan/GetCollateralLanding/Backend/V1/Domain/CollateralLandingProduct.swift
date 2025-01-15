@@ -9,7 +9,7 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public typealias GetCollateralLandingResponse = SerialStamped<String, CollateralLandingProduct>
+    public typealias GetCollateralLandingResponse = CollateralLandingProduct
 }
 
 extension ResponseMapper {
