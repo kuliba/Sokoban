@@ -84,7 +84,8 @@ func makeAnywayPaymentContext(
     payment: AnywayPayment = makeAnywayPayment(),
     staged: AnywayPaymentStaged = [],
     outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
-    shouldRestart: Bool = false
+    shouldRestart: Bool = false,
+    needSum: Bool = false
 ) -> AnywayPaymentContext {
     
     return .init(
@@ -92,7 +93,8 @@ func makeAnywayPaymentContext(
         payment: payment,
         staged: staged,
         outline: outline,
-        shouldRestart: shouldRestart
+        shouldRestart: shouldRestart,
+        needSum: needSum
     )
 }
 
