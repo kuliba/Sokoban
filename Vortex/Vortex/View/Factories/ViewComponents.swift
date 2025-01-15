@@ -40,6 +40,7 @@ typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
 typealias MakeQRFailedWrapperView = (QRFailedViewModelWrapper) -> QRFailedViewModelWrapperView
 typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOperatorView
 typealias MakeQRView = (QRScanner) -> QRScanner_View
+typealias MakeSavingsAccountView = (SavingsAccountDomain.Binder) -> SavingsAccountDomain.WrapperView?
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
@@ -66,6 +67,7 @@ struct ViewComponents {
     let makeQRFailedWrapperView: MakeQRFailedWrapperView
     let makeQRSearchOperatorView: MakeQRSearchOperatorView
     let makeQRView: MakeQRView
+    let makeSavingsAccountView: MakeSavingsAccountView
     let makeTemplatesListFlowView: MakeTemplatesListFlowView
     let makeTransportPaymentsView: MakeTransportPaymentsView
     let makeOrderCardView: MakeOrderCardView
@@ -121,6 +123,7 @@ extension ViewComponents {
         makeQRFailedWrapperView: makeQRFailedWrapperView,
         makeQRSearchOperatorView: makeQRSearchOperatorView,
         makeQRView: makeQRView,
+        makeSavingsAccountView: { _ in fatalError() },
         makeTemplatesListFlowView: { _ in fatalError() },
         makeTransportPaymentsView: { _ in fatalError() },
         makeOrderCardView: { EmptyView() }

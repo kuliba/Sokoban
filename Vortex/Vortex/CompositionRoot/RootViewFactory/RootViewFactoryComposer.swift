@@ -105,6 +105,7 @@ extension RootViewFactoryComposer {
             makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
+            makeSavingsAccountView: makeSavingsAccountView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView,
             makeOrderCardView: makeOrderCardView
@@ -595,6 +596,13 @@ private extension RootViewFactoryComposer {
         )
     }
     
+    func makeSavingsAccountView(
+        binder: SavingsAccountDomain.Binder
+    ) -> SavingsAccountDomain.WrapperView? {
+        
+        makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
+    }
+
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {
