@@ -88,14 +88,14 @@ extension LoggerAgentProtocol {
             
             let mapped = mapResponse(data, response)
             
-            self.log(level: .debug, category: category, message: "RemoteService: response \(String(describing: String(data: data, encoding: .utf8)).prefix(messagePrefixLength))", file: #file, line: #line)
+            self.log(level: .debug, category: category, message: "RemoteService: response \(String(describing: String(data: data, encoding: .utf8)).prefix(messagePrefixLength))", file: file, line: line)
             
             switch mapped {
             case let .failure(failure):
-                self.log(level: .error, category: category, message: "RemoteService: response mapping failure \(failure)", file: #file, line: #line)
+                self.log(level: .error, category: category, message: "RemoteService: response mapping failure \(failure)", file: file, line: line)
                 
             case let .success(success):
-                self.log(level: .debug, category: category, message: "RemoteService: response mapping success: \(String(describing: success).prefix(messagePrefixLength)).", file: #file, line: #line)
+                self.log(level: .debug, category: category, message: "RemoteService: response mapping success: \(String(describing: success).prefix(messagePrefixLength)).", file: file, line: line)
             }
             
             return mapped

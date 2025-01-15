@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingView.swift
+//  CollateralLoanShowcaseView.swift
 //  Vortex
 //
 //  Created by Valentin Ozerov on 25.12.2024.
@@ -7,9 +7,10 @@
 
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
 import RxViewModel
 
-struct CollateralLoanLandingView: View {
+struct CollateralLoanShowcaseView: View {
     
     @Environment(\.openURL) var openURL
 
@@ -77,8 +78,14 @@ struct CollateralLoanLandingView: View {
     ) -> some View {
         
         switch navigation {
-        case let .landing(landingId):
-            Text(landingId)
+        case let .landing(landing):
+            Text(String(describing: landing))
+
+//            GetCollateralLandingView(
+//                state: .init(),
+//                uiEvent: { _ in },
+//                factory: .init(makeImageView: factory.makeImageView)
+//            )
         }
     }
     
@@ -91,13 +98,13 @@ extension GetShowcaseDomain.Navigation: Identifiable {
     var id: ID {
         
         switch self {
-        case let .landing(landingId):
-            return .landing(landingId)
+        case let .landing(landing):
+            return .landing(.init(landing))
         }
     }
     
     enum ID: Hashable {
      
-        case landing(String)
+        case landing(ObjectIdentifier)
     }
 }

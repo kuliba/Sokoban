@@ -22,23 +22,15 @@ extension TemplatesListView {
             switch viewModel.state {
             case .normal, .processing:
                 
-                TemplatesListView.NormalItemView(
-                    avatar: viewModel.avatar,
-                    topImage: viewModel.topImage,
-                    title: viewModel.title,
-                    subTitle: viewModel.subTitle,
-                    amount: viewModel.amount,
-                    style: style,
-                    editMode: $editMode
-                )
-                .shimmering(active: viewModel.state.isProcessing, bounce: true)
-                .onTapGesture {
-                    
-                    if !viewModel.state.isProcessing {
+                itemView(viewModel: viewModel,editMode: $editMode)
+                    .shimmering(active: viewModel.state.isProcessing, bounce: true)
+                    .onTapGesture {
                         
-                        viewModel.tapAction(viewModel.id)
+                        if !viewModel.state.isProcessing {
+                            
+                            viewModel.tapAction(viewModel.id)
+                        }
                     }
-                }
                 
             case let .deleting(deletingProgressViewModel):
                 
@@ -48,34 +40,38 @@ extension TemplatesListView {
                 
             case let .select(roundButtonViewModel):
                 
-                TemplatesListView.NormalItemView(
-                    avatar: viewModel.avatar,
-                    topImage: viewModel.topImage,
-                    title: viewModel.title,
-                    subTitle: viewModel.subTitle,
-                    amount: viewModel.amount,
-                    style: style, editMode: .constant(.inactive))
-                .overlay13(alignment: .topLeading) {
-                    
-                    TemplatesListView.SelectItemVew(
-                        isSelected: roundButtonViewModel.isSelected
-                    )
-                    .offset(x: 8, y: 14)
-                }
-                .onTapGesture { roundButtonViewModel.action(viewModel.id) }
+                itemView(viewModel: viewModel, editMode: .constant(.inactive))
+                    .overlay13(alignment: .topLeading) {
+                        
+                        TemplatesListView.SelectItemVew(
+                            isSelected: roundButtonViewModel.isSelected
+                        )
+                        .offset(x: 8, y: 14)
+                    }
+                    .onTapGesture { roundButtonViewModel.action(viewModel.id) }
                 
             case let .delete(itemActionViewModel):
                 
-                TemplatesListView.NormalItemView(
-                    avatar: viewModel.avatar,
-                    topImage: viewModel.topImage,
-                    title: viewModel.title,
-                    subTitle: viewModel.subTitle,
-                    amount: viewModel.amount,
-                    style: style, editMode: .constant(.inactive)
-                )
-                .offset(x: -100, y: 0)
-            } //switch item state
+                itemView(viewModel: viewModel, editMode: .constant(.inactive))
+                    .offset(x: -100, y: 0)
+            }
+        }
+        
+        private func itemView(
+            viewModel: TemplatesListViewModel.ItemViewModel,
+            editMode: Binding<EditMode>
+        ) -> some View {
+            
+            TemplatesListView.NormalItemView(
+                avatar: viewModel.avatar,
+                topImage: viewModel.topImage,
+                title: viewModel.title,
+                subTitle: viewModel.subTitle,
+                amount: viewModel.amount,
+                style: style,
+                editMode: editMode
+            )
+            .id(viewModel.id)
         }
     }
 }
@@ -228,30 +224,18 @@ extension TemplatesListView {
             
             HStack(spacing: 16) {
                 
-                TemplatesListView.ItemIconView(
-                    avatar: avatar,
-                    topImage: topImage,
-                    style: style
-                )
+                itemIconView()
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
                     HStack {
                         
-                        TemplatesListView.ItemTitleView(
-                            title: title,
-                            style: style
-                        )
-                        
+                        itemTitleView()
                         Spacer()
-                        
-                        TemplatesListView.ItemAmountView(amount: amount)
+                        itemAmountView()
                     }
                     
-                    TemplatesListView.ItemSubtitleView(
-                        subtitle: subTitle,
-                        style: style
-                    )
+                    itemSubtitleView()
                 }
             }
             .modifier(Self.ItemPaddings(editMode: $editMode))
@@ -266,29 +250,42 @@ extension TemplatesListView {
                 
                 VStack(spacing: 0) {
                     
-                    TemplatesListView.ItemIconView(
-                        avatar: avatar,
-                        topImage: topImage,
-                        style: style
-                    )
-                    .padding(.vertical, 16)
-                    
-                    TemplatesListView.ItemTitleView(
-                        title: title,
-                        style: style
-                    )
-                    .padding(.bottom, 4)
-                    
-                    
-                    TemplatesListView.ItemSubtitleView(
-                        subtitle: subTitle,
-                        style: style
-                    )
-                    
-                    TemplatesListView.ItemAmountView(amount: amount)
-                        .padding(.bottom, 16)
+                    itemIconView().padding(.vertical, 16)
+                    itemTitleView().padding(.bottom, 4)
+                    itemSubtitleView()
+                    itemAmountView().padding(.bottom, 16)
                 }
             }
+        }
+        
+        private func itemIconView() -> some View {
+            
+            TemplatesListView.ItemIconView(
+                avatar: avatar,
+                topImage: topImage,
+                style: style
+            )
+        }
+        
+        private func itemTitleView() -> some View {
+            
+            TemplatesListView.ItemTitleView(
+                title: title,
+                style: style
+            )
+        }
+        
+        private func itemSubtitleView() -> some View {
+            
+            TemplatesListView.ItemSubtitleView(
+                subtitle: subTitle,
+                style: style
+            )
+        }
+        
+        private func itemAmountView() -> some View {
+            
+            TemplatesListView.ItemAmountView(amount: amount)
         }
     }
     
@@ -424,8 +421,13 @@ extension TemplatesListView {
             
             ZStack(alignment: .topTrailing)  {
                 
-                avatarView()
-                    .animated(initialScale: 0.8, scaleEffectAnchor: .center)
+                if #available(iOS 16.4, *) {
+                    avatarView()
+                        .animated(initialScale: 0.8, scaleEffectAnchor: .center, transition: .identity)
+                } else {
+                    avatarView()
+                }
+                
                 topImageView()
             }
         }
@@ -437,7 +439,7 @@ extension TemplatesListView {
             case let .image(image):
                 imageView(image)
                 
-            case let .md5Hash(md5Hash):
+            case .md5Hash:
                 placeholderView()
                 
             case let .text(text):

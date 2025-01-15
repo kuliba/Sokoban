@@ -16,7 +16,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     let state: GetCollateralLandingDomain.State
     let config: Config
-    let event: (Event) -> Void
+    let uiEvent: (UIEvent) -> Void
 
     var body: some View {
         
@@ -66,7 +66,7 @@ struct GetCollateralLandingCalculatorView: View {
                     .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
                     .onChange(of: toggleIsOn) { state in
                         
-                        event(.toggleIHaveSalaryInCompany(state))
+                        uiEvent(.toggleIHaveSalaryInCompany(state))
                     }
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }
@@ -232,7 +232,7 @@ struct GetCollateralLandingCalculatorView: View {
         )
         .onChange(of: sliderCurrentValue, perform: {
             
-            event(.changeDesiredAmount(UInt($0)))
+            uiEvent(.changeDesiredAmount(UInt($0)))
         })
         .padding(.leading, config.root.layouts.contentLeadingPadding)
         .padding(.trailing, config.root.layouts.contentTrailingPadding)
@@ -337,7 +337,7 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias Event = GetCollateralLandingDomain.Event
+    typealias UIEvent = GetCollateralLandingDomain.UIEvent
 }
 
 // MARK: - Previews
@@ -349,7 +349,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
         GetCollateralLandingCalculatorView(
             state: .init(product: .carStub),
             config: .default,
-            event: { print($0) }
+            uiEvent: { print($0) }
         )
     }
 }

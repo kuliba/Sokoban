@@ -13,11 +13,11 @@ extension RequestFactory {
     
     static func createGetCollateralLandingRequest(
         serial: String?,
-        landingType: RemoteServices.RequestFactory.CollateralLoanLandingType
+        landingId: String
     ) throws -> URLRequest {
         
         var parameters: [(String, String)] = [
-            ("landingTypes", landingType.rawValue)
+            ("landingTypes", landingId)
         ]
 
         if let serial {
@@ -29,16 +29,5 @@ extension RequestFactory {
         let url = try endpoint.url(withBase: Config.serverAgentEnvironment.baseURL, parameters: parameters)
         
         return try RemoteServices.RequestFactory.createGetCollateralLandingRequest(url: url)
-    }
-}
-
-extension RemoteServices.RequestFactory.CollateralLoanLandingType {
-    
-    var rawValue: String {
-        
-        switch self {
-        case .car:        return "CAR_LANDING"
-        case .realEstate: return "REAL_ESTATE_LANDING"
-        }
     }
 }

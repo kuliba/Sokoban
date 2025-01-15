@@ -748,3 +748,57 @@ extension GetCollateralLandingProduct {
         )
     )
 }
+
+extension GetCollateralLandingProduct {
+    
+    public static let empty = Self(
+        theme: .unknown,
+        name: "",
+        marketing: .empty,
+        conditions: [],
+        calc: .empty,
+        faq: [],
+        documents: [],
+        consents: [],
+        cities: [],
+        icons: .empty
+    )
+}
+
+extension GetCollateralLandingProduct.Marketing {
+    
+    static let empty = Self(
+        labelTag: "",
+        image: "",
+        params: []
+    )
+}
+
+extension GetCollateralLandingProduct.Calc {
+    
+    static let empty = Self(
+        amount: .empty,
+        collaterals: [],
+        rates: []
+    )
+}
+
+extension GetCollateralLandingProduct.Calc.Amount {
+    
+    static let empty = Self(
+        minIntValue: 0,
+        maxIntValue: 0,
+        maxStringValue: ""
+    )
+}
+
+extension GetCollateralLandingProduct.Icons {
+    
+    static let empty = Self(
+        productName: "",
+        amount: "",
+        term: "",
+        rate: "",
+        city: ""
+    )
+}

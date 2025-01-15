@@ -7,6 +7,7 @@
 
 import RxViewModel
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
 
 extension GetShowcaseDomain {
 
@@ -34,7 +35,6 @@ extension GetShowcaseDomain {
     
     enum Navigation {
 
-        // TODO: Need to realize binder in the future
-        case landing(String)
+        case landing(GetCollateralLandingDomain.Binder)
     }
 }

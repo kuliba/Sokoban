@@ -9,6 +9,7 @@ import ActivateSlider
 import Banners
 import ClientInformList
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
 import Combine
 import FooterComponent
 import InfoComponent
@@ -267,13 +268,16 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
                 makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
             )
-            CollateralLoanLandingView(binder: binder, factory: factory)
-                .navigationBarTitle("Кредиты", displayMode: .inline)
+
+            CollateralLoanShowcaseView(binder: binder, factory: factory)
+                .navigationBarWithBack(
+                    title: "Кредиты",
+                    dismiss: viewModel.resetDestination
+                )
                 .edgesIgnoringSafeArea(.bottom)
             
         case .orderCard:
@@ -617,10 +621,42 @@ extension MainViewModel {
         },
         sections: [],
         bannersBinder: .preview,
-        makeCollateralLoanLandingBinder: { .preview },
+        makeCollateralLoanShowcaseBinder: { .preview },
+        makeCollateralLoanLandingBinder: { _ in .preview },   
         makeOpenNewProductButtons: { _ in [] }
     )
 }
+
+// MARK: - GetCollateralLandingDomain.Binder preview
+
+private extension GetCollateralLandingDomain.Binder {
+    
+    static let preview = GetCollateralLandingDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetCollateralLandingDomain.Content {
+    
+    static let preview = GetCollateralLandingDomain.Content(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetCollateralLandingDomain.Flow {
+    
+    static let preview = GetCollateralLandingDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - GetShowcaseDomain.Binder preview
 
 private extension GetShowcaseDomain.Binder {
     
