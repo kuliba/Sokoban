@@ -421,8 +421,13 @@ extension TemplatesListView {
             
             ZStack(alignment: .topTrailing)  {
                 
-                avatarView()
-                    .animated(initialScale: 0.8, scaleEffectAnchor: .center)
+                if #available(iOS 16.4, *) {
+                    avatarView()
+                        .animated(initialScale: 0.8, scaleEffectAnchor: .center, transition: .identity)
+                } else {
+                    avatarView()
+                }
+                
                 topImageView()
             }
         }
