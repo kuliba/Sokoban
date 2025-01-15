@@ -26,7 +26,7 @@ where ContentView: View {
             )
             .navigationDestination(
                 destination: state.destination,
-                dismiss: { event(.dismiss) },
+                // dismiss managed by flow, not SwiftUI
                 content: makeDestinationView
             )
             .sheet(

@@ -93,8 +93,6 @@ private extension ResponseMapper._Latest._WithPhone {
         
         guard let phoneNumber,
               !phoneNumber.isEmpty,
-              let puref,
-              !puref.isEmpty,
               let paymentOperationDetailType,
               !paymentOperationDetailType.isEmpty
         else { return nil }

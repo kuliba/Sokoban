@@ -97,6 +97,9 @@ private extension ResponseMapper._DTO._Item._BannerAction {
         case "HOUSING_AND_COMMUNAL_SERVICE":
             return .init(type: .payment("HOUSING_AND_COMMUNAL_SERVICE"))
             
+        case "CARD_ORDER":
+            return .init(type: .cardOrder)
+            
         case .none, .some:
             return nil
         }

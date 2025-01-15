@@ -983,7 +983,12 @@ private extension MainViewModel {
             route.destination = .openCard(authProductsViewModel)
         }
     }
-            
+        
+    private func openOrderCardLanding() {
+        
+        route.destination = .orderCard
+    }
+    
     private typealias DepositeID = Int
     private func returnFirstExpiredDepositID(
         previousData: (expired: Date?, DepositeID?),
@@ -1694,6 +1699,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
+        case orderCard
         
         var id: Case {
             
@@ -1744,6 +1750,8 @@ extension MainViewModel {
                 return .providerServicePicker
             case .collateralLoanLanding:
                 return .collateralLoanLanding
+            case .orderCard:
+                return .orderCard
             }
         }
         
@@ -1772,6 +1780,7 @@ extension MainViewModel {
             case paymentProviderPicker
             case providerServicePicker
             case collateralLoanLanding
+            case orderCard
         }
     }
     

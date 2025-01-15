@@ -42,27 +42,19 @@ extension RootViewModelFactory {
         origin: LatestOrigin
     ) -> LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar? {
         
-        switch origin {
-        case let .service(service):
-            return nil
+        guard let contact = origin.phoneNumber.map(getContact)
+        else { return nil }
+        
+        if let data = contact?.avatar?.data, let avatarImg = Image(data: data) {
             
-        case let .withPhone(withPhone):
+            return .image(avatarImg)
             
-            let phoneNumber = withPhone.phoneNumber
-            if let contact = getContact(for: phoneNumber) {
-                if let avatar = contact.avatar,
-                   let avatarImg = Image(data: avatar.data) {
-                    
-                    return .image(avatarImg)
-                    
-                } else if let initials = contact.initials {
-                    
-                    return .text(initials)
-                }
-            }
+        } else if let initials = contact?.initials {
+            
+            return .text(initials)
         }
         
-        return .icon(.ic24Smartphone, .iconGray)
+        return nil
     }
     
     @inlinable
@@ -92,7 +84,10 @@ extension RootViewModelFactory {
                 return model.dictionaryBank(for: bankID)?.svgImage.image
                             
             case "mobile":
-                return model.dictionaryAnywayOperator(for: withPhone.puref)?
+                
+                guard let puref = withPhone.puref else { return nil }
+                
+                return model.dictionaryAnywayOperator(for: puref)?
                     .logotypeList.first?.svgImage?.image
                 
             default:
@@ -106,14 +101,15 @@ extension RootViewModelFactory {
         origin: LatestOrigin
     ) -> String? {
         
-        switch origin {
-        case let .service(service):
-            return service.name ?? service.lpName ?? ""
+        if let phoneNumber = origin.phoneNumber {
             
-        case let .withPhone(withPhone):
-            
-            let phoneNumber = withPhone.phoneNumber
             return getContact(for: phoneNumber)?.fullName ?? format(phoneNumber: phoneNumber.addCodeRuIfNeeded())
+        } else {
+            
+            switch origin {
+            case let .service(service):     return service.name ?? service.lpName ?? ""
+            case let .withPhone(withPhone): return withPhone.name ?? ""
+            }
         }
     }
     
@@ -186,5 +182,30 @@ private extension Array where Element == LatestOrigin.Service.AdditionalItem {
             }
         }
         return nil
+    }
+    
+    var phoneNumber: String? {
+        
+        for item in self {
+            
+            if item.fieldName == "a3_NUMBER_1_2" {
+                return item.fieldValue
+            }
+        }
+        return nil
+    }
+}
+
+private extension LatestOrigin {
+    
+    var phoneNumber: String? {
+       
+        switch self {
+        case let .service(service):
+            return service.additionalItems?.phoneNumber
+            
+        case let .withPhone(withPhone):
+            return withPhone.phoneNumber
+        }
     }
 }

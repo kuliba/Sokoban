@@ -1070,7 +1070,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            makeOrderCardViewModel: { }
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(

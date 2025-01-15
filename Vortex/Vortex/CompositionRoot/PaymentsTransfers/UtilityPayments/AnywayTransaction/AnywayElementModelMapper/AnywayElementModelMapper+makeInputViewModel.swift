@@ -9,9 +9,8 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import Foundation
 import InputComponent
-import TextFieldComponent
-import TextFieldModel
 import RxViewModel
+import TextFieldComponent
 
 extension AnywayElementModelMapper {
     
@@ -22,11 +21,16 @@ extension AnywayElementModelMapper {
         
         let placeholderText = "Введите значение"
         
-        let initialState = TextInputState(
-            parameter: parameter,
+        let textFieldReducer = parameter.textFieldReducer(
             placeholderText: placeholderText
         )
-        let textFieldReducer = parameter.textFieldReducer(
+        // apply masking
+        let reduced = textFieldReducer.reduce(
+            .editing(.init("")),
+            .setTextTo(parameter.field.value)
+        )
+        let initialState = TextInputState(
+            value: reduced.text,
             placeholderText: placeholderText
         )
         let validator = AnywayPaymentParameterValidator()
@@ -59,10 +63,10 @@ extension AnywayElementModelMapper {
 private extension TextInputState {
     
     init(
-        parameter: AnywayElement.Parameter,
+        value: String?,
         placeholderText: String
     ) {
-        switch parameter.field.value {
+        switch value {
         case .none:
             self.init(textField: .placeholder(placeholderText))
             
@@ -76,12 +80,52 @@ private extension AnywayElement.Parameter {
     
     func textFieldReducer(
         placeholderText: String
-    ) -> TransformingReducer {
+    ) -> TextFieldModel.Reducer {
         
-        guard case .number = uiAttributes.dataType
-        else { return .init(placeholderText: placeholderText) }
+        switch (uiAttributes.dataType, masking.composedMask) {
+        case (.number, .none):
+            return TransformingReducer.sberNumericReducer(
+                placeholderText: placeholderText
+            )
+            
+        default:
+            return ChangingReducer.mask(
+                placeholderText: placeholderText,
+                pattern: masking.composedMask ?? ""
+            )
+        }
+    }
+}
+
+private extension AnywayElement.Parameter.Masking {
+    
+    var composedMask: String? {
         
-        return .sberNumericReducer(placeholderText: placeholderText)
+        (inputMask ?? mask).map(\.expandingNs)
+    }
+}
+
+private extension String {
+    
+    /// Expands a string formatted as "<number>N" into a string of repeated "N" characters.
+    ///
+    /// Examples:
+    ///
+    ///     ```
+    ///     expandNStrings("5N")    // "NNNNN"
+    ///     expandNStrings("12N")   // "NNNNNNNNNNNN"
+    ///     expandNStrings("abcN")  // "abcN"
+    ///     ```
+    ///
+    /// - Parameter input: A string containing a number followed by "N" (e.g., "5N").
+    /// - Returns: A string with "N" repeated the specified number of times.
+    ///            Returns the original input if the format is invalid.
+    var expandingNs: String {
+        
+        guard last == "N", let numberPart = Int(dropLast())
+        else { return self }
+        
+        return String(repeating: "N", count: numberPart)
     }
 }
 

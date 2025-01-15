@@ -106,7 +106,8 @@ extension RootViewFactoryComposer {
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
-            makeTransportPaymentsView: makeTransportPaymentsView
+            makeTransportPaymentsView: makeTransportPaymentsView,
+            makeOrderCardView: makeOrderCardView
         )
     }
     
@@ -371,6 +372,10 @@ private extension RootViewFactoryComposer {
             },
             viewFactory: makeTransportPaymentsViewFactory()
         )
+    }
+    
+    func makeOrderCardView() -> EmptyView {
+        EmptyView()
     }
     
     func makeTransportPaymentsViewFactory() -> TransportPaymentsViewFactory {

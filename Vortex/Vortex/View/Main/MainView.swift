@@ -279,6 +279,9 @@ struct MainView<NavigationOperationView: View>: View {
                     dismiss: viewModel.resetDestination
                 )
                 .edgesIgnoringSafeArea(.bottom)
+            
+        case .orderCard:
+            viewFactory.components.makeOrderCardView()
         }
     }
     
@@ -591,7 +594,8 @@ extension ProductProfileViewModel  {
         makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
         makeServicePaymentBinder: ServicePaymentBinder.preview,
-        makeOpenNewProductButtons: { _ in [] }
+        makeOpenNewProductButtons: { _ in [] },
+        makeOrderCardViewModel: { /*TODO:  implement preview*/ }
     )
 }
 

@@ -87,7 +87,8 @@ extension PaymentsTransfersFactory {
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            makeOrderCardViewModel: { /*TODO:  implement preview*/ }
         )
         
         return .init(

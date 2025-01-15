@@ -75,6 +75,7 @@ private extension ProviderServicePickerView {
             )
             .animated()
         }
+        .buttonStyle(.plain)
     }
     
     func iconView(

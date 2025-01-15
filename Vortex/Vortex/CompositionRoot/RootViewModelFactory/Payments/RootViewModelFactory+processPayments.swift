@@ -25,10 +25,10 @@ extension RootViewModelFactory {
             return completion(nil)
             
         case "standard":
-           processPayments(repeatPayment: lastPayment, notify: notify, completion: completion)
+            processPayments(repeatPayment: lastPayment, notify: notify, completion: completion)
             
         default: // .none,  .mobile, .taxAndStateServices, .transport
-
+            
             let filter = ProductData.Filter.generalFrom
             guard let product = model.firstProduct(with: filter),
                   let paymentsPayload = lastPayment.paymentsPayload(activeProductID: product.id, getProduct: model.product(productId:))
@@ -84,33 +84,10 @@ private extension UtilityPaymentLastPayment {
             return .service(service)
         }
         
-       /* if let mode = betweenTheirMode(getProduct: getProduct) {
-            
-            return .mode(mode)
-        }*/
-        
-        
-        return nil
+        return .source(.servicePayment(puref:  puref, additionalList: additionalItems.map {
+            .init(fieldTitle: $0.fieldTitle, fieldName: $0.fieldName, fieldValue: $0.fieldValue, svgImage: $0.svgImage)
+        }, amount: Double(truncating: amount as NSNumber), productId: activeProductID))
     }
-    // MARK: - Mode
-    
-   /* func betweenTheirMode(
-        getProduct: @escaping (ProductData.ID) -> ProductData?
-    ) -> PaymentsMeToMeViewModel.Mode? {
-        
-        guard type.paymentType == .betweenTheir else { return nil }
-        
-        return additionalItems.compactMap {
-            
-            guard let amount = $0.amount,
-                  let productID = $0.payerOrInternalPayerProductID,
-                  let product = getProduct(productID)
-            else { return nil }
-            
-            return .makePaymentTo(product, amount)
-        }
-        .first
-    }*/
     
     // MARK: - Service
     
@@ -129,29 +106,18 @@ private extension UtilityPaymentLastPayment {
         if let source = byPhoneSource(activeProductID: activeProductID) {
             return source
         }
-
         if let source = directSource() {
             return source
         }
-        /*if let source = mobileSource() {
+        if let source = mobileSource(activeProductID: activeProductID) {
             return source
         }
-        if let source = repeatPaymentRequisitesSource() {
-            return source
-        }
-        if let source = servicePaymentSource() {
-            return source
-        }*/
         if let source = sfpSource(activeProductID: activeProductID) {
             return source
         }
         if let source = taxesSource() {
             return source
         }
-      /*  if let source = toAnotherCardSource() {
-            return source
-        }*/
-        
         return nil
     }
     
@@ -202,57 +168,20 @@ private extension UtilityPaymentLastPayment {
         )
     }
     
-    /*func mobileSource() -> Payments.Operation.Source? {
+    func mobileSource(
+        activeProductID: ProductData.ID
+    ) -> Payments.Operation.Source? {
         
-        guard type.paymentType == .mobile,
-              let transfer = additionalItems.last,
-              let phone = transfer.mobilePhone,
-              let amount = transfer.amount
+        guard type == "mobile",
+              let phone = mobilePhone
         else { return nil }
         
         return .mobile(
-            phone: "7\(phone)", // ?? or only phone
+            phone: "7\(phone)",
             amount: amount.description,
-            productId: transfer.payerProductID
+            productId: activeProductID
         )
-    }*/
-    
-    /*func repeatPaymentRequisitesSource() -> Payments.Operation.Source? {
-        
-        guard type.paymentType == .repeatPaymentRequisites,
-              let transfer = parameterList.last,
-              let amount = transfer.amount?.description,
-              let accountNumber = transfer.payeeExternal?.accountNumber,
-              let bankBIC = transfer.payeeExternal?.bankBIC
-        else { return nil }
-        
-        return .repeatPaymentRequisites(
-            accountNumber: accountNumber,
-            bankId: bankBIC,
-            inn: transfer.payeeExternal?.inn ?? "",
-            kpp: transfer.payeeExternal?.kpp,
-            amount: amount,
-            productId: transfer.payerProductID,
-            comment: transfer.comment
-        )
-    }*/
-    
-    /*func servicePaymentSource() -> Payments.Operation.Source? {
-        
-        guard type.paymentType == .servicePayment,
-              let amount
-        else { return nil }
-        
-        return .servicePayment(
-            puref: puref,
-            additionalList: additionalItems.map {
-                
-                return .init(fieldTitle: $0.fieldName, fieldName: $0.fieldName, fieldValue: $0.fieldValue, svgImage: $0.svgImage)
-            },
-            amount: amount,
-            productId: productId
-        )
-    }*/
+    }
     
     func sfpSource(
         activeProductID: ProductData.ID
@@ -275,19 +204,6 @@ private extension UtilityPaymentLastPayment {
         
         type == "taxAndStateService" ? .taxes(parameterData: nil) : nil
     }
-    
-    /*func toAnotherCardSource(
-    ) -> Payments.Operation.Source? {
-        
-        guard type.paymentType == .insideBank,
-              let transfer = additionalItems.last,
-              let from = transfer.payer?.cardId,
-              let amount = transfer.amount,
-              let to = productTemplate?.id
-        else { return nil }
-        
-        return .toAnotherCard(from: from, to: to, amount: amount.description)
-    }*/
 }
 
 private extension UtilityPaymentLastPayment {
@@ -323,9 +239,8 @@ private extension UtilityPaymentLastPayment {
     }
 }
 
-
 extension Array where Element == UtilityPaymentLastPayment {
-        
+    
     var additional: [UtilityPaymentLastPayment.AdditionalItem] {
         
         if let additional = last?.additionalItems, !additional.isEmpty {

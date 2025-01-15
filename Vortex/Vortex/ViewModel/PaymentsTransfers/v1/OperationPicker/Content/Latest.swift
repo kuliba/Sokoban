@@ -14,7 +14,6 @@ typealias LatestOrigin = RemoteServices.ResponseMapper.LatestPayment
 struct Latest: Equatable {
     
     private let origin: LatestOrigin
-    // let name: String or label: LatestPaymentButtonLabel
     private let avatar: Avatar
     
     init(
@@ -41,7 +40,7 @@ extension Latest {
         with image: Image
     ) -> Self {
         
-        return .init(origin: origin, avatar: .init(fullName: avatar.fullName, image: image, topIcon: avatar.topIcon, icon: avatar.icon))
+        return .init(origin: origin, avatar: .init(fullName: avatar.fullName, image: origin.latest.type == "mobile" ? avatar.image : image, topIcon: origin.latest.type == "mobile" ? image : avatar.topIcon, icon: avatar.icon))
     }
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment { origin.latest }
@@ -97,7 +96,7 @@ extension Latest {
             return service.puref
             
         case let .withPhone(withPhone):
-            return withPhone.puref
+            return withPhone.puref ?? ""
         }
     }
     
@@ -235,7 +234,7 @@ private extension RemoteServices.ResponseMapper.LatestPayment.WithPhone {
     
     var latest: RemoteServices.ResponseMapper.LatestServicePayment {
         
-        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, paymentFlow: flow, puref: puref, type: type.rawValue, additionalItems: [])
+        return .init(date: .init(timeIntervalSince1970: .init(date)), amount: amount ?? 0, name: name ?? "", md5Hash: md5Hash, paymentFlow: flow, puref: puref ?? "", type: type.rawValue, additionalItems: [])
     }
 }
 
@@ -243,31 +242,29 @@ extension Latest {
     
     var label: LatestPaymentButtonLabel {
         
-        let image: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar = {
-            
-            switch origin {
-            case .service:
-                if let image = avatar.image {
-                    return .image(image)
-                }
-                return .icon(.ic24MoreHorizontal, .iconGray)
-                
-            case .withPhone:
-                if let icon = avatar.icon {
-                    return icon
-                }
-                if let image = avatar.image {
-                    return .image(image)
-                }
-                return .icon(.ic24Smartphone, .iconGray)
-            }
-        }()
-        
         return .init(
             amount: "",
-            avatar: image,
+            avatar: avatarImage,
             description: avatar.fullName,
             topIcon: avatar.topIcon
         )
+    }
+    
+    var avatarImage: LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar {
+        
+        if let image = avatar.icon {
+            return image
+        }
+        if let image = avatar.image {
+            return .image(image)
+        }
+
+        switch origin {
+        case .service:
+            return .icon(.ic24MoreHorizontal, .iconGray)
+            
+        case .withPhone:
+            return .icon(.ic24Smartphone, .iconGray)
+        }
     }
 }
