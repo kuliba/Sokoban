@@ -36,6 +36,7 @@ public enum LandingEvent: Equatable {
         case migTransfer(Country)
         case openDeposit(Deposit)
         case payment(String)
+        case cardOrder
     }
     
     public struct Country: Equatable {

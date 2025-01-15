@@ -107,7 +107,7 @@ struct CancellableSearchView_Previews: PreviewProvider {
             cancelButton: PreviewCancelButton.init,
             keyboardType: .default,
             toolbar: nil,
-            textFieldConfig: .preview
+            textFieldConfig: .preview()
         )
     }
 }
