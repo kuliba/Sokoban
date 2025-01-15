@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersPersonal(
-    ) -> (PaymentsTransfersPersonalDomain.Binder, () -> Void) {
+    ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
         
@@ -72,6 +72,15 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
+    func getPaymentsTransfersPersonalNavigation(
+        select: PaymentsTransfersPersonalDomain.Select,
+        notify: @escaping PaymentsTransfersPersonalDomain.Notify,
+        completion: @escaping (PaymentsTransfersPersonalDomain.Navigation) -> Void
+    ) {
+        completion(select)
+    }
+
     @inlinable
     func emitting(
         content: PaymentsTransfersPersonalDomain.Content
