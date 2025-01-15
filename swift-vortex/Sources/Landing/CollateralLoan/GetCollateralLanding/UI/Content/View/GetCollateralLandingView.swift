@@ -15,6 +15,12 @@ public struct GetCollateralLandingView: View {
     let uiEvent: (UIEvent) -> Void
     let factory: Factory
     
+    public init(state: State, uiEvent: @escaping (UIEvent) -> Void, factory: Factory) {
+        self.state = state
+        self.uiEvent = uiEvent
+        self.factory = factory
+    }
+    
     public var body: some View {
         
         ScrollView {
@@ -138,9 +144,9 @@ extension GetCollateralLandingView {
     typealias FooterView = GetCollateralLandingFooterView
     typealias BottomSheetView = GetCollateralLandingBottomSheetView
     
-    typealias Factory = GetCollateralLandingFactory
-    typealias State = GetCollateralLandingDomain.State
-    typealias UIEvent = GetCollateralLandingDomain.UIEvent
+    public typealias Factory = GetCollateralLandingFactory
+    public typealias State = GetCollateralLandingDomain.State
+    public typealias UIEvent = GetCollateralLandingDomain.UIEvent
 }
 
 // MARK: - Previews

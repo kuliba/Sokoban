@@ -268,12 +268,12 @@ struct MainView<NavigationOperationView: View>: View {
         case let .providerServicePicker(node):
             servicePicker(flowModel: node.model)
             
-        // TODO: нужно использовать навбар, например navigationBarWithAsyncIcon или другой подходящий (наш, не SwiftUI)
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
                 makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
             )
-            CollateralLoanLandingView(binder: binder, factory: factory)
+
+            CollateralLoanShowcaseView(binder: binder, factory: factory)
                 .navigationBarWithBack(
                     title: "Кредиты",
                     dismiss: viewModel.resetDestination

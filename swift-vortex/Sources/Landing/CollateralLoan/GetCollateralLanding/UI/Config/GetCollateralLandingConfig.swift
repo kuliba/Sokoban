@@ -8,7 +8,7 @@
 import SwiftUI
 import DropDownTextListComponent
 
-struct GetCollateralLandingConfig {
+public struct GetCollateralLandingConfig {
     
     let fonts: Fonts
     let backgroundImageHeight: CGFloat
@@ -70,7 +70,7 @@ struct GetCollateralLandingConfig {
     }
 }
 
-extension GetCollateralLandingConfig {
+public extension GetCollateralLandingConfig {
 
     static let `default` = Self(
         fonts: .init(body: FontConfig(Font.system(size: 14))),

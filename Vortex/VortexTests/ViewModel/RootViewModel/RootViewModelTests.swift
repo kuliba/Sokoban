@@ -11,6 +11,7 @@ import LandingUIComponent
 import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
 import UIPrimitives
 import Combine
 
@@ -494,7 +495,8 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: [],
                     bannersBinder: .preview,
-                    makeCollateralLoanLandingBinder: { .preview },
+                    makeCollateralLoanShowcaseBinder: { .preview },
+                    makeCollateralLoanLandingBinder: { _ in .preview },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -572,7 +574,8 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
-                    makeCollateralLoanLandingBinder: { .preview },
+                    makeCollateralLoanShowcaseBinder: { .preview },
+                    makeCollateralLoanLandingBinder: { _ in .preview },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -706,6 +709,37 @@ final class RootViewModelTests: XCTestCase {
         )
     }    
 }
+
+// MARK: - GetCollateralLandingDomain.Binder preview
+
+private extension GetCollateralLandingDomain.Binder {
+    
+    static let preview = GetCollateralLandingDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetCollateralLandingDomain.Content {
+    
+    static let preview = GetCollateralLandingDomain.Content(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetCollateralLandingDomain.Flow {
+    
+    static let preview = GetCollateralLandingDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - GetShowcaseDomain.Binder preview
 
 private extension GetShowcaseDomain.Binder {
     
