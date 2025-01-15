@@ -684,7 +684,7 @@ internal extension Model {
                 
                 LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Pincode.Check.Response, correct")
                 action.send(ModelAction.Auth.Pincode.Check.Response.correct)
-                
+
             } else {
                 
                 let remainAttempts = authUnlockAttemptsAvailable - payload.attempt
@@ -865,6 +865,7 @@ internal extension Model {
                         case .ok:
                             LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Login.Response, success")
                             self.action.send(ModelAction.Auth.Login.Response.success)
+//                            self.handleAuthSetDeviceSettings(payload: .init(sensorType: nil))
 
                         default:
                             
@@ -1140,7 +1141,10 @@ extension Model {
         })
     }
     
-    func authSetDeviceSettings(credentials: SessionCredentials, sensorType: BiometricSensorType?) async throws {
+    func authSetDeviceSettings(
+        credentials: SessionCredentials,
+        sensorType: BiometricSensorType?
+    ) async throws {
         
         LoggerAgent.shared.log(category: .model, message: "authSetDeviceSettings")
         
@@ -1150,7 +1154,15 @@ extension Model {
         let pincode = try authStoredPincode()
         let loginValue = try pincode.sha256Base64String()
         
-        let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(credentials: credentials, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, loginValue: loginValue, availableSensorType: sensorType, isSensorEnabled: authIsBiometricSensorEnabled)
+        let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(
+            credentials: credentials,
+            pushDeviceId: pushDeviceId,
+            pushFcmToken: pushFcmToken,
+            serverDeviceGUID: serverDeviceGUID,
+            loginValue: loginValue,
+            availableSensorType: sensorType,
+            isSensorEnabled: authIsBiometricSensorEnabled
+        )
         
         LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
         
