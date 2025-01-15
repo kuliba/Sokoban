@@ -228,30 +228,18 @@ extension TemplatesListView {
             
             HStack(spacing: 16) {
                 
-                TemplatesListView.ItemIconView(
-                    avatar: avatar,
-                    topImage: topImage,
-                    style: style
-                )
+                itemIconView()
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
                     HStack {
                         
-                        TemplatesListView.ItemTitleView(
-                            title: title,
-                            style: style
-                        )
-                        
+                        itemTitleView()
                         Spacer()
-                        
-                        TemplatesListView.ItemAmountView(amount: amount)
+                        itemAmountView()
                     }
                     
-                    TemplatesListView.ItemSubtitleView(
-                        subtitle: subTitle,
-                        style: style
-                    )
+                    itemSubtitleView()
                 }
             }
             .modifier(Self.ItemPaddings(editMode: $editMode))
@@ -266,29 +254,42 @@ extension TemplatesListView {
                 
                 VStack(spacing: 0) {
                     
-                    TemplatesListView.ItemIconView(
-                        avatar: avatar,
-                        topImage: topImage,
-                        style: style
-                    )
-                    .padding(.vertical, 16)
-                    
-                    TemplatesListView.ItemTitleView(
-                        title: title,
-                        style: style
-                    )
-                    .padding(.bottom, 4)
-                    
-                    
-                    TemplatesListView.ItemSubtitleView(
-                        subtitle: subTitle,
-                        style: style
-                    )
-                    
-                    TemplatesListView.ItemAmountView(amount: amount)
-                        .padding(.bottom, 16)
+                    itemIconView().padding(.vertical, 16)
+                    itemTitleView().padding(.bottom, 4)
+                    itemSubtitleView()
+                    itemAmountView().padding(.bottom, 16)
                 }
             }
+        }
+        
+        private func itemIconView() -> some View {
+            
+            TemplatesListView.ItemIconView(
+                avatar: avatar,
+                topImage: topImage,
+                style: style
+            )
+        }
+        
+        private func itemTitleView() -> some View {
+            
+            TemplatesListView.ItemTitleView(
+                title: title,
+                style: style
+            )
+        }
+        
+        private func itemSubtitleView() -> some View {
+            
+            TemplatesListView.ItemSubtitleView(
+                subtitle: subTitle,
+                style: style
+            )
+        }
+        
+        private func itemAmountView() -> some View {
+            
+            TemplatesListView.ItemAmountView(amount: amount)
         }
     }
     
@@ -437,7 +438,7 @@ extension TemplatesListView {
             case let .image(image):
                 imageView(image)
                 
-            case let .md5Hash(md5Hash):
+            case .md5Hash:
                 placeholderView()
                 
             case let .text(text):
