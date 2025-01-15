@@ -46,7 +46,7 @@ struct TemplatesListView: View {
         }
     }
 }
- 
+
 private extension View {
     
     @ViewBuilder
@@ -84,122 +84,24 @@ private extension TemplatesListView {
             switch viewModel.state {
             case .normal, .select:
                 
-                if let categorySelectorViewModel = viewModel.categorySelector {
-                    
-                    viewFactory.makeOptionSelectorView(categorySelectorViewModel)
-                        .frame(height: 32)
-                        .padding(.top, 16)
-                        .padding(.horizontal)
-                }
+                categorySelector()
                 
                 switch viewModel.style {
                 case .list:
+                    list()
                     
-                    List {
-                        
-                        ForEach(viewModel.items) { item in
-                            
-                            switch item.kind {
-                            case .regular, .deleting:
-                                
-                                TemplateItemView(viewModel: item,
-                                                 style: .constant(.list),
-                                                 editMode: $viewModel.editModeState)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .listRowBackground(BackgroundListView())
-                                .modifier(Self.listRowSeparatorTint())
-                                .modifier(Self.trailingSwipeAction(
-                                    viewModel: viewModel.getItemsMenuViewModel(),
-                                    item: item))
-                            case .add:
-                                
-                                AddNewItemView(viewModel: item, style: .constant(.list))
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                                    .listRowBackground(BackgroundListView())
-                                    .modifier(Self.listRowSeparatorTint())
-                                
-                            case .placeholder:
-                                
-                                PlaceholderItemView(style: .constant(.list))
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                                    .shimmering(bounce: true)
-                                
-                            } //swich kind
-                        }//ForEach
-                        .onMove { indexes, destination in
-                            
-                            guard let first = indexes.first else { return }
-                            viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
-                                .init(move: (first, destination)))
-                        }
-                        .moveDisabled(viewModel.editModeState != .active)
-                    } //List
-                    .listStyle(.plain)
-                    .environment(\.editMode, $viewModel.editModeState)
-                    .padding(.horizontal)
-                    .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
-                    
-                    // TilesView
                 case .tiles:
-                    
-                    ScrollView {
-                        
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            
-                            ForEach(viewModel.items) { item in
-                                
-                                switch item.kind {
-                                case .regular, .deleting:
-                                    
-                                    TemplateItemView(viewModel: item,
-                                                     style: .constant(.tiles),
-                                                     editMode: $viewModel.editModeState)
-                                    .contextMenu {
-                                        
-                                        if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
-                                            
-                                            ForEach(itemsMenuViewModel) { button in
-                                                
-                                                Button(action: { button.action(item.id) }) {
-                                                    Text(button.subTitle)
-                                                    button.icon.renderingMode(.original)
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
-                                case .add:
-                                    
-                                    AddNewItemView(viewModel: item, style: .constant(.tiles))
-                                    
-                                case .placeholder:
-                                    
-                                    PlaceholderItemView(style: .constant(.tiles))
-                                        .shimmering(bounce: true)
-                                    
-                                } //kind swith
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.top)
-                    }//ScrollView
-                } //case style
-                
-                
-                if let deletePannelViewModel = viewModel.deletePanel {
-                    
-                    DeletePannelView(viewModel: deletePannelViewModel)
+                    tiles()
                 }
                 
-            case let .emptyList(emptyTemplateListViewModel):
+                viewModel.deletePanel.map(DeletePannelView.init)
                 
+            case let .emptyList(emptyTemplateListViewModel):
                 EmptyTemplateListView(viewModel: emptyTemplateListViewModel)
                 
             case .placeholder:
-                
                 PlaceholderView(style: viewModel.style)
-                
-            } //main stateSwitch
+            }
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -209,14 +111,126 @@ private extension TemplatesListView {
     }
     
     @ViewBuilder
+    func categorySelector() -> some View {
+        
+        viewModel.categorySelector.map {
+            
+            viewFactory.makeOptionSelectorView($0)
+                .frame(height: 32)
+                .padding(.top, 16)
+                .padding(.horizontal)
+        }
+    }
+    
+    func list() -> some View {
+        
+        List {
+            
+            ForEach(viewModel.items, content: itemView)
+                .onMove { indexes, destination in
+                    
+                    guard let first = indexes.first else { return }
+                    
+                    viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
+                        .init(move: (first, destination)))
+                }
+                .moveDisabled(viewModel.editModeState != .active)
+        }
+        .listStyle(.plain)
+        .environment(\.editMode, $viewModel.editModeState)
+        .padding(.horizontal)
+        .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
+    }
+    
+    @ViewBuilder
+    func itemView(
+        item: TemplatesListViewModel.ItemViewModel
+    ) -> some View {
+        
+        switch item.kind {
+        case .regular, .deleting:
+            TemplateItemView(
+                viewModel: item,
+                style: .constant(.list),
+                editMode: $viewModel.editModeState
+            )
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(BackgroundListView())
+            .modifier(Self.listRowSeparatorTint())
+            .modifier(Self.trailingSwipeAction(
+                viewModel: viewModel.getItemsMenuViewModel(),
+                item: item))
+            
+        case .add:
+            AddNewItemView(viewModel: item, style: .constant(.list))
+                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                .listRowBackground(BackgroundListView())
+                .modifier(Self.listRowSeparatorTint())
+            
+        case .placeholder:
+            PlaceholderItemView(style: .constant(.list))
+                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                .shimmering(bounce: true)
+        }
+    }
+    
+    func tiles() -> some View {
+        
+        ScrollView {
+            
+            LazyVGrid(columns: columns, spacing: 16) {
+                
+                ForEach(viewModel.items, content: tileView)
+            }
+            .padding(.horizontal)
+            .padding(.top)
+        }
+    }
+    
+    @ViewBuilder
+    func tileView(
+        item: TemplatesListViewModel.ItemViewModel
+    ) -> some View {
+        
+        switch item.kind {
+            
+        case .regular, .deleting:
+            TemplateItemView(
+                viewModel: item,
+                style: .constant(.tiles),
+                editMode: $viewModel.editModeState
+            )
+            .contextMenu {
+                
+                if let itemsMenuViewModel = viewModel.getItemsMenuViewModel(),
+                   !item.state.isProcessing {
+                    
+                    ForEach(itemsMenuViewModel) { button in
+                        
+                        Button(action: { button.action(item.id) }) {
+                            
+                            Text(button.subTitle)
+                            button.icon.renderingMode(.original)
+                        }
+                    }
+                }
+            }
+            
+        case .add:
+            AddNewItemView(viewModel: item, style: .constant(.tiles))
+            
+        case .placeholder:
+            PlaceholderItemView(style: .constant(.tiles))
+                .shimmering(bounce: true)
+        }
+    }
+    
+    @ViewBuilder
     func destination(
-        link: TemplatesListViewModel.Link?
+        link: TemplatesListViewModel.Link
     ) -> some View {
         
         switch link {
-        case nil:
-            EmptyView()
-            
         case let .payment(paymentsViewModel):
             viewFactory.makePaymentsView(paymentsViewModel)
         }
@@ -250,28 +264,22 @@ private extension TemplatesListView {
         
         switch sheet.type {
         case let .meToMe(viewModel):
-            
             viewFactory.makePaymentsMeToMeView(viewModel)
-                .fullScreenCover(item: $viewModel.success) { successViewModel in
-                    
-                    viewFactory.makePaymentsSuccessView(successViewModel)
-                }
-                .transaction { transaction in
-                    
-                    transaction.disablesAnimations = false
-                }
+                .fullScreenCover(
+                    item: $viewModel.success,
+                    content: viewFactory.makePaymentsSuccessView
+                )
+                .transaction { $0.disablesAnimations = false }
             
         case let .renameItem(renameViewModel):
-            
             RenameTemplateItemView(viewModel: renameViewModel)
             
         case let .productList(productListViewModel):
-            
             ProductListView(viewModel: productListViewModel, parentHeight: height)
         }
     }
 }
- 
+
 extension TemplatesListView {
     
     struct RenameTemplateItemView: View {
@@ -312,17 +320,17 @@ extension TemplatesListView {
                     RoundedRectangle(cornerRadius: 12)
                         .frame(height: 56)
                         .foregroundColor(viewModel.isNameNotValid ? Color.buttonPrimaryDisabled
-                                                                  : Color.buttonPrimary)
+                                         : Color.buttonPrimary)
                         .overlay13 {
                             Text(viewModel.saveButtonText)
                                 .font(.textH3Sb18240())
                                 .foregroundColor(.textWhite)
                         }
-                }.disabled(viewModel.isNameNotValid)
+                }
+                .disabled(viewModel.isNameNotValid)
             }
             .frame(height: 210)
             .padding()
-    
         }
     }
     
@@ -340,20 +348,22 @@ extension TemplatesListView {
         var body: some View {
             
             VStack(alignment: .leading, spacing: 15) {
-
+                
                 Text(viewModel.title)
                     .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
                     .padding(.leading)
                 
                 ScrollView {
-                
-                    VStack(spacing: 16) {
                     
+                    VStack(spacing: 16) {
+                        
                         ForEach(viewModel.sections) { sectionVM in
                             
-                            MyProductsSectionView(viewModel: sectionVM,
-                                                  editMode: .constant(.inactive))
+                            MyProductsSectionView(
+                                viewModel: sectionVM,
+                                editMode: .constant(.inactive)
+                            )
                             .onAppear {
                                 
                                 if ProductType(rawValue: sectionVM.id) == .card {
@@ -414,8 +424,8 @@ extension TemplatesListView {
                 }
                 .frame(height: 48)
                 .padding(.top, 24)
-
-            }.padding()
+            }
+            .padding()
         }
     }
     
@@ -425,20 +435,20 @@ extension TemplatesListView {
         let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
         
         var body: some View {
-                
+            
             VStack(alignment: .leading, spacing: 0) {
-                   
+                
                 HStack(spacing: 8) {
-                        
+                    
                     ForEach(0..<3) { _ in
-                           
+                        
                         RoundedRectangle(cornerRadius: 90)
                             .frame(width: 100, height: 32)
                             .shimmering(bounce: true)
                     }
                 }
                 .padding(.bottom, 20)
-                    
+                
                 switch style {
                 case .list:
                     
@@ -496,7 +506,7 @@ extension TemplatesListView {
                     
                     TemplatesListView
                         .PanelButtonView(viewModel: viewModel.deleteButton)
-                            .padding(.trailing, 30)
+                        .padding(.trailing, 30)
                     
                 }
                 .background(Color.barsBars.opacity(0.82))
@@ -510,9 +520,8 @@ extension TemplatesListView {
         let viewModel: TemplatesListViewModel.PanelButtonViewModel
         
         var body: some View {
-        
-            Button { viewModel.action()
-            } label: {
+            
+            Button(action: viewModel.action) {
                 
                 VStack(spacing: 4) {
                     
@@ -541,7 +550,6 @@ extension TemplatesListView {
                 .background(Color.white)
         }
     }
-
 }
 
 //MARK: - Helpers
@@ -549,6 +557,7 @@ extension TemplatesListView {
 extension TemplatesListView {
     
     struct listRowSeparatorTint: ViewModifier {
+        
         func body(content: Content) -> some View {
             
             if #available(iOS 15.0, *) {
@@ -595,8 +604,9 @@ extension TemplatesListView {
             }
         }
     }
-    
 }
+
+// MARK: - Previews
 
 struct TemplatesListView_Previews: PreviewProvider {
     
@@ -615,7 +625,7 @@ struct TemplatesListView_Previews: PreviewProvider {
             NavigationView {
                 TemplatesListView(viewModel: .sampleComplete, viewFactory: .preview)
                     .environment(\.mainViewSize, CGSize(width: 414, height: 800))
-                    
+                
             }
             .previewDisplayName("TemplatesView List")
             
@@ -646,5 +656,3 @@ extension TemplatesListViewFactory {
         makePaymentsView: {_ in fatalError() }
     )
 }
-
-
