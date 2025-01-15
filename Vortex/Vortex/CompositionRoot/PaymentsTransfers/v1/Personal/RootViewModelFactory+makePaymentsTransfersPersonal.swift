@@ -152,28 +152,22 @@ private extension CategoryPickerSectionDomain.Binder {
     }
 }
 
-private extension FlowState<SelectedCategoryNavigation> {
+private extension FlowState<CategoryPickerSectionDomain.Navigation> {
     
     var select: PaymentsTransfersPersonalSelect? {
         
         switch navigation {
-        case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case .mobile, .taxAndStateServices, .transport:
-                return nil
-                
-            case .qr(()):
-                return .scanQR
-                
-            case let .standard(.category(category)):
-                return .standardPayment(category.type)
-                
-            case .standard(.destination):
-                return nil
-            }
-            
-        default:
+        case .destination, .failure, .none:
             return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .qr:
+                return .scanQR
+
+            case let .standard(category):
+                return .standardPayment(category.type)
+            }
         }
     }
 }
