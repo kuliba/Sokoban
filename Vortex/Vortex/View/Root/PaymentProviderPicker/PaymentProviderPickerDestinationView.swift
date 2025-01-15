@@ -65,7 +65,8 @@ private extension PaymentProviderPickerDestinationView {
             
         case let .success(success):
             switch success {
-            case let .services(binder):
+            case let .services(node):
+                let binder = node.model
                 let navbar = binder.content.navBar
                 
                 ProviderServicePickerView(

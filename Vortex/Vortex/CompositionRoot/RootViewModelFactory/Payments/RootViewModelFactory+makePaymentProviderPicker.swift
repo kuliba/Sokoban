@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 import PayHub
 import RemoteServices
 
@@ -40,7 +41,7 @@ extension RootViewModelFactory {
         
         switch navigation {
         case .alert:       return .milliseconds(100)
-        case .destination: return .milliseconds(100)
+        case .destination: return .milliseconds(600)
         case .outside:     return .milliseconds(100)
         }
     }
@@ -129,13 +130,8 @@ extension RootViewModelFactory {
             case let .success(success):
                 switch success {
                 case let .services(operatorServices):
-                    
-                    completion(.destination(.payment(.success(
-                        .services(makeProviderServicePicker(
-                            provider: operatorServices.operator.operator,
-                            services: operatorServices.services
-                        ))
-                    ))))
+                    let node = makeProviderServicePickerNode(operatorServices, notify)
+                    completion(.destination(.payment(.success(.services(node)))))
                     
                 case let .startPayment(transaction):
                     completion(makeNavigation(
@@ -145,6 +141,23 @@ extension RootViewModelFactory {
                 }
             }
         }
+    }
+    
+    @inlinable
+    func makeProviderServicePickerNode(
+        _ operatorServices: OperatorServices,
+        _ notify: @escaping PaymentProviderPickerDomain.FlowDomain.Notify
+    ) -> Node<ProviderServicePickerDomain.Binder> {
+        
+        let picker = makeProviderServicePicker(
+            provider: operatorServices.operator.operator,
+            services: operatorServices.services
+        )
+        let cancellable = picker.flow.$state
+            .compactMap(\.navigation?.notifyEvent)
+            .sink { notify($0) }
+        
+        return .init(model: picker, cancellable: cancellable)
     }
     
     @inlinable
@@ -158,12 +171,10 @@ extension RootViewModelFactory {
             .compactMap(\.outside)
             .sink { notify($0.notifyEvent) }
         
-        return .destination(.payment(.success(
-            .startPayment(.init(
-                model: flowModel,
-                cancellable: cancellable
-            ))
-        )))
+        return .destination(.payment(.success(.startPayment(.init(
+            model: flowModel,
+            cancellable: cancellable
+        )))))
     }
     
     // MARK: - Content
@@ -250,6 +261,43 @@ extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+private extension ProviderServicePickerDomain.Navigation {
+    
+    var outcome: NavigationOutcome<PaymentProviderPickerDomain.Select>? {
+
+        switch self {
+        case let .outside(outside):
+            switch outside {
+            case .main:
+                return .select(.outside(.main))
+                
+            case .payments:
+                return .select(.outside(.payments))
+            }
+            
+        case .failure, .payment:
+            return nil
+        }
+    }
+    
+    var notifyEvent: PaymentProviderPickerDomain.FlowDomain.NotifyEvent? {
+
+        switch self {
+        case let .outside(outside):
+            switch outside {
+            case .main:
+                return .select(.outside(.main))
+                
+            case .payments:
+                return .select(.outside(.payments))
+            }
+            
+        case .failure, .payment:
+            return nil
+        }
+    }
+}
 
 private extension Latest {
     
