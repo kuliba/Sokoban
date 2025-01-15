@@ -34,11 +34,13 @@ extension GetCollateralLandingDomain {
     enum Select: Equatable {
         // TODO: Replace to payload
         case createDraftCollateralLoanApplication(String)
+        case showCaseList(ExternalEvent.CaseType)
     }
     
     enum Navigation {
 
         // TODO: Need to realize binder in the future
         case createDraftCollateralLoanApplication(String)
+        case showBottomSheet(ExternalEvent.CaseType)
     }
 }

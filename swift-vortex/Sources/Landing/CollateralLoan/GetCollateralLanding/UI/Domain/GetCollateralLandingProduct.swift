@@ -749,22 +749,6 @@ extension GetCollateralLandingProduct {
     )
 }
 
-extension GetCollateralLandingProduct {
-    
-    public static let empty = Self(
-        theme: .unknown,
-        name: "",
-        marketing: .empty,
-        conditions: [],
-        calc: .empty,
-        faq: [],
-        documents: [],
-        consents: [],
-        cities: [],
-        icons: .empty
-    )
-}
-
 extension GetCollateralLandingProduct.Marketing {
     
     static let empty = Self(

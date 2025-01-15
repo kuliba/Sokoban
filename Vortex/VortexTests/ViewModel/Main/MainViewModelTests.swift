@@ -1134,8 +1134,10 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+        reduce: {
+            state,_ in (state, nil)
+        },
         handleEffect: { _,_ in }
     )
 }

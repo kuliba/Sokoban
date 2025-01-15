@@ -12,9 +12,9 @@ import Combine
 
 extension RootViewModelFactory {
     
-    func makeCollateralLoanLandingBinder(landingId: String) -> GetCollateralLandingDomain.Binder {
+    func makeCollateralLoanLandingBinder(landingID: String) -> GetCollateralLandingDomain.Binder {
         
-        let content = makeContent(landingId: landingId)
+        let content = makeContent(landingID: landingID)
         
         return composeBinder(
             content: content,
@@ -26,16 +26,16 @@ extension RootViewModelFactory {
 
     // MARK: - Content
     
-    private func makeContent(landingId: String) -> GetCollateralLandingDomain.Content {
+    private func makeContent(landingID: String) -> GetCollateralLandingDomain.Content {
         
         let reducer = GetCollateralLandingDomain.Reducer()
         let effectHandler = GetCollateralLandingDomain.EffectHandler(
-            landingId: landingId,
+            landingID: landingID,
             load: loadCollateralLoanLanding
         )
                     
         return .init(
-            initialState: .init(),
+            initialState: .init(landingID: landingID),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
@@ -68,6 +68,8 @@ extension RootViewModelFactory {
         switch select {
         case let .createDraftCollateralLoanApplication(payload):
             completion(.createDraftCollateralLoanApplication(payload))
+        case let .showCaseList(id):
+            completion(.showBottomSheet(id))
         }
     }
 
@@ -78,18 +80,9 @@ extension RootViewModelFactory {
         switch navigation {
         case .createDraftCollateralLoanApplication:
             return .milliseconds(100)
+        case .showBottomSheet:
+            return .milliseconds(100)
         }
-    }
-
-    // Управление производится через Flow напрямую
-    private func witnesses() -> ContentWitnesses<
-        GetCollateralLandingDomain.Content,
-        FlowEvent<GetCollateralLandingDomain.Select, Never>
-    > {
-        .init(
-            emitting: { _ in Empty() },
-            dismissing: { _ in {} }
-        )
     }
 }
 

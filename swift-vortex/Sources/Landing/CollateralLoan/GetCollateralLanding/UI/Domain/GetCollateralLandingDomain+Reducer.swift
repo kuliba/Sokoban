@@ -26,6 +26,19 @@ extension GetCollateralLandingDomain {
             case let .loaded(result):
                 state.isLoading = false
                 state.result = result
+            // TODO: realize calculator logic
+            case .selectCaseList(_):
+                break
+            case .changeDesiredAmount(_):
+                break
+            case .createDraftApplication:
+                break
+            case .selectCollateral(_):
+                break
+            case .selectMonthPeriod(_):
+                break
+            case .toggleIHaveSalaryInCompany(_):
+                break
             }
             
             return (state, effect)

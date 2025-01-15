@@ -11,7 +11,7 @@ import UIPrimitives
 
 struct GetCollateralLandingConditionsView: View {
     
-    let state: State
+    let product: Product
     let config: Config
     let makeImageView: Factory.MakeImageView
     
@@ -50,7 +50,7 @@ struct GetCollateralLandingConditionsView: View {
 
             VStack {
                 
-                ForEach(state.product.conditions, id: \.title) {
+                ForEach(product.conditions, id: \.title) {
                     
                     GetCollateralLandingConditionView(
                         condition: $0,
@@ -127,7 +127,7 @@ struct GetCollateralLandingConditionsView_Previews: PreviewProvider {
     static var previews: some View {
 
             GetCollateralLandingConditionsView(
-                state: .init(product: .carStub),
+                product: .carStub,
                 config: .default,
                 makeImageView: Factory.preview.makeImageView
             )

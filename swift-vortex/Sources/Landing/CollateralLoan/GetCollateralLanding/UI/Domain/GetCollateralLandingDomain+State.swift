@@ -14,18 +14,18 @@ extension GetCollateralLandingDomain {
         var isLoading = false
         var result: Result?
         var bottomSheet: BottomSheet?
-        let product: Product
+        public let landingID: String
         
         public init(
             isLoading: Bool = false,
             result: Result? = nil,
             bottomSheet: BottomSheet? = nil,
-            product: Product = .empty
+            landingID: String
         ) {
             self.isLoading = isLoading
             self.result = result
             self.bottomSheet = bottomSheet
-            self.product = product
+            self.landingID = landingID
         }
     }
 }
@@ -50,6 +50,14 @@ extension GetCollateralLandingDomain.State {
             let icon: String?
             let title: String
         }
+    }
+}
+
+extension GetCollateralLandingDomain.State {
+    
+    var product: Product? {
+
+        try? result?.get()
     }
 }
 

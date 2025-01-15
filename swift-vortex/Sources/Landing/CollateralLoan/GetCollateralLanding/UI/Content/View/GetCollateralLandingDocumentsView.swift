@@ -9,8 +9,8 @@ import SwiftUI
 
 struct GetCollateralLandingDocumentsView: View {
 
+    let product: Product
     let config: Config
-    let state: State
     let makeImageView: Factory.MakeImageView
     
     var body: some View {
@@ -49,7 +49,7 @@ struct GetCollateralLandingDocumentsView: View {
 
             VStack {
                 
-                ForEach(state.product.documents, id: \.title) {
+                ForEach(product.documents, id: \.title) {
                     
                     GetCollateralLandingDocumentView(
                         document: $0,
@@ -83,8 +83,8 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
     static var previews: some View {
         
         GetCollateralLandingDocumentsView(
+            product: .carStub,
             config: .default,
-            state: .init(product: .carStub),
             makeImageView: Factory.preview.makeImageView
         )
     }

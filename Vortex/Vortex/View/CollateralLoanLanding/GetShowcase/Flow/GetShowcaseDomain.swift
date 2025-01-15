@@ -35,6 +35,6 @@ extension GetShowcaseDomain {
     
     enum Navigation {
 
-        case landing(GetCollateralLandingDomain.Binder)
+        case landing(String, GetCollateralLandingDomain.Binder)
     }
 }

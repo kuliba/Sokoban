@@ -270,7 +270,7 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
+                makeImageView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
             )
 
             CollateralLoanShowcaseView(binder: binder, factory: factory)
@@ -641,8 +641,12 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
+        initialState: .init(
+            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+        ),
+        reduce: {
+            state,_ in (state, nil)
+        },
         handleEffect: { _,_ in }
     )
 }
