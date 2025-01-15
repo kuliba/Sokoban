@@ -22,23 +22,15 @@ extension TemplatesListView {
             switch viewModel.state {
             case .normal, .processing:
                 
-                TemplatesListView.NormalItemView(
-                    avatar: viewModel.avatar,
-                    topImage: viewModel.topImage,
-                    title: viewModel.title,
-                    subTitle: viewModel.subTitle,
-                    amount: viewModel.amount,
-                    style: style,
-                    editMode: $editMode
-                )
-                .shimmering(active: viewModel.state.isProcessing, bounce: true)
-                .onTapGesture {
-                    
-                    if !viewModel.state.isProcessing {
+                itemView(viewModel: viewModel,editMode: $editMode)
+                    .shimmering(active: viewModel.state.isProcessing, bounce: true)
+                    .onTapGesture {
                         
-                        viewModel.tapAction(viewModel.id)
+                        if !viewModel.state.isProcessing {
+                            
+                            viewModel.tapAction(viewModel.id)
+                        }
                     }
-                }
                 
             case let .deleting(deletingProgressViewModel):
                 
@@ -48,34 +40,38 @@ extension TemplatesListView {
                 
             case let .select(roundButtonViewModel):
                 
-                TemplatesListView.NormalItemView(
-                    avatar: viewModel.avatar,
-                    topImage: viewModel.topImage,
-                    title: viewModel.title,
-                    subTitle: viewModel.subTitle,
-                    amount: viewModel.amount,
-                    style: style, editMode: .constant(.inactive))
-                .overlay13(alignment: .topLeading) {
-                    
-                    TemplatesListView.SelectItemVew(
-                        isSelected: roundButtonViewModel.isSelected
-                    )
-                    .offset(x: 8, y: 14)
-                }
-                .onTapGesture { roundButtonViewModel.action(viewModel.id) }
+                itemView(viewModel: viewModel, editMode: .constant(.inactive))
+                    .overlay13(alignment: .topLeading) {
+                        
+                        TemplatesListView.SelectItemVew(
+                            isSelected: roundButtonViewModel.isSelected
+                        )
+                        .offset(x: 8, y: 14)
+                    }
+                    .onTapGesture { roundButtonViewModel.action(viewModel.id) }
                 
             case let .delete(itemActionViewModel):
                 
-                TemplatesListView.NormalItemView(
-                    avatar: viewModel.avatar,
-                    topImage: viewModel.topImage,
-                    title: viewModel.title,
-                    subTitle: viewModel.subTitle,
-                    amount: viewModel.amount,
-                    style: style, editMode: .constant(.inactive)
-                )
-                .offset(x: -100, y: 0)
-            } //switch item state
+                itemView(viewModel: viewModel, editMode: .constant(.inactive))
+                    .offset(x: -100, y: 0)
+            }
+        }
+        
+        private func itemView(
+            viewModel: TemplatesListViewModel.ItemViewModel,
+            editMode: Binding<EditMode>
+        ) -> some View {
+            
+            TemplatesListView.NormalItemView(
+                avatar: viewModel.avatar,
+                topImage: viewModel.topImage,
+                title: viewModel.title,
+                subTitle: viewModel.subTitle,
+                amount: viewModel.amount,
+                style: style,
+                editMode: editMode
+            )
+            .id(viewModel.id)
         }
     }
 }
