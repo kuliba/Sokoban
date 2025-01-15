@@ -13,7 +13,6 @@ enum PaymentsTransfersPersonalTransfersDomain {
     // MARK: - Binder
     
     typealias Binder = PlainPickerBinder<Select, NavigationResult>
-    typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
     
     typealias FlowDomain = Vortex.FlowDomain<Select, NavigationResult>
     
@@ -27,6 +26,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     typealias FlowEvent = FlowDomain.Event
     typealias FlowEffect = FlowDomain.Effect
     
+    typealias Notify = FlowDomain.Notify
     typealias NotifyEvent = FlowDomain.NotifyEvent
     
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
