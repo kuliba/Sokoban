@@ -311,12 +311,53 @@ struct CapsuleText: View {
     
     var body: some View {
         
+        ShapedText(
+            text: text,
+            color: color,
+            bgColor: bgColor,
+            font: font,
+            shape: Capsule()
+        )
+    }
+}
+
+struct RoundedText: View {
+    
+    let text: String
+    let color: Color
+    let bgColor: Color
+    let font: Font
+    var cornerRadius: CGFloat = 12
+    
+    var body: some View {
+        
+        ShapedText(
+            text: text,
+            color: color,
+            bgColor: bgColor,
+            font: font,
+            shape: RoundedRectangle(cornerRadius: cornerRadius)
+        )
+    }
+}
+
+struct ShapedText<S: Shape>: View {
+    
+    let text: String
+    let color: Color
+    let bgColor: Color
+    let font: Font
+    let shape: S
+    
+    var body: some View {
+        
         Text(text)
             .font(font)
             .foregroundColor(color)
-            .padding(8)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 20)
             .background(bgColor)
-            .clipShape(Capsule())
+            .clipShape(shape)
     }
 }
 
