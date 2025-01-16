@@ -1233,7 +1233,14 @@ final class OperationDetailInfoViewModel: Identifiable {
             )
             
         default:
-            break
+            cells = Self.shortList(
+                statement: statement,
+                operation: operation,
+                product: product,
+                model: model,
+                dateTimeCell: dateTimeCell,
+                currency: currency
+            )
         }
         
         self.logo = logo
@@ -1390,6 +1397,39 @@ extension OperationDetailInfoViewModel {
         ].compactMap { $0 }
     }
     
+    static func shortList(
+        statement: ProductStatementData,
+        operation: OperationDetailData?,
+        product: ProductData,
+        model: Model,
+        dateTimeCell: PropertyCellViewModel,
+        currency: String
+    ) -> [DefaultCellViewModel] {
+        
+        let account = accountCell(
+            with: product,
+            model: model,
+            operationType: statement.operationType
+        )
+        let amount = amount(
+            statement: statement,
+            currency: currency,
+            model: model
+        )
+        let fee = fee(
+            fee: operation?.payerFee ?? 0,
+            currency: currency,
+            model: model
+        )
+
+        return [
+            account,
+            amount,
+            fee,
+            dateTimeCell
+        ].compactMap { $0 }
+    }
+    
     static func amount(
         statement: ProductStatementData,
         currency: String,
@@ -1409,6 +1449,15 @@ extension OperationDetailInfoViewModel {
                 value: $0
             )
         }
+    }
+    
+    static func fee(
+        fee: Double,
+        currency: String,
+        model: Model
+    ) -> PropertyCellViewModel? {
+        
+        return commissionCell(with: model, fee: fee, currency: currency)
     }
     
     static func payee(
