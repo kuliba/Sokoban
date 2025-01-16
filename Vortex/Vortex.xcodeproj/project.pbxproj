@@ -2672,6 +2672,7 @@
 		8302073F2D37E1270038EFA4 /* SavingsAccountDomain+Titles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8302073E2D37E1270038EFA4 /* SavingsAccountDomain+Titles.swift */; };
 		830207412D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207402D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift */; };
 		830207442D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */; };
+		830207462D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207452D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift */; };
 		8302824029C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */; };
 		8305F0572C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */; };
 		8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */; };
@@ -6266,6 +6267,7 @@
 		8302073E2D37E1270038EFA4 /* SavingsAccountDomain+Titles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavingsAccountDomain+Titles.swift"; sourceTree = "<group>"; };
 		830207402D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactoryComposer+makeSavingsAccountView.swift"; sourceTree = "<group>"; };
 		830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOpenNewProductsButtons.swift"; sourceTree = "<group>"; };
+		830207452D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOpenNewProductButtonsTests.swift"; sourceTree = "<group>"; };
 		8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CloseDepositResponseUnknowStatusGeneric.json; sourceTree = "<group>"; };
 		8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelModelEffectHandler.swift; sourceTree = "<group>"; };
 		8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getCardStatementForPeriod.swift"; sourceTree = "<group>"; };
@@ -10942,6 +10944,7 @@
 				2A86176C2D2083B400288B01 /* ProviderServicePicker */,
 				2A72ACCC2CC6ED1C00B8BF5B /* CodableTypes */,
 				A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */,
+				830207452D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift */,
 			);
 			path = RootViewModelFactory;
 			sourceTree = "<group>";
@@ -22972,6 +22975,7 @@
 				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
 				2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
+				830207462D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift in Sources */,
 				8375C01E2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift in Sources */,
 				2A730E372CEDCF5700BF626C /* QRScannerViewModelSpy.swift in Sources */,
 				2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */,
