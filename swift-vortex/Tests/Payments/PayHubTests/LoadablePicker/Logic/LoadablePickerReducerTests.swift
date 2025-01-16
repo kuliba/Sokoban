@@ -230,7 +230,7 @@ final class LoadablePickerReducerTests: LoadablePickerTests {
     
     // MARK: - loaded
     
-    func test_loaded_shouldNotChangeStateOnNil() {
+    func test_loaded_shouldNotChangeEmptyStateOnNil() {
         
         let state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [])
@@ -238,7 +238,19 @@ final class LoadablePickerReducerTests: LoadablePickerTests {
         assert(sut: sut, state, event: .loaded(nil))
     }
     
-    func test_loaded_shouldNotDeliverOnNil() {
+    func test_loaded_shouldResetSuffixOnNil() {
+        
+        let item = makeItem()
+        let state = makeState(prefix: [], suffix: [item])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded(nil)) {
+            
+            $0.suffix = []
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnNil() {
         
         let state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [])

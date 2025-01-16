@@ -77,7 +77,10 @@ extension LoadablePickerReducer {
         _ effect: inout Effect?,
         with elements: [Element]?
     ) {
-        guard let elements else { return }
+        guard let elements else {
+            
+            return state.suffix = []
+        }
         
         state.suffix = state.suffix
             .map(\.id)
