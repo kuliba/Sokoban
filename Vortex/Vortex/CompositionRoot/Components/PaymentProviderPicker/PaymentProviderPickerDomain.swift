@@ -47,24 +47,24 @@ extension PaymentProviderPickerDomain {
         
         case detailPayment
         case latest(Latest)
-        case outside(PaymentProviderPickerFlowOutside)
+        case outside(Outside)
         case provider(Provider)
     }
     
-    enum Navigation {
-        
-        case alert(BackendFailure)
-        case destination(Destination)
-        case outside(PaymentProviderPickerFlowOutside)
-    }
-    
-    enum PaymentProviderPickerFlowOutside: Equatable {
+    enum Outside: Equatable {
         
         case back
         case chat
         case main
         case payments
         case qr
+    }
+    
+    enum Navigation {
+        
+        case alert(BackendFailure)
+        case destination(Destination)
+        case outside(Outside)
     }
     
     enum Destination {

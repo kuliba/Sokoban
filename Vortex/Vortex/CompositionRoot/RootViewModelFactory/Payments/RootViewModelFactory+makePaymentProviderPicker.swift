@@ -53,7 +53,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .detailPayment:
-            completion(.destination(.detailPayment(makePaymentsNode(
+            let node = makePaymentsNode(
                 payload: .service(.requisites),
                 notify: { event in
                     
@@ -62,7 +62,8 @@ extension RootViewModelFactory {
                     case .scanQR: notify(.select(.outside(.qr)))
                     }
                 }
-            ))))
+            )
+            completion(.destination(.detailPayment(node)))
             
         case let .latest(latest):
             initiateAnywayPayment(latest: latest, notify: notify, completion: completion)
