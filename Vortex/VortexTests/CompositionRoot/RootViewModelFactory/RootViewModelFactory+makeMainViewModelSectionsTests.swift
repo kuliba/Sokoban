@@ -19,7 +19,8 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         
         let sections = sut.makeMainViewModelSections(
             bannersBinder: bannersBinder,
-            collateralLoanLandingFlag: .active
+            collateralLoanLandingFlag: .active, 
+            savingsAccountFlag: .inactive
         )
         
         XCTAssertTrue(sections.count == 6)
@@ -35,8 +36,9 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         
         let sut = makeSUT().sut
         let buttons = sut.makeOpenNewProductButtons(
-            collateralLoanLandingFlag: .active,
-            action: { _,_ in }
+            collateralLoanLandingFlag: .active, 
+            savingsAccountFlag: .inactive,
+            action: { _ in }
         )
         
         let ids = [
