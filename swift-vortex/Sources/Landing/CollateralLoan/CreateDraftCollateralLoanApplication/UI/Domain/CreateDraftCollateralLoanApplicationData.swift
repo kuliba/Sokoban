@@ -15,3 +15,13 @@ struct CreateDraftCollateralLoanApplicationData {
         let productName: String
     }
 }
+
+extension CreateDraftCollateralLoanApplicationData {
+    
+    static let preview = Self(
+        name: "Кредит под залог транспорта",
+        icons: .init(
+            productName: "info"
+        )
+    )
+}
