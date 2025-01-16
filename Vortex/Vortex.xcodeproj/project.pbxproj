@@ -2664,6 +2664,7 @@
 		8300FB6A2B71581200BE62E5 /* ProductProfile in Frameworks */ = {isa = PBXBuildFile; productRef = 8300FB692B71581200BE62E5 /* ProductProfile */; };
 		8300FB6E2B725E0800BE62E5 /* PreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300FB6D2B725E0800BE62E5 /* PreviewContent.swift */; };
 		830147892D030D1600174489 /* RequestFactory+createGetSavingLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830147882D030D1500174489 /* RequestFactory+createGetSavingLanding.swift */; };
+		830207442D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */; };
 		8302824029C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */; };
 		8305F0572C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */; };
 		8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */; };
@@ -6250,6 +6251,7 @@
 		77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValetKeychainAgent.swift; sourceTree = "<group>"; };
 		8300FB6D2B725E0800BE62E5 /* PreviewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContent.swift; sourceTree = "<group>"; };
 		830147882D030D1500174489 /* RequestFactory+createGetSavingLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSavingLanding.swift"; sourceTree = "<group>"; };
+		830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOpenNewProductsButtons.swift"; sourceTree = "<group>"; };
 		8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CloseDepositResponseUnknowStatusGeneric.json; sourceTree = "<group>"; };
 		8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelModelEffectHandler.swift; sourceTree = "<group>"; };
 		8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getCardStatementForPeriod.swift"; sourceTree = "<group>"; };
@@ -11505,8 +11507,8 @@
 			isa = PBXGroup;
 			children = (
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
-				A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingViewModel.swift */,
 				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
+				830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */,
 				2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */,
 				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift */,
 				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
@@ -21275,6 +21277,7 @@
 				0CF3D7172836D203001A1BEA /* PTSectionTransfersViewComponent.swift in Sources */,
 				7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */,
 				2A1980FC2CC10460005DEA3E /* Scheduler+ext.swift in Sources */,
+				830207442D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift in Sources */,
 				68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
 				77F9F2592A44A29C00699433 /* PaymentsSuccessAdditionalButtonsComponent.swift in Sources */,
 				77E1803127AC02170006ACC9 /* ServerCommands+Notification.swift in Sources */,

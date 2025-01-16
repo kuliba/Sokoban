@@ -524,17 +524,24 @@ private extension MainViewModel {
                                 self.openDeposit()
                                 
                             case .card:
-                                
                                 openCard()
                                 
-                            default:
-                                //MARK: Action for Sticker Product
+                            case .loan:
+                                openCollateralLoanLanding()
+                                
+                            case .sticker:
                                 handleLandingAction(.sticker)
+
+                            case .insurance:
+                                break
+                                
+                            case .mortgage:
+                                break
+                                
+                            case .savingsAccount:
+                                break // TODO: add openSavingsAccount
                             }
-                            
-                        case _ as MainSectionViewModelAction.OpenProduct.OpenCollateralLoanLanding:
-                            openCollateralLoanLanding()
-                            
+                                                        
                         default:
                             break
                         }
