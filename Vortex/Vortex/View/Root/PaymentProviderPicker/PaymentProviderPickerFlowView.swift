@@ -153,8 +153,8 @@ extension PaymentProviderPickerDomain.Destination: Identifiable {
                 
             case let .success(success):
                 switch success {
-                case let .services(binder):
-                    return .services(.init(binder))
+                case let .services(node):
+                    return .services(.init(node.model))
                     
                 case let .startPayment(node):
                     return .startPayment(.init(node.model))

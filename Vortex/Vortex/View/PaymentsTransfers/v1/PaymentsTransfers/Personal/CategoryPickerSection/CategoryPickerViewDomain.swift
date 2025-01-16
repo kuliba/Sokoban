@@ -1,16 +1,16 @@
 //
-//  CategoryPickerSectionDomain.swift
+//  CategoryPickerViewDomain.swift
 //  Vortex
 //
-//  Created by Igor Malyarov on 03.09.2024.
+//  Created by Igor Malyarov on 15.01.2025.
 //
 
 import PayHubUI
 
 /// A namespace.
-enum CategoryPickerSectionDomain {}
+enum CategoryPickerViewDomain {}
 
-extension CategoryPickerSectionDomain {
+extension CategoryPickerViewDomain {
     
     // MARK: - Binder
     
@@ -39,10 +39,12 @@ extension CategoryPickerSectionDomain {
     enum Destination {
         
         case mobile(Mobile)
+        case standard(Standard)
         case taxAndStateServices(Tax)
         case transport(Transport)
         
         typealias Mobile = ClosePaymentsViewModelWrapper
+        typealias Standard = StandardSelectedCategoryDestination
         typealias Tax = ClosePaymentsViewModelWrapper
         typealias Transport = TransportPaymentsViewModel
     }
@@ -50,6 +52,5 @@ extension CategoryPickerSectionDomain {
     enum Outside {
         
         case qr
-        case standard(ServiceCategory)
     }
 }

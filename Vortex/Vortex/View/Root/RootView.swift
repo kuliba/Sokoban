@@ -244,7 +244,7 @@ private extension RootView {
 
 // MARK: - adapters
 
-/*private*/ extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,
