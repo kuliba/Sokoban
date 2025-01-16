@@ -16,7 +16,8 @@ public extension AnywayPaymentContext {
             payment: initial,
             staged: .init(),
             outline: outline,
-            shouldRestart: shouldRestart
+            shouldRestart: shouldRestart,
+            needSum: false
         )
     }
 }
