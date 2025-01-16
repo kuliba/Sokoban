@@ -111,13 +111,15 @@ private extension AnywayPaymentContext {
         
         let outline = outline.updating(with: update)
         let payment = payment.update(with: update, and: outline)
+        let needSum = update.details.control.needSum
         
         return .init(
             initial: initial,
             payment: payment,
             staged: staged,
             outline: outline,
-            shouldRestart: shouldRestart
+            shouldRestart: shouldRestart,
+            needSum: needSum
         )
     }
 }
