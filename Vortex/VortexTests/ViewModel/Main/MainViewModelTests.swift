@@ -139,9 +139,11 @@ final class MainViewModelTests: XCTestCase {
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
-            bannersBinder: .preview,
-            makeCollateralLoanShowcaseBinder: { .preview },
-            makeCollateralLoanLandingBinder: { _ in .preview },
+            bindersFactory: .init(
+                bannersBinder: .preview,
+                makeCollateralLoanShowcaseBinder: { .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+            ),
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -770,11 +772,14 @@ final class MainViewModelTests: XCTestCase {
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: {},
             sections: makeSections(),
-            bannersBinder: .preview,
-            makeCollateralLoanShowcaseBinder: { .preview },
-            makeCollateralLoanLandingBinder: { _ in
-                collateralLandingSpy.call()
-            },
+            bindersFactory: .init(
+                bannersBinder: .preview,
+                makeCollateralLoanShowcaseBinder: { .preview },
+                makeCollateralLoanLandingBinder: { _ in
+                    collateralLandingSpy.call()
+                }, 
+                makeSavingsAccountBinder: { fatalError() }
+            ),
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -824,9 +829,12 @@ final class MainViewModelTests: XCTestCase {
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
-            bannersBinder: .preview,
-            makeCollateralLoanShowcaseBinder: { .preview },
-            makeCollateralLoanLandingBinder: { _ in .preview },
+            bindersFactory: .init(
+                bannersBinder: .preview,
+                makeCollateralLoanShowcaseBinder: { .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeSavingsAccountBinder: { fatalError() }
+            ),
             makeOpenNewProductButtons: { _ in buttons }
         )
         
@@ -868,9 +876,12 @@ final class MainViewModelTests: XCTestCase {
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
-            bannersBinder: .preview,
-            makeCollateralLoanShowcaseBinder: { .preview },
-            makeCollateralLoanLandingBinder: { _ in .preview },
+            bindersFactory: .init(
+                bannersBinder: .preview,
+                makeCollateralLoanShowcaseBinder: { .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeSavingsAccountBinder: { fatalError() }
+            ),
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -931,9 +942,12 @@ final class MainViewModelTests: XCTestCase {
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
-            bannersBinder: .preview,
-            makeCollateralLoanShowcaseBinder: { .preview },
-            makeCollateralLoanLandingBinder: { _ in .preview },
+            bindersFactory: .init(
+                bannersBinder: .preview,
+                makeCollateralLoanShowcaseBinder: { .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeSavingsAccountBinder: { fatalError() }
+            ),
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )

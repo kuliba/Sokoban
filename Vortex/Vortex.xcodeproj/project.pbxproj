@@ -2673,6 +2673,7 @@
 		830207412D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207402D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift */; };
 		830207442D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */; };
 		830207462D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207452D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift */; };
+		830207482D394DD60038EFA4 /* BindersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830207472D394DD60038EFA4 /* BindersFactory.swift */; };
 		8302824029C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */; };
 		8305F0572C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */; };
 		8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */; };
@@ -6268,6 +6269,7 @@
 		830207402D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactoryComposer+makeSavingsAccountView.swift"; sourceTree = "<group>"; };
 		830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOpenNewProductsButtons.swift"; sourceTree = "<group>"; };
 		830207452D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOpenNewProductButtonsTests.swift"; sourceTree = "<group>"; };
+		830207472D394DD60038EFA4 /* BindersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindersFactory.swift; sourceTree = "<group>"; };
 		8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CloseDepositResponseUnknowStatusGeneric.json; sourceTree = "<group>"; };
 		8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelModelEffectHandler.swift; sourceTree = "<group>"; };
 		8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getCardStatementForPeriod.swift"; sourceTree = "<group>"; };
@@ -14573,6 +14575,7 @@
 			children = (
 				83D962B22B67BDB00092C61C /* PaymentsTransfers */,
 				7772979227C77C190099EF91 /* MainViewModel.swift */,
+				830207472D394DD60038EFA4 /* BindersFactory.swift */,
 				2AB63F352B26E2140086B5EB /* SberQRInterfaces */,
 				2A16509F2B1FA853000DB3B1 /* QRTypealiases.swift */,
 				7772979427C781420099EF91 /* MainViewSectionViewModel.swift */,
@@ -22047,6 +22050,7 @@
 				2AFA3B152CB78DC10019AFBA /* Refreshable.swift in Sources */,
 				2A1F08432A7902BF00C5B11B /* TokenProvider.swift in Sources */,
 				774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */,
+				830207482D394DD60038EFA4 /* BindersFactory.swift in Sources */,
 				2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */,
 				839E53072BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift in Sources */,
 				2AB87C4D2C13346F0013EFFE /* AnywayElementModelMapper.swift in Sources */,

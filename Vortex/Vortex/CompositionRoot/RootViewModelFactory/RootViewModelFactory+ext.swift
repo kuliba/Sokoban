@@ -774,9 +774,12 @@ private extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
             sections: sections,
-            bannersBinder: bannersBinder,
-            makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
-            makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+            bindersFactory: .init(
+                bannersBinder: bannersBinder,
+                makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
+                makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeSavingsAccountBinder: makeSavingsAccount
+            ),
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
