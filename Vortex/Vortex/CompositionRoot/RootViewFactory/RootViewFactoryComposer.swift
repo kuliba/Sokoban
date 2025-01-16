@@ -17,6 +17,7 @@ import PayHub
 import PayHubUI
 import PaymentComponents
 import PDFKit
+import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
@@ -105,6 +106,7 @@ extension RootViewFactoryComposer {
             makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
+            makeSavingsAccountView: makeSavingsAccountView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView,
             makeOrderCardView: makeOrderCardView
@@ -114,6 +116,13 @@ extension RootViewFactoryComposer {
     private func clearCache() {
         
         try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
+    }
+    
+    func makeImageViewFactory(
+    ) -> SavingsAccount.ImageViewFactory {
+        .init(
+            makeIconView: model.imageCache().makeIconView(for:),
+            makeBannerImageView: model.generalImageCache().makeIconView(for:))
     }
 }
 
@@ -595,6 +604,13 @@ private extension RootViewFactoryComposer {
         )
     }
     
+    func makeSavingsAccountView(
+        binder: SavingsAccountDomain.Binder
+    ) -> SavingsAccountDomain.WrapperView? {
+        
+        makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
+    }
+
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {

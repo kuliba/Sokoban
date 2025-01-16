@@ -26,7 +26,8 @@ private extension AnywayPaymentContext {
             payment: payment,
             staged: staged,
             outline: outline,
-            shouldRestart: shouldRestart
+            shouldRestart: shouldRestart,
+            needSum: needSum
         )
     }
     

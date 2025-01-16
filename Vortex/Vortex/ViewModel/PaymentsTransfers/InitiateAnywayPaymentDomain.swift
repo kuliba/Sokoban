@@ -11,9 +11,9 @@ enum InitiateAnywayPaymentDomain<Payment, Operator, Service, OperatorServices, S
     
     enum Select {
         
-        case payment(Payment)
-        case `operator`(Operator)
         case oneOf(Service, for: Operator) // in case of multiple services the payment should have a field representing selected service
+        case `operator`(Operator)
+        case payment(Payment)
         case singleService(Service, for: Operator)
     }
     
@@ -36,6 +36,7 @@ extension InitiateAnywayPaymentDomain.Select: Equatable where Payment: Equatable
 extension InitiateAnywayPaymentDomain.Success: Equatable where Operator: Equatable, Service: Equatable, OperatorServices: Equatable, StartPayment: Equatable {}
 extension InitiateAnywayPaymentDomain.Failure: Equatable where Operator: Equatable {}
 
+// MARK: - OperatorServices
 
 struct OperatorServices<Operator, Service> {
     

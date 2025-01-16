@@ -1,50 +1,40 @@
 //
-//  RootViewFactory+makeCategoryPickerSectionView.swift
+//  RootViewFactory+makeCategoryPickerView.swift
 //  Vortex
 //
-//  Created by Igor Malyarov on 29.11.2024.
+//  Created by Igor Malyarov on 15.01.2025.
 //
 
-import PayHubUI
 import RxViewModel
 import SwiftUI
 import UIPrimitives
 
 extension RootViewFactory {
     
-    @ViewBuilder
-    func makeCategoryPickerSectionView(
-        _ categoryPicker: any CategoryPicker
+    func makeCategoryPickerView(
+        _ binder: CategoryPickerViewDomain.Binder
     ) -> some View {
         
-        if let binder = categoryPicker.sectionBinder {
-            
-            RxWrapperView(
-                model: binder.flow,
-                makeContentView: { state, _ in
-                    
-                    makeCategoryPickerContentView(binder.content, headerHeight: 24)
-                        .alert(
-                            item: state.failure,
-                            content: makeAlert(binder: binder)
-                        )
-                        .navigationDestination(
-                            destination: makeSectionDestination(state),
-                            content: makeSectionDestinationView
-                        )
-                }
-            )
-            .padding(.top, 20)
-        } else {
-            
-            Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")
-                .foregroundColor(.red)
-        }
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: { state, _ in
+                
+                makeCategoryPickerContentView(binder.content, headerHeight: nil)
+                    .alert(
+                        item: state.failure,
+                        content: makeAlert(binder: binder)
+                    )
+                    .navigationDestination(
+                        destination: makeDestination(state),
+                        content: makeDestinationView
+                    )
+            }
+        )
     }
     
-    private func makeSectionDestination(
-        _ state: CategoryPickerSectionDomain.FlowDomain.State
-    ) -> CategoryPickerSectionDomain.Destination? {
+    private func makeDestination(
+        _ state: CategoryPickerViewDomain.FlowDomain.State
+    ) -> CategoryPickerViewDomain.Destination? {
         
         guard case let .destination(destination) = state.navigation
         else { return nil }
@@ -53,13 +43,22 @@ extension RootViewFactory {
     }
     
     @ViewBuilder
-    private func makeSectionDestinationView(
-        destination: CategoryPickerSectionDomain.Destination
+    private func makeDestinationView(
+        destination: CategoryPickerViewDomain.Destination
     ) -> some View {
         
         switch destination {
         case let .mobile(mobile):
             components.makePaymentsView(mobile.paymentsViewModel)
+            
+        case let .standard(standard):
+            switch standard {
+            case let .failure(binder):
+                components.serviceCategoryFailureView(binder: binder)
+                
+            case let .success(binder):
+                makePaymentProviderPickerView(binder)
+            }
             
         case let .taxAndStateServices(wrapper):
             components.makePaymentsView(wrapper.paymentsViewModel)
@@ -70,7 +69,7 @@ extension RootViewFactory {
     }
     
     private func makeAlert(
-        binder: CategoryPickerSectionDomain.Binder
+        binder: CategoryPickerViewDomain.Binder
     ) -> (SelectedCategoryFailure) -> Alert {
         
         return { failure in
@@ -85,7 +84,7 @@ extension RootViewFactory {
 
 // MARK: - Adapters
 
-private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerViewDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,
@@ -126,7 +125,7 @@ private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     }
 }
 
-private extension CategoryPickerSectionDomain.FlowDomain.State {
+private extension CategoryPickerViewDomain.FlowDomain.State {
     
     var failure: SelectedCategoryFailure? {
         
@@ -137,7 +136,7 @@ private extension CategoryPickerSectionDomain.FlowDomain.State {
     }
 }
 
-extension CategoryPickerSectionDomain.Destination: Identifiable {
+extension CategoryPickerViewDomain.Destination: Identifiable {
     
     var id: ObjectIdentifier {
         
@@ -145,6 +144,15 @@ extension CategoryPickerSectionDomain.Destination: Identifiable {
             
         case let .mobile(mobile):
             return .init(mobile)
+            
+        case let .standard(standard):
+            switch standard {
+            case let .failure(failure):
+                return .init(failure)
+                
+            case let .success(success):
+                return .init(success)
+            }
             
         case let .taxAndStateServices(taxAndStateServices):
             return .init(taxAndStateServices)

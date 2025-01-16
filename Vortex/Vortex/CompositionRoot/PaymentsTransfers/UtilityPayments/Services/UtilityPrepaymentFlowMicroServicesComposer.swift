@@ -248,13 +248,15 @@ private extension AnywayPaymentContext {
             isFinalStep: false
         )
         let payment = initialPayment.update(with: update, and: outline)
+        let needSum = update.details.control.needSum
 
         self.init(
             initial: initialPayment,
             payment: payment,
             staged: .init(),
             outline: outline,
-            shouldRestart: false
+            shouldRestart: false,
+            needSum: needSum
         )
     }
 }

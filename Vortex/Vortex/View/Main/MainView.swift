@@ -282,6 +282,9 @@ struct MainView<NavigationOperationView: View>: View {
             
         case .orderCard:
             viewFactory.components.makeOrderCardView()
+            
+        case let .savingsAccount(binder):
+            viewFactory.components.makeSavingsAccountView(binder)
         }
     }
     
@@ -620,9 +623,7 @@ extension MainViewModel {
         onRegister: {
         },
         sections: [],
-        bannersBinder: .preview,
-        makeCollateralLoanShowcaseBinder: { .preview },
-        makeCollateralLoanLandingBinder: { _ in .preview },   
+        bindersFactory: .preview,
         makeOpenNewProductButtons: { _ in [] }
     )
 }

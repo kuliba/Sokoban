@@ -1064,26 +1064,8 @@ extension ProductProfileHistoryView {
                 
                 ZStack(alignment: .topTrailing) {
                     
-                    if let image = viewModel.image {
-                        
-                        image
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                        
-                    } else {
-                        
-                        Circle()
-                            .foregroundColor(.mainColorsGrayMedium)
-                            .frame(width: 40, height: 40)
-                            .shimmering()
-                    }
-                   
-                    if let image = viewModel.amountStatusImage {
-                        image
-                            .renderingMode(.original)
-                            .frame(width: 16, height: 16)
-                            .padding(.trailing, -4)
-                    }
+                    imageView()
+                    amountStatusImage()
                 }
                 .padding(.top, 8)
                 
@@ -1103,18 +1085,52 @@ extension ProductProfileHistoryView {
                 
                 Spacer()
                 
-                if let amount = viewModel.amount {
-                    
-                    Text(amount.value)
-                        .font(.textH4M16240())
-                        .foregroundColor(amount.color)
-                        .padding(.top, 8)
-                        .accessibilityIdentifier("operationAmount")
-                }
+                amountView()
             }
-            .onTapGesture {
+            .contentShape(Rectangle())
+            .onTapGesture(perform: viewModel.action)
+        }
+        
+        @ViewBuilder
+        private func imageView() -> some View {
             
-                viewModel.action()
+            if let image = viewModel.image {
+                
+                image
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                
+            } else {
+                
+                Circle()
+                    .foregroundColor(.mainColorsGrayMedium)
+                    .frame(width: 40, height: 40)
+                    .shimmering()
+            }
+        }
+        
+        @ViewBuilder
+        private func amountStatusImage() -> some View {
+            
+            if let image = viewModel.amountStatusImage {
+                
+                image
+                    .renderingMode(.original)
+                    .frame(width: 16, height: 16)
+                    .padding(.trailing, -4)
+            }
+        }
+        
+        @ViewBuilder
+        private func amountView() -> some View {
+            
+            if let amount = viewModel.amount {
+                
+                Text(amount.value)
+                    .font(.textH4M16240())
+                    .foregroundColor(amount.color)
+                    .padding(.top, 8)
+                    .accessibilityIdentifier("operationAmount")
             }
         }
     }

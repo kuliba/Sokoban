@@ -42,6 +42,18 @@ extension NewProductButton {
             self.subTitle = subTitle
             self.tapActionType = .url(url)
         }
+        
+        init(
+            openProductType: OpenProductType,
+            subTitle: String,
+            action: TapActionType
+        ) {
+            self.id = openProductType.rawValue
+            self.icon = openProductType.openButtonIcon
+            self.title = openProductType.openButtonTitle
+            self.subTitle = subTitle
+            self.tapActionType = action
+        }
     }
 }
 

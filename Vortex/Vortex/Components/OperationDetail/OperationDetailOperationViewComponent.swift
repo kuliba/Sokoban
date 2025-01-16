@@ -19,15 +19,24 @@ extension OperationDetailViewModel {
         let amount: OperationDetailViewModel.AmountViewModel
         let fee: OperationDetailViewModel.FeeViewModel?
         let description: String?
+        let updateWarning: String?
         let date: String
         
-        internal init(bankLogo: Image?, payee: OperationDetailViewModel.PayeeViewModel?, amount: OperationDetailViewModel.AmountViewModel, fee: OperationDetailViewModel.FeeViewModel?, description: String?, date: String) {
-            
+        internal init(
+            bankLogo: Image?,
+            payee: OperationDetailViewModel.PayeeViewModel?,
+            amount: OperationDetailViewModel.AmountViewModel,
+            fee: OperationDetailViewModel.FeeViewModel?,
+            description: String?,
+            updateWarning: String? = nil,
+            date: String
+        ) {
             self.bankLogo = bankLogo
             self.payee = payee
             self.amount = amount
             self.fee = fee
             self.description = description
+            self.updateWarning = updateWarning
             self.date = date
         }
         
@@ -36,39 +45,45 @@ extension OperationDetailViewModel {
             let image = Self.bankLogo(with: productStatement, model: model)
             let dateFormatted = DateFormatter.operation.string(from: productStatement.tranDate ?? productStatement.date)
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
+            let amountViewModel = AmountViewModel(
+                amount: productStatement.amount,
+                currencyCodeNumeric: productStatement.currencyCodeNumeric,
+                operationType: productStatement.operationType,
+                payService: nil,
+                model: model
+            )
             
             switch productStatement.paymentDetailType {
             case .insideBank:
-                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .betweenTheir:
-                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .otherBank:
-                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .contactAddressless, .direct:
-                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .externalIndivudual, .externalEntity:
                 if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
                     
-                    self.init(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: documentComment, date: dateFormatted)
+                    self.init(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: documentComment, updateWarning: nil, date: dateFormatted)
                     
                 } else {
                     
-                    self.init(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                    self.init(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: nil,updateWarning: nil,  date: dateFormatted)
                 }
                 
             case .housingAndCommunalService, .insideOther, .internet, .mobile:
-                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .outsideCash:
-                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .outsideOther:
-                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .sfp:
                 var payeeViewModel: PayeeViewModel
@@ -85,27 +100,27 @@ extension OperationDetailViewModel {
                 }
                 if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
                     
-                    self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: dateFormatted)
+                    self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, updateWarning: nil, date: dateFormatted)
                     
                 } else {
                     
-                    self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                    self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 }
                 
             case .transport:
-                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             case .c2b:
                 let bankLogo = Self.bankLogo(with: productStatement, model: model)
                 
-                self.init(bankLogo: bankLogo, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, date: dateFormatted)
+                self.init(bankLogo: bankLogo, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, updateWarning: nil, date: dateFormatted)
                 
             case .sberQRPayment:
-                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
                 
             default:
                 //FIXME: taxes
-                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, updateWarning: nil, date: dateFormatted)
             }
         }
         
@@ -119,31 +134,93 @@ extension OperationDetailViewModel {
             return bankInfo.svgImage.image
         }
         
-        func updated(with bankLogo: Image) -> OperationViewModel {
+        func updated(
+            with bankLogo: Image
+        ) -> OperationViewModel {
             
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
+            return .init(
+                bankLogo: bankLogo,
+                payee: payee,
+                amount: amount,
+                fee: fee,
+                description: description,
+                updateWarning: updateWarning,
+                date: date
+            )
         }
         
-        func updated(with payee: OperationDetailViewModel.PayeeViewModel) -> OperationViewModel {
+        func updated(
+            with payee: OperationDetailViewModel.PayeeViewModel
+        ) -> OperationViewModel {
             
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
+            return .init(
+                bankLogo: bankLogo,
+                payee: payee,
+                amount: amount,
+                fee: fee,
+                description: description,
+                updateWarning: updateWarning,
+                date: date
+            )
         }
         
-        func updated(with fee: OperationDetailViewModel.FeeViewModel) -> OperationViewModel {
+        func updated(
+            with fee: OperationDetailViewModel.FeeViewModel
+        ) -> OperationViewModel {
             
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
+            return .init(
+                bankLogo: bankLogo,
+                payee: payee,
+                amount: amount,
+                fee: fee,
+                description: description,
+                updateWarning: updateWarning,
+                date: date
+            )
         }
         
         func updated(with date: String) -> OperationViewModel {
             
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
+            return .init(
+                bankLogo: bankLogo,
+                payee: payee,
+                amount: amount,
+                fee: fee,
+                description: description,
+                updateWarning: updateWarning,
+                date: date
+            )
         }
         
-        func updated(with productStatement: ProductStatementData, operation: OperationDetailData, viewModel: OperationDetailViewModel) -> OperationViewModel {
+        func updated(
+            withUpdateWarning updateWarning: String?
+        ) -> OperationViewModel {
+            
+            return .init(
+                bankLogo: bankLogo,
+                payee: payee,
+                amount: amount,
+                fee: fee,
+                description: description,
+                updateWarning: updateWarning,
+                date: date
+            )
+        }
+        
+        func updated(
+            with productStatement: ProductStatementData,
+            operation: OperationDetailData,
+            viewModel: OperationDetailViewModel
+        ) -> OperationViewModel {
             
             var operationViewModel = self
             //FIXME: get currency from currencyList
             let currencyCode = "RUB"
+            
+            if operation.flow == nil {
+             
+                operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
+            }
             
             switch productStatement.paymentDetailType {
             case .contactAddressless:
@@ -250,6 +327,26 @@ extension OperationDetailViewModel {
     }
 }
 
+private extension String {
+    
+    static let warning = "В данной версии приложения операция отражается некорректно. Проверьте наличие обновления."
+}
+
+private extension OperationDetailData {
+    
+    var flow: ServiceCategory.PaymentFlow? {
+        
+        switch paymentFlow {
+        case "MOBILE":                return .mobile
+        case "QR":                    return .qr
+        case "STANDARD_FLOW":         return .standard
+        case "TAX_AND_STATE_SERVICE": return .taxAndStateServices
+        case "TRANSPORT":             return .transport
+        default:                      return .none
+        }
+    }
+}
+
 //MARK: - View
 
 extension OperationDetailView {
@@ -262,36 +359,101 @@ extension OperationDetailView {
             
             VStack(spacing: 0) {
                 
-                if let logo = viewModel.bankLogo {
-                    
-                    logo.resizable().frame(width: 32, height: 32)
-                }
+                logoView(viewModel.bankLogo)
+                payeeView(viewModel.payee)
+                amountView(viewModel.amount)
+                feeView(viewModel.fee)
+                capsuleText(viewModel.description)
+                dateView(viewModel.date)
+                roundedText(viewModel.updateWarning)
+            }
+        }
+        
+        @ViewBuilder
+        private func logoView(
+            _ logo: Image?
+        ) -> some View {
+            
+            if let logo {
                 
-                if let payee = viewModel.payee {
-                    
-                    OperationDetailView.PayeeView(viewModel: payee)
-                        .padding(.top, 8)
-                }
+                logo.resizable().frame(width: 32, height: 32)
+            }
+        }
+        
+        @ViewBuilder
+        private func payeeView(
+            _ payee: OperationDetailViewModel.PayeeViewModel?
+        ) -> some View {
+            
+            if let payee {
                 
-                OperationDetailView.AmountView(viewModel: viewModel.amount)
+                OperationDetailView.PayeeView(viewModel: payee)
+                    .padding(.top, 8)
+            }
+        }
+        
+        @ViewBuilder
+        private func amountView(
+            _ amount: OperationDetailViewModel.AmountViewModel
+        ) -> some View {
+            
+            OperationDetailView.AmountView(viewModel: amount)
+                .padding(.top, 32)
+        }
+        
+        @ViewBuilder
+        private func feeView(
+            _ fee: OperationDetailViewModel.FeeViewModel?
+        ) -> some View {
+            
+            if let fee {
+                
+                OperationDetailView.FeeView(viewModel: fee)
                     .padding(.top, 32)
+            }
+        }
+        
+        @ViewBuilder
+        private func capsuleText(
+            _ text: String?
+        ) -> some View {
+            
+            if let text, !text.isEmpty {
                 
-                if let fee = viewModel.fee {
-                    
-                    OperationDetailView.FeeView(viewModel: fee)
-                        .padding(.top, 32)
-                }
+                CapsuleText(
+                    text: text,
+                    color: .textSecondary,
+                    bgColor: .mainColorsGrayLightest,
+                    font: .system(size: 18, weight: .regular)
+                )
+                .padding(24)
+            }
+        }
+        
+        private func dateView(
+            _ date: String
+        ) -> some View {
+           
+            Text(viewModel.date)
+                .font(.system(size: 12, weight: .regular))
+                .foregroundColor(.textPlaceholder)
+                .padding(.top, 16)
+        }
+        
+        @ViewBuilder
+        private func roundedText(
+            _ text: String?
+        ) -> some View {
+            
+            if let text, !text.isEmpty {
                 
-                if let description = viewModel.description, !description.isEmpty {
-                    
-                    CapsuleText(text: description, color: .textSecondary, bgColor: .mainColorsGrayLightest, font: .system(size: 18, weight: .regular))
-                        .padding(24)
-                }
-                
-                Text(viewModel.date)
-                    .font(.system(size: 12, weight: .regular))
-                    .foregroundColor(.textPlaceholder)
-                    .padding(.top, 16)
+                RoundedText(
+                    text: text,
+                    color: .textSecondary,
+                    bgColor: .mainColorsGrayLightest,
+                    font: .system(size: 18, weight: .regular)
+                )
+                .padding(24)
             }
         }
     }
@@ -303,7 +465,18 @@ struct OperationDetailOperationViewComponent_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OperationDetailView.OperationView(viewModel: .sample)
+        Group {
+            
+            operationView(viewModel: .sample)
+            operationView(viewModel: .sampleWithUpdateWarning)
+        }
+    }
+    
+    private static func operationView(
+        viewModel: OperationDetailViewModel.OperationViewModel
+    ) -> some View {
+        
+        OperationDetailView.OperationView(viewModel: viewModel)
             .previewLayout(.fixed(width: 375, height: 600))
     }
 }
@@ -312,5 +485,7 @@ struct OperationDetailOperationViewComponent_Previews: PreviewProvider {
 
 extension OperationDetailViewModel.OperationViewModel {
     
-    static let sample = OperationDetailViewModel.OperationViewModel(bankLogo: nil, payee: nil, amount: .init(amount: "30,5 $", payService: .applePay, colorHex: "1C1C1C"), fee: nil, description: nil, date: "29.11.22")
+    static let sample = OperationDetailViewModel.OperationViewModel(bankLogo: nil, payee: nil, amount: .init(amount: "30,5 $", payService: .applePay, colorHex: "1C1C1C"), fee: nil, description: nil, updateWarning: nil, date: "29.11.22")
+    
+    static let sampleWithUpdateWarning = OperationDetailViewModel.OperationViewModel(bankLogo: nil, payee: nil, amount: .init(amount: "30,5 $", payService: .applePay, colorHex: "1C1C1C"), fee: nil, description: nil, updateWarning: "В данной версии приложения операция отражается некорректно. Проверьте наличие обновления.", date: "29.11.22")
 }

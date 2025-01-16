@@ -214,7 +214,7 @@ final class RootViewModelFactory_getPaymentProviderPickerNavigationTests: RootVi
         
         case alert(BackendFailure)
         case destination(EquatableDestination)
-        case outside(Domain.PaymentProviderPickerFlowOutside)
+        case outside(Domain.Outside)
         
         enum EquatableDestination: Equatable {
             

@@ -18,7 +18,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         getNavigation(flow: .mobile) {
             
             switch $0 {
-            case .paymentFlow(.mobile):
+            case .destination(.mobile):
                 break
                 
             default:
@@ -32,7 +32,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         getNavigation(flow: .qr) {
             
             switch $0 {
-            case .paymentFlow(.qr):
+            case .outside(.qr):
                 break
                 
             default:
@@ -56,7 +56,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         getNavigation(sut, flow: .standard) {
             
             switch $0 {
-            case .paymentFlow(.standard):
+            case .outside(.standard):
                 break
                 
             default:
@@ -70,7 +70,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         getNavigation(flow: .taxAndStateServices) {
             
             switch $0 {
-            case .paymentFlow(.taxAndStateServices):
+            case .destination(.taxAndStateServices):
                 break
                 
             default:
@@ -102,7 +102,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         getNavigation(sut, flow: .transport) {
             
             switch $0 {
-            case .paymentFlow(.transport):
+            case .destination(.transport):
                 break
                 
             default:
@@ -126,7 +126,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
             model: .mockWithEmptyExcept(),
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeStandard: { $1(.category($0)) },
+                makeStandard: { _,_ in },
                 makeTax: makeTax,
                 makeTransport: { transport }
             ),
@@ -159,7 +159,7 @@ final class SelectedCategoryGetNavigationComposerTests: XCTestCase {
         _ sut: SUT? = nil,
         with select: Domain.Select,
         notify: @escaping Domain.Notify = { _ in },
-        completion: @escaping (SUT.Navigation) -> Void,
+        completion: @escaping (Domain.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
