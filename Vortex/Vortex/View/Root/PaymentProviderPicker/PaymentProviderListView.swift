@@ -133,3 +133,5 @@ private extension PaymentProviderListView {
         makeIconView(md5Hash.map { .md5Hash(.init($0)) })
     }
 }
+
+extension Latest: Identifiable {}

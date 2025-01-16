@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 01.10.2024.
 //
 
+import Combine
 import PayHubUI
 
 protocol ReloadableCategoryPicker: CategoryPicker {
@@ -15,23 +16,66 @@ protocol ReloadableCategoryPicker: CategoryPicker {
 extension CategoryPickerSectionDomain.Binder: ReloadableCategoryPicker {
     
     func reload() {
-         
+        
         content.event(.reload)
     }
 }
 
 extension RootViewModelFactory {
     
+    typealias MakeStandard = (ServiceCategory, @escaping (SelectedCategoryNavigation.Standard) -> Void) -> Void
+    
     @inlinable
     func makeCategoryPickerSection(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
+    ) -> CategoryPickerSectionDomain.Binder {
+        
+        let content = makeContent(.init(
+            loadCategories: getServiceCategoriesWithoutQR,
+            reloadCategories: { $0(nil) },
+            loadAllLatest: { $0(nil) }
+        ))
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getNavigation(
+                makeStandard: { [weak self] category, completion in
+                    
+                    self?.handleSelectedServiceCategory(category) {
+                        
+                        completion(.destination($0))
+                    }
+                }
+            ),
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+    }
+    
+    @inlinable
+    func makeCategoryPickerSection(
+        nanoServices: PaymentsTransfersPersonalNanoServices,
+        makeStandard: @escaping MakeStandard
     ) -> ReloadableCategoryPicker {
         
-        return compose(
-            getNavigation: getNavigation,
-            content: makeContent(nanoServices),
-            witnesses: witnesses()
+        let content = makeContent(nanoServices)
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getNavigation(makeStandard: makeStandard),
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+    
+    @inlinable
+    func delayProvider(
+        navigation: CategoryPickerSectionDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .failure:     return .milliseconds(100)
+        case .paymentFlow: return settings.delay
+        }
     }
     
     @inlinable
@@ -49,12 +93,20 @@ extension RootViewModelFactory {
         )
     }
     
-    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
+    @inlinable
+    func emitting(
+        content: CategoryPickerSectionDomain.Content
+    ) -> some Publisher<FlowEvent<CategoryPickerSectionDomain.Select, Never>, Never> {
         
-        return .init(
-            emitting: { $0.$state.compactMap(\.selected) },
-            dismissing: { content in { content.event(.select(nil)) }}
-        )
+        content.$state.compactMap(\.selected).map(FlowEvent.select)
+    }
+    
+    @inlinable
+    func dismissing(
+        content: CategoryPickerSectionDomain.Content
+    ) -> () -> Void {
+        
+        return { content.event(.select(nil)) }
     }
 }
 
@@ -62,20 +114,31 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select: CategoryPickerSectionDomain.Select,
-        notify: @escaping CategoryPickerSectionDomain.Notify,
-        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
-    ) {
+        makeStandard: @escaping MakeStandard
+    ) -> (
+        CategoryPickerSectionDomain.Select,
+        @escaping CategoryPickerSectionDomain.Notify,
+        @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) -> Void {
+        
         let composer = SelectedCategoryGetNavigationComposer(
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
+                makeStandard: makeStandard,
                 makeTax: makeTaxPayment,
                 makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
         
-        composer.getNavigation(select, notify, completion)
+        return { select, notify, completion in
+            
+            composer.getNavigation(select, notify) {
+                
+                completion($0)
+                _ = composer
+            }
+        }
     }
 }

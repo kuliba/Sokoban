@@ -71,9 +71,26 @@ private extension PrepaymentOptionsEffectHandler {
         _ searchText: String,
         _ dispatch: @escaping Dispatch
     ) {
-        scheduler.schedule(after: .init(.now() + debounce)) {
+        scheduler.delay(for: .init(debounce)) {
             
             dispatch(.search(.updated(searchText)))
         }
     }
 }
+
+extension AnySchedulerOfDispatchQueue {
+    
+    /// Delays execution of a closure by a specified timeout.
+    ///
+    /// - Parameters:
+    ///   - timeout: The delay duration.
+    ///   - action: The closure to execute after the delay.
+    func delay(
+        for timeout: Delay,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: now.advanced(by: timeout), action)
+    }
+}
+
+typealias Delay = DispatchQueue.SchedulerTimeType.Stride

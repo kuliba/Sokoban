@@ -7,7 +7,7 @@
 
 import VortexTools
 
-// RootViewModelFactory+makePaymentProviderPicker.swift:257
+// RootViewModelFactory+handleSelected.swift:257
 /// A namespace.
 enum ProcessPaymentProviderDomain<Operator, Service, StartPaymentResult> {}
 

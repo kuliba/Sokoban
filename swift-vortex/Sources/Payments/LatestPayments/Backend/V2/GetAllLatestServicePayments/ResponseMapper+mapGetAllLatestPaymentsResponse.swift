@@ -36,6 +36,7 @@ extension ResponseMapper {
         public let md5Hash: String?
         public let puref: String
         public let type: String
+        public let paymentFlow: String?
         public let additionalItems: [AdditionalItem]
         
         public init(
@@ -43,6 +44,7 @@ extension ResponseMapper {
             amount: Decimal,
             name: String,
             md5Hash: String?,
+            paymentFlow: String?,
             puref: String,
             type: String,
             additionalItems: [AdditionalItem]
@@ -51,6 +53,7 @@ extension ResponseMapper {
             self.amount = amount
             self.name = name
             self.md5Hash = md5Hash
+            self.paymentFlow = paymentFlow
             self.puref = puref
             self.type = type
             self.additionalItems = additionalItems
@@ -101,6 +104,7 @@ private extension ResponseMapper.LatestServicePayment {
             amount: data.amount,
             name: data.name,
             md5Hash: data.md5hash,
+            paymentFlow: data.payment_flow,
             puref: data.puref,
             type: data.type,
             additionalItems: data.additionalList.map(AdditionalItem.init)
@@ -130,6 +134,7 @@ private extension ResponseMapper {
         let type: String
         let amount: Decimal
         let puref: String
+        let payment_flow: String?
         let lpName: String?
         let md5hash: String
         let name: String

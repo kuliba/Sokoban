@@ -11,17 +11,16 @@ struct CollateralLoanLandingGetShowcaseProductImageView: View {
     
     let url: String
     let config: Config
-
+    let makeImageView: Factory.MakeImageView
+    
     var body: some View {
 
         ZStack {
             
-            RoundedRectangle(cornerRadius: config.imageView.сornerRadius)
-                .fill(.gray)
+            makeImageView(url)
+                .scaledToFill()
                 .frame(height: config.imageView.height)
-            Text("Image")
-                .font(.system(size: 32).bold())
-                .foregroundColor(.white)
+                .cornerRadius(config.imageView.сornerRadius)
         }
         .padding(.top, config.paddings.top)
         .padding(.leading, config.paddings.outer.leading)
@@ -31,5 +30,7 @@ struct CollateralLoanLandingGetShowcaseProductImageView: View {
 
 extension CollateralLoanLandingGetShowcaseProductImageView {
     
+    typealias Md5hash = String
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }

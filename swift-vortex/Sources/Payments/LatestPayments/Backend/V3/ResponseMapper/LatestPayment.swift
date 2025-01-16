@@ -83,7 +83,7 @@ extension ResponseMapper.LatestPayment {
         public let paymentDate: Date
         public let paymentFlow: PaymentFlow?
         public let phoneNumber: String
-        public let puref: String
+        public let puref: String?
         public let type: LatestType
         
         public init(
@@ -98,7 +98,7 @@ extension ResponseMapper.LatestPayment {
             paymentDate: Date,
             paymentFlow: PaymentFlow?,
             phoneNumber: String,
-            puref: String,
+            puref: String?,
             type: LatestType
         ) {
             self.amount = amount

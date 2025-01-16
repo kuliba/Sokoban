@@ -26,13 +26,13 @@ extension AnywayPaymentSourceParser {
     
     enum Source: Equatable {
         
-        case latest(Latest)
+        case latest(LatestOutlinePayload)
         case oneOf(Service, Operator)
         case picked(ServicePickerItem, PaymentProviderServicePickerPayload)
         case single(Service, Operator)
         case template(PaymentTemplateData)
         
-        typealias Latest = RemoteServices.ResponseMapper.LatestServicePayment
+        typealias Latest = LatestOutlinePayload
         typealias Operator = UtilityPaymentProvider
         typealias Service = UtilityService
     }
@@ -53,13 +53,13 @@ extension AnywayPaymentSourceParser {
             return self.latest(latest, product)
             
         case let .oneOf(service, `operator`):
-            return oneOf(service, `operator`, product)
+            return self.oneOf(service, `operator`, product)
             
         case let .picked(item, payload):
-            return picked(item, payload, product)
+            return self.picked(item, payload, product)
             
         case let .single(service, `operator`):
-            return single(service, `operator`, product)
+            return self.single(service, `operator`, product)
             
         case let .template(template):
             return try self.template(template, product)
@@ -87,10 +87,7 @@ private extension AnywayPaymentSourceParser {
     ) -> Output {
         
         return .init(
-            outline: .init(
-                latestServicePayment: latest,
-                product: product
-            ),
+            outline: .init(payload: latest, product: product),
             firstField: nil
         )
     }
@@ -202,7 +199,7 @@ private extension PaymentTemplateData {
                 puref: core.puref,
                 title: name,
                 subtitle: groupName,
-                icon: svgImage.description
+                icon: svgImage?.description // TODO: replace with fallback to md5Hash
             )
         )
     }

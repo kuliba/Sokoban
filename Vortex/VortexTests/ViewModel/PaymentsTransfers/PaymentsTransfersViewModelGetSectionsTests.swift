@@ -97,7 +97,8 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            makeOrderCardViewModel: { }
         )
         
         return .init(

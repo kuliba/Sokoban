@@ -232,7 +232,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         self.operationId = operationDetail.paymentOperationDetailId
         self.paymentFlow = operationDetail.paymentFlow
-        self.printFormType = operationDetail.printFormType
+        self.printFormType = .init(rawValue: operationDetail.printFormType)
         self.productStatement = productStatement
 
         withAnimation {
@@ -352,20 +352,30 @@ private extension OperationDetailViewModel {
         let paymentOperationDetailID = operationDetail.paymentOperationDetailId
         let printFormType = operationDetail.printFormType
         
-        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in
+        return FeatureButtonViewModel(kind: .document,
+                                      icon: "Operation Details Document",
+                                      name: "Документ",
+                                      action: {
+            [weak self] in
             
             guard let self = self else {
                 return
             }
             
             switch operationDetail.printFormType {
-            case .closeAccount:
+            case "closeAccount":
                 let printFormViewModel = PrintFormView.ViewModel(type: .closeAccount(id: operationDetail.payerAccountId, paymentOperationDetailId: operationDetail.paymentOperationDetailId), model: self.model, dismissAction: {})
                 
                 self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
                 
             default:
-                let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: paymentOperationDetailID, printFormType: printFormType), model: self.model)
+                let printFormViewModel = PrintFormView.ViewModel(
+                    type: .operation(
+                        paymentOperationDetailId: paymentOperationDetailID,
+                        printFormType: printFormType
+                    ),
+                    model: self.model
+                )
                 
                 self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
                 

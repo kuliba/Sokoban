@@ -14,9 +14,9 @@ struct GetCollateralLandingCalculatorView: View {
     @State private var toggleIsOn = false
     @State private var sliderCurrentValue: Double = 6.0
     
+    let state: GetCollateralLandingDomain.State
     let config: Config
-    let event: (Event) -> Void
-    let state: GetCollateralLandingState
+    let uiEvent: (UIEvent) -> Void
 
     var body: some View {
         
@@ -66,7 +66,7 @@ struct GetCollateralLandingCalculatorView: View {
                     .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
                     .onChange(of: toggleIsOn) { state in
                         
-                        event(.toggleIHaveSalaryInCompany(state))
+                        uiEvent(.toggleIHaveSalaryInCompany(state))
                     }
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }
@@ -157,10 +157,6 @@ struct GetCollateralLandingCalculatorView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
-        .onTapGesture {
-            
-            event(.showPeriodBottomSheet)
-        }
     }
     
     private func percentView(config: Config.Calculator) -> some View {
@@ -195,10 +191,6 @@ struct GetCollateralLandingCalculatorView: View {
                 chevron(config: config)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .onTapGesture {
-            
-            event(.showCollateralBottomSheet)
         }
     }
     
@@ -240,7 +232,7 @@ struct GetCollateralLandingCalculatorView: View {
         )
         .onChange(of: sliderCurrentValue, perform: {
             
-            event(.changeDesiredAmount(UInt($0)))
+            uiEvent(.changeDesiredAmount(UInt($0)))
         })
         .padding(.leading, config.root.layouts.contentLeadingPadding)
         .padding(.trailing, config.root.layouts.contentTrailingPadding)
@@ -345,7 +337,7 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias Event = GetCollateralLandingEvent
+    typealias UIEvent = GetCollateralLandingDomain.UIEvent
 }
 
 // MARK: - Previews
@@ -355,9 +347,9 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
     static var previews: some View {
         
         GetCollateralLandingCalculatorView(
+            state: .init(product: .carStub),
             config: .default,
-            event: { print($0) },
-            state: .init(product: .carStub)
+            uiEvent: { print($0) }
         )
     }
 }

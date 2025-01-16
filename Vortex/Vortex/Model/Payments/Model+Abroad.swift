@@ -96,14 +96,12 @@ extension Model {
                 )
                 
             default:
-                
-                if countryWithService?.servicesList.first(where: { $0.isDefault == true }) != nil {
-                    
-                    let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
-                    
+
+                if let defaultService = options.first?.id {
+                                        
                     let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
                         id: dropDownListId,
-                        value: option
+                        value: defaultService
                     ), title: titleDropDownList(operation), options: options)
                     
                     var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,

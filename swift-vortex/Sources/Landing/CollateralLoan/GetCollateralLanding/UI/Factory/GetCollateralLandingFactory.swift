@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 import UIPrimitives
 
-struct GetCollateralLandingFactory {
+public struct GetCollateralLandingFactory {
 
     let config: GetCollateralLandingConfig
     let makeImageView: MakeImageView
@@ -23,7 +23,7 @@ struct GetCollateralLandingFactory {
     }
 }
 
-extension GetCollateralLandingFactory {
+public extension GetCollateralLandingFactory {
         
     typealias MakeImageView = (String) -> UIPrimitives.AsyncImage
 }

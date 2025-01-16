@@ -35,7 +35,7 @@ extension LoggingSerialLoaderComposer {
         
         RemoteServices.ResponseMapper
             .mapGetServiceCategoryListResponse(data, response)
-            .map { .init(value: $0.list, serial: $0.serial) }
+            .map { .init(value: $0.list.sorted(by: \.ord), serial: $0.serial) }
             .mapError { $0 }
     }
 }

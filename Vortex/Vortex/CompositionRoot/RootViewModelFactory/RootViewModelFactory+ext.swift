@@ -258,6 +258,10 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
         
+        let makeOrderCardViewModel = {
+            //TODO: implement makeOrderCardViewModel composer
+        }
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -278,7 +282,8 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            makeOrderCardViewModel: makeOrderCardViewModel
         )
         
         let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
@@ -419,19 +424,26 @@ extension RootViewModelFactory {
         
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
-            delay: settings.delay * 2,
             dismiss: dismiss,
             getNavigation: { [weak self] select, notify, completion in
                 
-                self?.getRootNavigation(
-                    makeProductProfileByID: makeProductProfileByID,
-                    select: select,
-                    notify: notify,
-                    completion: completion
-                )
+                guard let self else { return }
+                
+                // TODO: - improve with fine-grained delays for different navigation cases
+                schedulers.interactive.delay(
+                    for: settings.delay * 2
+                ) { [weak self] in
+                    
+                    self?.getRootNavigation(
+                        makeProductProfileByID: makeProductProfileByID,
+                        select: select,
+                        notify: notify,
+                        completion: completion
+                    )
+                }
             },
             bindOutside: { $1.bindOutside(to: $0) },
-            schedulers: schedulers,
+            scheduler: schedulers.main,
             witnesses: .init(content: witness, dismiss: .default)
         )
         
@@ -470,11 +482,9 @@ private extension RootViewDomain.Flow {
                     event(.dismiss)
                     
                     switch tab {
-                    case .main:
-                        content.selected = .main
-                        
-                    case .payments:
-                        content.selected = .payments
+                    case .chat:     content.selected = .chat
+                    case .main:     content.selected = .main
+                    case .payments: content.selected = .payments
                     }
                 }
             }
@@ -527,6 +537,7 @@ extension ProductProfileViewModel {
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeOrderCardViewModel = () -> Void
     
     static func make(
         with model: Model,
@@ -548,7 +559,8 @@ extension ProductProfileViewModel {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
+        makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
+        makeOrderCardViewModel: @escaping MakeOrderCardViewModel
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -573,7 +585,8 @@ extension ProductProfileViewModel {
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
-                makeOpenNewProductButtons: makeOpenNewProductButtons
+                makeOpenNewProductButtons: makeOpenNewProductButtons,
+                makeOrderCardViewModel: makeOrderCardViewModel
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -636,6 +649,7 @@ extension ProductProfileViewModel {
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
+                makeOrderCardViewModel: makeOrderCardViewModel,
                 model: model
             )
             
@@ -742,8 +756,6 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
                 
-        let openCollateralLanding: () -> Void
-
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
@@ -761,7 +773,8 @@ private extension RootViewModelFactory {
             onRegister: onRegister,
             sections: sections,
             bannersBinder: bannersBinder,
-            makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+            makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
+            makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )

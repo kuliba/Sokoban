@@ -79,6 +79,7 @@ extension RootViewFactoryComposer {
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(),
+            paymentsViewFactory: makePaymentsViewFactory(),
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
         )
     }
@@ -105,7 +106,8 @@ extension RootViewFactoryComposer {
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
-            makeTransportPaymentsView: makeTransportPaymentsView
+            makeTransportPaymentsView: makeTransportPaymentsView,
+            makeOrderCardView: makeOrderCardView
         )
     }
     
@@ -370,6 +372,10 @@ private extension RootViewFactoryComposer {
             },
             viewFactory: makeTransportPaymentsViewFactory()
         )
+    }
+    
+    func makeOrderCardView() -> EmptyView {
+        EmptyView()
     }
     
     func makeTransportPaymentsViewFactory() -> TransportPaymentsViewFactory {
@@ -828,6 +834,7 @@ private extension RootViewFactoryComposer {
                     return .init(
                         detailID: $0.detailID,
                         details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                        printFormType: $0.info.operationDetail?.printFormType ?? "",
                         status: $0.status
                     )
                 }
@@ -839,18 +846,20 @@ private extension RootViewFactoryComposer {
     }
     
     private func makeDocumentButton(
-        documentID: DocumentID
+        documentID: DocumentID,
+        printFormType: RequestFactory.PrintFormType
     ) -> TransactionDocumentButton {
         
-        return .init(getDocument: getDocument(forID: documentID))
+        return .init(getDocument: getDocument(forID: documentID, printFormType: printFormType))
     }
     
     private func getDocument(
-        forID documentID: DocumentID
+        forID documentID: DocumentID,
+        printFormType: RequestFactory.PrintFormType
     ) -> TransactionDocumentButton.GetDocument {
         
         let getDetailService = RemoteService(
-            createRequest: RequestFactory.createGetPrintFormRequest(printFormType: .service),
+            createRequest: RequestFactory.createGetPrintFormRequest(printFormType: printFormType),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapGetPrintFormResponse
         )
@@ -1003,7 +1012,7 @@ private extension AnywayTransactionReport {
     var detailID: Int {
         
         switch self.info {
-        case let .detailID(detailID): return detailID
+        case let .detailID(detailInfo): return detailInfo.operationDetailID
         case let .details(details):   return details.id
         }
     }

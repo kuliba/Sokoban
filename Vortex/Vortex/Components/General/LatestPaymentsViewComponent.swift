@@ -174,7 +174,7 @@ extension LatestPaymentsView.ViewModel {
         let amount: String?
         let action: () -> Void
         
-        enum Avatar {
+        enum Avatar: Equatable {
             
             case image(Image)
             case text(String)

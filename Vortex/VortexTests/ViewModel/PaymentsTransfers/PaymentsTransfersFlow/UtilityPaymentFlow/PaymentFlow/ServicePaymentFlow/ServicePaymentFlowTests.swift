@@ -70,7 +70,7 @@ class ServicePaymentFlowTests: XCTestCase {
     
     func makeReport(
         status: DocumentStatus = .completed,
-        info: _OperationInfo = .detailID(.random(in: 1...100))
+        info: _OperationInfo = .detailID(.init(operationDetailID: .random(in: 1...100), operationDetailPrintFormType: anyMessage()))
     ) -> AnywayTransactionReport {
         
         return .init(status: status, info: info)

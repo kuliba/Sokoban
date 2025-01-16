@@ -58,7 +58,7 @@ final class RetryLoaderTests: XCTestCase {
         assert(sut, with: anyPayload(), toDeliver: .success(response)) {
             
             spy.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             spy.complete(with: .success(response), at: 1)
         }
     }
@@ -71,7 +71,7 @@ final class RetryLoaderTests: XCTestCase {
         assert(sut, with: anyPayload(), toDeliver: .failure(failure)) {
             
             spy.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             spy.complete(with: .failure(failure), at: 1)
         }
     }
@@ -86,9 +86,9 @@ final class RetryLoaderTests: XCTestCase {
         assert(sut, with: anyPayload(), toDeliver: .failure(failure)) {
             
             spy.complete(with: .failure(anyLoadFailure()), at: 0)
-            scheduler.advance(to: .init(.now() + .seconds(1)))
+            scheduler.advance(by: .seconds(1))
             spy.complete(with: .failure(anyLoadFailure()), at: 1)
-            scheduler.advance(to: .init(.now() + .seconds(9)))
+            scheduler.advance(by: .seconds(9))
             spy.complete(with: .failure(failure), at: 2)
         }
     }

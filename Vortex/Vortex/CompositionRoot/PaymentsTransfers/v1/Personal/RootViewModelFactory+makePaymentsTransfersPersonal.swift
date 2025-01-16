@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersPersonal(
-    ) -> (PaymentsTransfersPersonalDomain.Binder, () -> Void) {
+    ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
         
@@ -47,18 +47,58 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonalDomain.Binder {
         
-        return compose(
+        let content = makePaymentsTransfersPersonalContent(nanoServices)
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersPersonalNavigation,
-            content: makePaymentsTransfersPersonalContent(nanoServices),
-            witnesses: .init(
-                emitting: { $0.eventPublisher },
-                dismissing: { $0.dismiss }
-            )
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
+    }
+    
+    @inlinable
+    func delayProvider(
+        navigation: PaymentsTransfersPersonalDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .byPhoneTransfer: return .milliseconds(100)
+        case .main:            return .milliseconds(100)
+        case .scanQR:          return .milliseconds(100)
+        case .standardPayment: return settings.delay
+        case .templates:       return settings.delay
+        case .userAccount:     return settings.delay
+        }
+    }
+    
+    @inlinable
+    func getPaymentsTransfersPersonalNavigation(
+        select: PaymentsTransfersPersonalDomain.Select,
+        notify: @escaping PaymentsTransfersPersonalDomain.Notify,
+        completion: @escaping (PaymentsTransfersPersonalDomain.Navigation) -> Void
+    ) {
+        completion(select)
+    }
+
+    @inlinable
+    func emitting(
+        content: PaymentsTransfersPersonalDomain.Content
+    ) -> some Publisher<FlowEvent<PaymentsTransfersPersonalDomain.Select, Never>, Never> {
+        
+        content.eventPublisher
+    }
+    
+    @inlinable
+    func dismissing(
+        content: PaymentsTransfersPersonalDomain.Content
+    ) -> () -> Void {
+        
+        return { content.dismiss() }
     }
 }
 
-private typealias EventPublisher = AnyPublisher<PaymentsTransfersPersonalSelect, Never>
+private typealias EventPublisher = AnyPublisher<FlowEvent<PaymentsTransfersPersonalSelect, Never>, Never>
 
 // MARK: - Content
 
@@ -83,7 +123,7 @@ extension PaymentsTransfersPersonalDomain.Content {
 
 // MARK: - CategoryPicker
 
-private extension PayHubUI.CategoryPicker {
+private extension CategoryPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -102,6 +142,7 @@ private extension CategoryPickerSectionDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     
@@ -124,8 +165,11 @@ private extension FlowState<SelectedCategoryNavigation> {
             case .qr(()):
                 return .scanQR
                 
-            case let .standard(category):
+            case let .standard(.category(category)):
                 return .standardPayment(category.type)
+                
+            case .standard(.destination):
+                return nil
             }
             
         default:
@@ -136,7 +180,7 @@ private extension FlowState<SelectedCategoryNavigation> {
 
 // MARK: - OperationPicker
 
-private extension PayHubUI.OperationPicker {
+private extension OperationPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -155,6 +199,7 @@ private extension OperationPickerDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     
@@ -189,7 +234,7 @@ private extension OperationPickerDomain.FlowDomain.State {
 
 // MARK: - TransfersPicker
 
-private extension PayHubUI.TransfersPicker {
+private extension TransfersPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -212,6 +257,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
                 
                 print($0)
             })
+            .map { .select($0) }
             .eraseToAnyPublisher()
     }
     

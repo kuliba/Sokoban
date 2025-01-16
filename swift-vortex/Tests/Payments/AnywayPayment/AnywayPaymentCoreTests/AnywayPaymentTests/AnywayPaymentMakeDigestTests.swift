@@ -159,10 +159,21 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
         XCTAssertNil(context.makeDigest().core)
     }
     
-    func test_shouldSetCoreAmountOnPaymentWithAmount() {
+    func test_shouldSetNotCoreAmountOnPaymentWithAmountWithNeedSumFalse() {
         
         let context = makeAnywayPaymentContext(
-            payment: makeAnywayPaymentWithAmount(12_345.67)
+            payment: makeAnywayPaymentWithAmount(12_345.67),
+            needSum: false
+        )
+        
+        XCTAssertNil(context.makeDigest().amount)
+    }
+    
+    func test_shouldSetCoreAmountOnPaymentWithAmountWithNeedSumTrue() {
+        
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPaymentWithAmount(12_345.67),
+            needSum: true
         )
         
         XCTAssertNoDiff(context.makeDigest().amount, 12_345.67)

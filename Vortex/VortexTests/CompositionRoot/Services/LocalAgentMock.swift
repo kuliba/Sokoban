@@ -44,7 +44,7 @@ final class LocalAgentMock {
     init(stubs: [(any Decodable, String?)] = []) {
         
         self.returnValues = .init(
-            stubs.map { (ObjectIdentifier(type(of: $0.0)), ($0.0, $0.1)) },
+            stubs.map { (.init(type(of: $0.0)), ($0.0, $0.1)) },
             uniquingKeysWith: { _, last in last }
         )
     }
@@ -59,7 +59,9 @@ extension LocalAgentMock: LocalAgentProtocol {
     func load<T: Decodable>(type: T.Type) -> T? {
         
         requestedTypes.append(type)
-        return returnValues[ObjectIdentifier(type)]?.0 as? T
+        let values = returnValues[.init(type)]?.0 as? T
+        
+        return values
     }
     
     /// Stores an `Encodable` value. In this mock, it records the value and the provided serial.

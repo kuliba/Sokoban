@@ -63,7 +63,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
     ) -> Outline {
         
         return .init(
-            latestServicePayment: latestPayment, 
+            payload: latestPayment.latestOutlinePayload, 
             product: product ?? makeOutlineProduct()
         )
     }
@@ -115,6 +115,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         amount: Decimal,
         name: String,
         md5Hash: String?,
+        paymentFlow: String? = nil,
         puref: String,
         type: String = anyMessage(),
         additionalItems: [LatestPayment.AdditionalItem]
@@ -125,6 +126,7 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
             amount: amount,
             name: name,
             md5Hash: md5Hash,
+            paymentFlow: paymentFlow,
             puref: puref,
             type: type,
             additionalItems: additionalItems

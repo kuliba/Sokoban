@@ -34,7 +34,7 @@ public extension AnywayPaymentContext {
         
         return .init(
             additional: additional,
-            amount: payment.amount,
+            amount: needSum ? payment.amount : nil,
             core: payment.core(),
             puref: outline.payload.puref
         )

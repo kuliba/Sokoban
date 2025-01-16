@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 import Foundation
 import PayHub
 import PayHubUI
@@ -16,11 +17,33 @@ extension RootViewModelFactory {
     @inlinable
     func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
-        return compose(getNavigation: getQRNavigation, makeContent: makeQRScannerModel, witnesses: .default)
+        return composeBinder(
+            makeContent: makeQRScannerModel,
+            delayProvider: delayProvider,
+            getNavigation: getQRNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
     }
 }
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func delayProvider(
+        navigation: QRScannerDomain.Navigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .failure:               return settings.delay
+        case .operatorSearch:        return settings.delay
+        case .operatorView:          return settings.delay
+        case .outside:               return .zero
+        case .payments:              return settings.delay
+        case .providerPicker:        return settings.delay
+        case .providerServicePicker: return settings.delay
+        case .sberQR:                return settings.delay
+        }
+    }
     
     @inlinable
     func getQRNavigation(
@@ -39,7 +62,7 @@ extension RootViewModelFactory {
             completion(.sberQR(nil))
             
         case let .sberQR(response):
-            #warning("FIXME")
+#warning("FIXME")
         }
     }
     
@@ -57,7 +80,9 @@ extension RootViewModelFactory {
             completion(payments(payload: .source(.c2b(url))))
             
         case let .failure(qrCode):
-            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            completion(.failure(
+                makeQRMappingFailureNode(qrCode, notify)
+            ))
             
         case let .mapped(mapped):
             getQRNavigation(mapped, notify, completion)
@@ -69,7 +94,9 @@ extension RootViewModelFactory {
             }
             
         case .url, .unknown:
-            completion(.failure(makeQRFailure(qrCode: nil)))
+            completion(.failure(
+                makeQRMappingFailureNode(nil, notify)
+            ))
         }
         
         func payments(
@@ -85,7 +112,7 @@ extension RootViewModelFactory {
         func pay(
             _ url: URL
         ) -> (SberQRConfirmPaymentState) -> Void {
-           
+            
             decoratedSberQRPay(url) { notify(.select(.sberQR($0))) }
         }
     }
@@ -98,7 +125,9 @@ extension RootViewModelFactory {
     ) {
         switch mapped {
         case let .missingINN(qrCode):
-            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            completion(.failure(
+                makeQRMappingFailureNode(qrCode, notify)
+            ))
             
         case let .mixed(mixed):
             completion(providerPicker(mixed))
@@ -190,33 +219,41 @@ extension RootViewModelFactory {
             return .providerServicePicker(picker)
         }
     }
+    
+    @inlinable
+    func makeQRMappingFailureNode(
+        _ qrCode: QRCode?,
+        _ notify: @escaping QRScannerDomain.Notify
+    ) -> Node<QRMappingFailureDomain.Binder> {
+        
+        makeQRMappingFailureBinder(qrCode: qrCode)
+            .asNode(
+                transform: { $0.notifyEvent },
+                notify: notify
+            )
+    }
+
+    @inlinable
+    func emitting(
+        content: QRScannerModel
+    ) -> some Publisher<FlowEvent<QRScannerDomain.Select, Never>, Never> {
+        
+        content.$state
+            .compactMap(\.?.qrResult)
+            .map(QRScannerDomain.Select.qrResult)
+            .map(FlowEvent.select)
+    }
+    
+    @inlinable
+    func dismissing(
+        content: QRScannerModel
+    ) -> () -> Void {
+        
+        return { content.event(.reset) }
+    }
 }
 
 // MARK: - Adapters
-
-private extension ContentWitnesses
-where Content == QRScannerModel,
-      Select == QRScannerDomain.Select {
-    
-    static var `default`: Self {
-        
-        return .init(
-            emitting: { $0.selectPublisher },
-            dismissing: { content in { content.event(.reset) }}
-        )
-    }
-}
-
-private extension QRScannerModel {
-    
-    var selectPublisher: AnyPublisher<QRScannerDomain.Select, Never> {
-        
-        $state
-            .compactMap(\.?.qrResult)
-            .map(QRScannerDomain.Select.qrResult)
-            .eraseToAnyPublisher()
-    }
-}
 
 private extension QRModelWrapperState {
     
@@ -235,6 +272,19 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
         switch self {
         case .close:  return .dismiss
         case .scanQR: return .dismiss
+        }
+    }
+}
+
+private extension QRMappingFailureDomain.Navigation {
+    
+    var notifyEvent: NavigationOutcome<QRScannerDomain.Select>? {
+        
+        switch self {
+        case .back:            return .dismiss
+        case .detailPayment:   return nil
+        case .categoryPicker:  return nil
+        case .scanQR:          return .dismiss
         }
     }
 }

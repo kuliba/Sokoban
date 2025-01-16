@@ -634,6 +634,13 @@
         "identifier" : "FlowCoreTests",
         "name" : "FlowCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
+      }
     }
   ],
   "version" : 1

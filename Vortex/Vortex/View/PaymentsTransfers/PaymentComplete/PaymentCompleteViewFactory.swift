@@ -15,6 +15,6 @@ struct PaymentCompleteViewFactory {
 extension PaymentCompleteViewFactory {
     
     typealias MakeDetailButton = (TransactionDetailButton.Details) -> TransactionDetailButton
-    typealias MakeDocumentButton = (DocumentID) -> TransactionDocumentButton
+    typealias MakeDocumentButton = (DocumentID, RequestFactory.PrintFormType) -> TransactionDocumentButton
     typealias MakeTemplateButtonView = () -> TemplateButtonStateWrapperView?
 }

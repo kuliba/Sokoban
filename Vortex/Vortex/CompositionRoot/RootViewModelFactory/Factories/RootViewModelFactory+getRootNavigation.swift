@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 
 extension RootViewModelFactory {
     
@@ -130,35 +131,35 @@ extension RootViewModelFactory {
                     completion(.failure(.init(failure)))
                     
                 case let .success(binder):
-                    completion(.standardPayment(.init(
-                        model: binder,
-                        cancellable: bind(binder)
-                    )))
+                    let node = binder.asNode(
+                        transform: { $0.outcome },
+                        notify: notify
+                    )
+                    completion(.standardPayment(node))
                 }
             }
-        }
-        
-        func bind(
-            _ binder: PaymentProviderPickerDomain.Binder
-        ) -> AnyCancellable {
-            
-            return binder.flow.$state
-                .compactMap(\.rootEvent)
-                .sink { notify($0) }
         }
     }
 }
 
 // MARK: - Adapters
 
-private extension PaymentProviderPickerDomain.FlowDomain.State {
+private extension PaymentProviderPickerDomain.Navigation {
     
-    var rootEvent: RootEvent? {
+    var outcome: NavigationOutcome<RootViewSelect>? {
         
-        switch navigation {
-        case .outside(.qr):   return .select(.scanQR)
-        case .outside(.main): return .select(.outside(.tab(.main)))
-        default:              return nil
+        switch self {
+        case .alert, .destination: // keep explicit for exhaustivity
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .qr:       return .select(.scanQR)
+            case .main:     return .select(.outside(.tab(.main)))
+            case .back:     return .dismiss
+            case .chat:     return .select(.outside(.tab(.chat)))
+            case .payments: return .select(.outside(.tab(.payments)))
+            }
         }
     }
 }

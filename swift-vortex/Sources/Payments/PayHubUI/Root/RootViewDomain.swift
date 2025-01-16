@@ -17,6 +17,20 @@ public extension RootViewDomain {
     
     typealias Binder = FlowCore.Binder<Content, Flow>
     typealias BinderComposer = RootViewBinderComposer<Content, DismissAll, Select, Navigation>
+    
+    // MARK: - Content
+    
+    typealias Content = RootViewModel
+    
+    // MARK: - Flow
+    
+    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
+    typealias Flow = FlowDomain.Flow
+    
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
+    
+    // MARK: -  other
+    
     typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
     
     struct Witnesses {
@@ -25,7 +39,7 @@ public extension RootViewDomain {
         public let dismiss: DismissWitnesses<Content>
         
         public init(
-            content: ContentWitnesses, 
+            content: ContentWitnesses,
             dismiss: DismissWitnesses<Content>
         ) {
             self.content = content
@@ -48,15 +62,4 @@ public extension RootViewDomain {
     }
     
     typealias ContentWitnesses = FlowCore.ContentWitnesses<Content, FlowDomain.NotifyEvent>
-    
-    // MARK: - Content
-    
-    typealias Content = RootViewModel
-    
-    // MARK: - Flow
-    
-    typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
-    typealias Flow = FlowDomain.Flow
-    
-    typealias Notify = (FlowDomain.NotifyEvent) -> Void
 }

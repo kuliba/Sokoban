@@ -73,7 +73,9 @@ private extension ProviderServicePickerView {
                 name: item.label.title,
                 iconView: iconView(icon: item.label.icon)
             )
+            .animated()
         }
+        .buttonStyle(.plain)
     }
     
     func iconView(
