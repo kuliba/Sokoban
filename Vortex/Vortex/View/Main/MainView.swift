@@ -630,35 +630,6 @@ extension MainViewModel {
     )
 }
 
-// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
-
-private extension CreateDraftCollateralLoanApplicationDomain.Binder {
-    
-    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
-        content: .preview,
-        flow: .preview,
-        bind: { _,_ in [] }
-    )
-}
-
-private extension CreateDraftCollateralLoanApplicationDomain.Content {
-    
-    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-private extension CreateDraftCollateralLoanApplicationDomain.Flow {
-    
-    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
 // MARK: - GetCollateralLandingDomain.Binder preview
 
 private extension GetCollateralLandingDomain.Binder {
