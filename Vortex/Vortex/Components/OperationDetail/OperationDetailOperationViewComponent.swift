@@ -193,6 +193,21 @@ extension OperationDetailViewModel {
         }
         
         func updated(
+            withUpdateWarning updateWarning: String?
+        ) -> OperationViewModel {
+            
+            return .init(
+                bankLogo: bankLogo,
+                payee: payee,
+                amount: amount,
+                fee: fee,
+                description: description,
+                updateWarning: updateWarning,
+                date: date
+            )
+        }
+        
+        func updated(
             with productStatement: ProductStatementData,
             operation: OperationDetailData,
             viewModel: OperationDetailViewModel
@@ -201,6 +216,11 @@ extension OperationDetailViewModel {
             var operationViewModel = self
             //FIXME: get currency from currencyList
             let currencyCode = "RUB"
+            
+            if operation.paymentFlow == nil {
+             
+                operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
+            }
             
             switch productStatement.paymentDetailType {
             case .contactAddressless:
@@ -305,6 +325,11 @@ extension OperationDetailViewModel {
             return operationViewModel
         }
     }
+}
+
+private extension String {
+    
+    static let warning = "В данной версии приложения операция отражается некорректно. Проверьте наличие обновления."
 }
 
 //MARK: - View
