@@ -352,6 +352,7 @@ struct ShapedText<S: Shape>: View {
     var body: some View {
         
         Text(text)
+            .fixedSize(horizontal: false, vertical: true)
             .font(font)
             .foregroundColor(color)
             .padding(.vertical, 8)
