@@ -217,7 +217,7 @@ extension OperationDetailViewModel {
             //FIXME: get currency from currencyList
             let currencyCode = "RUB"
             
-            if operation.paymentFlow == nil {
+            if operation.flow == nil {
              
                 operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
             }
@@ -330,6 +330,21 @@ extension OperationDetailViewModel {
 private extension String {
     
     static let warning = "В данной версии приложения операция отражается некорректно. Проверьте наличие обновления."
+}
+
+private extension OperationDetailData {
+    
+    var flow: ServiceCategory.PaymentFlow? {
+        
+        switch paymentFlow {
+        case "MOBILE":                return .mobile
+        case "QR":                    return .qr
+        case "STANDARD_FLOW":         return .standard
+        case "TAX_AND_STATE_SERVICE": return .taxAndStateServices
+        case "TRANSPORT":             return .transport
+        default:                      return .none
+        }
+    }
 }
 
 //MARK: - View
