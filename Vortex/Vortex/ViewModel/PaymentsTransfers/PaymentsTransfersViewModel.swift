@@ -748,16 +748,22 @@ private extension PaymentsTransfersViewModel {
         rootActions?.spinner.show()
         reset()
         
+        switch outside {
+        case .chat:
+            rootActions?.switchTab(.chat)
+            
+        case .main:
+            
+            if #available(iOS 16, *) {
+                rootActions?.switchTab(.main)
+            }
+        }
+        
         delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
-            case .chat: self?.rootActions?.switchTab(.chat)
-            case .main:
-                if #available(iOS 16, *) {
-                    self?.rootActions?.switchTab(.main)
-                } else {
-                    self?.dismissAllViewAndSwitchToMainTab()
-                }
+            case .chat: break
+            case .main: self?.dismissAllViewAndSwitchToMainTab()
             }
             
             self?.rootActions?.spinner.hide()
@@ -1440,9 +1446,14 @@ private extension PaymentsTransfersViewModel {
     
     private func closeSuccess() {
                 
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
-        self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
-        self.rootActions?.switchTab(.main)
+        self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            
+            self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+            self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+            self.rootActions?.switchTab(.main)
+        }
     }
     
     private func dismissAllViewAndSwitchToMainTab() {
