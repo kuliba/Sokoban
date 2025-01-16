@@ -22,7 +22,7 @@ public struct AnywayPaymentContext: Equatable {
         staged: AnywayPaymentStaged,
         outline: AnywayPaymentOutline,
         shouldRestart: Bool,
-        needSum: Bool = false
+        needSum: Bool
     ) {
         self.initial = initial
         self.payment = payment

@@ -55,9 +55,11 @@ class RootViewModel_Tests: XCTestCase {
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     sections: makeSections(),
-                    bannersBinder: .preview,
-                    makeCollateralLoanShowcaseBinder: { .preview },
-                    makeCollateralLoanLandingBinder: { _ in .preview },
+                    bindersFactory: .init(
+                        bannersBinder: .preview,
+                        makeCollateralLoanShowcaseBinder: { .preview },
+                        makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+                    ),
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,

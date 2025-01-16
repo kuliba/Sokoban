@@ -23,10 +23,6 @@ class MainViewModel: ObservableObject, Resetable {
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
-    typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
-    typealias MakeCreateDraftCollateralLoanApplicationBinder = (String) ->
-        CreateDraftCollateralLoanApplicationDomain.Binder
 
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -57,14 +53,11 @@ class MainViewModel: ObservableObject, Resetable {
 
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
-    private let makeCollateralLoanShowcaseBinder: MakeCollateralLoanShowcaseBinder
-    private let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
-    private let makeCreateDraftCollateralLoanApplicationBinder: MakeCreateDraftCollateralLoanApplicationBinder
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
-    let bannersBinder: BannersBinder
+    let bindersFactory: BindersFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
     private var bindings = Set<AnyCancellable>()
@@ -82,10 +75,7 @@ class MainViewModel: ObservableObject, Resetable {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
-        bannersBinder: BannersBinder,
-        makeCreateDraftCollateralLoanApplicationBinder: @escaping MakeCreateDraftCollateralLoanApplicationBinder,
-        makeCollateralLoanShowcaseBinder: @escaping MakeCollateralLoanShowcaseBinder,
-        makeCollateralLoanLandingBinder: @escaping MakeCollateralLoanLandingBinder,
+        bindersFactory: BindersFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
@@ -102,10 +92,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
-        self.bannersBinder = bannersBinder
-        self.makeCreateDraftCollateralLoanApplicationBinder = makeCreateDraftCollateralLoanApplicationBinder
-        self.makeCollateralLoanShowcaseBinder = makeCollateralLoanShowcaseBinder
-        self.makeCollateralLoanLandingBinder = makeCollateralLoanLandingBinder
+        self.bindersFactory = bindersFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
@@ -530,17 +517,24 @@ private extension MainViewModel {
                                 self.openDeposit()
                                 
                             case .card:
-                                
                                 openCard()
                                 
-                            default:
-                                //MARK: Action for Sticker Product
+                            case .loan:
+                                openCollateralLoanLanding()
+                                
+                            case .sticker:
                                 handleLandingAction(.sticker)
+
+                            case .insurance:
+                                break
+                                
+                            case .mortgage:
+                                break
+                                
+                            case .savingsAccount:
+                                openSavingsAccount()
                             }
-                            
-                        case _ as MainSectionViewModelAction.OpenProduct.OpenCollateralLoanLanding:
-                            openCollateralLoanLanding()
-                            
+                                                        
                         default:
                             break
                         }
@@ -954,7 +948,7 @@ private extension MainViewModel {
     
     func openCollateralLoanLanding() {
         
-        let binder = makeCollateralLoanShowcaseBinder()
+        let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
         route.destination = .collateralLoanLanding(binder)
     }
 
@@ -1705,6 +1699,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
+        case savingsAccount(SavingsAccountDomain.Binder)
         case orderCard
         
         var id: Case {
@@ -1756,6 +1751,8 @@ extension MainViewModel {
                 return .providerServicePicker
             case .collateralLoanLanding:
                 return .collateralLoanLanding
+            case .savingsAccount:
+                return .savingsAccount
             case .orderCard:
                 return .orderCard
             }
@@ -1763,30 +1760,31 @@ extension MainViewModel {
         
         enum Case {
             
-            case userAccount
-            case productProfile
+            case collateralLoanLanding
+            case country
+            case currencyWallet
+            case failedView
+            case landing
             case messages
+            case myProducts
+            case openCard
             case openDeposit
             case openDepositsList
-            case templates
-            case currencyWallet
-            case myProducts
-            case country
-            case serviceOperators
-            case failedView
-            case searchOperators
-            case openCard
-            case payments
             case operatorView
+            case orderCard
+            case orderSticker
+            case paymentProviderPicker
+            case payments
             case paymentsServices
             case paymentSticker
-            case landing
-            case orderSticker
-            case sberQRPayment
-            case paymentProviderPicker
+            case productProfile
             case providerServicePicker
-            case collateralLoanLanding
-            case orderCard
+            case savingsAccount
+            case sberQRPayment
+            case searchOperators
+            case serviceOperators
+            case templates
+            case userAccount
         }
     }
     
@@ -1816,6 +1814,15 @@ extension MainViewModel {
         static func == (lhs: MainViewModel.FullScreenSheet, rhs: MainViewModel.FullScreenSheet) -> Bool {
             lhs.id == rhs.id
         }
+    }
+}
+
+extension MainViewModel {
+    
+    func openSavingsAccount() {
+        
+        let binder: SavingsAccountDomain.Binder = bindersFactory.makeSavingsAccountBinder()
+        route.destination = .savingsAccount(binder)
     }
 }
 

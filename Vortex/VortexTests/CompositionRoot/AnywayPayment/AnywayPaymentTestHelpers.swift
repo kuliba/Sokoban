@@ -32,10 +32,18 @@ private func makeAnywayPaymentContext(
     payment: AnywayPaymentDomain.AnywayPayment = makeAnywayPayment(),
     staged: AnywayPaymentStaged = .init(),
     outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
-    shouldRestart: Bool = false
+    shouldRestart: Bool = false,
+    needSum: Bool = false
 ) -> AnywayPaymentContext {
     
-    return .init(initial: initial, payment: payment, staged: staged, outline: outline, shouldRestart: shouldRestart)
+    return .init(
+        initial: initial,
+        payment: payment,
+        staged: staged,
+        outline: outline,
+        shouldRestart: shouldRestart,
+        needSum: needSum
+    )
 }
 
 private func makeAnywayPayment(

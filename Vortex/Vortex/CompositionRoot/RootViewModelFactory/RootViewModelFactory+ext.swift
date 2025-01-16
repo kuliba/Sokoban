@@ -404,6 +404,7 @@ extension RootViewModelFactory {
                 guard let self else { return [] }
                 return makeOpenNewProductButtons(
                     collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+                    savingsAccountFlag: featureFlags.savingsAccountFlag,
                     action: $0
                 )
             },
@@ -758,7 +759,8 @@ private extension RootViewModelFactory {
                 
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
-            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
                 
         let mainViewModel = MainViewModel(
@@ -772,10 +774,13 @@ private extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
             sections: sections,
-            bannersBinder: bannersBinder,
-            makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
-            makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
-            makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+            bindersFactory: .init(
+                bannersBinder: bannersBinder,
+                makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
+                makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
+                makeSavingsAccountBinder: makeSavingsAccount
+            ),
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )

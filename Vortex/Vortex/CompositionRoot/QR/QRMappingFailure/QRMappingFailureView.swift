@@ -85,7 +85,7 @@ extension QRMappingFailureDomain.Navigation {
     
     enum Destination {
         
-        case categoryPicker(CategoryPickerSectionDomain.Binder)
+        case categoryPicker(CategoryPickerViewDomain.Binder)
         case detailPayment(PaymentsViewModel)
     }
 }
