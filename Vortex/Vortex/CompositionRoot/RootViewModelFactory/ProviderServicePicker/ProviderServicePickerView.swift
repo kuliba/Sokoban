@@ -20,14 +20,13 @@ struct ProviderServicePickerView<AnywayFlowView: View>: View {
         RxWrapperView(model: binder.flow) { state, event in
             
             contentView(binder.content)
-                .navigationDestination(
-                    destination: state.destination,
-                    dismiss: { event(.dismiss) },
-                    content: destinationView
-                )
                 .alert(
                     item: state.alert,
                     content: alert(failure:)
+                )
+                .navigationDestination(
+                    destination: state.destination,
+                    content: destinationView
                 )
         }
     }
