@@ -1,100 +1,19 @@
 //
-//  CollateralLoanShowcaseView.swift
+//  CollateralLoanLandingView.swift
 //  Vortex
 //
-//  Created by Valentin Ozerov on 25.12.2024.
+//  Created by Valentin Ozerov on 16.01.2025.
 //
 
 import SwiftUI
-import CollateralLoanLandingGetShowcaseUI
 import CollateralLoanLandingGetCollateralLandingUI
 import RxViewModel
 import UIPrimitives
 
-struct CollateralLoanShowcaseView: View {
-    
-    @Environment(\.openURL) var openURL
-    
-    let binder: GetShowcaseDomain.Binder
-    let factory: Factory
-    
-    var body: some View {
-        
-        RxWrapperView(model: binder.flow) { state, event in
-            
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: content(state:event:)
-            )
-            .navigationDestination(
-                destination: state.navigation,
-                content: destinationView
-            )
-        }
-    }
-    
-    private func content(
-        state: Domain.State,
-        event: @escaping (Domain.Event) -> Void
-    ) -> some View {
-        
-        Group {
-            
-            switch state.showcase {
-            case .none:
-                SpinnerView(viewModel: .init())
-                
-            case let .some(showcase):
-                CollateralLoanLandingGetShowcaseView(
-                    data: showcase,
-                    event: {
-                        switch $0 {
-                        case let .showLanding(landingId):
-                            binder.flow.event(.select(.landing(landingId)))
-                            
-                        case let .showTerms(urlString):
-                            if let url = URL(string: urlString) {
-                                openURL(url)
-                            }
-                        }
-                    },
-                    factory: factory
-                )
-            }
-        }
-        .onFirstAppear { event(.load) }
-    }
-    
-    @ViewBuilder
-    private func destinationView(
-        navigation: Domain.Navigation
-    ) -> some View {
-        
-        switch navigation {
-        case let .landing(landingID, landing):
-            CollateralLoanLandingView(binder: landing, makeImageView: factory.makeImageView)
-        }
-    }
-    
-    typealias Domain = GetShowcaseDomain
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
-}
-
-extension GetShowcaseDomain.Navigation: Identifiable {
-
-    var id: String {
-        
-        switch self {
-        case let .landing(id, _): return id
-        }
-    }
-}
-
 struct CollateralLoanLandingView: View {
     
     let binder: GetCollateralLandingDomain.Binder
-    let makeImageView: MakeImageView
-
+    let factory: Factory
     
     var body: some View {
         
@@ -128,9 +47,14 @@ struct CollateralLoanLandingView: View {
                 switch $0 {
                 case let .showCaseList(id):
                     binder.flow.event(.select(.showCaseList(id)))
+                case let .createDraftApplication(id):
+                    binder.flow.event(.select(.createDraftCollateralLoanApplication(id)))
                 }
             },
-            factory: .init(makeImageView: makeImageView)
+            factory: .init(
+                makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash,
+                makeImageViewByURL: factory.makeImageViewByURL
+            )
         )
         .onFirstAppear {
             event(.load(state.landingID))
@@ -147,7 +71,7 @@ struct CollateralLoanLandingView: View {
             Text(String(describing: id))
         }
     }
-
+    
     @ViewBuilder
     private func bottomSheetView(
         bottomSheet: GetCollateralLandingDomain.Navigation.BottomSheet
@@ -155,12 +79,48 @@ struct CollateralLoanLandingView: View {
         
         switch bottomSheet {
         case let .showBottomSheet(id):
-            Text(String(describing: id))
-                .padding(.bottom, 40)
+            switch id {
+            case let .periods(periods):
+                GetCollateralLandingBottomSheetView(
+                    items: periods.map(\.bottomSheetItem),
+                    config: factory.config.bottomSheet,
+                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
+                ) {
+                    switch $0 {
+                    case .selectMonthPeriod(let termMonth):
+                        binder.content.event(.selectMonthPeriod(termMonth))
+                        // Делаем задержку закрытия, чтобы пользователь увидел на шторке выбранный айтем
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [binder] in
+                            binder.flow.event(.dismiss)
+                        }
+                    default: break
+                    }
+                }
+            case let .collaterals(collaterals):
+                GetCollateralLandingBottomSheetView(
+                    items: collaterals.map(\.bottomSheetItem),
+                    config: factory.config.bottomSheet,
+                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
+                ) {
+                    switch $0 {
+                    case .selectCollateral(let collateral):
+                        binder.content.event(.selectCollateral(collateral))
+                        print(collateral)
+                        binder.flow.event(.dismiss)
+                    default: break
+                    }
+                }
+            }
         }
     }
+}
+ 
+extension CollateralLoanLandingView {
     
-    public typealias MakeImageView = (String) -> UIPrimitives.AsyncImage
+    typealias Factory = GetCollateralLandingFactory
+
+    public typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
+    public typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage
 }
 
 extension GetCollateralLandingDomain.Navigation {
@@ -184,7 +144,7 @@ extension GetCollateralLandingDomain.Navigation {
     var bottomSheet: BottomSheet? {
         
             switch self {
-            case let .createDraftCollateralLoanApplication(id):
+            case .createDraftCollateralLoanApplication:
                 return nil
                 
             case let .showBottomSheet(id):
@@ -198,15 +158,6 @@ extension GetCollateralLandingDomain.Navigation {
     }
 }
 
-// TODO: Next realize for binder:
-
-//    var id: ObjectIdentifier {
-//
-//        switch self {
-//        case let .createDraftCollateralLoanApplication(binder): return .init(binder)
-//        }
-//    }
-
 extension GetCollateralLandingDomain.Navigation.Destination: Identifiable {
     
     var id: String {
@@ -219,12 +170,16 @@ extension GetCollateralLandingDomain.Navigation.Destination: Identifiable {
 
 extension GetCollateralLandingDomain.Navigation.BottomSheet: Identifiable, BottomSheetCustomizable {
     
-    var id: Int {
+    var id: String {
         
         switch self {
-        case let .showBottomSheet(id): return id.hashValue
+        case let .showBottomSheet(id):
+            switch id {
+            case .periods:
+                return "periods"
+            case .collaterals:
+                return "collaterals"
+            }
         }
     }
-
 }
-

@@ -1452,7 +1452,6 @@ private extension Target {
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
-            .bottomSheetComponent,
             .dropDownTextListComponent,
             .rxViewModel,
             .sharedConfigs,

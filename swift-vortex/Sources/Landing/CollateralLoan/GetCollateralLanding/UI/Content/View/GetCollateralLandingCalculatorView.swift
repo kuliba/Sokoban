@@ -14,7 +14,8 @@ struct GetCollateralLandingCalculatorView: View {
     @State private var toggleIsOn = false
     @State private var sliderCurrentValue: Double = 6.0
     
-    let state: GetCollateralLandingDomain.State
+    let state: DomainState
+    let product: Product
     let config: Config
     let domainEvent: (DomainEvent) -> Void
     let externalEvent: (ExternalEvent) -> Void
@@ -155,7 +156,7 @@ struct GetCollateralLandingCalculatorView: View {
                 
                 chevron(config: config)
                     .onTapGesture {
-                        externalEvent(.showCaseList(.period))
+                        externalEvent(.showCaseList(.periods(product.calc.rates)))
                     }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -194,7 +195,7 @@ struct GetCollateralLandingCalculatorView: View {
 
                 chevron(config: config)
                     .onTapGesture {
-                        externalEvent(.showCaseList(.deposit))
+                        externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
                     }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -345,6 +346,8 @@ extension GetCollateralLandingCalculatorView {
     typealias Theme = GetCollateralLandingTheme
     typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
     typealias DomainEvent = GetCollateralLandingDomain.Event
+    typealias DomainState = GetCollateralLandingDomain.State
+    typealias Product = GetCollateralLandingProduct
 }
 
 // MARK: - Previews
@@ -355,6 +358,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
         
         GetCollateralLandingCalculatorView(
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            product: .carStub,
             config: .default,
             domainEvent: { print($0) },
             externalEvent: { print($0) }

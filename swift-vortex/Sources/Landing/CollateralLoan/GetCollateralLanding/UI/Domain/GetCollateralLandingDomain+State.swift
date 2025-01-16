@@ -11,21 +11,21 @@ extension GetCollateralLandingDomain {
     
     public struct State: Equatable {
         
+        public let landingID: String
+
         var isLoading = false
         var result: Result?
         var bottomSheet: BottomSheet?
-        public let landingID: String
-        
+        var iHaveSalaryInCompany = false
+        var selectedCollateral: String?
+        var selectedMonthPeriod: UInt?
+                
         public init(
-            isLoading: Bool = false,
-            result: Result? = nil,
-            bottomSheet: BottomSheet? = nil,
-            landingID: String
+            landingID: String,
+            bottomSheet: BottomSheet? = nil
         ) {
-            self.isLoading = isLoading
-            self.result = result
-            self.bottomSheet = bottomSheet
             self.landingID = landingID
+            self.bottomSheet = bottomSheet
         }
     }
 }
@@ -46,6 +46,7 @@ extension GetCollateralLandingDomain.State {
         public struct Item: Equatable, Identifiable {
             
             public let id: String
+            
             let termMonth: UInt?
             let icon: String?
             let title: String

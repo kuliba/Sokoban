@@ -11,7 +11,7 @@ struct GetCollateralLandingDocumentsView: View {
 
     let product: Product
     let config: Config
-    let makeImageView: Factory.MakeImageView
+    let makeImageViewByMD5Hash: Factory.MakeImageViewByMD5Hash
     
     var body: some View {
         
@@ -54,7 +54,7 @@ struct GetCollateralLandingDocumentsView: View {
                     GetCollateralLandingDocumentView(
                         document: $0,
                         config: config.list,
-                        makeImageView: makeImageView
+                        makeImageViewByMD5Hash: makeImageViewByMD5Hash
                     )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
@@ -85,7 +85,7 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
         GetCollateralLandingDocumentsView(
             product: .carStub,
             config: .default,
-            makeImageView: Factory.preview.makeImageView
+            makeImageViewByMD5Hash: Factory.preview.makeImageViewByMD5Hash
         )
     }
     

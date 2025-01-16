@@ -240,7 +240,7 @@ extension GetCollateralLandingProduct {
 
 extension GetCollateralLandingProduct.Calc.Rate {
     
-    var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
+    public var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
         
         .init(
             id: UUID().uuidString,
@@ -253,7 +253,7 @@ extension GetCollateralLandingProduct.Calc.Rate {
 
 extension GetCollateralLandingProduct.Calc.Collateral {
     
-    var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
+    public var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
         
         .init(
             id: type,

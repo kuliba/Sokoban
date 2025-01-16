@@ -11,11 +11,11 @@ struct GetCollateralLandingFooterView: View {
     
     let config: Config.Footer
     let state: State
-    let domainEvent: (DomainEvent) -> Void
+    let externalEvent: (ExternalEvent) -> Void
 
     var body: some View {
         
-        Button(action: { domainEvent(.createDraftApplication) }) {
+        Button(action: { externalEvent(.createDraftApplication("сюда надо поместить payload")) }) {
             
             Text(config.text)
                 .frame(maxWidth: .infinity)
@@ -37,7 +37,7 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias DomainEvent = GetCollateralLandingDomain.Event
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
     typealias State = GetCollateralLandingDomain.State
 }
 
@@ -50,7 +50,7 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
         GetCollateralLandingFooterView(
             config: .default,
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
-            domainEvent: { print($0) }
+            externalEvent: { print($0) }
         )
     }
 }

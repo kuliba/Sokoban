@@ -21,6 +21,7 @@ import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
 import VortexTools
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -270,7 +271,8 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
+                makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
+                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0)) }
             )
 
             CollateralLoanShowcaseView(binder: binder, factory: factory)
@@ -621,9 +623,39 @@ extension MainViewModel {
         },
         sections: [],
         bannersBinder: .preview,
+        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
         makeCollateralLoanShowcaseBinder: { .preview },
         makeCollateralLoanLandingBinder: { _ in .preview },   
         makeOpenNewProductButtons: { _ in [] }
+    )
+}
+
+// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
+
+private extension CreateDraftCollateralLoanApplicationDomain.Binder {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Content {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Flow {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

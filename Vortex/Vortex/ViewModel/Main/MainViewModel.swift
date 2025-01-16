@@ -6,6 +6,7 @@
 //
 
 import CalendarUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetShowcaseUI
 import Combine
@@ -24,6 +25,8 @@ class MainViewModel: ObservableObject, Resetable {
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
     typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
+    typealias MakeCreateDraftCollateralLoanApplicationBinder = (String) ->
+        CreateDraftCollateralLoanApplicationDomain.Binder
 
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -56,6 +59,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let makeCollateralLoanShowcaseBinder: MakeCollateralLoanShowcaseBinder
     private let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
+    private let makeCreateDraftCollateralLoanApplicationBinder: MakeCreateDraftCollateralLoanApplicationBinder
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
@@ -79,6 +83,7 @@ class MainViewModel: ObservableObject, Resetable {
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
         bannersBinder: BannersBinder,
+        makeCreateDraftCollateralLoanApplicationBinder: @escaping MakeCreateDraftCollateralLoanApplicationBinder,
         makeCollateralLoanShowcaseBinder: @escaping MakeCollateralLoanShowcaseBinder,
         makeCollateralLoanLandingBinder: @escaping MakeCollateralLoanLandingBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
@@ -98,6 +103,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.route = route
         self.onRegister = onRegister
         self.bannersBinder = bannersBinder
+        self.makeCreateDraftCollateralLoanApplicationBinder = makeCreateDraftCollateralLoanApplicationBinder
         self.makeCollateralLoanShowcaseBinder = makeCollateralLoanShowcaseBinder
         self.makeCollateralLoanLandingBinder = makeCollateralLoanLandingBinder
         self.makeOpenNewProductButtons = makeOpenNewProductButtons

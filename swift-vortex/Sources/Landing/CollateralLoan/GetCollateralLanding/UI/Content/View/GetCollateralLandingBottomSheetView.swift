@@ -5,20 +5,32 @@
 //  Created by Valentin Ozerov on 12.12.2024.
 //
 
-// Do not review, in progress!!
-
 import SwiftUI
 
-struct GetCollateralLandingBottomSheetView: View {
+public struct GetCollateralLandingBottomSheetView: View {
     
-    let items: [Item]
-    let config: Config
-    let makeImageView: Factory.MakeImageView
-    let domainEvent: (DomainEvent) -> Void
+    private let items: [Item]
+    private let config: Config
+    private let makeImageViewByMD5Hash: Factory.MakeImageViewByMD5Hash
+    private let domainEvent: (DomainEvent) -> Void
+    
+    public init(
+        items: [Item],
+        config: Config,
+        makeImageViewByMD5Hash: @escaping Factory.MakeImageViewByMD5Hash,
+        domainEvent: @escaping (DomainEvent) -> Void,
+        selected: Item? = nil
+    ) {
+        self.items = items
+        self.config = config
+        self.makeImageViewByMD5Hash = makeImageViewByMD5Hash
+        self.domainEvent = domainEvent
+        self.selected = selected
+    }
     
     @State var selected: Item? = nil
     
-    var body: some View {
+    public var body: some View {
         
         ScrollView(.vertical) {
             
@@ -88,7 +100,10 @@ struct GetCollateralLandingBottomSheetView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: cellHeight)
+        .contentShape(Rectangle())
         .onTapGesture {
+            
+            selected = item
             
             domainEvent(.selectCollateral(item.id))
         }
@@ -99,7 +114,7 @@ struct GetCollateralLandingBottomSheetView: View {
         
         if let icon = item.icon {
             
-            makeImageView(icon)
+            makeImageViewByMD5Hash(icon)
         } else {
             
             makeRadioButton(for: item)
@@ -182,11 +197,14 @@ struct GetCollateralLandingBottomSheetView: View {
             UIScreen.main.bounds.height - config.layouts.sheetTopOffset
         )
     }
+}
+
+extension GetCollateralLandingBottomSheetView {
     
-    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
-    typealias Config = GetCollateralLandingConfig.BottomSheet
-    typealias Factory = GetCollateralLandingFactory
-    typealias DomainEvent = GetCollateralLandingDomain.Event
+    public typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
+    public typealias Config = GetCollateralLandingConfig.BottomSheet
+    public typealias Factory = GetCollateralLandingFactory
+    public typealias DomainEvent = GetCollateralLandingDomain.Event
 }
 
 // MARK: - Previews
@@ -234,7 +252,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         GetCollateralLandingBottomSheetView(
             items: periodItems,
             config: .default,
-            makeImageView: Factory.preview.makeImageView,
+            makeImageViewByMD5Hash: Factory.preview.makeImageViewByMD5Hash,
             domainEvent: { print($0) },
             selected: periodItems[1]
         )
@@ -243,7 +261,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         GetCollateralLandingBottomSheetView(
             items: collateralItems,
             config: .default,
-            makeImageView: Factory.preview.makeImageView,
+            makeImageViewByMD5Hash: Factory.preview.makeImageViewByMD5Hash,
             domainEvent: { print($0) }
         )
         .previewDisplayName("Product collateral selector")
