@@ -20,43 +20,73 @@ extension RootViewFactoryComposer {
         if isActive {
             return .init(
                 model: binder.flow,
-                makeContentView: { flowState, flowEvent in
-                    SavingsAccountDomain.FlowView(
-                        state: flowState,
-                        event: flowEvent,
-                        contentView: {
-                            SavingsAccountDomain.ContentWrapperView(
-                                model: binder.content,
-                                makeContentView: { contentState, contentEvent in
-                                    SavingsAccountDomain.ContentView(
-                                        state: contentState,
-                                        event: contentEvent,
-                                        config: .prod,
-                                        factory: .init(
-                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: { viewModel in
-                                                    .init(
-                                                        viewModel: .init(
-                                                            initialState: .init(viewModel.list.first ?? .empty),
-                                                            reduce: { state,_ in (state, .none)} , // TODO: - add reduce
-                                                            handleEffect: {_,_ in } // TODO: - add handleEffect
-                                                        ),
-                                                        config: .iVortex,
-                                                        imageViewFactory: .init(
-                                                            makeIconView: model.imageCache().makeIconView(for:),
-                                                            makeBannerImageView: model.generalImageCache().makeIconView(for:))
-                                                    )
-                                            }
-                                        ))
-                                })
-                        },
-                        informerView: {
-                            InformerView(viewModel: .init(message: $0.message, icon: $0.icon.image, color: $0.color))
-                        })
-                })
+                makeContentView: { [makeFlowView] in makeFlowView(binder, $0, $1) })
         } else {
             return nil
         }
+    }
+    
+    func makeFlowView(
+        _ binder: SavingsAccountDomain.Binder,
+        _ flowState: SavingsAccountDomain.FlowState,
+        _ flowEvent: @escaping (SavingsAccountDomain.FlowEvent) -> Void
+    ) -> SavingsAccountDomain.FlowView<SavingsAccountDomain.ContentWrapperView, InformerView> {
+        
+        .init(
+            state: flowState,
+            event: flowEvent,
+            contentView: { [makeContentWrapperView] in makeContentWrapperView(binder) },
+            informerView: makeInformerView
+        )
+    }
+    
+    func makeContentWrapperView(
+        _ binder: SavingsAccountDomain.Binder
+    ) -> SavingsAccountDomain.ContentWrapperView {
+        .init(
+            model: binder.content,
+            makeContentView: makeContentView(_:_:)
+        )
+    }
+    
+    func makeContentView(
+        _ state: SavingsAccountDomain.ContentState,
+        _ event: @escaping (SavingsAccountDomain.ContentEvent) -> Void
+    ) -> SavingsAccountDomain.ContentView {
+        .init(
+            state: state,
+            event: event,
+            config: .prod,
+            factory: makeFactory()
+        )
+    }
+    
+    func makeFactory(
+    ) -> SavingsAccountDomain.ViewFactory {
+        .init(
+            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+            makeLandingView: makeLandingView
+        )
+    }
+    
+    func makeLandingView(
+        _ viewModel: SavingsAccountDomain.Landing
+    ) -> SavingsAccountWrapperView {
+        .init(
+            viewModel: .init(
+                initialState: .init(viewModel.list.first ?? .empty),
+                reduce: { state,_ in (state, .none)} , // TODO: - add reduce
+                handleEffect: {_,_ in } // TODO: - add handleEffect
+            ),
+            config: .iVortex,
+            imageViewFactory: makeImageViewFactory()
+        )
+    }
+    
+    func makeInformerView(
+        _ payload: SavingsAccountDomain.InformerPayload
+    ) -> InformerView {
+        .init(viewModel: .init(message: payload.message, icon: payload.icon.image, color: payload.color))
     }
 }
 

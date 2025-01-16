@@ -17,6 +17,7 @@ import PayHub
 import PayHubUI
 import PaymentComponents
 import PDFKit
+import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
@@ -115,6 +116,13 @@ extension RootViewFactoryComposer {
     private func clearCache() {
         
         try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
+    }
+    
+    func makeImageViewFactory(
+    ) -> SavingsAccount.ImageViewFactory {
+        .init(
+            makeIconView: model.imageCache().makeIconView(for:),
+            makeBannerImageView: model.generalImageCache().makeIconView(for:))
     }
 }
 

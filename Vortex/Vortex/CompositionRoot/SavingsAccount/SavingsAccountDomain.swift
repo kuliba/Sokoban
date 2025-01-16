@@ -50,6 +50,9 @@ extension SavingsAccountDomain {
     typealias FlowDomain = BinderDomain.FlowDomain
     typealias Flow = FlowDomain.Flow
     
+    typealias FlowState = FlowDomain.State
+    typealias FlowEvent = FlowDomain.Event
+    
     typealias Notify = (NotifyEvent) -> Void
     typealias NotifyEvent = FlowDomain.NotifyEvent
 
@@ -70,4 +73,6 @@ extension SavingsAccountDomain {
     typealias ContentWrapperView = RxWrapperView<ContentView, ContentState, ContentEvent, ContentEffect>
     
     typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView, InformerView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
+    
+    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountWrapperView>
 }
