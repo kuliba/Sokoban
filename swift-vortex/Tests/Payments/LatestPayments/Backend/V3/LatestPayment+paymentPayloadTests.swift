@@ -479,9 +479,25 @@ final class LatestPayment_paymentPayloadTests: XCTestCase {
         
         XCTAssertNoDiff(mapped.map(\.paymentPayload)[12], nil)
         
-        XCTAssertNil(mapped.map(\.paymentPayload)[13])
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[13],
+            .phone(.init(
+                amount: 100,
+                bankID: "100000000217",
+                phoneNumber: "9636124249",
+                puref: nil
+            ))
+        )
         
-        XCTAssertNil(mapped.map(\.paymentPayload)[14])
+        XCTAssertNoDiff(
+            mapped.map(\.paymentPayload)[14],
+            .phone(.init(
+                amount: 11.11,
+                bankID: "100000000217",
+                phoneNumber: "9191619658",
+                puref: nil
+            ))
+        )
     }
     
     // MARK: - Helpers
@@ -519,7 +535,7 @@ final class LatestPayment_paymentPayloadTests: XCTestCase {
         amount: Decimal? = nil,
         currency: String? = nil,
         date: Int = .random(in: 1...100),
-        detail: ResponseMapper.LatestPayment.PaymentOperationDetailType? = nil,
+        detail: ResponseMapper.LatestPayment.PaymentOperationDetailType = .addressless,
         inn: String? = nil,
         lpName: String? = nil,
         md5Hash: String? = nil,

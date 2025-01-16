@@ -2003,7 +2003,7 @@ private extension OperationDetailData {
             paymentOperationDetailId: paymentOperationDetailId,
             paymentTemplateId: paymentTemplateId,
             period: period,
-            printFormType: printFormType,
+            printFormType: printFormType.rawValue,
             provider: provider,
             puref: puref,
             regCert: regCert,

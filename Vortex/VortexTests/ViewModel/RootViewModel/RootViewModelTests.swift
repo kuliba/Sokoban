@@ -10,6 +10,10 @@ import CombineSchedulers
 import LandingUIComponent
 import SberQR
 import XCTest
+import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
+import UIPrimitives
+import Combine
 
 final class RootViewModelTests: XCTestCase {
     
@@ -471,6 +475,7 @@ final class RootViewModelTests: XCTestCase {
         let infoDictionary: [String : Any]? = appVersion.map {
             ["CFBundleShortVersionString": $0]
         }
+        
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
             stickerViewFactory: .preview,
@@ -490,7 +495,8 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: [],
                     bannersBinder: .preview,
-                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanShowcaseBinder: { .preview },
+                    makeCollateralLoanLandingBinder: { _ in .preview },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -568,7 +574,8 @@ final class RootViewModelTests: XCTestCase {
                     onRegister: {},
                     sections: makeSections(),
                     bannersBinder: .immediate,
-                    makeCollateralLoanLandingViewModel: makeCollateralLoanLandingViewModel,
+                    makeCollateralLoanShowcaseBinder: { .preview },
+                    makeCollateralLoanLandingBinder: { _ in .preview },
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -700,18 +707,65 @@ final class RootViewModelTests: XCTestCase {
             cardType: cardType,
             idParent: nil
         )
-    }
+    }    
+}
+
+// MARK: - GetCollateralLandingDomain.Binder preview
+
+private extension GetCollateralLandingDomain.Binder {
     
-    private func makeCollateralLoanLandingViewModel(
-        initialState: CollateralLoanLandingDomain.State = .init()
-    ) -> CollateralLoanLandingDomain.ViewModel {
-        
-        .init(
-            initialState: .init(),
-            reduce: CollateralLoanLandingDomain.Reducer().reduce(_:_:),
-            handleEffect: CollateralLoanLandingDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
-        )
-    }
+    static let preview = GetCollateralLandingDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetCollateralLandingDomain.Content {
+    
+    static let preview = GetCollateralLandingDomain.Content(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetCollateralLandingDomain.Flow {
+    
+    static let preview = GetCollateralLandingDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - GetShowcaseDomain.Binder preview
+
+private extension GetShowcaseDomain.Binder {
+    
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview = GetShowcaseDomain.Content(
+        initialState: .init(),
+        reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
+        handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+    )
 }
 
 // MARK: - DSL

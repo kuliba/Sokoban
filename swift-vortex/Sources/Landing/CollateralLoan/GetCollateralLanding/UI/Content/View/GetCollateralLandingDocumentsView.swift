@@ -10,8 +10,8 @@ import SwiftUI
 struct GetCollateralLandingDocumentsView: View {
 
     let config: Config
-    let state: GetCollateralLandingState
-    let makeIconView: Factory.MakeIconView
+    let state: State
+    let makeImageView: Factory.MakeImageView
     
     var body: some View {
         
@@ -54,7 +54,7 @@ struct GetCollateralLandingDocumentsView: View {
                     GetCollateralLandingDocumentView(
                         document: $0,
                         config: config.list,
-                        makeIconView: makeIconView
+                        makeImageView: makeImageView
                     )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
@@ -73,6 +73,7 @@ extension GetCollateralLandingDocumentsView {
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
     typealias Factory = GetCollateralLandingFactory
+    typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
@@ -84,7 +85,7 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
         GetCollateralLandingDocumentsView(
             config: .default,
             state: .init(product: .carStub),
-            makeIconView: Factory.preview.makeIconView
+            makeImageView: Factory.preview.makeImageView
         )
     }
     

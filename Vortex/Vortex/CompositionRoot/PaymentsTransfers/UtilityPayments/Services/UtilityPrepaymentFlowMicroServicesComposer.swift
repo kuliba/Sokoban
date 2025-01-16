@@ -104,11 +104,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ completion: @escaping ProcessSelectionCompletion
     ) {
         switch payload {
-        case let .lastPayment(lastPayment):
+        case let .payment(payment):
             nanoServices.startAnywayPayment(
-                .lastPayment(lastPayment)
+                .lastPayment(payment)
             ) {
-                completion(self.map($0, with: .lastPayment(lastPayment)))
+                completion(self.map($0, with: .payment(payment.latestOutlinePayload)))
             }
             
         case let .operator(`operator`):
@@ -172,7 +172,10 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             
         default:
             if let services = MultiElementArray(services) {
-                completion(.success(.services(services, for: `operator`)))
+                completion(.success(.services(.init(
+                    services: services,
+                    operator: `operator`
+                ))))
             } else {
                 completion(.failure(.operatorFailure(`operator`)))
             }
@@ -194,8 +197,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         case let .failure(.serviceFailure(.serverError(message))):
             return .failure(.serviceFailure(.serverError(message)))
             
-        case let .success(.services(services, for: `operator`)):
-            return .success(.services(services, for: `operator`))
+        case let .success(.services(operatorServices)):
+            return .success(.services(.init(
+                services: operatorServices.services,
+                operator: operatorServices.operator
+            )))
             
         case let .success(.startPayment(response)):
             guard let transaction = composer.makeTransaction(from: response, with: payload)
@@ -208,7 +214,21 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     }
 }
 
-// MARK: - Helpers
+// MARK: - Adapters, Helpers
+
+extension RemoteServices.ResponseMapper.LatestServicePayment {
+    
+    var latestOutlinePayload: LatestOutlinePayload {
+        
+        let pairs = additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
+        
+        return .init(md5Hash: md5Hash, name: name, fields: fields, puref: puref)
+    }
+}
 
 private extension AnywayPaymentContext {
     
@@ -279,7 +299,7 @@ private extension AnywayPaymentOutline.Payload {
     }
 }
 
-private extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure where Operator == UtilityPaymentProvider{
+private extension InitiateAnywayPaymentDomain.Failure where Operator == UtilityPaymentProvider {
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure

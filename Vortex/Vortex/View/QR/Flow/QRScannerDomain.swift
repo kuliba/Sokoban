@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 19.11.2024.
 //
 
-import PayHub
 import SberQR
 
 /// A namespace.
@@ -15,8 +14,8 @@ extension QRScannerDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias BinderComposer = PayHub.BinderComposer<Content, Select, Navigation>
+    typealias Binder = Vortex.Binder<Content, Flow>
+    typealias BinderComposer = Vortex.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -24,7 +23,7 @@ extension QRScannerDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
     typealias NotifyEvent = FlowDomain.NotifyEvent
@@ -36,7 +35,7 @@ extension QRScannerDomain {
     }
     
     enum Select: Equatable {
-    
+        
         case outside(Outside)
         case qrResult(QRModelResult)
         case sberQR(CreateSberQRPaymentResponse?)
@@ -44,7 +43,7 @@ extension QRScannerDomain {
     
     enum Navigation {
         
-        case failure(QRFailedViewModelWrapper)
+        case failure(Node<QRMappingFailureDomain.Binder>)
         case operatorSearch(QRSearchOperatorViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case outside(Outside)

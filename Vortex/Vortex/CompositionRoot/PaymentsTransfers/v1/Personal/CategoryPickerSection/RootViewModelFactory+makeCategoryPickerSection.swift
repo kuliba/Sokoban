@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 01.10.2024.
 //
 
+import Combine
 import PayHubUI
 
 protocol ReloadableCategoryPicker: CategoryPicker {
@@ -15,7 +16,7 @@ protocol ReloadableCategoryPicker: CategoryPicker {
 extension CategoryPickerSectionDomain.Binder: ReloadableCategoryPicker {
     
     func reload() {
-         
+        
         content.event(.reload)
     }
 }
@@ -24,58 +25,71 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerSection(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> ReloadableCategoryPicker {
+    ) -> CategoryPickerSectionDomain.Binder {
         
-        return compose(
+        let content = makeCategoryPickerContent(.init(
+            loadCategories: getServiceCategoriesWithoutQR,
+            reloadCategories: { $0(nil) },
+            loadAllLatest: { $0(nil) }
+        ))
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
             getNavigation: getNavigation,
-            content: makeContent(nanoServices),
-            witnesses: witnesses()
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
     
     @inlinable
-    func makeContent(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> CategoryPickerSectionDomain.Content {
+    func makeCategoryPickerSection(
+        nanoServices: PaymentsTransfersPersonalNanoServices
+    ) -> ReloadableCategoryPicker {
         
-        let placeholderCount = settings.categoryPickerPlaceholderCount
+        let content = makeCategoryPickerContent(nanoServices)
         
-        return composeLoadablePickerModel(
-            load: nanoServices.loadCategories,
-            reload: nanoServices.reloadCategories,
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
-            placeholderCount: placeholderCount
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
     
-    private func witnesses() -> CategoryPickerSectionDomain.Composer.Witnesses {
+    @inlinable
+    func delayProvider(
+        navigation: CategoryPickerSectionDomain.Navigation
+    ) -> Delay {
         
-        return .init(
-            emitting: { $0.$state.compactMap(\.selected) },
-            dismissing: { content in { content.event(.select(nil)) }}
-        )
+        switch navigation {
+        case .failure:     return .milliseconds(100)
+        case .destination: return settings.delay
+        case .outside:     return .milliseconds(100)
+        }
     }
-}
-
-extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
         select: CategoryPickerSectionDomain.Select,
-        notify: @escaping CategoryPickerSectionDomain.Notify,
+        notify:@escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
-    ) {
+    ) -> Void {
+        
         let composer = SelectedCategoryGetNavigationComposer(
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
+                makeStandard: { _,_ in }, // standard is not called for Section
                 makeTax: makeTaxPayment,
                 makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
         
-        composer.getNavigation(select, notify, completion)
+        composer.getNavigation(select, notify) {
+            
+            completion($0)
+            _ = composer
+        }
     }
 }

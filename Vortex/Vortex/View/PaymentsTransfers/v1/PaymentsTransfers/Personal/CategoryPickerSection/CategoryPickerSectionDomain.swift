@@ -5,16 +5,16 @@
 //  Created by Igor Malyarov on 03.09.2024.
 //
 
-import Foundation
-import PayHub
 import PayHubUI
 
-enum CategoryPickerSectionDomain {
- 
+/// A namespace.
+enum CategoryPickerSectionDomain {}
+
+extension CategoryPickerSectionDomain {
+    
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<Content, Flow>
-    typealias Composer = PayHub.BinderComposer<Content, Select, Navigation>
+    typealias Binder = Vortex.Binder<Content, Flow>
     
     // MARK: - Content
     
@@ -23,11 +23,33 @@ enum CategoryPickerSectionDomain {
     
     // MARK: - Flow
     
-    typealias FlowDomain = PayHub.FlowDomain<Select, Navigation>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
-        
+    
     typealias Select = ServiceCategory
     
-    typealias Navigation = SelectedCategoryNavigation
+    enum Navigation {
+        
+        case failure(SelectedCategoryFailure)
+        case destination(Destination)
+        case outside(Outside)
+    }
+    
+    enum Destination {
+        
+        case mobile(Mobile)
+        case taxAndStateServices(Tax)
+        case transport(Transport)
+        
+        typealias Mobile = ClosePaymentsViewModelWrapper
+        typealias Tax = ClosePaymentsViewModelWrapper
+        typealias Transport = TransportPaymentsViewModel
+    }
+    
+    enum Outside {
+        
+        case qr
+        case standard(ServiceCategory)
+    }
 }

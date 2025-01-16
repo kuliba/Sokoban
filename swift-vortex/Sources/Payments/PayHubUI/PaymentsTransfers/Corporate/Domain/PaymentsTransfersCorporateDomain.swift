@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 28.10.2024.
 //
 
-import PayHub
+import FlowCore
 import RxViewModel
 
 /// A namespace.
@@ -15,7 +15,7 @@ public extension PaymentsTransfersCorporateDomain {
     
     // MARK: - Binder
     
-    typealias BinderDomain = PayHub.BinderDomain<Content, Select, Navigation>
+    typealias BinderDomain = FlowCore.BinderDomain<Content, Select, Navigation>
     typealias Binder = BinderDomain.Binder
     typealias Composer = BinderDomain.BinderComposer
     

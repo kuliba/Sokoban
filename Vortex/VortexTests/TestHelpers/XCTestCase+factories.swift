@@ -6,26 +6,33 @@
 //
 
 @testable import Vortex
-import RemoteServices
 import XCTest
 
 extension XCTestCase {
     
+    func makeServiceLatest(
+        origin: LatestOrigin? = nil,
+        avatar: Latest.Avatar? = nil
+    ) -> Latest {
+        
+        return .init(origin: origin ?? .service(makeLatestService()), avatar: avatar ?? .init(fullName: "", image: nil, topIcon: nil, icon: nil))
+    }
+
     func makeLatestService(
-        additionalItems: [RemoteServices.ResponseMapper.LatestPayment.Service.AdditionalItem]? = nil,
+        additionalItems: [LatestOrigin.Service.AdditionalItem]? = nil,
         amount: Decimal? = nil,
         currency: String? = nil,
         date: Int = .random(in: 1...1_000),
-        detail: RemoteServices.ResponseMapper.LatestPayment.PaymentOperationDetailType? = nil,
+        detail: LatestOrigin.PaymentOperationDetailType = .account2Card,
         inn: String? = nil,
         lpName: String? = nil,
         md5Hash: String? = nil,
         name: String? = nil,
         paymentDate: Date = .now,
-        paymentFlow: RemoteServices.ResponseMapper.LatestPayment.PaymentFlow? = nil,
+        paymentFlow: LatestOrigin.PaymentFlow? = nil,
         puref: String = anyMessage(),
-        type: RemoteServices.ResponseMapper.LatestPayment.LatestType = "internet"
-    ) -> Latest.Service {
+        type: LatestOrigin.LatestType = "internet"
+    ) -> LatestOrigin.Service {
         
         return .init(
             additionalItems: additionalItems,

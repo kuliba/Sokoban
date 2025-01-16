@@ -13,8 +13,8 @@ struct GetCollateralLandingBottomSheetView: View {
     
     let items: [Item]
     let config: Config
-    let makeIconView: Factory.MakeIconView
-    let event: (Event) -> Void
+    let makeImageView: Factory.MakeImageView
+    let uiEvent: (UIEvent) -> Void
     
     @State var selected: Item? = nil
     
@@ -62,7 +62,7 @@ struct GetCollateralLandingBottomSheetView: View {
             
             if let termMonth = item.termMonth {
                 
-                event(.selectMonthPeriod(termMonth))
+                uiEvent(.selectMonthPeriod(termMonth))
             }
         }
     }
@@ -90,7 +90,7 @@ struct GetCollateralLandingBottomSheetView: View {
         .frame(height: cellHeight)
         .onTapGesture {
             
-            event(.selectCollateral(item.id))
+            uiEvent(.selectCollateral(item.id))
         }
     }
     
@@ -99,7 +99,7 @@ struct GetCollateralLandingBottomSheetView: View {
         
         if let icon = item.icon {
             
-            makeIconView(icon)
+            makeImageView(icon)
         } else {
             
             makeRadioButton(for: item)
@@ -183,10 +183,10 @@ struct GetCollateralLandingBottomSheetView: View {
         )
     }
     
-    typealias Item = GetCollateralLandingState.BottomSheet.Item
+    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
     typealias Config = GetCollateralLandingConfig.BottomSheet
     typealias Factory = GetCollateralLandingFactory
-    typealias Event = GetCollateralLandingEvent
+    typealias UIEvent = GetCollateralLandingDomain.UIEvent
 }
 
 // MARK: - Previews
@@ -234,8 +234,8 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         GetCollateralLandingBottomSheetView(
             items: periodItems,
             config: .default,
-            makeIconView: Factory.preview.makeIconView,
-            event: { print($0) },
+            makeImageView: Factory.preview.makeImageView,
+            uiEvent: { print($0) },
             selected: periodItems[1]
         )
         .previewDisplayName("Product period selector")
@@ -243,12 +243,12 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         GetCollateralLandingBottomSheetView(
             items: collateralItems,
             config: .default,
-            makeIconView: Factory.preview.makeIconView,
-            event: { print($0) }
+            makeImageView: Factory.preview.makeImageView,
+            uiEvent: { print($0) }
         )
         .previewDisplayName("Product collateral selector")
     }
     
     typealias Factory = GetCollateralLandingFactory
-    typealias Item = GetCollateralLandingState.BottomSheet.Item
+    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
 }

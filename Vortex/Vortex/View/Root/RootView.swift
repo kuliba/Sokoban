@@ -71,7 +71,8 @@ struct RootView: View {
                 viewFactory: rootViewFactory.mainViewFactory,
                 paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
-                getUImage: { viewModel.model.images.value[$0]?.uiImage }
+                getUImage: { viewModel.model.images.value[$0]?.uiImage },
+                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
@@ -243,7 +244,7 @@ private extension RootView {
 
 // MARK: - adapters
 
-/*private*/ extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,
@@ -291,7 +292,7 @@ extension PaymentProviderPickerDomain.Flow {
     ) {
         switch event {
         case .addCompany:
-            self.event(.select(.chat))
+            self.event(.select(.outside(.chat)))
             
         case .payByInstruction:
             self.event(.select(.detailPayment))
@@ -311,66 +312,7 @@ extension PaymentProviderPickerDomain.Flow {
     }
 }
 
-extension Latest {
-    
-    var amount: Decimal? {
-        
-        switch self {
-        case let .service(service):
-            return service.amount
-            
-        case let .withPhone(withPhone):
-            return withPhone.amount
-        }
-    }
-    
-    var md5Hash: String? {
-        
-        switch self {
-        case let .service(service):
-            return service.md5Hash
-            
-        case let .withPhone(withPhone):
-            return withPhone.md5Hash
-        }
-    }
-    
-    var puref: String {
-        
-        switch self {
-        case let .service(service):
-            return service.puref
-            
-        case let .withPhone(withPhone):
-            return withPhone.puref
-        }
-    }
-    
-    var type: String {
-        
-        switch self {
-        case let .service(service):
-            return service.type
-            
-        case let .withPhone(withPhone):
-            return withPhone.type
-        }
-    }
-}
-
-extension Latest: Named {
-    
-    public var name: String {
-        
-        switch self {
-        case let .service(service):
-            return service.name ?? String(describing: service)
-            
-        case let .withPhone(withPhone):
-            return withPhone.name ?? String(describing: withPhone)
-        }
-    }
-}
+extension Latest: Named {}
 
 extension ServiceCategory: Named {}
 
@@ -520,6 +462,7 @@ private extension RootViewFactory {
             },
             makeMarketShowcaseView: { _,_,_   in .none },
             components: .preview,
+            paymentsViewFactory: .preview,
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)

@@ -616,16 +616,30 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "ClientInformListTests",
         "name" : "ClientInformListTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "GetInfoRepeatPaymentServiceTests",
         "name" : "GetInfoRepeatPaymentServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FlowCoreTests",
+        "name" : "FlowCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests",
+        "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
       }
     }
   ],

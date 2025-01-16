@@ -80,8 +80,10 @@ let package = Package(
         .c2bSubscriptionUI,
         .calendarUI,
         .clientInformList,
+        .flowCore,
         .linkableText,
         .manageSubscriptionsUI,
+        .orderCard,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -154,6 +156,7 @@ let package = Package(
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests,
         .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
         .collateralLoanLandingGetCollateralLandingBackend,
         .collateralLoanLandingGetCollateralLandingBackendTests,
         .collateralLoanLandingGetCollateralLandingUI,
@@ -269,11 +272,14 @@ let package = Package(
         .clientInformListTests,
         .linkableText,
         .linkableTextTests,
+        .flowCore,
+        .flowCoreTests,
         .manageSubscriptionsUI,
         .otpInputComponent,
         .otpInputComponentTests,
         .operatorsListComponents,
         .operatorsListComponentsTests,
+        .orderCard,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -564,6 +570,13 @@ private extension Product {
         ]
     )
     
+    static let flowCore = library(
+        name: .flowCore,
+        targets: [
+            .flowCore
+        ]
+    )
+    
     static let manageSubscriptionsUI = library(
         name: .manageSubscriptionsUI,
         targets: [
@@ -582,6 +595,13 @@ private extension Product {
         name: .operatorsListComponents,
         targets: [
             .operatorsListComponents
+        ]
+    )
+    
+    static let orderCard = library(
+        name: .orderCard,
+        targets: [
+            .orderCard
         ]
     )
     
@@ -1333,11 +1353,15 @@ private extension Target {
             .collateralLoanLandingGetShowcaseBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)/Backend"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)Tests/Backend"
     )
     
     static let collateralLoanLandingGetShowcaseUI = target(
         name: .collateralLoanLandingGetShowcaseUI,
+        dependencies: [
+            .rxViewModel,
+            .uiPrimitives
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingGetShowcaseName)/UI"
     )
     
@@ -1347,7 +1371,7 @@ private extension Target {
             .collateralLoanLandingGetShowcaseUI,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)/UI"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)Tests/UI"
     )
 
     static let collateralLoanLandingGetConsentsBackend = target(
@@ -1366,7 +1390,7 @@ private extension Target {
             .customDump,
             .vortexTools
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetConsentsName)/Backend",
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetConsentsName)Tests/Backend",
         resources: [
             .copy("Resources/valid.pdf")
         ]
@@ -1386,14 +1410,27 @@ private extension Target {
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/Backend/V1"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)Tests/Backend/V1"
     )
 
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+        dependencies: [
+            .uiPrimitives,
+            .paymentComponents
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
-    
+
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = testTarget(
+        name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
+        dependencies: [
+            .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)Tests/UI"
+    )
+
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
@@ -1409,7 +1446,7 @@ private extension Target {
             .collateralLoanLandingGetCollateralLandingBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)/Backend/V1"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/Backend/V1"
     )
 
     static let collateralLoanLandingGetCollateralLandingUI = target(
@@ -1430,7 +1467,7 @@ private extension Target {
             .collateralLoanLandingGetCollateralLandingUI,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)/UI"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/UI"
     )
 
     static let collateralLoanLandingSaveConsentsBackend = target(
@@ -1448,7 +1485,7 @@ private extension Target {
             .collateralLoanLandingSaveConsentsBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.SaveConsents)/Backend"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.SaveConsents)Tests/Backend"
     )
     
     // MARK: - Infra
@@ -1680,6 +1717,8 @@ private extension Target {
     static let latestPaymentsBackendV3 = target(
         name: .latestPaymentsBackendV3,
         dependencies: [
+            // external packages
+            .tagged,
             // internal modules
             .vortexTools,
             .remoteServices,
@@ -1777,6 +1816,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             // internal modules
+            .flowCore,
             .rxViewModel,
         ],
         path: "Sources/Payments/\(String.payHub)"
@@ -1799,6 +1839,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             // internal modules
+            .flowCore,
             .payHub,
             .rxViewModel,
             .uiPrimitives,
@@ -2529,7 +2570,6 @@ private extension Target {
         ],
         path: "Sources/UI/ProductProfile/\(String.cardGuardianUI)"
     )
-    
     static let cardGuardianUITests = testTarget(
         name: .cardGuardianUITests,
         dependencies: [
@@ -2548,7 +2588,6 @@ private extension Target {
         ],
         path: "Sources/UI/\(String.clientInformList)"
     )
-    
     static let clientInformListTests = testTarget(
         name: .clientInformListTests,
         dependencies: [
@@ -2561,7 +2600,6 @@ private extension Target {
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
     )
-    
     static let linkableTextTests = testTarget(
         name: .linkableTextTests,
         dependencies: [
@@ -2571,6 +2609,28 @@ private extension Target {
             .linkableText,
         ],
         path: "Tests/UI/\(String.linkableTextTests)"
+    )
+    
+    static let flowCore = target(
+        name: .flowCore,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .rxViewModel,
+        ],
+        path: "Sources/UI/\(String.flowCore)"
+    )
+    static let flowCoreTests = testTarget(
+        name: .flowCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .flowCore,
+            .rxViewModel,
+        ],
+        path: "Tests/UI/\(String.flowCoreTests)"
     )
     
     static let manageSubscriptionsUI = target(
@@ -2708,6 +2768,17 @@ private extension Target {
         path: "Tests/UI/\(String.savingsAccountTests)"
     )
 
+    static let orderCard = target(
+        name: .orderCard,
+        dependencies: [
+            // internal packages
+            .sharedConfigs,
+            .uiPrimitives,
+            .rxViewModel,
+        ],
+        path: "Sources/UI/\(String.orderCard)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -3204,6 +3275,8 @@ private extension Target {
             .remoteServices,
             .rxViewModel,
             .serialComponents,
+            .textFieldDomain,
+            .textFieldModel,
             .vortexTools,
         ]
     )
@@ -3383,6 +3456,10 @@ private extension Target.Dependency {
         name: .linkableText
     )
     
+    static let flowCore = byName(
+        name: .flowCore
+    )
+    
     static let otpInputComponent = byName(
         name: .otpInputComponent
     )
@@ -3435,6 +3512,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
 
+    static let orderCard = byName(
+        name: .orderCard
+    )
+    
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -3779,7 +3860,8 @@ private extension String {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUI"
-
+    static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
+    
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
@@ -3824,10 +3906,15 @@ private extension String {
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
     
+    static let flowCore = "FlowCore"
+    static let flowCoreTests = "FlowCoreTests"
+    
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
     
     static let otpInputComponent = "OTPInputComponent"
     static let otpInputComponentTests = "OTPInputComponentTests"
+    
+    static let orderCard = "OrderCard"
     
     static let paymentCompletionUI = "PaymentCompletionUI"
     

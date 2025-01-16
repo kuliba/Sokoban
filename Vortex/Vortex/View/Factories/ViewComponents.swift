@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 08.11.2024.
 //
 
+import Combine
 import Foundation
 import LoadableResourceComponent
 import SwiftUI
@@ -42,6 +43,7 @@ typealias MakeQRView = (QRScanner) -> QRScanner_View
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
+typealias MakeOrderCardView = () -> EmptyView
 
 struct ViewComponents {
     
@@ -51,6 +53,7 @@ struct ViewComponents {
     let makeContactsView: MakeContactsView
     let makeControlPanelWrapperView: MakeControlPanelWrapperView
     let makeCurrencyWalletView: MakeCurrencyWalletView
+    let makeIconView: MakeIconView
     let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
     let makeMainSectionProductsView: MakeMainSectionProductsView
     let makeOperationDetailView: MakeOperationDetailView
@@ -65,6 +68,35 @@ struct ViewComponents {
     let makeQRView: MakeQRView
     let makeTemplatesListFlowView: MakeTemplatesListFlowView
     let makeTransportPaymentsView: MakeTransportPaymentsView
+    let makeOrderCardView: MakeOrderCardView
+}
+
+extension ViewComponents {
+    
+    @ViewBuilder
+    func makeAnywayServicePickerFlowView(
+        flowModel: AnywayServicePickerFlowModel,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        makeAnywayServicePickerFlowView(flowModel)
+            .navigationBarWithAsyncIcon(
+                title: provider.origin.title,
+                subtitle: provider.origin.inn,
+                dismiss: dismiss,
+                icon: iconView(provider.origin.icon),
+                style: .normal
+            )
+    }
+    
+    func iconView(
+        _ icon: String?
+    ) -> IconDomain.IconView {
+        
+        makeIconView(icon.map { .md5Hash(.init($0)) })
+    }
 }
 
 extension ViewComponents {
@@ -76,6 +108,7 @@ extension ViewComponents {
         makeContactsView: makeContactsView,
         makeControlPanelWrapperView: makeControlPanelWrapperView,
         makeCurrencyWalletView: makeCurrencyWalletView,
+        makeIconView: { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) },
         makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
         makeMainSectionProductsView: makeMainSectionProductsView,
         makeOperationDetailView: { _,_,_  in fatalError() },
@@ -89,7 +122,8 @@ extension ViewComponents {
         makeQRSearchOperatorView: makeQRSearchOperatorView,
         makeQRView: makeQRView,
         makeTemplatesListFlowView: { _ in fatalError() },
-        makeTransportPaymentsView: { _ in fatalError() }
+        makeTransportPaymentsView: { _ in fatalError() },
+        makeOrderCardView: { EmptyView() }
     )
     
     static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }

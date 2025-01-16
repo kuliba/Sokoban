@@ -92,7 +92,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             paymentOperationDetailID: data.paymentOperationDetailId,
             paymentTemplateID: data.paymentTemplateId,
             period: data.period,
-            printFormType: .init(data.printFormType),
+            printFormType: data.printFormType,
             provider: data.provider,
             puref: data.puref,
             regCert: data.regCert,
@@ -132,35 +132,6 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.Operation
         case "IN_PROGRESS": self = .inProgress
         case "REJECTED":    self = .rejected
         default:            return nil
-        }
-    }
-}
-
-private extension ResponseMapper.GetOperationDetailByPaymentIDResponse.PrintFormType {
-    
-    init(_ printFormType: ResponseMapper._Data.PrintFormType) {
-        
-        switch printFormType {
-        case .addressing_cash:           self = .addressing_cash
-        case .addressless:               self = .addressless
-        case .c2b:                       self = .c2b
-        case .changeOutgoing:            self = .changeOutgoing
-        case .closeAccount:              self = .closeAccount
-        case .closeDeposit:              self = .closeDeposit
-        case .contactAddressless:        self = .contactAddressless
-        case .direct:                    self = .direct
-        case .external:                  self = .external
-        case .housingAndCommunalService: self = .housingAndCommunalService
-        case .internal:                  self = .internal
-        case .internet:                  self = .internet
-        case .mobile:                    self = .mobile
-        case .newDirect:                 self = .newDirect
-        case .returnOutgoing:            self = .returnOutgoing
-        case .sberQR:                    self = .sberQR
-        case .sbp:                       self = .sbp
-        case .sticker:                   self = .sticker
-        case .taxAndStateService:        self = .taxAndStateService
-        case .transport:                 self = .transport
         }
     }
 }
@@ -337,28 +308,6 @@ private extension ResponseMapper {
 
 private extension ResponseMapper._Data {
     
-    enum PrintFormType: String, Codable {
-        
-        case addressing_cash
-        case addressless
-        case c2b
-        case changeOutgoing
-        case closeDeposit
-        case closeAccount
-        case contactAddressless
-        case direct
-        case external
-        case housingAndCommunalService
-        case internet
-        case `internal`
-        case mobile
-        case newDirect
-        case returnOutgoing
-        case sberQR
-        case sbp
-        case sticker
-        case taxAndStateService
-        case transport
-    }
+    typealias PrintFormType = String
 }
 

@@ -774,20 +774,10 @@ private extension PaymentsTransfersViewModel {
     }
     
     private func delay(
-        for timeout: DispatchTimeInterval,
+        for timeout: Delay,
         _ action: @escaping () -> Void
     ) {
         scheduler.delay(for: timeout, action)
-    }
-}
-
-extension AnySchedulerOfDispatchQueue {
-    
-    func delay(
-        for timeout: DispatchTimeInterval,
-        _ action: @escaping () -> Void
-    ) {
-        schedule(after: .init(.now() + timeout), action)
     }
 }
 

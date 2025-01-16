@@ -12,27 +12,19 @@ extension RootViewModelFactory {
         ofType type: ServiceCategory.CategoryType,
         completion: @escaping (StandardPaymentResult) -> Void
     ) {
-        loadServiceCategory(ofType: type) {
+        loadServiceCategory(ofType: type) { [weak self] in
+            
+            guard let self else { return }
             
             guard let category = $0
             else {
-
-                self.logger.log(level: .error, category: .cache, message: "Missing category \(type).", file: #file, line: #line)
+                logger.log(level: .error, category: .cache, message: "Missing category \(type).", file: #file, line: #line)
                 return completion(.failure(.missingCategoryOfType(type)))
             }
             
-            self.makePaymentProviderPicker(for: category) {
+            handleSelectedServiceCategory(category) {
                 
-                switch $0 {
-                case .failure:
-                    let binder = self.makeServiceCategoryFailure(
-                        category: category
-                    )
-                    completion(.failure(.makeStandardPaymentFailure(binder)))
-                    
-                case let .success(binder):
-                    completion(.success(binder))
-                }
+                completion($0.standardPaymentResult)
             }
         }
     }
@@ -43,5 +35,21 @@ extension RootViewModelFactory {
         
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case missingCategoryOfType(ServiceCategory.CategoryType)
+    }
+}
+
+// MARK: - Adapters
+
+private extension StandardSelectedCategoryDestination {
+    
+    var standardPaymentResult: RootViewModelFactory.StandardPaymentResult {
+        
+        switch self {
+        case let .failure(binder):
+            return .failure(.makeStandardPaymentFailure(binder))
+            
+        case let .success(binder):
+            return .success(binder)
+        }
     }
 }

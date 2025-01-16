@@ -110,11 +110,7 @@ private extension RequestCollector {
     /// Schedules the invocation of the collaborator to process the collected requests.
     func scheduleCollaboratorInvocation() {
         
-        scheduler.schedule(
-            after: .init(.now().advanced(by: collectionPeriod))
-        ) {
-            self.processRequests()
-        }
+        scheduler.delay(for: .init(collectionPeriod), processRequests)
     }
     
     /// Processes the collected requests by invoking the collaborator.

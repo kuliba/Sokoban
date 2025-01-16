@@ -100,7 +100,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         
         let mapped = try map(data(from: "v3_getAllLatestPayments")).get()
         
-        XCTAssertEqual(mapped.count, 15)
+        XCTAssertEqual(mapped.count, 18)
     }
     
     func test_fileData() throws {
@@ -238,7 +238,43 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             type: .outside
         ))
         
-        XCTAssertNoDiff(mapped[13], makeService(
+        XCTAssertNoDiff(mapped[13], makeWithPhone(
+            amount: 100,
+            bankID: "100000000217",
+            bankName: "Инновации-Бизнеса",
+            date: 1722345951000,
+            detail: .card2Phone,
+            paymentDate: .init(timeIntervalSince1970: 1722345951000 / 1000),
+            phoneNumber: "9636124249",
+            puref: nil,
+            type: .phone
+        ))
+        
+        XCTAssertNoDiff(mapped[14], makeWithPhone(
+            amount: 11.11,
+            bankID: "100000000217",
+            bankName: "Инновации-Бизнеса",
+            date: 1719408263000,
+            detail: .account2Phone,
+            paymentDate: .init(timeIntervalSince1970: 1719408263000 / 1000),
+            phoneNumber: "9191619658",
+            puref: nil,
+            type: .phone
+        ))
+        
+        XCTAssertNoDiff(mapped[15], makeWithPhone(
+            amount: 10,
+            bankID: "100000000217",
+            bankName: "Инновации-Бизнеса",
+            date: 1718707936000,
+            detail: .card2Phone,
+            paymentDate: .init(timeIntervalSince1970: 1718707936000 / 1000),
+            phoneNumber: "9636188169",
+            puref: nil,
+            type: .phone
+        ))
+
+        XCTAssertNoDiff(mapped[16], makeService(
             additionalItems: [
                 makeAdditional(fieldName: "trnPickupPoint", fieldValue: "KZ"),
                 makeAdditional(fieldName: "P1", fieldValue: "4400430261723339"),
@@ -256,7 +292,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             type: .outside
         ))
         
-        XCTAssertNoDiff(mapped[14], makeService(
+        XCTAssertNoDiff(mapped[17], makeService(
             additionalItems: [
                 makeAdditional(fieldName: "trnPickupPoint", fieldValue: "AB"),
                 makeAdditional(fieldName: "bSurName", fieldValue: ""),
@@ -317,7 +353,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         amount: Decimal? = nil,
         currency: String? = "RUB",
         date: Int,
-        detail: ResponseMapper.LatestPayment.PaymentOperationDetailType? = nil,
+        detail: ResponseMapper.LatestPayment.PaymentOperationDetailType = .account2Phone,
         inn: String? = nil,
         lpName: String? = nil,
         md5Hash: String? = nil,
@@ -372,7 +408,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         paymentDate: Date,
         paymentFlow: ResponseMapper.LatestPayment.PaymentFlow? = nil,
         phoneNumber: String,
-        puref: String = anyMessage(),
+        puref: String? = anyMessage(),
         type: ResponseMapper.LatestPayment.LatestType
     ) -> ResponseMapper.LatestPayment {
         
@@ -450,23 +486,4 @@ private extension String {
   "data": []
 }
 """
-}
-
-extension String {
-    
-    static let charity = "charity"
-    static let country = "country"
-    static let digitalWallets = "digitalWallets"
-    static let education = "education"
-    static let internet = "internet"
-    static let mobile = "mobile"
-    static let networkMarketing = "networkMarketing"
-    static let outside = "outside"
-    static let phone = "phone"
-    static let repaymentLoansAndAccounts = "repaymentLoansAndAccounts"
-    static let security = "security"
-    static let service = "service"
-    static let socialAndGames = "socialAndGames"
-    static let taxAndStateService = "taxAndStateService"
-    static let transport = "transport"
 }

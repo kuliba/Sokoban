@@ -11,9 +11,9 @@ import UIPrimitives
 
 struct GetCollateralLandingConditionsView: View {
     
+    let state: State
     let config: Config
-    let state: GetCollateralLandingState
-    let makeIconView: Factory.MakeIconView
+    let makeImageView: Factory.MakeImageView
     
     var body: some View {
         
@@ -55,7 +55,7 @@ struct GetCollateralLandingConditionsView: View {
                     GetCollateralLandingConditionView(
                         condition: $0,
                         config: config,
-                        makeIconView: makeIconView
+                        makeImageView: makeImageView
                     )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
@@ -117,6 +117,7 @@ extension GetCollateralLandingConditionsView {
     typealias Product = GetCollateralLandingProduct
     typealias Condition = GetCollateralLandingProduct.Condition
     typealias Factory = GetCollateralLandingFactory
+    typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
@@ -126,9 +127,9 @@ struct GetCollateralLandingConditionsView_Previews: PreviewProvider {
     static var previews: some View {
 
             GetCollateralLandingConditionsView(
-                config: .default,
                 state: .init(product: .carStub),
-                makeIconView: Factory.preview.makeIconView
+                config: .default,
+                makeImageView: Factory.preview.makeImageView
             )
             .frame(height: 100)
     }

@@ -61,7 +61,8 @@ extension PaymentsSuccessTransferNumberView {
             
             state = .check
             
-            scheduler.delay(for: timeout.timeInterval) { [weak self] in
+            scheduler.delay(for: timeout) { [weak self] in
+                
                 self?.state = .copy
             }
         }

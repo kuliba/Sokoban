@@ -31,32 +31,58 @@ final class SelectedCategoryGetNavigationComposer {
 
 extension SelectedCategoryGetNavigationComposer {
     
-    typealias Domain = CategoryPickerSectionDomain
-    typealias Navigation = Domain.Navigation
-    
     func getNavigation(
-        _ category: Domain.Select,
-        _ notify: @escaping Domain.Notify,
-        _ completion: @escaping (Navigation) -> Void
+        _ category: CategoryPickerSectionDomain.Select,
+        _ notify: @escaping CategoryPickerSectionDomain.Notify,
+        _ completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {
         switch category.paymentFlow {
         case .mobile:
-            completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
+            completion(.destination(.mobile(nanoServices.makeMobile())))
             
         case .qr:
-            completion(.paymentFlow(.qr(())))
+            completion(.outside(.qr))
             
         case .standard:
-            completion(.paymentFlow(.standard(category)))
+            completion(.outside(.standard(category)))
             
         case .taxAndStateServices:
-            completion(.paymentFlow(.taxAndStateServices(nanoServices.makeTax())))
+            completion(.destination(.taxAndStateServices(nanoServices.makeTax())))
             
         case .transport:
             guard let transport = nanoServices.makeTransport()
             else { return completion(.failure(.transport)) }
             
-            completion(.paymentFlow(.transport(transport)))
+            completion(.destination(.transport(transport)))
+        }
+    }
+    
+    func getNavigation(
+        _ category: CategoryPickerViewDomain.Select,
+        _ notify: @escaping CategoryPickerViewDomain.Notify,
+        _ completion: @escaping (CategoryPickerViewDomain.Navigation) -> Void
+    ) {
+        switch category.paymentFlow {
+        case .mobile:
+            completion(.destination(.mobile(nanoServices.makeMobile())))
+            
+        case .qr:
+            completion(.outside(.qr))
+            
+        case .standard:
+            nanoServices.makeStandard(category) {
+                
+                completion(.destination(.standard($0)))
+            }
+            
+        case .taxAndStateServices:
+            completion(.destination(.taxAndStateServices(nanoServices.makeTax())))
+            
+        case .transport:
+            guard let transport = nanoServices.makeTransport()
+            else { return completion(.failure(.transport)) }
+            
+            completion(.destination(.transport(transport)))
         }
     }
 }

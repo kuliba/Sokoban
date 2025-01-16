@@ -50,7 +50,6 @@ final class OperationTrackerBinderTests: XCTestCase {
         
         tracker.event(.start)
         
-        let response = makeResponse()
         let value = makeValue()
         
         startSpy.complete(with: nil)

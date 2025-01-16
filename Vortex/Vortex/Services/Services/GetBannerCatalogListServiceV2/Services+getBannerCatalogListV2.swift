@@ -92,6 +92,8 @@ extension GetBannerCatalogListResponse.BannerAction {
             return BannerActionSavingLanding(target: target)
         case let .payment(category):
             return BannerAction(type: .payment)
+        case .cardOrder:
+            return BannerAction(type: .cardOrder)
         }
     }
 }

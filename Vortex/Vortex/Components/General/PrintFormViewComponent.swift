@@ -13,6 +13,8 @@ extension PrintFormView {
     
     class ViewModel: ObservableObject {
         
+        typealias PrintFormType = String
+        
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var state: State

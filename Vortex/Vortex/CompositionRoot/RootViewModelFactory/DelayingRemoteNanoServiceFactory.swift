@@ -68,20 +68,3 @@ extension DelayingRemoteNanoServiceFactory: RemoteNanoServiceFactory {
     /// An error indicating that the factory was deallocated before the service completed.
     struct FactoryDeallocated: Error {}
 }
-
-private extension AnySchedulerOf<DispatchQueue> {
-    
-    /// Delays execution of a closure by a specified timeout.
-    ///
-    /// - Parameters:
-    ///   - timeout: The delay duration.
-    ///   - action: The closure to execute after the delay.
-    func delay(
-        for timeout: Delay,
-        _ action: @escaping () -> Void
-    ) {
-        schedule(after: .init(.init(uptimeNanoseconds: 0)).advanced(by: timeout), action)
-    }
-    
-    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
-}

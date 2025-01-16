@@ -48,9 +48,6 @@ extension MainSectionOpenProductView {
                         
                         self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: payload.productType))
                         
-                    case _ as OpenNewProductsViewModelAction.Tapped.CollateralLoanLanding:
-                        
-                        self?.action.send(MainSectionViewModelAction.OpenProduct.openCollateralLoanLanding())
                     default: break
                     }
                     

@@ -132,6 +132,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    //MARK: OrderCardFlag
+    
+    func test_load_shouldDeliverActiveOrderCardFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .orderCardFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            orderCardFlag: .active
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveOrderCardFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            orderCardFlag: .inactive
+        ))
+    }
+    
     // MARK: - SavingsAccountFlag
     
     func test_load_shouldDeliverActiveSavingsAccountFlagForActiveRetrieveResult() {
@@ -156,6 +180,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    // MARK: - SplashScreenFlag
+    
+    func test_load_shouldDeliverActiveSplashScreenFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .splashScreenFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            splashScreenFlag: .active
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveSplashScreenFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            splashScreenFlag: .inactive
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -178,7 +226,9 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         savingsAccountFlag: SavingsAccountFlag? = nil,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
+        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil,
+        splashScreenFlag: SplashScreenFlag? = nil,
+        orderCardFlag: OrderCardFlag? = nil
     ) -> FeatureFlags {
         
         .init(
@@ -186,7 +236,9 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             historyFilterFlag: historyFilterFlag?.map { $0 } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,
-            collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive
+            collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive,
+            splashScreenFlag: splashScreenFlag?.map { $0 } ?? .inactive,
+            orderCardFlag: orderCardFlag?.map { $0 } ?? .inactive
         )
     }
 }

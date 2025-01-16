@@ -49,7 +49,7 @@ struct SearchView_Previews: PreviewProvider {
         SearchView(
             textFieldState: .noFocus("abc123"),
             event: { _ in },
-            textFieldConfig: .preview
+            textFieldConfig: .preview()
         )
     }
 }

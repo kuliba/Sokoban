@@ -148,7 +148,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 return
             }
             
-            microServices.processSelection(.lastPayment(lastPayment)) {
+            microServices.processSelection(.payment(lastPayment)) {
                 
                 switch $0 {
                 case let .failure(failure):
@@ -294,6 +294,7 @@ private extension LatestPaymentData {
             amount: .init(data.amount),
             name: data.lastPaymentName ?? "",
             md5Hash: nil,
+            paymentFlow: nil,
             puref: data.puref,
             type: data.type.defaultName,
             additionalItems: data.additionalList.map { .init(data: $0) }

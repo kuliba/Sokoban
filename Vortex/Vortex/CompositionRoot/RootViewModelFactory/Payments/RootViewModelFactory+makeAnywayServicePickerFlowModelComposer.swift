@@ -14,7 +14,6 @@ extension RootViewModelFactory {
     func makeAnywayServicePickerFlowModelComposer(
     ) -> AnywayServicePickerFlowModelComposer {
         
-        let anywayFlowComposer = makeAnywayFlowComposer()
         let transactionComposer = AnywayTransactionComposer(
             model: model,
             validator: .init()
@@ -32,7 +31,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            makeAnywayFlowModel: anywayFlowComposer.compose(transaction:),
+            makeAnywayFlowModel: makeAnywayFlowModel(transaction:),
             microServices: pickerMicroServicesComposer.compose(),
             model: model,
             scheduler: schedulers.main

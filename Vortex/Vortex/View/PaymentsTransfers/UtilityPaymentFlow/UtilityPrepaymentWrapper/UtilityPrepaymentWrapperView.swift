@@ -84,7 +84,7 @@ private extension UtilityPrepaymentWrapperView {
         Button(
             action: { completionEvent(.select(.lastPayment(latestPayment))) },
             label: {
-
+                
                 LastPaymentLabel(
                     amount: "\(latestPayment.amount) ₽",
                     title: latestPayment.name,
@@ -121,7 +121,7 @@ private extension UtilityPrepaymentWrapperView {
             viewModel: searchModel,
             textFieldConfig: .black16,
             cancel: {
-            
+                
                 UIApplication.shared.endEditing()
                 searchModel.setText(to: nil)
             }
