@@ -63,11 +63,10 @@ extension RootViewModelFactory {
                 
             case .manualSearch:
                 completion(.categoryPicker(
-                    makeCategoryPickerSection()
-                        .asNode(
-                            transform: { $0.outcome },
-                            notify: notify
-                        )
+                    makeCategoryPicker().asNode(
+                        transform: { $0.outcome },
+                        notify: notify
+                    )
                 ))
                 
             case .scanQR:
@@ -109,16 +108,18 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
     }
 }
 
-private extension SelectedCategoryNavigation {
+private extension CategoryPickerViewDomain.Navigation {
     
     var outcome: NavigationOutcome<QRMappingFailureDomain.Select>? {
         
         switch self {
-        case let .failure(failure):
+        case .destination, .failure:
             return nil
-        
-        case let .paymentFlow(paymentFlow):
-            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .qr: return .select(.scanQR)
+            }
         }
     }
 }

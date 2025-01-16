@@ -66,7 +66,7 @@ extension QRWrapperViewFactory {
                 rootViewFactory.makeCategoryPickerView(categoryPicker)
                     .onFirstAppear {
                         
-                        categoryPicker.sectionBinder?.content.event(.load)
+                        categoryPicker.content.event(.load)
                     }
                     .navigationBarWithBack(
                         title: "Оплатить",
