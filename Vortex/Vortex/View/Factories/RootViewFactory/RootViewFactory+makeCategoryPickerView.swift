@@ -57,9 +57,7 @@ extension RootViewFactory {
                 components.serviceCategoryFailureView(binder: binder)
                 
             case let .success(binder):
-                // components.makepicke(binder)
-//                makeAnywayServicePickerFlowView(binder)
-                Text(String(describing: binder))
+                makePaymentProviderPickerView(binder)
             }
             
         case let .taxAndStateServices(wrapper):
