@@ -1,38 +1,38 @@
 //
-//  CachingDecorator.swift
+//  ProcessingDecorator.swift
 //
 //
 //  Created by Igor Malyarov on 17.01.2025.
 //
 
-/// A decorator that adds caching behavior to a loading operation.
+/// A decorator that adds post-processing behavior to a loading operation.
 ///
-/// Executes a decorated task and caches the result if successful.
-/// The completion handler receives the cached response or `nil` if the operation fails.
-public final class CachingDecorator<Payload, Response> {
+/// Executes a decorated task and performs additional processing on the result if successful.
+/// The completion handler receives the processed response or `nil` if the operation fails.
+public final class ProcessingDecorator<Payload, Response> {
     
     /// The decorated loading operation that fetches data.
     @usableFromInline
     let decoratee: Decoratee
     
-    /// The caching operation that stores the response.
+    /// The processing operation that handles the successful response.
     @usableFromInline
-    let cache: Cache
+    let processor: Processor
     
-    /// Initializes the decorator with a loading operation and a caching strategy.
+    /// Initializes the decorator with a loading operation and a processing strategy.
     ///
     /// - Parameters:
     ///   - decoratee: The primary loading function to fetch data.
-    ///   - cache: The caching function to store successful responses.
+    ///   - processor: The processing function to handle successful responses.
     public init(
         decoratee: @escaping Decoratee,
-        cache: @escaping Cache
+        processor: @escaping Processor
     ) {
         self.decoratee = decoratee
-        self.cache = cache
+        self.processor = processor
     }
     
-    /// The completion handler used by both the decoratee and cache.
+    /// The completion handler used by both the decoratee and processor.
     ///
     /// Passes the response if successful, or `nil` if the operation fails.
     public typealias Completion = (Response?) -> Void
@@ -44,21 +44,21 @@ public final class CachingDecorator<Payload, Response> {
     ///   - completion: Completion handler that receives the result or `nil` on failure.
     public typealias Decoratee = (Payload, @escaping Completion) -> Void
     
-    /// The caching operation that stores the response.
+    /// The processing operation that handles the successful response.
     ///
     /// - Parameters:
-    ///   - response: The successful response to cache.
-    ///   - completion: Completion handler that confirms if caching was successful (`response`) or failed (`nil`).
-    public typealias Cache = (Response, @escaping Completion) -> Void
+    ///   - response: The successful response to process.
+    ///   - completion: Completion handler that delivers the processed response or `nil` if processing failed.
+    public typealias Processor = (Response, @escaping Completion) -> Void
 }
 
-public extension CachingDecorator {
+public extension ProcessingDecorator {
     
-    /// Loads data using the decorated function and caches the result if successful.
+    /// Loads data using the decorated function and processes the result if successful.
     ///
     /// - Parameters:
     ///   - payload: The input for the loading operation.
-    ///   - completion: Completion handler that receives the cached response or `nil` on failure.
+    ///   - completion: Completion handler that receives the processed response or `nil` on failure.
     @inlinable
     func load(
         _ payload: Payload,
@@ -70,7 +70,7 @@ public extension CachingDecorator {
             
             guard let result else { return completion(nil) }
             
-            cache(result) { [weak self] in
+            processor(result) { [weak self] in
                 
                 guard self != nil else { return }
                 
