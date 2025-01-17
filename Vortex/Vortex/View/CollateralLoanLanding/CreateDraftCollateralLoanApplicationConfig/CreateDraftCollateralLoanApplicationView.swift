@@ -71,8 +71,6 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
     enum Navigation {
 
         case submitAnApplication(String)
-        
-        enum Destination {}
     }
 }
 

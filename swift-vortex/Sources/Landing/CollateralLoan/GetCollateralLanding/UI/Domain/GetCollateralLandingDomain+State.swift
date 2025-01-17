@@ -12,14 +12,14 @@ extension GetCollateralLandingDomain {
     public struct State: Equatable {
         
         public let landingID: String
+        public var bottomSheet: BottomSheet?
 
         var isLoading = false
         var result: Result?
-        var bottomSheet: BottomSheet?
         var iHaveSalaryInCompany = false
         var selectedCollateral: String?
         var selectedMonthPeriod: UInt?
-                
+
         public init(
             landingID: String,
             bottomSheet: BottomSheet? = nil
@@ -37,10 +37,14 @@ extension GetCollateralLandingDomain.State {
         public let id = UUID()
         public let sheetType: SheetType
         
+        public init(sheetType: SheetType) {
+            self.sheetType = sheetType
+        }
+        
         public enum SheetType: Equatable {
             
-            case periods([Period])
-            case collaterals([Collateral])
+            case periods
+            case collaterals
         }
         
         public struct Item: Equatable, Identifiable {
@@ -59,6 +63,22 @@ extension GetCollateralLandingDomain.State {
     var product: Product? {
 
         try? result?.get()
+    }
+    
+    var bottomSheetItems: [BottomSheet.Item] {
+        
+        guard
+            let product,
+            let bottomSheet
+        else { return [] }
+        
+        switch bottomSheet.sheetType {
+        case .periods:
+            return product.calc.rates.map(\.bottomSheetItem)
+
+        case .collaterals:
+            return product.calc.collaterals.map(\.bottomSheetItem)
+        }
     }
 }
 

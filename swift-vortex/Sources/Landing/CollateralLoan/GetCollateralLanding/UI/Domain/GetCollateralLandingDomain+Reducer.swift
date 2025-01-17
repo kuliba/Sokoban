@@ -26,14 +26,21 @@ extension GetCollateralLandingDomain {
             case let .loaded(result):
                 state.isLoading = false
                 state.result = result
+                
             case .selectCaseList(_,_):
+                // TODO: need to realize
                 break
+
             case .changeDesiredAmount(_):
+                // TODO: need to realize
                 break
+
             case let .selectCollateral(collateral):
                 state.selectedCollateral = collateral
+
             case let .selectMonthPeriod(period):
                 state.selectedMonthPeriod = period
+
             case let .toggleIHaveSalaryInCompany(iHave):
                 state.iHaveSalaryInCompany = iHave
             }

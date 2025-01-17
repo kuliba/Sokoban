@@ -78,40 +78,52 @@ struct CollateralLoanLandingView: View {
     ) -> some View {
         
         switch bottomSheet {
-        case let .showBottomSheet(id):
-            switch id {
-            case let .periods(periods):
-                GetCollateralLandingBottomSheetView(
-                    items: periods.map(\.bottomSheetItem),
-                    config: factory.config.bottomSheet,
-                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
-                ) {
-                    switch $0 {
-                    case .selectMonthPeriod(let termMonth):
-                        binder.content.event(.selectMonthPeriod(termMonth))
-                        // Делаем задержку закрытия, чтобы пользователь увидел на шторке выбранный айтем
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [binder] in
-                            binder.flow.event(.dismiss)
-                        }
-                    default: break
-                    }
-                }
-            case let .collaterals(collaterals):
-                GetCollateralLandingBottomSheetView(
-                    items: collaterals.map(\.bottomSheetItem),
-                    config: factory.config.bottomSheet,
-                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
-                ) {
-                    switch $0 {
-                    case .selectCollateral(let collateral):
-                        binder.content.event(.selectCollateral(collateral))
-                        print(collateral)
-                        binder.flow.event(.dismiss)
-                    default: break
-                    }
-                }
+        case let .showBottomSheet(type):
+            switch type {
+            case .periods:
+                periodsBottomSheetView
+                
+            case .collaterals:
+                collateralsBottomSheetView
             }
         }
+    }
+    
+    private var periodsBottomSheetView: some View {
+        
+        GetCollateralLandingBottomSheetView(
+            state: binder.content.state,
+            domainEvent: handlePeriodsDomainEvent(_:),
+            config: factory.config.bottomSheet,
+            factory: factory,
+            type: .periods
+        )
+    }
+    
+    private var collateralsBottomSheetView: some View {
+        
+        GetCollateralLandingBottomSheetView(
+            state: binder.content.state,
+            domainEvent: handlePeriodsDomainEvent(_:),
+            config: factory.config.bottomSheet,
+            factory: factory,
+            type: .collaterals
+        )
+    }
+
+    private func handlePeriodsDomainEvent(_ event: GetCollateralLandingDomain.Event) {
+        
+        binder.content.event(event)
+        // Делаем задержку закрытия, чтобы пользователь увидел на шторке выбранный айтем
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [binder] in
+            binder.flow.event(.dismiss)
+        }
+    }
+    
+    private func handleCollateralsDomainEvent(_ event: GetCollateralLandingDomain.Event) {
+        
+        binder.content.event(event)
+        binder.flow.event(.dismiss)
     }
 }
  

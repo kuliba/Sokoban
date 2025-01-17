@@ -152,7 +152,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         )
         .previewDisplayName("Product with calculator")
 
-        let periodBottomSheet = State.BottomSheet(sheetType: .periods(carStub.calc.rates))
+        let periodBottomSheet = State.BottomSheet(sheetType: .periods)
         
         GetCollateralLandingView(
             state: .init(
@@ -167,7 +167,7 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         )
         .previewDisplayName("Product period selector")
         
-        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals(carStub.calc.collaterals))
+        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals)
 
         GetCollateralLandingView(
             state: .init(

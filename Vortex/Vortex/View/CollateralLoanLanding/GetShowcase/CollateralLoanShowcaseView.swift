@@ -35,8 +35,8 @@ struct CollateralLoanShowcaseView: View {
     }
     
     private func content(
-        state: Domain.State,
-        event: @escaping (Domain.Event) -> Void
+        state: GetShowcaseDomain.State,
+        event: @escaping (GetShowcaseDomain.Event) -> Void
     ) -> some View {
         
         Group {
@@ -46,29 +46,37 @@ struct CollateralLoanShowcaseView: View {
                 SpinnerView(viewModel: .init())
                 
             case let .some(showcase):
-                CollateralLoanLandingGetShowcaseView(
-                    data: showcase,
-                    event: {
-                        switch $0 {
-                        case let .showLanding(landingId):
-                            binder.flow.event(.select(.landing(landingId)))
-                            
-                        case let .showTerms(urlString):
-                            if let url = URL(string: urlString) {
-                                openURL(url)
-                            }
-                        }
-                    },
-                    factory: factory
-                )
+                getShowcaseView(showcase)
             }
         }
         .onFirstAppear { event(.load) }
     }
     
+    private func getShowcaseView(_ showcase: GetShowcaseDomain.ShowCase) -> some View {
+        
+        CollateralLoanLandingGetShowcaseView(
+            data: showcase,
+            event: handleExternalEvent(_:),
+            factory: factory
+        )
+    }
+    
+    private func handleExternalEvent(_ event: GetShowcaseViewEvent.External) {
+
+        switch event {
+        case let .showLanding(landingId):
+            binder.flow.event(.select(.landing(landingId)))
+            
+        case let .showTerms(urlString):
+            if let url = URL(string: urlString) {
+                openURL(url)
+            }
+        }
+    }
+    
     @ViewBuilder
     private func destinationView(
-        navigation: Domain.Navigation
+        navigation: GetShowcaseDomain.Navigation
     ) -> some View {
         
         switch navigation {
@@ -83,7 +91,6 @@ struct CollateralLoanShowcaseView: View {
         }
     }
     
-    typealias Domain = GetShowcaseDomain
     typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }
 

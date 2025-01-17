@@ -12,8 +12,9 @@ import Combine
 
 extension RootViewModelFactory {
     
-    func makeCreateDraftCollateralLoanApplicationBinder(payload: String)
-        -> CreateDraftCollateralLoanApplicationDomain.Binder {
+    func makeCreateDraftCollateralLoanApplicationBinder(
+        payload: String
+    ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
         let content = makeContent()
 

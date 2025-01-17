@@ -9,37 +9,38 @@ import SwiftUI
 
 public struct GetCollateralLandingBottomSheetView: View {
     
-    private let items: [Item]
-    private let config: Config
-    private let makeImageViewByMD5Hash: Factory.MakeImageViewByMD5Hash
+    @State var selected: Item? = nil
+
+    private var state: DomainState
     private let domainEvent: (DomainEvent) -> Void
+    private let config: Config
+    private let factory: Factory
     
     public init(
-        items: [Item],
-        config: Config,
-        makeImageViewByMD5Hash: @escaping Factory.MakeImageViewByMD5Hash,
+        state: DomainState,
         domainEvent: @escaping (DomainEvent) -> Void,
-        selected: Item? = nil
+        config: Config,
+        factory: Factory,
+        type: DomainState.BottomSheet.SheetType
     ) {
-        self.items = items
-        self.config = config
-        self.makeImageViewByMD5Hash = makeImageViewByMD5Hash
+        self.state = state
         self.domainEvent = domainEvent
-        self.selected = selected
+        self.config = config
+        self.factory = factory
+        
+        self.state.bottomSheet = .init(sheetType: type)
     }
-    
-    @State var selected: Item? = nil
-    
+        
     public var body: some View {
         
         ScrollView(.vertical) {
             
             VStack(spacing: config.layouts.spacing) {
                 
-                ForEach(items, content: itemView)
+                ForEach(state.bottomSheetItems, content: itemView)
             }
         }
-        .disabled(items.count < config.layouts.scrollThreshold)
+        .disabled(state.bottomSheetItems.count < config.layouts.scrollThreshold)
         .frame(height: height)
     }
     
@@ -114,7 +115,7 @@ public struct GetCollateralLandingBottomSheetView: View {
         
         if let icon = item.icon {
             
-            makeImageViewByMD5Hash(icon)
+            factory.makeImageViewByMD5Hash(icon)
         } else {
             
             makeRadioButton(for: item)
@@ -179,7 +180,7 @@ public struct GetCollateralLandingBottomSheetView: View {
     
     private var isRadioButton: Bool {
         
-        items.first?.icon == nil
+        state.bottomSheetItems.first?.icon == nil
     }
     
     private var cellHeight: CGFloat {
@@ -192,7 +193,7 @@ public struct GetCollateralLandingBottomSheetView: View {
     private var height: CGFloat {
         
         min(
-            (cellHeight + config.layouts.cellHeightCompensation) * CGFloat(items.count)
+            (cellHeight + config.layouts.cellHeightCompensation) * CGFloat(state.bottomSheetItems.count)
                 + config.layouts.sheetBottomOffset,
             UIScreen.main.bounds.height - config.layouts.sheetTopOffset
         )
@@ -205,6 +206,7 @@ extension GetCollateralLandingBottomSheetView {
     public typealias Config = GetCollateralLandingConfig.BottomSheet
     public typealias Factory = GetCollateralLandingFactory
     public typealias DomainEvent = GetCollateralLandingDomain.Event
+    public typealias DomainState = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
@@ -213,56 +215,25 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        let periodItems: [Item] = [
-            .init(
-                id: UUID().uuidString,
-                termMonth: 1,
-                icon: nil,
-                title: "1 месяц"
-            ),
-            .init(
-                id: UUID().uuidString,
-                termMonth: 2,
-                icon: nil,
-                title: "2 месяца"
-            ),
-            .init(
-                id: UUID().uuidString,
-                termMonth: 12,
-                icon: nil,
-                title: "1 год"
-            )
-        ]
-        
-        let collateralItems: [Item] = [
-            .init(
-                id: UUID().uuidString,
-                termMonth: nil,
-                icon: "icon",
-                title: "Автомобиль"
-            ),
-            .init(
-                id: UUID().uuidString,
-                termMonth: nil,
-                icon: "icon",
-                title: "Иное движимое имущество"
-            )
-        ]
-        
         GetCollateralLandingBottomSheetView(
-            items: periodItems,
-            config: .default,
-            makeImageViewByMD5Hash: Factory.preview.makeImageViewByMD5Hash,
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: .init(sheetType: .periods)),
             domainEvent: { print($0) },
-            selected: periodItems[1]
+            config: .default,
+            factory: .preview,
+            type: .periods
         )
         .previewDisplayName("Product period selector")
         
         GetCollateralLandingBottomSheetView(
-            items: collateralItems,
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: .init(sheetType: .periods)),
+            domainEvent: { print($0) },
             config: .default,
-            makeImageViewByMD5Hash: Factory.preview.makeImageViewByMD5Hash,
-            domainEvent: { print($0) }
+            factory: .preview,
+            type: .collaterals
         )
         .previewDisplayName("Product collateral selector")
     }
