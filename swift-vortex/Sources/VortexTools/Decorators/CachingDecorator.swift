@@ -6,13 +6,16 @@
 //
 
 /// A decorator that adds caching behavior to a loading operation.
-/// - Executes a decorated task and caches the result if successful.
-/// - Delivers `true` if caching succeeds, `false` otherwise.
+///
+/// Executes a decorated task and caches the result if successful.
+/// The completion handler receives the cached response or `nil` if the operation fails.
 public final class CachingDecorator<Payload, Response> {
     
+    /// The decorated loading operation that fetches data.
     @usableFromInline
     let decoratee: Decoratee
     
+    /// The caching operation that stores the response.
     @usableFromInline
     let cache: Cache
     
@@ -29,11 +32,24 @@ public final class CachingDecorator<Payload, Response> {
         self.cache = cache
     }
     
-    /// The decorated loading operation.
-    public typealias Decoratee = (Payload, @escaping (Response?) -> Void) -> Void
+    /// The completion handler used by both the decoratee and cache.
+    ///
+    /// Passes the response if successful, or `nil` if the operation fails.
+    public typealias Completion = (Response?) -> Void
+    
+    /// The decorated loading operation that retrieves data.
+    ///
+    /// - Parameters:
+    ///   - payload: The input for the loading operation.
+    ///   - completion: Completion handler that receives the result or `nil` on failure.
+    public typealias Decoratee = (Payload, @escaping Completion) -> Void
     
     /// The caching operation that stores the response.
-    public typealias Cache = (Response, @escaping (Bool) -> Void) -> Void
+    ///
+    /// - Parameters:
+    ///   - response: The successful response to cache.
+    ///   - completion: Completion handler that confirms if caching was successful (`response`) or failed (`nil`).
+    public typealias Cache = (Response, @escaping Completion) -> Void
 }
 
 public extension CachingDecorator {
@@ -42,17 +58,17 @@ public extension CachingDecorator {
     ///
     /// - Parameters:
     ///   - payload: The input for the loading operation.
-    ///   - completion: Completion handler with `true` if caching succeeded, `false` otherwise.
+    ///   - completion: Completion handler that receives the cached response or `nil` on failure.
     @inlinable
     func load(
         _ payload: Payload,
-        completion: @escaping (Bool) -> Void
+        completion: @escaping Completion
     ) {
         decoratee(payload) { [weak self] result in
             
             guard let self else { return }
             
-            guard let result else { return completion(false) }
+            guard let result else { return completion(nil) }
             
             cache(result) { [weak self] in
                 

@@ -53,11 +53,11 @@ final class CachingDecoratorTests: XCTestCase {
         XCTAssertNoDiff(cache.payloads, [response])
     }
     
-    func test_load_shouldDeliverFalseOnDecorateeFailure() {
+    func test_load_shouldDeliverFailureOnDecorateeFailure() {
         
         let (sut, decoratee, _) = makeSUT()
         
-        expect(sut: sut, toDeliver: false) {
+        expect(sut: sut, toDeliver: nil) {
             
             decoratee.complete(with: nil)
         }
@@ -68,7 +68,7 @@ final class CachingDecoratorTests: XCTestCase {
         var sut: SUT?
         let decoratee: Decoratee
         (sut, decoratee, _) = makeSUT()
-        var result: Bool?
+        var result: Response?
         
         sut?.load(makePayload()) { result = $0 }
         sut = nil
@@ -77,14 +77,14 @@ final class CachingDecoratorTests: XCTestCase {
         XCTAssertNil(result)
     }
     
-    func test_load_shouldDeliverFalseOnDecorateeSuccessCacheFailure() {
+    func test_load_shouldDeliverFailureOnDecorateeSuccessCacheFailure() {
         
         let (sut, decoratee, cache) = makeSUT()
         
-        expect(sut: sut, toDeliver: false) {
+        expect(sut: sut, toDeliver: nil) {
             
             decoratee.complete(with: makeResponse())
-            cache.complete(with: false)
+            cache.complete(with: nil)
         }
     }
     
@@ -94,24 +94,25 @@ final class CachingDecoratorTests: XCTestCase {
         let decoratee: Decoratee
         let cache: Cache
         (sut, decoratee, cache) = makeSUT()
-        var result: Bool?
+        var result: Response?
         
         sut?.load(makePayload()) { result = $0 }
         decoratee.complete(with: makeResponse())
         sut = nil
-        cache.complete(with: false)
+        cache.complete(with: nil)
         
         XCTAssertNil(result)
     }
     
-    func test_load_shouldDeliverTrueOnDecorateeSuccessCacheSuccess() {
+    func test_load_shouldDeliverResponseOnDecorateeSuccessCacheSuccess() {
         
+        let response = makeResponse()
         let (sut, decoratee, cache) = makeSUT()
         
-        expect(sut: sut, toDeliver: true) {
+        expect(sut: sut, toDeliver: response) {
             
-            decoratee.complete(with: makeResponse())
-            cache.complete(with: true)
+            decoratee.complete(with: response)
+            cache.complete(with: response)
         }
     }
     
@@ -119,7 +120,7 @@ final class CachingDecoratorTests: XCTestCase {
     
     private typealias SUT = CachingDecorator<Payload, Response>
     private typealias Decoratee = Spy<Payload, Response?>
-    private typealias Cache = Spy<Response, Bool>
+    private typealias Cache = Spy<Response, Response?>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -169,7 +170,7 @@ final class CachingDecoratorTests: XCTestCase {
     private func expect(
         sut: SUT,
         with payload: Payload? = nil,
-        toDeliver expected: Bool,
+        toDeliver expected: Response?,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -179,7 +180,7 @@ final class CachingDecoratorTests: XCTestCase {
         
         sut.load(payload ?? makePayload()) {
             
-            XCTAssertNoDiff($0, expected, "Expected \(expected), but got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff($0, expected, "Expected \(String(describing: expected)), but got \(String(describing: $0)) instead.", file: file, line: line)
             exp.fulfill()
         }
         
