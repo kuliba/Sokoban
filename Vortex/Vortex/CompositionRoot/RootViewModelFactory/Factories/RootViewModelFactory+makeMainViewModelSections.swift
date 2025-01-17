@@ -15,7 +15,7 @@ extension RootViewModelFactory {
         savingsAccountFlag: SavingsAccountFlag
     ) -> [MainSectionViewModel] {
         
-        let stickerViewModel:  ProductCarouselView.StickerViewModel? = nil
+        let stickerViewModel: AdditionalProductViewModel? = nil
         
         var sections = [
             MainSectionProductsView.ViewModel(

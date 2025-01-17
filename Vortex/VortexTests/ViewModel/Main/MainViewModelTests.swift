@@ -894,7 +894,7 @@ final class MainViewModelTests: XCTestCase {
     }
     
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
-    typealias StickerViewModel = ProductCarouselView.StickerViewModel
+    typealias StickerViewModel = AdditionalProductViewModel
     
     private func makeSUTWithMainSectionProductsViewVM(
         file: StaticString = #file,

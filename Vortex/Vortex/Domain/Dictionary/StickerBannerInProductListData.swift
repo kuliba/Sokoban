@@ -53,7 +53,7 @@ extension StickerBannersMyProductList {
         backgroundImage: Image,
         onTap: @escaping () -> Void,
         onHide: @escaping () -> Void
-    ) -> ProductCarouselView.StickerViewModel {
+    ) -> AdditionalProductViewModel {
         
         .init(
             title: title,
