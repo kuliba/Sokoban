@@ -9,7 +9,8 @@
 public enum ItemListDomain<ID, Entity>{}
 
 public extension ItemListDomain
-where ID: Hashable {
+where ID: Hashable,
+      Entity: Identifiable {
     
     // Domain
     typealias State = ItemListState<ID, Entity>

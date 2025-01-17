@@ -6,7 +6,8 @@
 //
 
 public final class ItemListReducer<ID, Entity>
-where ID: Hashable {
+where ID: Hashable,
+      Entity: Identifiable {
     
     @usableFromInline
     let makeID: MakeID
@@ -50,6 +51,16 @@ public extension ItemListReducer {
             
         case let .loaded(elements):
             handleLoaded(&state, &effect, with: elements)
+            
+        case let .update(state: loadState, forID: id):
+            state.setSuffix(to: state.suffix.map {
+                
+                guard case let .element(identified) = $0,
+                      identified.element.id == id
+                else { return $0 }
+                
+                return .element(.init(id: identified.id, element: .init(entity: identified.element.entity, state: loadState)))
+            })
         }
         
         return (state, effect)
@@ -96,5 +107,16 @@ extension ItemListReducer {
     ) {
         state.setSuffix(to: makePlaceholders().map { .placeholder($0) })
         effect = .reload
+    }
+}
+
+private extension Array where Element: Identifiable {
+    
+    func updating(
+        withID id: Element.ID,
+        update: (Element) -> Element
+    ) -> Self {
+        
+        map { $0.id == id ? update($0) : $0 }
     }
 }

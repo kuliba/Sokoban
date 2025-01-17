@@ -23,8 +23,10 @@ where ID: Hashable {
 
 extension ItemListState {
     
+    @usableFromInline
     var suffix: [Item] { state.suffix }
     
+    @usableFromInline
     mutating func setSuffix(to suffix: [Item]) {
         
         self.state.suffix = suffix

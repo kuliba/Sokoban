@@ -412,6 +412,64 @@ final class ItemListReducerTests: ItemListTests {
         assert(sut: sut, state, event: .reload, delivers: .reload)
     }
     
+    // MARK: - updateState
+    
+    func test_updateState_shouldNotChangeEmptyState() {
+        
+        assert(sut: makeSUT(), makeState(), event: .update(state: .completed, forID: "cbd"))
+    }
+
+    func test_updateState_shouldNotChangeStateOnMismatchingEntityID() {
+
+        let state = makeState(suffix: [
+            element(id: 1, value: "abc", state: .pending)
+        ])
+        
+        assert(sut: makeSUT(), state, event: .update(state: .completed, forID: anyMessage()))
+    }
+    
+    func test_updateState_shouldUpdateStateOfMatchingElement() {
+        
+        let state = makeState(suffix: [
+            element(id: 1, value: "abc", state: .pending)
+        ])
+        let sut = makeSUT()
+        
+        assert(sut: sut, state, event: .update(state: .failed, forID: "abc")) {
+            
+            $0 = self.makeState(suffix: [
+                self.element(id: 1, value: "abc", state: .failed)
+            ])
+        }
+    }
+    
+    func test_updateState_shouldUpdateStateOfMatchingElement2() {
+        
+        let state = makeState(suffix: [
+            element(id: 1, value: "abc", state: .pending),
+            element(id: 2, value: "cbd", state: .loading)
+        ])
+        let sut = makeSUT()
+        
+        assert(sut: sut, state, event: .update(state: .completed, forID: "cbd")) {
+            
+            $0 = self.makeState(suffix: [
+                self.element(id: 1, value: "abc", state: .pending),
+                self.element(id: 2, value: "cbd", state: .completed)
+            ])
+        }
+    }
+    
+    private func element(
+        id: ID,
+        value: String,
+        state: LoadState
+    ) -> Item {
+        
+        let element = makeElement(entity: makeEntity(value), state: state)
+        return .element(makeIdentified(id: id, element: element))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = Domain.Reducer
