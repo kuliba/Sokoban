@@ -94,3 +94,18 @@ public extension ProcessingDecorator where Payload == Void {
         self.load((), completion: completion)
     }
 }
+
+public extension ProcessingDecorator {
+    
+    /// Initializes the decorator with a decoratee and a synchronous response action.
+    ///
+    /// - Parameters:
+    ///   - decoratee: The primary loading function to fetch data.
+    ///   - decorate: A closure executed with the successful response before completing.
+    convenience init(
+        decoratee: @escaping Decoratee,
+        decorate: @escaping (Response) -> Void
+    ) {
+        self.init(decoratee: decoratee, processor: { decorate($0); $1($0) })
+    }
+}
