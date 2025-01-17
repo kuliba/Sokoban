@@ -79,3 +79,18 @@ public extension ProcessingDecorator {
         }
     }
 }
+
+public extension ProcessingDecorator where Payload == Void {
+    
+    /// Loads data without requiring a payload and processes the result if successful.
+    ///
+    /// This is a convenience method for cases where no input is needed for the loading operation.
+    ///
+    /// - Parameter completion: Completion handler that receives the processed response or `nil` if the operation fails.
+    @inlinable
+    func load(
+        completion: @escaping Completion
+    ) {
+        self.load((), completion: completion)
+    }
+}
