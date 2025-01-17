@@ -40,6 +40,7 @@ public extension Batcher {
     /// - Parameters:
     ///   - parameters: An array of parameters to be processed.
     ///   - completion: A completion handler that is called with the array of parameters that failed during processing.
+    @inlinable
     func process(
         _ parameters: [Parameter],
         completion: @escaping ([Parameter]) -> Void
@@ -65,7 +66,7 @@ public extension Batcher {
     }
 }
 
-private extension Batcher {
+extension Batcher {
     
     /// Recursively processes the parameters, keeping track of those that fail.
     ///
@@ -73,6 +74,7 @@ private extension Batcher {
     ///   - parameters: A slice of the remaining parameters to be processed.
     ///   - failedParameters: A slice of parameters that have failed during processing.
     ///   - completion: A completion handler that is called with the array of parameters that failed during processing.
+    @usableFromInline
     func process(
         parameters: ArraySlice<Parameter>,
         failedParameters: ArraySlice<Parameter>,
