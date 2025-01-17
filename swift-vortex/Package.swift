@@ -3271,6 +3271,7 @@ private extension Target {
             .genericLoader,
             .genericRemoteService,
             .latestPaymentsBackendV3,
+            .payHub,
             .remoteServices,
             .rxViewModel,
             .serialComponents,
