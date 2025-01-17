@@ -92,6 +92,7 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
+        .splashScreen,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
@@ -292,6 +293,7 @@ let package = Package(
         .savingsAccount,
         .savingsAccountTests,
         .searchBarComponent,
+        .splashScreen,
         .textFieldComponent,
         .textFieldComponentTests,
         .textFieldUI,
@@ -651,6 +653,13 @@ private extension Product {
         name: .searchBarComponent,
         targets: [
             .searchBarComponent,
+        ]
+    )
+    
+    static let splashScreen = library(
+        name: .splashScreen,
+        targets: [
+            .splashScreen,
         ]
     )
     
@@ -2767,6 +2776,15 @@ private extension Target {
         ],
         path: "Tests/UI/\(String.savingsAccountTests)"
     )
+    
+    static let splashScreen = target(
+        name: .splashScreen,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives
+        ],
+        path: "Sources/UI/\(String.splashScreen)"
+    )
 
     static let orderCard = target(
         name: .orderCard,
@@ -3492,6 +3510,10 @@ private extension Target.Dependency {
     static let searchBarComponent = byName(
         name: .searchBarComponent
     )
+
+    static let splashScreen = byName(
+        name: .splashScreen
+    )
     
     static let textFieldUI = byName(
         name: .textFieldUI
@@ -3937,6 +3959,8 @@ private extension String {
     static let savingsAccountTests = "SavingsAccountTests"
 
     static let searchBarComponent = "SearchBarComponent"
+
+    static let splashScreen = "SplashScreen"
     
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"

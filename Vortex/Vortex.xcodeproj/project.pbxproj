@@ -3260,6 +3260,7 @@
 		ECCFA40D2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */; };
 		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
 		ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = ECDE23262CCA633E001BB212 /* ClientInformList */; };
+		ECEDD2602D394AA400C1E61B /* SplashScreen in Frameworks */ = {isa = PBXBuildFile; productRef = ECEDD25F2D394AA400C1E61B /* SplashScreen */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
 		ECF42BD62CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
@@ -7420,6 +7421,7 @@
 				836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */,
 				83C6A1E92CFF43540076BC25 /* SavingsAccount in Frameworks */,
 				2A3E48732C8ABCF3002D035F /* PaymentTemplateBackendV3 in Frameworks */,
+				ECEDD2602D394AA400C1E61B /* SplashScreen in Frameworks */,
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A04BFC52CBE61DA002490C5 /* SerialComponents in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
@@ -19263,6 +19265,7 @@
 				847321062D11A6740009C721 /* VortexTools */,
 				2A9EA5D82D26AC0700DEC45C /* FlowCore */,
 				A7930E6B2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI */,
+				ECEDD25F2D394AA400C1E61B /* SplashScreen */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -29094,6 +29097,10 @@
 		ECDE23262CCA633E001BB212 /* ClientInformList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ClientInformList;
+		};
+		ECEDD25F2D394AA400C1E61B /* SplashScreen */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplashScreen;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;
