@@ -12,7 +12,8 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
 typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
-typealias MakeCreateDraftCollateralLoanApplicationBinder = (String) -> CreateDraftCollateralLoanApplicationDomain.Binder
+typealias MakeCreateDraftCollateralLoanApplicationBinder
+    = (CreateDraftCollateralLoanApplicationUIData) -> CreateDraftCollateralLoanApplicationDomain.Binder
 typealias MakeSavingsAccountBinder = () -> SavingsAccountDomain.Binder
 
 struct BindersFactory {
@@ -107,7 +108,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.Binder {
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
     static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .init(),
+        initialState: .preview,
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

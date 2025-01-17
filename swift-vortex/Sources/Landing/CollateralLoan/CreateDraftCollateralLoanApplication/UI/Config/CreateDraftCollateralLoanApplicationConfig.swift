@@ -91,7 +91,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
 
 extension CreateDraftCollateralLoanApplicationConfig {
     
-    static let preview = Self(
+    public static let `default` = Self(
         fonts: .init(
             title: .init(textFont: Font.system(size: 14), textColor: .title),
             value: .init(textFont: Font.system(size: 16), textColor: .primary)

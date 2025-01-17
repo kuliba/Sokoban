@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension GetCollateralLandingDomain {
     
@@ -79,6 +80,21 @@ extension GetCollateralLandingDomain.State {
         case .collaterals:
             return product.calc.collaterals.map(\.bottomSheetItem)
         }
+    }
+}
+
+extension GetCollateralLandingDomain.State {
+    
+    public var payload: CreateDraftCollateralLoanApplicationUIData? {
+        
+        guard let product else { return nil }
+        
+        return .init(
+            name: product.name,
+            icons: .init(
+                productName: product.icons.productName
+            )
+        )
     }
 }
 

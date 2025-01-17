@@ -9,11 +9,12 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import RxViewModel
 import SwiftUI
 
-struct CreateDraftCollateralLoanApplicationView: View {
+struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     @Environment(\.openURL) var openURL
     
     let binder: CreateDraftCollateralLoanApplicationDomain.Binder
+    let config: Config
     let factory: Factory
     
     var body: some View {
@@ -36,7 +37,15 @@ struct CreateDraftCollateralLoanApplicationView: View {
         event: @escaping (CreateDraftCollateralLoanApplicationDomain.Event) -> Void
     ) -> some View {
         
-        Text("CreateDraftCollateralLoanApplicationView")
+        CreateDraftCollateralLoanApplicationView(
+            state: state,
+            event: event,
+            config: .default,
+            factory: .init(
+                makeImageViewWithMD5hash: factory.makeImageViewWithMD5hash,
+                makeImageViewWithURL: factory.makeImageViewWithURL
+            )
+        )
     }
     
     @ViewBuilder
@@ -48,9 +57,10 @@ struct CreateDraftCollateralLoanApplicationView: View {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationView {
+extension CreateDraftCollateralLoanApplicationWrapperView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
+    typealias Config = CreateDraftCollateralLoanApplicationConfig
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {

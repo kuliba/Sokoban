@@ -10,10 +10,11 @@ import PaymentComponents
 
 struct CreateDraftCollateralLoanApplicationHeaderView: View {
     
-    let data: Data
+    let state: DomainState
+    let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    
+
     var body: some View {
         
         ZStack {
@@ -25,11 +26,11 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
                 info: .init(
                     id: .other(UUID().uuidString),
                     title: config.header.title,
-                    value: data.name,
+                    value: state.data.name,
                     style: .expanded
                 ),
                 config: .init(title: config.fonts.title, value: config.fonts.value),
-                icon: factory.makeImageView
+                icon: { factory.makeImageViewWithMD5hash(state.data.icons.productName) }
             )
             .padding(config.layouts.paddings.contentStack)
         }
@@ -42,7 +43,8 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationData
+    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 
 // MARK: - Previews
@@ -52,13 +54,14 @@ struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationHeaderView(
-            data: .preview,
-            config: .preview,
-            factory: Factory.preview
+            state: .preview,
+            event: { print($0) },
+            config: .default,
+            factory: .preview
         )
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationData
+    typealias Data = CreateDraftCollateralLoanApplicationUIData
 }

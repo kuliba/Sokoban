@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import RxViewModel
 import UIPrimitives
 
@@ -47,8 +48,12 @@ struct CollateralLoanLandingView: View {
                 switch $0 {
                 case let .showCaseList(id):
                     binder.flow.event(.select(.showCaseList(id)))
-                case let .createDraftApplication(id):
-                    binder.flow.event(.select(.createDraftCollateralLoanApplication(id)))
+
+                case .createDraftApplication:
+                    if let payload = state.payload {
+                        
+                        binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
+                    }
                 }
             },
             factory: .init(
@@ -67,8 +72,15 @@ struct CollateralLoanLandingView: View {
     ) -> some View {
         
         switch destination {
-        case let .createDraftCollateralLoanApplication(id):
-            Text(String(describing: id))
+        case let .createDraftCollateralLoanApplication(binder):
+            CreateDraftCollateralLoanApplicationWrapperView(
+                binder: binder,
+                config: .default,
+                factory: .init(
+                    makeImageViewWithMD5hash: factory.makeImageViewByMD5Hash,
+                    makeImageViewWithURL: factory.makeImageViewByURL
+                )
+            )
         }
     }
     
@@ -140,8 +152,8 @@ extension GetCollateralLandingDomain.Navigation {
     var destination: Destination? {
         
         switch self {
-        case let .createDraftCollateralLoanApplication(id):
-            return .createDraftCollateralLoanApplication(id)
+        case let .createDraftCollateralLoanApplication(binder):
+            return .createDraftCollateralLoanApplication(binder)
             
         case .showBottomSheet:
             return nil
@@ -150,7 +162,7 @@ extension GetCollateralLandingDomain.Navigation {
     
     enum Destination {
         
-        case createDraftCollateralLoanApplication(String)
+        case createDraftCollateralLoanApplication(CreateDraftCollateralLoanApplicationDomain.Binder)
     }
     
     var bottomSheet: BottomSheet? {
@@ -172,10 +184,10 @@ extension GetCollateralLandingDomain.Navigation {
 
 extension GetCollateralLandingDomain.Navigation.Destination: Identifiable {
     
-    var id: String {
+    var id: ObjectIdentifier {
         
         switch self {
-        case let .createDraftCollateralLoanApplication(id): return id
+        case let .createDraftCollateralLoanApplication(binder): return .init(binder)
         }
     }
 }
@@ -189,9 +201,15 @@ extension GetCollateralLandingDomain.Navigation.BottomSheet: Identifiable, Botto
             switch id {
             case .periods:
                 return "periods"
+                
             case .collaterals:
                 return "collaterals"
             }
         }
     }
+}
+
+extension GetCollateralLandingDomain {
+    
+    typealias Payload = CreateDraftCollateralLoanApplicationUIData
 }

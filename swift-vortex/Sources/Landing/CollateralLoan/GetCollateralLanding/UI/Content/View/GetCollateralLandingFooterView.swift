@@ -15,7 +15,7 @@ struct GetCollateralLandingFooterView: View {
 
     var body: some View {
         
-        Button(action: { externalEvent(.createDraftApplication("сюда надо поместить payload")) }) {
+        Button(action: { externalEvent(.createDraftApplication) }) {
             
             Text(config.text)
                 .frame(maxWidth: .infinity)

@@ -26,7 +26,7 @@ extension GetCollateralLandingDomain {
         
     public enum ExternalEvent: Equatable {
         
-        case createDraftApplication(String)
+        case createDraftApplication
         case showCaseList(CaseType)
         
         public enum CaseType: Equatable {

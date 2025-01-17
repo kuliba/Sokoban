@@ -13,10 +13,10 @@ import Combine
 extension RootViewModelFactory {
     
     func makeCreateDraftCollateralLoanApplicationBinder(
-        payload: String
+        payload: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
-        let content = makeContent()
+        let content = makeContent(payload: payload)
 
         return composeBinder(
             content: content,
@@ -28,13 +28,15 @@ extension RootViewModelFactory {
     
     // MARK: - Content
     
-    private func makeContent() -> CreateDraftCollateralLoanApplicationDomain.Content {
+    private func makeContent(
+        payload: CreateDraftCollateralLoanApplicationUIData
+    ) -> CreateDraftCollateralLoanApplicationDomain.Content {
         
         let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer()
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler()
         
         return .init(
-            initialState: .init(),
+            initialState: .init(data: payload),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main

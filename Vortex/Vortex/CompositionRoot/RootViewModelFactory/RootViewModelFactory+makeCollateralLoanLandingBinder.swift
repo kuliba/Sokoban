@@ -67,7 +67,9 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .createDraftCollateralLoanApplication(payload):
-            completion(.createDraftCollateralLoanApplication(payload))
+            let binder = makeCreateDraftCollateralLoanApplicationBinder(payload: payload)
+            completion(.createDraftCollateralLoanApplication(binder))
+
         case let .showCaseList(id):
             completion(.showBottomSheet(id))
         }
