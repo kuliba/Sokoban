@@ -1,6 +1,6 @@
 //
-//  CachingDecoratorTests.swift
-//  
+//  ProcessingDecoratorTests.swift
+//
 //
 //  Created by Igor Malyarov on 17.01.2025.
 //
@@ -8,16 +8,16 @@
 import VortexTools
 import XCTest
 
-final class CachingDecoratorTests: XCTestCase {
+final class ProcessingDecoratorTests: XCTestCase {
     
     // MARK: - init
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, decoratee, cache) = makeSUT()
+        let (_, decoratee, processor) = makeSUT()
         
         XCTAssertEqual(decoratee.callCount, 0)
-        XCTAssertEqual(cache.callCount, 0)
+        XCTAssertEqual(processor.callCount, 0)
     }
     
     // MARK: - load
@@ -32,32 +32,32 @@ final class CachingDecoratorTests: XCTestCase {
         XCTAssertNoDiff(decoratee.payloads, [payload])
     }
     
-    func test_load_shouldNotCallCacheOnDecorateeFailure() {
+    func test_load_shouldNotCallProcessorOnDecorateeFailure() {
         
-        let (sut, decoratee, cache) = makeSUT()
+        let (sut, decoratee, processor) = makeSUT()
         
         sut.load(makePayload()) { _ in }
         decoratee.complete(with: nil)
         
-        XCTAssertTrue(cache.payloads.isEmpty)
+        XCTAssertTrue(processor.payloads.isEmpty)
     }
     
-    func test_load_shouldCallCacheWithDecorateeSuccess() {
+    func test_load_shouldCallProcessorWithDecorateeSuccess() {
         
         let response = makeResponse()
-        let (sut, decoratee, cache) = makeSUT()
+        let (sut, decoratee, processor) = makeSUT()
         
         sut.load(makePayload()) { _ in }
         decoratee.complete(with: response)
         
-        XCTAssertNoDiff(cache.payloads, [response])
+        XCTAssertNoDiff(processor.payloads, [response])
     }
     
-    func test_load_shouldDeliverFalseOnDecorateeFailure() {
+    func test_load_shouldDeliverFailureOnDecorateeFailure() {
         
         let (sut, decoratee, _) = makeSUT()
         
-        expect(sut: sut, toDeliver: false) {
+        expect(sut: sut, toDeliver: nil) {
             
             decoratee.complete(with: nil)
         }
@@ -68,7 +68,7 @@ final class CachingDecoratorTests: XCTestCase {
         var sut: SUT?
         let decoratee: Decoratee
         (sut, decoratee, _) = makeSUT()
-        var result: Bool?
+        var result: Response?
         
         sut?.load(makePayload()) { result = $0 }
         sut = nil
@@ -77,49 +77,50 @@ final class CachingDecoratorTests: XCTestCase {
         XCTAssertNil(result)
     }
     
-    func test_load_shouldDeliverFalseOnDecorateeSuccessCacheFailure() {
+    func test_load_shouldDeliverFailureOnDecorateeSuccessProcessorFailure() {
         
-        let (sut, decoratee, cache) = makeSUT()
+        let (sut, decoratee, processor) = makeSUT()
         
-        expect(sut: sut, toDeliver: false) {
+        expect(sut: sut, toDeliver: nil) {
             
             decoratee.complete(with: makeResponse())
-            cache.complete(with: false)
+            processor.complete(with: nil)
         }
     }
     
-    func test_load_shouldNotDeliverCacheResultOnInstanceDeallocation() {
+    func test_load_shouldNotDeliverProcessorResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let decoratee: Decoratee
-        let cache: Cache
-        (sut, decoratee, cache) = makeSUT()
-        var result: Bool?
+        let processor: Processor
+        (sut, decoratee, processor) = makeSUT()
+        var result: Response?
         
         sut?.load(makePayload()) { result = $0 }
         decoratee.complete(with: makeResponse())
         sut = nil
-        cache.complete(with: false)
+        processor.complete(with: nil)
         
         XCTAssertNil(result)
     }
     
-    func test_load_shouldDeliverTrueOnDecorateeSuccessCacheSuccess() {
+    func test_load_shouldDeliverResponseOnDecorateeSuccessProcessorSuccess() {
         
-        let (sut, decoratee, cache) = makeSUT()
+        let response = makeResponse()
+        let (sut, decoratee, processor) = makeSUT()
         
-        expect(sut: sut, toDeliver: true) {
+        expect(sut: sut, toDeliver: response) {
             
-            decoratee.complete(with: makeResponse())
-            cache.complete(with: true)
+            decoratee.complete(with: response)
+            processor.complete(with: response)
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = CachingDecorator<Payload, Response>
+    private typealias SUT = ProcessingDecorator<Payload, Response>
     private typealias Decoratee = Spy<Payload, Response?>
-    private typealias Cache = Spy<Response, Bool>
+    private typealias Processor = Spy<Response, Response?>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -127,19 +128,19 @@ final class CachingDecoratorTests: XCTestCase {
     ) -> (
         sut: SUT,
         decoratee: Decoratee,
-        cache: Cache
+        processor: Processor
     ) {
         let decoratee = Decoratee()
-        let cache = Cache()
+        let processor = Processor()
         let sut = SUT(
             decoratee: decoratee.process,
-            cache: cache.process
+            processor: processor.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(decoratee, file: file, line: line)
         
-        return (sut, decoratee, cache)
+        return (sut, decoratee, processor)
     }
     
     private struct Payload: Equatable {
@@ -169,7 +170,7 @@ final class CachingDecoratorTests: XCTestCase {
     private func expect(
         sut: SUT,
         with payload: Payload? = nil,
-        toDeliver expected: Bool,
+        toDeliver expected: Response?,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -179,7 +180,7 @@ final class CachingDecoratorTests: XCTestCase {
         
         sut.load(payload ?? makePayload()) {
             
-            XCTAssertNoDiff($0, expected, "Expected \(expected), but got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff($0, expected, "Expected \(String(describing: expected)), but got \(String(describing: $0)) instead.", file: file, line: line)
             exp.fulfill()
         }
         
