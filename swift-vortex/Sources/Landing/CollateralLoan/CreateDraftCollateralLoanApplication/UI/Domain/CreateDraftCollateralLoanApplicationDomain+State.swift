@@ -9,6 +9,18 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     public struct State: Equatable {
         
-        public init() {}
+        public let data: CreateDraftCollateralLoanApplicationUIData
+        
+        public init(data: CreateDraftCollateralLoanApplicationUIData) {
+         
+            self.data = data
+        }
     }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.State {
+    
+    public static let preview = Self(
+        data: .preview
+    )
 }

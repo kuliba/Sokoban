@@ -7,18 +7,32 @@
 
 import SwiftUI
 
-struct CreateDraftCollateralLoanApplicationView: View {
+public struct CreateDraftCollateralLoanApplicationView: View {
     
-    let data: Data
+    let state: DomainState
+    let event: (Event) -> Void
     let config: Config
     let factory: Factory
     
-    var body: some View {
-
+    public init(
+        state: DomainState,
+        event: @escaping (Event) -> Void,
+        config: Config,
+        factory: Factory
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.factory = factory
+    }
+    
+    public var body: some View {
+        
         ScrollView {
             
             CreateDraftCollateralLoanApplicationHeaderView(
-                data: data,
+                state: state,
+                event: event,
                 config: config,
                 factory: factory
             )
@@ -26,10 +40,14 @@ struct CreateDraftCollateralLoanApplicationView: View {
             Spacer()
         }
     }
+}
+
+extension CreateDraftCollateralLoanApplicationView {
     
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationData
+    public typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    public typealias Config = CreateDraftCollateralLoanApplicationConfig
+    public typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
 
 // MARK: - Previews
@@ -39,9 +57,10 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView(
-            data: .preview,
-            config: .preview,
-            factory: Factory.preview
+            state: .preview,
+            event: { print($0) },
+            config: .default,
+            factory: .preview
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
     }

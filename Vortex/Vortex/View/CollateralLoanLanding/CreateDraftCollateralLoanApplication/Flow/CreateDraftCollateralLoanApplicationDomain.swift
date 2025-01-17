@@ -14,7 +14,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
     // MARK: - Binder
     
     typealias Binder = Vortex.Binder<Content, Flow>
-    typealias BinderComposer = Vortex.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
