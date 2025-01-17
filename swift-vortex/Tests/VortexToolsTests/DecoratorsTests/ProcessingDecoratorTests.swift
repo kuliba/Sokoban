@@ -139,6 +139,7 @@ final class ProcessingDecoratorTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(decoratee, file: file, line: line)
+        trackForMemoryLeaks(processor, file: file, line: line)
         
         return (sut, decoratee, processor)
     }
