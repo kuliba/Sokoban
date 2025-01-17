@@ -21,6 +21,7 @@ import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
 import VortexTools
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -270,7 +271,8 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
+                makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
+                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0)) }
             )
 
             CollateralLoanShowcaseView(binder: binder, factory: factory)

@@ -12,6 +12,7 @@ import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import UIPrimitives
 import Combine
 
@@ -142,7 +143,9 @@ final class MainViewModelTests: XCTestCase {
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                makeSavingsAccountBinder: { fatalError() }
             ),
             makeOpenNewProductButtons: { _ in [] }
         )
@@ -778,6 +781,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCollateralLoanLandingBinder: { _ in
                     collateralLandingSpy.call()
                 }, 
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview},
                 makeSavingsAccountBinder: { fatalError() }
             ),
             makeOpenNewProductButtons: { _ in buttons },
@@ -832,7 +836,8 @@ final class MainViewModelTests: XCTestCase {
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
             makeOpenNewProductButtons: { _ in buttons }
@@ -880,6 +885,7 @@ final class MainViewModelTests: XCTestCase {
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
             makeOpenNewProductButtons: { _ in buttons },
@@ -946,6 +952,7 @@ final class MainViewModelTests: XCTestCase {
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
             makeOpenNewProductButtons: { _ in buttons },
@@ -1108,6 +1115,35 @@ private extension GetShowcaseDomain.Flow {
 private extension GetShowcaseDomain.Content {
     
     static let preview: GetShowcaseDomain.Content = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
+
+private extension CreateDraftCollateralLoanApplicationDomain.Binder {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Content {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Flow {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
         initialState: .init(),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }

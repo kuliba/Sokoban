@@ -21,7 +21,8 @@ public struct GetCollateralLandingConfig {
     let faq: DropDownTextListConfig
     let documents: Documents
     let footer: Footer
-    let bottomSheet: BottomSheet
+    
+    public let bottomSheet: BottomSheet
         
     struct Fonts {
         

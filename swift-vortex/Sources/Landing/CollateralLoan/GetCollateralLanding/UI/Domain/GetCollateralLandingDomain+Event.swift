@@ -15,11 +15,10 @@ extension GetCollateralLandingDomain {
 
     public enum Event: Equatable {
         
+        case changeDesiredAmount(UInt)
         case load(String)
         case loaded(Result)
-        case selectCaseList(String)
-        case changeDesiredAmount(UInt)
-        case createDraftApplication
+        case selectCaseList(String, String)
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
         case toggleIHaveSalaryInCompany(Bool)
@@ -27,12 +26,16 @@ extension GetCollateralLandingDomain {
         
     public enum ExternalEvent: Equatable {
         
+        case createDraftApplication(String)
         case showCaseList(CaseType)
         
         public enum CaseType: Equatable {
             
-            case period
-            case deposit
+            case periods([Period])
+            case collaterals([Collateral])
         }
     }
+    
+    public typealias Period = GetCollateralLandingProduct.Calc.Rate
+    public typealias Collateral = GetCollateralLandingProduct.Calc.Collateral
 }

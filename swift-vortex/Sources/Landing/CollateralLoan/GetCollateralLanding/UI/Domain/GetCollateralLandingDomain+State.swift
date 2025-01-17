@@ -11,21 +11,21 @@ extension GetCollateralLandingDomain {
     
     public struct State: Equatable {
         
+        public let landingID: String
+        public var bottomSheet: BottomSheet?
+
         var isLoading = false
         var result: Result?
-        var bottomSheet: BottomSheet?
-        public let landingID: String
-        
+        var iHaveSalaryInCompany = false
+        var selectedCollateral: String?
+        var selectedMonthPeriod: UInt?
+
         public init(
-            isLoading: Bool = false,
-            result: Result? = nil,
-            bottomSheet: BottomSheet? = nil,
-            landingID: String
+            landingID: String,
+            bottomSheet: BottomSheet? = nil
         ) {
-            self.isLoading = isLoading
-            self.result = result
-            self.bottomSheet = bottomSheet
             self.landingID = landingID
+            self.bottomSheet = bottomSheet
         }
     }
 }
@@ -37,15 +37,20 @@ extension GetCollateralLandingDomain.State {
         public let id = UUID()
         public let sheetType: SheetType
         
+        public init(sheetType: SheetType) {
+            self.sheetType = sheetType
+        }
+        
         public enum SheetType: Equatable {
             
-            case periods([Period])
-            case collaterals([Collateral])
+            case periods
+            case collaterals
         }
         
         public struct Item: Equatable, Identifiable {
             
             public let id: String
+            
             let termMonth: UInt?
             let icon: String?
             let title: String
@@ -58,6 +63,22 @@ extension GetCollateralLandingDomain.State {
     var product: Product? {
 
         try? result?.get()
+    }
+    
+    var bottomSheetItems: [BottomSheet.Item] {
+        
+        guard
+            let product,
+            let bottomSheet
+        else { return [] }
+        
+        switch bottomSheet.sheetType {
+        case .periods:
+            return product.calc.rates.map(\.bottomSheetItem)
+
+        case .collaterals:
+            return product.calc.collaterals.map(\.bottomSheetItem)
+        }
     }
 }
 

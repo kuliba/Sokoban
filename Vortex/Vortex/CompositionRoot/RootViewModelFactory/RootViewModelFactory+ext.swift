@@ -778,6 +778,7 @@ private extension RootViewModelFactory {
                 bannersBinder: bannersBinder,
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
             makeOpenNewProductButtons: makeOpenNewProductButtons,

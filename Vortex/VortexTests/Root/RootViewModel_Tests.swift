@@ -10,6 +10,7 @@ import PayHub
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import UIPrimitives
 import Combine
 
@@ -58,7 +59,9 @@ class RootViewModel_Tests: XCTestCase {
                     bindersFactory: .init(
                         bannersBinder: .preview,
                         makeCollateralLoanShowcaseBinder: { .preview },
-                        makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+                        makeCollateralLoanLandingBinder: { _ in .preview },
+                        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                        makeSavingsAccountBinder: { fatalError() }
                     ),
                     makeOpenNewProductButtons: { _ in [] }
                 ),
@@ -195,6 +198,35 @@ private extension GetShowcaseDomain.Content {
         initialState: .init(),
         reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
         handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+    )
+}
+
+// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
+
+private extension CreateDraftCollateralLoanApplicationDomain.Binder {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Content {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Flow {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

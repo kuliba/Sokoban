@@ -5,7 +5,6 @@
 //  Created by Valentin Ozerov on 12.12.2024.
 //
 
-import BottomSheetComponent
 import Combine
 import SwiftUI
 
@@ -47,38 +46,7 @@ public struct GetCollateralLandingView: View {
             .ignoresSafeArea()
         }
     }
-    
-    // TODO: move it to main target
-//    private func bottomSheet(_ bottomSheet: State.BottomSheet) -> some View {
-//        
-//        switch bottomSheet.sheetType {
-//        case let .periods(period):
-//            return BottomSheetView(
-//                items: period.map(\.bottomSheetItem),
-//                config: factory.config.bottomSheet,
-//                makeImageView: factory.makeImageView
-//            ) {
-//                switch $0 {
-//                case .selectMonthPeriod(let termMonth):
-//                    domainEvent(.selectMonthPeriod(termMonth))
-//                default: break
-//                }
-//            }
-//        case let .collaterals(collateral):
-//            return BottomSheetView(
-//                items: collateral.map(\.bottomSheetItem),
-//                config: factory.config.bottomSheet,
-//                makeImageView: factory.makeImageView
-//            ) {
-//                switch $0 {
-//                case .selectCollateral(let collateral):
-//                    domainEvent(.selectCollateral(collateral))
-//                default: break
-//                }
-//            }
-//        }
-//    }
-    
+        
     private var bottomSheetItem: Binding<State.BottomSheet?> {
         
     .init(
@@ -90,7 +58,7 @@ public struct GetCollateralLandingView: View {
         
         VStack {
             
-            factory.makeImageView(product.marketing.image)
+            factory.makeImageViewByURL(product.marketing.image)
                 .frame(height: factory.config.backgroundImageHeight)
             
             Spacer()
@@ -111,12 +79,13 @@ public struct GetCollateralLandingView: View {
                 ConditionsView(
                     product: product,
                     config: factory.config,
-                    makeImageView: factory.makeImageView
+                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
                 )
             }
             
             CalculatorView(
                 state: state,
+                product: product,
                 config: factory.config,
                 domainEvent: domainEvent,
                 externalEvent: externalEvent
@@ -132,13 +101,14 @@ public struct GetCollateralLandingView: View {
                 DocumentsView(
                     product: product,
                     config: factory.config,
-                    makeImageView: factory.makeImageView)
+                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
+                )
             }
             
             FooterView(
                 config: factory.config.footer,
                 state: state,
-                domainEvent: domainEvent
+                externalEvent: externalEvent
             )
         }
         .background(Color.clear)
@@ -182,12 +152,12 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         )
         .previewDisplayName("Product with calculator")
 
-        let periodBottomSheet = State.BottomSheet(sheetType: .periods(carStub.calc.rates))
+        let periodBottomSheet = State.BottomSheet(sheetType: .periods)
         
         GetCollateralLandingView(
             state: .init(
-                bottomSheet: periodBottomSheet,
-                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: periodBottomSheet
             ),
             domainEvent: { print($0) },
             externalEvent: {
@@ -197,12 +167,12 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         )
         .previewDisplayName("Product period selector")
         
-        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals(carStub.calc.collaterals))
+        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals)
 
         GetCollateralLandingView(
             state: .init(
-                bottomSheet: collateralBottomSheet,
-                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: collateralBottomSheet
             ),
             domainEvent: {
                 print($0)
