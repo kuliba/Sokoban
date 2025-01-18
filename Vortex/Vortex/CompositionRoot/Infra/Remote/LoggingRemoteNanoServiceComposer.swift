@@ -179,40 +179,39 @@ extension LoggingRemoteNanoServiceComposer {
             let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
             let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
             
-            do {
-                let request = try createRequest(serial)
+            guard let request = try? createRequest(serial)
+            else {
+                // Invoke the completion with nil if an error occurs during request creation
+                return completion(.failure(SerialResultLoadError.urlRequestCreationFailure))
+            }
+            
+            let lastPathComponent = request.url?.lastPathComponent ?? ""
+            
+            httpClient.performRequest(request) { [logger] result in
                 
-                let lastPathComponent = request.url?.lastPathComponent ?? ""
-                
-                httpClient.performRequest(request) { [logger] result in
+                switch result {
+                case let .failure(failure):
+                    logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
+                    completion(.failure(SerialResultLoadError.performRequestFailure))
                     
-                    switch result {
-                    case let .failure(failure):
-                        logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
-                        completion(.failure(SerialResultLoadError.performRequestFailure))
+                case let .success((data, response)):
+                    switch mapResponse(data, response) {
+                    case .failure:
+                        completion(.failure(SerialResultLoadError.mapResponseFailure))
                         
-                    case let .success((data, response)):
-                        switch mapResponse(data, response) {
-                        case .failure:
-                            completion(.failure(SerialResultLoadError.mapResponseFailure))
-                            
-                        case let .success(stamped):
-                            // Check if the stamped serial is different from the input serial
-                            if stamped.serial == serial {
-                                logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has same serial.", file: file, line: line)
-                                // If serials are the same, invoke the completion with failure
-                                completion(.failure(SerialResultLoadError.noNewDataFailure))
-                            } else {
-                                logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has different serial.", file: file, line: line)
-                                // If serials are different, invoke the completion with the new stamped value
-                                completion(.success(stamped))
-                            }
+                    case let .success(stamped):
+                        // Check if the stamped serial is different from the input serial
+                        if stamped.serial == serial {
+                            logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has same serial.", file: file, line: line)
+                            // If serials are the same, invoke the completion with failure
+                            completion(.failure(SerialResultLoadError.noNewDataFailure))
+                        } else {
+                            logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has different serial.", file: file, line: line)
+                            // If serials are different, invoke the completion with the new stamped value
+                            completion(.success(stamped))
                         }
                     }
                 }
-            } catch {
-                // Invoke the completion with nil if an error occurs during request creation
-                completion(.failure(SerialResultLoadError.urlRequestCreationFailure))
             }
         }
     }
