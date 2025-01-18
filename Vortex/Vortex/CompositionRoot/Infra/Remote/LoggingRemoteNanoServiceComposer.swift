@@ -122,7 +122,6 @@ extension LoggingRemoteNanoServiceComposer {
             
             guard let request = try? createRequest(serial)
             else {
-                logger.log(level: .error, category: .network, message: "Request creation failure.", file: file, line: line)
                 // Invoke the completion with nil if an error occurs during request creation
                 return completion(nil)
             }

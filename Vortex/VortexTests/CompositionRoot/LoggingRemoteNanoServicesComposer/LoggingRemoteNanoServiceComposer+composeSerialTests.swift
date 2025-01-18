@@ -66,12 +66,12 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         expect(
             sut,
-            createRequest: { _ in throw anyError() },
+            createRequest: { _ in throw TestFailure() },
             mapResponse: { _,_ in .failure(self.makeFailure()) },
             with: anyMessage(),
             assert: { _ in
                 
-                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "Request creation failure."))
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "RemoteService: TestFailure()"))
             },
             on: ()
         )
@@ -117,9 +117,9 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             with: anyMessage(),
             assert: { _ in
                 
-                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "Perform request \(url.lastPathComponent) failure: HTTPFailure()."))
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "Perform request \(url.lastPathComponent) failure: TestFailure()."))
             },
-            on: httpClientSpy.complete(with: HTTPFailure())
+            on: httpClientSpy.complete(with: TestFailure())
         )
     }
     
@@ -333,7 +333,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         return .success(makeStamped(value: value, serial: serial))
     }
     
-    private struct HTTPFailure: Error {}
+    private struct TestFailure: Error {}
     
     private func expect(
         _ sut: SUT,
