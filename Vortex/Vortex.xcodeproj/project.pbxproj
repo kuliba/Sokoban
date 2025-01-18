@@ -536,6 +536,8 @@
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A29666C2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */; };
 		2A29666E2CABE0CA0030EC0B /* QRNavigationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */; };
+		2A29B0B82D3B94E100EAD554 /* SerialStamped+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0B72D3B94E100EAD554 /* SerialStamped+description.swift */; };
+		2A29B0BC2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
 		2A2B91E82C7CBA42008F5186 /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91E62C7CBA2E008F5186 /* PlaceholderView.swift */; };
@@ -4157,6 +4159,8 @@
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCategoryPickerSection.swift"; sourceTree = "<group>"; };
 		2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerTests.swift; sourceTree = "<group>"; };
+		2A29B0B72D3B94E100EAD554 /* SerialStamped+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialStamped+description.swift"; sourceTree = "<group>"; };
+		2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialStampedCustomStringConvertibleTests.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A2B91E12C7CB894008F5186 /* CategoryPickerSectionContentViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionContentViewConfig+iVortex.swift"; sourceTree = "<group>"; };
@@ -9000,6 +9004,31 @@
 			path = Transfers;
 			sourceTree = "<group>";
 		};
+		2A29B0B62D3B94C100EAD554 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
+				2A29B0B72D3B94E100EAD554 /* SerialStamped+description.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		2A29B0B92D3B9CF500EAD554 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		2A29B0BA2D3B9D0900EAD554 /* Infra */ = {
+			isa = PBXGroup;
+			children = (
+				2A29B0B92D3B9CF500EAD554 /* Logging */,
+			);
+			path = Infra;
+			sourceTree = "<group>";
+		};
 		2A2B91D92C7CB50A008F5186 /* v1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -11029,17 +11058,20 @@
 		2A7688D42AF3A72000045293 /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
-				833245DE2CAC56DC001AFF9D /* MarketShowcase */,
-				839331A22C90312700D15379 /* LoadBannersList */,
 				2A0439C42BB405F40063B7AB /* AnywayPayment */,
 				2A7688D52AF3A73600045293 /* CVVPIN */,
 				2A65FB442B4E862000A84F9E /* FastPayments */,
 				2AD8E5462C116EE100C31E48 /* FeatureFlags */,
 				D4A5A79D2BAA58BD006EE7A5 /* GetProductListByType */,
 				2A9049492C32696F00313CB8 /* ImageLoader */,
+				2A29B0BA2D3B9D0900EAD554 /* Infra */,
+				839331A22C90312700D15379 /* LoadBannersList */,
 				2AF718D92C74C25B00511C02 /* LoadLatestOperations */,
+				2A42B4022C8D64EF00A9B658 /* LoggingRemoteNanoServicesComposer */,
+				833245DE2CAC56DC001AFF9D /* MarketShowcase */,
 				2A35DDA62C021A5C00EFF0EB /* PaymentsTransfers */,
 				2ACFD65C2C5CCA65003F08AE /* QR */,
+				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
 				2A72ACC22CC6CC6100B8BF5B /* RootViewModelFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
@@ -11047,8 +11079,6 @@
 				2A7CA21E2C92154F00B900E9 /* SerialServices */,
 				2A94AAFC2C8F79D6003B4FB1 /* Services */,
 				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
-				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
-				2A42B4022C8D64EF00A9B658 /* LoggingRemoteNanoServicesComposer */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -12922,7 +12952,7 @@
 				2A4074872CBA922E0027D7C3 /* GenericLoaderOf.swift */,
 				2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */,
 				2A3417852B7CAD66002FAAFC /* KeyChainStore+Bool.swift */,
-				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
+				2A29B0B62D3B94C100EAD554 /* Logging */,
 				2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */,
 				2A94991E2B7362A700C67F05 /* NanoServices */,
 				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
@@ -22629,6 +22659,7 @@
 				505E711E2948D4CA00AAB895 /* ButtonOrderViewComponent.swift in Sources */,
 				2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */,
 				2A1F084C2A79049E00C5B11B /* Services.swift in Sources */,
+				2A29B0B82D3B94E100EAD554 /* SerialStamped+description.swift in Sources */,
 				C10CE65D29070CDF00FC5706 /* TextViewPhoneNumberViewComponent.swift in Sources */,
 				2A61D0672BECB65A00802C95 /* UtilityPrepaymentViewModel.swift in Sources */,
 				83E45EC82D01CA4200158F64 /* FlowView.swift in Sources */,
@@ -23116,6 +23147,7 @@
 				2A1F086A2A7A2E1A00C5B11B /* PublicTransportKeyTests.swift in Sources */,
 				2A0439C72BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift in Sources */,
 				77B6B35D2852286500E3001B /* ProductStatementsStorageTests.swift in Sources */,
+				2A29B0BC2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift in Sources */,
 				2AC6D7392D05FBF7008C11A2 /* ProvidersTests.swift in Sources */,
 				2A3BD6252B6D3501009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift in Sources */,
 				2A1F08572A7905B500C5B11B /* Services+getProcessingSessionCodeTests.swift in Sources */,
