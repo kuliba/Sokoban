@@ -129,10 +129,8 @@ extension LoggingRemoteNanoServiceComposer {
             
             let lastPathComponent = request.url?.lastPathComponent ?? ""
             
-            httpClient.performRequest(request) { [weak self] result in
-                
-                guard let self else { return }
-                
+            httpClient.performRequest(request) { [logger] result in
+                                
                 switch result {
                 case let .failure(failure):
                     logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
