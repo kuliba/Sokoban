@@ -1,5 +1,5 @@
 //
-//  LoggingRemoteNanoServiceComposer+composeSerialTests.swift
+//  LoggingRemoteNanoServiceComposer+composeSerialLoadTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 18.10.2024.
@@ -8,7 +8,7 @@
 @testable import Vortex
 import XCTest
 
-final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
+final class LoggingRemoteNanoServiceComposer_composeSerialLoadTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -22,7 +22,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     func test_composeSerial_shouldCallCreateRequestWithNilOnNilSerial() {
         
         let createRequestSpy = CreateRequestSpy(stubs: [anyURLRequest()])
-        let composed: SerialLoad = makeSUT().sut.composeSerial(
+        let composed: SerialLoad = makeSUT().sut.composeSerialLoad(
             createRequest: createRequestSpy.call(payload:),
             mapResponse: { _,_ in .failure(anyError()) }
         )
@@ -36,7 +36,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         let serial = anyMessage()
         let createRequestSpy = CreateRequestSpy(stubs: [anyURLRequest()])
-        let composed: SerialLoad = makeSUT().sut.composeSerial(
+        let composed: SerialLoad = makeSUT().sut.composeSerialLoad(
             createRequest: createRequestSpy.call(payload:),
             mapResponse: { _,_ in .failure(anyError()) }
         )
@@ -81,7 +81,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         let request = anyURLRequest()
         let (sut, httpClientSpy, _) = makeSUT()
-        let composed: SerialLoad = sut.composeSerial(
+        let composed: SerialLoad = sut.composeSerialLoad(
             createRequest: { _ in request },
             mapResponse: { _,_ in .failure(anyError()) }
         )
@@ -364,7 +364,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         on action: @autoclosure () -> Void,
         timeout: TimeInterval = 1
     ) {
-        let composed: SerialLoad = sut.composeSerial(
+        let composed: SerialLoad = sut.composeSerialLoad(
             createRequest: createRequest,
             mapResponse: mapResponse
         )

@@ -108,7 +108,7 @@ extension LoggingRemoteNanoServiceComposer {
     ///   - file: The file from which this function is called (for logging purposes). Defaults to the current file.
     ///   - line: The line number from which this function is called (for logging purposes). Defaults to the current line.
     /// - Returns: A `SerialLoad<T>` closure that can be called with a serial and a completion handler.
-    func composeSerial<T, MapResponseError: Error>(
+    func composeSerialLoad<T, MapResponseError: Error>(
         createRequest: @escaping (String?) throws -> URLRequest,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
         file: StaticString = #file,
