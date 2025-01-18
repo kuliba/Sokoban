@@ -17,8 +17,8 @@ extension RootViewModelFactory {
     ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
-        let personal = makePaymentsTransfersPersonal(nanoServices)
-        let categoryPicker = personal.content.categoryPicker.sectionBinder
+        let content = makePaymentsTransfersPersonalContent(nanoServices)
+        let categoryPicker = content.categoryPicker.sectionBinder
         
         let notifyPicker = { [weak self, weak categoryPicker] in
             
@@ -26,6 +26,13 @@ extension RootViewModelFactory {
             
             notify(categoryPicker: categoryPicker, with: $0)
         }
+        
+        let personal = composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getPaymentsTransfersPersonalNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
         
         return (personal, { nanoServices.reloadCategories(notifyPicker) })
     }
@@ -45,21 +52,6 @@ extension RootViewModelFactory {
             loadCategories: loadCategories,
             reloadCategories: reloadCategories,
             loadAllLatest: makeLoadLatestOperations(.all)
-        )
-    }
-    
-    @inlinable
-    func makePaymentsTransfersPersonal(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonalDomain.Binder {
-        
-        let content = makePaymentsTransfersPersonalContent(nanoServices)
-        
-        return composeBinder(
-            content: content,
-            delayProvider: delayProvider,
-            getNavigation: getPaymentsTransfersPersonalNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
     
