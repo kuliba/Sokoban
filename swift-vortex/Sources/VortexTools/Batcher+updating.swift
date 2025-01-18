@@ -20,6 +20,8 @@ public extension Batcher {
     /// completes successfully (`.completed`), or fails (`.failed`). If the load result is `nil` or an empty array,
     /// the parameter is treated as a failure.
     ///
+    /// Items are processed **sequentially**: the next item begins loading only after the previous item has finished.
+    ///
     /// - Parameters:
     ///   - load: A closure that performs an asynchronous loading operation for a given parameter.
     ///   - update: A closure that updates the state (`LoadState`) of the given parameter during the loading process.
