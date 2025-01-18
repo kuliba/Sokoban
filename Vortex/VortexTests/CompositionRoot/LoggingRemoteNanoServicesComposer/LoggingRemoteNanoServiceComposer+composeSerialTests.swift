@@ -21,16 +21,15 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     
     func test_composeSerial_shouldCallCreateRequestWithNilOnNilSerial() {
         
-        let serial: String? = nil
         let createRequestSpy = CreateRequestSpy(stubs: [anyURLRequest()])
         let composed: SerialLoad = makeSUT().sut.composeSerial(
             createRequest: createRequestSpy.call(payload:),
             mapResponse: { _,_ in .failure(anyError()) }
         )
         
-        composed(serial) { _ in }
+        composed(nil) { _ in }
         
-        XCTAssertNoDiff(createRequestSpy.payloads, [serial])
+        XCTAssertNoDiff(createRequestSpy.payloads, [nil])
     }
     
     func test_composeSerial_shouldCallCreateRequestWithSerial() {
@@ -60,6 +59,23 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             on: ()
         )
     }
+
+    func test_composeSerial_shouldLogFailureOnCreateRequestFailure() {
+        
+        let (sut, _, loggerSpy) = makeSUT()
+        
+        expect(
+            sut,
+            createRequest: { _ in throw anyError() },
+            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            with: anyMessage(),
+            assert: { _ in
+                
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "Request creation failure."))
+            },
+            on: ()
+        )
+    }
     
     func test_composeSerial_shouldCallHTTPClientWithRequest() {
         
@@ -86,6 +102,24 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: anyError())
+        )
+    }
+    
+    func test_composeSerial_shouldLogFailureOnHTTPClientFailure() {
+        
+        let url = anyURL()
+        let (sut, httpClientSpy, loggerSpy) = makeSUT()
+        
+        expect(
+            sut,
+            createRequest: { _ in anyURLRequest(url: url) },
+            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            with: anyMessage(),
+            assert: { _ in
+                
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "Perform request \(url.lastPathComponent) failure: HTTPFailure()."))
+            },
+            on: httpClientSpy.complete(with: HTTPFailure())
         )
     }
     
@@ -243,6 +277,8 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         return .success(makeStamped(value: value, serial: serial))
     }
+    
+    private struct HTTPFailure: Error {}
     
     private func expect(
         _ sut: SUT,

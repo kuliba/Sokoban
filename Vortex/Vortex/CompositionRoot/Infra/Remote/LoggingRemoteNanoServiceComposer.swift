@@ -122,11 +122,15 @@ extension LoggingRemoteNanoServiceComposer {
             
             do {
                 let request = try createRequest(serial)
+                let lastPathComponent = request.url?.lastPathComponent ?? ""
                 
-                httpClient.performRequest(request) { result in
+                httpClient.performRequest(request) { [weak self] result in
+                    
+                    guard let self else { return }
                     
                     switch result {
-                    case .failure:
+                    case let .failure(failure):
+                        logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
                         completion(nil)
                         
                     case let .success((data, response)):
@@ -147,6 +151,7 @@ extension LoggingRemoteNanoServiceComposer {
                     }
                 }
             } catch {
+                logger.log(level: .error, category: .network, message: "Request creation failure.", file: file, line: line)
                 // Invoke the completion with nil if an error occurs during request creation
                 completion(nil)
             }
