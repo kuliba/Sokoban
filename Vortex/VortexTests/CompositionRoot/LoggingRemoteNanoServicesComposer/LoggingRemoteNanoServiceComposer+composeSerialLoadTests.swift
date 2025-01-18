@@ -22,7 +22,8 @@ final class LoggingRemoteNanoServiceComposer_composeSerialLoadTests: XCTestCase 
     func test_composeSerial_shouldCallCreateRequestWithNilOnNilSerial() {
         
         let createRequestSpy = CreateRequestSpy(stubs: [anyURLRequest()])
-        let composed: SerialLoad = makeSUT().sut.composeSerialLoad(
+        let sut = makeSUT().sut
+        let composed: SerialLoad = sut.composeSerialLoad(
             createRequest: createRequestSpy.call(payload:),
             mapResponse: { _,_ in .failure(anyError()) }
         )
@@ -30,13 +31,15 @@ final class LoggingRemoteNanoServiceComposer_composeSerialLoadTests: XCTestCase 
         composed(nil) { _ in }
         
         XCTAssertNoDiff(createRequestSpy.payloads, [nil])
+        XCTAssertNotNil(sut)
     }
     
     func test_composeSerial_shouldCallCreateRequestWithSerial() {
         
         let serial = anyMessage()
         let createRequestSpy = CreateRequestSpy(stubs: [anyURLRequest()])
-        let composed: SerialLoad = makeSUT().sut.composeSerialLoad(
+        let sut = makeSUT().sut
+        let composed: SerialLoad = sut.composeSerialLoad(
             createRequest: createRequestSpy.call(payload:),
             mapResponse: { _,_ in .failure(anyError()) }
         )
@@ -44,6 +47,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialLoadTests: XCTestCase 
         composed(serial) { _ in }
         
         XCTAssertNoDiff(createRequestSpy.payloads, [serial])
+        XCTAssertNotNil(sut)
     }
     
     func test_composeSerial_shouldDeliverFailureOnCreateRequestFailure() {
