@@ -129,7 +129,7 @@ extension LoggingRemoteNanoServiceComposer {
             let lastPathComponent = request.url?.lastPathComponent ?? ""
             
             httpClient.performRequest(request) { [logger] result in
-                                
+                
                 switch result {
                 case let .failure(failure):
                     logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
@@ -147,8 +147,8 @@ extension LoggingRemoteNanoServiceComposer {
                             // If serials are the same, invoke the completion with nil
                             completion(nil)
                         } else {
-                            // If serials are different, invoke the completion with the new stamped value
                             logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has different serial.", file: file, line: line)
+                            // If serials are different, invoke the completion with the new stamped value
                             completion(stamped)
                         }
                     }
@@ -164,7 +164,7 @@ extension LoggingRemoteNanoServiceComposer {
     
     /// A closure type representing a function that takes an optional `String` serial and a completion handler.
     typealias SerialResultLoad<T> = (String?, @escaping SerialResultLoadCompletion<T>) -> Void
-
+    
     func composeSerialResultLoad<T, MapResponseError: Error>(
         createRequest: @escaping (String?) throws -> URLRequest,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
@@ -182,10 +182,13 @@ extension LoggingRemoteNanoServiceComposer {
             do {
                 let request = try createRequest(serial)
                 
-                httpClient.performRequest(request) { result in
+                let lastPathComponent = request.url?.lastPathComponent ?? ""
+                
+                httpClient.performRequest(request) { [logger] result in
                     
                     switch result {
-                    case .failure:
+                    case let .failure(failure):
+                        logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
                         completion(.failure(SerialResultLoadError.performRequestFailure))
                         
                     case let .success((data, response)):
@@ -196,9 +199,11 @@ extension LoggingRemoteNanoServiceComposer {
                         case let .success(stamped):
                             // Check if the stamped serial is different from the input serial
                             if stamped.serial == serial {
-                                // If serials are the same, invoke the completion with nil
+                                logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has same serial.", file: file, line: line)
+                                // If serials are the same, invoke the completion with failure
                                 completion(.failure(SerialResultLoadError.noNewDataFailure))
                             } else {
+                                logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has different serial.", file: file, line: line)
                                 // If serials are different, invoke the completion with the new stamped value
                                 completion(.success(stamped))
                             }

@@ -538,6 +538,7 @@
 		2A29666E2CABE0CA0030EC0B /* QRNavigationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */; };
 		2A29B0B82D3B94E100EAD554 /* SerialStamped+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0B72D3B94E100EAD554 /* SerialStamped+description.swift */; };
 		2A29B0BC2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */; };
+		2A29B0BE2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0BD2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
 		2A2B91E82C7CBA42008F5186 /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91E62C7CBA2E008F5186 /* PlaceholderView.swift */; };
@@ -4161,6 +4162,7 @@
 		2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerTests.swift; sourceTree = "<group>"; };
 		2A29B0B72D3B94E100EAD554 /* SerialStamped+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialStamped+description.swift"; sourceTree = "<group>"; };
 		2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialStampedCustomStringConvertibleTests.swift; sourceTree = "<group>"; };
+		2A29B0BD2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift"; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A2B91E12C7CB894008F5186 /* CategoryPickerSectionContentViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionContentViewConfig+iVortex.swift"; sourceTree = "<group>"; };
@@ -9848,6 +9850,7 @@
 			children = (
 				2A42B4052C8D653700A9B658 /* LoggingRemoteNanoServiceComposerTests.swift */,
 				2A00A5122CC2477A008268E4 /* LoggingRemoteNanoServiceComposer+composeSerialLoadTests.swift */,
+				2A29B0BD2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift */,
 			);
 			path = LoggingRemoteNanoServicesComposer;
 			sourceTree = "<group>";
@@ -23132,6 +23135,7 @@
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
 				2AA309612B9086D900C2FE42 /* Model+loadOperatorsTests.swift in Sources */,
 				2AFF320B2D034091006DD60C /* CodableServicePaymentOperator+matchesTests.swift in Sources */,
+				2A29B0BE2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift in Sources */,
 				2AD109652CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift in Sources */,
 				77A76A7E27FB036200A271B3 /* ServerCommandsAtmTests.swift in Sources */,
 				0BDDFE05290028910045CDC6 /* QRCodeTests.swift in Sources */,
