@@ -171,6 +171,23 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         )
     }
     
+    func test_composeSerial_shouldLogFailureOnMapResponseFailure() {
+        
+        let (sut, httpClientSpy, loggerSpy) = makeSUT()
+        
+        expect(
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in .failure(self.makeFailure("mapping-failure")) },
+            with: anyMessage(),
+            assert: { _ in
+                
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .error, category: .network, message: "RemoteService: response mapping failure Failure(value: \"mapping-failure\")"))
+            },
+            on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        )
+    }
+    
     func test_composeSerial_shouldDeliverFailureOnSameSerial() {
         
         let serial = anyMessage()
@@ -186,6 +203,25 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         )
     }
     
+    func test_composeSerial_shouldLogFailureOnSameSerial() {
+        
+        let serial = anyMessage()
+        let url = anyURL()
+        let (sut, httpClientSpy, loggerSpy) = makeSUT()
+        
+        expect(
+            sut,
+            createRequest: { _ in anyURLRequest(url: url) },
+            mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) },
+            with: serial,
+            assert: { _ in
+                
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .info, category: .network, message: "Response for \(url.lastPathComponent) has same serial."))
+            },
+            on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        )
+    }
+    
     func test_composeSerial_shouldDeliverStampedOnDifferentSerial() {
         
         let stamped = makeStamped()
@@ -197,6 +233,25 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             mapResponse: { _,_ in self.makeStampedSuccess(stamped) },
             with: anyMessage(),
             assert: { XCTAssertNoDiff($0, stamped) },
+            on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        )
+    }
+    
+    func test_composeSerial_shouldLogSuccessOnDifferentSerial() {
+        
+        let stamped = makeStamped()
+        let url = anyURL()
+        let (sut, httpClientSpy, loggerSpy) = makeSUT()
+
+        expect(
+            sut,
+            createRequest: { _ in anyURLRequest(url: url) },
+            mapResponse: { _,_ in self.makeStampedSuccess(stamped) },
+            with: anyMessage(),
+            assert: { _ in
+                
+                XCTAssertNoDiff(loggerSpy.events.last, .init(level: .info, category: .network, message: "Response for \(url.lastPathComponent) has different serial."))
+            },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
         )
     }

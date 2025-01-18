@@ -144,10 +144,12 @@ extension LoggingRemoteNanoServiceComposer {
                     case let .success(stamped):
                         // Check if the stamped serial is different from the input serial
                         if stamped.serial == serial {
+                            logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has same serial.", file: file, line: line)
                             // If serials are the same, invoke the completion with nil
                             completion(nil)
                         } else {
                             // If serials are different, invoke the completion with the new stamped value
+                            logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has different serial.", file: file, line: line)
                             completion(stamped)
                         }
                     }
