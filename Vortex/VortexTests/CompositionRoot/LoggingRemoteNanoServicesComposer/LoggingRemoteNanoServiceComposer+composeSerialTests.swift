@@ -53,13 +53,13 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in throw anyError() },
-            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            response: .failure(makeFailure()),
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: ()
         )
     }
-
+    
     func test_composeSerial_shouldLogFailureOnCreateRequestFailure() {
         
         let (sut, _, loggerSpy) = makeSUT()
@@ -67,7 +67,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in throw TestFailure() },
-            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            response: .failure(makeFailure()),
             with: anyMessage(),
             assert: { _ in
                 
@@ -98,7 +98,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            response: .failure(makeFailure()),
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: anyError())
@@ -113,7 +113,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest(url: url) },
-            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            response: .failure(makeFailure()),
             with: anyMessage(),
             assert: { _ in
                 
@@ -164,7 +164,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in .failure(self.makeFailure()) },
+            response: .failure(makeFailure()),
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
@@ -178,7 +178,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in .failure(self.makeFailure("mapping-failure")) },
+            response: .failure(makeFailure("mapping-failure")),
             with: anyMessage(),
             assert: { _ in
                 
@@ -196,7 +196,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) },
+            response: makeStampedSuccess(serial: serial),
             with: serial,
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
@@ -212,7 +212,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest(url: url) },
-            mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) },
+            response: makeStampedSuccess(serial: serial),
             with: serial,
             assert: { _ in
                 
@@ -230,7 +230,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         expect(
             sut,
             createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in self.makeStampedSuccess(stamped) },
+            response: makeStampedSuccess(stamped),
             with: anyMessage(),
             assert: { XCTAssertNoDiff($0, stamped) },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
@@ -242,11 +242,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         let stamped = makeStamped()
         let url = anyURL()
         let (sut, httpClientSpy, loggerSpy) = makeSUT()
-
+        
         expect(
             sut,
             createRequest: { _ in anyURLRequest(url: url) },
-            mapResponse: { _,_ in self.makeStampedSuccess(stamped) },
+            response: makeStampedSuccess(stamped),
             with: anyMessage(),
             assert: { _ in
                 
@@ -334,6 +334,26 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     }
     
     private struct TestFailure: Error {}
+    
+    private func expect(
+        _ sut: SUT,
+        createRequest: @escaping (String?) throws -> URLRequest,
+        response: Result<Stamped, Failure>,
+        with serial: String? = anyMessage(),
+        assert: @escaping (Stamped?) -> Void = { _ in },
+        on action: @autoclosure () -> Void,
+        timeout: TimeInterval = 1
+    ) {
+        expect(
+            sut,
+            createRequest: createRequest,
+            mapResponse: { _,_ in response },
+            with: serial,
+            assert: assert,
+            on: action(),
+            timeout: timeout
+        )
+    }
     
     private func expect(
         _ sut: SUT,
