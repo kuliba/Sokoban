@@ -115,6 +115,7 @@ extension RootViewFactoryComposer {
     
     private func clearCache() {
         
+        try? model.localAgent.clear(type: ServicePaymentOperatorStorage.self)
         try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
     }
     

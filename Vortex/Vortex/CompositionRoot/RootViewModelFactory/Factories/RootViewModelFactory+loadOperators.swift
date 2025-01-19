@@ -45,7 +45,10 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             // sorting is performed at cache phase
-            let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
+            let storage = model.localAgent.load(type: ServicePaymentOperatorStorage.self)
+            let items = storage?.items(for: payload.categoryType)
+            let page = items?.page(for: payload) ?? []
+            debugLog(pageCount: page.count, of: items?.count ?? 0)
             completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
     }

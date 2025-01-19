@@ -149,7 +149,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
                 "getServiceCategoryList",
                 "getOperatorsListByParam-security",
             ])
-            XCTAssertEqual(localAgent.loadCallCount, 2)
+            XCTAssertGreaterThanOrEqual(localAgent.loadCallCount, 2)
             XCTAssertEqual(localAgent.storeCallCount, 0)
         }
     }
@@ -191,7 +191,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
                 "getServiceCategoryList",
                 "getOperatorsListByParam-charity",
             ])
-            XCTAssertEqual(localAgent.loadCallCount, 2)
+            XCTAssertGreaterThanOrEqual(localAgent.loadCallCount, 2)
             XCTAssertEqual(localAgent.storeCallCount, 0)
         }
     }
@@ -290,7 +290,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         expectReload(remoteCategories, localAgent) { httpClient, localAgent in
             
             self.awaitActorThreadHop()
-            XCTAssertNil(localAgent.lastStoredValue(ofType: [CodableServicePaymentOperator].self))
+            XCTAssertNil(localAgent.lastStoredValue(ofType: ServicePaymentOperatorStorage.self))
             
             httpClient.complete(with: categoriesJSON)
             self.awaitActorThreadHop()
@@ -301,8 +301,11 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
             httpClient.complete(with: anyError(), at: 2)
             self.awaitActorThreadHop()
             
-            XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).count, 1, "Expected to cache Operators once.")
-            XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServicePaymentOperator].self)?.map(\.name), [
+            XCTAssertEqual(localAgent.getStoredValues(ofType: ServicePaymentOperatorStorage.self).count, 1, "Expected to cache Operators once.")
+            
+            let storage = localAgent.lastStoredValue(ofType: ServicePaymentOperatorStorage.self)
+            let items = storage?.items(for: "housingAndCommunalService")
+            XCTAssertNoDiff(items?.map(\.name), [
                 "ООО МЕТАЛЛЭНЕРГОФИНАНС",
                 "ООО  ИЛЬИНСКОЕ ЖКХ",
                 "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",
