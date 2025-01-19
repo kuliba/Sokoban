@@ -1799,7 +1799,6 @@
 		2AFF320F2D0372E3006DD60C /* CodableServicePaymentOperatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF320E2D0372E3006DD60C /* CodableServicePaymentOperatorTests.swift */; };
 		2AFF32132D041BEF006DD60C /* XCTestCase+factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32122D041BEF006DD60C /* XCTestCase+factories.swift */; };
 		2AFF32152D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */; };
-		2AFF32172D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */; };
 		2AFF32192D047FE9006DD60C /* RootViewModelFactory+loadPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */; };
 		2AFF321B2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */; };
 		2AFF321D2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */; };
@@ -5404,7 +5403,6 @@
 		2AFF320E2D0372E3006DD60C /* CodableServicePaymentOperatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableServicePaymentOperatorTests.swift; sourceTree = "<group>"; };
 		2AFF32122D041BEF006DD60C /* XCTestCase+factories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+factories.swift"; sourceTree = "<group>"; };
 		2AFF32142D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersFlowManager.swift"; sourceTree = "<group>"; };
-		2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composedLoadOperators.swift"; sourceTree = "<group>"; };
 		2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadPage.swift"; sourceTree = "<group>"; };
 		2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadPageTests.swift"; sourceTree = "<group>"; };
 		2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactoryLocalLoadTests.swift; sourceTree = "<group>"; };
@@ -10776,7 +10774,6 @@
 				2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */,
 				2AA404B82D381F49002623BB /* RootViewModelFactory+makeCategoryPicker.swift */,
 				2AA404BA2D381F99002623BB /* RootViewModelFactory+makeCategoryPickerContent.swift */,
-				2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */,
 				2AFF32062D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift */,
 				2AFF32182D047FE9006DD60C /* RootViewModelFactory+loadPage.swift */,
 				2A6A6A352CAADF0B006D6044 /* SelectedCategoryGetNavigationComposer.swift */,
@@ -11568,7 +11565,7 @@
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
 				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
 				830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */,
-				2AFF32162D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift */,
+				2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */,
 				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeDecoratedServiceCategoryListLoaders.swift */,
 				2ADB21CD2CF8327C00B37234 /* RootViewModelFactory+loadCategory.swift */,
 				EC5A2D1F2D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift */,
@@ -20766,7 +20763,6 @@
 				2AD54D342B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift in Sources */,
 				2A8A8FA42C00D5CD001ECAA3 /* OtherConfigs.swift in Sources */,
 				83CFA29B2C2D7302003B5E49 /* ControlPanelViewConfig.swift in Sources */,
-				2AFF32172D043DAB006DD60C /* RootViewModelFactory+composedLoadOperators.swift in Sources */,
 				774A8B702865FEB200B81140 /* OptionSelectorViewComponent.swift in Sources */,
 				2AAB56F72C7D8ACE002D96BC /* TemplateEmitter.swift in Sources */,
 				8393319F2C8F263200D15379 /* BannersBinder.swift in Sources */,
