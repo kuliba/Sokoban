@@ -491,6 +491,7 @@
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
 		2A1F5E822C26EA0D002B3F65 /* ButtonStateConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F5E812C26EA0D002B3F65 /* ButtonStateConfig+ext.swift */; };
 		2A1F5E842C26EA92002B3F65 /* FooterButtonConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F5E832C26EA92002B3F65 /* FooterButtonConfig+iVortex.swift */; };
+		2A1FDF392D3CBDB3005D1614 /* RootViewFactory+makePaymentsTransfersSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1FDF382D3CBDB3005D1614 /* RootViewFactory+makePaymentsTransfersSwitcherView.swift */; };
 		2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
 		2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
 		2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */; };
@@ -4111,6 +4112,7 @@
 		2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyDomain.swift; sourceTree = "<group>"; };
 		2A1F5E812C26EA0D002B3F65 /* ButtonStateConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ButtonStateConfig+ext.swift"; sourceTree = "<group>"; };
 		2A1F5E832C26EA92002B3F65 /* FooterButtonConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FooterButtonConfig+iVortex.swift"; sourceTree = "<group>"; };
+		2A1FDF382D3CBDB3005D1614 /* RootViewFactory+makePaymentsTransfersSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makePaymentsTransfersSwitcherView.swift"; sourceTree = "<group>"; };
 		2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SberQRPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPreviewApp.swift; sourceTree = "<group>"; };
 		2A20F8D02B05E1D000E3AE79 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -12427,6 +12429,7 @@
 				842C423B2D11FF2F006A307D /* RootViewFactory+operatorFailureView.swift */,
 				842C423A2D11FF2F006A307D /* ViewComponents+serviceCategoryFailureView.swift */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
+				2A1FDF382D3CBDB3005D1614 /* RootViewFactory+makePaymentsTransfersSwitcherView.swift */,
 				2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */,
 				2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */,
 				2AD767502CF99B8600BFDA70 /* RootViewFactory+makeAnywayFlowView.swift */,
@@ -21045,6 +21048,7 @@
 				2A4593C62A7CC8B6008593A3 /* Services+keyExchangeService.swift in Sources */,
 				2A366E682CFF966A006D1FB8 /* RootViewModelFactory+handleSelectedServiceCategory.swift in Sources */,
 				0BB015DC26C9BE3700E7A85B /* ExtensionGKHMainNav.swift in Sources */,
+				2A1FDF392D3CBDB3005D1614 /* RootViewFactory+makePaymentsTransfersSwitcherView.swift in Sources */,
 				0BD1CAA226E6C46900CFE993 /* GetCurrencyListSaved.swift in Sources */,
 				C16502F32939FED600B034D0 /* PaymentsAntifraudViewModel.swift in Sources */,
 				77C3829127E0CA2200B5246E /* Model+General.swift in Sources */,
