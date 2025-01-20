@@ -147,3 +147,30 @@ extension LocalAgent {
         let fileManager: FileManager
     }
 }
+
+// MARK: - Clear Cache
+
+extension LocalAgent {
+    
+    func clearCache(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        do {
+            let fileManager = context.fileManager
+            let rootFolder = try rootFolderURL()
+            let filePaths = try fileManager.contentsOfDirectory(
+                at: rootFolder,
+                includingPropertiesForKeys: nil
+            )
+            for filePath in filePaths {
+                
+                try fileManager.removeItem(at: filePath)
+            }
+            print("Cache cleared successfully.")
+            
+        } catch {
+            print("Failed to clear cache: \(error.localizedDescription) - \(file):\(line)")
+        }
+    }
+}

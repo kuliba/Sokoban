@@ -7,9 +7,9 @@
 
 import Foundation
 
-func anyURLRequest() -> URLRequest {
+func anyURLRequest(url: URL = anyURL()) -> URLRequest {
     
-    .init(url: anyURL())
+    .init(url: url)
 }
 
 func anyError(

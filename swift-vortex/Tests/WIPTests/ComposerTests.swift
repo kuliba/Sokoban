@@ -516,7 +516,7 @@ final class ComposerTests: XCTestCase {
         line: UInt = #line
     ) -> (composed: Load, fromLocal: FromLocalSpy) {
         
-        let fromLocal = FromLocalSpy(response: response)
+        let fromLocal = FromLocalSpy(stubs: [response])
         let composed = sut.compose(fromLocal: fromLocal.call(payload:))
         
         trackForMemoryLeaks(fromLocal, file: file, line: line)
@@ -539,9 +539,9 @@ final class ComposerTests: XCTestCase {
         toLocal: ToLocalSpy
     ) {
         let remote = RemoteLoadSpy()
-        let fromLocal = FromLocalSpy(response: fromLocal)
-        let fromRemote = FromRemoteSpy(response: fromRemote)
-        let toLocal = ToLocalSpy(response: toLocal)
+        let fromLocal = FromLocalSpy(stubs: [fromLocal])
+        let fromRemote = FromRemoteSpy(stubs: [fromRemote])
+        let toLocal = ToLocalSpy(stubs: [toLocal])
         let composed = sut.compose(
             remote: remote.process(_:completion:),
             fromLocal: fromLocal.call(payload:),

@@ -285,6 +285,10 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .savingsAccount(binder):
             viewFactory.components.makeSavingsAccountView(binder)
+                .onAppear { binder.content.event(.load) }
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden()
+                .navigationViewStyle(StackNavigationViewStyle())
         }
     }
     

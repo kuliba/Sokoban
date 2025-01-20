@@ -17,43 +17,41 @@ extension RootViewModelFactory {
     ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
+        let content = makePaymentsTransfersPersonalContent(nanoServices)
+        let categoryPicker = content.categoryPicker.sectionBinder
         
-        let personal = makePaymentsTransfersPersonal(
-            nanoServices: nanoServices
-        )
-        
-        let loadCategoriesAndNotifyPicker = {
+        let notifyPicker = { [weak self, weak categoryPicker] in
             
-            nanoServices.reloadCategories { [weak personal] categories in
-                
-                let categoryPicker = personal?.content.categoryPicker.sectionBinder
-                
-                guard let categoryPicker else {
-                    
-                    return self.logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
-                }
-                
-                categoryPicker.content.event(.loaded(categories ?? []))
-                
-                self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-            }
+            guard let self, let categoryPicker else { return }
+            
+            notify(categoryPicker: categoryPicker, with: $0)
         }
         
-        return (personal, loadCategoriesAndNotifyPicker)
-    }
-    
-    @inlinable
-    func makePaymentsTransfersPersonal(
-        nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonalDomain.Binder {
-        
-        let content = makePaymentsTransfersPersonalContent(nanoServices)
-        
-        return composeBinder(
+        let personal = composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersPersonalNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+        
+        return (personal, { nanoServices.reloadCategories(notifyPicker) })
+    }
+    
+    @inlinable
+    func composePaymentsTransfersPersonalNanoServices(
+    ) -> PaymentsTransfersPersonalNanoServices {
+        
+        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
+        
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: loadCategories,
+            getLatestPayments: loadLatestPayments
+        )
+        
+        return .init(
+            loadCategories: loadCategories,
+            reloadCategories: reloadCategories,
+            loadAllLatest: makeLoadLatestOperations(.all)
         )
     }
     
@@ -80,7 +78,7 @@ extension RootViewModelFactory {
     ) {
         completion(select)
     }
-
+    
     @inlinable
     func emitting(
         content: PaymentsTransfersPersonalDomain.Content
@@ -95,6 +93,25 @@ extension RootViewModelFactory {
     ) -> () -> Void {
         
         return { content.dismiss() }
+    }
+    
+    @inlinable
+    func notify(
+        categoryPicker: CategoryPicker,
+        with categories: [ServiceCategory]?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let message = (categories?.count).map { "==== Loaded \($0) service categories." } ?? "Load service categories failure."
+        
+        logger.log(level: .info, category: .network, message: message, file: file, line: line)
+        
+        guard let categoryPicker = categoryPicker.sectionBinder
+        else {
+            return logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: file, line: line)
+        }
+        
+        categoryPicker.content.event(.loaded(categories))
     }
 }
 
@@ -164,7 +181,7 @@ private extension FlowState<CategoryPickerSectionDomain.Navigation> {
             switch outside {
             case .qr:
                 return .scanQR
-
+                
             case let .standard(category):
                 return .standardPayment(category.type)
             }

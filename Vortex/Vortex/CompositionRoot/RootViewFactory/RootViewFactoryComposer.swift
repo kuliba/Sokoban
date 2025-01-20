@@ -114,8 +114,8 @@ extension RootViewFactoryComposer {
     }
     
     private func clearCache() {
-        
-        try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
+
+        (model.localAgent as? LocalAgent)?.clearCache()
     }
     
     func makeImageViewFactory(
