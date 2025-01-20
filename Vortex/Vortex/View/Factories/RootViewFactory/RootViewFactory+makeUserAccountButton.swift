@@ -21,7 +21,10 @@ extension RootViewFactory {
             makeUserAccountButton(action: action)
                 .contextMenu {
                     
-                    Button("Clear segmented operators cache", action: clearCache)
+                    Button(action: clearCache) {
+                        
+                        Label("Clear cache", systemImage: "trash.circle")
+                    }
                 }
             #endif
         }

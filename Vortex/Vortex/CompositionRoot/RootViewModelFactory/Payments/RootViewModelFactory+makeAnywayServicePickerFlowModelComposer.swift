@@ -22,7 +22,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            loadOperators: composedLoadOperators
+            loadOperators: loadCachedOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
             composer: transactionComposer,

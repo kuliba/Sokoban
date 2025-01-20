@@ -13,6 +13,7 @@ class ItemListTests: XCTestCase {
     typealias ID = Int
     typealias Domain = ItemListDomain<ID, Entity>
     typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias Item = State.Item
     typealias Element = Stateful<Entity, LoadState>
     

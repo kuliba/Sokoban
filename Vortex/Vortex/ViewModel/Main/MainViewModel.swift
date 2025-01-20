@@ -104,7 +104,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func makeStickerViewModel(
         _ model: Model
-    ) -> ProductCarouselView.StickerViewModel? {
+    ) -> AdditionalProductViewModel? {
         
         return ProductCarouselView.ViewModel.makeStickerViewModel(model) { [weak self] in
             self?.handleLandingAction(.sticker)
@@ -125,7 +125,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func updateSticker(
         _ model: Model,
-        stickerViewModel: ProductCarouselView.StickerViewModel
+        stickerViewModel: AdditionalProductViewModel
     ) {
         if let index = sections.indexProductsSection,
             let section = sections[index] as? MainSectionProductsView.ViewModel,
@@ -624,31 +624,31 @@ private extension MainViewModel {
     
     func bind(productsSections: [MainSectionViewModel]) {
         
-        for section in sections {
+        if let section = sections.productsSection {
             
-            let shared = section.action.share()
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                .map(\.productId)
-                .receive(on: scheduler)
-                .sink { [weak self] in
-                    
-                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
-                }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] _ in self?.openMoreProducts() }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
-                .store(in: &bindings)
+                let shared = section.action.share()
+                
+                shared
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                    .map(\.productId)
+                    .receive(on: scheduler)
+                    .sink { [weak self] in
+                        
+                        self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+                    }
+                    .store(in: &bindings)
+                
+                shared
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+                    .receive(on: scheduler)
+                    .sink { [weak self] _ in self?.openMoreProducts() }
+                    .store(in: &bindings)
+                
+                shared
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
+                    .receive(on: scheduler)
+                    .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
+                    .store(in: &bindings)
         }
     }
     
@@ -2020,7 +2020,7 @@ extension Array where Element == MainSectionViewModel {
         firstIndex(where: { $0.type == .products })
     }
     
-    var stickerViewModel: ProductCarouselView.StickerViewModel? {
+    var stickerViewModel: AdditionalProductViewModel? {
         productsSection?.productCarouselViewModel.stickerViewModel
     }
 }

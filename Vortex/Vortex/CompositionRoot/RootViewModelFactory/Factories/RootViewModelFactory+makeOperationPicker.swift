@@ -148,7 +148,7 @@ extension RootViewModelFactory {
                 
                 return updating
                     .map { $0.map { .latest($0) }}
-                    .handleEvents(receiveOutput: { print("===== latest", $0.count) })
+                    // .handleEvents(receiveOutput: { print("===== latest", $0.count) })
                     .eraseToAnyPublisher()
             }
         )

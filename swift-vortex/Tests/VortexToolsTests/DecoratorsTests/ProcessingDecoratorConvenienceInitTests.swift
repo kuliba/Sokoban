@@ -1,6 +1,6 @@
 //
-//  CachingDecoratorTests.swift
-//  
+//  ProcessingDecoratorConvenienceInitTests.swift
+//  swift-vortex
 //
 //  Created by Igor Malyarov on 17.01.2025.
 //
@@ -8,16 +8,16 @@
 import VortexTools
 import XCTest
 
-final class CachingDecoratorTests: XCTestCase {
+final class ProcessingDecoratorConvenienceInitTests: XCTestCase {
     
     // MARK: - init
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, decoratee, cache) = makeSUT()
+        let (_, decoratee, decorate) = makeSUT()
         
         XCTAssertEqual(decoratee.callCount, 0)
-        XCTAssertEqual(cache.callCount, 0)
+        XCTAssertEqual(decorate.callCount, 0)
     }
     
     // MARK: - load
@@ -32,94 +32,65 @@ final class CachingDecoratorTests: XCTestCase {
         XCTAssertNoDiff(decoratee.payloads, [payload])
     }
     
-    func test_load_shouldNotCallCacheOnDecorateeFailure() {
-        
-        let (sut, decoratee, cache) = makeSUT()
-        
-        sut.load(makePayload()) { _ in }
-        decoratee.complete(with: nil)
-        
-        XCTAssertTrue(cache.payloads.isEmpty)
-    }
-    
-    func test_load_shouldCallCacheWithDecorateeSuccess() {
+    func test_load_shouldCallHandlerOnDecorateeSuccess() {
         
         let response = makeResponse()
-        let (sut, decoratee, cache) = makeSUT()
+        let (sut, decoratee, decorate) = makeSUT()
         
         sut.load(makePayload()) { _ in }
         decoratee.complete(with: response)
         
-        XCTAssertNoDiff(cache.payloads, [response])
+        XCTAssertNoDiff(decorate.payloads, [response])
     }
     
-    func test_load_shouldDeliverFalseOnDecorateeFailure() {
+    func test_load_shouldNotCallHandlerOnDecorateeFailure() {
+        
+        let (sut, decoratee, decorate) = makeSUT()
+        
+        sut.load(makePayload()) { _ in }
+        decoratee.complete(with: nil)
+        
+        XCTAssertTrue(decorate.payloads.isEmpty)
+    }
+    
+    func test_load_shouldDeliverResponseOnDecorateeSuccess() {
+        
+        let response = makeResponse()
+        let (sut, decoratee, _) = makeSUT()
+        
+        expect(sut: sut, toDeliver: response) {
+            decoratee.complete(with: response)
+        }
+    }
+    
+    func test_load_shouldDeliverFailureOnDecorateeFailure() {
         
         let (sut, decoratee, _) = makeSUT()
         
-        expect(sut: sut, toDeliver: false) {
-            
+        expect(sut: sut, toDeliver: nil) {
             decoratee.complete(with: nil)
         }
     }
     
-    func test_load_shouldNotDeliverResultOnInstanceDeallocation() {
-        
+    func test_load_shouldNotDeliverResultOnInstanceDeallocation()
+    {
         var sut: SUT?
         let decoratee: Decoratee
         (sut, decoratee, _) = makeSUT()
-        var result: Bool?
+        var result: Response?
         
         sut?.load(makePayload()) { result = $0 }
         sut = nil
-        decoratee.complete(with: nil)
-        
-        XCTAssertNil(result)
-    }
-    
-    func test_load_shouldDeliverFalseOnDecorateeSuccessCacheFailure() {
-        
-        let (sut, decoratee, cache) = makeSUT()
-        
-        expect(sut: sut, toDeliver: false) {
-            
-            decoratee.complete(with: makeResponse())
-            cache.complete(with: false)
-        }
-    }
-    
-    func test_load_shouldNotDeliverCacheResultOnInstanceDeallocation() {
-        
-        var sut: SUT?
-        let decoratee: Decoratee
-        let cache: Cache
-        (sut, decoratee, cache) = makeSUT()
-        var result: Bool?
-        
-        sut?.load(makePayload()) { result = $0 }
         decoratee.complete(with: makeResponse())
-        sut = nil
-        cache.complete(with: false)
         
         XCTAssertNil(result)
-    }
-    
-    func test_load_shouldDeliverTrueOnDecorateeSuccessCacheSuccess() {
-        
-        let (sut, decoratee, cache) = makeSUT()
-        
-        expect(sut: sut, toDeliver: true) {
-            
-            decoratee.complete(with: makeResponse())
-            cache.complete(with: true)
-        }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = CachingDecorator<Payload, Response>
+    private typealias SUT = ProcessingDecorator<Payload, Response>
     private typealias Decoratee = Spy<Payload, Response?>
-    private typealias Cache = Spy<Response, Bool>
+    private typealias Decorate = CallSpy<Response, Void>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -127,19 +98,21 @@ final class CachingDecoratorTests: XCTestCase {
     ) -> (
         sut: SUT,
         decoratee: Decoratee,
-        cache: Cache
+        decorate: Decorate
     ) {
         let decoratee = Decoratee()
-        let cache = Cache()
+        let decorate = Decorate(stubs: .init(repeating: (), count: 100))
+        
         let sut = SUT(
             decoratee: decoratee.process,
-            cache: cache.process
+            decorate: decorate.call(payload:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(decoratee, file: file, line: line)
+        trackForMemoryLeaks(decorate, file: file, line: line)
         
-        return (sut, decoratee, cache)
+        return (sut, decoratee, decorate)
     }
     
     private struct Payload: Equatable {
@@ -169,7 +142,7 @@ final class CachingDecoratorTests: XCTestCase {
     private func expect(
         sut: SUT,
         with payload: Payload? = nil,
-        toDeliver expected: Bool,
+        toDeliver expected: Response?,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -179,7 +152,7 @@ final class CachingDecoratorTests: XCTestCase {
         
         sut.load(payload ?? makePayload()) {
             
-            XCTAssertNoDiff($0, expected, "Expected \(expected), but got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff($0, expected, "Expected \(String(describing: expected)), but got \(String(describing: $0)) instead.", file: file, line: line)
             exp.fulfill()
         }
         

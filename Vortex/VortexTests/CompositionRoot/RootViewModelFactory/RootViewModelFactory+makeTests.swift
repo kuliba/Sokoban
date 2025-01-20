@@ -261,7 +261,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         )
         
         awaitActorThreadHop()
-        XCTAssert(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).isEmpty)
+        XCTAssert(localAgent.getStoredValues(ofType: ServicePaymentOperatorStorage.self).isEmpty)
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
@@ -291,8 +291,11 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             "getServiceCategoryList",
         ])
         
-        XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServicePaymentOperator].self).count, 1, "Expected to cache Operators once.")
-        XCTAssertNoDiff(localAgent.lastStoredValue(ofType: [CodableServicePaymentOperator].self)?.map(\.name), [
+        XCTAssertEqual(localAgent.getStoredValues(ofType: ServicePaymentOperatorStorage.self).count, 1, "Expected to cache Operators once.")
+        
+        let storage = localAgent.lastStoredValue(ofType: ServicePaymentOperatorStorage.self)
+        let names = storage?.items(for: "housingAndCommunalService")?.map(\.name)
+        XCTAssertNoDiff(names, [
             "ООО МЕТАЛЛЭНЕРГОФИНАНС",
             "ООО  ИЛЬИНСКОЕ ЖКХ",
             "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",

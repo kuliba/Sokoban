@@ -62,11 +62,3 @@ extension Stateful: Identifiable where Entity: Identifiable {
     
     public var id: Entity.ID { entity.id }
 }
-
-public enum LoadState: Equatable {
-    
-    case completed
-    case failed
-    case loading
-    case pending
-}

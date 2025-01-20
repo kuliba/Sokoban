@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentsTransfersPersonalTests.swift
+//  RootViewModelFactory+makePaymentsTransfersPersonalContentTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 20.08.2024.
@@ -10,7 +10,7 @@ import PayHub
 import PayHubUI
 import XCTest
 
-final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase {
+final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -24,7 +24,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         let (sut, _,_, spy) = makeSUT()
         
-        sut.content.operationPicker.operationBinder?.content.event(.load)
+        sut.operationPicker.operationBinder?.content.event(.load)
         
         XCTAssertEqual(spy.callCount, 1)
         XCTAssertNotNil(sut)
@@ -34,21 +34,21 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         let sut = makeSUT().sut
         
-        let prefix = sut.content.operationPicker.operationBinder?.content.state.elements.prefix(2)
+        let prefix = sut.operationPicker.operationBinder?.content.state.elements.prefix(2)
         
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
     
     func test_shouldSetCategoryPickerContentStateToLoading() throws {
         
-        let state = try XCTUnwrap(makeSUT().sut.content.categoryPicker.sectionBinder?.content.state)
+        let state = try XCTUnwrap(makeSUT().sut.categoryPicker.sectionBinder?.content.state)
         
         XCTAssertTrue(state.isLoading)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = Vortex.PaymentsTransfersPersonalDomain.Binder
+    private typealias SUT = Vortex.PaymentsTransfersPersonalDomain.Content
     private typealias LoadLatestSpy = Spy<Void, [Latest]?, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
@@ -76,13 +76,11 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
-        let sut = factory.makePaymentsTransfersPersonal(
-            nanoServices: .init(
-                loadCategories: loadCategoriesSpy.process(completion:),
-                reloadCategories: reloadCategoriesSpy.process(completion:),
-                loadAllLatest: loadLatestSpy.process(completion:)
-            )
-        )
+        let sut = factory.makePaymentsTransfersPersonalContent(.init(
+            loadCategories: loadCategoriesSpy.process(completion:),
+            reloadCategories: reloadCategoriesSpy.process(completion:),
+            loadAllLatest: loadLatestSpy.process(completion:)
+        ))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadCategoriesSpy, file: file, line: line)
