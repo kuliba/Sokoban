@@ -15,7 +15,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            loadOperators: composedLoadOperators,
+            loadOperators: loadCachedOperators,
             scheduler: schedulers.main
         )
         

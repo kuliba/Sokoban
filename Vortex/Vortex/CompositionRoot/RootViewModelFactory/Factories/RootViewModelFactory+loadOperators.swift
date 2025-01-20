@@ -1,22 +1,42 @@
 //
-//  RootViewModelFactory+composedLoadOperators.swift
+//  RootViewModelFactory+loadCachedOperators.swift
 //  Vortex
 //
-//  Created by Igor Malyarov on 07.12.2024.
+//  Created by Igor Malyarov on 22.11.2024.
 //
 
 import VortexTools
 
 extension RootViewModelFactory {
     
-    func composedLoadOperators(
-        categoryType: ServiceCategory.CategoryType,
-        completion: @escaping ([UtilityPaymentProvider]) -> Void
+    @inlinable
+    func loadCachedOperators(
+        forCategory category: ServiceCategory,
+        completion: @escaping (Result<[UtilityPaymentProvider], Error>) -> Void
     ) {
-        composedLoadOperators(payload: .init(categoryType: categoryType, pageSize: settings.pageSize), completion: completion)
+        loadCachedOperators(
+            forCategoryType: category.type
+        ) {
+            completion(.success($0))
+        }
     }
     
-    func composedLoadOperators(
+    @inlinable
+    func loadCachedOperators(
+        forCategoryType categoryType: ServiceCategory.CategoryType,
+        completion: @escaping ([UtilityPaymentProvider]) -> Void
+    ) {
+        loadCachedOperators(
+            payload: .init(
+                categoryType: categoryType,
+                pageSize: settings.pageSize
+            ),
+            completion: completion
+        )
+    }
+    
+    @inlinable
+    func loadCachedOperators(
         payload: LoadOperatorsPayload,
         completion: @escaping ([UtilityPaymentProvider]) -> Void
     ) {
@@ -25,13 +45,14 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             // sorting is performed at cache phase
-            let page = loadPage(of: [CodableServicePaymentOperator].self, for: payload) ?? []
+            let storage = model.localAgent.load(type: ServicePaymentOperatorStorage.self)
+            let items = storage?.items(for: payload.categoryType)
+            let page = items?.page(for: payload) ?? []
+            debugLog(pageCount: page.count, of: items?.count ?? 0)
             completion(page.map(UtilityPaymentProvider.init(codable:)))
         }
     }
 }
-
-// MARK: - Load Operators
 
 struct LoadOperatorsPayload: Equatable {
     

@@ -37,7 +37,7 @@ extension RootViewModelFactory {
     ) {
         let service = LoadNanoServices(
             loadLatest: loadLatestPayments,
-            loadOperators: loadOperatorsForCategory
+            loadOperators: loadCachedOperators
         )
         
         service.load(category: category) { completion($0); _ = service }

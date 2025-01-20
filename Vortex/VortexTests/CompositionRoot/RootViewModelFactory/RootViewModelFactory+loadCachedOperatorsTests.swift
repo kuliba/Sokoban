@@ -34,17 +34,18 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryS
     
     func test_loadCachedOperators_shouldDeliverEmptyOnEmptyValue() {
         
-        expect(withLoadStub: [], payload: makePayload(), toDeliver: [])
+        expect(withLoadStub: .init(items: [], serial: anyMessage()), payload: makePayload(), toDeliver: [])
     }
     
     func test_loadCachedOperators_shouldDeliverEmptyOnNonMatchingCategoryType() {
         
+        let serial = anyMessage()
         let (_, model) = makeOperatorWithModel(type: "charity")
-        let (sut, _) = makeSUT(loadStub: [model])
+        let (sut, _) = makeSUT(loadStub: .init(items: [model], serial: serial))
         
         expect(
             sut: sut,
-            withLoadStub: [model],
+            withLoadStub: .init(items: [model], serial: serial),
             payload: makePayload(for: "digitalWallets"),
             toDeliver: []
         )
@@ -52,13 +53,14 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryS
     
     func test_loadCachedOperators_shouldDeliverOneOnValueOfOneForMatchingCategoryType() {
         
+        let serial = anyMessage()
         let categoryType: CategoryType = "networkMarketing"
         let (`operator`, model) = makeOperatorWithModel(type: categoryType)
-        let (sut, _) = makeSUT(loadStub: [model])
+        let (sut, _) = makeSUT(loadStub: .init(items: [model], serial: serial))
         
         expect(
             sut: sut,
-            withLoadStub: [model],
+            withLoadStub: .init(items: [model], serial: serial),
             payload: makePayload(for: categoryType),
             toDeliver: [`operator`]
         )
@@ -66,14 +68,15 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryS
     
     func test_loadCachedOperators_shouldDeliverTwoOnValueOfOneForMatchingCategoryType() {
         
+        let serial = anyMessage()
         let categoryType: CategoryType = "socialAndGames"
         let (operator1, model1) = makeOperatorWithModel(type: categoryType)
         let (operator2, model2) = makeOperatorWithModel(type: categoryType)
-        let (sut, _) = makeSUT(loadStub: [model1, model2])
+        let (sut, _) = makeSUT(loadStub: .init(items: [model1, model2], serial: serial))
         
         expect(
             sut: sut,
-            withLoadStub: [model1, model2],
+            withLoadStub: .init(items: [model1, model2], serial: serial),
             payload: makePayload(for: categoryType),
             toDeliver: [operator1, operator2]
         )
@@ -81,12 +84,12 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryS
     
     // MARK: - Helpers
     
-    private typealias LocalAgent = LocalAgentSpy<[CodableServicePaymentOperator]>
+    private typealias LocalAgent = LocalAgentSpy<ServicePaymentOperatorStorage>
     private typealias Payload = LoadOperatorsPayload
     private typealias CategoryType = ServiceCategory.CategoryType
     
     private func makeSUT(
-        loadStub: [CodableServicePaymentOperator]? = nil,
+        loadStub: ServicePaymentOperatorStorage? = nil,
         schedulers: Schedulers = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -117,7 +120,7 @@ final class RootViewModelFactory_loadCachedOperatorsTests: RootViewModelFactoryS
     
     private func expect(
         sut: SUT? = nil,
-        withLoadStub loadStub: [CodableServicePaymentOperator]?,
+        withLoadStub loadStub: ServicePaymentOperatorStorage?,
         payload: Payload,
         toDeliver expectedValue: [UtilityPaymentProvider],
         timeout: TimeInterval = 1.0,
