@@ -139,13 +139,11 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
                     loadBanners: { _ in unimplemented() }
                 )
             ),
-            personal: factory.makePaymentsTransfersPersonal(
-                nanoServices: .init(
-                    loadCategories: { _ in unimplemented() },
-                    reloadCategories: { _ in unimplemented() },
-                    loadAllLatest: { _ in unimplemented() }
-                )
-            ),
+            personal: factory.makePaymentsTransfersPersonal(.init(
+                loadCategories: { _ in unimplemented() },
+                reloadCategories: { _ in unimplemented() },
+                loadAllLatest: { _ in unimplemented() }
+            )),
             scheduler: .immediate
         )
         

@@ -76,13 +76,11 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
-        let sut = factory.makePaymentsTransfersPersonal(
-            nanoServices: .init(
-                loadCategories: loadCategoriesSpy.process(completion:),
-                reloadCategories: reloadCategoriesSpy.process(completion:),
-                loadAllLatest: loadLatestSpy.process(completion:)
-            )
-        )
+        let sut = factory.makePaymentsTransfersPersonal(.init(
+            loadCategories: loadCategoriesSpy.process(completion:),
+            reloadCategories: reloadCategoriesSpy.process(completion:),
+            loadAllLatest: loadLatestSpy.process(completion:)
+        ))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadCategoriesSpy, file: file, line: line)

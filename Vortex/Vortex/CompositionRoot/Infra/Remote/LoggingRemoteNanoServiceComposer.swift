@@ -108,48 +108,18 @@ extension LoggingRemoteNanoServiceComposer {
     ///   - file: The file from which this function is called (for logging purposes). Defaults to the current file.
     ///   - line: The line number from which this function is called (for logging purposes). Defaults to the current line.
     /// - Returns: A `SerialLoad<T>` closure that can be called with a serial and a completion handler.
-    func composeSerial<T, MapResponseError: Error>(
+    func composeSerialLoad<T, MapResponseError: Error>(
         createRequest: @escaping (String?) throws -> URLRequest,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SerialLoad<T> {
         
-        return { [self] serial, completion in
+        let resultLoad = composeSerialResultLoad(createRequest: createRequest, mapResponse: mapResponse, file: file,line: line)
+        
+        return { [resultLoad] serial, completion in
             
-            let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
-            let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
-            
-            do {
-                let request = try createRequest(serial)
-                
-                httpClient.performRequest(request) { result in
-                    
-                    switch result {
-                    case .failure:
-                        completion(nil)
-                        
-                    case let .success((data, response)):
-                        switch mapResponse(data, response) {
-                        case .failure:
-                            completion(nil)
-                            
-                        case let .success(stamped):
-                            // Check if the stamped serial is different from the input serial
-                            if stamped.serial == serial {
-                                // If serials are the same, invoke the completion with nil
-                                completion(nil)
-                            } else {
-                                // If serials are different, invoke the completion with the new stamped value
-                                completion(stamped)
-                            }
-                        }
-                    }
-                }
-            } catch {
-                // Invoke the completion with nil if an error occurs during request creation
-                completion(nil)
-            }
+            resultLoad(serial) { completion(try? $0.get()); _ = resultLoad }
         }
     }
     
@@ -160,7 +130,7 @@ extension LoggingRemoteNanoServiceComposer {
     
     /// A closure type representing a function that takes an optional `String` serial and a completion handler.
     typealias SerialResultLoad<T> = (String?, @escaping SerialResultLoadCompletion<T>) -> Void
-
+    
     func composeSerialResultLoad<T, MapResponseError: Error>(
         createRequest: @escaping (String?) throws -> URLRequest,
         mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
@@ -175,35 +145,39 @@ extension LoggingRemoteNanoServiceComposer {
             let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
             let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
             
-            do {
-                let request = try createRequest(serial)
+            guard let request = try? createRequest(serial)
+            else {
+                // Invoke the completion with nil if an error occurs during request creation
+                return completion(.failure(SerialResultLoadError.urlRequestCreationFailure))
+            }
+            
+            let lastPathComponent = request.url?.lastPathComponent ?? ""
+            
+            httpClient.performRequest(request) { [logger] result in
                 
-                httpClient.performRequest(request) { result in
+                switch result {
+                case let .failure(failure):
+                    logger.log(level: .error, category: .network, message: "Perform request \(lastPathComponent) failure: \(failure).", file: file, line: line)
+                    completion(.failure(SerialResultLoadError.performRequestFailure))
                     
-                    switch result {
+                case let .success((data, response)):
+                    switch mapResponse(data, response) {
                     case .failure:
-                        completion(.failure(SerialResultLoadError.performRequestFailure))
+                        completion(.failure(SerialResultLoadError.mapResponseFailure))
                         
-                    case let .success((data, response)):
-                        switch mapResponse(data, response) {
-                        case .failure:
-                            completion(.failure(SerialResultLoadError.mapResponseFailure))
-                            
-                        case let .success(stamped):
-                            // Check if the stamped serial is different from the input serial
-                            if stamped.serial == serial {
-                                // If serials are the same, invoke the completion with nil
-                                completion(.failure(SerialResultLoadError.noNewDataFailure))
-                            } else {
-                                // If serials are different, invoke the completion with the new stamped value
-                                completion(.success(stamped))
-                            }
+                    case let .success(stamped):
+                        // Check if the stamped serial is different from the input serial
+                        if stamped.serial == serial {
+                            logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has same serial.", file: file, line: line)
+                            // If serials are the same, invoke the completion with failure
+                            completion(.failure(SerialResultLoadError.noNewDataFailure))
+                        } else {
+                            logger.log(level: .info, category: .network, message: "Response for \(lastPathComponent) has different serial.", file: file, line: line)
+                            // If serials are different, invoke the completion with the new stamped value
+                            completion(.success(stamped))
                         }
                     }
                 }
-            } catch {
-                // Invoke the completion with nil if an error occurs during request creation
-                completion(.failure(SerialResultLoadError.urlRequestCreationFailure))
             }
         }
     }

@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+composePaymentsTransfersPersonalNanoServices.swift
+//  RootViewModelFactory+composeDecoratedServiceCategoryListLoaders.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 21.10.2024.
@@ -8,24 +8,6 @@
 import Foundation
 
 extension RootViewModelFactory {
-    
-    @inlinable
-    func composePaymentsTransfersPersonalNanoServices(
-    ) -> PaymentsTransfersPersonalNanoServices {
-        
-        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
-
-        let makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: loadCategories,
-            getLatestPayments: loadLatestPayments
-        )
-        
-        return .init(
-            loadCategories: loadCategories,
-            reloadCategories: reloadCategories,
-            loadAllLatest: makeLoadLatestOperations(.all)
-        )
-    }
     
     typealias ServiceCategoryLoad = Load<[ServiceCategory]>
     
