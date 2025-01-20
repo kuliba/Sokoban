@@ -36,6 +36,17 @@ extension RootViewModelFactory {
         featureFlags: FeatureFlags
     ) -> RootViewDomain.Binder {
         
+        // keep for manual override of release flags
+        let featureFlags = FeatureFlags(
+            getProductListByTypeV6Flag: featureFlags.getProductListByTypeV6Flag,
+            historyFilterFlag: featureFlags.historyFilterFlag,
+            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+            splashScreenFlag: featureFlags.splashScreenFlag,
+            orderCardFlag: featureFlags.orderCardFlag
+        )
+        
         var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
