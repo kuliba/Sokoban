@@ -16,20 +16,24 @@ typealias LoadState = VortexTools.LoadState
 
 extension RootViewModelFactory {
     
-    typealias ServiceCategoryLoad = Load<[ServiceCategory]>
+    typealias ServiceCategoryLoad = (@escaping ([ServiceCategory]?) -> Void) -> Void
+    typealias ServiceCategoryReload = (@escaping (ItemListEvent<ServiceCategory>) -> Void, @escaping ([ServiceCategory]?) -> Void) -> Void
     
     /// Compose `ServiceCategory` Loaders decorated with `operatorsService` (operators loading and caching).
     /// - Note:This method is responsible for threading.
     @inlinable
     func composeDecoratedServiceCategoryListLoaders(
-    ) -> (load: ServiceCategoryLoad, reload: ServiceCategoryLoad) {
+    ) -> (load: ServiceCategoryLoad, reload: ServiceCategoryReload) {
         
-        let (loadCategories, reloadCategories) = composeServiceCategoryListLoaders()
+        let remoteLoad = nanoServiceComposer.composeServiceCategoryRemoteLoad()
         
-        let decoratedReload = decoratedReload(
-            reloadCategories: reloadCategories,
-            notify: notify
+        let (loadCategories, reloadCategories) = composeLoaders(
+            remoteLoad: remoteLoad,
+            fromModel: { $0.serviceCategory },
+            toModel: { $0.codable }
         )
+        
+        let decoratedReload = decoratedReload(reloadCategories)
         
         // threading
         let load = schedulers.userInitiated.scheduled(loadCategories)
@@ -38,21 +42,58 @@ extension RootViewModelFactory {
         return (load, reload)
     }
     
+    /// - Warning: Threading is not the responsibility of this func.
     @inlinable
-    func composeServiceCategoryListLoaders(
-    ) -> (load: ServiceCategoryLoad, reload: ServiceCategoryLoad) {
+    func loadServicePaymentOperatorSerial(
+        forCategory category: ServiceCategory
+    ) -> String? {
         
-        let remoteLoad = nanoServiceComposer.composeServiceCategoryRemoteLoad()
+        let storage = load(type: ServicePaymentOperatorStorage.self)
         
-        let (load, reload) = composeLoaders(
-            remoteLoad: remoteLoad,
-            fromModel: { $0.serviceCategory },
-            toModel: { $0.codable }
+        return storage?.serial(for: category.type)
+    }
+    
+    /// - Warning: Threading is not the responsibility of this func.
+    @inlinable
+    func load<T>(type: T.Type) -> T? where T: Decodable {
+        
+        model.localAgent.load(type: T.self)
+    }
+    
+    /// - Warning: Threading is not the responsibility of this func.
+    @inlinable
+    func loadRemoteOperatorList(
+        category: ServiceCategory,
+        serial: String?,
+        completion: @escaping (Result<SerialComponents.SerialStamped<String, [RemoteServices.ResponseMapper.ServicePaymentProvider]>, Error>) -> Void
+    ) {
+        let load = nanoServiceComposer.composeSerialResultLoad(
+            createRequest: { serial in
+                
+                try Vortex.RequestFactory.getOperatorsListByParam(payload: .init(
+                    serial: serial,
+                    category: category
+                ))
+            },
+            mapResponse: { data, response in
+                
+                let response = RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse(data, response)
+                
+                return response.map { .init(value: $0.list, serial: $0.serial) }
+            }
         )
         
-        return (load, reload)
+        // keep scheduling for easier demo
+        // schedulers.background.delay(for: .seconds(0)) {
+        
+        load(serial) { [load] in
+            
+            completion($0)
+            _ = load
+        }
+        // }
     }
-
+    
     /// Creates a decorated reload function for service categories that processes each category with state updates.
     ///
     /// This method wraps the provided `reloadCategories` closure with additional functionality for processing
@@ -66,29 +107,38 @@ extension RootViewModelFactory {
     /// - Warning: Threading is not the responsibility of this func.
     @inlinable
     func decoratedReload(
-        reloadCategories: @escaping ServiceCategoryLoad,
-        notify: @escaping (ServiceCategory, LoadState) -> Void
-    ) -> ServiceCategoryLoad {
+        _ reloadCategories: @escaping ServiceCategoryLoad
+    ) -> ServiceCategoryReload {
         
-        let decorator = UpdatingLoadDecorator(
-            decoratee: cachingLoadOperatorList,
-            update: notify
-        )
-        let batcher = Batcher { category, completion in
+        return { [/*weak */self] notify, completion in
             
-            decorator.load(category) { completion($0.failure) }
-        }
-        
-        return { completion in
+            //guard let self else { return }
             
-            reloadCategories {
+            let decorator = UpdatingLoadDecorator(
+                decoratee: cachingLoadOperatorList,
+                update: { category, loadState in
+                    
+                    notify(.update(state: loadState, forID: category.id))
+                    debugLog(category: .network, message: "##### notify: \(String(describing: loadState)) \(category.type)")
+                }
+            )
+            let batcher = Batcher { category, completion in
+                
+                decorator.load(category) { completion($0.failure) }
+            }
+            
+            reloadCategories { [batcher] in
                 
                 completion($0)
                 // non-blocking processing
                 batcher.process(
                     // only categories with standard payment flow
                     ($0 ?? []).filter { $0.paymentFlow == .standard }
-                ) { [weak self] in self?.onItemDataLoadComplete($0) }
+                ) { [weak self] in
+                    
+                    self?.onItemDataLoadComplete($0)
+                    _ = batcher
+                }
             }
         }
     }
@@ -127,50 +177,6 @@ extension RootViewModelFactory {
     
     /// - Warning: Threading is not the responsibility of this func.
     @inlinable
-    func loadServicePaymentOperatorSerial(
-        forCategory category: ServiceCategory
-    ) -> String? {
-        
-        let storage = load(type: ServicePaymentOperatorStorage.self)
-        
-        return storage?.serial(for: category.type)
-    }
-    
-    /// - Warning: Threading is not the responsibility of this func.
-    @inlinable
-    func load<T>(type: T.Type) -> T? where T: Decodable {
-        
-        model.localAgent.load(type: T.self)
-    }
-
-    /// - Warning: Threading is not the responsibility of this func.
-    @inlinable
-    func loadRemoteOperatorList(
-        category: ServiceCategory,
-        serial: String?,
-        completion: @escaping (Result<SerialComponents.SerialStamped<String, [RemoteServices.ResponseMapper.ServicePaymentProvider]>, Error>) -> Void
-    ) {
-        let load = nanoServiceComposer.composeSerialResultLoad(
-            createRequest: { serial in
-                
-                try Vortex.RequestFactory.getOperatorsListByParam(payload: .init(
-                    serial: serial,
-                    category: category
-                ))
-            },
-            mapResponse: { data, response in
-                
-                let response = RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse(data, response)
-                
-                return response.map { .init(value: $0.list, serial: $0.serial) }
-            }
-        )
-        
-        load(serial, completion)
-    }
-    
-    /// - Warning: Threading is not the responsibility of this func.
-    @inlinable
     func cacheOperatorList(
         for category: ServiceCategory,
         data: SerialComponents.SerialStamped<String, [RemoteServices.ResponseMapper.ServicePaymentProvider]>,
@@ -191,14 +197,6 @@ extension RootViewModelFactory {
         }
         
         completion()
-    }
-
-    @inlinable
-    func notify(
-        _ category: ServiceCategory,
-        _ loadState: LoadState
-    ) {
-        debugLog(category: .network, message: "##### notify: \(String(describing: loadState)) \(category.type)")
     }
     
     @inlinable

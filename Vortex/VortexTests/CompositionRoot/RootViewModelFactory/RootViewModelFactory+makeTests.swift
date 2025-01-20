@@ -86,7 +86,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
-
+        
         sessionAgent.deactivate()
         sessionAgent.activate()
         
@@ -425,7 +425,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             paymentsTransfersFlag: .active,
             savingsAccountFlag: .active,
             collateralLoanLandingFlag: .active,
-            splashScreenFlag: .inactive, 
+            splashScreenFlag: .inactive,
             orderCardFlag: .inactive
         )
     }
@@ -488,4 +488,21 @@ extension String {
     }
 }
 """
+}
+
+extension CategoryPickerSectionDomain.ContentDomain.State {
+    
+    var elements: [ServiceCategory] {
+        
+        items.compactMap { item in
+            
+            switch item {
+            case let .element(element):
+                return element.element.entity
+                
+            case .placeholder:
+                return nil
+            }
+        }
+    }
 }

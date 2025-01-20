@@ -19,15 +19,19 @@ extension RootViewFactory {
             model: binder.flow,
             makeContentView: { state, _ in
                 
-                makeCategoryPickerContentView(binder.content, headerHeight: nil)
-                    .alert(
-                        item: state.failure,
-                        content: makeAlert(binder: binder)
-                    )
-                    .navigationDestination(
-                        destination: makeDestination(state),
-                        content: makeDestinationView
-                    )
+                makeCategoryPickerContentView(
+                    binder.content,
+                    select: { binder.flow.event(.select($0)) },
+                    headerHeight: nil
+                )
+                .alert(
+                    item: state.failure,
+                    content: makeAlert(binder: binder)
+                )
+                .navigationDestination(
+                    destination: makeDestination(state),
+                    content: makeDestinationView
+                )
             }
         )
     }

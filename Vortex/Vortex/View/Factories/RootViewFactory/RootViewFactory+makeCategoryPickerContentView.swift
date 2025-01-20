@@ -13,6 +13,7 @@ extension RootViewFactory {
     
     func makeCategoryPickerContentView(
         _ content: CategoryPickerContentDomain<ServiceCategory>.Content,
+        select: @escaping (ServiceCategory) -> Void,
         headerHeight: CGFloat?
     ) -> some View {
         
@@ -23,6 +24,7 @@ extension RootViewFactory {
                 CategoryPickerSectionContentView(
                     state: state,
                     event: event,
+                    select: select,
                     config: .iVortex(headerHeight: headerHeight),
                     itemLabel: itemLabel
                 )
