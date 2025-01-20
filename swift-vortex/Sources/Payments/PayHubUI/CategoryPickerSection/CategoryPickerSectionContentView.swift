@@ -12,10 +12,11 @@ import UIPrimitives
 
 public struct CategoryPickerSectionContentView<ItemLabel, ServiceCategory>: View
 where ItemLabel: View,
-      ServiceCategory: Equatable {
+      ServiceCategory: Equatable & Identifiable {
     
     private let state: State
     private let event: (Event) -> Void
+    private let select: (ServiceCategory) -> Void
     private let config: Config
     private let itemLabel: (State.Item) -> ItemLabel
     
@@ -24,11 +25,13 @@ where ItemLabel: View,
     public init(
         state: State,
         event: @escaping (Event) -> Void,
+        select: @escaping (ServiceCategory) -> Void,
         config: Config,
         @ViewBuilder itemLabel: @escaping (State.Item) -> ItemLabel
     ) {
         self.state = state
         self.event = event
+        self.select = select
         self.config = config
         self.itemLabel = itemLabel
     }
@@ -43,7 +46,7 @@ where ItemLabel: View,
                     .frame(height: $0)
             }
             
-            if state.isLoadingFailed {
+            if isLoadingFailed {
                 
                 failureView(config: config.failure)
                     .padding(.top, config.spacing)
@@ -52,7 +55,7 @@ where ItemLabel: View,
                 
                 ScrollView(showsIndicators: false) {
                     
-                    ForEach(state.suffix, content: itemView)
+                    ForEach(state.items, content: itemView)
                         .animation(.easeInOut, value: state)
                 }
                 .padding(.horizontal, config.title.leadingPadding)
@@ -69,15 +72,12 @@ public extension CategoryPickerSectionContentView {
     typealias Config = CategoryPickerSectionContentViewConfig
 }
 
-private extension LoadablePickerState {
+private extension CategoryPickerSectionContentView {
     
     var isLoadingFailed: Bool {
         
-        !isLoading && suffix.isEmpty
+        !state.isLoading && state.items.isEmpty
     }
-}
-
-private extension CategoryPickerSectionContentView {
     
     func failureView(
         config: LabelConfig
@@ -132,7 +132,7 @@ private extension CategoryPickerSectionContentView {
             
         case let .element(identified):
             Button {
-                event(.select(identified.element))
+                select(identified.element.entity)
             } label: {
                 label
             }
@@ -154,6 +154,8 @@ private extension CategoryPickerSectionContentView {
     }
 }
 
+// MARK: - Previews
+
 struct CategoryPickerSectionContentView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -174,6 +176,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
         CategoryPickerSectionContentView(
             state: .init(prefix: [], suffix: items),
             event: { print($0) },
+            select: { print($0) },
             config: .preview(),
             itemLabel: { item in
                 
@@ -191,8 +194,9 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
     }
 }
 
-struct PreviewServiceCategory: Equatable {
+struct PreviewServiceCategory: Equatable, Identifiable {
     
+    let id = UUID()
 }
 
 extension Array where Element == CategoryPickerContentDomain<PreviewServiceCategory>.State.Item {
@@ -204,7 +208,7 @@ extension Array where Element == CategoryPickerContentDomain<PreviewServiceCateg
     
     static var preview: Self {
         
-        [PreviewServiceCategory].preview.map { .element(.init($0)) }
+        [PreviewServiceCategory].preview.map { .element(.init(id: .init(), element: .init(entity: $0, state: .completed))) }
     }
 }
 

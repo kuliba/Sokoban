@@ -16,7 +16,7 @@ extension RootViewModelFactory {
         
         let content = makeCategoryPickerContent(.init(
             loadCategories: getServiceCategoriesWithoutQR,
-            reloadCategories: { $0(nil) },
+            reloadCategories: { $1(nil) },
             loadAllLatest: { $0(nil) }
         ))
         

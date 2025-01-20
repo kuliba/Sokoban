@@ -363,7 +363,7 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        reload({ _ in }) {
             
             XCTAssertNoDiff($0, expectedCategories, "Expected \(String(describing: expectedCategories)), but got \(String(describing: $0)) instead.", file: file, line: line)
             

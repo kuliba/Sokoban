@@ -52,6 +52,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
     private typealias LoadLatestSpy = Spy<Void, [Latest]?, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
+    private typealias ReloadCategoriesSpy = Spy<(ItemListEvent<ServiceCategory>) -> Void, [ServiceCategory], Never>
     private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
@@ -61,11 +62,11 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
     ) -> (
         sut: SUT,
         loadCategoriesSpy: LoadCategoriesSpy,
-        reloadCategoriesSpy: LoadCategoriesSpy,
+        reloadCategoriesSpy: ReloadCategoriesSpy,
         loadLatestSpy: LoadLatestSpy
     ) {
         let loadCategoriesSpy = LoadCategoriesSpy()
-        let reloadCategoriesSpy = LoadCategoriesSpy()
+        let reloadCategoriesSpy = ReloadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
         let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
@@ -78,7 +79,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
         )
         let sut = factory.makePaymentsTransfersPersonalContent(.init(
             loadCategories: loadCategoriesSpy.process(completion:),
-            reloadCategories: reloadCategoriesSpy.process(completion:),
+            reloadCategories: reloadCategoriesSpy.process(_:completion:),
             loadAllLatest: loadLatestSpy.process(completion:)
         ))
         

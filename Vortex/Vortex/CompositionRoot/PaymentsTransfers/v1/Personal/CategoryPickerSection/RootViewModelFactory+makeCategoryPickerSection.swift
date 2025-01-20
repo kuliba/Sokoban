@@ -27,24 +27,15 @@ extension RootViewModelFactory {
     func makeCategoryPickerSection(
     ) -> CategoryPickerSectionDomain.Binder {
         
-        let content = makeCategoryPickerContent(.init(
-            loadCategories: getServiceCategoriesWithoutQR,
-            reloadCategories: { $0(nil) },
-            loadAllLatest: { $0(nil) }
-        ))
+        let nanoServices = composePaymentsTransfersPersonalNanoServices()
         
-        return composeBinder(
-            content: content,
-            delayProvider: delayProvider,
-            getNavigation: getNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
-        )
+        return makeCategoryPickerSection(nanoServices: nanoServices)
     }
     
     @inlinable
     func makeCategoryPickerSection(
         nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> ReloadableCategoryPicker {
+    ) -> CategoryPickerSectionDomain.Binder {
         
         let content = makeCategoryPickerContent(nanoServices)
         

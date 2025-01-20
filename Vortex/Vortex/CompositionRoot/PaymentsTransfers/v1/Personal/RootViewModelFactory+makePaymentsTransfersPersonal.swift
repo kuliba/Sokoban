@@ -18,14 +18,6 @@ extension RootViewModelFactory {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
         let content = makePaymentsTransfersPersonalContent(nanoServices)
-        let categoryPicker = content.categoryPicker.sectionBinder
-        
-        let notifyPicker = { [weak self, weak categoryPicker] in
-            
-            guard let self, let categoryPicker else { return }
-            
-            notify(categoryPicker: categoryPicker, with: $0)
-        }
         
         let personal = composeBinder(
             content: content,
@@ -34,7 +26,17 @@ extension RootViewModelFactory {
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
         
-        return (personal, { nanoServices.reloadCategories(notifyPicker) })
+        let categoryPicker = content.categoryPicker.sectionBinder
+        
+        let notify: () -> Void = {
+            
+            nanoServices.reloadCategories(
+                { categoryPicker?.content.event($0) },
+                { categoryPicker?.content.event(.loaded($0?.pending)) }
+            )
+        }
+        
+        return (personal, notify)
     }
     
     @inlinable
@@ -93,25 +95,6 @@ extension RootViewModelFactory {
     ) -> () -> Void {
         
         return { content.dismiss() }
-    }
-    
-    @inlinable
-    func notify(
-        categoryPicker: CategoryPicker,
-        with categories: [ServiceCategory]?,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let message = (categories?.count).map { "==== Loaded \($0) service categories." } ?? "Load service categories failure."
-        
-        logger.log(level: .info, category: .network, message: message, file: file, line: line)
-        
-        guard let categoryPicker = categoryPicker.sectionBinder
-        else {
-            return logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: file, line: line)
-        }
-        
-        categoryPicker.content.event(.loaded(categories))
     }
 }
 
