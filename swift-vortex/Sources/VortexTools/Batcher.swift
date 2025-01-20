@@ -37,6 +37,9 @@ public extension Batcher {
     
     /// Initiates the sequential processing of the provided parameters.
     ///
+    /// Each parameter is passed to the `perform` closure in order. The batch completes once all parameters
+    /// have been processed or an error occurs (errors are just collected; they do **not** halt processing).
+    ///
     /// - Parameters:
     ///   - parameters: An array of parameters to be processed.
     ///   - completion: A completion handler that is called with the array of parameters that failed during processing.
@@ -69,6 +72,9 @@ public extension Batcher {
 extension Batcher {
     
     /// Recursively processes the parameters, keeping track of those that fail.
+    ///
+    /// After the first parameter finishes, the next one begins. This method is used internally by `process(...)`
+    /// to handle all parameters in sequence.
     ///
     /// - Parameters:
     ///   - parameters: A slice of the remaining parameters to be processed.

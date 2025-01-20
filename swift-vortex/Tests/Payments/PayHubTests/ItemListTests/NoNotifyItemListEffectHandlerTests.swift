@@ -1,5 +1,5 @@
 //
-//  ItemListEffectHandlerTests.swift
+//  NoNotifyItemListEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 17.01.2025.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class ItemListEffectHandlerTests: ItemListTests {
+final class NoNotifyItemListEffectHandlerTests: ItemListTests {
     
     // MARK: - init
     
@@ -30,18 +30,6 @@ final class ItemListEffectHandlerTests: ItemListTests {
         sut.handleEffect(.load) { _ in }
         
         XCTAssertEqual(loadSpy.callCount, 1)
-    }
-    
-    func test_load_shouldPassNotifyToLoad() {
-        
-        let id = anyMessage()
-        let (sut, loadSpy, _) = makeSUT()
-        var receivedEvents = [SUT.Event]()
-        
-        sut.handleEffect(.load) { receivedEvents.append($0) }
-        loadSpy.payloads.first?(.update(state: .completed, forID: id))
-        
-        XCTAssertNoDiff(receivedEvents, [.update(state: .completed, forID: id)])
     }
     
     func test_load_shouldNotDeliverResultOnInstanceDeallocation() throws {
@@ -102,18 +90,6 @@ final class ItemListEffectHandlerTests: ItemListTests {
         XCTAssertEqual(reloadSpy.callCount, 1)
     }
     
-    func test_reload_shouldPassNotifyToReload() {
-        
-        let id = anyMessage()
-        let (sut, _, reloadSpy) = makeSUT()
-        var receivedEvents = [SUT.Event]()
-        
-        sut.handleEffect(.reload) { receivedEvents.append($0) }
-        reloadSpy.payloads.first?(.update(state: .completed, forID: id))
-        
-        XCTAssertNoDiff(receivedEvents, [.update(state: .completed, forID: id)])
-    }
-    
     func test_reload_shouldNotDeliverResultOnInstanceDeallocation() throws {
         
         var sut: SUT?
@@ -164,7 +140,7 @@ final class ItemListEffectHandlerTests: ItemListTests {
     // MARK: - Helpers
     
     private typealias SUT = Domain.EffectHandler
-    private typealias LoadSpy = Spy<(Event) -> Void, [Element]?>
+    typealias LoadSpy = Spy<Void, [Element]?>
     
     private func makeSUT(
         file: StaticString = #file,

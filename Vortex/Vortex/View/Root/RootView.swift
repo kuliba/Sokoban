@@ -91,7 +91,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(switcher as PaymentsTransfersSwitcher):
-                paymentsTransfersSwitcherView(switcher)
+                rootViewFactory.makePaymentsTransfersSwitcherView(switcher)
 
             default:
                 EmptyView()
@@ -217,28 +217,6 @@ extension PaymentsTransfersPersonalDomain.Binder {
     func refresh() {
         
         self.content.reload()
-    }
-}
-
-private extension RootView {
-    
-    func paymentsTransfersSwitcherView(
-        _ switcher: PaymentsTransfersSwitcher
-    ) -> some View {
-        
-        RefreshableScrollView(
-            action: switcher.refresh,
-            showsIndicators: false,
-            refreshCompletionDelay: 2.0
-        ) {
-            ComposedProfileSwitcherView(
-                model: switcher,
-                corporateView: rootViewFactory.makePaymentsTransfersCorporateView,
-                personalView: rootViewFactory.makePaymentsTransfersPersonalView,
-                undefinedView: { SpinnerView(viewModel: .init()) }
-            )
-            .padding(.top)
-        }
     }
 }
 
