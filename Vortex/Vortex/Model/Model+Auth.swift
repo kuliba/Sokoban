@@ -866,7 +866,6 @@ internal extension Model {
                         case .ok:
                             LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Login.Response, success")
                             self.action.send(ModelAction.Auth.Login.Response.success)
-//                            self.handleAuthSetDeviceSettings(payload: .init(sensorType: nil))
 
                         default:
                             
