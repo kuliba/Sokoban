@@ -116,19 +116,23 @@ extension RootViewModelFactory {
         return { content.event(.select(nil)) }
     }
     
+    typealias OperationPickerUpdater = ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]>
+    
     @inlinable
     func makeLatestUpdater(
         fetch: @escaping (@escaping ([Latest]?) -> Void) -> Void
-    ) -> ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]> {
+    ) -> OperationPickerUpdater {
         
-        let imageCache = model.imageCache()
-
         return .init(
             fetcher: AnyOptionalFetcher(fetch: fetch),
-            updater: AnyReactiveUpdater { latest in
+            updater: AnyReactiveUpdater { [weak self] latest in
+                
+                guard let self else {
+                    return Just([]).eraseToAnyPublisher()
+                }
                 
                 let md5Hashes = latest.compactMap(\.md5Hash)
-                let dictionaryPublisher = imageCache.imagesDictionaryPublisher(for: md5Hashes)
+                let dictionaryPublisher = infra.imageCache.imagesDictionaryPublisher(for: md5Hashes)
                 
                 return latest
                     .updating(with: dictionaryPublisher)

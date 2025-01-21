@@ -14,6 +14,7 @@ final class RootViewModelFactory {
     
     // TODO: - hide properties, provide methods to use in extensions
     
+    let infra: RootInfra
     let model: Model
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
@@ -24,7 +25,7 @@ final class RootViewModelFactory {
     
     let settings: RootViewModelFactorySettings
     
-    // active flags
+    // TODO: remove: active flags
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
     let historyFilterFlag: HistoryFilterFlag = true
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
@@ -50,6 +51,7 @@ final class RootViewModelFactory {
         settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
     ) {
+        self.infra = .init(model: model)
         self.model = model
         self.httpClient = httpClient
         self.logger = logger

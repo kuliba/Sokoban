@@ -43,12 +43,6 @@ final class ImageCache {
         print("ImageCache init", ObjectIdentifier(self))
     }
     
-    deinit {
-        
-        // TODO: use this as aa starting point to fix imageCache deallocation issues
-        print("ImageCache deinit", ObjectIdentifier(self))
-    }
-    
     func image(
         forKey imageKey: ImageKey
     ) -> ImageSubject {
