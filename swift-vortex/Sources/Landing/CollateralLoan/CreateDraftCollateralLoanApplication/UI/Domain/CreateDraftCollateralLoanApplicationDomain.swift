@@ -9,7 +9,12 @@ public enum CreateDraftCollateralLoanApplicationDomain {
 
     public struct LoadResultFailure: Equatable, Error {
         
-        public init() {}
+        public let message: String
+        
+        public init(message: String) {
+
+            self.message = message
+        }
     }
     
     public typealias CreateDraftApplicationResult = Swift.Result<

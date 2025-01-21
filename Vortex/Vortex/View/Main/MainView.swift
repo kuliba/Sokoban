@@ -275,7 +275,7 @@ struct MainView<NavigationOperationView: View>: View {
                 makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
-            CollateralLoanShowcaseView(binder: binder, factory: factory)
+            CollateralLoanShowcaseWrapperView(binder: binder, factory: factory)
                 .navigationBarWithBack(
                     title: "Кредиты",
                     dismiss: viewModel.resetDestination

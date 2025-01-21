@@ -35,8 +35,7 @@ extension RootViewModelFactory {
         let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer()
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
-            saveConsents: saveConsents(payload:completion:),
-            showSaveConsentsResult: showSaveConsentsResult(result:)
+            saveConsents: saveConsents(payload:completion:)
         )
         
         return .init(
@@ -58,7 +57,7 @@ extension RootViewModelFactory {
         
         createDraftApplication(payload.payload) { [createDraftApplication] in
   
-            completion($0.map(\.submitResult).mapError { _ in .init() })
+            completion($0.map(\.submitResult).mapError { .init(message: $0.localizedDescription) })
             _ = createDraftApplication
         }
     }
@@ -74,7 +73,7 @@ extension RootViewModelFactory {
         
         saveConsents(payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response).mapError { _ in .init() })
+            completion($0.map(\.response).mapError { .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
@@ -87,8 +86,8 @@ extension RootViewModelFactory {
         completion: @escaping (CreateDraftCollateralLoanApplicationDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .submitAnApplication(id):
-            completion(.submitAnApplication(id))
+        case let .showSaveConsentsResult(saveConsentsResult):
+            completion(.showSaveConsentsResult(saveConsentsResult))
         }
     }
 
@@ -98,15 +97,9 @@ extension RootViewModelFactory {
   
         switch navigation {
             
-        case .submitAnApplication(_):
+        case .showSaveConsentsResult:
             return .milliseconds(100)
         }
-    }
-    
-    private func showSaveConsentsResult(result: CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult) {
-        
-//        let successViewModel = makeCollateralLoanLandingSuccessViewModel()
-//        route.modal = .fullScreenSheet(.init(type: .success(successViewModel)))   
     }
 }
 

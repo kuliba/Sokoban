@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingView.swift
+//  CollateralLoanLandingWrapperView.swift
 //  Vortex
 //
 //  Created by Valentin Ozerov on 16.01.2025.
@@ -11,7 +11,7 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import RxViewModel
 import UIPrimitives
 
-struct CollateralLoanLandingView: View {
+struct CollateralLoanLandingWrapperView: View {
     
     let binder: GetCollateralLandingDomain.Binder
     let factory: Factory
@@ -139,7 +139,7 @@ struct CollateralLoanLandingView: View {
     }
 }
  
-extension CollateralLoanLandingView {
+extension CollateralLoanLandingWrapperView {
     
     typealias Factory = GetCollateralLandingFactory
 

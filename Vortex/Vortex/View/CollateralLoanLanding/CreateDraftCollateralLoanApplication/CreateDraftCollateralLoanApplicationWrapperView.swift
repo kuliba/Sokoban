@@ -25,6 +25,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 model: binder.content,
                 makeContentView: makeContentView(state:event:)
             )
+            .navigationDestination(
+                destination: state.navigation?.destination,
+                content: destinationView
+            )
         }
     }
     
@@ -36,12 +40,29 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         CreateDraftCollateralLoanApplicationView(
             state: state,
             event: event,
+            externalEvent: {
+                switch $0 {
+                case let .showSaveConsentsResult(saveConsentsResult):
+                    print("######1: " + String(describing: saveConsentsResult))
+                }
+            },
             config: .default,
             factory: .init(
                 makeImageViewWithMD5hash: factory.makeImageViewWithMD5hash,
                 makeImageViewWithURL: factory.makeImageViewWithURL
             )
         )
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        destination: CreateDraftCollateralLoanApplicationDomain.Navigation.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .showSaveConsentsResult(saveConsentsResult):
+            Text("######2: " + String(describing: saveConsentsResult))
+        }
     }
 }
     
@@ -57,19 +78,19 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
     var destination: Destination? {
         
         switch self {
-        case let .submitAnApplication(payload):
-            return .submitAnApplication(payload)
+        case let .showSaveConsentsResult(saveConsentsResult):
+            return .showSaveConsentsResult(saveConsentsResult)
         }
     }
 
     enum Destination {
         
-        case submitAnApplication(String)
+        case showSaveConsentsResult(CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult)
     }
 
     enum Navigation {
 
-        case submitAnApplication(String)
+        case showSaveConsentsResult(CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult)
     }
 }
 
@@ -78,8 +99,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation: Identifiable {
     var id: String {
         
         switch self {
-        case let .submitAnApplication(payload):
-            return payload
+        case .showSaveConsentsResult:
+            return "showSaveConsentsResult"
         }
     }
 }
@@ -89,7 +110,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation.Destination: Ide
     var id: String {
         
         switch self {
-        case let .submitAnApplication(payload): return payload
+        case .showSaveConsentsResult:
+            return "showSaveConsentsResult"
         }
     }
 }
