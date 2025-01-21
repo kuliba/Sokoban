@@ -700,25 +700,8 @@ private extension ProductProfileViewModel {
                     textFieldAlert = nil
                     
                 case _ as ProductProfileViewModelAction.Show.MeToMeExternal:
-                    if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
-                        
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(
-                            productTo: loanAccount,
-                            closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
-                            getUImage: { self.model.images.value[$0]?.uiImage }
-                        )
-                        self.link = .meToMeExternal(meToMeExternalViewModel)
-                    } else {
-                        
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(
-                            productTo: productData,
-                            closeAction: { [weak self] in
-                                self?.action.send(ProductProfileViewModelAction.Close.Link())
-                            },
-                            getUImage: { self.model.images.value[$0]?.uiImage }
-                        )
-                        self.link = .meToMeExternal(meToMeExternalViewModel)
-                    }
+                    openMeToMeLegacy(self.productData)
+                    
                 default:
                     break
                 }
@@ -1338,6 +1321,29 @@ private extension ProductProfileViewModel {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func openMeToMeLegacy(_ productData: ProductData?) {
+        
+        var loanAccount: ProductData?
+        
+        if let productData = productData as? ProductLoanData,
+           let loan = self.model.products.value[.account]?.first(where: {
+               $0.number == productData.settlementAccount }) {
+            
+            loanAccount = loan
+        }
+        
+        let meToMeExternalViewModel = MeToMeExternalViewModel(
+            productTo: loanAccount ?? productData,
+            closeAction: { [weak self] in
+                
+                self?.action.send(ProductProfileViewModelAction.Close.Link())
+            },
+            getUImage: { self.model.images.value[$0]?.uiImage }
+        )
+        
+        self.link = .meToMeExternal(meToMeExternalViewModel)
     }
     
     private func handleDepositTransfer() {
@@ -3143,14 +3149,7 @@ extension ProductProfileViewModel {
             self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))
             
         default:
-            let meToMeExternalViewModel = MeToMeExternalViewModel(
-                productTo: productData,
-                closeAction: { [weak self] in
-                    self?.action.send(ProductProfileViewModelAction.Close.Link())
-                },
-                getUImage: { self.model.images.value[$0]?.uiImage }
-            )
-            self.link = .meToMeExternal(meToMeExternalViewModel)
+            openMeToMeLegacy(productData)
         }
     }
     
