@@ -17,17 +17,26 @@ extension RootViewModelFactory {
     ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
-        let personal = makePaymentsTransfersPersonal(nanoServices)
-        let categoryPicker = personal.content.categoryPicker.sectionBinder
+        let content = makePaymentsTransfersPersonalContent(nanoServices)
         
-        let notifyPicker = { [weak self, weak categoryPicker] in
+        let personal = composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getPaymentsTransfersPersonalNavigation,
+            witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+        
+        let categoryPicker = content.categoryPicker.sectionBinder
+        
+        let notify: () -> Void = {
             
-            guard let self, let categoryPicker else { return }
-            
-            notify(categoryPicker: categoryPicker, with: $0)
+            nanoServices.reloadCategories(
+                { categoryPicker?.content.event($0) },
+                { categoryPicker?.content.event(.loaded($0?.pending)) }
+            )
         }
         
-        return (personal, { nanoServices.reloadCategories(notifyPicker) })
+        return (personal, notify)
     }
     
     @inlinable
@@ -45,21 +54,6 @@ extension RootViewModelFactory {
             loadCategories: loadCategories,
             reloadCategories: reloadCategories,
             loadAllLatest: makeLoadLatestOperations(.all)
-        )
-    }
-    
-    @inlinable
-    func makePaymentsTransfersPersonal(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonalDomain.Binder {
-        
-        let content = makePaymentsTransfersPersonalContent(nanoServices)
-        
-        return composeBinder(
-            content: content,
-            delayProvider: delayProvider,
-            getNavigation: getPaymentsTransfersPersonalNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
     
@@ -101,25 +95,6 @@ extension RootViewModelFactory {
     ) -> () -> Void {
         
         return { content.dismiss() }
-    }
-    
-    @inlinable
-    func notify(
-        categoryPicker: CategoryPicker,
-        with categories: [ServiceCategory]?,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let message = (categories?.count).map { "==== Loaded \($0) service categories." } ?? "Load service categories failure."
-        
-        logger.log(level: .info, category: .network, message: message, file: file, line: line)
-        
-        guard let categoryPicker = categoryPicker.sectionBinder
-        else {
-            return logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: file, line: line)
-        }
-        
-        categoryPicker.content.event(.loaded(categories))
     }
 }
 

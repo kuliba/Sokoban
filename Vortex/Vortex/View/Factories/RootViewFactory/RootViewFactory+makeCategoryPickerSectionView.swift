@@ -23,7 +23,11 @@ extension RootViewFactory {
                 model: binder.flow,
                 makeContentView: { state, _ in
                     
-                    makeCategoryPickerContentView(binder.content, headerHeight: 24)
+                    makeCategoryPickerContentView(
+                        binder.content, 
+                        select: { binder.flow.event(.select($0)) },
+                        headerHeight: 24
+                    )
                         .alert(
                             item: state.failure,
                             content: makeAlert(binder: binder)
@@ -35,6 +39,7 @@ extension RootViewFactory {
                 }
             )
             .padding(.top, 20)
+            
         } else {
             
             Text("Unexpected categoryPicker type \(String(describing: categoryPicker))")

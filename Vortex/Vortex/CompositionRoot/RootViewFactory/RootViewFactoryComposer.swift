@@ -114,8 +114,8 @@ extension RootViewFactoryComposer {
     }
     
     private func clearCache() {
-        
-        try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
+
+        (model.localAgent as? LocalAgent)?.clearCache()
     }
     
     func makeImageViewFactory(
@@ -849,7 +849,10 @@ private extension RootViewFactoryComposer {
                     
                     return .init(
                         detailID: $0.detailID,
-                        details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                        details: model.makeTransactionDetailButtonDetail(
+                            with: $0.info,
+                            merchantLogoMD5Hash: completed.merchantIcon
+                        ),
                         printFormType: $0.info.operationDetail?.printFormType ?? "",
                         status: $0.status
                     )

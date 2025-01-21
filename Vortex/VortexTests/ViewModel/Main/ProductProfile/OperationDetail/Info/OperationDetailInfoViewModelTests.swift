@@ -1100,7 +1100,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             currencyList: [.rub]
         )
         
-        sut.cells = sut.makeItems(operation: detail)
+        sut.cells = sut.makeItems(operation: detail, merchantLogoMD5Hash: nil)
         
         XCTAssertNoDiff(sut.testTitles, [
             "Сумма перевода",
@@ -1444,7 +1444,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let sut = OperationDetailInfoViewModel(
             model: model,
-            operation: detail ?? makeExternal(externalTransferType: externalTransferType),
+            operation: detail ?? makeExternal(externalTransferType: externalTransferType), merchantLogoMD5Hash: nil,
             dismissAction: {}
         )
         
@@ -1591,7 +1591,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         model.images.value = ["1": .iconClose]
         let sut = OperationDetailInfoViewModel(
             model: model,
-            operation: detail ?? makeOperationDetail(transferEnum: transferEnum),
+            operation: detail ?? makeOperationDetail(transferEnum: transferEnum), merchantLogoMD5Hash: nil,
             dismissAction: {}
         )
         
