@@ -485,26 +485,30 @@ class Model {
         
         //MARK: - Model Action
         
-        let oneTimer = Just(())
-            .delay(for: .seconds(10), scheduler: DispatchQueue.main)
+        let fcmTokenPublisher = self.fcmToken.compactMap { $0 }
+            .handleEvents(receiveOutput: { print("#### fcmToken: \($0)") })
+            .map { _ in () }
             .eraseToAnyPublisher()
         
-        let delayedFCMToken = Publishers.Merge(
-            self.fcmToken.compactMap { $0 }
-                .handleEvents(receiveOutput: { print("#### fcmToken: \($0)") })
-                .map { _ in () }
-                .eraseToAnyPublisher(),
-            oneTimer
-                .handleEvents(receiveOutput: { print("#### oneTimer: \($0)") })
-        )
-        .first()
+        print("#### expired just created")
+        let expired = Just(())
+            .handleEvents(receiveOutput: { print("#### expired just: \($0)") })
+            .delay(for: .seconds(10), scheduler: DispatchQueue.main)
+            .handleEvents(receiveOutput: { print("#### expired delayed: \($0)") })
+            .eraseToAnyPublisher()
+        
+        // either we get a token or wait expired
+        let fcmTokenOrExpired = Publishers.Merge(fcmTokenPublisher, expired).first()
         
         action
             .compactMap { $0 as? ModelAction.Auth.CheckClient.Request }
-            .zip(delayedFCMToken)
-            .handleEvents(receiveOutput: { print("#### combineLatest: \($0)") })
+            .flatMap { request in
+            
+                fcmTokenOrExpired.map { _ in request }
+            }
+            .handleEvents(receiveOutput: { print("#### flatMap: \($0)") })
             .receive(on: queue)
-            .sink { [weak self] payload, _ in
+            .sink { [weak self] payload in
                 
                 self?.handleAuthCheckClientRequest(payload: payload)
             }
