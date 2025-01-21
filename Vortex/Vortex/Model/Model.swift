@@ -168,8 +168,7 @@ class Model {
         userModel.preferredProductPublisher
     }
     
-    // private
-    var bindings: Set<AnyCancellable>
+    private var bindings: Set<AnyCancellable>
     private let queue = DispatchQueue(label: "ru.\(Config.name).sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         
@@ -486,6 +485,31 @@ class Model {
         
         //MARK: - Model Action
         
+        let oneTimer = Just(())
+            .delay(for: .seconds(10), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        
+        let delayedFCMToken = Publishers.Merge(
+            self.fcmToken.compactMap { $0 }
+                .handleEvents(receiveOutput: { print("#### fcmToken: \($0)") })
+                .map { _ in () }
+                .eraseToAnyPublisher(),
+            oneTimer
+                .handleEvents(receiveOutput: { print("#### oneTimer: \($0)") })
+        )
+        .first()
+        
+        action
+            .compactMap { $0 as? ModelAction.Auth.CheckClient.Request }
+            .zip(delayedFCMToken)
+            .handleEvents(receiveOutput: { print("#### combineLatest: \($0)") })
+            .receive(on: queue)
+            .sink { [weak self] payload, _ in
+                
+                self?.handleAuthCheckClientRequest(payload: payload)
+            }
+            .store(in: &bindings)
+        
         action
             .receive(on: queue)
             .sink { [weak self] action in
@@ -574,8 +598,8 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
-                case let payload as ModelAction.Auth.CheckClient.Request:
-                    handleAuthCheckClientRequest(payload: payload)
+//                case let payload as ModelAction.Auth.CheckClient.Request:
+//                    handleAuthCheckClientRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)

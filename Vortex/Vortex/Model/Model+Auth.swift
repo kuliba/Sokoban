@@ -316,9 +316,6 @@ extension Model {
 
 //MARK: - Handlers
 
-import CombineSchedulers
-import Foundation
-
 internal extension Model {
     
     func handleAuthSessionStartRequest() {
@@ -379,36 +376,14 @@ internal extension Model {
         }
     }
     
-    func handleAuthCheckClientRequest(payload: ModelAction.Auth.CheckClient.Request) {
-        
+    func handleAuthCheckClientRequest(
+        payload: ModelAction.Auth.CheckClient.Request
+    ) {
         LoggerAgent.shared.log(category: .model, message: "handleAuthCheckClientRequest")
         
-        if self.fcmToken.value != nil {
-            Task {
-                
-                await handleAuthCheckClientRequest(payload: payload)
-            }
-        } else {
+        Task { [weak self] in
             
-            let oneTimer = Just(())
-                .delay(for: .seconds(10), scheduler: DispatchQueue.main)
-                .eraseToAnyPublisher()
-            
-            Publishers.Merge(
-                self.fcmToken.compactMap { $0 }
-                    .map { _ in () }
-                    .eraseToAnyPublisher(),
-                oneTimer
-            )
-            .first()
-            .sink {
-                
-                Task { [weak self] in
-
-                    await self?.handleAuthCheckClientRequest(payload: payload)
-                }
-            }
-            .store(in: &bindings)
+            await self?.handleAuthCheckClientRequest(payload: payload)
         }
     }
     
