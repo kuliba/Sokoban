@@ -1,5 +1,5 @@
 //
-//  CollateralLoanShowcaseView.swift
+//  CollateralLoanShowcaseWrapperView.swift
 //  Vortex
 //
 //  Created by Valentin Ozerov on 25.12.2024.
@@ -12,7 +12,7 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-struct CollateralLoanShowcaseView: View {
+struct CollateralLoanShowcaseWrapperView: View {
     
     @Environment(\.openURL) var openURL
     
@@ -81,7 +81,7 @@ struct CollateralLoanShowcaseView: View {
         
         switch navigation {
         case let .landing(landingID, landing):
-            CollateralLoanLandingView(
+            CollateralLoanLandingWrapperView(
                 binder: landing,
                 factory: .init(
                     makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash,

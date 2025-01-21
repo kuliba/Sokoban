@@ -66,8 +66,8 @@ extension RootViewModelFactory {
         completion: @escaping (GetCollateralLandingDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .createDraftCollateralLoanApplication(payload):
-            let binder = makeCreateDraftCollateralLoanApplicationBinder(payload: payload)
+        case let .createDraftCollateralLoanApplication(uiData):
+            let binder = makeCreateDraftCollateralLoanApplicationBinder(uiData: uiData)
             completion(.createDraftCollateralLoanApplication(binder))
 
         case let .showCaseList(id):
@@ -222,5 +222,12 @@ private extension RemoteServices.ResponseMapper.GetCollateralLandingResponse {
             rate: icons.rate,
             city: icons.city
         )
+    }
+}
+
+extension String {
+    
+    func addingPercentEncoding() -> Self {
+        addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
     }
 }

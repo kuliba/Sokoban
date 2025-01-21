@@ -33,13 +33,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     enum Select: Equatable {
         
-        // TODO: Replace to payload
-        case submitAnApplication(String)
+        case showSaveConsentsResult(SaveConsentsResult)
     }
     
-    enum Navigation {
+    enum Navigation: Equatable {
 
-        // TODO: Need to realize binder in the future
-        case submitAnApplication(String)
+        case showSaveConsentsResult(SaveConsentsResult)
     }
 }

@@ -12,10 +12,10 @@ public extension RequestFactory {
 
     struct SaveConsentsPayload: Equatable {
         
-        public let applicationId: Int
+        public let applicationId: UInt
         public let verificationCode: String
 
-        public init(applicationId: Int, verificationCode: String) {
+        public init(applicationId: UInt, verificationCode: String) {
             self.applicationId = applicationId
             self.verificationCode = verificationCode
         }

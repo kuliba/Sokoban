@@ -7,5 +7,12 @@
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public enum Effect: Equatable {}
+    public enum Effect: Equatable {
+        
+        case createDraftApplication(CreateDraftPayload)
+        case saveConsents(SaveConsentsPayload)
+    }
+    
+    public typealias CreateDraftPayload = CollateralLandingApplicationCreateDraftPayload
+    public typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
 }

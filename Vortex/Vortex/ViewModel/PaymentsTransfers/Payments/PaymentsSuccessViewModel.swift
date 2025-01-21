@@ -356,7 +356,15 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .document:
                     
                     switch mode {
-                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund, .sberQR:
+                    case .normal,
+                         .meToMe,
+                         .closeDeposit,
+                         .makePaymentToDeposit,
+                         .makePaymentFromDeposit,
+                         .change,
+                         .refund,
+                         .sberQR,
+                         .collateralLoanLanding:
                         guard
                             let operationDetailData,
                             let paymentOperationDetailID
@@ -541,6 +549,7 @@ extension PaymentsSuccessViewModel {
         case closeDeposit(Currency, balance: Double, CloseProductTransferData)
         case closeAccount(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
         case closeAccountEmpty(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
+        case collateralLoanLanding
         case makePaymentToDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case makePaymentFromDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case changePin

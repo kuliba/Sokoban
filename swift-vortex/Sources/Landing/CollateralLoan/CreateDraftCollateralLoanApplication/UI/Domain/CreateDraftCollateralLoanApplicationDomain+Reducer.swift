@@ -16,6 +16,34 @@ extension CreateDraftCollateralLoanApplicationDomain {
             var state = state
             var effect: Effect?
             
+            switch event {
+            case .selectedAmount(_):
+                break
+                
+            case .selectedPeriod(_):
+                break
+                
+            case .selectedCity(_):
+                break
+                
+            case .tappedContinue:
+                state.isLoading = true
+                effect = .createDraftApplication(state.createDraftApplicationPayload)
+
+            case let .applicationCreated(result):
+                state.applicationId = try? result.get().applicationId
+                state.stage = .confirm
+                state.isLoading = false
+
+            case .tappedSubmit:
+                state.isLoading = true
+                effect = .saveConsents(state.saveConsentspayload)     
+                
+            case let .showSaveConsentsResult(result):
+                state.isLoading = false
+                state.saveConsentsResult = result
+            }
+            
             return (state, effect)
         }
     }

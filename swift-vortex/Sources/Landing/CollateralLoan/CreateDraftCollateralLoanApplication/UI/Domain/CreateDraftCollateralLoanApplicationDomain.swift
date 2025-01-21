@@ -5,4 +5,25 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-public enum CreateDraftCollateralLoanApplicationDomain {}
+public enum CreateDraftCollateralLoanApplicationDomain {
+
+    public struct LoadResultFailure: Equatable, Error {
+        
+        public let message: String
+        
+        public init(message: String) {
+
+            self.message = message
+        }
+    }
+    
+    public typealias CreateDraftApplicationResult = Swift.Result<
+        CollateralLandingApplicationCreateDraftResult,
+        LoadResultFailure
+    >
+    
+    public typealias SaveConsentsResult = Swift.Result<
+        CollateralLandingApplicationSaveConsentsResult, LoadResultFailure
+    >
+
+}

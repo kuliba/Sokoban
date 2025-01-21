@@ -5,7 +5,23 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-extension CreateDraftCollateralLoanApplicationDomain {
+import Foundation
 
-    public enum Event: Equatable {}
+extension CreateDraftCollateralLoanApplicationDomain {
+    
+    public enum Event: Equatable {
+        
+        case selectedAmount(UInt)
+        case selectedPeriod(String)
+        case selectedCity(String)
+        case tappedContinue
+        case tappedSubmit
+        case applicationCreated(CreateDraftApplicationResult)
+        case showSaveConsentsResult(SaveConsentsResult)
+    }
+    
+    public enum ExternalEvent: Equatable {
+        
+        case showSaveConsentsResult(SaveConsentsResult)
+    }
 }

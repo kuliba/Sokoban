@@ -12,6 +12,7 @@ import SberQR
 import SwiftUI
 import OperatorsListComponents
 import CalendarUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
