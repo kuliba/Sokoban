@@ -46,8 +46,8 @@ class ProductProfileViewModel: ObservableObject {
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published var link: Link? // { didSet { isLinkActive = link != nil } }
+   // @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
@@ -434,6 +434,12 @@ extension ProductProfileViewModel {
 private extension ProductProfileViewModel {
     
     func bind() {
+        
+        NotificationCenter.default
+            .publisher(for: .dismissAllViewAndSwitchToMainTab)
+            .receive(on: scheduler)
+            .sink { [weak self] _ in self?.link = nil }
+            .store(in: &bindings)
                 
         action
             .compactMap { $0 as? DelayWrappedAction }
@@ -451,7 +457,7 @@ private extension ProductProfileViewModel {
         
         action
             .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ChangePin }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] payload in
                 
                 guard let self else { return }
@@ -539,15 +545,25 @@ private extension ProductProfileViewModel {
 //                }
             }.store(in: &bindings)
         
-        $isLinkActive
-            .sink { [unowned self] value in
-                
-                if value == false {
+        $link
+            .sink { [weak self] link in
                     
-                    model.setPreferredProductID(to: nil)
+                if link == nil {
+                    
+                    self?.model.setPreferredProductID(to: nil)
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
+        
+//        $isLinkActive
+//            .sink { [unowned self] value in
+//                
+//                if value == false {
+//                    
+//                    model.setPreferredProductID(to: nil)
+//                }
+//                
+//            }.store(in: &bindings)
         
         $filterState
             .sink { state in
