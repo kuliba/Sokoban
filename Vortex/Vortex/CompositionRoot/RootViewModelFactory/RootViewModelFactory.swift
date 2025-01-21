@@ -16,9 +16,6 @@ final class RootViewModelFactory {
     
     let infra: Infra
     let model: Model
-    let httpClient: HTTPClient
-    let logger: LoggerAgentProtocol
-    
     let mapScanResult: MapScanResult
     let resolveQR: ResolveQR
     let scanner: any QRScannerViewModel
@@ -51,10 +48,12 @@ final class RootViewModelFactory {
         settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
     ) {
-        self.infra = .init(model: model)
+        self.infra = .init(
+            httpClient: httpClient,
+            imageCache: model.imageCache(),
+            logger: logger
+        )
         self.model = model
-        self.httpClient = httpClient
-        self.logger = logger
         self.mapScanResult = mapScanResult
         self.resolveQR = resolveQR
         self.scanner = scanner

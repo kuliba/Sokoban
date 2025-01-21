@@ -20,7 +20,7 @@ extension RootViewModelFactory {
         let getProducts = model.getFastPaymentsSettingsProducts
         let getBanks = model.getBanks
         
-        let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(httpClient, infoNetworkLog)
+        let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(infra.httpClient, infoNetworkLog)
         
         let bankDefaultReducer = BankDefaultReducer()
         let consentListReducer = ConsentListRxReducer()
@@ -34,11 +34,11 @@ extension RootViewModelFactory {
             productsReduce: productsReducer.reduce(_:_:)
         )
         
-        let facade = MicroServices.Facade(httpClient, getProducts, getBanks, getBankDefaultResponse, infoNetworkLog)
+        let facade = MicroServices.Facade(infra.httpClient, getProducts, getBanks, getBankDefaultResponse, infoNetworkLog)
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
             facade: facade,
-            httpClient: httpClient, 
+            httpClient: infra.httpClient, 
             getProducts: model.getC2BSubscriptionProducts,
             log: infoNetworkLog
         )

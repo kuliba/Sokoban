@@ -9,14 +9,8 @@ extension RootViewModelFactory {
     
     struct Infra {
         
+        let httpClient: HTTPClient
         let imageCache: ImageCache
-    }
-}
-
-extension RootViewModelFactory.Infra {
-    
-    init(model: Model) {
-        
-        self.imageCache = model.imageCache()
+        let logger: LoggerAgentProtocol
     }
 }

@@ -17,7 +17,7 @@ extension RootViewModelFactory {
         
         let localBannerListLoader = ServiceItemsLoader.default
         let getBannerList = NanoServices.makeGetBannerCatalogListV2(
-            httpClient: httpClient,
+            httpClient: infra.httpClient,
             log: infoNetworkLog
         )
         

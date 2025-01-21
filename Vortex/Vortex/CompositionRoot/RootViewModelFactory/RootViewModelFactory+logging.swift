@@ -15,8 +15,7 @@ extension RootViewModelFactory {
         file: StaticString = #fileID,
         line: UInt = #line
     ) {
-        
-        logger.log(level: level, category: category, message: message, file: file, line: line)
+        infra.logger.log(level: level, category: category, message: message, file: file, line: line)
     }
     
     @inlinable
@@ -25,8 +24,7 @@ extension RootViewModelFactory {
         file: StaticString = #fileID,
         line: UInt = #line
     ) {
-        
-        logger.log(level: .info, category: .network, message: message, file: file, line: line)
+        log(level: .info, category: .network, message: message, file: file, line: line)
     }
     
     @inlinable
@@ -36,8 +34,29 @@ extension RootViewModelFactory {
         file: StaticString = #fileID,
         line: UInt = #line
     ) {
+        log(level: .error, category: category, message: message, file: file, line: line)
+    }
+    
+    /// Logs a message at the debug level with the specified category.
+    ///
+    /// - Parameters:
+    ///   - category: The log category.
+    ///   - message: The message to log.
+    ///   - file: The file from which this method is called.
+    ///   - line: The line number from which this method is called.
+    @inlinable
+    func debugLog(
+        category: LoggerAgentCategory,
+        message: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        log(level: .debug, category: category, message: message, file: file, line: line)
+    }
+    
+    @inlinable
+    func debugLog(pageCount: Int, of total: Int) {
         
-        logger.log(level: .error, category: category, message: message, file: file, line: line)
+        debugLog(category: .cache, message: "Page with \(pageCount) item(s) of \(total) total.")
     }
 }
-
