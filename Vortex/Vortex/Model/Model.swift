@@ -169,7 +169,7 @@ class Model {
     }
     
     // private
-    private var bindings: Set<AnyCancellable>
+    var bindings: Set<AnyCancellable>
     private let queue = DispatchQueue(label: "ru.\(Config.name).sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         

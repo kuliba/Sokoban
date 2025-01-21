@@ -255,6 +255,8 @@ extension ModelAction {
 
 //MARK: - Data Helpers
 
+import Combine
+
 extension Model {
     
     var authPincodeLength: Int { 4 }
@@ -313,6 +315,9 @@ extension Model {
 }
 
 //MARK: - Handlers
+
+import CombineSchedulers
+import Foundation
 
 internal extension Model {
     
@@ -378,60 +383,89 @@ internal extension Model {
         
         LoggerAgent.shared.log(category: .model, message: "handleAuthCheckClientRequest")
         
-        Task {
+        if self.fcmToken.value != nil {
+            Task {
+                
+                await handleAuthCheckClientRequest(payload: payload)
+            }
+        } else {
             
-            do {
+            let oneTimer = Just(())
+                .delay(for: .seconds(10), scheduler: DispatchQueue.main)
+                .eraseToAnyPublisher()
+            
+            Publishers.Merge(
+                self.fcmToken.compactMap { $0 }
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                oneTimer
+            )
+            .first()
+            .sink {
                 
-                let credentials = try await authSessionCredentials()
-                self.fcmToken.value = credentials.token
+                Task { [weak self] in
+
+                    await self?.handleAuthCheckClientRequest(payload: payload)
+                }
+            }
+            .store(in: &bindings)
+        }
+    }
+    
+    func handleAuthCheckClientRequest(
+        payload: ModelAction.Auth.CheckClient.Request
+    ) async {
+        
+        do {
+            
+            let credentials = try await authSessionCredentials()
+            
+            try await authPushRegister(token: credentials.token)
+            let encryptedNumber = try credentials.csrfAgent.encrypt(payload.number)
+            let cryptoVersion = "1.0"
+            
+            let command = ServerCommands.RegistrationContoller.CheckClient(token: credentials.token, payload: .init(cardNumber: encryptedNumber, cryptoVersion: cryptoVersion))
+            LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
+            self.serverAgent.executeCommand(command: command) { result in
                 
-                try await authPushRegister(token: credentials.token)
-                let encryptedNumber = try credentials.csrfAgent.encrypt(payload.number)
-                let cryptoVersion = "1.0"
-                
-                let command = ServerCommands.RegistrationContoller.CheckClient(token: credentials.token, payload: .init(cardNumber: encryptedNumber, cryptoVersion: cryptoVersion))
-                LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
-                self.serverAgent.executeCommand(command: command) { result in
-                    
-                    switch result {
-                    case .success(let response):
-                        if let data = response.data {
+                switch result {
+                case .success(let response):
+                    if let data = response.data {
+                        
+                        do {
                             
-                            do {
-                                
-                                let decryptedPhone = try credentials.csrfAgent.decrypt(data.phone)
-                                LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.CheckClient.Response, success")
-                                self.action.send(ModelAction.Auth.CheckClient.Response.success(codeLength: self.authVerificationCodeLength, phone: decryptedPhone, resendCodeDelay: self.authVerificationCodeResendDelay))
-                                
-                            } catch {
-                                
-                                self.handleServerCommandError(error: error, command: command)
-                                LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.CheckClient.Response, failure")
-                                self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
-                            }
+                            let decryptedPhone = try credentials.csrfAgent.decrypt(data.phone)
+                            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.CheckClient.Response, success")
+                            self.action.send(ModelAction.Auth.CheckClient.Response.success(codeLength: self.authVerificationCodeLength, phone: decryptedPhone, resendCodeDelay: self.authVerificationCodeResendDelay))
                             
-                        } else {
+                        } catch {
                             
-                            self.handleServerCommandEmptyData(command: command)
-                            
-                            let message = response.errorMessage ?? self.defaultErrorMessage
+                            self.handleServerCommandError(error: error, command: command)
                             LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.CheckClient.Response, failure")
-                            self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: message))
+                            self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
                         }
                         
-                    case .failure(let error):
-                        self.handleServerCommandError(error: error, command: command)
+                    } else {
+                        
+                        self.handleServerCommandEmptyData(command: command)
+                        
+                        let message = response.errorMessage ?? self.defaultErrorMessage
                         LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.CheckClient.Response, failure")
-                        self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
+                        self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: message))
                     }
+                    
+                case .failure(let error):
+                    self.handleServerCommandError(error: error, command: command)
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.CheckClient.Response, failure")
+                    self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
                 }
-
-            } catch {
-                
-                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth CheckClient Task Error: \(error.localizedDescription)")
-                LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.CheckClient.Response, failure")
-                self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
             }
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Auth CheckClient Task Error: \(error.localizedDescription)")
+            LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.CheckClient.Response, failure")
+            self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
         }
     }
     
