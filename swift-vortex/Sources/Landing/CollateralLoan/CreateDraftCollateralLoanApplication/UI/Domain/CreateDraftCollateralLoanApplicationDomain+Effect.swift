@@ -11,7 +11,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
         
         case createDraftApplication(CreateDraftPayload)
         case saveConsents(SaveConsentsPayload)
-        case showSaveConsentsResult(SaveConsentsResult)
     }
     
     public typealias CreateDraftPayload = CollateralLandingApplicationCreateDraftPayload

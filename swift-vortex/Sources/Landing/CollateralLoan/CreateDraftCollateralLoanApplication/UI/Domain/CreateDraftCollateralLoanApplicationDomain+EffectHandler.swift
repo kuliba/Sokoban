@@ -31,9 +31,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .saveConsents(payload):
                 saveConsents(payload) { dispatch(.showSaveConsentsResult($0)) }
-
-            case let .showSaveConsentsResult(saveConsentsResult):
-                showSaveConsentsResult(saveConsentsResult)
             }
         }
 
