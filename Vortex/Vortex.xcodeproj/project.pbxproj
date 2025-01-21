@@ -429,7 +429,7 @@
 		2A118E272AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */; };
 		2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */; };
 		2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */; };
-		2A11B9392D402D6500BD98C2 /* RootInfra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A11B9382D402D6500BD98C2 /* RootInfra.swift */; };
+		2A11B9392D402D6500BD98C2 /* RootViewModelFactory+Infra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A11B9382D402D6500BD98C2 /* RootViewModelFactory+Infra.swift */; };
 		2A11B93B2D402DCF00BD98C2 /* ImageCache+imagesDictionaryPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A11B93A2D402DCF00BD98C2 /* ImageCache+imagesDictionaryPublisher.swift */; };
 		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
 		2A1408202B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14081F2B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift */; };
@@ -4052,7 +4052,7 @@
 		2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINFunctionalityActivationService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINServiceTests.swift"; sourceTree = "<group>"; };
 		2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINHelpers.swift; sourceTree = "<group>"; };
-		2A11B9382D402D6500BD98C2 /* RootInfra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootInfra.swift; sourceTree = "<group>"; };
+		2A11B9382D402D6500BD98C2 /* RootViewModelFactory+Infra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Infra.swift"; sourceTree = "<group>"; };
 		2A11B93A2D402DCF00BD98C2 /* ImageCache+imagesDictionaryPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCache+imagesDictionaryPublisher.swift"; sourceTree = "<group>"; };
 		2A14081D2B78C79E004219AA /* C2BSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = C2BSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A14081F2B78C79E004219AA /* C2BSubscriptionUIPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BSubscriptionUIPreviewApp.swift; sourceTree = "<group>"; };
@@ -10922,7 +10922,7 @@
 			children = (
 				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
-				2A11B9382D402D6500BD98C2 /* RootInfra.swift */,
+				2A11B9382D402D6500BD98C2 /* RootViewModelFactory+Infra.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
 				2AB529FC2D296F930016AA6E /* RootViewModelFactory+composeBinder.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
@@ -22645,7 +22645,7 @@
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				A5ECD4C127ECB392008FBEEC /* C2BSuccessViewController.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
-				2A11B9392D402D6500BD98C2 /* RootInfra.swift in Sources */,
+				2A11B9392D402D6500BD98C2 /* RootViewModelFactory+Infra.swift in Sources */,
 				68B55C5B28249D8F00ACAF46 /* OpenDepositDetailView.swift in Sources */,
 				83E45EC52D01C98900158F64 /* FlowEffectHandlerMicroServices.swift in Sources */,
 				68AD33F9279961F700647665 /* ServerCommands+Card.swift in Sources */,

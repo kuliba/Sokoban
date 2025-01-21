@@ -14,7 +14,7 @@ final class RootViewModelFactory {
     
     // TODO: - hide properties, provide methods to use in extensions
     
-    let infra: RootInfra
+    let infra: Infra
     let model: Model
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
