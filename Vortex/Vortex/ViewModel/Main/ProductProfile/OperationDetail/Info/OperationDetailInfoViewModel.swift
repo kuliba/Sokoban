@@ -206,7 +206,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell)}
+          //  if let documentNumberCell { cells.append(documentNumberCell)}
 
             if let amountCell = Self.amountCell(
                 with: model,
