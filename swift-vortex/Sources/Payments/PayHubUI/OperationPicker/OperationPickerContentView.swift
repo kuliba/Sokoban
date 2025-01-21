@@ -82,7 +82,7 @@ private extension OperationPickerContentView {
             Button {
                 event(.select(identified.element))
             } label: {
-                label
+                label.contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }

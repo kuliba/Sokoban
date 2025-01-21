@@ -39,6 +39,14 @@ final class ImageCache {
         self.imagesPublisher = imagesPublisher
         self.fallback = fallback
         self.scheduler = scheduler
+        
+        print("ImageCache init", ObjectIdentifier(self))
+    }
+    
+    deinit {
+        
+        // TODO: use this as aa starting point to fix imageCache deallocation issues
+        print("ImageCache deinit", ObjectIdentifier(self))
     }
     
     func image(
