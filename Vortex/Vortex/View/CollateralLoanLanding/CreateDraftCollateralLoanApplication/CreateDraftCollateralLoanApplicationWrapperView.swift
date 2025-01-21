@@ -13,7 +13,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     @Environment(\.openURL) var openURL
     
-    let binder: CreateDraftCollateralLoanApplicationDomain.Binder
+    let binder: Domain.Binder
     let config: Config
     let factory: Factory
     
@@ -24,10 +24,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             RxWrapperView(
                 model: binder.content,
                 makeContentView: makeContentView(state:event:)
-            )
-            .navigationDestination(
-                destination: state.navigation?.destination,
-                content: destinationView
             )
         }
     }
@@ -47,20 +43,13 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             )
         )
     }
-    
-    @ViewBuilder
-    private func destinationView(
-        destination: CreateDraftCollateralLoanApplicationDomain.Navigation.Destination
-    ) -> some View {
-        
-        Text("destinationView")
-    }
 }
-
+    
 extension CreateDraftCollateralLoanApplicationWrapperView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
@@ -90,7 +79,7 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation: Identifiable {
         
         switch self {
         case let .submitAnApplication(payload):
-                return payload
+            return payload
         }
     }
 }

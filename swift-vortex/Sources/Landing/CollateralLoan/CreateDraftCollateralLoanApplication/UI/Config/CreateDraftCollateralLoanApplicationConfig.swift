@@ -14,6 +14,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public let colors: Colors
     public let layouts: Layouts
     public let header: Header
+    public let button: Button
 
     public struct Fonts {
         
@@ -119,7 +120,8 @@ extension CreateDraftCollateralLoanApplicationConfig {
                 )
             )
         ),
-        header: .preview
+        header: .preview,
+        button: .preview
     )
 }
 

@@ -272,7 +272,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
                 makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
-                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0)) }
+                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
             CollateralLoanShowcaseView(binder: binder, factory: factory)
@@ -621,6 +621,7 @@ extension MainViewModel {
         landingServices: .empty(),
         
         paymentsTransfersFactory: .preview,
+        collateralLoanLandingFactory: .preview,
         updateInfoStatusFlag: .active,
         onRegister: {
         },

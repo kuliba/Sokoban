@@ -28,17 +28,38 @@ public struct CreateDraftCollateralLoanApplicationView: View {
     
     public var body: some View {
         
-        ScrollView {
+        if state.isLoading {
             
-            CreateDraftCollateralLoanApplicationHeaderView(
-                state: state,
-                event: event,
-                config: config,
-                factory: factory
-            )
-            
-            Spacer()
+            ProgressView()
+        } else {
+        
+            content
         }
+    }
+        
+    @ViewBuilder
+    private var content: some View {
+        
+        VStack {
+            
+            ScrollView {
+                
+                CreateDraftCollateralLoanApplicationHeaderView(
+                    state: state,
+                    event: event,
+                    config: config,
+                    factory: factory
+                )
+            }
+            .frame(maxHeight: .infinity)
+        }
+        
+        CreateDraftCollateralLoanApplicationButtonView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
     }
 }
 
