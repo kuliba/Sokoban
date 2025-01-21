@@ -2700,6 +2700,10 @@
 		8328ABF52C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */; };
 		8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */; };
 		8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */; };
+		832CB0A32D3E780500370E7F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832CB0A22D3E780500370E7F /* Item.swift */; };
+		832CB0A52D3E822900370E7F /* CarouselWithPromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832CB0A42D3E822900370E7F /* CarouselWithPromoView.swift */; };
+		832CB0A72D3FEC1700370E7F /* Logic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832CB0A62D3FEC1700370E7F /* Logic.swift */; };
+		832CB0A92D3FEC6200370E7F /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832CB0A82D3FEC6200370E7F /* Preview.swift */; };
 		832F2D4D2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */; };
 		832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */; };
 		832F2D532BC9570200221360 /* BottomSheetReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D522BC9570200221360 /* BottomSheetReducer.swift */; };
@@ -6294,6 +6298,10 @@
 		8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSVCardLimitServices.swift; sourceTree = "<group>"; };
 		8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeSVCardLimitRequest.swift"; sourceTree = "<group>"; };
 		8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "RequestFactory+createChangeSVCardLimitTests.swift"; path = "ForaBankTests/Services/RequestFactory/RequestFactory+createChangeSVCardLimitTests.swift"; sourceTree = SOURCE_ROOT; };
+		832CB0A22D3E780500370E7F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		832CB0A42D3E822900370E7F /* CarouselWithPromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselWithPromoView.swift; sourceTree = "<group>"; };
+		832CB0A62D3FEC1700370E7F /* Logic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic.swift; sourceTree = "<group>"; };
+		832CB0A82D3FEC6200370E7F /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createTopUpPanel.swift"; sourceTree = "<group>"; };
 		832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductNavigationStateEffectHandler.swift; sourceTree = "<group>"; };
 		832F2D522BC9570200221360 /* BottomSheetReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetReducer.swift; sourceTree = "<group>"; };
@@ -16055,6 +16063,7 @@
 			isa = PBXGroup;
 			children = (
 				83AB45282BADB9170055A4E9 /* Preview Assets.xcassets */,
+				832CB0A82D3FEC6200370E7F /* Preview.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -16924,6 +16933,7 @@
 			children = (
 				D4BD60912B97DF5500909F43 /* NewProductButton.swift */,
 				835F095E2BB02F1400E681AC /* CarouselMainView.swift */,
+				832CB0A42D3E822900370E7F /* CarouselWithPromoView.swift */,
 				D4BD60972B98A24E00909F43 /* StickerView.swift */,
 			);
 			path = Views;
@@ -16934,6 +16944,8 @@
 			children = (
 				D4BD607F2B97511000909F43 /* Product.swift */,
 				835F09602BB1B48100E681AC /* CarouselProduct.swift */,
+				832CB0A22D3E780500370E7F /* Item.swift */,
+				832CB0A62D3FEC1700370E7F /* Logic.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -20682,10 +20694,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				832CB0A32D3E780500370E7F /* Item.swift in Sources */,
+				832CB0A52D3E822900370E7F /* CarouselWithPromoView.swift in Sources */,
 				D47C7EE02B97165000A35A25 /* ContentView_Preview.swift in Sources */,
 				D47C7ED42B9715F700A35A25 /* ContentView.swift in Sources */,
+				832CB0A72D3FEC1700370E7F /* Logic.swift in Sources */,
 				D47C7ED22B9715F700A35A25 /* CarouselPreviewApp.swift in Sources */,
 				D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */,
+				832CB0A92D3FEC6200370E7F /* Preview.swift in Sources */,
 				D46EC0F12B9D2E7200E70669 /* NewProductButtonConfig.swift in Sources */,
 				D4BD60922B97DF5500909F43 /* NewProductButton.swift in Sources */,
 				D4BD608C2B97511100909F43 /* Product.swift in Sources */,
@@ -27458,6 +27474,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CarouselPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -27497,6 +27514,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CarouselPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -27535,6 +27553,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CarouselPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -27573,6 +27592,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CarouselPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
