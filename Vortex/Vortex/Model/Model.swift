@@ -168,7 +168,6 @@ class Model {
         userModel.preferredProductPublisher
     }
     
-    // private
     private var bindings: Set<AnyCancellable>
     private let queue = DispatchQueue(label: "ru.\(Config.name).sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
@@ -486,6 +485,35 @@ class Model {
         
         //MARK: - Model Action
         
+        let fcmTokenPublisher = self.fcmToken.compactMap { $0 }
+            .handleEvents(receiveOutput: { print("#### fcmToken: \($0)") })
+            .map { _ in () }
+            .eraseToAnyPublisher()
+        
+        print("#### expired just created")
+        let expired = Just(())
+            .handleEvents(receiveOutput: { print("#### expired just: \($0)") })
+            .delay(for: .seconds(10), scheduler: DispatchQueue.main)
+            .handleEvents(receiveOutput: { print("#### expired delayed: \($0)") })
+            .eraseToAnyPublisher()
+        
+        // either we get a token or wait expired
+        let fcmTokenOrExpired = Publishers.Merge(fcmTokenPublisher, expired).first()
+        
+        action
+            .compactMap { $0 as? ModelAction.Auth.CheckClient.Request }
+            .flatMap { request in
+            
+                fcmTokenOrExpired.map { _ in request }
+            }
+            .handleEvents(receiveOutput: { print("#### flatMap: \($0)") })
+            .receive(on: queue)
+            .sink { [weak self] payload in
+                
+                self?.handleAuthCheckClientRequest(payload: payload)
+            }
+            .store(in: &bindings)
+        
         action
             .receive(on: queue)
             .sink { [weak self] action in
@@ -574,8 +602,8 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
-                case let payload as ModelAction.Auth.CheckClient.Request:
-                    handleAuthCheckClientRequest(payload: payload)
+//                case let payload as ModelAction.Auth.CheckClient.Request:
+//                    handleAuthCheckClientRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)

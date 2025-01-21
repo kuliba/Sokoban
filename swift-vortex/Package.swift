@@ -1416,7 +1416,8 @@ private extension Target {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
-            .uiPrimitives
+            .uiPrimitives,
+            .paymentComponents
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
@@ -3271,6 +3272,7 @@ private extension Target {
             .genericLoader,
             .genericRemoteService,
             .latestPaymentsBackendV3,
+            .payHub,
             .remoteServices,
             .rxViewModel,
             .serialComponents,

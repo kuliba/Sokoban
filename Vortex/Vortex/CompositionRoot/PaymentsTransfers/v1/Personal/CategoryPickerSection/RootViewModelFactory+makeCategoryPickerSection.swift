@@ -23,46 +23,26 @@ extension CategoryPickerSectionDomain.Binder: ReloadableCategoryPicker {
 
 extension RootViewModelFactory {
     
-    typealias MakeStandard = (ServiceCategory, @escaping (SelectedCategoryNavigation.Standard) -> Void) -> Void
-    
     @inlinable
     func makeCategoryPickerSection(
     ) -> CategoryPickerSectionDomain.Binder {
         
-        let content = makeContent(.init(
-            loadCategories: getServiceCategoriesWithoutQR,
-            reloadCategories: { $0(nil) },
-            loadAllLatest: { $0(nil) }
-        ))
+        let nanoServices = composePaymentsTransfersPersonalNanoServices()
         
-        return composeBinder(
-            content: content,
-            delayProvider: delayProvider,
-            getNavigation: getNavigation(
-                makeStandard: { [weak self] category, completion in
-                    
-                    self?.handleSelectedServiceCategory(category) {
-                        
-                        completion(.destination($0))
-                    }
-                }
-            ),
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
-        )
+        return makeCategoryPickerSection(nanoServices: nanoServices)
     }
     
     @inlinable
     func makeCategoryPickerSection(
-        nanoServices: PaymentsTransfersPersonalNanoServices,
-        makeStandard: @escaping MakeStandard
-    ) -> ReloadableCategoryPicker {
+        nanoServices: PaymentsTransfersPersonalNanoServices
+    ) -> CategoryPickerSectionDomain.Binder {
         
-        let content = makeContent(nanoServices)
+        let content = makeCategoryPickerContent(nanoServices)
         
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation(makeStandard: makeStandard),
+            getNavigation: getNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
@@ -74,71 +54,33 @@ extension RootViewModelFactory {
         
         switch navigation {
         case .failure:     return .milliseconds(100)
-        case .paymentFlow: return settings.delay
+        case .destination: return settings.delay
+        case .outside:     return .milliseconds(100)
         }
     }
     
     @inlinable
-    func makeContent(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> CategoryPickerSectionDomain.Content {
-        
-        let placeholderCount = settings.categoryPickerPlaceholderCount
-        
-        return composeLoadablePickerModel(
-            load: nanoServices.loadCategories,
-            reload: nanoServices.reloadCategories,
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
-            placeholderCount: placeholderCount
-        )
-    }
-    
-    @inlinable
-    func emitting(
-        content: CategoryPickerSectionDomain.Content
-    ) -> some Publisher<FlowEvent<CategoryPickerSectionDomain.Select, Never>, Never> {
-        
-        content.$state.compactMap(\.selected).map(FlowEvent.select)
-    }
-    
-    @inlinable
-    func dismissing(
-        content: CategoryPickerSectionDomain.Content
-    ) -> () -> Void {
-        
-        return { content.event(.select(nil)) }
-    }
-}
-
-extension RootViewModelFactory {
-    
-    @inlinable
     func getNavigation(
-        makeStandard: @escaping MakeStandard
-    ) -> (
-        CategoryPickerSectionDomain.Select,
-        @escaping CategoryPickerSectionDomain.Notify,
-        @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+        select: CategoryPickerSectionDomain.Select,
+        notify:@escaping CategoryPickerSectionDomain.Notify,
+        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) -> Void {
         
         let composer = SelectedCategoryGetNavigationComposer(
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
-                makeStandard: makeStandard,
+                makeStandard: { _,_ in }, // standard is not called for Section
                 makeTax: makeTaxPayment,
                 makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
         
-        return { select, notify, completion in
+        composer.getNavigation(select, notify) {
             
-            composer.getNavigation(select, notify) {
-                
-                completion($0)
-                _ = composer
-            }
+            completion($0)
+            _ = composer
         }
     }
 }

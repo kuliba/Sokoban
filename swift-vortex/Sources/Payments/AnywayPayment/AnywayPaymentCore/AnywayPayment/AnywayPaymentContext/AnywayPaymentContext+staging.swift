@@ -16,7 +16,8 @@ extension AnywayPaymentContext {
             payment: payment,
             staged: payment.getStaged(),
             outline: outline.updating(with: payment),
-            shouldRestart: shouldRestart
+            shouldRestart: shouldRestart,
+            needSum: needSum
         )
     }
 }

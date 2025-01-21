@@ -38,7 +38,7 @@ extension Services {
                     return "rest/v1/pages/collateral"
                     
                 case .savingsAccount:
-                    return "rest/pages"
+                    return "rest/pages/savings"
                     
                 case let .processing(processing):
                     return "processing/\(processing.rawValue)"

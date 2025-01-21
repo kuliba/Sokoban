@@ -243,10 +243,10 @@ class MyProductsViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as MyProductsViewModelAction.Tapped.NewProduct:
-                    
+                    bottomSheet = nil
+
                     switch payload.productType {
                     case .account:
-                        bottomSheet = nil
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                             
@@ -259,7 +259,6 @@ class MyProductsViewModel: ObservableObject {
                         }
                         
                     case .deposit:
-                        bottomSheet = nil
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                             
@@ -274,17 +273,21 @@ class MyProductsViewModel: ObservableObject {
                         }
                         
                     case .card:
-                        bottomSheet = nil
                         
                         DispatchQueue.main.delay(for: .milliseconds(300)) {
                             
                             self.openCard()
                         }
                         
-                    default: 
-                        bottomSheet = nil
-                        
+                    case .sticker:
                         openOrderSticker()
+                        
+                    case .loan:
+                        // TODO: - add openCollateralLoanLanding
+                        break
+                        
+                    default:
+                        break
                     }
                     
                 default: break
@@ -648,7 +651,7 @@ enum MyProductsViewModelAction {
     enum Tapped {
         
         struct NewProduct: Action {
-            let productType: ProductType
+            let productType: OpenProductType
         }
         
         struct NewProductLauncher: Action {}

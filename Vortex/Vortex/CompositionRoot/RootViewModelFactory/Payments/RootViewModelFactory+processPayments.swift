@@ -162,7 +162,7 @@ private extension UtilityPaymentLastPayment {
                 date: date, // ???
                 paymentDate: "", // ???
                 puref: puref,
-                type: .internet, // ???
+                type: .outside, // ???
                 lastPaymentName: nil
             )
         )

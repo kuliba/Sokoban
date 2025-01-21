@@ -33,7 +33,8 @@ final class AnywayPaymentContextTests: XCTestCase {
             payment: payment,
             staged: [.init("one")],
             outline: makeAnywayPaymentOutline(["one": "one"]),
-            shouldRestart: false
+            shouldRestart: false,
+            needSum: false
         )
         
         let restored = context.rollbackPayment()
@@ -424,7 +425,8 @@ final class AnywayPaymentContextTests: XCTestCase {
         elements: [AnywayElement],
         staged: AnywayPaymentStaged = [],
         outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
-        shouldRestart: Bool = false
+        shouldRestart: Bool = false,
+        needSum: Bool = false
     ) -> AnywayPaymentContext {
         
         let payment = makeAnywayPayment(
@@ -437,7 +439,8 @@ final class AnywayPaymentContextTests: XCTestCase {
             payment: payment,
             staged: staged,
             outline: outline,
-            shouldRestart: shouldRestart
+            shouldRestart: shouldRestart,
+            needSum: needSum
         )
     }
     

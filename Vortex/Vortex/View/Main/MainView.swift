@@ -282,6 +282,13 @@ struct MainView<NavigationOperationView: View>: View {
             
         case .orderCard:
             viewFactory.components.makeOrderCardView()
+            
+        case let .savingsAccount(binder):
+            viewFactory.components.makeSavingsAccountView(binder)
+                .onAppear { binder.content.event(.load) }
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden()
+                .navigationViewStyle(StackNavigationViewStyle())
         }
     }
     
@@ -620,68 +627,8 @@ extension MainViewModel {
         onRegister: {
         },
         sections: [],
-        bannersBinder: .preview,
-        makeCollateralLoanShowcaseBinder: { .preview },
-        makeCollateralLoanLandingBinder: { _ in .preview },   
+        bindersFactory: .preview,
         makeOpenNewProductButtons: { _ in [] }
-    )
-}
-
-// MARK: - GetCollateralLandingDomain.Binder preview
-
-private extension GetCollateralLandingDomain.Binder {
-    
-    static let preview = GetCollateralLandingDomain.Binder(
-        content: .preview,
-        flow: .preview,
-        bind: { _,_ in [] }
-    )
-}
-
-private extension GetCollateralLandingDomain.Content {
-    
-    static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-private extension GetCollateralLandingDomain.Flow {
-    
-    static let preview = GetCollateralLandingDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-// MARK: - GetShowcaseDomain.Binder preview
-
-private extension GetShowcaseDomain.Binder {
-    
-    static let preview = GetShowcaseDomain.Binder(
-        content: .preview,
-        flow: .preview,
-        bind: { _,_ in [] }
-    )
-}
-
-private extension GetShowcaseDomain.Flow {
-    
-    static let preview = GetShowcaseDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-private extension GetShowcaseDomain.Content {
-    
-    static let preview: GetShowcaseDomain.Content = .init(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
     )
 }
 

@@ -14,28 +14,38 @@ struct PaymentProviderPickerView: View {
     let binder: PaymentProviderPickerDomain.Binder
     let components: ViewComponents
     let makeIconView: MakeIconView
-
+    
     var body: some View {
         
         RxWrapperView(
             model: binder.flow,
             makeContentView: { state, event in
                 
-                PaymentProviderPickerFlowView(
-                    state: state.navigation,
-                    event: event,
-                    contentView: contentView,
-                    destinationView: destinationView
-                )
+                ZStack {
+                    
+                    if state.isLoading {
+                        
+                        SpinnerView(viewModel: .init())
+                            .zIndex(1)
+                    }
+                    
+                    PaymentProviderPickerFlowView(
+                        state: state.navigation,
+                        event: event,
+                        contentView: contentView,
+                        destinationView: destinationView
+                    )
+                    .navigationBarHidden(true)
+                    .navigationBarWithBack(
+                        title: binder.content.title,
+                        dismiss: { binder.flow.event(.dismiss) },
+                        rightItem: .barcodeScanner {
+                            
+                            binder.flow.event(.select(.outside(.qr)))
+                        }
+                    )
+                }
             }
-        )
-        .navigationBarWithBack(
-            title: binder.content.title,
-            dismiss: { binder.flow.event(.dismiss) },
-            rightItem: .barcodeScanner(action: {
-                
-                binder.flow.event(.select(.outside(.qr)))
-            })
         )
     }
 }

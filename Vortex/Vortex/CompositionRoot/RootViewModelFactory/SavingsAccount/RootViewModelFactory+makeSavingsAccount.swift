@@ -23,7 +23,7 @@ extension RootViewModelFactory {
         )
 
         let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
-            loadLanding: { getSavingLanding(( "", $0), $1) },
+            loadLanding: { getSavingLanding($0, $1) },
             orderAccount: {_ in }
         )
         

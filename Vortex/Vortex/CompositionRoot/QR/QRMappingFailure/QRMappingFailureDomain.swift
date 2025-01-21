@@ -15,7 +15,6 @@ extension QRMappingFailureDomain {
     // MARK: - Binder
     
     typealias Binder = Vortex.Binder<Content, Flow>
-    typealias BinderComposer = Vortex.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
@@ -41,7 +40,7 @@ extension QRMappingFailureDomain {
         
         case back
         case detailPayment(Node<PaymentsViewModel>)
-        case categoryPicker(Node<CategoryPickerSectionDomain.Binder>)
+        case categoryPicker(Node<CategoryPickerViewDomain.Binder>)
         case scanQR
     }
 }

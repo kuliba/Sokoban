@@ -91,7 +91,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(switcher as PaymentsTransfersSwitcher):
-                paymentsTransfersSwitcherView(switcher)
+                rootViewFactory.makePaymentsTransfersSwitcherView(switcher)
 
             default:
                 EmptyView()
@@ -220,31 +220,9 @@ extension PaymentsTransfersPersonalDomain.Binder {
     }
 }
 
-private extension RootView {
-    
-    func paymentsTransfersSwitcherView(
-        _ switcher: PaymentsTransfersSwitcher
-    ) -> some View {
-        
-        RefreshableScrollView(
-            action: switcher.refresh,
-            showsIndicators: false,
-            refreshCompletionDelay: 2.0
-        ) {
-            ComposedProfileSwitcherView(
-                model: switcher,
-                corporateView: rootViewFactory.makePaymentsTransfersCorporateView,
-                personalView: rootViewFactory.makePaymentsTransfersPersonalView,
-                undefinedView: { SpinnerView(viewModel: .init()) }
-            )
-            .padding(.top)
-        }
-    }
-}
-
 // MARK: - adapters
 
-/*private*/ extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,

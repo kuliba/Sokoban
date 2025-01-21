@@ -16,7 +16,7 @@ extension RootViewModelFactoryServiceCategoryTests {
         
         let (_, codable) = makeOperatorWithModel(type: category.type)
         
-        return makeModelWithCache(cache: [[codable]])
+        return makeModelWithCache(cache: [ServicePaymentOperatorStorage(items: [codable], serial: anyMessage())])
     }
     
     func makeCache(
@@ -26,7 +26,7 @@ extension RootViewModelFactoryServiceCategoryTests {
         
         let (_, codableOperator) = makeOperatorWithModel(type: type)
         
-        return [[category.codable], [codableOperator]]
+        return [[category.codable], ServicePaymentOperatorStorage(items: [codableOperator], serial: anyMessage())]
     }
     
     func makeModelWithCache(

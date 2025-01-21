@@ -36,6 +36,17 @@ extension RootViewModelFactory {
         featureFlags: FeatureFlags
     ) -> RootViewDomain.Binder {
         
+        // keep for manual override of release flags
+        let featureFlags = FeatureFlags(
+            getProductListByTypeV6Flag: featureFlags.getProductListByTypeV6Flag,
+            historyFilterFlag: featureFlags.historyFilterFlag,
+            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+            splashScreenFlag: featureFlags.splashScreenFlag,
+            orderCardFlag: featureFlags.orderCardFlag
+        )
+        
         var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
@@ -404,6 +415,7 @@ extension RootViewModelFactory {
                 guard let self else { return [] }
                 return makeOpenNewProductButtons(
                     collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+                    savingsAccountFlag: featureFlags.savingsAccountFlag,
                     action: $0
                 )
             },
@@ -758,7 +770,8 @@ private extension RootViewModelFactory {
                 
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
-            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
                 
         let mainViewModel = MainViewModel(
@@ -772,9 +785,12 @@ private extension RootViewModelFactory {
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
             sections: sections,
-            bannersBinder: bannersBinder,
-            makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
-            makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+            bindersFactory: .init(
+                bannersBinder: bannersBinder,
+                makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
+                makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeSavingsAccountBinder: makeSavingsAccount
+            ),
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )

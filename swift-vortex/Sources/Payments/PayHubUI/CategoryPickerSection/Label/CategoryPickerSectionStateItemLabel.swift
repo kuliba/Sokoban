@@ -16,7 +16,7 @@ public protocol Named {
 public struct CategoryPickerSectionStateItemLabel<CategoryIcon, PlaceholderView, ServiceCategory>: View
 where CategoryIcon: View,
       PlaceholderView: View,
-      ServiceCategory: Named {
+      ServiceCategory: Named & Identifiable {
     
     private let item: Item
     private let config: Config
@@ -24,7 +24,7 @@ where CategoryIcon: View,
     private let placeholderView: () -> PlaceholderView
     
     public init(
-        item: Item, 
+        item: Item,
         config: Config,
         categoryIcon: @escaping (ServiceCategory) -> CategoryIcon,
         placeholderView: @escaping () -> PlaceholderView
@@ -57,18 +57,27 @@ public extension CategoryPickerSectionStateItemLabel {
 private extension CategoryPickerSectionStateItemLabel {
     
     func categoryView(
-        _ category: ServiceCategory
+        _ stateful: Stateful<ServiceCategory, LoadState>
     ) -> some View {
         
         HStack(spacing: config.spacing) {
             
-            categoryIcon(category)
+            categoryIcon(stateful.entity)
                 .frame(config.iconSize)
                 .renderIconBackground(with: config.iconBackground)
             
-            category.name.text(withConfig: config.title)
+            label(stateful)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+    
+    @ViewBuilder
+    func label(
+        _ stateful: Stateful<ServiceCategory, LoadState>
+    ) -> some View {
+        
+        stateful.entity.name.text(withConfig: config.title)
+            .stateful(state: stateful.state)
     }
     
     func placeholderLabel() -> some View {
@@ -89,6 +98,22 @@ private extension CategoryPickerSectionStateItemLabel {
                 ._shimmering()
                 .frame(config.placeholder.title.size)
                 .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+private extension View {
+    
+    @ViewBuilder
+    func stateful(
+        state: LoadState
+    ) -> some View {
+        
+        switch state {
+        case .completed: self
+        case .failed:    self
+        case .loading:   self._shimmering()
+        case .pending:   self.opacity(0.5)
         }
     }
 }

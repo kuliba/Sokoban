@@ -187,7 +187,6 @@ extension AnywayPaymentUpdate.Parameter {
     
     public struct Field: Equatable {
         
-        @available(*, deprecated, message: "not used according to analytics")
         public let content: String?
         @available(*, deprecated, message: "not used according to analytics")
         public let dataDictionary: String?

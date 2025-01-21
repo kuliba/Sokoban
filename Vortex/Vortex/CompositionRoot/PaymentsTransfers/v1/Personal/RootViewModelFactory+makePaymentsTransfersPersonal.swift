@@ -17,43 +17,43 @@ extension RootViewModelFactory {
     ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
-        
-        let personal = makePaymentsTransfersPersonal(
-            nanoServices: nanoServices
-        )
-        
-        let loadCategoriesAndNotifyPicker = {
-            
-            nanoServices.reloadCategories { [weak personal] categories in
-                
-                let categoryPicker = personal?.content.categoryPicker.sectionBinder
-                
-                guard let categoryPicker else {
-                    
-                    return self.logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
-                }
-                
-                categoryPicker.content.event(.loaded(categories ?? []))
-                
-                self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-            }
-        }
-        
-        return (personal, loadCategoriesAndNotifyPicker)
-    }
-    
-    @inlinable
-    func makePaymentsTransfersPersonal(
-        nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonalDomain.Binder {
-        
         let content = makePaymentsTransfersPersonalContent(nanoServices)
         
-        return composeBinder(
+        let personal = composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersPersonalNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+        
+        let categoryPicker = content.categoryPicker.sectionBinder
+        
+        let notify: () -> Void = {
+            
+            nanoServices.reloadCategories(
+                { categoryPicker?.content.event($0) },
+                { categoryPicker?.content.event(.loaded($0?.pending)) }
+            )
+        }
+        
+        return (personal, notify)
+    }
+    
+    @inlinable
+    func composePaymentsTransfersPersonalNanoServices(
+    ) -> PaymentsTransfersPersonalNanoServices {
+        
+        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
+        
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: loadCategories,
+            getLatestPayments: loadLatestPayments
+        )
+        
+        return .init(
+            loadCategories: loadCategories,
+            reloadCategories: reloadCategories,
+            loadAllLatest: makeLoadLatestOperations(.all)
         )
     }
     
@@ -80,7 +80,7 @@ extension RootViewModelFactory {
     ) {
         completion(select)
     }
-
+    
     @inlinable
     func emitting(
         content: PaymentsTransfersPersonalDomain.Content
@@ -152,28 +152,22 @@ private extension CategoryPickerSectionDomain.Binder {
     }
 }
 
-private extension FlowState<SelectedCategoryNavigation> {
+private extension FlowState<CategoryPickerSectionDomain.Navigation> {
     
     var select: PaymentsTransfersPersonalSelect? {
         
         switch navigation {
-        case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case .mobile, .taxAndStateServices, .transport:
-                return nil
-                
-            case .qr(()):
+        case .destination, .failure, .none:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .qr:
                 return .scanQR
                 
-            case let .standard(.category(category)):
+            case let .standard(category):
                 return .standardPayment(category.type)
-                
-            case .standard(.destination):
-                return nil
             }
-            
-        default:
-            return nil
         }
     }
 }

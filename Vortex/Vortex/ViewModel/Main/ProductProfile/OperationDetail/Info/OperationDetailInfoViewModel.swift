@@ -32,11 +32,19 @@ final class OperationDetailInfoViewModel: Identifiable {
         self.dismissAction = dismissAction
     }
     
-    convenience init(model: Model, operation: OperationDetailData, dismissAction: @escaping () -> Void) {
+    convenience init(
+        model: Model,
+        operation: OperationDetailData,
+        merchantLogoMD5Hash: String?,
+        dismissAction: @escaping () -> Void
+    ) {
         
         let logo = Self.logo(model: model, operation: operation)
         self.init(model: model, logo: logo, cells: [], dismissAction: dismissAction)
-        self.cells = makeItems(operation: operation)
+        self.cells = makeItems(
+            operation: operation,
+            merchantLogoMD5Hash: merchantLogoMD5Hash
+        )
     }
     
     static func logo(model: Model, operation: OperationDetailData) -> Image? {
@@ -1233,7 +1241,14 @@ final class OperationDetailInfoViewModel: Identifiable {
             )
             
         default:
-            break
+            cells = Self.shortList(
+                statement: statement,
+                operation: operation,
+                product: product,
+                model: model,
+                dateTimeCell: dateTimeCell,
+                currency: currency
+            )
         }
         
         self.logo = logo
@@ -1390,6 +1405,39 @@ extension OperationDetailInfoViewModel {
         ].compactMap { $0 }
     }
     
+    static func shortList(
+        statement: ProductStatementData,
+        operation: OperationDetailData?,
+        product: ProductData,
+        model: Model,
+        dateTimeCell: PropertyCellViewModel,
+        currency: String
+    ) -> [DefaultCellViewModel] {
+        
+        let account = accountCell(
+            with: product,
+            model: model,
+            operationType: statement.operationType
+        )
+        let amount = amount(
+            statement: statement,
+            currency: currency,
+            model: model
+        )
+        let fee = fee(
+            fee: operation?.payerFee ?? 0,
+            currency: currency,
+            model: model
+        )
+
+        return [
+            account,
+            amount,
+            fee,
+            dateTimeCell
+        ].compactMap { $0 }
+    }
+    
     static func amount(
         statement: ProductStatementData,
         currency: String,
@@ -1409,6 +1457,15 @@ extension OperationDetailInfoViewModel {
                 value: $0
             )
         }
+    }
+    
+    static func fee(
+        fee: Double,
+        currency: String,
+        model: Model
+    ) -> PropertyCellViewModel? {
+        
+        return commissionCell(with: model, fee: fee, currency: currency)
     }
     
     static func payee(
@@ -1664,7 +1721,10 @@ private extension OperationDetailInfoViewModel {
 
 extension OperationDetailInfoViewModel {
     
-    func makeItems(operation: OperationDetailData) -> [DefaultCellViewModel] {
+    func makeItems(
+        operation: OperationDetailData,
+        merchantLogoMD5Hash: String?
+    ) -> [DefaultCellViewModel] {
         
         let payeeProductId = [operation.payeeCardId,
                               operation.payeeAccountId].compactMap {$0}.first
@@ -1682,6 +1742,7 @@ extension OperationDetailInfoViewModel {
             productNumber: payerProductNumber)
         
         let operationCategoryViewModel = Self.operationCategoryCellViewModel(value: operation.operationCategory)
+        
         let documentNumberViewModel = Self.documentNumberCellViewModel(value: operation.documentNumber)
 
         let amountViewModel = makePropertyViewModel(
@@ -1727,6 +1788,41 @@ extension OperationDetailInfoViewModel {
         let payeeBankViewModel = makeBankViewModel(
             operation: operation)
         
+        
+        if let merchantLogoMD5Hash {
+            
+            var merchantViewModel: BankCellViewModel?
+            
+            if let image = model.images.value[merchantLogoMD5Hash]?.image,
+               let name = operation.payeeFullName {
+                
+                merchantViewModel = .init(
+                    title: "Наименование получателя",
+                    icon: image,
+                    name: name
+                )
+            }
+            
+            let paymentID = operation.account.map {
+                
+                PropertyCellViewModel(
+                    title: "Идентификатор платежа",
+                    iconType: IconType.account.icon,
+                    value: $0
+                )
+            }
+            
+            return [
+                merchantViewModel,
+                operationCategoryViewModel,
+                documentNumberViewModel,
+                paymentID,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                dateViewModel
+            ].compactMap { $0 }
+        }
         
         switch operation.transferEnum {
             
