@@ -6,26 +6,30 @@
 //
 
 import AnywayPaymentDomain
-import VortexTools
+import Combine
 import PaymentComponents
 import SwiftUI
+import VortexTools
 
 final class AnywayElementModelMapper {
     
     private let currencyOfProduct: CurrencyOfProduct
     private let format: Format
     private let getProducts: GetProducts
+    private let makeContacts: MakeContacts
     private let settings: Settings
     
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
         format: @escaping Format,
         getProducts: @escaping GetProducts,
+        makeContacts: @escaping MakeContacts,
         settings: Settings = .default
     ) {
         self.currencyOfProduct = currencyOfProduct
         self.format = format
         self.getProducts = getProducts
+        self.makeContacts = makeContacts
         self.settings = settings
     }
     
@@ -33,6 +37,7 @@ final class AnywayElementModelMapper {
     typealias Format = (Currency?, Decimal) -> String
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
+    typealias MakeContacts = () -> AnywayElementModel.Contact
     
     struct Settings: Equatable {
         
@@ -82,7 +87,7 @@ private extension AnywayElementModelMapper {
         switch parameter.uiComponent.type {
         case .checkbox:
             return .parameter(.init(
-                origin: parameter.uiComponent, 
+                origin: parameter.uiComponent,
                 type: .checkbox(makeCheckboxViewModel(with: parameter, event: event))
             ))
             
@@ -120,10 +125,14 @@ private extension AnywayElementModelMapper {
             ))
             
         case .textInput:
-            return .parameter(.init(
-                origin: parameter.uiComponent,
-                type: .textInput(makeInputViewModel(with: parameter, event: event))
-            ))
+            if parameter.uiAttributes.phoneBook {
+                return .withContacts(makeWithContacts(with: parameter, event: event))
+            } else {
+                return .parameter(.init(
+                    origin: parameter.uiComponent,
+                    type: .textInput(makeInputViewModel(with: parameter, event: event))
+                ))
+            }
             
         case .unknown:
             return .parameter(.init(
@@ -209,8 +218,8 @@ private extension AnywayElementModelMapper {
             observe: { event(.payment(.widget(.otp($0)))) }
         )
     }
-
-    #warning("event here is too wide, contain to widget")
+    
+#warning("event here is too wide, contain to widget")
     private func makeSimpleOTPViewModel(
         with otp: Int?,
         event: @escaping (AnywayPaymentEvent) -> Void
@@ -230,9 +239,44 @@ private extension AnywayElementModelMapper {
             observe: { event(.widget(.otp($0.value.map { "\($0)" } ?? ""))) }
         )
     }
+    
+    private func makeWithContacts(
+        with parameter: AnywayElement.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) -> AnywayElementModel.WithContacts {
+        
+        let inputNode = makeInputViewModel(with: parameter, event: event)
+        let contacts = makeContacts()
+        
+        let input = inputNode.model
+        let cancellable = contacts.phonePublisher
+            .sink { [weak input] in
+                
+                let masked = parameter.applyMasking(to: $0.digits)
+                input?.event(.textField(.setTextTo(masked)))
+            }
+        
+        return .init(
+            origin: parameter.uiComponent,
+            input: inputNode,
+            contacts: contacts,
+            bindings: [cancellable]
+        )
+    }
 }
 
 // MARK: - Adapters
+
+extension ContactsViewModel {
+    
+    var phonePublisher: AnyPublisher<String, Never> {
+        
+        action
+            .compactMap { $0 as? ContactsViewModelAction.ContactPhoneSelected }
+            .map(\.phone)
+            .eraseToAnyPublisher()
+    }
+}
 
 private extension TimedOTPInputViewModel {
     
@@ -277,7 +321,7 @@ private extension TimedOTPInputViewModel {
         let otpInputEffectHandler = OTPInputEffectHandler(
             handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
             handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
-
+        
         self.init(
             initialState: .starting(
                 phoneNumber: "",
@@ -350,10 +394,10 @@ private extension SelectState {
     }
     
     init(_ selector: Selector<AnywayElementOption>) {
-
+        
         let selectOption = selector.selectedOption
         let options = selector.selectStataOptions
-
+        
         if selector.isShowingOptions {
             self = .expanded(
                 selectOption: selectOption,

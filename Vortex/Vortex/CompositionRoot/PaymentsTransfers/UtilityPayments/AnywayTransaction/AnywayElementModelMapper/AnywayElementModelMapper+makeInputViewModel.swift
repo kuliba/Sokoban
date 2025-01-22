@@ -76,6 +76,17 @@ private extension TextInputState {
     }
 }
 
+extension AnywayElement.Parameter {
+    
+    func applyMasking(to text: String) -> String {
+        
+        let reducer = textFieldReducer(placeholderText: "")
+        let reduced = reducer.reduce(.editing(.init("")), .setTextTo(text))
+        
+        return reduced.text ?? ""
+    }
+}
+
 private extension AnywayElement.Parameter {
     
     func textFieldReducer(

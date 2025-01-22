@@ -18,13 +18,16 @@ import UIPrimitives
 final class AnywayPaymentFactoryComposer {
     
     private let currencyOfProduct: CurrencyOfProduct
+    private let makeContactsView: MakeContactsView
     private let makeIconView: MakeIconView
     
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
+        makeContactsView: @escaping MakeContactsView,
         makeIconView: @escaping MakeIconView
     ) {
         self.currencyOfProduct = currencyOfProduct
+        self.makeContactsView = makeContactsView
         self.makeIconView = makeIconView
     }
 }
@@ -36,8 +39,9 @@ extension AnywayPaymentFactoryComposer {
     ) -> Factory {
         
         let elementFactory = AnywayPaymentElementViewFactory(
+            makeContactsView: makeContactsView,
             makeIconView: makeIconView,
-            parameterFactory: makeElementFactory(), 
+            parameterFactory: makeElementFactory(),
             widgetFactory: makeWidgetFactory()
         )
         
