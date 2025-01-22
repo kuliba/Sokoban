@@ -36,8 +36,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case showSaveConsentsResult(SaveConsentsResult)
     }
     
-    enum Navigation: Equatable {
+    enum Navigation {
 
-        case showSaveConsentsResult(SaveConsentsResult)
+        case failure(String)
+        case success(String)
     }
 }

@@ -10,8 +10,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
     public struct State: Equatable {
         
         public let data: CreateDraftCollateralLoanApplicationUIData
-
-        var saveConsentsResult: SaveConsentsResult?
+        public var saveConsentsResult: SaveConsentsResult?
 
         public var stage: Stage
         public var isValid: Bool

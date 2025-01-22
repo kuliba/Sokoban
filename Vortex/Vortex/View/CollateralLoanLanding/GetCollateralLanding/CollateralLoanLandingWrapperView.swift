@@ -35,7 +35,7 @@ struct CollateralLoanLandingWrapperView: View {
             )
         }
     }
-    
+
     private func makeContentView(
         state: GetCollateralLandingDomain.State,
         event: @escaping (GetCollateralLandingDomain.Event) -> Void
@@ -142,6 +142,8 @@ struct CollateralLoanLandingWrapperView: View {
 extension CollateralLoanLandingWrapperView {
     
     typealias Factory = GetCollateralLandingFactory
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
 
     public typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
     public typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage

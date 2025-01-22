@@ -25,5 +25,4 @@ public enum CreateDraftCollateralLoanApplicationDomain {
     public typealias SaveConsentsResult = Swift.Result<
         CollateralLandingApplicationSaveConsentsResult, LoadResultFailure
     >
-
 }

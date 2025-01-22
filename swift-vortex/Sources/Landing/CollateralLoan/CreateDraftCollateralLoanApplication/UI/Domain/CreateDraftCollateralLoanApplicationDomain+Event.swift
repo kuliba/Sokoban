@@ -19,9 +19,4 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case applicationCreated(CreateDraftApplicationResult)
         case showSaveConsentsResult(SaveConsentsResult)
     }
-    
-    public enum ExternalEvent: Equatable {
-        
-        case showSaveConsentsResult(SaveConsentsResult)
-    }
 }

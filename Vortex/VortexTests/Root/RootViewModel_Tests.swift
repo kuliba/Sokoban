@@ -53,7 +53,6 @@ class RootViewModel_Tests: XCTestCase {
                     qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
-                    collateralLoanLandingFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     sections: makeSections(),

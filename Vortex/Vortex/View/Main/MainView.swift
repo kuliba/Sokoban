@@ -619,9 +619,7 @@ extension MainViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         landingServices: .empty(),
-        
         paymentsTransfersFactory: .preview,
-        collateralLoanLandingFactory: .preview,
         updateInfoStatusFlag: .active,
         onRegister: {
         },

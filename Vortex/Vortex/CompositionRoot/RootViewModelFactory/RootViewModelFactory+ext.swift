@@ -763,8 +763,6 @@ private extension RootViewModelFactory {
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
                 
-        let collateralLoanLandingFactory = makeCollateralLoanLandingFactory()
-        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -773,7 +771,6 @@ private extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
-            collateralLoanLandingFactory: collateralLoanLandingFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister,
             sections: sections,

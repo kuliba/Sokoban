@@ -22,10 +22,17 @@ extension RootViewModelFactory {
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: .empty
+            witnesses: .init(
+                emitting: { content in content.$state
+                    .compactMap(\.saveConsentsResult)
+                    .map { .select(.showSaveConsentsResult($0)) }
+                    .eraseToAnyPublisher()
+                },
+                dismissing: { _ in {} }
+            )
         )
     }
-    
+
     // MARK: - Content
     
     private func makeContent(
@@ -35,7 +42,13 @@ extension RootViewModelFactory {
         let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer()
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
-            saveConsents: saveConsents(payload:completion:)
+            saveConsents: { payload, completion in
+            
+                // TODO: Restore
+                // saveConsents(payload:completion:)
+                // TODO: Remove stub
+                completion(.success(.preview))
+            }
         )
         
         return .init(
@@ -77,7 +90,7 @@ extension RootViewModelFactory {
             _ = saveConsents
         }
     }
-    
+
     // MARK: - Flow
     
     private func getNavigation(
@@ -87,7 +100,13 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .showSaveConsentsResult(saveConsentsResult):
-            completion(.showSaveConsentsResult(saveConsentsResult))
+            switch saveConsentsResult {
+            case let .failure(failure):
+                completion(.failure(failure.localizedDescription))
+                
+            case let .success(success):
+                completion(.success(String(describing: success)))
+            }
         }
     }
 
@@ -96,8 +115,10 @@ extension RootViewModelFactory {
     ) -> Delay {
   
         switch navigation {
+        case .failure(_):
+            return .milliseconds(100)
             
-        case .showSaveConsentsResult:
+        case .success(_):
             return .milliseconds(100)
         }
     }
