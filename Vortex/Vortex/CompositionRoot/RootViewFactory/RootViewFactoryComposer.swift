@@ -286,7 +286,16 @@ private extension RootViewFactoryComposer {
     }
     
     func makeProductCarouselViewFactory() -> ProductCarouselViewFactory {
-        .init(makeOptionSelectorView: makeOptionSelectorView)
+        .init(
+            makeOptionSelectorView: makeOptionSelectorView,
+            makePromoView: makePromoView
+        )
+    }
+    
+    func makePromoView(
+        _ viewModel: AdditionalProductViewModel
+    ) -> AdditionalProductView {
+        .init(viewModel: viewModel)
     }
     
     func makeMainSectionCurrencyMetalView(

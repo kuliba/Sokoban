@@ -101,14 +101,14 @@ extension MainSectionProductsView {
                 }
                 .store(in: &bindings)
             
-            typealias CarouselStickerDidTapped = ProductCarouselViewModelAction.Products.StickerDidTapped
+            typealias CarouselPromoDidTapped = ProductCarouselViewModelAction.Products.PromoDidTapped
             
             productCarouselViewModel.action
-                .compactMap { $0 as? CarouselStickerDidTapped }
+                .compactMap { $0 as? CarouselPromoDidTapped }
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
+                .sink { [weak self] in
                     
-                    self?.action.send(MainSectionViewModelAction.Products.StickerDidTapped())
+                    self?.action.send(MainSectionViewModelAction.Products.PromoDidTapped(promo: $0.promo))
                 }
                 .store(in: &bindings)
             

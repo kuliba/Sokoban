@@ -2811,6 +2811,7 @@
 		838C09242C8B59C400E894AC /* NanoServices+makeGetBannersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C09202C8B59C400E894AC /* NanoServices+makeGetBannersList.swift */; };
 		838C09252C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C09212C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift */; };
 		838C09602C8DD9E700E894AC /* Banners in Frameworks */ = {isa = PBXBuildFile; productRef = 838C095F2C8DD9E700E894AC /* Banners */; };
+		838F00912D40EEC00032EE92 /* PromoProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838F00902D40EEC00032EE92 /* PromoProduct.swift */; };
 		839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */; };
 		839109282C381D86007F5257 /* GetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */; };
 		8391092A2C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109292C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift */; };
@@ -6409,6 +6410,7 @@
 		838C091F2C8B59C400E894AC /* ItemsWithSerial+BannersData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ItemsWithSerial+BannersData.swift"; sourceTree = "<group>"; };
 		838C09202C8B59C400E894AC /* NanoServices+makeGetBannersList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeGetBannersList.swift"; sourceTree = "<group>"; };
 		838C09212C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadBannersList.swift"; sourceTree = "<group>"; };
+		838F00902D40EEC00032EE92 /* PromoProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoProduct.swift; sourceTree = "<group>"; };
 		839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSVCardLimitsServices.swift"; sourceTree = "<group>"; };
 		839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSVCardLimitsServices.swift; sourceTree = "<group>"; };
 		839109292C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSVCardLimitsRequest.swift"; sourceTree = "<group>"; };
@@ -13260,6 +13262,7 @@
 				2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */,
 				7789794529CB696100ECF684 /* ProductGroupViewComponent.swift */,
 				830408232D3AABB000AA2244 /* AdditionalProductView.swift */,
+				838F00902D40EEC00032EE92 /* PromoProduct.swift */,
 			);
 			path = ProductsSelector;
 			sourceTree = "<group>";
@@ -21469,6 +21472,7 @@
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				2A5AEF2C2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iVortex.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
+				838F00912D40EEC00032EE92 /* PromoProduct.swift in Sources */,
 				ECCA5B512CFDFC250034A64A /* RemoteNanoServiceFactory.swift in Sources */,
 				ECCA5B562CFDFC250034A64A /* LocalImageLoaderComposer.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
