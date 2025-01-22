@@ -401,12 +401,7 @@ extension ProductCarouselView.ViewModel {
         
         mode.shouldShowSticker && shouldShowSticker
     }
-    
-    func showSticker() { // TODO: Me, Delete?
         
-        action.send(ProductCarouselViewModelAction.Products.StickerDidTapped())
-    }
-    
     func hideSticker() { // TODO: Me, Delete?
         
         shouldShowSticker = false
@@ -650,7 +645,9 @@ enum ProductCarouselViewModelAction {
             let productId: ProductData.ID
         }
         
-        struct StickerDidTapped: Action, Equatable {}
+        struct PromoDidTapped: Action, Equatable {
+            let promo: PromoProduct
+        }
         
         struct ScrollToGroup: Action {
             
@@ -721,11 +718,14 @@ extension ProductCarouselView.ViewModel {
 struct ProductCarouselViewFactory {
     
     let makeOptionSelectorView: MakeOptionSelectorView
+    let makePromoView: MakePromoView
 }
 
 extension ProductCarouselViewFactory {
     
-    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+    static let preview: Self = .init(
+        makeOptionSelectorView: {_ in fatalError()},
+        makePromoView: { AdditionalProductView(viewModel: $0)})
 }
 
 //MARK: - View
@@ -795,17 +795,14 @@ struct ProductCarouselView: View {
                                     ProductGroupView(viewModel: groupViewModel)
                                         .accessibilityIdentifier("productScrollView")
                                     
-                                    
                                     if let vm = viewModel.stickerViewModel {
                                         
-                                        stickerView(
-                                            isCard: groupViewModel.productType == .card,
+                                        promoView(
+                                            productType: groupViewModel.productType,
                                             model: vm
                                         )
                                     }
-                                    
                                 }
-                                
                             }
                         }
                         
@@ -825,16 +822,16 @@ struct ProductCarouselView: View {
         }
     }
     
-    // MARK: StickerActions
+    // MARK: PromoActions
     @ViewBuilder
-    private func stickerView(
-        isCard: Bool,
+    private func promoView(
+        productType: ProductType,
         model: AdditionalProductViewModel
     ) -> some View {
         
-        if isCard && viewModel.sticker {
+        if model.productType == productType && viewModel.sticker {
             
-            AdditionalProductView(viewModel: model)
+            viewFactory.makePromoView(model)
         }
     }
     

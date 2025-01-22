@@ -96,22 +96,14 @@ final class MainViewModelTests: XCTestCase {
     
     func test_productCarouselStickerDidTapped()  {
         
-        let (sut, _) = makeSUTWithMainSectionProductsViewVM()
+        let (sut, spy) = makeSUTWithSpy()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+                
+        XCTAssertNoDiff(spy.values, [])
         
-        let sutActionSpy = ValueSpy(
-            sut.productCarouselViewModel.action.compactMap { $0 as? ProductCarouselViewModelAction.Products.StickerDidTapped })
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        sut.productCarouselViewModel.showPromoProductAndWait(.sticker)
         
-        XCTAssertNoDiff(sutActionSpy.values.count, 0)
-        
-        sut.productCarouselViewModel.action.send(ProductCarouselViewModelAction.Products.StickerDidTapped())
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-        
-        XCTAssertNoDiff(sutActionSpy.values.count, 1)
-        
-        XCTAssertNotNil(sutActionSpy.values.first)
+        XCTAssertNoDiff(spy.values, [.init(promo: .sticker)])
     }
     
     func test_orderSticker_showsAlert_whenNoCards() {
@@ -185,6 +177,18 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [nil, .paymentSticker])
     }
     
+    func test_productCarouselSavingsActionDidTapped()  {
+        
+        let (sut, spy) = makeSUTWithSpy()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(spy.values, [])
+        
+        sut.productCarouselViewModel.showPromoProductAndWait(.savingsAccount)
+
+        XCTAssertNoDiff(spy.values, [.init(promo: .savingsAccount)])
+    }
+
     func test_tapQr_onlyCorporateCards_shouldShowAlert() {
         
         let (sut, model) = makeSUT()
@@ -377,7 +381,7 @@ final class MainViewModelTests: XCTestCase {
         let (sut, _) = makeSUT(scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.showSticker()
+        sut.mainSection?.showPromoProduct(.sticker)
         
         XCTAssertNoDiff(sut.route.case, .landing)
     }
@@ -896,6 +900,24 @@ final class MainViewModelTests: XCTestCase {
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = AdditionalProductViewModel
     
+    private func makeSUTWithSpy(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: MainSectionViewVM,
+        promoSpy: ValueSpy<ProductCarouselViewModelAction.Products.PromoDidTapped>
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        let sut = MainSectionViewVM(model, stickerViewModel: nil)
+        
+        let spy = ValueSpy(
+            sut.productCarouselViewModel.action.compactMap { $0 as? ProductCarouselViewModelAction.Products.PromoDidTapped })
+
+        // trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return (sut, spy)
+    }
+
     private func makeSUTWithMainSectionProductsViewVM(
         file: StaticString = #file,
         line: UInt = #line
@@ -1389,25 +1411,47 @@ private extension MainViewModel {
 
 private extension MainSectionOpenProductView.ViewModel {
     
-    func tapStickerAndWait(timeout: TimeInterval = 0.05) {
-        let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
+    func tapPromoProductAndWait(
+        _ promo: PromoProduct,
+        timeout: TimeInterval = 0.05
+    ) {
+        let stickerAction = MainSectionViewModelAction.Products.PromoDidTapped(promo: promo)
         action.send(stickerAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
 
+private extension ProductCarouselView.ViewModel {
+    
+    func showPromoProductAndWait(
+        _ promo: PromoProduct,
+        timeout: TimeInterval = 0.05
+    ) {
+        
+        let promoAction = ProductCarouselViewModelAction.Products.PromoDidTapped(promo: promo)
+        action.send(promoAction)
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
 private extension MainSectionProductsView.ViewModel {
     
-    func showSticker() {
+    func showPromoProduct(
+        _ promo: PromoProduct
+    ) {
         
-        let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
-        action.send(stickerAction)
+        let promoAction = MainSectionViewModelAction.Products.PromoDidTapped(promo: promo)
+        action.send(promoAction)
     }
     
-    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+    func showPromoProductAndWait(
+        _ promo: PromoProduct,
+        timeout: TimeInterval = 0.05
+    ) {
         
-        showSticker()
+        showPromoProduct(promo)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -1460,10 +1504,6 @@ private extension MainViewModelTests {
     
     static let cardProducts = [cardActiveAddUsdIsMainFalse,
                                cardActiveAddUsdIsMainTrue]
-}
-
-extension MainSectionViewModelAction.Products.StickerDidTapped: Equatable {
-    public static func == (lhs: MainSectionViewModelAction.Products.StickerDidTapped, rhs: MainSectionViewModelAction.Products.StickerDidTapped) -> Bool { return true }
 }
 
 private extension CurrencyWalletData {

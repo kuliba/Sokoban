@@ -107,7 +107,7 @@ class MainViewModel: ObservableObject, Resetable {
     ) -> AdditionalProductViewModel? {
         
         return ProductCarouselView.ViewModel.makeStickerViewModel(model) { [weak self] in
-            self?.handleLandingAction(.sticker)
+            self?.handlePromoAction(.sticker)
         } hide: { [weak self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
             self?.removeSticker(model)
@@ -645,9 +645,10 @@ private extension MainViewModel {
                     .store(in: &bindings)
                 
                 shared
-                    .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
                     .receive(on: scheduler)
-                    .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
+                    .sink { [weak self] in
+                        self?.handlePromoAction($0.promo) }
                     .store(in: &bindings)
         }
     }
@@ -1826,6 +1827,17 @@ extension MainViewModel {
 }
 
 extension MainViewModel {
+    
+    func handlePromoAction(_ promo: PromoProduct) {
+        
+        switch promo {
+        case .sticker:
+            handleLandingAction(.sticker)
+            
+        case .savingsAccount:
+            openSavingsAccount()
+        }
+    }
     
     func handleLandingAction(_ abroadType: AbroadType) {
         

@@ -9,9 +9,8 @@ import SwiftUI
 
 struct AdditionalProductViewModel {
     
-    let title: String
-    let subTitle: String
     let backgroundImage: Image
+    let productType: ProductType
     
     let onTap: () -> Void
     let onHide: () -> Void
@@ -83,9 +82,8 @@ struct AdditionalProductView: View {
 #Preview {
     AdditionalProductView(
         viewModel: .init(
-            title: "Test title",
-            subTitle: "Test subtitle",
-            backgroundImage: .cardPlaceholder,
+            backgroundImage: .cardPlaceholder, 
+            productType: .card,
             onTap: {
                 print("onTap")
             }, 
