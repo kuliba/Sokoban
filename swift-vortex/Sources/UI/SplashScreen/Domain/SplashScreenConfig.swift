@@ -38,7 +38,6 @@ public struct SplashScreenConfig {
         public init(
             iconSize: CGFloat
         ) {
-            
             self.iconSize = iconSize
         }
     }
@@ -52,7 +51,6 @@ public struct SplashScreenConfig {
             imageBottomPadding: CGFloat,
             bottomPadding: CGFloat
         ) {
-            
             self.imageBottomPadding = imageBottomPadding
             self.bottomPadding = bottomPadding
         }
