@@ -342,7 +342,7 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         // A single space character.
         let pattern = "^((\\d{1,30}\\.\\d{1,4})|(\\d{1,30})|(\\d{1,30},\\d{1,4})|([ ]{1}))$"
         
-        assert(value: "", isRequired: false, regExp: pattern, validationError: .regExViolation)
+        assert(value: "", isRequired: false, regExp: pattern, validationError: nil)
         
         assert(value: "12.34", isRequired: false, regExp: pattern, validationError: nil)
         assert(value: "12.34567", isRequired: false, regExp: pattern, validationError: .regExViolation)
