@@ -797,7 +797,7 @@ struct ProductCarouselView: View {
                                     
                                     if let vm = viewModel.stickerViewModel {
                                         
-                                        stickerView(
+                                        promoView(
                                             productType: groupViewModel.productType,
                                             model: vm
                                         )
@@ -822,9 +822,9 @@ struct ProductCarouselView: View {
         }
     }
     
-    // MARK: StickerActions
+    // MARK: PromoActions
     @ViewBuilder
-    private func stickerView(
+    private func promoView(
         productType: ProductType,
         model: AdditionalProductViewModel
     ) -> some View {
