@@ -11,9 +11,26 @@ struct AdditionalProductViewModel {
     
     let backgroundImage: Image
     let productType: ProductType
+    let promoType: PromoProduct
     
     let onTap: () -> Void
     let onHide: () -> Void
+}
+
+extension AdditionalProductViewModel: Identifiable {
+    
+    public var id: ID {
+        
+        switch promoType {
+        case .savingsAccount: return .savingsAccount
+        case .sticker:   return .sticker
+        }
+    }
+    
+    public enum ID: Hashable {
+        
+        case savingsAccount, sticker
+    }
 }
 
 struct AdditionalProductView: View {
@@ -84,6 +101,7 @@ struct AdditionalProductView: View {
         viewModel: .init(
             backgroundImage: .cardPlaceholder, 
             productType: .card,
+            promoType: .sticker,
             onTap: {
                 print("onTap")
             }, 

@@ -127,15 +127,26 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         stickerViewModel: AdditionalProductViewModel
     ) {
+        let stickerVM = getSticker()
         if let index = sections.indexProductsSection,
-            let section = sections[index] as? MainSectionProductsView.ViewModel,
-           section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
+           (stickerVM == nil || stickerVM?.backgroundImage != stickerViewModel.backgroundImage) {
             sections[index] = MainSectionProductsView.ViewModel(
                 model,
-                stickerViewModel: stickerViewModel
+                promoProducts: [stickerViewModel]
             )
             bind(productsSections: sections)
         }
+    }
+    
+    // TODO: need delete
+    
+    private func getSticker() -> AdditionalProductViewModel? {
+        guard let index = sections.indexProductsSection,
+              let section = sections[index] as? MainSectionProductsView.ViewModel,
+              let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
+        else { return nil }
+        
+        return stickerVM
     }
     
     private func removeSticker(_ model: Model) {
@@ -144,7 +155,7 @@ class MainViewModel: ObservableObject, Resetable {
             
             sections[index] = MainSectionProductsView.ViewModel(
                 model,
-                stickerViewModel: nil
+                promoProducts: nil
             )
             bind(productsSections: sections)
         }
@@ -156,13 +167,15 @@ class MainViewModel: ObservableObject, Resetable {
         if let index = sections.indexProductsSection,
             let section = sections[index] as? MainSectionProductsView.ViewModel {
             
-            withAnimation {
-                sections[index] = MainSectionProductsView.ViewModel(
-                    model,
-                    stickerViewModel: section.productCarouselViewModel.stickerViewModel
-                )
+            if let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker }) {
+                withAnimation {
+                    sections[index] = MainSectionProductsView.ViewModel(
+                        model,
+                        promoProducts: [stickerVM]
+                    )
+                }
+                bind(productsSections: sections)
             }
-            bind(productsSections: sections)
         }
     }
 }
@@ -2033,7 +2046,7 @@ extension Array where Element == MainSectionViewModel {
     }
     
     var stickerViewModel: AdditionalProductViewModel? {
-        productsSection?.productCarouselViewModel.stickerViewModel
+        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
     }
 }
 

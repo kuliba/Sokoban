@@ -45,7 +45,8 @@ extension StickerBannersMyProductList {
         
         .init(
             backgroundImage: backgroundImage, 
-            productType: .card,
+            productType: .card, 
+            promoType: .sticker,
             onTap: onTap,
             onHide: onHide
         )

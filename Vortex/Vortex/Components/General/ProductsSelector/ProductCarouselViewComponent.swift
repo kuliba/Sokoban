@@ -38,7 +38,7 @@ extension ProductCarouselView {
         }
         
         private let products: CurrentValueSubject<[ProductType: [ProductViewModel]], Never> = .init([:])
-        let stickerViewModel: AdditionalProductViewModel?
+        let promoProducts: [AdditionalProductViewModel]?
         
         private var groups: [ProductGroupView.ViewModel] = []
         
@@ -60,7 +60,7 @@ extension ProductCarouselView {
             mode: Mode,
             style: Style,
             model: Model = .emptyMock,
-            stickerViewModel: AdditionalProductViewModel?
+            promoProducts: [AdditionalProductViewModel]?
         ) {
             self.content = content
             self.selector = selector
@@ -70,7 +70,7 @@ extension ProductCarouselView {
             self.style = style
             self.model = model
             
-            self.stickerViewModel = stickerViewModel
+            self.promoProducts = promoProducts
             self.shouldShowSticker = model.settingsAgent.shouldShowSticker
             self.saveHideStickerSetting = model.settingsAgent.hideSticker
             
@@ -88,7 +88,7 @@ extension ProductCarouselView {
             isScrollChangeSelectorEnable: Bool = true,
             style: Style,
             model: Model,
-            stickerViewModel: AdditionalProductViewModel? = nil
+            promoProducts: [AdditionalProductViewModel]? = nil
         ) {
             let selector = Self.makeSelector(
                 products: model.allProducts,
@@ -104,7 +104,7 @@ extension ProductCarouselView {
                 mode: mode,
                 style: style,
                 model: model,
-                stickerViewModel: stickerViewModel
+                promoProducts: promoProducts
             )
             
             bind()
@@ -794,14 +794,7 @@ struct ProductCarouselView: View {
                                 ForEach(groups) { groupViewModel in
                                     ProductGroupView(viewModel: groupViewModel)
                                         .accessibilityIdentifier("productScrollView")
-                                    
-                                    if let vm = viewModel.stickerViewModel {
-                                        
-                                        promoView(
-                                            productType: groupViewModel.productType,
-                                            model: vm
-                                        )
-                                    }
+                                    promoViews(productType: groupViewModel.productType)
                                 }
                             }
                         }
@@ -823,13 +816,23 @@ struct ProductCarouselView: View {
     }
     
     // MARK: PromoActions
+    
+    @ViewBuilder
+    private func promoViews(
+        productType: ProductType
+    ) -> some View {
+        
+        promoByType(productType).map {
+            ForEach($0, content: promoView)
+        }
+    }
+
     @ViewBuilder
     private func promoView(
-        productType: ProductType,
         model: AdditionalProductViewModel
     ) -> some View {
         
-        if model.productType == productType && viewModel.sticker {
+        if viewModel.sticker {
             
             viewFactory.makePromoView(model)
         }
@@ -852,6 +855,12 @@ struct ProductCarouselView: View {
         }
     }
     
+    private func promoByType(
+        _ type: ProductType
+    ) -> [AdditionalProductViewModel]? {
+        
+        viewModel.promoProducts?.filter { $0.productType == type }
+    }
 }
 
 extension ProductCarouselView {
@@ -1018,7 +1027,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
         style: .regular,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let placeholdersSmall = ProductCarouselView.ViewModel(
@@ -1028,7 +1037,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
         style: .small,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let placeholdersSmallWithSelector = ProductCarouselView.ViewModel(
@@ -1038,7 +1047,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
         style: .small,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let preview = ProductCarouselView.ViewModel(
@@ -1048,7 +1057,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
         style: .regular,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let previewSmall = ProductCarouselView.ViewModel(
@@ -1058,7 +1067,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .filtered(.generalFrom),
         style: .small,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let sampleProducts = ProductCarouselView.ViewModel(
@@ -1068,7 +1077,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .main,
         style: .regular,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let sampleProductsSmall = ProductCarouselView.ViewModel(
@@ -1078,7 +1087,7 @@ extension ProductCarouselView.ViewModel {
         selectedProductId: nil,
         mode: .main,
         style: .small,
-        stickerViewModel: nil
+        promoProducts: nil
     )
     
     static let oneProductSmall = ProductCarouselView.ViewModel(
