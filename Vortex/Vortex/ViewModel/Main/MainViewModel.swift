@@ -129,7 +129,7 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         let stickerVM = getSticker()
         if let index = sections.indexProductsSection,
-           (stickerVM == nil || stickerVM?.backgroundImage != stickerViewModel.backgroundImage) {
+           stickerVM == nil {
             sections[index] = MainSectionProductsView.ViewModel(
                 model,
                 promoProducts: [stickerViewModel]
@@ -293,7 +293,7 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .assign(to: &$route)
         
-        model.images
+        model.productListBannersWithSticker
             .receive(on: scheduler)
             .sink { [weak self] _ in
                 guard let self else { return }

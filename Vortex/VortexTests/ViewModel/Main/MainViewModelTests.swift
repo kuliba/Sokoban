@@ -27,24 +27,14 @@ final class MainViewModelTests: XCTestCase {
     
     func test_init_cacheContainsSticker_shouldSetSticker() throws {
         
-        let (sut, _) = makeSUTWithLocalAgent(localAgent: try makeLocalAgentForSticker())
+        let (sut, model) = makeSUT()
+        model.productListBannersWithSticker.value = [.init(productName: anyMessage(), link: anyMessage(), md5hash: anyMessage(), action: nil)]
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
         
         XCTAssertNotNil(sut.sections.stickerViewModel)
     }
-    
-    func test_updateImages_imageNotSticker_shouldNotUpdateSticker() {
         
-        let (sut, model) = makeSUT()
-        let stickerSpy = ValueSpy(sut.$sections.map(\.stickerViewModel?.backgroundImage))
-        XCTAssertNoDiff(stickerSpy.values, [nil])
-        
-        model.images.value = ["1": .tiny()]
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertNoDiff(stickerSpy.values, [nil, nil])
-    }
-    
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT(scheduler: .immediate)
@@ -806,49 +796,7 @@ final class MainViewModelTests: XCTestCase {
             MainSectionAtmView.ViewModel.initial
         ]
     }
-    
-    private func makeSUTWithLocalAgent(
-        localAgent: LocalAgent,
-        buttons: [NewProductButton.ViewModel] = [],
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> (
-        sut: MainViewModel,
-        model: Model
-    ) {
-        let model: Model = Model.mockWithEmptyExcept(localAgent: localAgent)
-        let sberQRServices = SberQRServices.preview(
-            createSberQRPaymentResultStub: .success(.empty()),
-            getSberQRDataResultStub: .success(.empty())
-        )
         
-        let sut = MainViewModel(
-            model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
-            navigationStateManager: .preview,
-            sberQRServices: sberQRServices,
-            qrViewModelFactory: .preview(),
-            landingServices: .empty(),
-            paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .inactive,
-            onRegister: {},
-            sections: makeSections(),
-            bindersFactory: .init(
-                bannersBinder: .preview,
-                makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
-            ),
-            makeOpenNewProductButtons: { _ in buttons }
-        )
-        
-        // trackForMemoryLeaks(sut, file: file, line: line)
-        // TODO: restore memory leaks tracking after Model fix
-        // trackForMemoryLeaks(model, file: file, line: line)
-        
-        return (sut, model)
-    }
-    
     private func makeSUT(
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
@@ -908,7 +856,7 @@ final class MainViewModelTests: XCTestCase {
         promoSpy: ValueSpy<ProductCarouselViewModelAction.Products.PromoDidTapped>
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = MainSectionViewVM(model, stickerViewModel: nil)
+        let sut = MainSectionViewVM(model, promoProducts: nil)
         
         let spy = ValueSpy(
             sut.productCarouselViewModel.action.compactMap { $0 as? ProductCarouselViewModelAction.Products.PromoDidTapped })
@@ -926,7 +874,7 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = MainSectionViewVM(model, stickerViewModel: nil)
+        let sut = MainSectionViewVM(model, promoProducts: nil)
         
         // trackForMemoryLeaks(sut, file: file, line: line)
         

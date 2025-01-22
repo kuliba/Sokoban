@@ -38,14 +38,14 @@ struct CardBannerAction: Codable, Equatable {
 extension StickerBannersMyProductList {
     
     func mapper(
-        backgroundImage: Image,
+        md5Hash: String,
         onTap: @escaping () -> Void,
         onHide: @escaping () -> Void
     ) -> AdditionalProductViewModel {
         
         .init(
-            backgroundImage: backgroundImage, 
-            productType: .card, 
+            md5Hash: md5Hash,
+            productType: .card,
             promoType: .sticker,
             onTap: onTap,
             onHide: onHide

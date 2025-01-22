@@ -5,11 +5,13 @@
 //  Created by Andryusina Nataly on 17.01.2025.
 //
 
+import Combine
 import SwiftUI
+import UIPrimitives
 
 struct AdditionalProductViewModel {
     
-    let backgroundImage: Image
+    let md5Hash: String
     let productType: ProductType
     let promoType: PromoProduct
     
@@ -36,6 +38,7 @@ extension AdditionalProductViewModel: Identifiable {
 struct AdditionalProductView: View {
     
     let viewModel: AdditionalProductViewModel
+    let makeIconView: MakeIconView
     
     var body: some View {
         
@@ -54,8 +57,7 @@ struct AdditionalProductView: View {
     
     func backgroundImageView() -> some View {
         ZStack(alignment: .topTrailing) {
-            viewModel.backgroundImage
-                .resizable()
+            makeIconView(.md5Hash(.init(viewModel.md5Hash)))
                 .scaledToFill()
                 .frame(width: 164, height: 104)
             
@@ -99,7 +101,7 @@ struct AdditionalProductView: View {
 #Preview {
     AdditionalProductView(
         viewModel: .init(
-            backgroundImage: .cardPlaceholder, 
+            md5Hash: "dsdsd",
             productType: .card,
             promoType: .sticker,
             onTap: {
@@ -107,6 +109,10 @@ struct AdditionalProductView: View {
             }, 
             onHide: {
                 print("onHide")
-            })
+            }), 
+        makeIconView: { _ in .init(
+            image: .cardPlaceholder,
+            publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+        )}
     )
 }

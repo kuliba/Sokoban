@@ -295,7 +295,7 @@ private extension RootViewFactoryComposer {
     func makePromoView(
         _ viewModel: AdditionalProductViewModel
     ) -> AdditionalProductView {
-        .init(viewModel: viewModel)
+        .init(viewModel: viewModel, makeIconView: makeIconView(for:))
     }
     
     func makeMainSectionCurrencyMetalView(

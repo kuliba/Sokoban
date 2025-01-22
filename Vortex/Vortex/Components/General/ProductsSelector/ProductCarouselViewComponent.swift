@@ -116,21 +116,15 @@ extension ProductCarouselView {
             hide: @escaping () -> Void
         ) -> AdditionalProductViewModel? {
             
-            if let productListBannersWithSticker = model.localAgent.load(type: [StickerBannersMyProductList].self),
-               let images = model.localAgent.load(type: [String: ImageData].self) {
-                
-                guard let md5hash = productListBannersWithSticker.first?.md5hash,
-                      let image = images[md5hash]?.image
-                else { return nil }
-                
-                return productListBannersWithSticker.first?.mapper(
-                    backgroundImage: image,
-                    onTap: show,
-                    onHide: hide
-                )
-            }
-            return nil
-        }
+            guard let productListBannersWithSticker = model.productListBannersWithSticker.value.first
+            else { return nil }
+                        
+            return productListBannersWithSticker.mapper(
+                md5Hash: productListBannersWithSticker.md5hash,
+                onTap: show,
+                onHide: hide
+            )
+     }
         
         var selectedType: ProductType? {
             
@@ -725,7 +719,15 @@ extension ProductCarouselViewFactory {
     
     static let preview: Self = .init(
         makeOptionSelectorView: {_ in fatalError()},
-        makePromoView: { AdditionalProductView(viewModel: $0)})
+        makePromoView: {
+            AdditionalProductView(
+                viewModel: $0,
+                makeIconView: { _ in .init(
+                    image: .cardPlaceholder,
+                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+                )}
+            )
+        })
 }
 
 //MARK: - View

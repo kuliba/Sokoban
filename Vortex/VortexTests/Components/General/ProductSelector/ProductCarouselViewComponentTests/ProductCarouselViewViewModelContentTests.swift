@@ -83,7 +83,7 @@ final class ProductCarouselViewViewModelContentTests: XCTestCase {
         
         let (sut, model) = makeSUT()
         
-        XCTAssertNil(sut.stickerViewModel)
+        XCTAssertNil(sut.promoProducts)
         XCTAssertNoDiff(model.productListBannersWithSticker.value, [])
     }
     
