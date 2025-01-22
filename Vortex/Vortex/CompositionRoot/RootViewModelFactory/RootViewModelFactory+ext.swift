@@ -47,6 +47,9 @@ extension RootViewModelFactory {
             orderCardFlag: featureFlags.orderCardFlag
         )
         
+        let httpClient = infra.httpClient
+        let logger = infra.logger
+        
         var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
@@ -698,17 +701,16 @@ extension ProductProfileViewModel {
 }
 
 // TODO: needs better naming
+
 private extension RootViewModelFactory {
     
     func makeLoggingStore<Key>(
         store: any Store<Key>
     ) -> any Store<Key> {
         
-        let log = { self.logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
-        
         return LoggingStoreDecorator(
             decoratee: store,
-            log: log
+            log: { [weak self] in self?.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         )
     }
     

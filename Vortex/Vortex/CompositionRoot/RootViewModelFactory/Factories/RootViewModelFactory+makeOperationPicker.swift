@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import PayHub
 import PayHubUI
+import SwiftUI
 import VortexTools
 
 private typealias Domain = OperationPickerDomain
@@ -115,40 +116,34 @@ extension RootViewModelFactory {
         return { content.event(.select(nil)) }
     }
     
+    typealias OperationPickerUpdater = ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]>
+    
     @inlinable
     func makeLatestUpdater(
         fetch: @escaping (@escaping ([Latest]?) -> Void) -> Void
-    ) -> ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]> {
+    ) -> OperationPickerUpdater {
         
-        ReactiveFetchingUpdater(
+        return .init(
             fetcher: AnyOptionalFetcher(fetch: fetch),
-            updater: AnyReactiveUpdater { latest in
+            updater: AnyReactiveUpdater { [weak self] latest in
                 
-            // TODO: reuse/extract mapping from LatestPaymentsView.ViewModel.bind() - see LatestPaymentsViewComponent.swift:41
+                guard let self else {
+                    return Just([]).eraseToAnyPublisher()
+                }
                 
                 let md5Hashes = latest.compactMap(\.md5Hash)
-                let imageCache = self.model.imageCache()
+                let dictionaryPublisher = infra.imageCache.imagesDictionaryPublisher(for: md5Hashes)
                 
-                let publishers = md5Hashes.map { md5Hash in
-                    
-                    imageCache.image(forKey: .init(md5Hash))
-                        .map { (md5Hash, $0) }
-                }
-                                
-                let updating = Publishers.MergeMany(publishers)
-                    .scan((latest)) { old, new in
-                        old.map {
-                            if $0.md5Hash == new.0 {
-                                return $0.updating(with: new.1)
-                            } else {
-                                return $0
-                            }
-                        }
-                    }
-                
-                return updating
-                    .map { $0.map { .latest($0) }}
-                    // .handleEvents(receiveOutput: { print("===== latest", $0.count) })
+                return latest
+                    .updating(with: dictionaryPublisher)
+                    .handleEvents(receiveOutput: {
+                        
+                        print("####### updating: ", String(describing: $0.map {
+                            
+                            ($0.md5Hash, $0.avatarImage)
+                        }))
+                    })
+                    .map { $0.map(OperationPickerDomain.Select.latest) }
                     .eraseToAnyPublisher()
             }
         )
@@ -165,5 +160,17 @@ private extension AnywayFlowState.Status.Outside {
         case .main:     return .dismiss
         case .payments: return .dismiss
         }
+    }
+}
+
+extension Latest: KeyProviding, ValueUpdatable {
+        
+    // Use `md5Hash` as the unique key
+    public var key: String { md5Hash ?? "" }
+    
+    // Return a new `Latest` with its `image` field updated
+    public func updated(value: Image) -> Self {
+        
+        updating(with: value)
     }
 }

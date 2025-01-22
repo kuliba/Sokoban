@@ -19,8 +19,8 @@ extension RootViewModelFactory {
     ) {
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             model: model,
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
+            httpClient: infra.httpClient,
+            log: log,
             loadOperators: { $1([]) } // not used in this case of ...!!!!!!!
         )
         let composer = AnywayTransactionComposer(
@@ -51,8 +51,8 @@ extension RootViewModelFactory {
     ) {
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             model: model,
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
+            httpClient: infra.httpClient,
+            log: log,
             loadOperators: { $1([]) } // not used in this case of ...!!!!!!!
         )
         let composer = AnywayTransactionComposer(

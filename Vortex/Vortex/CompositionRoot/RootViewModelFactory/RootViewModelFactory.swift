@@ -14,17 +14,15 @@ final class RootViewModelFactory {
     
     // TODO: - hide properties, provide methods to use in extensions
     
+    let infra: Infra
     let model: Model
-    let httpClient: HTTPClient
-    let logger: LoggerAgentProtocol
-    
     let mapScanResult: MapScanResult
     let resolveQR: ResolveQR
     let scanner: any QRScannerViewModel
     
     let settings: RootViewModelFactorySettings
     
-    // active flags
+    // TODO: remove: active flags
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
     let historyFilterFlag: HistoryFilterFlag = true
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
@@ -41,18 +39,16 @@ final class RootViewModelFactory {
     let nanoServiceComposer: LoggingRemoteNanoServiceComposer
     
     init(
+        infra: Infra,
         model: Model,
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
         mapScanResult: @escaping MapScanResult,
         resolveQR: @escaping ResolveQR,
         scanner: any QRScannerViewModel,
         settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
     ) {
+        self.infra = infra
         self.model = model
-        self.httpClient = httpClient
-        self.logger = logger
         self.mapScanResult = mapScanResult
         self.resolveQR = resolveQR
         self.scanner = scanner
@@ -69,8 +65,8 @@ final class RootViewModelFactory {
         
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
-            httpClient: httpClient,
-            logger: logger
+            httpClient: infra.httpClient,
+            logger: infra.logger
         )
         
         let delayingRemoteNanoServiceFactory = DelayingRemoteNanoServiceFactory(
@@ -85,9 +81,9 @@ final class RootViewModelFactory {
         )
         
         self.loggingSerialLoaderComposer = .init(
-            httpClient: httpClient,
+            httpClient: infra.httpClient,
             localAgent: model.localAgent,
-            logger: logger
+            logger: infra.logger
         )
         
         self.nanoServiceComposer = nanoServiceComposer
@@ -95,4 +91,31 @@ final class RootViewModelFactory {
     
     typealias ResolveQR = (String) -> QRViewModel.ScanResult
     typealias MapScanResult = (QRViewModel.ScanResult, @escaping (QRModelResult) -> Void) -> Void
+}
+
+extension RootViewModelFactory {
+    
+    convenience init(
+        model: Model,
+        httpClient: HTTPClient,
+        logger: LoggerAgentProtocol,
+        mapScanResult: @escaping MapScanResult,
+        resolveQR: @escaping ResolveQR,
+        scanner: any QRScannerViewModel,
+        settings: RootViewModelFactorySettings = .prod,
+        schedulers: Schedulers
+    ) {
+        self.init(
+            infra: .init(
+                httpClient: httpClient,
+                imageCache: model.imageCache(),
+                logger: logger
+            ),
+            model: model,
+            mapScanResult: mapScanResult,
+            resolveQR: resolveQR,
+            scanner: scanner,
+            schedulers: schedulers
+        )
+    }
 }

@@ -14,8 +14,8 @@ extension RootViewModelFactory {
         
         let transactionComposer = AnywayTransactionViewModelComposer(
             model: model,
-            httpClient: httpClient,
-            log: logger.log,
+            httpClient: infra.httpClient,
+            log: log,
             scheduler: schedulers.main
         )
         
