@@ -9,6 +9,7 @@ import AnywayPaymentDomain
 import Combine
 import PaymentComponents
 import SwiftUI
+import TextFieldUI
 import VortexTools
 
 final class AnywayElementModelMapper {
@@ -86,10 +87,17 @@ private extension AnywayElementModelMapper {
         
         switch parameter.uiComponent.type {
         case .checkbox:
-            return .parameter(.init(
-                origin: parameter.uiComponent,
-                type: .checkbox(makeCheckboxViewModel(with: parameter, event: event))
-            ))
+            return .parameter(
+                .init(
+                    origin: parameter.uiComponent,
+                    type: .checkbox(
+                        makeCheckboxViewModel(
+                            with: parameter,
+                            event: event
+                        )
+                    )
+                )
+            )
             
         case .hidden:
             return .parameter(.init(
@@ -98,16 +106,24 @@ private extension AnywayElementModelMapper {
             ))
             
         case .nonEditable:
-            return .parameter(.init(
-                origin: parameter.uiComponent,
-                type: .nonEditable(makeInputViewModel(with: parameter, event: event))
-            ))
+            return .parameter(
+                .init(
+                    origin: parameter.uiComponent,
+                    type: .nonEditable(
+                        makeInputViewModel(
+                            with: parameter,
+                            event: event
+                        )
+                    )
+                )
+            )
             
         case .numberInput:
-            return .parameter(.init(
-                origin: parameter.uiComponent,
-                type: .numberInput(makeInputViewModel(with: parameter, event: event))
-            ))
+            return makeInput(
+                with: parameter,
+                event: event,
+                keyboardType: .decimal
+            )
             
         case let .select(option, options):
             let model = makeSelectorViewModel(
@@ -119,25 +135,52 @@ private extension AnywayElementModelMapper {
                 and: parameter.uiComponent,
                 event: event
             )
+            
             return .parameter(.init(
                 origin: parameter.uiComponent,
                 type: .select(model)
             ))
             
         case .textInput:
-            if parameter.uiAttributes.phoneBook {
-                return .withContacts(makeWithContacts(with: parameter, event: event))
-            } else {
-                return .parameter(.init(
-                    origin: parameter.uiComponent,
-                    type: .textInput(makeInputViewModel(with: parameter, event: event))
-                ))
-            }
+            return makeInput(
+                with: parameter,
+                event: event,
+                keyboardType: .default
+            )
             
         case .unknown:
             return .parameter(.init(
                 origin: parameter.uiComponent,
                 type: .unknown
+            ))
+        }
+    }
+    
+    func makeInput(
+        with parameter: AnywayElement.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void,
+        keyboardType: TextFieldUI.KeyboardType
+    ) -> AnywayElementModel {
+        
+        if parameter.uiAttributes.phoneBook {
+            
+            return .withContacts(makeWithContacts(
+                with: parameter,
+                event: event,
+                keyboard: keyboardType
+            ))
+            
+        } else {
+            
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .input(
+                    makeInputViewModel(
+                        with: parameter,
+                        event: event
+                    ),
+                    keyboardType
+                )
             ))
         }
     }
@@ -242,7 +285,8 @@ private extension AnywayElementModelMapper {
     
     private func makeWithContacts(
         with parameter: AnywayElement.Parameter,
-        event: @escaping (AnywayPaymentEvent) -> Void
+        event: @escaping (AnywayPaymentEvent) -> Void,
+        keyboard: AnywayElementModel.KeyboardType
     ) -> AnywayElementModel.WithContacts {
         
         let inputNode = makeInputViewModel(with: parameter, event: event)
@@ -250,15 +294,16 @@ private extension AnywayElementModelMapper {
         
         let input = inputNode.model
         let cancellable = contacts.phoneDigitsPublisher
+            .map { $0.dropFirst() }
             .sink { [weak input] in
                 
-                let masked = parameter.applyMasking(to: $0)
-                input?.event(.textField(.setTextTo(masked)))
+                input?.event(.textField(.setTextTo(.init($0))))
             }
         
         return .init(
             origin: parameter.uiComponent,
             input: inputNode,
+            keyboard: keyboard,
             contacts: contacts,
             bindings: [cancellable]
         )
