@@ -36,7 +36,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
-            $0.status = .result(.failure(.updatePaymentFailure(message)))
+            $0.status = .result(.failure(.transactionFailure(message)))
         })
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
@@ -224,7 +224,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
-            $0.status = .result(.failure(.updatePaymentFailure(message)))
+            $0.status = .result(.failure(.transactionFailure(message)))
         })
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
