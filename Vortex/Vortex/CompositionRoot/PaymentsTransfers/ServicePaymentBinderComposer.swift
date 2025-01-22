@@ -87,9 +87,6 @@ private extension ServicePaymentBinderComposer {
             scheduler: scheduler
         )
     }
-}
-
-private extension ServicePaymentBinderComposer {
     
     func getFormattedAmount(
         context: AnywayPaymentContext

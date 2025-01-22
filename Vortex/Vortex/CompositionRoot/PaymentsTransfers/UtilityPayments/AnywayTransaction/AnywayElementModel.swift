@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import Combine
 import Foundation
 import PaymentComponents
 import RxViewModel
@@ -15,19 +16,20 @@ enum AnywayElementModel {
     case field(AnywayElement.UIComponent.Field)
     case parameter(Parameter)
     case widget(Widget)
+    case withContacts(WithContacts)
 }
 
 extension AnywayElementModel {
+    
+    typealias Origin = AnywayElement.UIComponent.Parameter
     
     struct Parameter {
         
         let origin: Origin
         let type: ParameterType
         
-        typealias Origin = AnywayElement.UIComponent.Parameter
-
         enum ParameterType {
-         
+            
             case checkbox(Node<RxCheckboxViewModel>)
             case hidden
             case nonEditable(Node<RxInputViewModel>)
@@ -45,6 +47,28 @@ extension AnywayElementModel {
         case otp(OTPViewModel)
         case simpleOTP(SimpleOTPViewModel)
     }
+    
+    struct WithContacts {
+        
+        let origin: Origin
+        let input: Node<RxInputViewModel>
+        let contacts: ContactsViewModel
+        private let bindings: Set<AnyCancellable>
+        
+        init(
+            origin: Origin,
+            input: Node<RxInputViewModel>,
+            contacts: ContactsViewModel,
+            bindings: Set<AnyCancellable>
+        ) {
+            self.origin = origin
+            self.input = input
+            self.contacts = contacts
+            self.bindings = bindings
+        }
+    }
+    
+    typealias Contact = ContactsViewModel
 }
 
 extension AnywayElementModel.Widget {

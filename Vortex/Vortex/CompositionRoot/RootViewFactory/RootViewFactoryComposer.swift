@@ -96,7 +96,7 @@ extension RootViewFactoryComposer {
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView, 
+            makePaymentsView: makePaymentsView,
             makeProductProfileView: makeProductProfileView,
             makeQRFailedView: makeQRFailedView,
             makeQRFailedWrapperView: makeQRFailedWrapperView,
@@ -110,7 +110,7 @@ extension RootViewFactoryComposer {
     }
     
     private func clearCache() {
-
+        
         (model.localAgent as? LocalAgent)?.clearCache()
     }
     
@@ -215,26 +215,35 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountViewFactory() -> UserAccountViewFactory {
-        .init(
+        
+        return .init(
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makeSbpPayView: makeSbpPayView)
+            makeSbpPayView: makeSbpPayView
+        )
     }
     
     func makeSbpPayView(
         viewModel: SbpPayViewModel
     ) -> SbpPayView {
-        .init(viewModel: viewModel, viewFactory: makeSbpPayViewFactory())
+        
+        return .init(
+            viewModel: viewModel,
+            viewFactory: makeSbpPayViewFactory()
+        )
     }
     
     func makeSbpPayViewFactory() -> SbpPayViewFactory {
-        .init(makeProductSelectorView: makeProductSelectorView)
+        
+        return .init(makeProductSelectorView: makeProductSelectorView)
     }
     
     func makeAnywayPaymentFactory(
         event: @escaping (AnywayPaymentEvent) -> ()
     ) -> AnywayPaymentFactory<IconView> {
+        
         let composer = AnywayPaymentFactoryComposer(
             currencyOfProduct: currencyOfProduct,
+            makeContactsView: makeContactsView,
             makeIconView: makeIconView
         )
         
@@ -244,8 +253,14 @@ private extension RootViewFactoryComposer {
     func makeCategoryView(
         savingsAccountFlag: Bool
     ) -> MakeProductsCategoryView  {
+        
         return {
-            .init(newImplementation: savingsAccountFlag, isSelected: $0, title: $1)
+            
+            .init(
+                newImplementation: savingsAccountFlag,
+                isSelected: $0,
+                title: $1
+            )
         }
     }
     
@@ -614,7 +629,7 @@ private extension RootViewFactoryComposer {
         
         makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
     }
-
+    
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {
@@ -623,13 +638,13 @@ private extension RootViewFactoryComposer {
             viewFactory: makePaymentsSuccessViewFactory()
         )
     }
-        
+    
     func makeProductProfileView(
         viewModel: ProductProfileViewModel
     ) -> ProductProfileView {
         
         let getUImage = { self.model.images.value[$0]?.uiImage }
-
+        
         return .init(
             viewModel: viewModel,
             viewFactory: makePaymentsTransfersViewFactory(),
@@ -660,12 +675,12 @@ private extension RootViewFactoryComposer {
             }
         )
     }
-        
+    
     func makePaymentsTransfersViewFactory() -> PaymentsTransfersViewFactory {
         
         let imageCache = model.imageCache()
         let generalImageCache = model.generalImageCache()
-
+        
         return .init(
             makeAnywayPaymentFactory: makeAnywayPaymentFactory(event:),
             makeIconView: imageCache.makeIconView(for:),
