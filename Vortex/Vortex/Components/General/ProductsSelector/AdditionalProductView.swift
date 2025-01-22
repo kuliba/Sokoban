@@ -5,20 +5,40 @@
 //  Created by Andryusina Nataly on 17.01.2025.
 //
 
+import Combine
 import SwiftUI
+import UIPrimitives
 
 struct AdditionalProductViewModel {
     
-    let backgroundImage: Image
+    let md5Hash: String
     let productType: ProductType
+    let promoType: PromoProduct
     
     let onTap: () -> Void
     let onHide: () -> Void
 }
 
+extension AdditionalProductViewModel: Identifiable {
+    
+    public var id: ID {
+        
+        switch promoType {
+        case .savingsAccount: return .savingsAccount
+        case .sticker:   return .sticker
+        }
+    }
+    
+    public enum ID: Hashable {
+        
+        case savingsAccount, sticker
+    }
+}
+
 struct AdditionalProductView: View {
     
     let viewModel: AdditionalProductViewModel
+    let makeIconView: MakeIconView
     
     var body: some View {
         
@@ -37,8 +57,7 @@ struct AdditionalProductView: View {
     
     func backgroundImageView() -> some View {
         ZStack(alignment: .topTrailing) {
-            viewModel.backgroundImage
-                .resizable()
+            makeIconView(.md5Hash(.init(viewModel.md5Hash)))
                 .scaledToFill()
                 .frame(width: 164, height: 104)
             
@@ -82,13 +101,18 @@ struct AdditionalProductView: View {
 #Preview {
     AdditionalProductView(
         viewModel: .init(
-            backgroundImage: .cardPlaceholder, 
+            md5Hash: "dsdsd",
             productType: .card,
+            promoType: .sticker,
             onTap: {
                 print("onTap")
             }, 
             onHide: {
                 print("onHide")
-            })
+            }), 
+        makeIconView: { _ in .init(
+            image: .cardPlaceholder,
+            publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+        )}
     )
 }

@@ -54,13 +54,13 @@ extension MainSectionProductsView {
         convenience init(
             settings: MainProductsGroupSettings = .base,
             _ model: Model,
-            stickerViewModel: AdditionalProductViewModel?
+            promoProducts: [AdditionalProductViewModel]?
         ) {
             let carouselViewModel = ProductCarouselView.ViewModel(
                 mode: .main,
                 style: .regular,
                 model: model,
-                stickerViewModel: stickerViewModel
+                promoProducts: promoProducts
             )
             
             self.init(
