@@ -249,10 +249,10 @@ private extension AnywayElementModelMapper {
         let contacts = makeContacts()
         
         let input = inputNode.model
-        let cancellable = contacts.phonePublisher
+        let cancellable = contacts.phoneDigitsPublisher
             .sink { [weak input] in
                 
-                let masked = parameter.applyMasking(to: $0.digits)
+                let masked = parameter.applyMasking(to: $0)
                 input?.event(.textField(.setTextTo(masked)))
             }
         
@@ -269,11 +269,11 @@ private extension AnywayElementModelMapper {
 
 extension ContactsViewModel {
     
-    var phonePublisher: AnyPublisher<String, Never> {
+    var phoneDigitsPublisher: AnyPublisher<String, Never> {
         
         action
             .compactMap { $0 as? ContactsViewModelAction.ContactPhoneSelected }
-            .map(\.phone)
+            .map(\.phone.digits)
             .eraseToAnyPublisher()
     }
 }

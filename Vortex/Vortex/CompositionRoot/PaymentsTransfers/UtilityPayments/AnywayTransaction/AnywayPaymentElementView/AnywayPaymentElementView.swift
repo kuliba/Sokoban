@@ -147,7 +147,7 @@ struct WithContactView<InputView: View, ContactsView: View>: View {
         .sheet(isPresented: $isShowingContacts) {
             
             makeContactsView(withContacts.contacts)
-                .onReceive(withContacts.contacts.phonePublisher) { _ in
+                .onReceive(withContacts.contacts.phoneDigitsPublisher) { _ in
                     
                     isShowingContacts = false
                 }
