@@ -26,20 +26,17 @@ final class RootViewFactoryComposer {
     
     private let model: Model
     private let httpClient: HTTPClient
-    private let historyFeatureFlag: HistoryFilterFlag
     private let savingsAccountFlag: SavingsAccountFlag
     private let schedulers: Schedulers
     
     init(
         model: Model,
         httpClient: HTTPClient,
-        historyFeatureFlag: HistoryFilterFlag,
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
-        self.historyFeatureFlag = historyFeatureFlag
         self.savingsAccountFlag = savingsAccountFlag
         self.schedulers = schedulers
     }
@@ -60,7 +57,6 @@ extension RootViewFactoryComposer {
             makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
                 
                 self.makeHistoryButtonView(
-                    self.historyFeatureFlag,
                     isFiltered: isFiltered,
                     isDateFiltered: isDateFiltered,
                     clearAction: clearAction,
@@ -73,7 +69,7 @@ extension RootViewFactoryComposer {
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeReturnButtonView: { action in
                 
-                self.makeReturnButtonView(self.historyFeatureFlag, action: action)
+                self.makeReturnButtonView(action: action)
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
@@ -158,14 +154,13 @@ private extension RootViewFactoryComposer {
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: {
                     self.makeHistoryButtonView(
-                        self.historyFeatureFlag,
                         isFiltered: $1,
                         isDateFiltered: $2,
                         clearAction: $3,
                         event: $0
                     )
                 },
-                makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
+                makeRepeatButtonView: makeReturnButtonView
             ),
             getUImage: getUImage
         )
@@ -642,7 +637,6 @@ private extension RootViewFactoryComposer {
                 guard let self else { return nil }
                 
                 return makeHistoryButtonView(
-                    historyFeatureFlag,
                     isFiltered: $1,
                     isDateFiltered: $2,
                     clearAction: $3,
@@ -653,7 +647,7 @@ private extension RootViewFactoryComposer {
                 
                 guard let self else { return nil }
                 
-                return makeReturnButtonView(historyFeatureFlag, action: $0)
+                return makeReturnButtonView(action: $0)
             }
         )
     }
@@ -812,7 +806,6 @@ private extension RootViewFactoryComposer {
     }
     
     func makeReturnButtonView(
-        _ historyFeatureFlag: HistoryFilterFlag,
         action: @escaping () -> Void
     ) -> RepeatButtonView? {
         
@@ -820,7 +813,6 @@ private extension RootViewFactoryComposer {
     }
     
     func makeHistoryButtonView(
-        _ historyFeatureFlag: HistoryFilterFlag,
         isFiltered: @escaping () -> Bool,
         isDateFiltered: @escaping () -> Bool,
         clearAction: @escaping () -> Void,

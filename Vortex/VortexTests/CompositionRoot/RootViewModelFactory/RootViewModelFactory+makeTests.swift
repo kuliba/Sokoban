@@ -421,7 +421,6 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         .init(
             getProductListByTypeV6Flag: .active,
-            historyFilterFlag: true,
             paymentsTransfersFlag: .active,
             savingsAccountFlag: .active,
             collateralLoanLandingFlag: .active,
