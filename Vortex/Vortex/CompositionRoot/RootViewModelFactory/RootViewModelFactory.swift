@@ -23,8 +23,6 @@ final class RootViewModelFactory {
     let settings: RootViewModelFactorySettings
     
     // TODO: remove: active flags
-    let getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active
-    let historyFilterFlag: HistoryFilterFlag = true
     let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .active
     
     let schedulers: Schedulers

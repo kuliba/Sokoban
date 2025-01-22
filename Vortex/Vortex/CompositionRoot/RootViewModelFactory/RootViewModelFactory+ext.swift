@@ -38,8 +38,7 @@ extension RootViewModelFactory {
         
         // keep for manual override of release flags
         let featureFlags = FeatureFlags(
-            getProductListByTypeV6Flag: featureFlags.getProductListByTypeV6Flag,
-            historyFilterFlag: featureFlags.historyFilterFlag,
+            getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
@@ -72,7 +71,7 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
-        if getProductListByTypeV6Flag.isActive {
+        if featureFlags.getProductListByTypeV6Flag.isActive {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
         } else {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)

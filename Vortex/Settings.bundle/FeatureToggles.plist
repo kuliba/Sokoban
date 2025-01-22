@@ -19,16 +19,6 @@
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Фильтр Истории Операций</string>
-			<key>Key</key>
-			<string>history_filter</string>
-			<key>DefaultValue</key>
-			<string>NO</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
 			<key>DefaultValue</key>
 			<false/>
 			<key>Title</key>
