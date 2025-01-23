@@ -15,7 +15,6 @@ extension RootViewModelFactory {
     struct MakeSelectedCategorySuccessPayload {
         
         let category: ServiceCategory
-        let latest: [Latest]
         let operators: [UtilityPaymentProvider]
     }
     
@@ -228,7 +227,7 @@ extension RootViewModelFactory {
         
         return .init(
             initialState: .init(
-                lastPayments: payload.latest,
+                lastPayments: [], // latest is the responsibility of operationPicker, not provider list
                 operators: payload.operators,
                 searchText: ""
             ),
