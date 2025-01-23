@@ -21,30 +21,21 @@ struct PaymentProviderPickerView: View {
             model: binder.flow,
             makeContentView: { state, event in
                 
-                ZStack {
-                    
-                    if state.isLoading {
+                PaymentProviderPickerFlowView(
+                    state: state.navigation,
+                    event: event,
+                    contentView: contentView,
+                    destinationView: destinationView
+                )
+                .navigationBarHidden(true)
+                .navigationBarWithBack(
+                    title: binder.content.title,
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner {
                         
-                        SpinnerView(viewModel: .init())
-                            .zIndex(1)
+                        binder.flow.event(.select(.outside(.qr)))
                     }
-                    
-                    PaymentProviderPickerFlowView(
-                        state: state.navigation,
-                        event: event,
-                        contentView: contentView,
-                        destinationView: destinationView
-                    )
-                    .navigationBarHidden(true)
-                    .navigationBarWithBack(
-                        title: binder.content.title,
-                        dismiss: { binder.flow.event(.dismiss) },
-                        rightItem: .barcodeScanner {
-                            
-                            binder.flow.event(.select(.outside(.qr)))
-                        }
-                    )
-                }
+                )
             }
         )
     }
