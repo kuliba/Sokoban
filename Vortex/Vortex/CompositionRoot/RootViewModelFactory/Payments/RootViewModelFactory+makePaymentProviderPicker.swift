@@ -7,6 +7,7 @@
 
 import Combine
 import FlowCore
+import Foundation
 import PayHub
 import RemoteServices
 
@@ -185,13 +186,34 @@ extension RootViewModelFactory {
         
         let providerList = makeProviderList(with: payload)
         let search = payload.category.hasSearch ? makeSearch() : nil
+        let operationPicker = makeOperationPickerContent(for: payload.category)
+        
+        operationPicker.event(.reload)
         
         return .init(
             title: payload.category.name,
-            operationPicker: (),
+            operationPicker: operationPicker,
             providerList: providerList,
             search: search,
             cancellables: bind(search, to: providerList)
+        )
+    }
+    
+    @inlinable
+    func makeOperationPickerContent(
+        for category: ServiceCategory,
+        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item] = []
+    ) -> OperationPickerDomain.Content {
+        
+        makeOperationPickerContent(
+            loadLatest: { [weak self] completion in
+                
+                self?.loadLatestPayments(for: category) {
+                    
+                    completion(try? $0.get())
+                }
+            },
+            prefix: prefix
         )
     }
     
