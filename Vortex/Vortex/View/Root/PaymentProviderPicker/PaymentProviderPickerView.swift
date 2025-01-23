@@ -48,23 +48,52 @@ private extension PaymentProviderPickerView {
         PaymentProviderPickerContentView(
             content: binder.content,
             factory: .init(
-                makeOperationPickerView: makeOperationPickerView,
+                makeOperationPickerView: { content in
+                    
+                    makeOperationPickerView(
+                        search: binder.content.search,
+                        content: content
+                    )
+                },
                 makeProviderList: makePaymentProviderListView,
-                makeSearchView: { _ in EmptyView() }
+                makeSearchView: makeSearchView
             )
         )
         .ignoresSafeArea()
     }
     
+    @ViewBuilder
     func makeOperationPickerView(
-        _ content: OperationPickerDomain.Content
+        search: PaymentProviderPickerDomain.Search?,
+        content: OperationPickerDomain.Content
+    ) -> some View {
+        
+        switch search {
+        case .none:
+            makeOperationPickerView(content: content)
+            
+        case let .some(search):
+            HidingOnActiveSearch(search: search) {
+                
+                makeOperationPickerView(content: content)
+            }
+        }
+    }
+    
+    func makeOperationPickerView(
+        content: OperationPickerDomain.Content
     ) -> some View {
         
         OperationPickerContentWrapperView(
             content: content,
             select: select,
-            config: .init(label: .iVortex, latest: .prod(iconSize: 40), view: .prod)
+            config: .init(
+                label: .iVortex,
+                latest: .prod(iconSize: 40),
+                view: .prod
+            )
         )
+        .padding(.horizontal, 16)
     }
     
     func select(_ element: OperationPickerElement<Latest>) {
@@ -81,8 +110,25 @@ private extension PaymentProviderPickerView {
         PaymentProviderListView(
             providerList: providerList,
             binder: binder,
-            makeIconView: makeIconView
+            makeIconView: makeIconView,
+            makeSearchView: EmptyView.init
         )
+    }
+    
+    func makeSearchView(
+        search: PaymentProviderPickerDomain.Search
+    ) -> some View {
+        
+        DefaultCancellableSearchBarView(
+            viewModel: search,
+            textFieldConfig: .black16,
+            cancel: {
+                
+                UIApplication.shared.endEditing()
+                search.setText(to: nil)
+            }
+        )
+        .padding(.horizontal, 16)
     }
     
     @ViewBuilder
@@ -97,5 +143,23 @@ private extension PaymentProviderPickerView {
             components: components,
             makeIconView: makeIconView
         )
+    }
+}
+
+/// Hide content if observing search is active.
+struct HidingOnActiveSearch<Content: View>: View {
+    
+    @ObservedObject var search: RegularFieldViewModel
+    
+    let content: () -> Content
+    var anchor: UnitPoint = .leading
+    
+    var body: some View {
+        
+        content()
+            .scaleEffect(search.isActive ? 0.01 : 1, anchor: anchor)
+            .frame(height: search.isActive ? 0.01 : nil, alignment: .bottom)
+            .opacity(search.isActive ? 0 : 1)
+            .animation(.bouncy, value: search.isActive)
     }
 }
