@@ -486,15 +486,11 @@ class Model {
         //MARK: - Model Action
         
         let fcmTokenPublisher = self.fcmToken.compactMap { $0 }
-            .handleEvents(receiveOutput: { print("#### fcmToken: \($0)") })
             .map { _ in () }
             .eraseToAnyPublisher()
         
-        print("#### expired just created")
         let expired = Just(())
-            .handleEvents(receiveOutput: { print("#### expired just: \($0)") })
             .delay(for: .seconds(10), scheduler: DispatchQueue.main)
-            .handleEvents(receiveOutput: { print("#### expired delayed: \($0)") })
             .eraseToAnyPublisher()
         
         // either we get a token or wait expired
@@ -506,7 +502,6 @@ class Model {
             
                 fcmTokenOrExpired.map { _ in request }
             }
-            .handleEvents(receiveOutput: { print("#### flatMap: \($0)") })
             .receive(on: queue)
             .sink { [weak self] payload in
                 
@@ -602,6 +597,7 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
+//resolve - Model.swift:499
 //                case let payload as ModelAction.Auth.CheckClient.Request:
 //                    handleAuthCheckClientRequest(payload: payload)
                     
