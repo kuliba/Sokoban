@@ -78,40 +78,12 @@ extension OperationPickerView {
         _ content: OperationPickerDomain.Content
     ) -> some View {
         
-        RxWrapperView(
-            model: content,
-            makeContentView: { state, event in
-                
-                OperationPickerContentView(
-                    state: state,
-                    event: event,
-                    config: .prod,
-                    itemLabel: operationPickerItemLabel
-                )
-            }
+        OperationPickerContentWrapperView(
+            content: content,
+            select: { content.event(.select($0)) },
+            config: .init(label: .iVortex, latest: .prod(), view: .prod)
         )
         .onFirstAppear { content.event(.load) }
-    }
-    
-    private func operationPickerItemLabel(
-        item: OperationPickerState.Item
-    ) -> some View {
-        
-        OperationPickerStateItemLabel(
-            item: item,
-            config: .iVortex,
-            latestView: { latest in
-                
-                LatestPaymentButtonLabelView(latest: latest, config: .prod())
-            },
-            placeholderView:  {
-                
-                LatestPlaceholder(
-                    opacity: 1,
-                    config: OperationPickerStateItemLabelConfig.iVortex.latestPlaceholder
-                )
-            }
-        )
     }
     
     @ViewBuilder
