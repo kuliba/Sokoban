@@ -32,13 +32,20 @@ typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     
+    struct Infra {
+        
+        let imageCache: ImageCache
+        let generalImageCache: ImageCache
+    }
+    
+    // TODO: add init, make `infra` private
+    let infra: Infra
+    
     let clearCache: () -> Void
     let isCorporate: () -> Bool
     let makeActivateSliderView: MakeActivateSliderView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView
-    let makeIconView: MakeIconView
-    let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
@@ -51,6 +58,19 @@ struct RootViewFactory {
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
+}
+
+extension RootViewFactory {
+
+    var makeGeneralIconView: MakeIconView {
+        
+        infra.generalImageCache.makeIconView(for:)
+    }
+    
+    var makeIconView: MakeIconView {
+        
+        infra.imageCache.makeIconView(for:)
+    }
 }
 
 extension RootViewFactory {
