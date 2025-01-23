@@ -10,6 +10,7 @@ import Combine
 import Foundation
 import PaymentComponents
 import RxViewModel
+import TextFieldUI
 
 enum AnywayElementModel {
     
@@ -22,6 +23,7 @@ enum AnywayElementModel {
 extension AnywayElementModel {
     
     typealias Origin = AnywayElement.UIComponent.Parameter
+    typealias KeyboardType = TextFieldUI.KeyboardType
     
     struct Parameter {
         
@@ -32,10 +34,9 @@ extension AnywayElementModel {
             
             case checkbox(Node<RxCheckboxViewModel>)
             case hidden
+            case input(Node<RxInputViewModel>, KeyboardType)
             case nonEditable(Node<RxInputViewModel>)
-            case numberInput(Node<RxInputViewModel>)
             case select(ObservingSelectorViewModel)
-            case textInput(Node<RxInputViewModel>)
             case unknown
         }
     }
@@ -52,17 +53,20 @@ extension AnywayElementModel {
         
         let origin: Origin
         let input: Node<RxInputViewModel>
+        let keyboard: KeyboardType
         let contacts: ContactsViewModel
         private let bindings: Set<AnyCancellable>
         
         init(
             origin: Origin,
             input: Node<RxInputViewModel>,
+            keyboard: KeyboardType,
             contacts: ContactsViewModel,
             bindings: Set<AnyCancellable>
         ) {
             self.origin = origin
             self.input = input
+            self.keyboard = keyboard
             self.contacts = contacts
             self.bindings = bindings
         }
