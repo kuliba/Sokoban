@@ -18,7 +18,7 @@ extension RootViewModelFactory {
         var sections = [
             MainSectionProductsView.ViewModel(
                 model,
-                promoProducts: nil // TODO: add promoProduct
+                promoProducts: nil
             ),
             MainSectionFastOperationView.ViewModel(),
             MainSectionPromoView.ViewModel(model),

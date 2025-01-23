@@ -774,13 +774,20 @@ private extension RootViewModelFactory {
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-                
+         
+        let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
+        }
+        
+        let mainViewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: makeAuthFactory,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makePromoProductViewModel: makePromoViewModel,
+            qrViewModelFactory: qrViewModelFactory)
+        
         let mainViewModel = MainViewModel(
             model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
@@ -792,6 +799,7 @@ private extension RootViewModelFactory {
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
+            viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
