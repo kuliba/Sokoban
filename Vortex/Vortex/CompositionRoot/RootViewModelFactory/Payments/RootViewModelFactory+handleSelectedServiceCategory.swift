@@ -36,7 +36,7 @@ extension RootViewModelFactory {
     ) -> StandardSelectedCategoryDestination {
         
         switch operators {
-        case .none:
+        case .none, .some([]):
             let failure = makeServiceCategoryFailure(category: category)
             return .failure(failure)
             
