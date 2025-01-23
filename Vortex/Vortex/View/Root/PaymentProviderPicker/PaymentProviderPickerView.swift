@@ -48,12 +48,30 @@ private extension PaymentProviderPickerView {
         PaymentProviderPickerContentView(
             content: binder.content,
             factory: .init(
-                makeOperationPickerView: { _ in EmptyView() },
+                makeOperationPickerView: makeOperationPickerView,
                 makeProviderList: makePaymentProviderListView,
                 makeSearchView: { _ in EmptyView() }
             )
         )
         .ignoresSafeArea()
+    }
+    
+    func makeOperationPickerView(
+        _ content: OperationPickerDomain.Content
+    ) -> some View {
+        
+        OperationPickerContentWrapperView(
+            content: content,
+            select: select,
+            config: .init(label: .iVortex, latest: .prod(iconSize: 40), view: .prod)
+        )
+    }
+    
+    func select(_ element: OperationPickerElement<Latest>) {
+        
+        guard case let .latest(latest) = element else { return }
+        
+        binder.flow.event(.select(.latest(latest)))
     }
     
     func makePaymentProviderListView(
@@ -66,7 +84,7 @@ private extension PaymentProviderPickerView {
             makeIconView: makeIconView
         )
     }
-        
+    
     @ViewBuilder
     func destinationView(
         _ destination: PaymentProviderPickerDomain.Destination
@@ -76,7 +94,7 @@ private extension PaymentProviderPickerView {
             dismiss: { binder.flow.event(.dismiss) },
             detailPayment: { binder.flow.event(.select(.detailPayment)) },
             destination: destination,
-            components: components, 
+            components: components,
             makeIconView: makeIconView
         )
     }
