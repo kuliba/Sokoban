@@ -26,7 +26,7 @@ where OperationPickerView: View,
     
     public var body: some View {
         
-        VStack {
+        VStack(spacing: 0) {
             
             content.search.map(factory.makeSearchView)
             factory.makeOperationPickerView(content.operationPicker)

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 import PayHub
 import RemoteServices
 
@@ -20,45 +21,29 @@ extension RootViewModelFactory {
         _ category: ServiceCategory,
         completion: @escaping (StandardSelectedCategoryDestination) -> Void
     ) {
-        loadOperatorsAndLatest(for: category) { [weak self] in
+        loadCachedOperators(forCategory: category) { [weak self] in
             
             guard let self else { return }
             
-            completion(makeDestination(for: category, and: $0))
+            completion(makeDestination(for: category, and: try? $0.get()))
         }
-    }
-    
-    typealias OperatorsAndLatest = LoadNanoServices<ServiceCategory, Latest, UtilityPaymentProvider>.Success
-    
-    @inlinable
-    func loadOperatorsAndLatest(
-        for category: ServiceCategory,
-        completion: @escaping (OperatorsAndLatest?) -> Void
-    ) {
-        let service = LoadNanoServices(
-            loadLatest: loadLatestPayments,
-            loadOperators: loadCachedOperators
-        )
-        
-        service.load(category: category) { completion($0); _ = service }
     }
     
     @inlinable
     func makeDestination(
         for category: ServiceCategory,
-        and payload: OperatorsAndLatest?
+        and operators: [UtilityPaymentProvider]?
     ) -> StandardSelectedCategoryDestination {
         
-        switch payload {
-        case .none:
+        switch operators {
+        case .none, .some([]):
             let failure = makeServiceCategoryFailure(category: category)
             return .failure(failure)
             
-        case let .some(operatorsAndLatest):
+        case let .some(operators):
             let picker = makePaymentProviderPicker(payload: .init(
                 category: category,
-                latest: operatorsAndLatest.latest,
-                operators: operatorsAndLatest.operators
+                operators: operators
             ))
             return .success(picker)
         }
