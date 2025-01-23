@@ -81,7 +81,14 @@ extension OperationPickerView {
         OperationPickerContentWrapperView(
             content: content,
             select: { content.event(.select($0)) },
-            config: .init(label: .iVortex, latest: .prod(), view: .prod)
+            config: .init(label: .prod, view: .prod(height: 96)),
+            makeLastPaymentLabel: {
+            
+                LatestPaymentButtonLabelView(
+                    latest: $0,
+                    config: .prod()
+                )
+            }
         )
         .onFirstAppear { content.event(.load) }
     }

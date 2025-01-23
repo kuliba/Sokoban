@@ -8,6 +8,7 @@
 import PayHubUI
 import RxViewModel
 import SwiftUI
+import UtilityServicePrepaymentUI
 
 struct PaymentProviderPickerView: View {
     
@@ -87,13 +88,23 @@ private extension PaymentProviderPickerView {
         OperationPickerContentWrapperView(
             content: content,
             select: select,
-            config: .init(
-                label: .iVortex,
-                latest: .prod(iconSize: 40),
-                view: .prod
-            )
+            config: .init(label: .prod, view: .prod(height: 80)),
+            makeLastPaymentLabel: makeLastPaymentLabel
         )
-        .padding(.horizontal, 16)
+        .padding(.top)
+    }
+    
+    func makeLastPaymentLabel(
+        latest: Latest
+    ) -> some View {
+        
+        LastPaymentLabel(
+            amount: latest.amount.map { "\($0) ₽" } ?? "",
+            title: latest.name,
+            config: .iVortex,
+            iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
+        )
+        .contentShape(Rectangle())
     }
     
     func select(_ element: OperationPickerElement<Latest>) {

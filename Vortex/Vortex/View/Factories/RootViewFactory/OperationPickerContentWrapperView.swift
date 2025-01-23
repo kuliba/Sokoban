@@ -8,25 +8,30 @@
 import PayHubUI
 import RxViewModel
 import SwiftUI
+import UtilityServicePrepaymentUI
 
-struct OperationPickerContentWrapperView: View {
+struct OperationPickerContentWrapperView<LastPaymentLabel: View>: View {
     
     let content: OperationPickerDomain.Content
     let select: (OperationPickerElement<Latest>) -> Void
     let config: Config
-    
+    let makeLastPaymentLabel: (Latest) -> LastPaymentLabel
+
     var body: some View {
         
         RxWrapperView(
             model: content,
             makeContentView: { state, _ in
                 
-                OperationPickerContentView(
-                    state: state,
-                    select: select,
-                    config: config.view,
-                    itemLabel: operationPickerItemLabel
-                )
+                if !state.items.isEmpty {
+                
+                    OperationPickerContentView(
+                        state: state,
+                        select: select,
+                        config: config.view,
+                        itemLabel: operationPickerItemLabel
+                    )
+                }
             }
         )
     }
@@ -37,7 +42,6 @@ extension OperationPickerContentWrapperView {
     struct Config {
         
         let label: OperationPickerStateItemLabelConfig
-        let latest: LatestPaymentButtonLabelConfig
         let view: OperationPickerContentViewConfig
     }
 }
@@ -51,17 +55,13 @@ private extension OperationPickerContentWrapperView {
         OperationPickerStateItemLabel(
             item: item,
             config: config.label,
-            latestView: { latest in
-                
-                LatestPaymentButtonLabelView(
-                    latest: latest,
-                    config: config.latest
-                )
-            },
-            placeholderView:  {
-                
-                LatestPlaceholder(opacity: 1, config: config.label.latestPlaceholder)
-            }
+            latestView: makeLastPaymentLabel,
+            placeholderView: placeholderView
         )
+    }
+    
+    func placeholderView() -> some View {
+        
+        LatestPlaceholder(opacity: 1, config: config.label.latestPlaceholder)
     }
 }
