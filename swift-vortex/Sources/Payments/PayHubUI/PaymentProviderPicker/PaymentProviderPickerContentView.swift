@@ -39,11 +39,11 @@ where OperationPickerView: View,
             factory.makeOperationPickerView(content.operationPicker)
                 .frame(height: isSearchActive ? 0.01 : nil, alignment: .bottom)
                 .opacity(isSearchActive ? 0 : 1)
-                .animation(.bouncy, value: isSearchActive)
             
             factory.makeProviderList(content.providerList)
         }
         .onReceive(isSearchActivePublisher) { isSearchActive = $0 }
+        .animation(.bouncy, value: isSearchActive)
     }
 }
 
