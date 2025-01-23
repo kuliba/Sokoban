@@ -843,7 +843,6 @@ internal extension Model {
             do {
                
                 let credentials = try await authSessionCredentials(restartSession: payload.restartSession)
-                self.fcmToken.value = Messaging.messaging().fcmToken
 
                 let appId = authOperationSystem
                 let pushDeviceId = try await authPushDeviceId()
