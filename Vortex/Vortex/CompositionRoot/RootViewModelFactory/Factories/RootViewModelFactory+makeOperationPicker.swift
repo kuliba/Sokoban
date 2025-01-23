@@ -38,24 +38,8 @@ extension RootViewModelFactory {
         prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
     ) -> ReloadableOperationPicker {
         
-        let fetchingUpdater = makeLatestUpdater(fetch: loadLatest)
+        let content = makeOperationPickerContent(loadLatest: loadLatest, prefix: prefix)
         
-        return makeOperationPicker(load: fetchingUpdater.load, prefix: prefix)
-    }
-    
-    @inlinable
-    func makeOperationPicker(
-        load: @escaping (@escaping ([OperationPickerDomain.Select]?) -> Void) -> Void,
-        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
-    ) -> ReloadableOperationPicker {
-        
-        let content = composeLoadablePickerModel(
-            load: load,
-            prefix: prefix,
-            suffix: [],
-            placeholderCount: settings.operationPickerPlaceholderCount
-        )
-                
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
@@ -64,6 +48,22 @@ extension RootViewModelFactory {
         )
     }
     
+    @inlinable
+    func makeOperationPickerContent(
+        loadLatest: @escaping LoadLatest,
+        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
+    ) -> OperationPickerDomain.Content {
+        
+        let fetchingUpdater = makeLatestUpdater(fetch: loadLatest)
+
+        return composeLoadablePickerModel(
+            load: fetchingUpdater.load,
+            prefix: prefix,
+            suffix: [],
+            placeholderCount: settings.operationPickerPlaceholderCount
+        )
+    }
+        
     private func delayProvider(
         navigation: Domain.Navigation
     ) -> Delay {
