@@ -1440,9 +1440,14 @@ private extension PaymentsTransfersViewModel {
     
     private func closeSuccess() {
                 
-        self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
-        self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
-        self.rootActions?.switchTab(.main)
+        self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            
+            self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+            self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+            self.rootActions?.switchTab(.main)
+        }
     }
     
     private func dismissAllViewAndSwitchToMainTab() {
