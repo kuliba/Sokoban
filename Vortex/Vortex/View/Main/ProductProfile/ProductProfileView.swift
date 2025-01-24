@@ -64,8 +64,13 @@ struct ProductProfileView: View {
             }
             .coordinateSpace(name: "scroll")
             
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
+            NavigationLink(
+                "",
+                isActive: .init(
+                    get: { viewModel.link != nil },
+                    set: { if !$0 { viewModel.link = nil }}
+                )
+            ) {
                 viewModel.link.map(navLinkDestination)
             }
             
