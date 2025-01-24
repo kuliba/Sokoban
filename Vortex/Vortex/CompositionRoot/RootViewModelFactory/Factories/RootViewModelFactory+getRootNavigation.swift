@@ -49,20 +49,20 @@ extension RootViewModelFactory {
         func makeScanQR() {
             
             let qrScanner = makeQRScannerBinder()
-            let cancellable = bind(qrScanner.content)
+            let cancellables = bind(qrScanner)
             
             completion(.scanQR(.init(
                 model: qrScanner,
-                cancellable: cancellable
+                cancellables: cancellables
             )))
         }
         
         func bind(
-            _ scanQR: QRScannerModel
-        ) -> AnyCancellable {
+            _ qrScanner: QRScannerDomain.Binder
+        ) -> Set<AnyCancellable> {
             
             // PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer.swift:308
-            return scanQR.$state
+            let content = qrScanner.content.$state
                 .compactMap { $0 }
                 .delay(for: 0.1, scheduler: schedulers.main)
             // .debounce(for: 0.1, scheduler: scheduler)
@@ -80,6 +80,28 @@ extension RootViewModelFactory {
                         break
                     }
                 }
+            
+            let flow = qrScanner.flow.$state
+                .compactMap {
+                    #warning("extract to helper")
+                    switch $0.navigation {
+                    case let .outside(outside):
+                        switch outside {
+                        case .chat:
+                            return .tab(.chat)
+                        case .main:
+                            return .tab(.main)
+                        case .payments:
+                            return .tab(.payments)
+                        }
+                        
+                    default:
+                        return nil
+                    }
+                }
+                .sink { notify(.select(.outside($0))) }
+            
+            return [content, flow]
         }
         
         func makeTemplatesNode() {
