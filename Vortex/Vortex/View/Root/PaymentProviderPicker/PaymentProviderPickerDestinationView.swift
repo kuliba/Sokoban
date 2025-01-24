@@ -67,10 +67,10 @@ private extension PaymentProviderPickerDestinationView {
             switch success {
             case let .services(node):
                 let binder = node.model
-                let navbar = binder.content.navBar
                 
                 ProviderServicePickerView(
-                    binder: binder, 
+                    binder: binder,
+                    dismiss: dismiss,
                     makeAnywayFlowView: { anywayFlowModel in
                         
                         makeAnywayFlowView(
@@ -79,13 +79,6 @@ private extension PaymentProviderPickerDestinationView {
                         )
                     },
                     makeIconView: makeIconView
-                )
-                .navigationBarWithAsyncIcon(
-                    title: navbar.title,
-                    subtitle: navbar.subtitle,
-                    dismiss: dismiss,
-                    icon: iconView(navbar.icon),
-                    style: .normal
                 )
                 
             case let .startPayment(node):

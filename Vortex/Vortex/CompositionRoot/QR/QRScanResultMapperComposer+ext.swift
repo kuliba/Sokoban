@@ -79,8 +79,8 @@ private extension Model {
         with inn: String
     ) -> [SegmentedProvider]? {
         
-        localAgent.load(type: [CodableServicePaymentOperator].self)?
-            .filter { $0.inn == inn }
+        localAgent.load(type: ServicePaymentOperatorStorage.self)?
+            .search(for: inn, in: \.inn)
             .map(SegmentedProvider.init)
     }
 }

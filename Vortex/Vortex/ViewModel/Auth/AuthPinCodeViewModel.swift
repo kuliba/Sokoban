@@ -130,7 +130,41 @@ class AuthPinCodeViewModel: ObservableObject {
                 }
             }
             .store(in: &bindings)
-       
+        
+        model.sessionState
+            .combineLatest(model.clientInform, self.viewDidAppear)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state, clientInformData, isViewDidAppear in
+                
+                guard let self else { return }
+                
+                switch state {
+                    
+                case .active:
+                    
+                    guard clientInformData.isRecieved, isViewDidAppear else { return }
+                    
+                    withAnimation {
+                        self.spinner = nil
+                    }
+                    
+                    if !self.model.clientInformStatus.isShowNotAuthorized,
+                       let message = clientInformData.data?.notAuthorized  {
+                        
+                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(title: "Ошибка", message: message))
+                        
+                    } else {
+                        
+                        tryAutoEvaluateSensor()
+                    }
+                    
+                default:
+                    withAnimation {
+                        self.spinner = .init()
+                    }
+                }
+                
+            }.store(in: &bindings)
 
         model.action
             .receive(on: DispatchQueue.main)

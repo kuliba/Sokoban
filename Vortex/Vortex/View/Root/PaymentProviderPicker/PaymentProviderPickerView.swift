@@ -5,16 +5,18 @@
 //  Created by Igor Malyarov on 28.11.2024.
 //
 
+import Combine
 import PayHubUI
 import RxViewModel
 import SwiftUI
+import UtilityServicePrepaymentUI
 
 struct PaymentProviderPickerView: View {
     
     let binder: PaymentProviderPickerDomain.Binder
     let components: ViewComponents
     let makeIconView: MakeIconView
-
+    
     var body: some View {
         
         RxWrapperView(
@@ -27,16 +29,31 @@ struct PaymentProviderPickerView: View {
                     contentView: contentView,
                     destinationView: destinationView
                 )
+                .navigationBarHidden(true)
+                .navigationBarWithBack(
+                    title: binder.content.title,
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner {
+                        
+                        binder.flow.event(.select(.outside(.qr)))
+                    }
+                )
             }
         )
-        .navigationBarWithBack(
-            title: binder.content.title,
-            dismiss: { binder.flow.event(.dismiss) },
-            rightItem: .barcodeScanner(action: {
-                
-                binder.flow.event(.select(.outside(.qr)))
-            })
-        )
+    }
+}
+
+extension PaymentProviderPickerDomain.Content {
+    
+    var isSearchActivePublisher: AnyPublisher<Bool, Never> {
+        
+        switch search {
+        case .none:
+            return Empty().eraseToAnyPublisher()
+            
+        case let .some(search):
+            return search.$state.map(\.isEditing).eraseToAnyPublisher()
+        }
     }
 }
 
@@ -46,13 +63,47 @@ private extension PaymentProviderPickerView {
         
         PaymentProviderPickerContentView(
             content: binder.content,
+            isSearchActivePublisher: binder.content.isSearchActivePublisher,
             factory: .init(
-                makeOperationPickerView: { _ in EmptyView() },
+                makeOperationPickerView: makeOperationPickerView,
                 makeProviderList: makePaymentProviderListView,
-                makeSearchView: { _ in EmptyView() }
+                makeSearchView: makeSearchView
             )
         )
         .ignoresSafeArea()
+    }
+    
+    func makeOperationPickerView(
+        content: OperationPickerDomain.Content
+    ) -> some View {
+        
+        OperationPickerContentWrapperView(
+            content: content,
+            select: select,
+            config: .init(label: .prod, view: .prod(height: 80)),
+            makeLastPaymentLabel: makeLastPaymentLabel
+        )
+        .padding(.top)
+    }
+    
+    func makeLastPaymentLabel(
+        latest: Latest
+    ) -> some View {
+        
+        LastPaymentLabel(
+            amount: latest.amount.map { "\($0) ₽" } ?? "",
+            title: latest.name,
+            config: .iVortex,
+            iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
+        )
+        .contentShape(Rectangle())
+    }
+    
+    func select(_ element: OperationPickerElement<Latest>) {
+        
+        guard case let .latest(latest) = element else { return }
+        
+        binder.flow.event(.select(.latest(latest)))
     }
     
     func makePaymentProviderListView(
@@ -62,10 +113,29 @@ private extension PaymentProviderPickerView {
         PaymentProviderListView(
             providerList: providerList,
             binder: binder,
-            makeIconView: makeIconView
+            makeIconView: makeIconView,
+            makeSearchView: EmptyView.init
         )
     }
+    
+    func makeSearchView(
+        search: PaymentProviderPickerDomain.Search
+    ) -> some View {
         
+        DefaultCancellableSearchBarView(
+            viewModel: search,
+            textFieldConfig: .black16,
+            cancel: {
+                
+                UIApplication.shared.endEditing()
+                search.setText(to: nil)
+            }
+        )
+        .padding(.horizontal, 16)
+        .background(.white)
+        .zIndex(1)
+    }
+    
     @ViewBuilder
     func destinationView(
         _ destination: PaymentProviderPickerDomain.Destination
@@ -75,7 +145,7 @@ private extension PaymentProviderPickerView {
             dismiss: { binder.flow.event(.dismiss) },
             detailPayment: { binder.flow.event(.select(.detailPayment)) },
             destination: destination,
-            components: components, 
+            components: components,
             makeIconView: makeIconView
         )
     }

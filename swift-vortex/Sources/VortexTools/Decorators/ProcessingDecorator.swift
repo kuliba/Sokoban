@@ -79,3 +79,33 @@ public extension ProcessingDecorator {
         }
     }
 }
+
+public extension ProcessingDecorator where Payload == Void {
+    
+    /// Loads data without requiring a payload and processes the result if successful.
+    ///
+    /// This is a convenience method for cases where no input is needed for the loading operation.
+    ///
+    /// - Parameter completion: Completion handler that receives the processed response or `nil` if the operation fails.
+    @inlinable
+    func load(
+        completion: @escaping Completion
+    ) {
+        self.load((), completion: completion)
+    }
+}
+
+public extension ProcessingDecorator {
+    
+    /// Initializes the decorator with a decoratee and a synchronous response action.
+    ///
+    /// - Parameters:
+    ///   - decoratee: The primary loading function to fetch data.
+    ///   - decorate: A closure executed with the successful response before completing.
+    convenience init(
+        decoratee: @escaping Decoratee,
+        decorate: @escaping (Response) -> Void
+    ) {
+        self.init(decoratee: decoratee, processor: { decorate($0); $1($0) })
+    }
+}

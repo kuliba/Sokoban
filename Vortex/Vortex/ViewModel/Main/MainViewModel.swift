@@ -22,7 +22,6 @@ class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
-    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -46,19 +45,17 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     let model: Model
-    private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     let landingServices: LandingServices
 
-    private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let collateralLoanLandingFactory: CollateralLoanLandingFactory
     private let onRegister: () -> Void
-    private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
     let bindersFactory: BindersFactory
+    let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
     private var bindings = Set<AnyCancellable>()
@@ -67,10 +64,8 @@ class MainViewModel: ObservableObject, Resetable {
     init(
         _ model: Model,
         route: Route = .empty,
-        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
-        qrViewModelFactory: QRViewModelFactory,
         landingServices: LandingServices,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         collateralLoanLandingFactory: CollateralLoanLandingFactory,
@@ -78,6 +73,7 @@ class MainViewModel: ObservableObject, Resetable {
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
         bindersFactory: BindersFactory,
+        viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
@@ -85,17 +81,15 @@ class MainViewModel: ObservableObject, Resetable {
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
         self.sections = sections
-        self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
-        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
-        self.qrViewModelFactory = qrViewModelFactory
         self.landingServices = landingServices
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.collateralLoanLandingFactory = collateralLoanLandingFactory
         self.route = route
         self.onRegister = onRegister
         self.bindersFactory = bindersFactory
+        self.viewModelsFactory = viewModelsFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
@@ -108,14 +102,18 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func makeStickerViewModel(
         _ model: Model
-    ) -> ProductCarouselView.StickerViewModel? {
+    ) -> AdditionalProductViewModel? {
         
-        return ProductCarouselView.ViewModel.makeStickerViewModel(model) { [weak self] in
-            self?.handleLandingAction(.sticker)
-        } hide: { [weak self] in
-            model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self?.removeSticker(model)
-        }
+        guard let productListBannersWithSticker = model.productListBannersWithSticker.value.first
+        else { return nil }
+        
+        return viewModelsFactory.makePromoProductViewModel(productListBannersWithSticker, .init(
+            hide: { [weak self] in
+                model.settingsAgent.saveShowStickerSetting(shouldShow: false)
+                self?.removePromo(.sticker)
+            },
+            show: { [weak self] in self?.handlePromoAction(.sticker) })
+        )
     }
     
     func createSticker(
@@ -129,44 +127,57 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func updateSticker(
         _ model: Model,
-        stickerViewModel: ProductCarouselView.StickerViewModel
+        stickerViewModel: AdditionalProductViewModel
     ) {
+        let stickerVM = getSticker()
         if let index = sections.indexProductsSection,
-            let section = sections[index] as? MainSectionProductsView.ViewModel,
-           section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
+           stickerVM == nil {
             sections[index] = MainSectionProductsView.ViewModel(
                 model,
-                stickerViewModel: stickerViewModel
+                promoProducts: [stickerViewModel]
             )
             bind(productsSections: sections)
         }
     }
     
-    private func removeSticker(_ model: Model) {
+    // TODO: need delete
+    
+    private func getSticker() -> AdditionalProductViewModel? {
+        guard let index = sections.indexProductsSection,
+              let section = sections[index] as? MainSectionProductsView.ViewModel,
+              let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
+        else { return nil }
         
-        if let index = sections.indexProductsSection {
+        return stickerVM
+    }
+
+    private func removePromo(_ type: PromoProduct) {
+        
+        if let products = sections.productsSection {
             
-            sections[index] = MainSectionProductsView.ViewModel(
-                model,
-                stickerViewModel: nil
-            )
-            bind(productsSections: sections)
+            if var promoProducts = products.productCarouselViewModel.promoProducts, let index = promoProducts.firstIndex(where: { $0.promoType == type}) {
+                promoProducts.remove(at: index)
+                products.productCarouselViewModel.updatePromo(promoProducts)
+            }
         }
     }
-    
+
+
     private func updateProducts(
         _ model: Model
     ) {
         if let index = sections.indexProductsSection,
             let section = sections[index] as? MainSectionProductsView.ViewModel {
             
-            withAnimation {
-                sections[index] = MainSectionProductsView.ViewModel(
-                    model,
-                    stickerViewModel: section.productCarouselViewModel.stickerViewModel
-                )
+            if let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker }) {
+                withAnimation {
+                    sections[index] = MainSectionProductsView.ViewModel(
+                        model,
+                        promoProducts: [stickerVM]
+                    )
+                }
+                bind(productsSections: sections)
             }
-            bind(productsSections: sections)
         }
     }
 }
@@ -203,7 +214,7 @@ extension MainViewModel {
     
     private func openScanner() {
         
-        guard let qrModel = qrViewModelFactory.makeQRScannerModel()
+        guard let qrModel = viewModelsFactory.qrViewModelFactory.makeQRScannerModel()
         else { return }
         
         let cancellable = bind(qrModel)
@@ -284,7 +295,7 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .assign(to: &$route)
         
-        model.images
+        model.productListBannersWithSticker
             .receive(on: scheduler)
             .sink { [weak self] _ in
                 guard let self else { return }
@@ -309,7 +320,7 @@ private extension MainViewModel {
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = makeProductProfileViewModel(
+                          let productProfileViewModel = viewModelsFactory.makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
                             .defaultFilterComponents(product: product),
@@ -628,31 +639,32 @@ private extension MainViewModel {
     
     func bind(productsSections: [MainSectionViewModel]) {
         
-        for section in sections {
+        if let section = sections.productsSection {
             
-            let shared = section.action.share()
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                .map(\.productId)
-                .receive(on: scheduler)
-                .sink { [weak self] in
-                    
-                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
-                }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] _ in self?.openMoreProducts() }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.StickerDidTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] _ in self?.handleLandingAction(.sticker) }
-                .store(in: &bindings)
+                let shared = section.action.share()
+                
+                shared
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                    .map(\.productId)
+                    .receive(on: scheduler)
+                    .sink { [weak self] in
+                        
+                        self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+                    }
+                    .store(in: &bindings)
+                
+                shared
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+                    .receive(on: scheduler)
+                    .sink { [weak self] _ in self?.openMoreProducts() }
+                    .store(in: &bindings)
+                
+                shared
+                    .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
+                    .receive(on: scheduler)
+                    .sink { [weak self] in
+                        self?.handlePromoAction($0.promo) }
+                    .store(in: &bindings)
         }
     }
     
@@ -660,7 +672,7 @@ private extension MainViewModel {
         
         let myProductsViewModel = MyProductsViewModel(
             model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
+            makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
             openOrderSticker: { [weak self] in
                 
                 self?.route = .empty
@@ -1312,7 +1324,7 @@ extension MainViewModel {
             
         case let .success(getSberQRDataResponse):
             do {
-                let viewModel = try qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
+                let viewModel = try viewModelsFactory.qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
                     getSberQRDataResponse,
                     { [weak self] in self?.sberQRPay(url: url, state: $0) }
                 )
@@ -1359,7 +1371,7 @@ extension MainViewModel {
                 self.route.modal = .alert(.techError { [weak self] in self?.resetModal() })
                 
             case let .success(success):
-                let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
+                let successViewModel = viewModelsFactory.qrViewModelFactory.makePaymentsSuccessViewModel(success)
                 self.route.modal = .fullScreenSheet(.init(type: .success(successViewModel)))
             }
         }
@@ -1837,9 +1849,20 @@ extension MainViewModel {
 
 extension MainViewModel {
     
+    func handlePromoAction(_ promo: PromoProduct) {
+        
+        switch promo {
+        case .sticker:
+            handleLandingAction(.sticker)
+            
+        case .savingsAccount:
+            openSavingsAccount()
+        }
+    }
+    
     func handleLandingAction(_ abroadType: AbroadType) {
         
-        let viewModel = authFactory.makeStickerLandingViewModel(
+        let viewModel = viewModelsFactory.makeAuthFactory(model, rootActions ?? .emptyMock).makeStickerLandingViewModel(
             abroadType,
             config: .stickerDefault,
             landingActions: landingAction
@@ -2030,8 +2053,8 @@ extension Array where Element == MainSectionViewModel {
         firstIndex(where: { $0.type == .products })
     }
     
-    var stickerViewModel: ProductCarouselView.StickerViewModel? {
-        productsSection?.productCarouselViewModel.stickerViewModel
+    var stickerViewModel: AdditionalProductViewModel? {
+        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
     }
 }
 

@@ -18,10 +18,7 @@ extension AnywayElementModel: Receiver {
             
         case let (.parameter(parameter), .updateValueTo(value)):
             switch parameter.type {
-            case let .numberInput(node):
-                node.model.event(.textField(.setTextTo(value)))
-                
-            case let .textInput(node):
+            case let .input(node, _):
                 node.model.event(.textField(.setTextTo(value)))
                 
             default:

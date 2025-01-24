@@ -117,9 +117,18 @@ class PaymentsSuccessViewModelAdapter {
         .init(type: type, model: model)
     }
     
-    func makeOperationDetailInfoViewModel(operationDetailData: OperationDetailData, dissmissAction: @escaping () -> Void) -> OperationDetailInfoViewModel {
+    func makeOperationDetailInfoViewModel(
+        operationDetailData: OperationDetailData,
+        merchantLogoMD5Hash: String?,
+        dissmissAction: @escaping () -> Void
+    ) -> OperationDetailInfoViewModel {
         
-        .init(model: model, operation: operationDetailData, dismissAction: dissmissAction)
+        .init(
+            model: model,
+            operation: operationDetailData,
+            merchantLogoMD5Hash: merchantLogoMD5Hash,
+            dismissAction: dissmissAction
+        )
     }
     
     func makeSections(_ success: Payments.Success) -> [PaymentsSectionViewModel]  {

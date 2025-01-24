@@ -47,10 +47,8 @@ class RootViewModel_Tests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     collateralLoanLandingFactory: .preview,
@@ -64,6 +62,7 @@ class RootViewModel_Tests: XCTestCase {
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                         makeSavingsAccountBinder: { fatalError() }
                     ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] }
                 ),
                 paymentsModel: paymentsModel,

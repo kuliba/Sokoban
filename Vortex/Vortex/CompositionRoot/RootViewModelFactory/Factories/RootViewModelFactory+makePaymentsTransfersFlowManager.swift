@@ -13,9 +13,9 @@ extension RootViewModelFactory {
         
         let composer = PaymentsTransfersFlowManagerComposer(
             model: model,
-            httpClient: httpClient,
-            log: logger.log,
-            loadOperators: composedLoadOperators,
+            httpClient: infra.httpClient,
+            log: log,
+            loadOperators: loadCachedOperators,
             scheduler: schedulers.main
         )
         

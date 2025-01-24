@@ -472,25 +472,30 @@ extension Model {
     
     static func withServiceCategoryAndOperator(
         ofType categoryType: CodableServiceCategory.CategoryType = "housingAndCommunalService",
+        serial: String = anyMessage(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> Model {
         
         let categories = [makeCodableServiceCategory(type: categoryType)]
         let operators = [makeCodableServicePaymentOperator(type: categoryType)]
+        let storage = ServicePaymentOperatorStorage(items: operators, serial: serial)
         
         let encoder = JSONEncoder()
         
         let categoriesData = try encoder.encode(categories)
-        let operatorsData = try encoder.encode(operators)
+        let storageData = try encoder.encode(storage)
         
         let localAgent = LocalAgentStub(stub: [
             "\(type(of: categories).self)" : categoriesData,
-            "\(type(of: operators).self)" : operatorsData
+            "\(type(of: storage).self)" : storageData
         ])
         
+        let cached = localAgent.load(type: ServicePaymentOperatorStorage.self)
+        let items = cached?.items(for: categoryType)
+        
         XCTAssertNotNil(localAgent.load(type: [CodableServiceCategory].self)?.first(where: { $0.type == categoryType }), file: file, line: line)
-        XCTAssertNotNil(localAgent.load(type: [CodableServicePaymentOperator].self)?.first(where: { $0.type == categoryType }), file: file, line: line)
+        XCTAssertNotNil(items?.first(where: { $0.type == categoryType }), file: file, line: line)
         
         return .mockWithEmptyExcept(localAgent: localAgent)
     }

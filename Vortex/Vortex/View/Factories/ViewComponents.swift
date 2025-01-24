@@ -24,6 +24,8 @@ typealias MakeMainSectionProductsView = (MainSectionProductsView.ViewModel) -> M
 typealias MakeOperationDetailView = (OperationDetailViewModel, @escaping MakeRepeatButtonView, @escaping MakePayment) -> OperationDetailView
 typealias MakeOptionButtonView = (OptionSelectorView.ViewModel.OptionViewModel, Bool) -> OptionSelectorView.OptionButtonView
 typealias MakeOptionSelectorView = (OptionSelectorView.ViewModel) -> OptionSelectorView
+typealias MakePromoView = (AdditionalProductViewModel) -> AdditionalProductView
+
 typealias MakePayment = () -> Void
 typealias MakePaymentGroupView = (PaymentsGroupViewModel) -> PaymentGroupView
 typealias MakePaymentsMeToMeView = (PaymentsMeToMeViewModel) -> PaymentsMeToMeView

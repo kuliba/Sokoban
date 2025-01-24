@@ -13,7 +13,7 @@ where ItemLabel: View,
       Latest: Equatable {
     
     private let state: State
-    private let event: (Event) -> Void
+    private let select: (OperationPickerElement<Latest>) -> Void
     private let config: Config
     private let itemLabel: (Item) -> ItemLabel
     
@@ -30,12 +30,12 @@ where ItemLabel: View,
     
     public init(
         state: State,
-        event: @escaping (Event) -> Void,
+        select: @escaping (OperationPickerElement<Latest>) -> Void,
         config: Config,
         itemLabel: @escaping (Item) -> ItemLabel
     ) {
         self.state = state
-        self.event = event
+        self.select = select
         self.config = config
         self.itemLabel = itemLabel
     }
@@ -80,9 +80,9 @@ private extension OperationPickerContentView {
             
         case let .element(identified):
             Button {
-                event(.select(identified.element))
+                select(identified.element)
             } label: {
-                label
+                label.contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }
@@ -146,12 +146,12 @@ struct PayHubContentView_Previews: PreviewProvider {
     
     private static func payHubContentView(
         _ state: OperationPickerState<PreviewLatest>,
-        event: @escaping (OperationPickerEvent<PreviewLatest>) -> Void = { print($0) }
+        select: @escaping (OperationPickerElement<PreviewLatest>) -> Void = { print($0) }
     ) -> some View {
         
         OperationPickerContentView(
             state: state,
-            event: event,
+            select: select,
             config: .preview,
             itemLabel: { Text(String(describing: $0)) }
         )
@@ -185,13 +185,7 @@ struct PayHubContentView_Previews: PreviewProvider {
                         
                         payHubContentView(state) {
                             
-                            switch $0 {
-                            case let .select(select):
-                                state.selected = select
-                                
-                            default:
-                                print($0)
-                            }
+                            state.selected = $0
                         }
                     }
                     .frame(maxHeight: .infinity)

@@ -14,13 +14,11 @@ extension RootViewModelFactory {
         collateralLoanLandingFlag: CollateralLoanLandingFlag,
         savingsAccountFlag: SavingsAccountFlag
     ) -> [MainSectionViewModel] {
-        
-        let stickerViewModel:  ProductCarouselView.StickerViewModel? = nil
-        
+                
         var sections = [
             MainSectionProductsView.ViewModel(
                 model,
-                stickerViewModel: stickerViewModel
+                promoProducts: nil
             ),
             MainSectionFastOperationView.ViewModel(),
             MainSectionPromoView.ViewModel(model),

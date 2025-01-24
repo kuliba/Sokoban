@@ -217,11 +217,6 @@ extension OperationDetailViewModel {
             //FIXME: get currency from currencyList
             let currencyCode = "RUB"
             
-            if operation.flow == nil {
-             
-                operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
-            }
-            
             switch productStatement.paymentDetailType {
             case .contactAddressless:
                 if let transferReference = operation.transferReference {
@@ -317,7 +312,13 @@ extension OperationDetailViewModel {
                 }
             case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
                 return operationViewModel
+  
             default:
+                if operation.flow == nil {
+                    
+                    operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
+                }
+
                 //FIXME: taxes & c2b
                 return operationViewModel
             }
