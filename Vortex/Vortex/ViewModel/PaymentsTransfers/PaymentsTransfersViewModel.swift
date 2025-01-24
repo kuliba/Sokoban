@@ -748,16 +748,22 @@ private extension PaymentsTransfersViewModel {
         rootActions?.spinner.show()
         reset()
         
+        switch outside {
+        case .chat:
+            rootActions?.switchTab(.chat)
+            
+        case .main:
+            
+            if #available(iOS 16, *) {
+                rootActions?.switchTab(.main)
+            }
+        }
+        
         delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
-            case .chat: self?.rootActions?.switchTab(.chat)
-            case .main:
-                if #available(iOS 16, *) {
-                    self?.rootActions?.switchTab(.main)
-                } else {
-                    self?.dismissAllViewAndSwitchToMainTab()
-                }
+            case .chat: break
+            case .main: self?.dismissAllViewAndSwitchToMainTab()
             }
             
             self?.rootActions?.spinner.hide()
