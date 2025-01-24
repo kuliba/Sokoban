@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.11.2024.
 //
 
+import Combine
 import PayHubUI
 import RxViewModel
 import SwiftUI
@@ -42,43 +43,34 @@ struct PaymentProviderPickerView: View {
     }
 }
 
+extension PaymentProviderPickerDomain.Content {
+    
+    var isSearchActivePublisher: AnyPublisher<Bool, Never> {
+        
+        switch search {
+        case .none:
+            return Empty().eraseToAnyPublisher()
+            
+        case let .some(search):
+            return search.$state.map(\.isEditing).eraseToAnyPublisher()
+        }
+    }
+}
+
 private extension PaymentProviderPickerView {
     
     func contentView() -> some View {
         
         PaymentProviderPickerContentView(
             content: binder.content,
+            isSearchActivePublisher: binder.content.isSearchActivePublisher,
             factory: .init(
-                makeOperationPickerView: { content in
-                    
-                    makeOperationPickerView(
-                        search: binder.content.search,
-                        content: content
-                    )
-                },
+                makeOperationPickerView: makeOperationPickerView,
                 makeProviderList: makePaymentProviderListView,
                 makeSearchView: makeSearchView
             )
         )
         .ignoresSafeArea()
-    }
-    
-    @ViewBuilder
-    func makeOperationPickerView(
-        search: PaymentProviderPickerDomain.Search?,
-        content: OperationPickerDomain.Content
-    ) -> some View {
-        
-        switch search {
-        case .none:
-            makeOperationPickerView(content: content)
-            
-        case let .some(search):
-            HidingOnActiveSearch(search: search) {
-                
-                makeOperationPickerView(content: content)
-            }
-        }
     }
     
     func makeOperationPickerView(
@@ -140,6 +132,8 @@ private extension PaymentProviderPickerView {
             }
         )
         .padding(.horizontal, 16)
+        .background(.white)
+        .zIndex(1)
     }
     
     @ViewBuilder
@@ -154,23 +148,5 @@ private extension PaymentProviderPickerView {
             components: components,
             makeIconView: makeIconView
         )
-    }
-}
-
-/// Hide content if observing search is active.
-struct HidingOnActiveSearch<Content: View>: View {
-    
-    @ObservedObject var search: RegularFieldViewModel
-    
-    let content: () -> Content
-    var anchor: UnitPoint = .leading
-    
-    var body: some View {
-        
-        content()
-            .scaleEffect(search.isActive ? 0.01 : 1, anchor: anchor)
-            .frame(height: search.isActive ? 0.01 : nil, alignment: .bottom)
-            .opacity(search.isActive ? 0 : 1)
-            .animation(.bouncy, value: search.isActive)
     }
 }
