@@ -485,11 +485,8 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
@@ -502,6 +499,7 @@ final class RootViewModelTests: XCTestCase {
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                         makeSavingsAccountBinder: { fatalError() }
                     ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -569,10 +567,8 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
@@ -585,6 +581,7 @@ final class RootViewModelTests: XCTestCase {
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                         makeSavingsAccountBinder: { fatalError() }
                     ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),

@@ -618,10 +618,8 @@ extension MainViewModel {
     
     static let sample = MainViewModel(
         .emptyMock,
-        makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
         navigationStateManager: .preview,
         sberQRServices: .empty(),
-        qrViewModelFactory: .preview(),
         landingServices: .empty(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .active,
@@ -629,6 +627,7 @@ extension MainViewModel {
         },
         sections: [],
         bindersFactory: .preview,
+        viewModelsFactory: .preview,
         makeOpenNewProductButtons: { _ in [] }
     )
 }

@@ -111,12 +111,8 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: {
-                _,_,_,_   in nil
-            },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
-            qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
@@ -129,6 +125,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -758,12 +755,18 @@ final class MainViewModelTests: XCTestCase {
         
         let qrViewModelFactory = QRViewModelFactory.preview()
         
+        let viewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1)},
+            makeProductProfileViewModel: { _,_,_,_ in .sample },
+            makePromoProductViewModel: { $0.mapper(md5Hash: $0.md5hash, onTap: $1.show, onHide: $1.hide)},
+            qrViewModelFactory: qrViewModelFactory
+        )
+        
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_ in .sample },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
+           // qrViewModelFactory: qrViewModelFactory,
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
@@ -778,6 +781,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview},
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -821,12 +825,17 @@ final class MainViewModelTests: XCTestCase {
             getSberQRDataResultStub: .success(.empty())
         )
         
+        let viewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1)},
+            makeProductProfileViewModel: { _,_,_,_ in nil },
+            makePromoProductViewModel: { $0.mapper(md5Hash: $0.md5hash, onTap: $1.show, onHide: $1.hide)},
+            qrViewModelFactory: .preview()
+        )
+
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
@@ -839,6 +848,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -908,10 +918,8 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
-            qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
@@ -924,6 +932,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
