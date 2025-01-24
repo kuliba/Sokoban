@@ -9,15 +9,16 @@ import SwiftUI
 
 public struct SplashScreenView: View {
 
-    @State private var showSplash: Bool = false
+    @Binding private var showSplash: Bool
     private let config: Config
     private let data: Data
 
-    public init(showSplash: Bool, config: Config, data: Data) {
+    public init(showSplash: Binding<Bool>, config: Config, data: Data) {
         
-        self.showSplash = showSplash
+        self._showSplash = showSplash
         self.config = config
         self.data = data
+        
     }
 
     public var body: some View {
@@ -26,8 +27,9 @@ public struct SplashScreenView: View {
             
             (data.backgroundImage ?? config.defaultBackgroundImage)
                 .resizable()
+                .ignoresSafeArea(edges: .top)
                 .scaledToFill()
-                .scaleEffect(showSplash ? 1.05 : 1.0)
+                .scaleEffect(showSplash ? 0.5 : 1.0)
                 .animation(.easeInOut(duration: 1.2), value: showSplash)
             
             VStack {
@@ -65,6 +67,6 @@ struct SplashScreenPreview: View {
     
     var body: some View {
         
-        SplashScreenView(showSplash: showSplash, config: .default, data: .preview)
+        SplashScreenView(showSplash: $showSplash, config: .default, data: .preview)
     }
 }

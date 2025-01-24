@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SplashScreen
 import SwiftUI
 
 struct RootBinderView: View {
@@ -15,11 +16,28 @@ struct RootBinderView: View {
     
     var body: some View {
         
+        var isShowingSplash = Binding<Bool>(
+            get: { binder.content.isShowingSplash },
+            set: { _ in }
+        )
+        
         ZStack {
             
             spinnerView(flow: binder.flow)
                 .zIndex(1.0)
             
+            SplashScreenView(
+                showSplash: isShowingSplash,
+                config: .iVortex,
+                data: .init(
+                    backgroundImage: Image("splashPlaceholder"),
+                    logoImage: Image("vortexLogoNewYear"),
+                    userNameText: "Петр Петрович",
+                    dayTimeText: "Добрый вечер!"
+                )
+            )
+            .zIndex(1.0)
+
             rootViewInNavigationView(flow: binder.flow)
         }
     }
