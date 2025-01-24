@@ -392,6 +392,7 @@ private extension RootViewFactory {
         }
         
         return .init(
+            infra: .init(imageCache: .preview, generalImageCache: .preview),
             clearCache: {},
             isCorporate: { false },
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -399,8 +400,6 @@ private extension RootViewFactory {
             makeHistoryButtonView: { _,_,_,_   in
                 HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
             },
-            makeIconView: IconDomain.preview,
-            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
@@ -447,6 +446,15 @@ private extension RootViewFactory {
             }
         )
     }
+}
+
+private extension ImageCache {
+    
+    static let preview: ImageCache = .init(
+        requestImages: { _ in },
+        imagesPublisher: .init([:]),
+        fallback: { _ in .ic24MoreHorizontal }
+    )
 }
 
 private struct IgnoringSafeArea: ViewModifier {

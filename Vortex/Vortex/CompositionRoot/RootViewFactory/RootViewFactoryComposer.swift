@@ -50,6 +50,10 @@ extension RootViewFactoryComposer {
         let generalImageCache = model.generalImageCache()
         
         return .init(
+            infra: .init(
+                imageCache: imageCache,
+                generalImageCache: generalImageCache
+            ),
             clearCache: clearCache,
             isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -63,14 +67,9 @@ extension RootViewFactoryComposer {
                     event: event
                 )
             },
-            makeIconView: imageCache.makeIconView(for:),
-            makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
-            makeReturnButtonView: { action in
-                
-                self.makeReturnButtonView(action: action)
-            },
+            makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
