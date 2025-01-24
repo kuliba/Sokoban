@@ -22,7 +22,7 @@ extension SavingsAccountConfig {
             label: "Продолжить",
             title: .init(textFont: .textH3Sb18240(), textColor: .textWhite)
         ),
-        divider: .mainColorsGrayMedium,
+        divider: .blurMediumGray30,
         icon: .init(leading: 8, widthAndHeight: 40),
         list: .init(
             background: .mainColorsGrayLightest,

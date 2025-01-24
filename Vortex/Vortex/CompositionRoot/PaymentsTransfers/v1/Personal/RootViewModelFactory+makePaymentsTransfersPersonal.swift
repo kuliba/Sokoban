@@ -17,43 +17,43 @@ extension RootViewModelFactory {
     ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
-        
-        let personal = makePaymentsTransfersPersonal(
-            nanoServices: nanoServices
-        )
-        
-        let loadCategoriesAndNotifyPicker = {
-            
-            nanoServices.reloadCategories { [weak personal] categories in
-                
-                let categoryPicker = personal?.content.categoryPicker.sectionBinder
-                
-                guard let categoryPicker else {
-                    
-                    return self.logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
-                }
-                
-                categoryPicker.content.event(.loaded(categories ?? []))
-                
-                self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-            }
-        }
-        
-        return (personal, loadCategoriesAndNotifyPicker)
-    }
-    
-    @inlinable
-    func makePaymentsTransfersPersonal(
-        nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonalDomain.Binder {
-        
         let content = makePaymentsTransfersPersonalContent(nanoServices)
         
-        return composeBinder(
+        let personal = composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersPersonalNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+        
+        let categoryPicker = content.categoryPicker.sectionBinder
+        
+        let notify: () -> Void = {
+            
+            nanoServices.reloadCategories(
+                { categoryPicker?.content.event($0) },
+                { categoryPicker?.content.event(.loaded($0?.pending)) }
+            )
+        }
+        
+        return (personal, notify)
+    }
+    
+    @inlinable
+    func composePaymentsTransfersPersonalNanoServices(
+    ) -> PaymentsTransfersPersonalNanoServices {
+        
+        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
+        
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: loadCategories,
+            getLatestPayments: loadLatestPayments
+        )
+        
+        return .init(
+            loadCategories: loadCategories,
+            reloadCategories: reloadCategories,
+            loadAllLatest: makeLoadLatestOperations(.all)
         )
     }
     
@@ -80,7 +80,7 @@ extension RootViewModelFactory {
     ) {
         completion(select)
     }
-
+    
     @inlinable
     func emitting(
         content: PaymentsTransfersPersonalDomain.Content
@@ -164,7 +164,7 @@ private extension FlowState<CategoryPickerSectionDomain.Navigation> {
             switch outside {
             case .qr:
                 return .scanQR
-
+                
             case let .standard(category):
                 return .standardPayment(category.type)
             }

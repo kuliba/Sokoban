@@ -9,6 +9,7 @@ import Combine
 import CombineSchedulers
 import Foundation
 
+// TODO: - refactor as Binder, move to module
 final class AnywayFlowModel: ObservableObject {
     
     @Published private(set) var state: State
@@ -156,8 +157,8 @@ private extension AnywayFlowModel {
         _ effect: inout Effect?,
         with result: AnywayTransactionStatus.TransactionResult
     ) {
-        guard let formattedAmount = factory.getFormattedAmount(state.content.state.transaction)
-        else { return }
+        // result could occur before amount is defined
+        let formattedAmount = factory.getFormattedAmount(state.content.state.transaction) ?? ""
         
         switch result {
         case let .failure(terminated):

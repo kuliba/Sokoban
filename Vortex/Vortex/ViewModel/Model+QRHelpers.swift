@@ -82,8 +82,8 @@ extension Model {
         
         // TODO: replace with loader with fallback to remote
         // TODO: expensive! make async with QOS
-        localAgent.load(type: [CodableServicePaymentOperator].self)?
-            .filter { $0.inn == inn }
+        localAgent.load(type: ServicePaymentOperatorStorage.self)?
+            .search(for: inn, in: \.inn)
             .map(SegmentedPaymentProvider.init)
     }
 }

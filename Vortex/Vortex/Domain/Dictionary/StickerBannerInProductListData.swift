@@ -26,18 +26,6 @@ struct StickerBannersMyProductList: Codable, Equatable {
     let link: String
     let md5hash: String
     let action: CardBannerAction?
-    
-    var title: String {
-        
-        let components = productName.components(separatedBy: " ")
-        return components.first ?? ""
-    }
-    
-    var subtitle: String {
-        
-        let components = productName.components(separatedBy: " ")
-        return components.count > 1 ? components[1] : ""
-    }
 }
 
 
@@ -50,15 +38,15 @@ struct CardBannerAction: Codable, Equatable {
 extension StickerBannersMyProductList {
     
     func mapper(
-        backgroundImage: Image,
+        md5Hash: String,
         onTap: @escaping () -> Void,
         onHide: @escaping () -> Void
-    ) -> ProductCarouselView.StickerViewModel {
+    ) -> AdditionalProductViewModel {
         
         .init(
-            title: title,
-            subTitle: subtitle,
-            backgroundImage: backgroundImage,
+            md5Hash: md5Hash,
+            productType: .card,
+            promoType: .sticker,
             onTap: onTap,
             onHide: onHide
         )

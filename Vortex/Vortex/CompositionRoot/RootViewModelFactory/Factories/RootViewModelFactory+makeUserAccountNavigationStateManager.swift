@@ -20,8 +20,14 @@ extension RootViewModelFactory {
         
         return makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
-            otpServices: .init(httpClient, logger),
-            otpDeleteBankServices: .init(for: httpClient, infoNetworkLog),
+            otpServices: .init(
+                infra.httpClient,
+                infra.logger
+            ),
+            otpDeleteBankServices: .init(
+                for: infra.httpClient,
+                infoNetworkLog
+            ),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel
         )

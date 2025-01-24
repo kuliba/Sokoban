@@ -1119,7 +1119,7 @@ final class TransactionReducerTests: XCTestCase {
             makeUpdateConnectivityErrorTransactionEvent(message),
             on: makeTransaction()
         ) {
-            $0.status = .result(.failure(.updatePaymentFailure(message)))
+            $0.status = .result(.failure(.transactionFailure(message)))
         }
     }
     

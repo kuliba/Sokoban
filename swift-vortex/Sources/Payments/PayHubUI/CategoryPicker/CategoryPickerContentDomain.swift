@@ -10,13 +10,16 @@ import PayHub
 import RxViewModel
 
 /// A namespace.
-public enum CategoryPickerContentDomain<Category> {}
+public enum CategoryPickerContentDomain<Category>
+where Category: Identifiable {}
 
 public extension CategoryPickerContentDomain {
+    
+    typealias ItemListDomain = PayHub.ItemListDomain<UUID, Category>
         
-    typealias State = LoadablePickerState<UUID, Category>
-    typealias Event = LoadablePickerEvent<Category>
-    typealias Effect = LoadablePickerEffect
+    typealias State = ItemListDomain.State
+    typealias Event = ItemListDomain.Event
+    typealias Effect = ItemListDomain.Effect
     
     typealias Content = RxViewModel<State, Event, Effect>
     

@@ -32,6 +32,18 @@ final class ItemListEffectHandlerTests: ItemListTests {
         XCTAssertEqual(loadSpy.callCount, 1)
     }
     
+    func test_load_shouldPassNotifyToLoad() {
+        
+        let id = anyMessage()
+        let (sut, loadSpy, _) = makeSUT()
+        var receivedEvents = [SUT.Event]()
+        
+        sut.handleEffect(.load) { receivedEvents.append($0) }
+        loadSpy.payloads.first?(.update(state: .completed, forID: id))
+        
+        XCTAssertNoDiff(receivedEvents, [.update(state: .completed, forID: id)])
+    }
+    
     func test_load_shouldNotDeliverResultOnInstanceDeallocation() throws {
         
         var sut: SUT?
@@ -90,6 +102,18 @@ final class ItemListEffectHandlerTests: ItemListTests {
         XCTAssertEqual(reloadSpy.callCount, 1)
     }
     
+    func test_reload_shouldPassNotifyToReload() {
+        
+        let id = anyMessage()
+        let (sut, _, reloadSpy) = makeSUT()
+        var receivedEvents = [SUT.Event]()
+        
+        sut.handleEffect(.reload) { receivedEvents.append($0) }
+        reloadSpy.payloads.first?(.update(state: .completed, forID: id))
+        
+        XCTAssertNoDiff(receivedEvents, [.update(state: .completed, forID: id)])
+    }
+    
     func test_reload_shouldNotDeliverResultOnInstanceDeallocation() throws {
         
         var sut: SUT?
@@ -140,7 +164,7 @@ final class ItemListEffectHandlerTests: ItemListTests {
     // MARK: - Helpers
     
     private typealias SUT = Domain.EffectHandler
-    typealias LoadSpy = Spy<Void, [Element]?>
+    private typealias LoadSpy = Spy<(Event) -> Void, [Element]?>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -153,10 +177,8 @@ final class ItemListEffectHandlerTests: ItemListTests {
         let loadSpy = LoadSpy()
         let reloadSpy = LoadSpy()
         let sut = SUT(
-            microServices: .init(
-                load: loadSpy.process,
-                reload: reloadSpy.process
-            )
+            load: loadSpy.process,
+            reload: reloadSpy.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

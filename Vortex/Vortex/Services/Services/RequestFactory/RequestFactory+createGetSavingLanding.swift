@@ -10,14 +10,11 @@ import Foundation
 extension RequestFactory {
         
     static func createGetSavingLandingRequest(
-        _ input: (
-        serial: String,
-        name: String)
+        _ name: String
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
-            ("serial", input.serial),
-            ("name", input.name)
+            ("name", name)
         ]
         let endpoint = Services.Endpoint.getSavingLandingRequest
         let url = try! endpoint.url(

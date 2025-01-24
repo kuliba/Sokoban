@@ -65,7 +65,8 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             elementMapper: .init(
                 currencyOfProduct: { _ in "₽" }, 
                 format: { _,_ in ""},
-                getProducts: { [] }
+                getProducts: { [] }, 
+                makeContacts: { .sampleFastContacts }
             ),
             microServices: .init(
                 getVerificationCode: { _ in },

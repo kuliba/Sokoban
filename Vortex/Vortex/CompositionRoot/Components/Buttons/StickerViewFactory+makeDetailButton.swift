@@ -57,6 +57,7 @@ extension StickerViewFactory {
                 let viewModel = OperationDetailInfoViewModel(
                     model: model,
                     operation: detail,
+                    merchantLogoMD5Hash: nil,
                     dismissAction: dismiss
                 )
                 OperationDetailInfoView(viewModel: viewModel)
