@@ -775,9 +775,6 @@ private extension RootViewModelFactory {
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
                 
-        let collateralLoanLandingFactory = makeCollateralLoanLandingFactory()
-        
-         
         let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
         }
         

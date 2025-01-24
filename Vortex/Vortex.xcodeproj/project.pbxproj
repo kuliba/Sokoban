@@ -12849,7 +12849,6 @@
 		2AF1774D2AC476B600D100DD /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
-				A7F3ECEA2D3E623A00AE3D80 /* CollateralLoanLanding */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A2836E52CC79FD100694241 /* HTTPClientFactory */,
@@ -16638,13 +16637,6 @@
 				A7F3ECE42D3E600B00AE3D80 /* CollateralLoanLandingParameters+Style.swift */,
 			);
 			path = Primitives;
-			sourceTree = "<group>";
-		};
-		A7F3ECEA2D3E623A00AE3D80 /* CollateralLoanLanding */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CollateralLoanLanding;
 			sourceTree = "<group>";
 		};
 		C10423932A72786C00D0AC63 /* ManagingSubscription */ = {
@@ -21770,7 +21762,6 @@
 				2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */,
 				F81EF91A27D2180E0096DC70 /* MainSectionPromoViewComponent.swift in Sources */,
 				A7E314142D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift in Sources */,
-				2A72ACBE2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift in Sources */,
 				ED5CB97228724501008D8A1E /* UserAccountExitInfoView.swift in Sources */,
 				2A84C4A52B25D90900F314BD /* sberQRProducts.swift in Sources */,
 				830AF2D72AB3236000C2F29C /* Factory.swift in Sources */,
