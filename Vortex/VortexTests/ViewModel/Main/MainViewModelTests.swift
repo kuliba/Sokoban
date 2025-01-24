@@ -805,6 +805,35 @@ final class MainViewModelTests: XCTestCase {
         ]
     }
         
+        let sut = MainViewModel(
+            model,
+            makeProductProfileViewModel: { _,_,_,_   in nil },
+            navigationStateManager: .preview,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: .preview(),
+            landingServices: .empty(),
+            paymentsTransfersFactory: .preview,
+            collateralLoanLandingFactory: .preview,
+            updateInfoStatusFlag: .inactive,
+            onRegister: {},
+            sections: makeSections(),
+            bindersFactory: .init(
+                bannersBinder: .preview,
+                makeCollateralLoanShowcaseBinder: { .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                makeSavingsAccountBinder: { fatalError() }
+            ),
+            makeOpenNewProductButtons: { _ in buttons }
+        )
+        
+        // trackForMemoryLeaks(sut, file: file, line: line)
+        // TODO: restore memory leaks tracking after Model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (sut, model)
+    }
+    
     private func makeSUT(
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
