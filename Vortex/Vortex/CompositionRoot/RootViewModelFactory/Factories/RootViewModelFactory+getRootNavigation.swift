@@ -82,23 +82,7 @@ extension RootViewModelFactory {
                 }
             
             let flow = qrScanner.flow.$state
-                .compactMap {
-                    #warning("extract to helper")
-                    switch $0.navigation {
-                    case let .outside(outside):
-                        switch outside {
-                        case .chat:
-                            return .tab(.chat)
-                        case .main:
-                            return .tab(.main)
-                        case .payments:
-                            return .tab(.payments)
-                        }
-                        
-                    default:
-                        return nil
-                    }
-                }
+                .compactMap(\.rootOutside)
                 .sink { notify(.select(.outside($0))) }
             
             return [content, flow]
@@ -166,6 +150,27 @@ extension RootViewModelFactory {
 
 // MARK: - Adapters
 
+private extension QRScannerDomain.FlowDomain.State {
+    
+    var rootOutside: RootViewSelect.RootViewOutside? {
+
+        switch navigation {
+        case let .outside(outside):
+            switch outside {
+            case .chat:
+                return .tab(.chat)
+            case .main:
+                return .tab(.main)
+            case .payments:
+                return .tab(.payments)
+            }
+            
+        default:
+            return nil
+        }
+    }
+}
+    
 private extension PaymentProviderPickerDomain.Navigation {
     
     var outcome: NavigationOutcome<RootViewSelect>? {
