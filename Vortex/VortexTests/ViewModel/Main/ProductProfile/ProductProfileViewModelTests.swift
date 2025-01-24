@@ -71,19 +71,19 @@ final class ProductProfileViewModelTests: XCTestCase {
      }
      */
     
-    func test_preferredProductID_setToNilAfrerIsLinkActiveBecomeFalse() throws {
+    func test_preferredProductID_setToNilAfterLinkBecomesNil() throws {
         
         let model = makeModelWithProducts()
         let product = try XCTUnwrap(model.products.value[.card]?.first)
         let sut = try XCTUnwrap(makeSUT(model: model, product: product))
         model.setPreferredProductID(to: 1000)
-        sut.isLinkActive = true
+        sut.link = .meToMeExternal(.init(closeAction: {}, getUImage: { _ in UIImage(named: "") }))
         
         // wait for bindings
         _ = XCTWaiter.wait(for: [], timeout: 0.1)
         
         // when
-        sut.isLinkActive = false
+        sut.link = nil
         _ = XCTWaiter.wait(for: [], timeout: 0.1)
         
         XCTAssertNil(model.preferredProductID)

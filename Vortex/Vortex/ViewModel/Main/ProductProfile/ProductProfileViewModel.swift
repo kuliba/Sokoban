@@ -46,8 +46,7 @@ class ProductProfileViewModel: ObservableObject {
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
-    @Published var link: Link? // { didSet { isLinkActive = link != nil } }
-   // @Published var isLinkActive: Bool = false
+    @Published var link: Link?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
@@ -554,16 +553,6 @@ private extension ProductProfileViewModel {
                 }
             }
             .store(in: &bindings)
-        
-//        $isLinkActive
-//            .sink { [unowned self] value in
-//                
-//                if value == false {
-//                    
-//                    model.setPreferredProductID(to: nil)
-//                }
-//                
-//            }.store(in: &bindings)
         
         $filterState
             .sink { state in
