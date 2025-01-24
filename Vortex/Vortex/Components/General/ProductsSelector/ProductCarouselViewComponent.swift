@@ -22,7 +22,8 @@ extension ProductCarouselView {
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
         @Published private(set) var shouldShowSticker: Bool
-        
+        @Published private(set) var needUpdate: Bool = false
+
         var isScrollChangeSelectorEnable: Bool
         
         enum Content {
@@ -38,7 +39,7 @@ extension ProductCarouselView {
         }
         
         private let products: CurrentValueSubject<[ProductType: [ProductViewModel]], Never> = .init([:])
-        let promoProducts: [AdditionalProductViewModel]?
+        var promoProducts: [AdditionalProductViewModel]?
         
         private var groups: [ProductGroupView.ViewModel] = []
         
@@ -109,22 +110,6 @@ extension ProductCarouselView {
             
             bind()
         }
-        
-        static func makeStickerViewModel(
-            _ model: Model,
-            show: @escaping () -> Void,
-            hide: @escaping () -> Void
-        ) -> AdditionalProductViewModel? {
-            
-            guard let productListBannersWithSticker = model.productListBannersWithSticker.value.first
-            else { return nil }
-                        
-            return productListBannersWithSticker.mapper(
-                md5Hash: productListBannersWithSticker.md5hash,
-                onTap: show,
-                onHide: hide
-            )
-     }
         
         var selectedType: ProductType? {
             
@@ -357,6 +342,12 @@ extension ProductCarouselView {
             }
             
             return groups.last?.productType
+        }
+        
+        func updatePromo(_ newItems: [AdditionalProductViewModel]?) {
+            needUpdate = true
+            promoProducts = newItems
+            needUpdate = false
         }
     }
 }
