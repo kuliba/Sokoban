@@ -10,11 +10,12 @@ import RxViewModel
 import SwiftUI
 import UtilityServicePrepaymentUI
 
-struct PaymentProviderListView: View {
+struct PaymentProviderListView<SearchView: View>: View {
     
     let providerList: PaymentProviderPickerDomain.ProviderList
     let binder: PaymentProviderPickerDomain.Binder
     let makeIconView: MakeIconView
+    let makeSearchView: () -> SearchView
     
     var body: some View {
         
@@ -110,7 +111,7 @@ private extension PaymentProviderListView {
     }
     
     @ViewBuilder
-    func makeSearchView() -> some View {
+    func _makeSearchView() -> some View {
         
         binder.content.search.map { search in
             

@@ -26,7 +26,6 @@ extension FeatureFlagsLoader {
         
         return .init(
             getProductListByTypeV6Flag: loadGetProductListByTypeV6Flag(),
-            historyFilterFlag: loadHistoryFilterFlag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             savingsAccountFlag: loadSavingsAccountFlag(),
             collateralLoanLandingFlag: loadCollateralLoanLandingFlag(),
@@ -39,7 +38,6 @@ extension FeatureFlagsLoader {
 enum FeatureFlagKey: String {
     
     case getProductListByTypeV6Flag = "getProductListByTypeV6"
-    case historyFilterFlag = "history_filter"
     case paymentsTransfersFlag = "payments_transfers"
     case collateralLoanLandingFlag = "collateralLoanLanding"
     case savingsAccountFlag = "savingsAccount"
@@ -62,14 +60,6 @@ private extension FeatureFlagsLoader {
         switch retrieve(.savingsAccountFlag) {
         case "1":  return .active
         default:   return .inactive
-        }
-    }
-
-    func loadHistoryFilterFlag() -> HistoryFilterFlag {
-        
-        switch retrieve(.historyFilterFlag) {
-        case "1":  return true
-        default:   return false
         }
     }
     

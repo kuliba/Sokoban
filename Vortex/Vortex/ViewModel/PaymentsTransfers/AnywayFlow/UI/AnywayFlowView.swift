@@ -21,9 +21,8 @@ struct AnywayFlowView<PaymentCompleteView: View>: View {
         
         AnywayTransactionStateWrapperView(
             viewModel: flowModel.state.content
-        ) { state, event in
-            
-            AnywayTransactionView(state: state, event: event, factory: factory)
+        ) {
+            AnywayTransactionView(state: $0, event: $1, factory: factory)
         }
         .padding(.bottom)
         .ignoresSafeArea(.container, edges: .bottom)
@@ -83,10 +82,10 @@ extension AnywayFlowState.Status.Alert: Identifiable {
         switch self {
         case .paymentRestartConfirmation:
             return .paymentRestartConfirmation
-        
+            
         case .serverError:
             return .serverError
-        
+            
         case .terminalError:
             return .terminalError
         }
@@ -181,7 +180,7 @@ where PrimaryEvent == AnywayFlowEvent,
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: .dismissDestination
+                event: .goTo(.payments)
             )
         )
     }

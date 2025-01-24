@@ -26,20 +26,17 @@ final class RootViewFactoryComposer {
     
     private let model: Model
     private let httpClient: HTTPClient
-    private let historyFeatureFlag: HistoryFilterFlag
     private let savingsAccountFlag: SavingsAccountFlag
     private let schedulers: Schedulers
     
     init(
         model: Model,
         httpClient: HTTPClient,
-        historyFeatureFlag: HistoryFilterFlag,
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
         self.model = model
         self.httpClient = httpClient
-        self.historyFeatureFlag = historyFeatureFlag
         self.savingsAccountFlag = savingsAccountFlag
         self.schedulers = schedulers
     }
@@ -53,6 +50,10 @@ extension RootViewFactoryComposer {
         let generalImageCache = model.generalImageCache()
         
         return .init(
+            infra: .init(
+                imageCache: imageCache,
+                generalImageCache: generalImageCache
+            ),
             clearCache: clearCache,
             isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -60,21 +61,15 @@ extension RootViewFactoryComposer {
             makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
                 
                 self.makeHistoryButtonView(
-                    self.historyFeatureFlag,
                     isFiltered: isFiltered,
                     isDateFiltered: isDateFiltered,
                     clearAction: clearAction,
                     event: event
                 )
             },
-            makeIconView: imageCache.makeIconView(for:),
-            makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
-            makeReturnButtonView: { action in
-                
-                self.makeReturnButtonView(self.historyFeatureFlag, action: action)
-            },
+            makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
@@ -100,7 +95,7 @@ extension RootViewFactoryComposer {
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView, 
+            makePaymentsView: makePaymentsView,
             makeProductProfileView: makeProductProfileView,
             makeQRFailedView: makeQRFailedView,
             makeQRFailedWrapperView: makeQRFailedWrapperView,
@@ -114,7 +109,7 @@ extension RootViewFactoryComposer {
     }
     
     private func clearCache() {
-
+        
         (model.localAgent as? LocalAgent)?.clearCache()
     }
     
@@ -158,14 +153,13 @@ private extension RootViewFactoryComposer {
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: {
                     self.makeHistoryButtonView(
-                        self.historyFeatureFlag,
                         isFiltered: $1,
                         isDateFiltered: $2,
                         clearAction: $3,
                         event: $0
                     )
                 },
-                makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
+                makeRepeatButtonView: makeReturnButtonView
             ),
             getUImage: getUImage
         )
@@ -220,26 +214,35 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountViewFactory() -> UserAccountViewFactory {
-        .init(
+        
+        return .init(
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makeSbpPayView: makeSbpPayView)
+            makeSbpPayView: makeSbpPayView
+        )
     }
     
     func makeSbpPayView(
         viewModel: SbpPayViewModel
     ) -> SbpPayView {
-        .init(viewModel: viewModel, viewFactory: makeSbpPayViewFactory())
+        
+        return .init(
+            viewModel: viewModel,
+            viewFactory: makeSbpPayViewFactory()
+        )
     }
     
     func makeSbpPayViewFactory() -> SbpPayViewFactory {
-        .init(makeProductSelectorView: makeProductSelectorView)
+        
+        return .init(makeProductSelectorView: makeProductSelectorView)
     }
     
     func makeAnywayPaymentFactory(
         event: @escaping (AnywayPaymentEvent) -> ()
     ) -> AnywayPaymentFactory<IconView> {
+        
         let composer = AnywayPaymentFactoryComposer(
             currencyOfProduct: currencyOfProduct,
+            makeContactsView: makeContactsView,
             makeIconView: makeIconView
         )
         
@@ -249,8 +252,14 @@ private extension RootViewFactoryComposer {
     func makeCategoryView(
         savingsAccountFlag: Bool
     ) -> MakeProductsCategoryView  {
+        
         return {
-            .init(newImplementation: savingsAccountFlag, isSelected: $0, title: $1)
+            
+            .init(
+                newImplementation: savingsAccountFlag,
+                isSelected: $0,
+                title: $1
+            )
         }
     }
     
@@ -291,7 +300,16 @@ private extension RootViewFactoryComposer {
     }
     
     func makeProductCarouselViewFactory() -> ProductCarouselViewFactory {
-        .init(makeOptionSelectorView: makeOptionSelectorView)
+        .init(
+            makeOptionSelectorView: makeOptionSelectorView,
+            makePromoView: makePromoView
+        )
+    }
+    
+    func makePromoView(
+        _ viewModel: AdditionalProductViewModel
+    ) -> AdditionalProductView {
+        .init(viewModel: viewModel, makeIconView: makeIconView(for:))
     }
     
     func makeMainSectionCurrencyMetalView(
@@ -610,7 +628,7 @@ private extension RootViewFactoryComposer {
         
         makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
     }
-
+    
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {
@@ -619,13 +637,13 @@ private extension RootViewFactoryComposer {
             viewFactory: makePaymentsSuccessViewFactory()
         )
     }
-        
+    
     func makeProductProfileView(
         viewModel: ProductProfileViewModel
     ) -> ProductProfileView {
         
         let getUImage = { self.model.images.value[$0]?.uiImage }
-
+        
         return .init(
             viewModel: viewModel,
             viewFactory: makePaymentsTransfersViewFactory(),
@@ -642,7 +660,6 @@ private extension RootViewFactoryComposer {
                 guard let self else { return nil }
                 
                 return makeHistoryButtonView(
-                    historyFeatureFlag,
                     isFiltered: $1,
                     isDateFiltered: $2,
                     clearAction: $3,
@@ -653,16 +670,16 @@ private extension RootViewFactoryComposer {
                 
                 guard let self else { return nil }
                 
-                return makeReturnButtonView(historyFeatureFlag, action: $0)
+                return makeReturnButtonView(action: $0)
             }
         )
     }
-        
+    
     func makePaymentsTransfersViewFactory() -> PaymentsTransfersViewFactory {
         
         let imageCache = model.imageCache()
         let generalImageCache = model.generalImageCache()
-
+        
         return .init(
             makeAnywayPaymentFactory: makeAnywayPaymentFactory(event:),
             makeIconView: imageCache.makeIconView(for:),
@@ -812,7 +829,6 @@ private extension RootViewFactoryComposer {
     }
     
     func makeReturnButtonView(
-        _ historyFeatureFlag: HistoryFilterFlag,
         action: @escaping () -> Void
     ) -> RepeatButtonView? {
         
@@ -820,7 +836,6 @@ private extension RootViewFactoryComposer {
     }
     
     func makeHistoryButtonView(
-        _ historyFeatureFlag: HistoryFilterFlag,
         isFiltered: @escaping () -> Bool,
         isDateFiltered: @escaping () -> Bool,
         clearAction: @escaping () -> Void,

@@ -18,7 +18,7 @@ extension RootViewModelFactory {
             
             guard let category = $0
             else {
-                logger.log(level: .error, category: .cache, message: "Missing category \(type).", file: #file, line: #line)
+                errorLog(category: .cache, message: "Missing category \(type).", file: #file, line: #line)
                 return completion(.failure(.missingCategoryOfType(type)))
             }
             

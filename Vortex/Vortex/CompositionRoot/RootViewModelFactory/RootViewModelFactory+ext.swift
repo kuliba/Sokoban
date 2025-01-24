@@ -38,14 +38,16 @@ extension RootViewModelFactory {
         
         // keep for manual override of release flags
         let featureFlags = FeatureFlags(
-            getProductListByTypeV6Flag: featureFlags.getProductListByTypeV6Flag,
-            historyFilterFlag: featureFlags.historyFilterFlag,
+            getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
             orderCardFlag: featureFlags.orderCardFlag
         )
+        
+        let httpClient = infra.httpClient
+        let logger = infra.logger
         
         var bindings = Set<AnyCancellable>()
         
@@ -69,7 +71,7 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
-        if getProductListByTypeV6Flag.isActive {
+        if featureFlags.getProductListByTypeV6Flag.isActive {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
         } else {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
@@ -698,17 +700,16 @@ extension ProductProfileViewModel {
 }
 
 // TODO: needs better naming
+
 private extension RootViewModelFactory {
     
     func makeLoggingStore<Key>(
         store: any Store<Key>
     ) -> any Store<Key> {
         
-        let log = { self.logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
-        
         return LoggingStoreDecorator(
             decoratee: store,
-            log: log
+            log: { [weak self] in self?.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         )
     }
     
@@ -773,13 +774,20 @@ private extension RootViewModelFactory {
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-                
+         
+        let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
+        }
+        
+        let mainViewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: makeAuthFactory,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makePromoProductViewModel: makePromoViewModel,
+            qrViewModelFactory: qrViewModelFactory)
+        
         let mainViewModel = MainViewModel(
             model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
@@ -791,6 +799,7 @@ private extension RootViewModelFactory {
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
+            viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
