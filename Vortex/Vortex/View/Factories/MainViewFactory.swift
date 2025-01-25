@@ -37,7 +37,7 @@ extension MainViewFactory {
         LabelWithIcon(
             title: title,
             subtitle: subtitle,
-            config: .iVortex,
+            config: .iVortex(),
             iconView: iconView(icon)
         )
     }

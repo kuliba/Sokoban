@@ -107,7 +107,7 @@ private extension UtilityPrepaymentWrapperView {
                 OperatorLabel(
                     title: `operator`.title,
                     subtitle: "ИНН \(`operator`.inn)",
-                    config: .iVortex,
+                    config: .iVortex(),
                     iconView: makeIconView(`operator`.icon)
                 )
                 .contentShape(Rectangle())

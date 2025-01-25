@@ -72,7 +72,7 @@ private extension PaymentProviderServicePickerWrapperView {
             LabelWithIcon(
                 title: item.service.name,
                 subtitle: nil,
-                config: .iVortex,
+                config: .iVortex(),
                 iconView: iconView(item.service.icon)
             )
         }

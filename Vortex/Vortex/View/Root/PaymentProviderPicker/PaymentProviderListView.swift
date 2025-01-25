@@ -102,7 +102,7 @@ private extension PaymentProviderListView {
                 OperatorLabel(
                     title: provider.title,
                     subtitle: provider.inn,
-                    config: .iVortex,
+                    config: .iVortex(),
                     iconView: makeIconView(md5Hash: provider.icon)
                 )
                 .contentShape(Rectangle())
