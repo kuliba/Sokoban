@@ -14,13 +14,11 @@ public extension View {
     ///   - spacing: The vertical spacing between rows. Defaults to `0`.
     ///   - insets: The edge insets for the row. Defaults to `.zero`.    @inlinable
     func plainListRow(
-        spacing: CGFloat? = 0,
-        insets: EdgeInsets = .zero
+        insets: EdgeInsets? = .zero
     ) -> some View {
         
         self
             .listRowSeparator(.hidden)
-            .listRowSpacing(spacing)
             .listRowInsets(insets)
     }
 }
