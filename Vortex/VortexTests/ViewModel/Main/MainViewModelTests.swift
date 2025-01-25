@@ -6,15 +6,15 @@
 //
 
 @testable import Vortex
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetShowcaseUI
+import Combine
 import CombineSchedulers
 import LandingUIComponent
 import SberQR
-import XCTest
-import CollateralLoanLandingGetShowcaseUI
-import CollateralLoanLandingGetCollateralLandingUI
-import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import UIPrimitives
-import Combine
+import XCTest
 
 final class MainViewModelTests: XCTestCase {
     
@@ -115,14 +115,13 @@ final class MainViewModelTests: XCTestCase {
             sberQRServices: .empty(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
@@ -770,7 +769,6 @@ final class MainViewModelTests: XCTestCase {
            // qrViewModelFactory: qrViewModelFactory,
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: {},
             sections: makeSections(),
@@ -779,8 +777,8 @@ final class MainViewModelTests: XCTestCase {
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in
                     collateralLandingSpy.call()
-                }, 
-                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview},
+                },
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
             viewModelsFactory: viewModelsFactory,
@@ -807,35 +805,6 @@ final class MainViewModelTests: XCTestCase {
         ]
     }
         
-        let sut = MainViewModel(
-            model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
-            navigationStateManager: .preview,
-            sberQRServices: sberQRServices,
-            qrViewModelFactory: .preview(),
-            landingServices: .empty(),
-            paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
-            updateInfoStatusFlag: .inactive,
-            onRegister: {},
-            sections: makeSections(),
-            bindersFactory: .init(
-                bannersBinder: .preview,
-                makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview }, 
-                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
-            ),
-            makeOpenNewProductButtons: { _ in buttons }
-        )
-        
-        // trackForMemoryLeaks(sut, file: file, line: line)
-        // TODO: restore memory leaks tracking after Model fix
-        // trackForMemoryLeaks(model, file: file, line: line)
-        
-        return (sut, model)
-    }
-    
     private func makeSUT(
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
@@ -869,14 +838,13 @@ final class MainViewModelTests: XCTestCase {
             sberQRServices: sberQRServices,
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
@@ -954,14 +922,13 @@ final class MainViewModelTests: XCTestCase {
             sberQRServices: .empty(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
@@ -1089,9 +1056,7 @@ private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
         initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
-        reduce: {
-            state,_ in (state, nil)
-        },
+        reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
 }
@@ -1333,7 +1298,7 @@ private extension MainViewModel {
         let openProductSection = try XCTUnwrap(section, file: file, line: line)
 
         let openCollateralLoanLandingAction =
-        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .loan) 
+        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .loan)
         openProductSection.action.send(openCollateralLoanLandingAction)
     }
 }
