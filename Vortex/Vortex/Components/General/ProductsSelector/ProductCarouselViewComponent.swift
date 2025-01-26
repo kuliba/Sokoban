@@ -21,7 +21,6 @@ extension ProductCarouselView {
         
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
-        @Published private(set) var shouldShowSticker: Bool
         @Published private(set) var needUpdate: Bool = false
 
         var isScrollChangeSelectorEnable: Bool
@@ -49,7 +48,6 @@ extension ProductCarouselView {
         let style: Style
         
         private let model: Model
-        private let saveHideStickerSetting: () -> Void
         
         private var bindings = Set<AnyCancellable>()
         
@@ -70,10 +68,7 @@ extension ProductCarouselView {
             self.mode = mode
             self.style = style
             self.model = model
-            
             self.promoProducts = promoProducts
-            self.shouldShowSticker = model.settingsAgent.shouldShowSticker
-            self.saveHideStickerSetting = model.settingsAgent.hideSticker
             
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductCarouselView.ViewModel initialized")
         }
@@ -355,48 +350,40 @@ extension ProductCarouselView {
 // MARK: StickerActions
 private extension SettingsAgentProtocol {
     
-    var shouldShowSticker: Bool {
+    func shouldShowPromo(_ promoProduct: PromoProduct) -> Bool {
         
-        (try? load(type: .interface(.sticker))) ?? true
-    }
-    
-    func hideSticker() {
-        
-        saveShowStickerSetting(shouldShow: false)
+        (try? load(type: .interface(promoProduct.interfaceType))) ?? true
     }
 }
 
 extension SettingsAgentProtocol {
     
-    func saveShowStickerSetting(shouldShow: Bool) {
+    func saveShowPromoSetting(
+        shouldShow: Bool,
+        promoType: PromoProduct
+    ) {
         
         do {
             
-            try store(shouldShow, type: .interface(.sticker))
+            try store(shouldShow, type: .interface(promoType.interfaceType))
         } catch {
             
-            LoggerAgent.shared.log(level: .error, category: .model, message: "Sticker Hide Error: \(error.localizedDescription)")
+            LoggerAgent.shared.log(level: .error, category: .model, message: "\(promoType.rawValue) Hide Error: \(error.localizedDescription)")
         }
     }
 }
 
 extension ProductCarouselView.ViewModel {
     
-    var sticker: Bool {
+    func shouldShowPromo(_ promoProduct: PromoProduct) -> Bool {
         
-        mode.shouldShowSticker && shouldShowSticker
-    }
-        
-    func hideSticker() { // TODO: Me, Delete?
-        
-        shouldShowSticker = false
-        saveHideStickerSetting()
+        mode.shouldShowPromo && model.settingsAgent.shouldShowPromo(promoProduct)
     }
 }
 
 extension ProductCarouselView.ViewModel.Mode {
     
-    var shouldShowSticker: Bool {
+    var shouldShowPromo: Bool {
         
         switch self {
         case .main: return true
@@ -825,7 +812,7 @@ struct ProductCarouselView: View {
         model: AdditionalProductViewModel
     ) -> some View {
         
-        if viewModel.sticker {
+        if viewModel.shouldShowPromo(model.promoType) {
             
             viewFactory.makePromoView(model)
         }
