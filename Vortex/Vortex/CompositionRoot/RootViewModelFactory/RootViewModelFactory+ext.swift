@@ -39,7 +39,7 @@ extension RootViewModelFactory {
         // keep for manual override of release flags
         let featureFlags = FeatureFlags(
             getProductListByTypeV6Flag: .active,
-            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
+            paymentsTransfersFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
