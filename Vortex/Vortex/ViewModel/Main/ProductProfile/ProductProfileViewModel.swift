@@ -2406,7 +2406,7 @@ extension ProductProfileViewModel {
                 openDeposit(deposit.depositID)
                 
             case .payment:
-                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             
             case .cardOrder:
                 orderCard()
