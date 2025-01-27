@@ -201,7 +201,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(comissionCell)
             }
             
-            if let debitAccount = debitAccount(payeeCardID: operation?.payeeCardId) {
+            if let debitAccount = debitAccount(payeeCardID: operation?.payerCardId) {
                 
                 cells.append(debitAccount)
             }
