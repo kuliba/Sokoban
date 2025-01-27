@@ -49,11 +49,9 @@ struct CollateralLoanLandingWrapperView: View {
                 case let .showCaseList(id):
                     binder.flow.event(.select(.showCaseList(id)))
 
-                case .createDraftApplication:
-                    if let payload = state.payload {
-                        
-                        binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
-                    }
+                case let .createDraftApplication(product):
+                    let payload = state.payload(product)
+                    binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
                 }
             },
             factory: .init(

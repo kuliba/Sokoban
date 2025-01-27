@@ -10,6 +10,8 @@ import SwiftUI
 public struct CreateDraftCollateralLoanApplicationView<InputView>: View
     where InputView: View {
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
@@ -32,46 +34,132 @@ public struct CreateDraftCollateralLoanApplicationView<InputView>: View
     
     public var body: some View {
         
-        if state.isLoading {
+        Group {
             
-            ProgressView()
+            if state.isLoading {
+                
+                ProgressView()
+            } else {
+                
+                content
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: buttonBack)
+    }
+    
+    var buttonBack : some View { Button(action: {
+        if state.stage == .confirm {
+            event(.tappedBack)
         } else {
-        
-            content
+            self.presentationMode.wrappedValue.dismiss()
+        }
+    }) {
+        HStack {
+            Image(systemName: "chevron.left")
+                .aspectRatio(contentMode: .fit)
+            Text("Назад")
         }
     }
-        
+    }
+    
     @ViewBuilder
     private var content: some View {
         
         VStack {
             
             ScrollView {
-                
-                CreateDraftCollateralLoanApplicationHeaderView(
-                    state: state,
-                    event: event,
-                    config: config,
-                    factory: factory
-                )
-                
-                CreateDraftCollateralLoanApplicationAmountView(
-                    state: state,
-                    event: event,
-                    config: config,
-                    factory: factory,
-                    inputView: inputView
-                )
+
+                headerView
+                amountView
+                periodView
+                percentView
+                cityView
+
+                if state.stage == .confirm {
+
+                    otpView
+                    consentsView
+                }
             }
             .frame(maxHeight: .infinity)
+            
+            buttonView
         }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationView {
+    
+    var headerView: some View {
         
+        CreateDraftCollateralLoanApplicationHeaderView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+    
+    var amountView: some View {
+        
+        CreateDraftCollateralLoanApplicationAmountView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory,
+            inputView: inputView
+        )
+    }
+
+    var periodView: some View {
+        
+        CreateDraftCollateralLoanApplicationPeriodView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+    
+    var percentView: some View {
+
+        CreateDraftCollateralLoanApplicationPercentView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    var cityView: some View {
+
+        CreateDraftCollateralLoanApplicationCityView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    var buttonView: some View {
+
         CreateDraftCollateralLoanApplicationButtonView(
             state: state,
             event: event,
             config: config,
             factory: factory
         )
+    }
+    
+    var otpView: some View {
+        
+        Text("OTP View")
+    }
+    
+    var consentsView: some View {
+        
+        Text("Согласия")
     }
 }
 
@@ -111,13 +199,22 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView(
-            state: .preview,
+            state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
             factory: .preview,
             inputView: Text("InputView")
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
+
+        CreateDraftCollateralLoanApplicationView(
+            state: .confirmPreview,
+            event: { print($0) },
+            config: .default,
+            factory: .preview,
+            inputView: Text("InputView")
+        )
+        .previewDisplayName("Экран отправки параметров кредита")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

@@ -26,7 +26,7 @@ extension GetCollateralLandingDomain {
         
     public enum ExternalEvent: Equatable {
         
-        case createDraftApplication
+        case createDraftApplication(Product)
         case showCaseList(CaseType)
         
         public enum CaseType: Equatable {
@@ -38,4 +38,5 @@ extension GetCollateralLandingDomain {
     
     public typealias Period = GetCollateralLandingProduct.Calc.Rate
     public typealias Collateral = GetCollateralLandingProduct.Calc.Collateral
+    public typealias Product = GetCollateralLandingProduct
 }

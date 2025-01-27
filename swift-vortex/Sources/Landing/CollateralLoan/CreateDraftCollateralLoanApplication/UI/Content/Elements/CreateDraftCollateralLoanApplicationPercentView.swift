@@ -1,56 +1,37 @@
 //
-//  CreateDraftCollateralLoanApplicationAmountView.swift
+//  CreateDraftCollateralLoanApplicationPercentView.swift
 //
 //
-//  Created by Valentin Ozerov on 23.01.2025.
+//  Created by Valentin Ozerov on 27.01.2025.
 //
 
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
-    where InputView: View {
+struct CreateDraftCollateralLoanApplicationPercentView: View {
     
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let inputView: InputView
 
     var body: some View {
-        
-        if state.stage == .correctParameters {
-            
-            editModeView
-        } else {
-          
-            readOnlyModeView
-        }
-    }
-    
-    private var editModeView: some View {
-        
-        inputView
-            .modifier(FrameWithCornerRadiusModifier(config: config))
-    }
-    
-    private var readOnlyModeView: some View {
         
         InfoView(
             info: .init(
                 id: .other(UUID().uuidString),
-                title: config.amount.title,
-                value: state.data.formattedAmount,
+                title: config.percent.title,
+                value: state.data.formattedPercent,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+            icon: { factory.makeImageViewWithMD5hash(state.data.icons.rate) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 
-extension CreateDraftCollateralLoanApplicationAmountView {
+extension CreateDraftCollateralLoanApplicationPercentView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
@@ -60,27 +41,25 @@ extension CreateDraftCollateralLoanApplicationAmountView {
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationAmountView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationPercentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationAmountView(
+        CreateDraftCollateralLoanApplicationPercentView(
             state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
-        .previewDisplayName("Edit mode")
+        .previewDisplayName("Edit only mode")
 
-        CreateDraftCollateralLoanApplicationAmountView(
+        CreateDraftCollateralLoanApplicationPercentView(
             state: .confirmPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
-        .previewDisplayName("Read only mode")
+        .previewDisplayName("Read only only mode")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

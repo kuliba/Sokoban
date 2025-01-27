@@ -5,10 +5,12 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
-import RemoteServices
-import Foundation
 import Combine
+import Foundation
+import InputComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     

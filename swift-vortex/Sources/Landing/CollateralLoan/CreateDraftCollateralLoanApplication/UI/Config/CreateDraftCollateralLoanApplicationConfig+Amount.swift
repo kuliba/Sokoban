@@ -1,13 +1,38 @@
 //
-//  CreateDraftCollateralLoanApplicationConfig+InputComponent.swift
+//  CreateDraftCollateralLoanApplicationConfig+Amount.swift
 //
 //
-//  Created by Valentin Ozerov on 24.01.2025.
+//  Created by Valentin Ozerov on 27.01.2025.
 //
 
 import InputComponent
 import SwiftUI
 import TextFieldUI
+
+extension CreateDraftCollateralLoanApplicationConfig {
+    
+    public struct Amount {
+        
+        public let title: String
+        public let inputComponentConfig: TextInputConfig
+
+        public init(
+            title: String,
+            inputComponentConfig: TextInputConfig
+        ) {
+            self.title = title
+            self.inputComponentConfig = inputComponentConfig
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationConfig.Amount {
+    
+    static let preview = Self(
+        title: "Сумма кредита",
+        inputComponentConfig: .preview
+    )
+}
 
 extension TextInputConfig {
     

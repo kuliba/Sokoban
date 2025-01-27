@@ -85,15 +85,23 @@ extension GetCollateralLandingDomain.State {
 
 extension GetCollateralLandingDomain.State {
     
-    public var payload: CreateDraftCollateralLoanApplicationUIData? {
+    public func payload(_ product: GetCollateralLandingProduct) -> CreateDraftCollateralLoanApplicationUIData {
         
-        guard let product else { return nil }
-        
+        // TODO: Need to get from calculate summ from calculator
         return .init(
             name: product.name,
+            amount: 1_234_567,
+            periods: product.calc.rates.map { .init(title: $0.termStringValue, months: $0.termMonth) },
+            selectedMonths: 24,
+            percent: 18.54221,
+            cities: product.cities,
+            selectedCity: "Балабаново",
             icons: .init(
                 productName: product.icons.productName,
-                amount: product.icons.amount
+                amount: product.icons.amount,
+                term: product.icons.term,
+                rate: product.icons.rate,
+                city: product.icons.city
             )
         )
     }

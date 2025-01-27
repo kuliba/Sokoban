@@ -19,16 +19,18 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var isValid: Bool
         public var isLoading: Bool
         public var applicationId: UInt?
-        
+        public var amount: UInt
+        public var needToDissmiss: Bool
         public var textInputState: TextInputState
-        
+
         public init(
             data: CreateDraftCollateralLoanApplicationUIData,
             stage: Stage = .correctParameters,
             isValid: Bool = true,
             isLoading: Bool = false,
             applicationId: UInt? = nil,
-            textInputState: TextInputState = .init(textField: .editing(.empty))
+            textInputState: TextInputState = .init(textField: .editing(.empty)),
+            needToDissmiss: Bool = false
         ) {
             self.data = data
             self.stage = stage
@@ -36,6 +38,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.isLoading = isLoading
             self.applicationId = applicationId
             self.textInputState = textInputState
+            self.amount = data.amount
+            self.needToDissmiss = needToDissmiss
         }
         
         public enum Stage {
@@ -50,7 +54,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var createDraftApplicationPayload: CollateralLandingApplicationCreateDraftPayload {
         
-        // TODO: Need to realize. Mock!
+        // TODO: Need to realize. Stub!
         .init(
             name: "Кредит под залог транспорта",
             amount: 1000000,
@@ -65,7 +69,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var saveConsentspayload: CollateralLandingApplicationSaveConsentsPayload {
         
-        // TODO: Need to realize. Mock!
+        // TODO: Need to realize. Stub!
         .init(
             applicationId: 123,
             verificationCode: "123"
@@ -75,9 +79,15 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
 
 extension CreateDraftCollateralLoanApplicationDomain.State {
     
-    public static let preview = Self(
+    public static let correntParametersPreview = Self(
         data: .preview,
         stage: .correctParameters,
+        isValid: true
+    )
+
+    public static let confirmPreview = Self(
+        data: .preview,
+        stage: .confirm,
         isValid: true
     )
 }

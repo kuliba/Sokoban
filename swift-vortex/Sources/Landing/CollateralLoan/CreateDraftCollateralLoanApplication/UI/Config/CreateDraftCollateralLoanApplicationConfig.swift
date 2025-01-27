@@ -15,9 +15,34 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public let colors: Colors
     public let layouts: Layouts
     public let header: Header
-    public let inputComponentConfig: TextInputConfig
+    public let amount: Amount
+    public let period: Period
+    public let percent: Percent
+    public let city: City
     public let button: Button
 
+    public init(
+        fonts: Fonts,
+        colors: Colors,
+        layouts: Layouts,
+        header: Header,
+        amount: Amount,
+        period: Period,
+        percent: Percent,
+        city: City,
+        button: Button
+    ) {
+        self.fonts = fonts
+        self.colors = colors
+        self.layouts = layouts
+        self.header = header
+        self.amount = amount
+        self.period = period
+        self.percent = percent
+        self.city = city
+        self.button = button
+    }
+    
     public struct Fonts {
         
         let title: TextConfig
@@ -123,7 +148,10 @@ extension CreateDraftCollateralLoanApplicationConfig {
             )
         ),
         header: .preview,
-        inputComponentConfig: .preview,
+        amount: .preview,
+        period: .preview,
+        percent: .preview,
+        city: .preview,
         button: .preview
     )
 }

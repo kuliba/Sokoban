@@ -18,6 +18,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case selectedCity(String)
         case tappedContinue
         case tappedSubmit
+        case tappedBack
         case applicationCreated(CreateDraftApplicationResult)
         case showSaveConsentsResult(SaveConsentsResult)
         case inputComponentEvent(InputComponentEvent)

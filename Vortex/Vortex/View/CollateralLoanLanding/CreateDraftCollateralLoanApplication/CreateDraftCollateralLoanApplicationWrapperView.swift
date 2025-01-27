@@ -64,7 +64,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                     event(.inputComponentEvent(.textField(action)))
                 }
             },
-            config: config.inputComponentConfig,
+            config: config.amount.inputComponentConfig,
             iconView: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
         )
     }

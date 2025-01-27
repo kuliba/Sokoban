@@ -1,21 +1,19 @@
 //
-//  CreateDraftCollateralLoanApplicationAmountView.swift
+//  CreateDraftCollateralLoanApplicationPeriodView.swift
+//  
 //
-//
-//  Created by Valentin Ozerov on 23.01.2025.
+//  Created by Valentin Ozerov on 27.01.2025.
 //
 
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
-    where InputView: View {
+struct CreateDraftCollateralLoanApplicationPeriodView: View {
     
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let inputView: InputView
 
     var body: some View {
         
@@ -29,9 +27,19 @@ struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
     }
     
     private var editModeView: some View {
-        
-        inputView
-            .modifier(FrameWithCornerRadiusModifier(config: config))
+
+        // TODO: Need to realize editing mode
+        InfoView(
+            info: .init(
+                id: .other(UUID().uuidString),
+                title: config.period.title,
+                value: state.data.selectedPeriodTitle,
+                style: .expanded
+            ),
+            config: .init(title: config.fonts.title, value: config.fonts.value),
+            icon: { factory.makeImageViewWithMD5hash(state.data.icons.term) }
+        )
+        .modifier(FrameWithCornerRadiusModifier(config: config))
     }
     
     private var readOnlyModeView: some View {
@@ -39,18 +47,18 @@ struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
         InfoView(
             info: .init(
                 id: .other(UUID().uuidString),
-                title: config.amount.title,
-                value: state.data.formattedAmount,
+                title: config.period.title,
+                value: state.data.selectedPeriodTitle,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+            icon: { factory.makeImageViewWithMD5hash(state.data.icons.term) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 
-extension CreateDraftCollateralLoanApplicationAmountView {
+extension CreateDraftCollateralLoanApplicationPeriodView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
@@ -60,27 +68,16 @@ extension CreateDraftCollateralLoanApplicationAmountView {
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationAmountView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationPeriodView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationAmountView(
+        CreateDraftCollateralLoanApplicationPeriodView(
             state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
-        .previewDisplayName("Edit mode")
-
-        CreateDraftCollateralLoanApplicationAmountView(
-            state: .confirmPreview,
-            event: { print($0) },
-            config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
-        )
-        .previewDisplayName("Read only mode")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

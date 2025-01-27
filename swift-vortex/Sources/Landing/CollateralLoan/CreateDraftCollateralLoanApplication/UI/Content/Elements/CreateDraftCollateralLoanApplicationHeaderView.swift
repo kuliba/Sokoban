@@ -46,7 +46,7 @@ struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationHeaderView(
-            state: .preview,
+            state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
             factory: .preview
