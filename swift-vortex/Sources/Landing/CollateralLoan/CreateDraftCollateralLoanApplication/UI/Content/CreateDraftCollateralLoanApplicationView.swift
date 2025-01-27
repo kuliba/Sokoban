@@ -7,23 +7,27 @@
 
 import SwiftUI
 
-public struct CreateDraftCollateralLoanApplicationView: View {
+public struct CreateDraftCollateralLoanApplicationView<InputView>: View
+    where InputView: View {
     
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
+    let inputView: InputView
     
     public init(
         state: DomainState,
         event: @escaping (Event) -> Void,
         config: Config,
-        factory: Factory
+        factory: Factory,
+        inputView: InputView
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
+        self.inputView = inputView
     }
     
     public var body: some View {
@@ -50,6 +54,8 @@ public struct CreateDraftCollateralLoanApplicationView: View {
                     config: config,
                     factory: factory
                 )
+                
+                inputView
             }
             .frame(maxHeight: .infinity)
         }
@@ -81,7 +87,8 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
             state: .preview,
             event: { print($0) },
             config: .default,
-            factory: .preview
+            factory: .preview,
+            inputView: Text("InputView")
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
     }
