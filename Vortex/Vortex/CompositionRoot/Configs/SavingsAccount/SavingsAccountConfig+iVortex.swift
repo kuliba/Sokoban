@@ -13,6 +13,7 @@ extension SavingsAccountConfig {
     
     static let iVortex: Self = .init(
         backImage: .ic24ChevronLeft,
+        bannerHeight: 703,
         chevronDownImage: .ic24ChevronDown,
         cornerRadius: 16,
         continueButton: .init(

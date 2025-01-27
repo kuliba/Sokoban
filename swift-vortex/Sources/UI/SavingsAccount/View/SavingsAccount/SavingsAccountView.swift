@@ -69,6 +69,8 @@ public struct SavingsAccountView: View {
     private func landing() -> some View {
         VStack {
             factory.makeBannerImageView(state.imageLink)
+                .aspectRatio(contentMode: .fill)
+                .frame(height: config.bannerHeight)
                 .aspectRatio(contentMode: .fit)
                 .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
             

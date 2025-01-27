@@ -12,6 +12,7 @@ import DropDownTextListComponent
 public struct SavingsAccountConfig {
     
     let backImage: Image
+    let bannerHeight: CGFloat
     let chevronDownImage: Image
     let cornerRadius: CGFloat
     let continueButton: ContinueButton
@@ -24,8 +25,9 @@ public struct SavingsAccountConfig {
     let spacing: CGFloat
     let questionHeight: CGFloat
     
-    public init(backImage: Image, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
+    public init(backImage: Image, bannerHeight: CGFloat, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
         self.backImage = backImage
+        self.bannerHeight = bannerHeight
         self.chevronDownImage = chevronDownImage
         self.cornerRadius = cornerRadius
         self.continueButton = continueButton
