@@ -781,7 +781,13 @@ private extension RootViewModelFactory {
         let mainViewModelsFactory: MainViewModelsFactory = .init(
             makeAuthFactory: makeAuthFactory,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makePromoProductViewModel: makePromoViewModel,
+            makePromoProductViewModel: { [weak self] in
+                self?.makePromoViewModel(
+                    viewModel: $0,
+                    actions: $1,
+                    featureFlags: featureFlags
+                )
+            },
             qrViewModelFactory: qrViewModelFactory)
         
         let mainViewModel = MainViewModel(

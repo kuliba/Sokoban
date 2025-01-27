@@ -2689,7 +2689,7 @@
 		830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */; };
 		830D974F2BBC5E8800899832 /* CardType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D974E2BBC5E8800899832 /* CardType.swift */; };
 		830DC3792BCFE1370095AB39 /* Model+allProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830DC3782BCFE1370095AB39 /* Model+allProductTests.swift */; };
-		83172A1A2D422E3000722619 /* RootViewModelFactory+makePromoProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83172A192D422E3000722619 /* RootViewModelFactory+makePromoProducts.swift */; };
+		83172A1A2D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83172A192D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift */; };
 		83172A1C2D423D5800722619 /* MainViewModelsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83172A1B2D423D5800722619 /* MainViewModelsFactory.swift */; };
 		83172A1E2D4289B700722619 /* PromoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83172A1D2D4289B700722619 /* PromoItem.swift */; };
 		8317CA492C3D641D0076DC7A /* SVCardLandingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */; };
@@ -2772,6 +2772,7 @@
 		8353CD552B57AF72005F7D1A /* Services+getCardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */; };
 		8353CD5E2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */; };
 		8353CD612B57F699005F7D1A /* CardStatementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD602B57F699005F7D1A /* CardStatementFactory.swift */; };
+		8354294D2D43A1AB00963709 /* GetBannersMyProductListService in Frameworks */ = {isa = PBXBuildFile; productRef = 8354294C2D43A1AB00963709 /* GetBannersMyProductListService */; };
 		835741C22C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835741C12C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift */; };
 		8357E3312B6809540065E581 /* OperationDetailFactoryl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3302B6809540065E581 /* OperationDetailFactoryl.swift */; };
 		8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */; };
@@ -6292,7 +6293,7 @@
 		830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAllCardsModel+clover.swift"; sourceTree = "<group>"; };
 		830D974E2BBC5E8800899832 /* CardType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardType.swift; sourceTree = "<group>"; };
 		830DC3782BCFE1370095AB39 /* Model+allProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+allProductTests.swift"; sourceTree = "<group>"; };
-		83172A192D422E3000722619 /* RootViewModelFactory+makePromoProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePromoProducts.swift"; sourceTree = "<group>"; };
+		83172A192D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePromoViewModel.swift"; sourceTree = "<group>"; };
 		83172A1B2D423D5800722619 /* MainViewModelsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelsFactory.swift; sourceTree = "<group>"; };
 		83172A1D2D4289B700722619 /* PromoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoItem.swift; sourceTree = "<group>"; };
 		8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVCardLandingServices.swift; sourceTree = "<group>"; };
@@ -7496,6 +7497,7 @@
 				A7930E6C2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
+				8354294D2D43A1AB00963709 /* GetBannersMyProductListService in Frameworks */,
 				2A4074852CBA89CA0027D7C3 /* GenericLoader in Frameworks */,
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
 				838C09602C8DD9E700E894AC /* Banners in Frameworks */,
@@ -11569,7 +11571,7 @@
 			children = (
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
 				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
-				83172A192D422E3000722619 /* RootViewModelFactory+makePromoProducts.swift */,
+				83172A192D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift */,
 				830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */,
 				2A2EE9102CF0B17F0019FC31 /* RootViewModelFactory+loadOperators.swift */,
 				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeDecoratedServiceCategoryListLoaders.swift */,
@@ -19311,6 +19313,7 @@
 				847321062D11A6740009C721 /* VortexTools */,
 				2A9EA5D82D26AC0700DEC45C /* FlowCore */,
 				A7930E6B2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI */,
+				8354294C2D43A1AB00963709 /* GetBannersMyProductListService */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -21764,7 +21767,7 @@
 				842C42392D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				ED0AF88F286B68B900F86B68 /* UIImage+Extensions.swift in Sources */,
-				83172A1A2D422E3000722619 /* RootViewModelFactory+makePromoProducts.swift in Sources */,
+				83172A1A2D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift in Sources */,
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
 				EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */,
 				77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */,
@@ -28949,6 +28952,10 @@
 		833E87282B94C60A009A01AB /* ProductProfileComponents */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ProductProfileComponents;
+		};
+		8354294C2D43A1AB00963709 /* GetBannersMyProductListService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GetBannersMyProductListService;
 		};
 		835D0DF62BEA667A00FFE90B /* ProductProfile */ = {
 			isa = XCSwiftPackageProductDependency;
