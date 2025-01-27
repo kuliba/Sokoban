@@ -21,6 +21,7 @@ import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
+import UIKit
 
 final class RootViewFactoryComposer {
     
@@ -36,9 +37,11 @@ final class RootViewFactoryComposer {
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
+
+        let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache()
+            generalImageCache: model.generalImageCache(defaultImage)
         )
         self.model = model
         self.httpClient = httpClient

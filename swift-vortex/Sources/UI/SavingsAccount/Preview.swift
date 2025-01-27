@@ -12,6 +12,7 @@ extension SavingsAccountConfig {
     
     static let preview: Self = .init(
         backImage: Image(systemName: "chevron.backward"),
+        bannerHeight: 703,
         chevronDownImage: Image(systemName: "chevron.down"),
         cornerRadius: 16,
         continueButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Продолжить", title: .init(textFont: .body, textColor: .white)),
