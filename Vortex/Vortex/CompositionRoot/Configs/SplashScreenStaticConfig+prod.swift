@@ -17,9 +17,26 @@ extension SplashScreenStaticConfig {
                 width: 64,
                 height: 64
             ),
-            paddings: .init(top: 32, bottom: 200),
-            spacing: 64,
+            paddings: .init(top: 134, bottom: 60),
+            spacing: 28,
             scaleEffect: .init(start: 1, end: 1.05)
+        )
+    }
+}
+
+extension SplashScreenDynamicConfig {
+    
+    static func prod() -> Self {
+        
+        return .init(
+            greeting: .init(
+                textFont: .textH1R24322(),
+                textColor: .black
+            ),
+            footer: .init(
+                textFont: .textBodyMR14180(),
+                textColor: .white
+            )
         )
     }
 }

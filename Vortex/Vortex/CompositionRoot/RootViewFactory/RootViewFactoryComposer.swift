@@ -19,6 +19,7 @@ import PaymentComponents
 import PDFKit
 import SavingsAccount
 import SberQR
+import SplashScreen
 import SwiftUI
 import UIPrimitives
 
@@ -75,7 +76,8 @@ extension RootViewFactoryComposer {
                 
                 self.makeReturnButtonView(self.historyFeatureFlag, action: action)
             },
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView, 
+            makeSplashScreenView: makeSplashScreenView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
@@ -191,6 +193,14 @@ private extension RootViewFactoryComposer {
             },
             config: .iVortex
         )
+    }
+    
+    func makeSplashScreenView(
+        state: Splash,
+        eventHandler: @escaping (SplashScreenEvent) -> ()
+    ) -> SplashScreenView {
+        
+        .init(splash: state, config: .prod())
     }
     
     func makeOptionSelectorViewFactory() -> OptionSelectorViewFactory {

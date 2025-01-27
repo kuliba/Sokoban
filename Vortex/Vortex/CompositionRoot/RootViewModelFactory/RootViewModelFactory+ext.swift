@@ -375,13 +375,13 @@ extension RootViewModelFactory {
             initialState: .init(
                 data: .init(
                     showSplash: false,
-                    background: <#T##Image#>,
-                    logo: <#T##Image?#>,
-                    footer: <#T##String?#>,
-                    greeting: <#T##String?#>,
-                    animation: <#T##Animation#>
+                    background: Image("splashPlaceholder"),
+                    logo: Image("vortexLogoNewYear"),
+                    footer: "Vortex",
+                    greeting: "Good Morning!",
+                    animation: .easeInOut
                 ),
-                config: { fatalError() }()// .prod()
+                config: .prod()
             )
         )
         

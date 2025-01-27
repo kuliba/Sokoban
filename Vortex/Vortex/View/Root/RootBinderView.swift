@@ -18,18 +18,10 @@ struct RootBinderView: View {
         
         ZStack {
             
-            // TODO: - move to factory so that call is
-//            RxWrapperView(
-//                model: binder.content.splash,
-//                makeContentView: rootViewFactory.makeSplashScreenView
-//            )
             RxWrapperView(
-                model: binder.content.splash
-            ) { state, _ in
-                
-                // TODO: - move to factory
-                SplashScreenView(splash: state, config: .prod())
-            }
+                model: binder.content.splash,
+                makeContentView: rootViewFactory.makeSplashScreenView
+            )
             .zIndex(2.0)
             
             spinnerView(flow: binder.flow)

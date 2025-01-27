@@ -382,8 +382,24 @@ struct RootView_Previews: PreviewProvider {
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .init(data: .init(showSplash: false, background: <#T##Image#>, logo: <#T##Image?#>, footer: <#T##String?#>, greeting: <#T##String?#>, animation: <#T##Animation#>), config: <#T##SplashScreenDynamicConfig#>),
-        reduce: { state, _ in (state, nil) },
+        initialState: .init(
+            data: .init(
+                showSplash: false,
+                background: Image("splashPlaceholder"),
+                logo: Image("vortexLogoNewYear"),
+                footer: "Vortex",
+                greeting: "Good Morning!",
+                animation: .easeInOut
+            ),
+            config: .init(
+                greeting: .init(textFont: .textH1Sb24322() , textColor: .black),
+                footer: .init(textFont: .textH1Sb24322(), textColor: .black)
+            )
+        ),
+        reduce: {
+            state,
+            _ in (state, nil)
+        },
         handleEffect: { _,_ in }
     )
 }
@@ -400,6 +416,11 @@ private extension RootViewFactory {
                 map: PublishingInfo.preview(info:),
                 config: .iVortex
             )
+        }
+        
+        let makeSplashScreenView: MakeSplashScreenView = { state, event in
+            
+            .init(splash: state, config: .prod())
         }
         
         return .init(
@@ -439,7 +460,8 @@ private extension RootViewFactory {
                 )
             },
             makeReturnButtonView: { _ in .init(action: {}) },
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView, 
+            makeSplashScreenView: makeSplashScreenView,
             makeInfoViews: .default,
             makeUserAccountView: {
                 
