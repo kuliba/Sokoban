@@ -3253,9 +3253,15 @@ extension ProductProfileViewModel {
         operationID: Int?,
         productStatement: ProductStatementData
     ) {
-        
         // TODO: call with non-optional operationID
         guard let operationID else { return cannotRepeatPayment() }
+        
+        let closeAction: () -> Void = { [weak self] in
+            
+            self?.closeAction()   
+            self?.rootActions?.dismissAll()
+            self?.rootActions?.switchTab(.main)
+        }
         
         productProfileServices.repeatPayment(
             .init(
