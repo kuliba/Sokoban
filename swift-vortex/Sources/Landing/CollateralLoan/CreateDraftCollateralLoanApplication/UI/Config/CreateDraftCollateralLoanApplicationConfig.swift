@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIPrimitives
+import InputComponent
 
 public struct CreateDraftCollateralLoanApplicationConfig {
         
@@ -14,6 +15,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public let colors: Colors
     public let layouts: Layouts
     public let header: Header
+    public let inputComponentConfig: TextInputConfig
     public let button: Button
 
     public struct Fonts {
@@ -107,10 +109,10 @@ extension CreateDraftCollateralLoanApplicationConfig {
             contentVerticalSpacing: 4,
             paddings: .init(
                 stack: .init(
-                    top: 16,
-                    leading: 16,
-                    bottom: 16,
-                    trailing: 15
+                    top: 10,
+                    leading: 15,
+                    bottom: 0,
+                    trailing: 12
                 ),
                 contentStack: .init(
                     top: 13,
@@ -121,6 +123,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
             )
         ),
         header: .preview,
+        inputComponentConfig: .preview,
         button: .preview
     )
 }

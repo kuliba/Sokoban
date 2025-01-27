@@ -1,37 +1,30 @@
 //
-//  CreateDraftCollateralLoanApplicationHeaderView.swift
+//  CreateDraftCollateralLoanApplicationAmountView.swift
 //
 //
-//  Created by Valentin Ozerov on 30.12.2024.
+//  Created by Valentin Ozerov on 23.01.2025.
 //
 
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationHeaderView: View {
+struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
+    where InputView: View {
     
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
+    let inputView: InputView
 
     var body: some View {
         
-        InfoView(
-            info: .init(
-                id: .other(UUID().uuidString),
-                title: config.header.title,
-                value: state.data.name,
-                style: .expanded
-            ),
-            config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.productName) }
-        )
-        .modifier(FrameWithCornerRadiusModifier(config: config))
+        inputView
+            .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 
-extension CreateDraftCollateralLoanApplicationHeaderView {
+extension CreateDraftCollateralLoanApplicationAmountView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
@@ -41,15 +34,16 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationAmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationHeaderView(
+        CreateDraftCollateralLoanApplicationAmountView(
             state: .preview,
             event: { print($0) },
             config: .default,
-            factory: .preview
+            factory: .preview,
+            inputView: Text("InputView")
         )
     }
     

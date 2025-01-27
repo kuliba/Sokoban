@@ -8,6 +8,7 @@
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import RxViewModel
 import SwiftUI
+import InputComponent
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -45,7 +46,26 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             factory: .init(
                 makeImageViewWithMD5hash: factory.makeImageViewWithMD5hash,
                 makeImageViewWithURL: factory.makeImageViewWithURL
-            )
+            ),
+            inputView: makeInputView(state: state, event: event)
+        )
+    }
+
+    func makeInputView(
+        state: Domain.State,
+        event: @escaping (Domain.Event) -> Void
+    ) -> some View {
+
+        TextInputView(
+            state: state.textInputState,
+            event: {
+                switch $0 {
+                case let .textField(action):
+                    event(.inputComponentEvent(.textField(action)))
+                }
+            },
+            config: config.inputComponentConfig,
+            iconView: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
         )
     }
 
@@ -72,7 +92,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         switch cover {
         case let .completed(completed):
-            Text(completed)
+            Text("completed")
         }
     }
 }
@@ -83,6 +103,7 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
+    typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {

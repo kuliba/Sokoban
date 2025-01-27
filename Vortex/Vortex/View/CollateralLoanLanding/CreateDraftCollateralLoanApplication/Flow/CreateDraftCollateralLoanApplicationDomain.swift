@@ -6,7 +6,6 @@
 //
 
 import RxViewModel
-
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension CreateDraftCollateralLoanApplicationDomain {

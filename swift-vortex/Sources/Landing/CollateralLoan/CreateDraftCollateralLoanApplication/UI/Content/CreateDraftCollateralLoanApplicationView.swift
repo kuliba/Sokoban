@@ -55,7 +55,13 @@ public struct CreateDraftCollateralLoanApplicationView<InputView>: View
                     factory: factory
                 )
                 
-                inputView
+                CreateDraftCollateralLoanApplicationAmountView(
+                    state: state,
+                    event: event,
+                    config: config,
+                    factory: factory,
+                    inputView: inputView
+                )
             }
             .frame(maxHeight: .infinity)
         }
@@ -66,6 +72,27 @@ public struct CreateDraftCollateralLoanApplicationView<InputView>: View
             config: config,
             factory: factory
         )
+    }
+}
+
+struct FrameWithCornerRadiusModifier: ViewModifier {
+    
+    let config: CreateDraftCollateralLoanApplicationConfig
+    
+    func body(content: Content) -> some View {
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: config.layouts.cornerRadius)
+                .fill(config.colors.background)
+                .frame(maxWidth: .infinity)
+            
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(config.layouts.paddings.contentStack)
+        }
+        .padding(config.layouts.paddings.stack)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 

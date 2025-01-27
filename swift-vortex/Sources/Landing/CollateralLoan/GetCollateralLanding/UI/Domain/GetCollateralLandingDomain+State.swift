@@ -92,7 +92,8 @@ extension GetCollateralLandingDomain.State {
         return .init(
             name: product.name,
             icons: .init(
-                productName: product.icons.productName
+                productName: product.icons.productName,
+                amount: product.icons.amount
             )
         )
     }

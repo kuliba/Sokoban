@@ -9,8 +9,8 @@ import Foundation
 
 public struct CreateDraftCollateralLoanApplicationUIData {
     
-    let name: String
-    let icons: Icons
+    public let name: String
+    public let icons: Icons
     
     public init(name: String, icons: Icons) {
         
@@ -20,12 +20,15 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     
     public struct Icons {
         
-        let productName: String
+        public let productName: String
+        public let amount: String
         
         public init(
-            productName: String
+            productName: String,
+            amount: String
         ) {
             self.productName = productName
+            self.amount = amount
         }
     }
 }
@@ -35,7 +38,8 @@ extension CreateDraftCollateralLoanApplicationUIData {
     static let preview = Self(
         name: "Кредит под залог транспорта",
         icons: .init(
-            productName: "info"
+            productName: "info",
+            amount: "info"
         )
     )
 }

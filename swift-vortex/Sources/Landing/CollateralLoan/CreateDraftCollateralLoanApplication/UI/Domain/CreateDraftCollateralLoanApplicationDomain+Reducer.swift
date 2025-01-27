@@ -42,6 +42,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case let .showSaveConsentsResult(result):
                 state.isLoading = false
                 state.saveConsentsResult = result
+                
+            case .inputComponentEvent(_):
+                break
             }
             
             return (state, effect)

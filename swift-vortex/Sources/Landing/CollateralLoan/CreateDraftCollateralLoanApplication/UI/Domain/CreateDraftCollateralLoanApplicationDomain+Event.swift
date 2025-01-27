@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import InputComponent
+import TextFieldDomain
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
@@ -18,5 +20,22 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case tappedSubmit
         case applicationCreated(CreateDraftApplicationResult)
         case showSaveConsentsResult(SaveConsentsResult)
+        case inputComponentEvent(InputComponentEvent)
+        
+        public enum InputComponentEvent: Equatable {
+
+            case textField(TextFieldAction)
+        }
+    }
+}
+
+extension TextInputEvent {
+    
+    public var inputComponentEvent: CreateDraftCollateralLoanApplicationDomain.Event.InputComponentEvent {
+        
+        switch self {
+        case let .textField(event):
+            return .textField(event)
+        }
     }
 }

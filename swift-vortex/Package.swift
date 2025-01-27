@@ -1417,7 +1417,10 @@ private extension Target {
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
             .uiPrimitives,
-            .paymentComponents
+            .paymentComponents,
+            .inputComponent,
+            .textFieldDomain,
+            .textFieldUI
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
