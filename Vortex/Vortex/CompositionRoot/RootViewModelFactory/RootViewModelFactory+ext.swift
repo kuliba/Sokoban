@@ -369,6 +369,27 @@ extension RootViewModelFactory {
         
         let savingsAccount = makeSavingsAccount()
         
+        // MARK: - Splash
+        
+        let splash = makeSplashScreenViewModel(
+            initialState: .init(
+                data: .init(
+                    showSplash: false,
+                    background: <#T##Image#>,
+                    logo: <#T##Image?#>,
+                    footer: <#T##String?#>,
+                    greeting: <#T##String?#>,
+                    animation: <#T##Animation#>
+                ),
+                config: { fatalError() }()// .prod()
+            )
+        )
+        
+        performOrWaitForAuthorized { // TODO: - replace with observation of sign-in state
+            
+            splash.event(.start)
+        }
+
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in
@@ -381,6 +402,7 @@ extension RootViewModelFactory {
         
         let rootViewModel = make(
             featureFlags: featureFlags,
+            splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
             fastPaymentsFactory: fastPaymentsFactory,
@@ -716,6 +738,7 @@ private extension RootViewModelFactory {
     
     func make(
         featureFlags: FeatureFlags,
+        splash: SplashScreenViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -844,6 +867,7 @@ private extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
+            splash: splash,
             model,
             showLoginAction: showLoginAction,
             landingServices: landingServices,

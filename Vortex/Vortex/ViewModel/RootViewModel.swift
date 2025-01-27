@@ -29,6 +29,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     let tabsViewModel: TabsViewModel
     let informerViewModel: InformerView.ViewModel
+    let splash: SplashScreenViewModel
     
     @Published private(set) var isShowingSplash = true
         
@@ -43,7 +44,6 @@ class RootViewModel: ObservableObject, Resetable {
                 mainScheduler.delay(for: .seconds(2)) { [weak self] in
                     
                     self?.isShowingSplash = false
-                    print("\(self?.isShowingSplash) =======")
                 }
             }
         }
@@ -71,6 +71,7 @@ class RootViewModel: ObservableObject, Resetable {
         productNavigationStateManager: ProductProfileFlowManager,
         tabsViewModel: TabsViewModel,
         informerViewModel: InformerView.ViewModel,
+        splash: SplashScreenViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction,
@@ -84,6 +85,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.selected = .main
         self.tabsViewModel = tabsViewModel
         self.informerViewModel = informerViewModel
+        self.splash = splash
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction

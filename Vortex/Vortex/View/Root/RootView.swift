@@ -366,6 +366,7 @@ struct RootView_Previews: PreviewProvider {
                 productNavigationStateManager: .preview,
                 tabsViewModel: .preview,
                 informerViewModel: .init(.emptyMock),
+                splash: .preview,
                 .emptyMock,
                 showLoginAction: { _ in
                     
@@ -377,6 +378,16 @@ struct RootView_Previews: PreviewProvider {
         )
     }
 }
+
+private extension SplashScreenViewModel {
+    
+    static let preview: SplashScreenViewModel = .init(
+        initialState: .init(data: .init(showSplash: false, background: <#T##Image#>, logo: <#T##Image?#>, footer: <#T##String?#>, greeting: <#T##String?#>, animation: <#T##Animation#>), config: <#T##SplashScreenDynamicConfig#>),
+        reduce: { state, _ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
 
 private extension RootViewFactory {
     

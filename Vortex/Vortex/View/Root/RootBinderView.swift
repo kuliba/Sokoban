@@ -16,27 +16,24 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        var isShowingSplash = Binding<Bool>(
-            get: { binder.content.isShowingSplash },
-            set: { _ in }
-        )
-        
         ZStack {
+            
+            // TODO: - move to factory so that call is
+//            RxWrapperView(
+//                model: binder.content.splash,
+//                makeContentView: rootViewFactory.makeSplashScreenView
+//            )
+            RxWrapperView(
+                model: binder.content.splash
+            ) { state, _ in
+                
+                // TODO: - move to factory
+                SplashScreenView(splash: state, config: .prod())
+            }
+            .zIndex(2.0)
             
             spinnerView(flow: binder.flow)
                 .zIndex(1.0)
-            
-            SplashScreenView(
-                showSplash: isShowingSplash,
-                config: .iVortex,
-                data: .init(
-                    backgroundImage: Image("splashPlaceholder"),
-                    logoImage: Image("vortexLogoNewYear"),
-                    userNameText: "Петр Петрович",
-                    dayTimeText: "Добрый вечер!"
-                )
-            )
-            .zIndex(1.0)
 
             rootViewInNavigationView(flow: binder.flow)
         }

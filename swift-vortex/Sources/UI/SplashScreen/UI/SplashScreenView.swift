@@ -6,67 +6,89 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct SplashScreenView: View {
-
-    @Binding private var showSplash: Bool
-    private let config: Config
-    private let data: Data
-
-    public init(showSplash: Binding<Bool>, config: Config, data: Data) {
-        
-        self._showSplash = showSplash
+    
+    private let splash: Splash
+    private let config: SplashScreenStaticConfig
+    
+    public init(splash: Splash, config: SplashScreenStaticConfig) {
+        self.splash = splash
         self.config = config
-        self.data = data
-        
     }
-
+    
+    private var dynamicConfig: SplashScreenDynamicConfig { splash.config }
+    
+    private var scaleEffect: CGFloat {
+        
+        splash.data.showSplash ? config.scaleEffect.end : config.scaleEffect.start
+    }
+    
     public var body: some View {
         
         ZStack {
             
-            (data.backgroundImage ?? config.defaultBackgroundImage)
-                .resizable()
-                .ignoresSafeArea(edges: .top)
-                .scaledToFill()
-                .scaleEffect(showSplash ? 0.5 : 1.0)
-                .animation(.easeInOut(duration: 1.2), value: showSplash)
+            splashBackground()
             
-            VStack {
+            VStack(spacing: config.spacing) {
                 
-                (data.logoImage ?? config.defaultLogoImage)
-                    .resizable()
-                    .frame(
-                        width: config.sizes.iconSize,
-                        height: config.sizes.iconSize
-                    )
-                    .padding(.bottom, config.paddings.imageBottomPadding)
+                splash.data.logo.map {
+                    
+                    $0
+                        .resizable()
+                        .frame(config.logoSize)
+                }
                 
-                Text(data.dayTimeText)
-                Text(data.userNameText)
+                splash.data.greeting.map {
+                    
+                    $0.text(withConfig: splash.config.greeting)
+                }
+                
+                Spacer()
+                
+                splash.data.footer.map {
+                    
+                    $0.text(withConfig: splash.config.footer)
+                }
             }
-            .padding(.bottom, config.paddings.bottomPadding)
+            .padding(.top, config.paddings.top)
+            .padding(.bottom, config.paddings.bottom)
         }
+        .opacity(splash.data.showSplash ? 1 : 0.1) // TODO: improve
     }
 }
 
-public extension SplashScreenView {
+private extension SplashScreenView {
     
-    typealias Config = SplashScreenConfig
-    typealias Data = SplashScreenData
+    func splashBackground() -> some View {
+        
+        splash.data.background
+            .resizable()
+            .scaledToFill()
+            .scaleEffect(scaleEffect)
+            .animation(splash.data.animation, value: splash.data.showSplash)
+            .ignoresSafeArea()
+    }
 }
 
 #Preview {
-        
-    SplashScreenPreview(showSplash: true)
+    
+    SplashScreenPreview()
 }
 
 struct SplashScreenPreview: View {
     
-    @State var showSplash: Bool
+    @State private var splash: Splash = .init(data: .preview, config: .preview)
     
     var body: some View {
         
-        SplashScreenView(showSplash: $showSplash, config: .default, data: .preview)
+        SplashScreenView(splash: splash, config: .preview)
+            .overlay {
+                
+                Toggle("showSplash", isOn: $splash.data.showSplash)
+                    .labelsHidden()
+                    .padding()
+            }
     }
 }
