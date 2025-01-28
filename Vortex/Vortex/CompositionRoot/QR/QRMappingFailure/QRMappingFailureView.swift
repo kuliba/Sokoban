@@ -68,17 +68,14 @@ extension QRMappingFailureDomain.Navigation {
     
     var destination: Destination? {
         
-        switch self {
-        case .back:
-            return nil
-            
+        switch self {            
         case let .detailPayment(node):
             return .detailPayment(node.model)
             
         case let .categoryPicker(node):
             return .categoryPicker(node.model)
-            
-        case .scanQR:
+
+        case .outside:
             return nil
         }
     }

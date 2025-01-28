@@ -21,7 +21,7 @@ extension RootViewFactory {
                 
                 makeCategoryPickerContentView(
                     binder.content,
-                    select: { binder.flow.event(.select($0)) },
+                    select: { binder.flow.event(.select(.category($0))) },
                     headerHeight: nil
                 )
                 .alert(
@@ -56,7 +56,7 @@ extension RootViewFactory {
             components.makePaymentsView(mobile.paymentsViewModel)
             
         case let .standard(standard):
-            switch standard {
+            switch standard.model {
             case let .failure(binder):
                 components.serviceCategoryFailureView(binder: binder)
                 
@@ -150,7 +150,7 @@ extension CategoryPickerViewDomain.Destination: Identifiable {
             return .init(mobile)
             
         case let .standard(standard):
-            switch standard {
+            switch standard.model {
             case let .failure(failure):
                 return .init(failure)
                 
