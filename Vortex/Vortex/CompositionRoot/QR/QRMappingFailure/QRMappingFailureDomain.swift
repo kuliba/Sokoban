@@ -37,7 +37,7 @@ extension QRMappingFailureDomain {
     
     enum Outside {
         
-        case back, main, scanQR
+        case back, chat, main, payments, scanQR
     }
     
     enum Navigation {

@@ -27,7 +27,11 @@ extension CategoryPickerViewDomain {
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     
-    typealias Select = ServiceCategory
+    enum Select {
+      
+        case category(ServiceCategory)
+        case outside(Outside)
+    }
     
     enum Navigation {
         
@@ -44,13 +48,13 @@ extension CategoryPickerViewDomain {
         case transport(Transport)
         
         typealias Mobile = ClosePaymentsViewModelWrapper
-        typealias Standard = StandardSelectedCategoryDestination
+        typealias Standard = Node<StandardSelectedCategoryDestination>
         typealias Tax = ClosePaymentsViewModelWrapper
         typealias Transport = TransportPaymentsViewModel
     }
     
     enum Outside {
         
-        case qr, main
+        case chat, main, payments, qr
     }
 }

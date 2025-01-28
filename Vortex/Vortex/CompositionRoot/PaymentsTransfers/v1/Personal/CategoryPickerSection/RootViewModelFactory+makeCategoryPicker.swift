@@ -24,7 +24,10 @@ extension RootViewModelFactory {
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
+            witnesses: .init(
+                emitting: { _ in Empty() },
+                dismissing: { _ in {} }
+            )
         )
     }
     
@@ -44,7 +47,22 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select category: CategoryPickerViewDomain.Select,
+        select: CategoryPickerViewDomain.Select,
+        notify: @escaping CategoryPickerViewDomain.Notify,
+        completion: @escaping (CategoryPickerViewDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case let .category(category):
+            getNavigation(category: category, notify: notify, completion: completion)
+            
+        case let .outside(outside):
+            completion(.outside(outside))
+        }
+    }
+    
+    @inlinable
+    func getNavigation(
+        category: ServiceCategory,
         notify: @escaping CategoryPickerViewDomain.Notify,
         completion: @escaping (CategoryPickerViewDomain.Navigation) -> Void
     ) {
@@ -56,9 +74,14 @@ extension RootViewModelFactory {
             completion(.outside(.qr))
             
         case .standard:
-            handleSelectedServiceCategory(category) {
+            handleSelectedServiceCategory(category) { [weak self] in
                 
-                completion(.destination(.standard($0)))
+                guard let self else { return }
+                
+                completion(.destination(.standard(.init(
+                    model: $0,
+                    cancellable: bind(standard: $0, to: notify)
+                ))))
             }
             
         case .taxAndStateServices:
@@ -69,6 +92,55 @@ extension RootViewModelFactory {
             else { return completion(.failure(.transport)) }
             
             completion(.destination(.transport(transport)))
+        }
+    }
+    
+    @inlinable
+    func bind(
+        standard: StandardSelectedCategoryDestination,
+        to notify: @escaping CategoryPickerViewDomain.Notify
+    ) -> AnyCancellable {
+        
+        switch standard {
+        case let .failure(failure):
+            return failure.flow.$state.compactMap(\.outside)
+                .sink { notify(.select(.outside($0))) }
+            
+        case let .success(success):
+            return success.flow.$state.compactMap(\.outside)
+                .sink { notify(.select(.outside($0))) }
+        }
+    }
+}
+
+private extension ServiceCategoryFailureDomain.FlowDomain.State {
+    
+    var outside: CategoryPickerViewDomain.Outside? {
+        
+        switch navigation {
+        case .none:          return nil
+        case .detailPayment: return nil
+        case .scanQR:        return .qr
+        }
+    }
+}
+
+private extension PaymentProviderPickerDomain.FlowDomain.State {
+    
+    var outside: CategoryPickerViewDomain.Outside? {
+        
+        switch navigation {
+        case .none, .alert, .destination:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .back:     return nil
+            case .chat:     return .chat
+            case .main:     return .main
+            case .payments: return .payments
+            case .qr:       return .qr
+            }
         }
     }
 }

@@ -64,7 +64,7 @@ extension RootViewModelFactory {
                         notify: notify
                     )
                 ))
-
+                
             case let .outside(outside):
                 completion(.outside(outside))
             }
@@ -98,7 +98,7 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
     var notifyEvent: QRMappingFailureDomain.NotifyEvent {
         
         switch self {
-        case .close: return .dismiss
+        case .close:  return .dismiss
         case .scanQR: return .select(.outside(.scanQR))
         }
     }
@@ -114,8 +114,10 @@ private extension CategoryPickerViewDomain.Navigation {
             
         case let .outside(outside):
             switch outside {
-            case .main: return .select(.outside(.main))
-            case .qr:   return .select(.outside(.scanQR))
+            case .chat:     return .select(.outside(.chat))
+            case .main:     return .select(.outside(.main))
+            case .payments: return .select(.outside(.payments))
+            case .qr:       return .select(.outside(.scanQR))
             }
         }
     }
