@@ -61,26 +61,36 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select: CategoryPickerSectionDomain.Select,
+        select category: CategoryPickerSectionDomain.Select,
         notify:@escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
-    ) -> Void {
-        
-        let composer = SelectedCategoryGetNavigationComposer(
-            model: model,
-            nanoServices: .init(
-                makeMobile: makeMobilePayment,
-                makeStandard: { _,_ in }, // standard is not called for Section
-                makeTax: makeTaxPayment,
-                makeTransport: makeTransportPayment
-            ),
-            scheduler: schedulers.main
-        )
-        
-        composer.getNavigation(select, notify) {
+    ) {
+        switch category.paymentFlow {
+        case .mobile:
+            completion(.destination(.mobile(makeMobilePayment())))
             
-            completion($0)
-            _ = composer
+        case .qr:
+            completion(.outside(.qr))
+            
+        case .standard:
+            completion(.outside(.standard(category)))
+            
+        case .taxAndStateServices:
+            completion(.destination(.taxAndStateServices(makeTaxPayment())))
+            
+        case .transport:
+            guard let transport = makeTransportPayment()
+            else { return completion(.failure(.transport)) }
+            
+            completion(.destination(.transport(transport)))
         }
     }
+}
+
+private extension SelectedCategoryFailure {
+    
+    static let transport: Self = .init(
+        id: .init(),
+        message: "Ошибка создания транспортных платежей"
+    )
 }

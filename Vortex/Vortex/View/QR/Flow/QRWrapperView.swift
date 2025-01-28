@@ -72,7 +72,7 @@ extension QRWrapperViewFactory {
                         title: "Оплатить",
                         dismiss: { binder.flow.event(.dismiss) },
                         rightItem: .barcodeScanner(
-                            action: { binder.flow.event(.select(.scanQR)) }
+                            action: { binder.flow.event(.select(.outside(.scanQR))) }
                         )
                     )
             }
