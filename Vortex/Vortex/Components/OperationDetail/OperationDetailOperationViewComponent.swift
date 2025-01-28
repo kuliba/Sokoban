@@ -312,9 +312,9 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
-            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash, "C2B_PAYMENT":
+            case let type where type.isKnownPaymentType:
                 return operationViewModel
-                
+                                
             default:
                 if operation.flow == nil {
                     
@@ -331,6 +331,16 @@ extension OperationDetailViewModel {
 }
 
 private extension String {
+    
+    var isKnownPaymentType: Bool {
+        
+        knownPaymentTypes.contains(self)
+    }
+ 
+    private var knownPaymentTypes: [String] {
+        
+        [.outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash, "C2B_PAYMENT", "SBER_QR_PAYMENT"]
+    }
     
     static let warning = "В данной версии приложения операция отражается некорректно. Проверьте наличие обновления."
 }
