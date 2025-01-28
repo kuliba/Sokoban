@@ -8,6 +8,7 @@
 import Foundation
 import SavingsAccount
 import SavingsServices
+import RxViewModel
 
 extension RootViewFactoryComposer {
     
@@ -18,17 +19,21 @@ extension RootViewFactoryComposer {
         isActive: Bool
     ) -> SavingsAccountDomain.WrapperView? {
         
-        if isActive {
-            return .init(
-                model: binder.flow,
-                makeContentView: { [makeFlowView] in makeFlowView(binder, $0, $1, dismiss) })
-        } else {
-            return nil
+        guard isActive else { return nil }
+        
+        return RxWrapperView(model: binder.flow) {
+            
+            self.makeFlowView(
+                { self.makeContentWrapperView(binder.content, dismiss) },
+                $0,
+                $1,
+                dismiss
+            )
         }
     }
     
     func makeFlowView(
-        _ binder: SavingsAccountDomain.Binder,
+        _ contentView: @escaping () -> SavingsAccountDomain.ContentWrapperView,
         _ flowState: SavingsAccountDomain.FlowState,
         _ flowEvent: @escaping (SavingsAccountDomain.FlowEvent) -> Void,
         _ dismiss: @escaping SavingsAccountDismiss
@@ -37,34 +42,27 @@ extension RootViewFactoryComposer {
         .init(
             state: flowState,
             event: flowEvent,
-            contentView: { [makeContentWrapperView] in makeContentWrapperView(binder, dismiss) },
+            contentView: contentView,
             informerView: makeInformerView
         )
     }
     
     func makeContentWrapperView(
-        _ binder: SavingsAccountDomain.Binder,
+        _ content: SavingsAccountDomain.Content,
         _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.ContentWrapperView {
-        .init(
-            model: binder.content,
-            makeContentView: { [makeContentView] in makeContentView($0, $1, dismiss)}
-        )
+        
+        RxWrapperView(model: content) {
+            
+            SavingsAccountDomain.ContentView(
+                state: $0,
+                event: $1,
+                config: .prod,
+                factory: self.makeFactory(dismiss)
+            )
+        }
     }
-    
-    func makeContentView(
-        _ state: SavingsAccountDomain.ContentState,
-        _ event: @escaping (SavingsAccountDomain.ContentEvent) -> Void,
-        _ dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountDomain.ContentView {
-        .init(
-            state: state,
-            event: event,
-            config: .prod,
-            factory: makeFactory(dismiss)
-        )
-    }
-    
+        
     func makeFactory(
         _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.ViewFactory {
