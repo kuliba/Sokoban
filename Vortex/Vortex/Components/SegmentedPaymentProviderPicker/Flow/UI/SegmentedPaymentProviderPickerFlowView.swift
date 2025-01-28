@@ -62,10 +62,10 @@ private extension SegmentedPaymentProviderPickerFlowView {
             event: {
                 switch $0 {
                 case .addCompany:
-                    flowModel.state.content.event(.select(.addCompany))
+                    flowModel.event(.goTo(.addCompany))
                     
                 case .payByInstruction:
-                    flowModel.state.content.event(.select(.payByInstructions))
+                    flowModel.event(.payByInstructions)
                 }
             },
             config: .iVortex
@@ -88,11 +88,17 @@ private extension SegmentedPaymentProviderPickerFlowView {
     ) {
         switch segmented {
         case let .operator(`operator`):
-            flowModel.state.content.event(.select(.item(.operator(`operator`))))
+            select(select: .operator(`operator`))
             
         case let .provider(provider):
-            flowModel.state.content.event(.select(.item(.provider(provider))))
+            select(select: .provider(provider))
         }
+    }
+    
+    func select(
+        select: SegmentedPaymentProviderPickerFlowEvent.Select
+    ) {
+        flowModel.event(.select(select))
     }
 }
 
