@@ -114,7 +114,8 @@ private extension CategoryPickerViewDomain.Navigation {
             
         case let .outside(outside):
             switch outside {
-            case .qr: return .select(.outside(.scanQR))
+            case .main: return .select(.outside(.main))
+            case .qr:   return .select(.outside(.scanQR))
             }
         }
     }

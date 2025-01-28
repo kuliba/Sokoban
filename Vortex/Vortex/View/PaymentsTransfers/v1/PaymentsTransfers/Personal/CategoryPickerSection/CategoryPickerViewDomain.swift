@@ -51,6 +51,6 @@ extension CategoryPickerViewDomain {
     
     enum Outside {
         
-        case qr
+        case qr, main
     }
 }
