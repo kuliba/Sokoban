@@ -306,19 +306,21 @@ extension OperationDetailViewModel {
                     feeViewModel.title = "Комиссия:"
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
+                
             case .transport:
                 if let feeViewModel = OperationDetailViewModel.FeeViewModel(with: operation, currencyCode: currencyCode)  {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
-            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
+                
+            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash, "C2B_PAYMENT":
                 return operationViewModel
-  
+                
             default:
                 if operation.flow == nil {
                     
                     operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
                 }
-
+                
                 //FIXME: taxes & c2b
                 return operationViewModel
             }
