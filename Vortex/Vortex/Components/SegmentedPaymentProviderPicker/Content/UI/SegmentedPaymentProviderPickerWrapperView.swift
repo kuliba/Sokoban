@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct SegmentedPaymentProviderPickerWrapperView<OperatorLabel, Footer>: View
-where OperatorLabel: View,
+struct SegmentedPaymentProviderPickerWrapperView<ProviderView, Footer>: View
+where ProviderView: View,
       Footer: View {
     
     @ObservedObject var model: Model
     
-    let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
+    let providerView: (SegmentedOperatorProvider) -> ProviderView
     let footer: () -> Footer
     let config: Config
 
@@ -32,24 +32,4 @@ extension SegmentedPaymentProviderPickerWrapperView {
     
     typealias Model = SegmentedPaymentProviderPickerModel<SegmentedOperatorProvider>
     typealias Config = SegmentedPaymentProviderPickerViewConfig
-}
-
-private extension SegmentedPaymentProviderPickerWrapperView {
-    
-    func providerView(
-        segmented: SegmentedOperatorProvider
-    ) -> some View {
-        
-        Button {
-            switch segmented {
-            case let .operator(`operator`):
-                model.event(.select(.item(.operator(`operator`))))
-                
-            case let .provider(provider):
-                model.event(.select(.item(.provider(provider))))
-            }
-        } label: {
-            operatorLabel(segmented)
-        }
-    }
 }

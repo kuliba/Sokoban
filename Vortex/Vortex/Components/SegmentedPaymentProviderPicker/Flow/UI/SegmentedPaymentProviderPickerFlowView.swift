@@ -6,6 +6,7 @@
 //
 
 import FooterComponent
+import RxViewModel
 import SwiftUI
 import UIPrimitives
 
@@ -36,6 +37,59 @@ extension SegmentedPaymentProviderPickerFlowView {
     typealias Provider = SegmentedProvider
 }
 
+private extension SegmentedPaymentProviderPickerFlowView {
+    
+    func content() -> some View {
+        
+        SegmentedPaymentProviderPickerWrapperView(
+            model: flowModel.state.content,
+            providerView: providerView,
+            footer: footer,
+            config: .iVortex
+        )
+    }
+    
+    func footer() -> some View {
+        
+        FooterView(
+            state: .footer(.iVortex),
+            event: {
+                switch $0 {
+                case .addCompany:
+                    flowModel.state.content.event(.select(.addCompany))
+                    
+                case .payByInstruction:
+                    flowModel.state.content.event(.select(.payByInstructions))
+                }
+            },
+            config: .iVortex
+        )
+    }
+    
+    func providerView(
+        segmented: SegmentedOperatorProvider
+    ) -> some View {
+        
+        Button {
+            select(segmented: segmented)
+        } label: {
+            operatorLabel(segmented)
+        }
+    }
+    
+    func select(
+        segmented: SegmentedOperatorProvider
+    ) {
+        switch segmented {
+        case let .operator(`operator`):
+            flowModel.state.content.event(.select(.item(.operator(`operator`))))
+            
+        case let .provider(provider):
+            flowModel.state.content.event(.select(.item(.provider(provider))))
+        }
+    }
+}
+
 extension SegmentedPaymentProviderPickerFlowState {
     
     var destination: Status.Destination? {
@@ -62,33 +116,5 @@ extension SegmentedPaymentProviderPickerFlowState.Status.Destination: Identifiab
         case payByInstructions
         case payments
         case servicePicker
-    }
-}
-
-private extension SegmentedPaymentProviderPickerFlowView {
-    
-    func content() -> some View {
-        
-        SegmentedPaymentProviderPickerWrapperView(
-            model: flowModel.state.content,
-            operatorLabel: operatorLabel,
-            footer: {
-                
-                FooterView(
-                    state: .footer(.iVortex),
-                    event: {
-                        switch $0 {
-                        case .addCompany:
-                            flowModel.state.content.event(.select(.addCompany))
-                            
-                        case .payByInstruction:
-                            flowModel.state.content.event(.select(.payByInstructions))
-                        }
-                    },
-                    config: .iVortex
-                )
-            },
-            config: .iVortex
-        )
     }
 }
