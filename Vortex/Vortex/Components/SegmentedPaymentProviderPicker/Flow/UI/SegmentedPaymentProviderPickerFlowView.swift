@@ -48,16 +48,21 @@ extension SegmentedPaymentProviderPickerFlowState.Status.Destination: Identifiab
         
         switch self {
             
-        case .payByInstructions: return .payByInstructions
-        case .payments:          return .payments
-        case .servicePicker:     return .servicePicker
+        case let .payByInstructions(node):
+            return .payByInstructions(.init(node.model))
+            
+        case let .payments(node):
+            return .payments(.init(node.model))
+            
+        case let .servicePicker(node):
+            return .servicePicker(.init(node.model))
         }
     }
     
     enum ID: Hashable {
         
-        case payByInstructions
-        case payments
-        case servicePicker
+        case payByInstructions(ObjectIdentifier)
+        case payments(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
     }
 }
