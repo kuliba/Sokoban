@@ -112,7 +112,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     @ViewBuilder
     func destinationContent(
-        _ destination: FlowState.Status.Destination
+        _ destination: FlowState.Navigation.Destination
     ) -> some View {
         
         switch destination {

@@ -1494,7 +1494,7 @@ private extension MainViewModel {
     }
     
     func handle(
-        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Navigation.Outside
     ) {
         resetDestination()
         rootActions?.spinner.hide()
@@ -1520,9 +1520,9 @@ private extension MainViewModel {
 
 extension SegmentedPaymentProviderPickerFlowState {
     
-    var outside: Status.Outside? {
+    var outside: Navigation.Outside? {
         
-        guard case let .outside(outside) = status
+        guard case let .outside(outside) = navigation
         else { return nil }
         
         return outside

@@ -1973,7 +1973,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     func handle(
-        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Navigation.Outside
     ) {
         event(.dismiss(.destination))
         rootActions?.spinner.hide()

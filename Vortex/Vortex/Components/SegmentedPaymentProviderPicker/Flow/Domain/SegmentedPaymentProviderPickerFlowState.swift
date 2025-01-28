@@ -8,15 +8,16 @@
 struct SegmentedPaymentProviderPickerFlowState {
     
     let content: Content
+    
     var isLoading = false
-    var status: Status?
+    var navigation: Navigation?
 }
 
 extension SegmentedPaymentProviderPickerFlowState {
     
     typealias Content = SegmentedPaymentProviderPickerState<SegmentedOperatorProvider>
     
-    enum Status {
+    enum Navigation {
         
         case destination(Destination)
         case outside(Outside)

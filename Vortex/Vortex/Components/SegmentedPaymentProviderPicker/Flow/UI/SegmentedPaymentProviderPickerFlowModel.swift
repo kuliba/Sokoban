@@ -61,7 +61,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
         
         switch event {
         case .dismiss:
-            state.status = nil
+            state.navigation = nil
             
         case let .goTo(goTo):
             return reduce(&state, with: goTo)
@@ -86,16 +86,16 @@ private extension SegmentedPaymentProviderPickerFlowModel {
         
         switch goTo {
         case .addCompany:
-            state.status = .outside(.addCompany)
+            state.navigation = .outside(.addCompany)
             
         case .main:
-            state.status = .outside(.main)
+            state.navigation = .outside(.main)
             
         case .payments:
-            state.status = .outside(.payments)
+            state.navigation = .outside(.payments)
             
         case .scanQR:
-            state.status = .outside(.scanQR)
+            state.navigation = .outside(.scanQR)
         }
         
         return nil
@@ -124,18 +124,18 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payWithOperator(
         _ state: inout State,
-        _ `operator`: State.Status.Operator
+        _ `operator`: State.Navigation.Operator
     ) {
         let paymentsViewModel = makePaymentsViewModel(with: `operator`)
         
-        state.status = .destination(.payments(.init(
+        state.navigation = .destination(.payments(.init(
             model: paymentsViewModel,
             cancellable: bind(paymentsViewModel)
         )))
     }
     
     private func makePaymentsViewModel(
-        with `operator`: State.Status.Operator
+        with `operator`: State.Navigation.Operator
     ) -> PaymentsViewModel {
         
         let qrCode = state.content.qrCode
@@ -153,7 +153,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payWithProvider(
         _ state: inout State,
-        _ provider: State.Status.Provider
+        _ provider: State.Navigation.Provider
     ) {
         let qrCode = state.content.qrCode
         let qrMapping = state.content.qrMapping
@@ -163,7 +163,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
             qrMapping: qrMapping
         ))
         
-        state.status = .destination(.servicePicker(.init(
+        state.navigation = .destination(.servicePicker(.init(
             model: flowModel,
             cancellables: bind(flowModel)
         )))
@@ -221,7 +221,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     ) {
         let paymentsViewModel = makePayByInstructionsModel()
         
-        state.status = .destination(.payByInstructions(.init(
+        state.navigation = .destination(.payByInstructions(.init(
             model: paymentsViewModel,
             cancellable: bind(paymentsViewModel)
         )))

@@ -298,7 +298,7 @@ private extension QRMappingFailureDomain.Navigation {
 
 private extension QRScannerDomain.NotifyEvent {
     
-    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Navigation.Outside, Never>
     
     init(_ event: PickerFlowEvent) {
         
