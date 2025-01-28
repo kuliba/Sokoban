@@ -5,18 +5,16 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-import FooterComponent
-import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-struct SegmentedPaymentProviderPickerFlowView<OperatorLabel, DestinationContent>: View
-where OperatorLabel: View,
+struct SegmentedPaymentProviderPickerFlowView<Content, DestinationContent>: View
+where Content: View,
       DestinationContent: View {
     
     @ObservedObject var flowModel: FlowModel
     
-    let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
+    let content: () -> Content
     let destinationContent: (FlowState.Status.Destination) -> DestinationContent
     
     var body: some View {
@@ -33,73 +31,6 @@ extension SegmentedPaymentProviderPickerFlowView {
     
     typealias FlowModel = SegmentedPaymentProviderPickerFlowModel
     typealias FlowState = SegmentedPaymentProviderPickerFlowState
-    typealias Operator = SegmentedOperatorData
-    typealias Provider = SegmentedProvider
-}
-
-private extension SegmentedPaymentProviderPickerFlowView {
-    
-    func content() -> some View {
-        
-        RxWrapperView(
-            model: flowModel.state.content,
-            makeContentView: { state, event in
-                
-                SegmentedPaymentProviderPickerView(
-                    segments: state.segments,
-                    providerView: providerView,
-                    footer: footer,
-                    config: .iVortex
-                )
-            }
-        )
-    }
-    
-    func footer() -> some View {
-        
-        FooterView(
-            state: .footer(.iVortex),
-            event: {
-                switch $0 {
-                case .addCompany:
-                    flowModel.event(.goTo(.addCompany))
-                    
-                case .payByInstruction:
-                    flowModel.event(.payByInstructions)
-                }
-            },
-            config: .iVortex
-        )
-    }
-    
-    func providerView(
-        segmented: SegmentedOperatorProvider
-    ) -> some View {
-        
-        Button {
-            select(segmented: segmented)
-        } label: {
-            operatorLabel(segmented)
-        }
-    }
-    
-    func select(
-        segmented: SegmentedOperatorProvider
-    ) {
-        switch segmented {
-        case let .operator(`operator`):
-            select(select: .operator(`operator`))
-            
-        case let .provider(provider):
-            select(select: .provider(provider))
-        }
-    }
-    
-    func select(
-        select: SegmentedPaymentProviderPickerFlowEvent.Select
-    ) {
-        flowModel.event(.select(select))
-    }
 }
 
 extension SegmentedPaymentProviderPickerFlowState {

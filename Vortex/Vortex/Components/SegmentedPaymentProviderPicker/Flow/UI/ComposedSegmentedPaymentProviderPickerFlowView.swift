@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 04.08.2024.
 //
 
+import FooterComponent
+import RxViewModel
 import SwiftUI
 
 struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View
@@ -17,8 +19,8 @@ where AnywayFlowView: View {
         
         SegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
-            operatorLabel: label(provider:),
-            destinationContent: destinationContent(_:)
+            content: content,
+            destinationContent: destinationContent
         )
     }
 }
@@ -38,6 +40,51 @@ struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
 
 private extension ComposedSegmentedPaymentProviderPickerFlowView {
     
+    func content() -> some View {
+        
+        RxWrapperView(
+            model: flowModel.state.content,
+            makeContentView: { state, _ in
+                
+                SegmentedPaymentProviderPickerView(
+                    segments: state.segments,
+                    providerView: providerView,
+                    footer: footer,
+                    config: .iVortex
+                )
+            }
+        )
+    }
+    
+    func providerView(
+        provider: SegmentedOperatorProvider
+    ) -> some View {
+        
+        Button {
+            select(provider: provider)
+        } label: {
+            label(provider: provider)
+        }
+    }
+    
+    func select(
+        provider: SegmentedOperatorProvider
+    ) {
+        switch provider {
+        case let .operator(`operator`):
+            select(select: .operator(`operator`))
+            
+        case let .provider(provider):
+            select(select: .provider(provider))
+        }
+    }
+    
+    func select(
+        select: SegmentedPaymentProviderPickerFlowEvent.Select
+    ) {
+        flowModel.event(.select(select))
+    }
+    
     func label(
         provider: SegmentedOperatorProvider
     ) -> some View {
@@ -47,6 +94,23 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
             subtitle: provider.subtitle,
             config: .iVortex(),
             iconView: viewFactory.makeIconView(provider.icon)
+        )
+    }
+    
+    func footer() -> some View {
+        
+        FooterView(
+            state: .footer(.iVortex),
+            event: {
+                switch $0 {
+                case .addCompany:
+                    flowModel.event(.goTo(.addCompany))
+                    
+                case .payByInstruction:
+                    flowModel.event(.payByInstructions)
+                }
+            },
+            config: .iVortex
         )
     }
     
