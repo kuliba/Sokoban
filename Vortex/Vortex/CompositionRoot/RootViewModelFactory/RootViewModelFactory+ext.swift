@@ -382,7 +382,9 @@ extension RootViewModelFactory {
                     animation: .easeInOut
                 ),
                 config: .prod()
-            )
+            ),
+            phaseOneDuration: .seconds(2),
+            phaseTwoDuration: .seconds(1)
         )
         
         performOrWaitForAuthorized { // TODO: - replace with observation of sign-in state
