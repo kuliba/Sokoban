@@ -14,9 +14,9 @@ typealias SplashScreenState = SplashScreen.Splash
 
 enum SplashScreenEvent {
     
-    case start // TODO: add`end` event to finish animation
-    case phaseOne // TODO: - rename to reflect phase
-    case phaseTwo
+    case start
+    case fadeOut
+    case end
 }
 
 enum SplashScreenEffect {

@@ -30,12 +30,12 @@ extension SplashScreenDynamicConfig {
         
         return .init(
             greeting: .init(
-                textFont: .textH1R24322(),
-                textColor: .black
+                textFont: .textH1Sb24322(),
+                textColor: .mainColorsBlack
             ),
             footer: .init(
-                textFont: .textBodyMR14180(),
-                textColor: .white
+                textFont: .textH4R16240(),
+                textColor: .mainColorsBlack
             )
         )
     }

@@ -26,12 +26,12 @@ extension Image {
 extension SplashScreenState {
     
     static let preview: Self = .init(
-        showSplash: true,
+        phase: .phaseTwo,
         background: .backgroundImage,
         logo: .logoImage,
         footer: "Vortex",
         greeting: "Добрый день!",
-        animation: .easeInOut(duration: 1.7)
+        animation: .easeInOut(duration: 1.2)
     )
 }
 
@@ -49,6 +49,6 @@ extension SplashScreenStaticConfig {
         logoSize: .init(width: 60.0, height: 60.0),
         paddings: .init(top: 200, bottom: 100),
         spacing: 50,
-        scaleEffect: .init(start: 1, end: 1.4)
+        scaleEffect: .init(start: 1, end: 1.05)
     )
 }

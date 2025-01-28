@@ -374,7 +374,7 @@ extension RootViewModelFactory {
         let splash = makeSplashScreenViewModel(
             initialState: .init(
                 data: .init(
-                    showSplash: false,
+                    phase: .phaseOne,
                     background: Image("splashPlaceholder"),
                     logo: Image("vortexLogoNewYear"),
                     footer: "Vortex",
@@ -383,14 +383,19 @@ extension RootViewModelFactory {
                 ),
                 config: .prod()
             ),
-            phaseOneDuration: .seconds(2),
-            phaseTwoDuration: .seconds(1)
+            phaseOneDuration: .seconds(0.0), // zoom
+            phaseTwoDuration: .seconds(0.3)  // fade out
         )
         
-        performOrWaitForAuthorized { // TODO: - replace with observation of sign-in state
-            
-            splash.event(.start)
-        }
+        model.auth
+            .sink { auth in
+                
+                if auth == .authorized, featureFlags.splashScreenFlag == .active {
+                    
+                    splash.event(.start)
+                }
+            }
+            .store(in: &bindings)
 
         // MARK: - Notifications Authorized
         

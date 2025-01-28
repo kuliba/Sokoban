@@ -9,8 +9,13 @@ import SwiftUI
 
 public struct SplashScreenState {
     
-    public var showSplash: Bool // ?? replace with phase1 & phase2
-
+    public enum SplashScreenPhase {
+        case phaseOne
+        case phaseTwo
+    }
+    
+    public var phase: SplashScreenPhase
+    
     public let background: Image
     public let logo: Image?
     public let footer: String?
@@ -18,14 +23,14 @@ public struct SplashScreenState {
     public let animation: Animation
     
     public init(
-        showSplash: Bool,
+        phase: SplashScreenPhase,
         background: Image,
         logo: Image?,
         footer: String?,
         greeting: String?,
         animation: Animation
     ) {
-        self.showSplash = showSplash
+        self.phase = phase
         self.background = background
         self.logo = logo
         self.footer = footer

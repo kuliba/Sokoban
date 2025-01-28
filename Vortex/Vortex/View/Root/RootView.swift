@@ -384,7 +384,7 @@ private extension SplashScreenViewModel {
     static let preview: SplashScreenViewModel = .init(
         initialState: .init(
             data: .init(
-                showSplash: false,
+                phase: .phaseTwo,
                 background: Image("splashPlaceholder"),
                 logo: Image("vortexLogoNewYear"),
                 footer: "Vortex",
@@ -392,8 +392,8 @@ private extension SplashScreenViewModel {
                 animation: .easeInOut
             ),
             config: .init(
-                greeting: .init(textFont: .textH1Sb24322() , textColor: .black),
-                footer: .init(textFont: .textH1Sb24322(), textColor: .black)
+                greeting: .init(textFont: .textH1Sb24322(), textColor: .mainColorsBlack),
+                footer: .init(textFont: .textH4R16240(), textColor: .mainColorsBlack)
             )
         ),
         reduce: {

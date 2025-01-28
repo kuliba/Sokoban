@@ -7,6 +7,7 @@
 
 import RxViewModel
 import SplashScreen
+import SwiftUI
 
 extension RootViewModelFactory {
     
@@ -63,10 +64,10 @@ final class SplashScreenEffectHandler {
     ) {
         switch effect {
         case .startPhaseOneTimer:
-            startPhaseOneTimer { dispatch(.phaseOne) }
+            startPhaseOneTimer { dispatch(.start) }
             
         case .startPhaseTwoTimer:
-            startPhaseTwoTimer { dispatch(.phaseTwo) }
+            startPhaseTwoTimer { dispatch(.fadeOut) }
         }
     }
     
@@ -94,17 +95,18 @@ final class SplashScreenReducer {
         switch event {
         case .start:
             if state.isNoSplash {
-                state = state.splash()
+                state = state.zoomed()
                 effect = .startPhaseOneTimer
             }
             
-        case .phaseOne:
-            if state.isSplash {
-                state = state.zoomed()
+        case .fadeOut:
+            if state.isNoSplash {
+                state = state.splash()
                 effect = .startPhaseTwoTimer
+
             }
             
-        case .phaseTwo:
+        case .end:
             if state.isZoomed {
                 state = state.noSplash()
             }
@@ -125,31 +127,61 @@ extension SplashScreenState {
     
     var isNoSplash: Bool {
         
-        // TODO: ????
+        data.phase == .phaseTwo
     }
     
     var isSplash: Bool {
         
-        // TODO: ????
+        data.phase == .phaseOne
     }
     
     var isZoomed: Bool {
         
-        // TODO: ????
+        data.phase == .phaseTwo
     }
-    
+
     func splash() -> Self {
         
-        // TODO: ????
+        SplashScreenState(
+            data: .init(
+                phase: .phaseTwo,
+                background: Image("splashPlaceholder"),
+                logo: Image("vortexLogoNewYear"),
+                footer: "Vortex",
+                greeting: "Hello",
+                animation: .easeOut(duration: 0.3)
+            ),
+            config: .prod()
+        )
     }
-    
+
     func zoomed() -> Self {
         
-        // TODO: ????
+        SplashScreenState(
+            data: .init(
+                phase: .phaseTwo,
+                background: Image("splashPlaceholder"),
+                logo: Image("vortexLogoNewYear"),
+                footer: "Vortex",
+                greeting: "Hello",
+                animation: .easeOut(duration: 0.6)
+            ),
+            config: .prod()
+        )
     }
-    
+
     func noSplash() -> Self {
         
-        // TODO: ????
+        SplashScreenState(
+            data: .init(
+                phase: .phaseTwo,
+                background: Image("splashPlaceholder"),
+                logo: Image("vortexLogoNewYear"),
+                footer: "Vortex",
+                greeting: "Hello",
+                animation: .easeOut(duration: 0.3)
+            ),
+            config: .prod()
+        )
     }
 }

@@ -22,7 +22,7 @@ public struct SplashScreenView: View {
     
     private var scaleEffect: CGFloat {
         
-        splash.data.showSplash ? config.scaleEffect.end : config.scaleEffect.start
+        splash.data.phase != .phaseOne ? config.scaleEffect.start : config.scaleEffect.end
     }
     
     public var body: some View {
@@ -55,7 +55,11 @@ public struct SplashScreenView: View {
             .padding(.top, config.paddings.top)
             .padding(.bottom, config.paddings.bottom)
         }
-        .opacity(splash.data.showSplash ? 1 : 0.1) // TODO: improve
+        .opacity(splash.data.phase == .phaseOne ? 0 : 1)
+        .animation(
+            splash.data.animation,
+            value: splash.data.phase == .phaseOne
+        )
     }
 }
 
@@ -67,7 +71,10 @@ private extension SplashScreenView {
             .resizable()
             .scaledToFill()
             .scaleEffect(scaleEffect)
-            .animation(splash.data.animation, value: splash.data.showSplash)
+            .animation(
+                splash.data.animation,
+                value: splash.data.phase
+            )
             .ignoresSafeArea()
     }
 }
@@ -80,13 +87,16 @@ private extension SplashScreenView {
 struct SplashScreenPreview: View {
     
     @State private var splash: Splash = .init(data: .preview, config: .preview)
+    @State private var showSplash: Bool = true
     
     var body: some View {
         
         SplashScreenView(splash: splash, config: .preview)
+            .onChange(of: showSplash) { newValue in
+                splash.data.phase = newValue ? .phaseTwo : .phaseOne
+            }
             .overlay {
-                
-                Toggle("showSplash", isOn: $splash.data.showSplash)
+                Toggle("showSplash", isOn: $showSplash)
                     .labelsHidden()
                     .padding()
             }
