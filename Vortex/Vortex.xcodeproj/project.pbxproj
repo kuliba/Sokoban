@@ -644,7 +644,6 @@
 		2A36245E2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245D2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift */; };
 		2A3624602C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245F2C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift */; };
 		2A3624622C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624612C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift */; };
-		2A3624642C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624632C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift */; };
 		2A3624672C5E6B2000174C50 /* SegmentedPaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624662C5E6B2000174C50 /* SegmentedPaymentProviderPickerFlowModel.swift */; };
 		2A3624692C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624682C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift */; };
 		2A3624712C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624702C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift */; };
@@ -4270,7 +4269,6 @@
 		2A36245D2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerModel.swift; sourceTree = "<group>"; };
 		2A36245F2C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerView.swift; sourceTree = "<group>"; };
 		2A3624612C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerViewConfig.swift; sourceTree = "<group>"; };
-		2A3624632C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerWrapperView.swift; sourceTree = "<group>"; };
 		2A3624662C5E6B2000174C50 /* SegmentedPaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowModel.swift; sourceTree = "<group>"; };
 		2A3624682C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A3624702C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowEffect.swift; sourceTree = "<group>"; };
@@ -9486,7 +9484,6 @@
 			isa = PBXGroup;
 			children = (
 				2A36245D2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift */,
-				2A3624632C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift */,
 				2A36245F2C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift */,
 				2A3624612C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift */,
 			);
@@ -21660,7 +21657,6 @@
 				83CE89F72BC40178008CA98C /* ProductProfileViewModel+AccountInfoPanel.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				7758400227B13CF300251969 /* ImageData.swift in Sources */,
-				2A3624642C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift in Sources */,
 				2A3B4F632CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift in Sources */,
 				2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */,
 				ECCA5B4D2CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift in Sources */,

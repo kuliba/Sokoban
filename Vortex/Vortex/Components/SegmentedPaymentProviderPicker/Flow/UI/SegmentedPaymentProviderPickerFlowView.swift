@@ -41,11 +41,17 @@ private extension SegmentedPaymentProviderPickerFlowView {
     
     func content() -> some View {
         
-        SegmentedPaymentProviderPickerWrapperView(
+        RxWrapperView(
             model: flowModel.state.content,
-            providerView: providerView,
-            footer: footer,
-            config: .iVortex
+            makeContentView: { state, event in
+                
+                SegmentedPaymentProviderPickerView(
+                    segments: state.segments,
+                    providerView: providerView,
+                    footer: footer,
+                    config: .iVortex
+                )
+            }
         )
     }
     
