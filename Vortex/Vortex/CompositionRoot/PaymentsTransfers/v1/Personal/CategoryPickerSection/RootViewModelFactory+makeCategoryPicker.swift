@@ -23,9 +23,7 @@ extension RootViewModelFactory {
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation(
-                makeStandard: handleSelectedServiceCategory
-            ),
+            getNavigation: getNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
@@ -43,34 +41,28 @@ extension RootViewModelFactory {
     }
     
     typealias MakeStandard = (ServiceCategory, @escaping (CategoryPickerViewDomain.Destination.Standard) -> Void) -> Void
-
+    
     @inlinable
     func getNavigation(
-        makeStandard: @escaping MakeStandard
-    ) -> (
-        CategoryPickerViewDomain.Select,
-        @escaping CategoryPickerViewDomain.Notify,
-        @escaping (CategoryPickerViewDomain.Navigation) -> Void
-    ) -> Void {
-        
+        select: CategoryPickerViewDomain.Select,
+        notify: @escaping CategoryPickerViewDomain.Notify,
+        completion: @escaping (CategoryPickerViewDomain.Navigation) -> Void
+    ) {
         let composer = SelectedCategoryGetNavigationComposer(
             model: model,
             nanoServices: .init(
                 makeMobile: makeMobilePayment,
-                makeStandard: makeStandard,
+                makeStandard: handleSelectedServiceCategory,
                 makeTax: makeTaxPayment,
                 makeTransport: makeTransportPayment
             ),
             scheduler: schedulers.main
         )
         
-        return { select, notify, completion in
+        composer.getNavigation(select, notify) {
             
-            composer.getNavigation(select, notify) {
-                
-                completion($0)
-                _ = composer
-            }
+            completion($0)
+            _ = composer
         }
     }
 }
