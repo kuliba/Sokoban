@@ -15,7 +15,7 @@ struct PaymentProviderServicePickerWrapperView: View {
     @ObservedObject var model: Model
     
     let failureView: () -> FooterView
-    let iconView: (IconDomain.Icon?) -> IconDomain.IconView
+    let iconView: MakeIconView
     let config: Config
     
     var body: some View {

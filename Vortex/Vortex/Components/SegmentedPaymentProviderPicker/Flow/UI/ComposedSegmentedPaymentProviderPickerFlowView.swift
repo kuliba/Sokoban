@@ -7,18 +7,11 @@
 
 import SwiftUI
 
-struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
-    
-    let makePaymentsView: MakePaymentsView
-    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
-}
-
 struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View
 where AnywayFlowView: View {
     
     let flowModel: FlowModel
-    let iconView: (IconDomain.Icon?) -> IconDomain.IconView
-    let viewFactory: ComposedSegmentedPaymentProviderPickerFlowViewFactory
+    let viewFactory: ViewFactory
     
     var body: some View {
         
@@ -33,6 +26,14 @@ where AnywayFlowView: View {
 extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     typealias FlowModel = SegmentedPaymentProviderPickerFlowModel
+    typealias ViewFactory = ComposedSegmentedPaymentProviderPickerFlowViewFactory
+}
+
+struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+    
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+    let makeIconView: MakeIconView
+    let makePaymentsView: MakePaymentsView
 }
 
 private extension ComposedSegmentedPaymentProviderPickerFlowView {
@@ -45,7 +46,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
             title: provider.title,
             subtitle: provider.subtitle,
             config: .iVortex(),
-            iconView: iconView(provider.icon)
+            iconView: viewFactory.makeIconView(provider.icon)
         )
     }
     
@@ -69,7 +70,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
                     title: node.title,
                     subtitle: node.subtitle,
                     dismiss: { node.model.event(.dismiss) },
-                    icon: iconView(node.icon)
+                    icon: viewFactory.makeIconView(node.icon)
                 )
         }
     }
