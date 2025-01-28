@@ -20,7 +20,7 @@ final class MainViewModelTests: XCTestCase {
     func test_init_cacheNotContainsSticker_shouldSetStickerToNil()  {
         
         let (sut, _) = makeSUT()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNil(sut.sections.stickerViewModel)
     }
