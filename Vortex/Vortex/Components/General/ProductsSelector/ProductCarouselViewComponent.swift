@@ -347,11 +347,7 @@ extension ProductCarouselView {
         
         func visiblePromoProducts(productType: ProductType) -> Int {
             
-            let promoItems = promoProducts?.filter { $0.productType == productType } ?? []
-            
-            let visiblePromoItems = promoItems.filter { shouldShowPromo($0.promoType) }.count
-            
-            return visiblePromoItems
+            return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoType)}.count ?? 0
         }
     }
 }

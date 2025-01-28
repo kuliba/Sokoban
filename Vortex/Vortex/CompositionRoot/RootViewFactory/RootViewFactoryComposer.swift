@@ -686,10 +686,16 @@ private extension RootViewFactoryComposer {
     }
     
     func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder
+        binder: SavingsAccountDomain.Binder,
+        dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.WrapperView? {
         
-        makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
+        makeSavingsAccountView(
+            binder: binder,
+            dismiss: dismiss,
+            model:  model,
+            isActive: savingsAccountFlag.isActive
+        )
     }
     
     func makePaymentsSuccessView(
