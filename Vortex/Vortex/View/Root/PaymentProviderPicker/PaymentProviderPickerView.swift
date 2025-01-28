@@ -113,8 +113,7 @@ private extension PaymentProviderPickerView {
         PaymentProviderListView(
             providerList: providerList,
             binder: binder,
-            makeIconView: makeIconView,
-            makeSearchView: EmptyView.init
+            makeIconView: makeIconView
         )
     }
     

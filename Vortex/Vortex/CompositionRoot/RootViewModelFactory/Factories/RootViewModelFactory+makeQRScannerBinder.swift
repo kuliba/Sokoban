@@ -281,10 +281,17 @@ private extension QRMappingFailureDomain.Navigation {
     var notifyEvent: NavigationOutcome<QRScannerDomain.Select>? {
         
         switch self {
-        case .back:            return .dismiss
-        case .detailPayment:   return nil
-        case .categoryPicker:  return nil
-        case .scanQR:          return .dismiss
+        case .detailPayment, .categoryPicker:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .back:     return .dismiss
+            case .chat:     return .select(.outside(.chat))
+            case .main:     return .select(.outside(.main))
+            case .payments: return .select(.outside(.payments))
+            case .scanQR:   return .dismiss
+            }
         }
     }
 }
