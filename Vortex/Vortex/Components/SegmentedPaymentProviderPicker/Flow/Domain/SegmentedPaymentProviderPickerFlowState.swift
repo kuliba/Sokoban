@@ -14,7 +14,7 @@ struct SegmentedPaymentProviderPickerFlowState {
 
 extension SegmentedPaymentProviderPickerFlowState {
     
-    typealias Content = SegmentedPaymentProviderPickerModel<SegmentedOperatorProvider>
+    typealias Content = SegmentedPaymentProviderPickerState<SegmentedOperatorProvider>
     
     enum Status {
         

@@ -27,8 +27,6 @@ final class SegmentedPaymentProviderPickerFlowModel: ObservableObject {
         self.factory = factory
         self.scheduler = scheduler
         
-        bind(state.content)
-        
         stateSubject
             .receive(on: scheduler)
             .assign(to: &$state)
@@ -140,7 +138,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
         with `operator`: State.Status.Operator
     ) -> PaymentsViewModel {
         
-        let qrCode = state.content.state.qrCode
+        let qrCode = state.content.qrCode
         
         return factory.makePaymentsViewModel(`operator`, qrCode) { [weak self] in
             
@@ -157,8 +155,8 @@ private extension SegmentedPaymentProviderPickerFlowModel {
         _ state: inout State,
         _ provider: State.Status.Provider
     ) {
-        let qrCode = state.content.state.qrCode
-        let qrMapping = state.content.state.qrMapping
+        let qrCode = state.content.qrCode
+        let qrMapping = state.content.qrMapping
         let flowModel = factory.makeServicePickerFlowModel(.init(
             provider: provider,
             qrCode: qrCode,
@@ -231,7 +229,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     
     private func makePayByInstructionsModel() -> PaymentsViewModel {
         
-        let qrCode = state.content.state.qrCode
+        let qrCode = state.content.qrCode
         
         return factory.makePayByInstructionsViewModel(qrCode) { [weak self] in
             
@@ -247,35 +245,5 @@ private extension SegmentedPaymentProviderPickerFlowModel {
             .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
             .receive(on: scheduler)
             .sink { [weak self] a in self?.event(.goTo(.scanQR)) }
-    }
-}
-
-private extension SegmentedPaymentProviderPickerFlowModel {
-    
-    func bind(_ content: Content) {
-        
-        state.content.$state
-            .map(\.selection)
-            .receive(on: scheduler)
-            .sink { [weak self] in
-                
-                switch $0 {
-                case .none:
-                    self?.event(.dismiss)
-                    
-                case .addCompany:
-                    self?.event(.goTo(.addCompany))
-                    
-                case let .item(.operator(`operator`)):
-                    self?.event(.select(.operator(`operator`)))
-                    
-                case let .item(.provider(provider)):
-                    self?.event(.select(.provider(provider)))
-                    
-                case .payByInstructions:
-                    self?.event(.payByInstructions)
-                }
-            }
-            .store(in: &cancellables)
     }
 }
