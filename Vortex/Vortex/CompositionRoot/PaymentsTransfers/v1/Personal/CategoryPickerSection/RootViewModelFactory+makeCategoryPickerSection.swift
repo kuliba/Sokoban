@@ -62,12 +62,14 @@ extension RootViewModelFactory {
     @inlinable
     func getNavigation(
         select category: CategoryPickerSectionDomain.Select,
-        notify:@escaping CategoryPickerSectionDomain.Notify,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {
         switch category.paymentFlow {
         case .mobile:
-            completion(.destination(.mobile(makeMobilePayment())))
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .qr:
             completion(.outside(.qr))
