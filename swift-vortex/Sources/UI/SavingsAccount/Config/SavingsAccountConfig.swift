@@ -19,13 +19,13 @@ public struct SavingsAccountConfig {
     let divider: Color
     let icon: Icon
     let list: List
-    let navTitle: TitleWithSubtitle
+    let navTitle: NavTitleWithSubtitle
     let offsetForDisplayHeader: CGFloat
     let paddings: Paddings
     let spacing: CGFloat
     let questionHeight: CGFloat
     
-    public init(backImage: Image, bannerHeight: CGFloat, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
+    public init(backImage: Image, bannerHeight: CGFloat, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: NavTitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
         self.backImage = backImage
         self.bannerHeight = bannerHeight
         self.chevronDownImage = chevronDownImage
@@ -89,6 +89,16 @@ public struct SavingsAccountConfig {
         }
     }
     
+    public struct NavTitleWithSubtitle {
+        let title: TitleConfig
+        let subtitle: TitleConfig
+        
+        public init(title: TitleConfig, subtitle: TitleConfig) {
+            self.title = title
+            self.subtitle = subtitle
+        }
+    }
+
     public struct TitleWithSubtitle {
         let title: TextConfig
         let subtitle: TextConfig
