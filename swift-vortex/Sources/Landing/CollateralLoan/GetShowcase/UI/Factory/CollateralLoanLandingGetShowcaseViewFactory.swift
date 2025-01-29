@@ -5,9 +5,10 @@
 //  Created by Valentin Ozerov on 10.10.2024.
 //
 
+import Combine
+import OTPInputComponent
 import SwiftUI
 import UIPrimitives
-import Combine
 
 public struct CollateralLoanLandingGetShowcaseViewFactory {
 
@@ -25,8 +26,11 @@ public struct CollateralLoanLandingGetShowcaseViewFactory {
         self.makeImageViewByURL = makeImageViewByURL
     }
  
+    typealias IconView = UIPrimitives.AsyncImage
+    
     public typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
     public typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage
+    public typealias OTPView = TimedOTPInputWrapperView<IconView, GetShowcaseOTPWarningView>
 }
 
 extension CollateralLoanLandingGetShowcaseViewFactory {

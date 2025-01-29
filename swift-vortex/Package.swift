@@ -1418,6 +1418,7 @@ private extension Target {
         dependencies: [
             .inputComponent,
             .optionalSelectorComponent,
+            .otpInputComponent,
             .paymentComponents,
             .textFieldDomain,
             .textFieldUI,
