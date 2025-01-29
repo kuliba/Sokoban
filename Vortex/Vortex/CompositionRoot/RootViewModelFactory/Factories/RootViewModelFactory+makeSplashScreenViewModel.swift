@@ -142,46 +142,46 @@ extension SplashScreenState {
 
     func splash() -> Self {
         
-        SplashScreenState(
+        return .init(
             data: .init(
-                phase: .phaseTwo,
-                background: Image("splashPlaceholder"),
-                logo: Image("vortexLogoNewYear"),
-                footer: "Vortex",
-                greeting: "Hello",
-                animation: .easeOut(duration: 0.3)
+                phase: ??????,
+                background: background,
+                logo: logo,
+                footer: footer,
+                greeting: greeting,
+                animation: animation
             ),
-            config: .prod()
+            config: config
         )
     }
 
     func zoomed() -> Self {
         
-        SplashScreenState(
+        return .init(
             data: .init(
-                phase: .phaseTwo,
-                background: Image("splashPlaceholder"),
-                logo: Image("vortexLogoNewYear"),
-                footer: "Vortex",
-                greeting: "Hello",
-                animation: .easeOut(duration: 0.6)
+                phase: ??????,
+                background: background,
+                logo: logo,
+                footer: footer,
+                greeting: greeting,
+                animation: animation
             ),
-            config: .prod()
+            config: config
         )
     }
 
     func noSplash() -> Self {
         
-        SplashScreenState(
+        return .init(
             data: .init(
-                phase: .phaseTwo,
-                background: Image("splashPlaceholder"),
-                logo: Image("vortexLogoNewYear"),
-                footer: "Vortex",
-                greeting: "Hello",
-                animation: .easeOut(duration: 0.3)
+                phase: ??????,
+                background: background,
+                logo: logo,
+                footer: footer,
+                greeting: greeting,
+                animation: animation
             ),
-            config: .prod()
+            config: config
         )
     }
 }
