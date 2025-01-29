@@ -15,13 +15,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
     public enum Event: Equatable {
         
         case amount(TextInputEvent)
-        case period(SelectPeriodEvent)
+        case applicationCreated(CreateDraftApplicationResult)
         case city(SelectCityEvent)
+        case period(SelectPeriodEvent)
+        case showSaveConsentsResult(SaveConsentsResult)
+        case tappedBack
         case tappedContinue
         case tappedSubmit
-        case tappedBack
-        case applicationCreated(CreateDraftApplicationResult)
-        case showSaveConsentsResult(SaveConsentsResult)
     }
     
     public typealias SelectPeriodEvent = OptionalSelectorEvent<PeriodItem>

@@ -9,17 +9,17 @@ import Foundation
 
 public struct CreateDraftCollateralLoanApplicationUIData {
     
-    public let name: String
     public let amount: UInt
-    public let minAmount: UInt
-    public let maxAmount: UInt
-    public let periods: [Period]
-    public let selectedMonths: UInt
-    public let percent: Double
     public let cities: [String]
-    public let selectedCity: String
     public let icons: Icons
-    
+    public let maxAmount: UInt
+    public let minAmount: UInt
+    public let name: String
+    public let percent: Double
+    public let periods: [Period]
+    public let selectedCity: String
+    public let selectedMonths: UInt
+
     public init(
         name: String,
         amount: UInt,
@@ -91,7 +91,7 @@ extension CreateDraftCollateralLoanApplicationUIData {
     
     var formattedAmount: String {
         
-        String(format: "%ld %@", locale: Locale.current, amount, "₽")
+        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
     }
     
     var selectedPeriodTitle: String {
@@ -101,10 +101,18 @@ extension CreateDraftCollateralLoanApplicationUIData {
     
     public var hintText: String {
         
-        let minAmount = String(format: "%ld %@", locale: Locale.current, minAmount, "₽")
-        let maxAmount = String(format: "%ld %@", locale: Locale.current, maxAmount, "₽")
+        let minAmount = String(format: "%ld %@", locale: Locale.current, minAmount, rubSymbol)
+        let maxAmount = String(format: "%ld %@", locale: Locale.current, maxAmount, rubSymbol)
         
         return "Мин. - \(minAmount), Макс. - \(maxAmount)"
+    }
+    
+    // MARK: Helpers
+    
+    var rubSymbol: String {
+        let code = "RUB"
+        let locale = NSLocale(localeIdentifier: code)
+        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
     }
 }
 

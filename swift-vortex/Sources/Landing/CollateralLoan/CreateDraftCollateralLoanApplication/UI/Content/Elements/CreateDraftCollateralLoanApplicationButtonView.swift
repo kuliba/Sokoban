@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationButtonView: View {
     
-    @SwiftUI.State private var isDisabled = true
+    @State private var isDisabled = false
     
     let state: DomainState
     let event: (Event) -> Void
@@ -22,30 +22,28 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
             
             Text(title)
                 .frame(maxWidth: .infinity)
-                .frame(height: config.button.layouts.height)
-                .foregroundColor(config.button.colors.foreground)
+                .frame(height: config.elements.button.layouts.height)
+                .foregroundColor(config.elements.button.colors.foreground)
                 .background(backgroundColor)
-                .cornerRadius(config.button.layouts.cornerRadius)
-                .font(config.button.font.font)
+                .cornerRadius(config.elements.button.layouts.cornerRadius)
+                .font(config.elements.button.font.font)
         }
         .disabled(isDisabled)
-        .padding(config.button.layouts.paddings)
+        .padding(config.elements.button.layouts.paddings)
     }
-    
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    
+        
     private var title: String {
         
-        state.stage == .correctParameters ? config.button.continueTitle : config.button.createTitle
+        state.stage == .correctParameters
+            ? config.elements.button.continueTitle
+            : config.elements.button.createTitle
     }
     
     private var backgroundColor: Color {
         
         isDisabled
-            ? config.button.colors.disabled
-            : config.button.colors.background
+            ? config.elements.button.colors.disabled
+            : config.elements.button.colors.background
     }
     
     private func tapped() {
@@ -56,6 +54,8 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
 
 extension CreateDraftCollateralLoanApplicationButtonView {
     
+    typealias Config = CreateDraftCollateralLoanApplicationConfig
+    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
@@ -71,8 +71,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
             CreateDraftCollateralLoanApplicationButtonView(
                 state: .init(
                     data: .preview,
-                    stage: .correctParameters,
-                    isValid: true
+                    stage: .correctParameters
                 ),
                 event: { print($0) },
                 config: .default,
@@ -83,8 +82,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
             CreateDraftCollateralLoanApplicationButtonView(
                 state: .init(
                     data: .preview,
-                    stage: .correctParameters,
-                    isValid: false
+                    stage: .correctParameters
                 ),
                 event: { print($0) },
                 config: .default,
@@ -95,8 +93,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
             CreateDraftCollateralLoanApplicationButtonView(
                 state: .init(
                     data: .preview,
-                    stage: .confirm,
-                    isValid: false
+                    stage: .confirm
                 ),
                 event: { print($0) },
                 config: .default,

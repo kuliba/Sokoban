@@ -66,8 +66,8 @@ extension RootViewModelFactory {
         completion: @escaping (GetCollateralLandingDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .createDraftCollateralLoanApplication(uiData):
-            let binder = makeCreateDraftCollateralLoanApplicationBinder(uiData: uiData)
+        case let .createDraftCollateralLoanApplication(payload):
+            let binder = makeCreateDraftCollateralLoanApplicationBinder(payload: payload)
             completion(.createDraftCollateralLoanApplication(binder))
 
         case let .showCaseList(id):

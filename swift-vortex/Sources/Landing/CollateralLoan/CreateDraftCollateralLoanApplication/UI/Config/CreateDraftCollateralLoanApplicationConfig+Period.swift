@@ -13,18 +13,29 @@ extension CreateDraftCollateralLoanApplicationConfig {
     public struct Period {
         
         public let title: String
-        public let viewConfig: OptionalSelectorViewConfig
-        public let chevronViewConfig: ChevronViewConfig
+        public let periodConfig: PeriodConfig
 
         public init(
             title: String,
-            viewConfig: OptionalSelectorViewConfig,
-            chevronViewConfig: ChevronViewConfig
+            periodConfig: PeriodConfig
         ) {
             self.title = title
-            self.viewConfig = viewConfig
-            self.chevronViewConfig = chevronViewConfig
-        }        
+            self.periodConfig = periodConfig
+        }
+        
+        public struct PeriodConfig {
+            
+            public let chevron: ChevronViewConfig
+            public let selector: OptionalSelectorViewConfig
+            
+            public init(
+                chevron: ChevronViewConfig,
+                selector: OptionalSelectorViewConfig
+            ) {
+                self.chevron = chevron
+                self.selector = selector
+            }
+        }
     }
 }
 
@@ -32,15 +43,17 @@ extension CreateDraftCollateralLoanApplicationConfig.Period {
     
     static let preview = Self(
         title: "Срок кредита",
-        viewConfig: .init(
-            title: .init(
-                text: "Срок кредита",
-                config: .init(textFont: Font.system(size: 14), textColor: .title)
-            ),
-            search: .init(textFont: Font.system(size: 14), textColor: .primary),
-            searchPlaceholder: "Поиск"
-        ),
-        chevronViewConfig: .init(color: .secondary, image: Image(systemName: "chevron.down"), size: 12)
+        periodConfig: .init(
+            chevron: .init(color: .secondary, image: Image(systemName: "chevron.down"), size: 12),
+            selector: .init(
+                title: .init(
+                    text: "Срок кредита",
+                    config: .init(textFont: Font.system(size: 14), textColor: .title)
+                ),
+                search: .init(textFont: Font.system(size: 14), textColor: .primary),
+                searchPlaceholder: "Поиск"
+            )
+        )
     )
 }
 

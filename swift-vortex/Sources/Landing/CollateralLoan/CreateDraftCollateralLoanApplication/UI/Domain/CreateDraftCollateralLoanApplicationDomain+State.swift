@@ -16,33 +16,27 @@ extension CreateDraftCollateralLoanApplicationDomain {
         
         public let data: Data
 
-        public var city: OptionalSelectorState<CityItem>
-        public var period: OptionalSelectorState<PeriodItem>
         public var amount: TextInputState
-        public var selectedAmount: UInt
+        public var applicationId: UInt?
+        public var city: OptionalSelectorState<CityItem>
+        public var isLoading: Bool
+        public var needToDissmiss: Bool
+        public var period: OptionalSelectorState<PeriodItem>
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
-        public var isValid: Bool
-        public var isLoading: Bool
-        public var applicationId: UInt?
-        public var needToDissmiss: Bool
 
         public init(
             data: Data,
             stage: Stage = .correctParameters,
-            isValid: Bool = true,
             isLoading: Bool = false,
             applicationId: UInt? = nil,
             needToDissmiss: Bool = false
         ) {
             self.data = data
             self.stage = stage
-            self.isValid = isValid
             self.isLoading = isLoading
             self.applicationId = applicationId
             self.needToDissmiss = needToDissmiss
-            self.selectedAmount = data.amount
-
             self.period = data.makePeriodSelectorState()
             self.city = data.makeCitySelectorState()
             self.amount = .init(textField: .noFocus(data.formattedAmount))
@@ -52,6 +46,41 @@ extension CreateDraftCollateralLoanApplicationDomain {
             
             case correctParameters
             case confirm
+        }
+        
+        public enum FieldID: String {
+            
+            case amount
+            case city
+            case header
+            case percent
+            case period
+            
+            var id: String { rawValue }
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.State {
+    
+    public var selectedAmount: UInt {
+        
+        guard
+            let amountText = amount.textField.text,
+            let amount = UInt(amountText.filter { $0.isNumber })
+        else { return 0 }
+        
+        return amount
+    }
+    
+    public var isValid: Bool {
+        
+        switch stage {
+        case .correctParameters:
+            return selectedAmount >= data.minAmount && selectedAmount <= data.maxAmount
+
+        case .confirm:
+            return true
         }
     }
 }
@@ -117,14 +146,12 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     public static let correntParametersPreview = Self(
         data: .preview,
-        stage: .correctParameters,
-        isValid: true
+        stage: .correctParameters
     )
 
     public static let confirmPreview = Self(
         data: .preview,
-        stage: .confirm,
-        isValid: true
+        stage: .confirm
     )
 }
 

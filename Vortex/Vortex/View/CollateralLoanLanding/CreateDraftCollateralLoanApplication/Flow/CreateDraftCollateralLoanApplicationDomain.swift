@@ -37,6 +37,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     enum Navigation {
 
+        // TODO: реализовать 2 кейса для failure: informer и alert
         case failure(String)
         case success(String)
     }

@@ -19,8 +19,8 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
         
         InfoView(
             info: .init(
-                id: .other(UUID().uuidString),
-                title: config.header.title,
+                id: .other(DomainState.FieldID.header.id),
+                title: config.elements.header.title,
                 value: state.data.name,
                 style: .expanded
             ),

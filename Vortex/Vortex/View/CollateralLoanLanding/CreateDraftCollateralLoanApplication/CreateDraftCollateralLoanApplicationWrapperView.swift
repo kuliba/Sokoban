@@ -117,7 +117,7 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
     }
     
     enum Cover {
-        
+        // TODO: передавать данные для Cover
         case completed(String)
     }    
 }

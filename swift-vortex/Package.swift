@@ -1416,12 +1416,12 @@ private extension Target {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
-            .uiPrimitives,
-            .paymentComponents,
             .inputComponent,
+            .optionalSelectorComponent,
+            .paymentComponents,
             .textFieldDomain,
             .textFieldUI,
-            .optionalSelectorComponent
+            .uiPrimitives
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )

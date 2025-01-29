@@ -31,7 +31,7 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
         TextInputView(
             state: state.amount,
             event: { event(.amount($0)) },
-            config: config.amount.inputComponentConfig,
+            config: config.elements.amount.inputComponentConfig,
             iconView: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
@@ -41,8 +41,8 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
         
         InfoView(
             info: .init(
-                id: .other(UUID().uuidString),
-                title: config.amount.title,
+                id: .other(DomainState.FieldID.amount.id),
+                title: config.elements.amount.title,
                 value: state.data.formattedAmount,
                 style: .expanded
             ),

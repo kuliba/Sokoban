@@ -15,10 +15,10 @@ import RemoteServices
 extension RootViewModelFactory {
     
     func makeCreateDraftCollateralLoanApplicationBinder(
-        uiData: CreateDraftCollateralLoanApplicationUIData
+        payload: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
-        let content = makeContent(uiData: uiData)
+        let content = makeContent(data: payload)
 
         return composeBinder(
             content: content,
@@ -38,10 +38,10 @@ extension RootViewModelFactory {
     // MARK: - Content
     
     private func makeContent(
-        uiData: CreateDraftCollateralLoanApplicationUIData
+        data: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Content {
         
-        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: uiData)
+        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: data)
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             saveConsents: { payload, completion in
@@ -54,7 +54,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            initialState: .init(data: uiData),
+            initialState: .init(data: data),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main

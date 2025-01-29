@@ -5,12 +5,12 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import Foundation
-import TextFieldComponent
-import InputComponent
-import TextFieldDomain
-import OptionalSelectorComponent
 import AnywayPaymentCore
+import Foundation
+import InputComponent
+import OptionalSelectorComponent
+import TextFieldComponent
+import TextFieldDomain
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
@@ -135,7 +135,7 @@ private extension OptionalSelectorReducer {
         _ event: Event
     ) -> State {
         
-        return self.reduce(state, event).0
+        reduce(state, event).0
     }
 }
 
@@ -158,33 +158,5 @@ private extension TextInputReducer {
     ) -> TextInputState {
         
         reduce(state, event).0
-    }
-}
-
-private extension ChangingReducer {
-    
-    func setToValue(_ value: UInt) -> TextFieldState {
-        
-        do {
-            let started = try reduce(
-                .placeholder(""),
-                with: .startEditing
-            )
-            
-            let formattedAmount = String(format: "%ld %@", locale: Locale.current, value, "₽")
-
-            let value = try reduce(
-                started,
-                with: .changeText(formattedAmount, in: .zero)
-            )
-            
-            return try reduce(
-                value,
-                with: .finishEditing
-            )
-        } catch {
-            
-            return .placeholder("")
-        }
     }
 }

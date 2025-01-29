@@ -19,8 +19,8 @@ struct CreateDraftCollateralLoanApplicationPercentView: View {
         
         InfoView(
             info: .init(
-                id: .other(UUID().uuidString),
-                title: config.percent.title,
+                id: .other(DomainState.FieldID.percent.id),
+                title: config.elements.percent.title,
                 value: state.data.formattedPercent,
                 style: .expanded
             ),

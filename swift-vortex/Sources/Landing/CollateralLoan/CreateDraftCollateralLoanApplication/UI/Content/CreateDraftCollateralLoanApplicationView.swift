@@ -9,8 +9,6 @@ import SwiftUI
 
 public struct CreateDraftCollateralLoanApplicationView: View {
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
@@ -40,17 +38,14 @@ public struct CreateDraftCollateralLoanApplicationView: View {
                 content
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: buttonBack)
+        .if(state.stage == .confirm) {
+        
+            $0.navigationBarBackButtonHidden(true)
+              .navigationBarItems(leading: buttonBack)
+        }
     }
     
-    var buttonBack : some View { Button(action: {
-        if state.stage == .confirm {
-            event(.tappedBack)
-        } else {
-            self.presentationMode.wrappedValue.dismiss()
-        }
-    }) {
+    var buttonBack : some View { Button(action: { event(.tappedBack) }) {
         HStack {
             Image(systemName: "chevron.left")
                 .aspectRatio(contentMode: .fit)
@@ -178,6 +173,17 @@ struct FrameWithCornerRadiusModifier: ViewModifier {
         }
         .padding(config.layouts.paddings.stack)
         .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+extension View {
+   @ViewBuilder
+   func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
+        if conditional {
+            content(self)
+        } else {
+            self
+        }
     }
 }
 

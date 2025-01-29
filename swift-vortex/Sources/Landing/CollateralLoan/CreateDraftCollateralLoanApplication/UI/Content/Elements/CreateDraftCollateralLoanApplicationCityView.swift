@@ -37,15 +37,21 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
                 makeIconView: { factory.makeImageViewWithMD5hash(state.data.icons.city) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
-                    makeIconView: { Image(systemName: isItemSelected(item) ? "record.circle" : "circle") },
+                    makeIconView: {
+                        
+                        Image(
+                            systemName: isItemSelected(item)
+                                          ? config.icons.selectedItem
+                                          : config.icons.unselectedItem)
+                    },
                     iconColor: isItemSelected(item) ? .red : .secondary
                 ) },
                 makeSelectedItemLabel: { SelectedOptionView(optionTitle: $0.title) },
                 makeToggleLabel: { state in
-                    ChevronView(state: state, config: config.city.chevronViewConfig)
+                    ChevronView(state: state, config: config.elements.city.cityConfig.chevron)
                 }
             ),
-            config: config.city.viewConfig
+            config: config.elements.city.cityConfig.selector
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -54,8 +60,8 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
         
         InfoView(
             info: .init(
-                id: .other(UUID().uuidString),
-                title: config.city.title,
+                id: .other(DomainState.FieldID.city.id),
+                title: config.elements.city.title,
                 value: state.data.selectedCity,
                 style: .expanded
             ),
