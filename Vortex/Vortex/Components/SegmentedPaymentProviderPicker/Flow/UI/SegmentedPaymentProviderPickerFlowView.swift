@@ -5,17 +5,16 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-import FooterComponent
 import SwiftUI
 import UIPrimitives
 
-struct SegmentedPaymentProviderPickerFlowView<OperatorLabel, DestinationContent>: View
-where OperatorLabel: View,
+struct SegmentedPaymentProviderPickerFlowView<Content, DestinationContent>: View
+where Content: View,
       DestinationContent: View {
     
     @ObservedObject var flowModel: FlowModel
     
-    let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
+    let content: () -> Content
     let destinationContent: (FlowState.Status.Destination) -> DestinationContent
     
     var body: some View {
@@ -32,8 +31,6 @@ extension SegmentedPaymentProviderPickerFlowView {
     
     typealias FlowModel = SegmentedPaymentProviderPickerFlowModel
     typealias FlowState = SegmentedPaymentProviderPickerFlowState
-    typealias Operator = SegmentedOperatorData
-    typealias Provider = SegmentedProvider
 }
 
 extension SegmentedPaymentProviderPickerFlowState {
@@ -51,44 +48,21 @@ extension SegmentedPaymentProviderPickerFlowState.Status.Destination: Identifiab
         
         switch self {
             
-        case .payByInstructions: return .payByInstructions
-        case .payments:          return .payments
-        case .servicePicker:     return .servicePicker
+        case let .payByInstructions(node):
+            return .payByInstructions(.init(node.model))
+            
+        case let .payments(node):
+            return .payments(.init(node.model))
+            
+        case let .servicePicker(node):
+            return .servicePicker(.init(node.model))
         }
     }
     
     enum ID: Hashable {
         
-        case payByInstructions
-        case payments
-        case servicePicker
-    }
-}
-
-private extension SegmentedPaymentProviderPickerFlowView {
-    
-    func content() -> some View {
-        
-        SegmentedPaymentProviderPickerWrapperView(
-            model: flowModel.state.content,
-            operatorLabel: operatorLabel,
-            footer: {
-                
-                FooterView(
-                    state: .footer(.iVortex),
-                    event: {
-                        switch $0 {
-                        case .addCompany:
-                            flowModel.state.content.event(.select(.addCompany))
-                            
-                        case .payByInstruction:
-                            flowModel.state.content.event(.select(.payByInstructions))
-                        }
-                    },
-                    config: .iVortex
-                )
-            },
-            config: .iVortex
-        )
+        case payByInstructions(ObjectIdentifier)
+        case payments(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
     }
 }
