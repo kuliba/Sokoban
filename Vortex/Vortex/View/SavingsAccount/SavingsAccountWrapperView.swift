@@ -28,7 +28,6 @@ struct SavingsAccountWrapperView: View {
     
     public var body: some View {
         
-        NavigationView {
             RxWrapperView(
                 model: viewModel,
                 makeContentView: {
@@ -40,7 +39,6 @@ struct SavingsAccountWrapperView: View {
                     )
                 }
             )
-        }
     }
 }
 

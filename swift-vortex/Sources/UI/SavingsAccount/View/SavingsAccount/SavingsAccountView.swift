@@ -15,61 +15,25 @@ public struct SavingsAccountView: View {
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    
-    private let coordinateSpace: String
-    
+        
     @State private(set) var selectedQuestion: Question?
-    @State private(set) var isShowHeader = false
     
     public init(
         state: SavingsAccountState,
         event: @escaping (SavingsAccountEvent) -> Void,
         config: Config,
-        factory: Factory,
-        coordinateSpace: String = "scroll"
+        factory: Factory
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
-        self.coordinateSpace = coordinateSpace
     }
     
     public var body: some View {
         
         VStack(alignment: .leading, spacing: config.spacing) {
-            ScrollView(showsIndicators: false) {
-                landing()
-            }
-            .onPreferenceChange(ViewOffsetKey.self) { value in
-                isShowHeader = value > config.offsetForDisplayHeader
-            }
-            .coordinateSpace(name: coordinateSpace)
-        }
-        .toolbar(content: toolbarContent)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            continueButton()
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
-    }
-    
-    @ToolbarContentBuilder
-    private func toolbarContent() -> some ToolbarContent {
-        
-        ToolbarItem(placement: .principal) {
-            header()
-        }
-        
-        ToolbarItem(placement: .navigationBarLeading) {
-            backButton()
-        }
-    }
-    
-    private func landing() -> some View {
-        VStack {
             factory.makeBannerImageView(state.imageLink)
-                .aspectRatio(contentMode: .fill)
                 .frame(height: config.bannerHeight)
                 .aspectRatio(contentMode: .fit)
                 .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
@@ -83,45 +47,10 @@ public struct SavingsAccountView: View {
             questionsView()
                 .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
         }
-        .background(
-            GeometryReader {
-                Color.clear.preference(
-                    key: ViewOffsetKey.self,
-                    value: -$0.frame(in: .named(coordinateSpace)).origin.y)
-            }
-        )
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
     }
-    
-    private func continueButton() -> some View {
         
-        Button(action: { event(.continue) }, label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: config.continueButton.cornerRadius)
-                    .foregroundColor(config.continueButton.background)
-                config.continueButton.label.text(withConfig: config.continueButton.title)
-            }
-        })
-        .padding(.horizontal)
-        .frame(height: config.continueButton.height)
-        .frame(maxWidth: .infinity)
-    }
-    
-    private func backButton() -> some View {
-        
-        Button(action: { event(.dismiss) }) { config.backImage }
-    }
-    
-    @ViewBuilder
-    private func header() -> some View {
-        
-        if isShowHeader {
-            VStack {
-                config.navTitle.title.text.text(withConfig: config.navTitle.title.config)
-                config.navTitle.subtitle.text.text(withConfig: config.navTitle.subtitle.config)
-            }
-        }
-    }
-    
     private func list(
         items: Items
     ) -> some View {

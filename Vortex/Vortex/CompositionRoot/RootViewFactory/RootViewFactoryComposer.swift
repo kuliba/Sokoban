@@ -22,6 +22,8 @@ import SberQR
 import SwiftUI
 import UIPrimitives
 import UIKit
+import RxViewModel
+
 
 final class RootViewFactoryComposer {
     
@@ -689,13 +691,18 @@ private extension RootViewFactoryComposer {
         binder: SavingsAccountDomain.Binder,
         dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.WrapperView? {
-        
-        makeSavingsAccountView(
-            binder: binder,
-            dismiss: dismiss,
-            model:  model,
-            isActive: savingsAccountFlag.isActive
-        )
+                            
+        guard savingsAccountFlag.isActive else { return nil }
+            
+        return RxWrapperView(model: binder.flow) {
+            
+            self.makeFlowView(
+                { self.makeContentWrapperView(binder.content, dismiss) },
+                $0,
+                $1,
+                dismiss
+            )
+        }
     }
     
     func makePaymentsSuccessView(
@@ -1156,4 +1163,17 @@ extension RootViewFactory.MakeInfoViews {
         makeUpdateInfoView: UpdateInfoView.init(text:),
         makeDisableCorCardsInfoView: DisableCorCardsView.init(text:)
     )
+}
+
+extension SavingsAccountDomain.ContentState {
+    
+    var title: String {
+        
+        switch status {
+        case let .loaded(landing):
+            return "Накопительный заголовок"
+            
+        default: return ""
+        }
+    }
 }

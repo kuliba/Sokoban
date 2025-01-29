@@ -12,26 +12,6 @@ import RxViewModel
 
 extension RootViewFactoryComposer {
     
-    func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder,
-        dismiss: @escaping SavingsAccountDismiss,
-        model: Model,
-        isActive: Bool
-    ) -> SavingsAccountDomain.WrapperView? {
-        
-        guard isActive else { return nil }
-        
-        return RxWrapperView(model: binder.flow) {
-            
-            self.makeFlowView(
-                { self.makeContentWrapperView(binder.content, dismiss) },
-                $0,
-                $1,
-                dismiss
-            )
-        }
-    }
-    
     func makeFlowView(
         _ contentView: @escaping () -> SavingsAccountDomain.ContentWrapperView,
         _ flowState: SavingsAccountDomain.FlowState,
@@ -81,12 +61,14 @@ extension RootViewFactoryComposer {
                 initialState: .init(viewModel.list.first ?? .empty),
                 reduce: { state, event in
                     
+                    var state = state
                     switch event {
                     case .dismiss:
                         dismiss()
                         
                     case .continue:
                         break
+                        
                     }
                     return (state, .none)
                 } , // TODO: - add reduce
@@ -104,7 +86,7 @@ extension RootViewFactoryComposer {
     }
 }
 
-private extension SavingsAccountDomain.LandingItem {
+extension SavingsAccountDomain.LandingItem {
     
     static let empty: Self = .init(
         theme: "",
@@ -116,7 +98,7 @@ private extension SavingsAccountDomain.LandingItem {
     )
 }
 
-private extension SavingsAccountState {
+extension SavingsAccountState {
     
     init(_ data: SavingsAccountDomain.LandingItem) {
         

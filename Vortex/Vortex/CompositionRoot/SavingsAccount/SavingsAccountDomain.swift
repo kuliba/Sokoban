@@ -72,8 +72,9 @@ extension SavingsAccountDomain {
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
     typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountWrapperView, Landing, InformerPayload>
     typealias ContentWrapperView = RxWrapperView<ContentView, ContentState, ContentEvent, ContentEffect>
-    
     typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView, InformerView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
     
     typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountWrapperView>
+    
+    typealias Config = SavingsAccountConfig
 }

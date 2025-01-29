@@ -31,9 +31,6 @@ extension SavingsAccountConfig {
                 title: .init(textFont: .textH4M16240(), textColor: .textSecondary),
                 subtitle: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)),
             title: .init(textFont: .textH3M18240(), textColor: .textSecondary)),
-        navTitle: .init(
-            title: .init(text: "Накопительный счет", config: .init(textFont: .textH3M18240(), textColor: .textSecondary)),
-            subtitle: .init(text: "Накопительный в рублях", config: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder))),
         offsetForDisplayHeader: 100,
         paddings: .init(
             negativeBottomPadding: 60,
