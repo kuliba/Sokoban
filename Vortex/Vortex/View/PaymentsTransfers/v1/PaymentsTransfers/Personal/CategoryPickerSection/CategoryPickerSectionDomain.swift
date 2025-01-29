@@ -43,7 +43,7 @@ extension CategoryPickerSectionDomain {
         case transport(Transport)
         
         typealias Mobile = PaymentsViewModel
-        typealias Tax = ClosePaymentsViewModelWrapper
+        typealias Tax = PaymentsViewModel
         typealias Transport = TransportPaymentsViewModel
     }
     

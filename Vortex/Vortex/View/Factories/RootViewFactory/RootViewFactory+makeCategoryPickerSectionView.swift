@@ -73,8 +73,8 @@ extension RootViewFactory {
         case let .mobile(paymentsViewModel):
             components.makePaymentsView(paymentsViewModel)
             
-        case let .taxAndStateServices(wrapper):
-            components.makePaymentsView(wrapper.paymentsViewModel)
+        case let .taxAndStateServices(paymentsViewModel):
+            components.makePaymentsView(paymentsViewModel)
             
         case let .transport(transport):
             transportPaymentsView(transport)
