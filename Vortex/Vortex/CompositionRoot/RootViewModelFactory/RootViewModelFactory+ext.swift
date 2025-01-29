@@ -469,9 +469,20 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch selection {
-        case .none: return nil
-        case .order: return .order
+        switch status {
+        case .initiate, .inflight, .loaded:
+            return nil
+            
+        case let .failure(failure, _):
+            switch failure{
+            case let .alert(message):
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
+            }
+        case .selection:
+            return .order
         }
     }
 }

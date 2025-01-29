@@ -96,11 +96,11 @@ final class ContentReducerTests: XCTestCase {
         assert(.failure(.alert(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
     }
 
-    func test_reduce_selectOrder_shouldSelectionToOrder() {
+    func test_reduce_selectOrder_shouldStatusToOrder() {
         
         assertState(.selectOrder, on: .init(status: .inflight(nil))) {
             
-            $0.selection = .order
+            $0.status = .selection(.order, nil)
         }
     }
     
@@ -109,17 +109,18 @@ final class ContentReducerTests: XCTestCase {
         assert(.selectOrder, on: .init(status: .inflight(nil)), effect: nil)
     }
 
-    func test_reduce_reset_shouldSelectionToNil() {
+    func test_reduce_reset_shouldStatusToLoaded() {
         
-        assertState(.resetSelection, on: .init(selection: .order, status: .inflight(nil))) {
+        let landing = anyMessage()
+        assertState(.resetSelection, on: .init(status: .selection(.order, landing))) {
             
-            $0.selection = nil
+            $0.status = .loaded(landing)
         }
     }
     
     func test_reduce_reset_shouldDeliverNoEffect() {
         
-        assert(.resetSelection, on: .init(selection: .order, status: .inflight(nil)), effect: nil)
+        assert(.resetSelection, on: .init(status: .selection(.order, nil)), effect: nil)
     }
 
     // MARK: - Helpers
