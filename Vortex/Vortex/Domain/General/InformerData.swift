@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InformerData {
+struct InformerData: Equatable {
 
     let message: String
     let icon: IconType
