@@ -76,10 +76,6 @@ extension RootViewFactory {
             
         case let .transport(transport):
             transportPaymentsView(transport)
-                .navigationBarWithBack(
-                    title: "Транспорт",
-                    dismiss: dismiss
-                )
         }
     }
     
