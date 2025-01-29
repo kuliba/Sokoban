@@ -27,8 +27,6 @@ final class SegmentedPaymentProviderPickerFlowModel: ObservableObject {
         self.factory = factory
         self.scheduler = scheduler
         
-        bind(state.content)
-        
         stateSubject
             .receive(on: scheduler)
             .assign(to: &$state)
@@ -63,7 +61,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
         
         switch event {
         case .dismiss:
-            state.status = nil
+            state.navigation = nil
             
         case let .goTo(goTo):
             return reduce(&state, with: goTo)
@@ -88,16 +86,16 @@ private extension SegmentedPaymentProviderPickerFlowModel {
         
         switch goTo {
         case .addCompany:
-            state.status = .outside(.addCompany)
+            state.navigation = .outside(.addCompany)
             
         case .main:
-            state.status = .outside(.main)
+            state.navigation = .outside(.main)
             
         case .payments:
-            state.status = .outside(.payments)
+            state.navigation = .outside(.payments)
             
         case .scanQR:
-            state.status = .outside(.scanQR)
+            state.navigation = .outside(.scanQR)
         }
         
         return nil
@@ -126,21 +124,21 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payWithOperator(
         _ state: inout State,
-        _ `operator`: State.Status.Operator
+        _ `operator`: State.Navigation.Operator
     ) {
         let paymentsViewModel = makePaymentsViewModel(with: `operator`)
         
-        state.status = .destination(.payments(.init(
+        state.navigation = .destination(.payments(.init(
             model: paymentsViewModel,
             cancellable: bind(paymentsViewModel)
         )))
     }
     
     private func makePaymentsViewModel(
-        with `operator`: State.Status.Operator
+        with `operator`: State.Navigation.Operator
     ) -> PaymentsViewModel {
         
-        let qrCode = state.content.state.qrCode
+        let qrCode = state.content.qrCode
         
         return factory.makePaymentsViewModel(`operator`, qrCode) { [weak self] in
             
@@ -155,17 +153,17 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payWithProvider(
         _ state: inout State,
-        _ provider: State.Status.Provider
+        _ provider: State.Navigation.Provider
     ) {
-        let qrCode = state.content.state.qrCode
-        let qrMapping = state.content.state.qrMapping
+        let qrCode = state.content.qrCode
+        let qrMapping = state.content.qrMapping
         let flowModel = factory.makeServicePickerFlowModel(.init(
             provider: provider,
             qrCode: qrCode,
             qrMapping: qrMapping
         ))
         
-        state.status = .destination(.servicePicker(.init(
+        state.navigation = .destination(.servicePicker(.init(
             model: flowModel,
             cancellables: bind(flowModel)
         )))
@@ -223,7 +221,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     ) {
         let paymentsViewModel = makePayByInstructionsModel()
         
-        state.status = .destination(.payByInstructions(.init(
+        state.navigation = .destination(.payByInstructions(.init(
             model: paymentsViewModel,
             cancellable: bind(paymentsViewModel)
         )))
@@ -231,7 +229,7 @@ private extension SegmentedPaymentProviderPickerFlowModel {
     
     private func makePayByInstructionsModel() -> PaymentsViewModel {
         
-        let qrCode = state.content.state.qrCode
+        let qrCode = state.content.qrCode
         
         return factory.makePayByInstructionsViewModel(qrCode) { [weak self] in
             
@@ -247,35 +245,5 @@ private extension SegmentedPaymentProviderPickerFlowModel {
             .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
             .receive(on: scheduler)
             .sink { [weak self] a in self?.event(.goTo(.scanQR)) }
-    }
-}
-
-private extension SegmentedPaymentProviderPickerFlowModel {
-    
-    func bind(_ content: Content) {
-        
-        state.content.$state
-            .map(\.selection)
-            .receive(on: scheduler)
-            .sink { [weak self] in
-                
-                switch $0 {
-                case .none:
-                    self?.event(.dismiss)
-                    
-                case .addCompany:
-                    self?.event(.goTo(.addCompany))
-                    
-                case let .item(.operator(`operator`)):
-                    self?.event(.select(.operator(`operator`)))
-                    
-                case let .item(.provider(provider)):
-                    self?.event(.select(.provider(provider)))
-                    
-                case .payByInstructions:
-                    self?.event(.payByInstructions)
-                }
-            }
-            .store(in: &cancellables)
     }
 }

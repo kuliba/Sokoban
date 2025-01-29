@@ -42,17 +42,11 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     func content() -> some View {
         
-        RxWrapperView(
-            model: flowModel.state.content,
-            makeContentView: { state, _ in
-                
-                SegmentedPaymentProviderPickerView(
-                    segments: state.segments,
-                    providerView: providerView,
-                    footer: footer,
-                    config: .iVortex
-                )
-            }
+        SegmentedPaymentProviderPickerView(
+            segments: flowModel.state.content.segments,
+            providerView: providerView,
+            footer: footer,
+            config: .iVortex
         )
     }
     
@@ -118,7 +112,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     @ViewBuilder
     func destinationContent(
-        _ destination: FlowState.Status.Destination
+        _ destination: FlowState.Navigation.Destination
     ) -> some View {
         
         switch destination {

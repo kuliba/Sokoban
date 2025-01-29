@@ -52,23 +52,14 @@ private extension SegmentedPaymentProviderPickerFlowModelComposer {
         _ qrMapping: QRMapping
     ) -> SegmentedPaymentProviderPickerFlowState.Content {
         
-        let reducer = SegmentedPaymentProviderPickerReducer<SegmentedOperatorProvider>()
-        let effectHandler = SegmentedPaymentProviderPickerEffectHandler<SegmentedOperatorProvider>()
-        
         return .init(
-            initialState: .init(
-                segments: .init(
-                    with: mix.elements,
-                    sortingSegmentsBy: \.title,
-                    sortingItemsBy: \.title
-                ),
-                qrCode: qrCode,
-                qrMapping: qrMapping
+            segments: .init(
+                with: mix.elements,
+                sortingSegmentsBy: \.title,
+                sortingItemsBy: \.title
             ),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            predicate: ==,
-            scheduler: scheduler
+            qrCode: qrCode,
+            qrMapping: qrMapping
         )
     }
     

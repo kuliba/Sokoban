@@ -15,7 +15,7 @@ where Content: View,
     @ObservedObject var flowModel: FlowModel
     
     let content: () -> Content
-    let destinationContent: (FlowState.Status.Destination) -> DestinationContent
+    let destinationContent: (FlowState.Navigation.Destination) -> DestinationContent
     
     var body: some View {
         
@@ -35,14 +35,14 @@ extension SegmentedPaymentProviderPickerFlowView {
 
 extension SegmentedPaymentProviderPickerFlowState {
     
-    var destination: Status.Destination? {
+    var destination: Navigation.Destination? {
         
-        guard case let .destination(destination) = status else { return nil }
+        guard case let .destination(destination) = navigation else { return nil }
         return destination
     }
 }
 
-extension SegmentedPaymentProviderPickerFlowState.Status.Destination: Identifiable {
+extension SegmentedPaymentProviderPickerFlowState.Navigation.Destination: Identifiable {
     
     var id: ID {
         
