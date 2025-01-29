@@ -45,12 +45,12 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     
     public struct Icons {
         
-        public let selectedItem: String
-        public let unselectedItem: String
+        public let selectedItem: Image
+        public let unselectedItem: Image
         
         public init(
-            selectedItem: String,
-            unselectedItem: String
+            selectedItem: Image,
+            unselectedItem: Image
         ) {
             self.selectedItem = selectedItem
             self.unselectedItem = unselectedItem
@@ -72,9 +72,17 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public struct Colors {
         
         public let background: Color
-        
-        public init(background: Color) {
+        public let selected: Color
+        public let unselected: Color
+
+        public init(
+            background: Color,
+            selected: Color,
+            unselected: Color
+        ) {
             self.background = background
+            self.selected = selected
+            self.unselected = unselected
         }
     }
     
@@ -152,7 +160,9 @@ extension CreateDraftCollateralLoanApplicationConfig {
             value: .init(textFont: Font.system(size: 16), textColor: .primary)
         ),
         colors: .init(
-            background: .background
+            background: .background,
+            selected: .red,
+            unselected: .secondary
         ),
         layouts: .init(
             iconSize: .init(width: 27, height: 27),
@@ -175,8 +185,8 @@ extension CreateDraftCollateralLoanApplicationConfig {
             )
         ),
         icons: .init(
-            selectedItem: "record.circle",
-            unselectedItem: "circle"
+            selectedItem: Image(systemName: "record.circle"),
+            unselectedItem: Image(systemName: "circle")
         ),
         elements: .init(
             header: .preview,

@@ -37,14 +37,12 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
                 makeIconView: { factory.makeImageViewWithMD5hash(state.data.icons.city) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
-                    makeIconView: {
-                        
-                        Image(
-                            systemName: isItemSelected(item)
-                                          ? config.icons.selectedItem
-                                          : config.icons.unselectedItem)
-                    },
-                    iconColor: isItemSelected(item) ? .red : .secondary
+                    image: isItemSelected(item)
+                        ? config.icons.selectedItem
+                        : config.icons.unselectedItem,
+                    iconColor: isItemSelected(item)
+                        ? config.colors.selected
+                        : config.colors.unselected
                 ) },
                 makeSelectedItemLabel: { SelectedOptionView(optionTitle: $0.title) },
                 makeToggleLabel: { state in
