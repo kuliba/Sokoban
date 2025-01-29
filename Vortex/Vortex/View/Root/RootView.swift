@@ -437,9 +437,13 @@ private extension RootViewFactory {
                     viewFactory: .preview
                 )
             },
-            makeMarketShowcaseView: { _,_,_   in .none },
+            makeMarketShowcaseView: { _,_,_ in .none },
             components: .preview,
             paymentsViewFactory: .preview,
+            makeTemplateButtonWrapperView: {
+                
+                .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0.operationDetail))
+            },
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
