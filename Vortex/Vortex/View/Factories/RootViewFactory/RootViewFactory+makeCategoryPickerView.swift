@@ -30,7 +30,13 @@ extension RootViewFactory {
                 )
                 .navigationDestination(
                     destination: makeDestination(state),
-                    content: makeDestinationView
+                    content: {
+                        
+                        makeDestinationView(destination: $0) {
+                            
+                            binder.flow.event(.dismiss)
+                        }
+                    }
                 )
             }
         )
@@ -48,7 +54,8 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: CategoryPickerViewDomain.Destination
+        destination: CategoryPickerViewDomain.Destination,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         switch destination {
@@ -69,6 +76,10 @@ extension RootViewFactory {
             
         case let .transport(transport):
             transportPaymentsView(transport)
+                .navigationBarWithBack(
+                    title: "Транспорт",
+                    dismiss: dismiss
+                )
         }
     }
     
