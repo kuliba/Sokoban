@@ -68,7 +68,9 @@ extension RootViewModelFactory {
     ) {
         switch category.paymentFlow {
         case .mobile:
-            completion(.destination(.mobile(makeMobilePayment())))
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .qr:
             completion(.outside(.qr))

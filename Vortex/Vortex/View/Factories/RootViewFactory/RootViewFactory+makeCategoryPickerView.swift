@@ -59,8 +59,8 @@ extension RootViewFactory {
     ) -> some View {
         
         switch destination {
-        case let .mobile(mobile):
-            components.makePaymentsView(mobile.paymentsViewModel)
+        case let .mobile(paymentsViewModel):
+            components.makePaymentsView(paymentsViewModel)
             
         case let .standard(standard):
             switch standard.model {
