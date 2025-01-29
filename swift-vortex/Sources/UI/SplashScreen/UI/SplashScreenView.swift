@@ -22,7 +22,7 @@ public struct SplashScreenView: View {
     
     private var scaleEffect: CGFloat {
         
-        splash.data.phase != .phaseOne ? config.scaleEffect.start : config.scaleEffect.end
+        splash.data.phase != .zoom ? config.scaleEffect.end : config.scaleEffect.start
     }
     
     public var body: some View {
@@ -44,6 +44,11 @@ public struct SplashScreenView: View {
                     
                     $0.text(withConfig: splash.config.greeting)
                 }
+                                
+                splash.data.message.map {
+                    
+                    $0.text(withConfig: splash.config.message)
+                }
                 
                 Spacer()
                 
@@ -52,13 +57,14 @@ public struct SplashScreenView: View {
                     $0.text(withConfig: splash.config.footer)
                 }
             }
+            .padding(.horizontal)
             .padding(.top, config.paddings.top)
             .padding(.bottom, config.paddings.bottom)
         }
-        .opacity(splash.data.phase == .phaseOne ? 0 : 1)
+        .opacity(splash.data.phase == .fadeOut ? 1 : 0)
         .animation(
             splash.data.animation,
-            value: splash.data.phase == .phaseOne
+            value: splash.data.phase
         )
     }
 }
@@ -80,7 +86,6 @@ private extension SplashScreenView {
 }
 
 #Preview {
-    
     SplashScreenPreview()
 }
 
@@ -93,7 +98,53 @@ struct SplashScreenPreview: View {
         
         SplashScreenView(splash: splash, config: .preview)
             .onChange(of: showSplash) { newValue in
-                splash.data.phase = newValue ? .phaseTwo : .phaseOne
+                splash.data.phase = newValue ? .zoom : .fadeOut
+            }
+            .overlay {
+                Toggle("showSplash", isOn: $showSplash)
+                    .labelsHidden()
+                    .padding()
+            }
+    }
+}
+
+#Preview("Zoom Phase") {
+    SplashScreenZoomPreview()
+}
+
+struct SplashScreenZoomPreview: View {
+    
+    @State private var splash: Splash = .init(data: .preview, config: .preview)
+    @State private var showSplash: Bool = true
+    
+    var body: some View {
+        
+        SplashScreenView(splash: splash, config: .preview)
+            .onChange(of: showSplash) { newValue in
+                splash.data.phase = newValue ? .zoom : .fadeOut
+            }
+            .overlay {
+                Toggle("showSplash", isOn: $showSplash)
+                    .labelsHidden()
+                    .padding()
+            }
+    }
+}
+
+#Preview("FadeOut") {
+    SplashScreenFadeOutPreview()
+}
+
+struct SplashScreenFadeOutPreview: View {
+    
+    @State private var splash: Splash = .init(data: .preview, config: .preview)
+    @State private var showSplash: Bool = true
+    
+    var body: some View {
+        
+        SplashScreenView(splash: splash, config: .preview)
+            .onChange(of: showSplash) { newValue in
+                splash.data.phase = newValue ? .fadeOut : .noSplash
             }
             .overlay {
                 Toggle("showSplash", isOn: $showSplash)

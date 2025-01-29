@@ -382,20 +382,7 @@ struct RootView_Previews: PreviewProvider {
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .init(
-            data: .init(
-                phase: .phaseTwo,
-                background: Image("splashPlaceholder"),
-                logo: Image("vortexLogoNewYear"),
-                footer: "Vortex",
-                greeting: "Good Morning!",
-                animation: .easeInOut
-            ),
-            config: .init(
-                greeting: .init(textFont: .textH1Sb24322(), textColor: .mainColorsBlack),
-                footer: .init(textFont: .textH4R16240(), textColor: .mainColorsBlack)
-            )
-        ),
+        initialState: .initialSplashData,
         reduce: {
             state,
             _ in (state, nil)

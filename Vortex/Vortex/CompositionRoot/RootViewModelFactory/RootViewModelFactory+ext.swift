@@ -372,19 +372,9 @@ extension RootViewModelFactory {
         // MARK: - Splash
         
         let splash = makeSplashScreenViewModel(
-            initialState: .init(
-                data: .init(
-                    phase: .phaseOne,
-                    background: Image("splashPlaceholder"),
-                    logo: Image("vortexLogoNewYear"),
-                    footer: "Vortex",
-                    greeting: "Good Morning!",
-                    animation: .easeInOut
-                ),
-                config: .prod()
-            ),
-            phaseOneDuration: .seconds(0.0), // zoom
-            phaseTwoDuration: .seconds(0.3)  // fade out
+            initialState: .initialSplashData,
+            phaseOneDuration: .milliseconds(300),
+            phaseTwoDuration: .milliseconds(1200)
         )
         
         model.auth

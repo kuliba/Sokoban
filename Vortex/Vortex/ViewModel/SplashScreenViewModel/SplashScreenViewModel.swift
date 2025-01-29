@@ -16,7 +16,7 @@ enum SplashScreenEvent {
     
     case start
     case fadeOut
-    case end
+    case noSplash
 }
 
 enum SplashScreenEffect {
@@ -24,21 +24,3 @@ enum SplashScreenEffect {
     case startPhaseOneTimer
     case startPhaseTwoTimer
 }
-
-/*
- 
- State:
- - no splash
- - splash
- - zoomed splash
- 
- Lifecycle: // reduce
- - no splash
- == `start` event =>
- - splash + start timer (= effect!!)
- == timer: // phase1 // zoomed
- - splash = zoomed + start 2nd timer (= effect!!)
- == 2nd timer: // phase2
- - state = no splash + NO effect
- 
- */

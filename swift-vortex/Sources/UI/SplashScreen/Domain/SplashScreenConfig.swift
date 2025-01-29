@@ -11,10 +11,16 @@ import SharedConfigs
 public struct SplashScreenDynamicConfig {
 
     let greeting: TextConfig
+    let message: TextConfig
     let footer: TextConfig
     
-    public init(greeting: TextConfig, footer: TextConfig) {
+    public init(
+        greeting: TextConfig,
+        message: TextConfig,
+        footer: TextConfig
+    ) {
         self.greeting = greeting
+        self.message = message
         self.footer = footer
     }
 }

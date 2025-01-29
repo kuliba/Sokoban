@@ -31,23 +31,9 @@ class RootViewModel: ObservableObject, Resetable {
     let informerViewModel: InformerView.ViewModel
     let splash: SplashScreenViewModel
     
-    @Published private(set) var isShowingSplash = true
+    @Published private(set) var isShowingSplash = false
         
-    var coverPresented: RootViewHostingViewController.Cover.Kind? {
-        
-        didSet {
-        
-            if coverPresented == nil {
-                
-                isShowingSplash = true
-                
-                mainScheduler.delay(for: .seconds(2)) { [weak self] in
-                    
-                    self?.isShowingSplash = false
-                }
-            }
-        }
-    }
+    var coverPresented: RootViewHostingViewController.Cover.Kind?
 
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
