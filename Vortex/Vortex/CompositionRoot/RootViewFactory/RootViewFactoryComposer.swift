@@ -17,6 +17,7 @@ import PayHub
 import PayHubUI
 import PaymentComponents
 import PDFKit
+import RemoteServices
 import SavingsAccount
 import SberQR
 import SwiftUI
@@ -1152,4 +1153,39 @@ extension RootViewFactory.MakeInfoViews {
         makeUpdateInfoView: UpdateInfoView.init(text:),
         makeDisableCorCardsInfoView: DisableCorCardsView.init(text:)
     )
+}
+
+extension RootViewFactoryComposer {
+    
+    func makeTemplateButtonWrapperView(
+        response: RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+    ) -> TemplateButtonWrapperView {
+        
+        return makeTemplateButtonWrapperView(
+            operationDetail: response.operationDetail
+        )
+    }
+    
+    func makeTemplateButtonWrapperView(
+        operationDetail: OperationDetailData
+    ) -> TemplateButtonWrapperView {
+        
+        return .init(
+            viewModel: .init(
+                model: self.model,
+                operation: nil,
+                operationDetail: operationDetail
+            )
+        )
+    }
+}
+
+struct TemplateButtonWrapperView: View {
+    
+    @StateObject var viewModel: TemplateButtonView.ViewModel
+    
+    var body: some View {
+        
+        TemplateButtonView(viewModel: viewModel)
+    }
 }
