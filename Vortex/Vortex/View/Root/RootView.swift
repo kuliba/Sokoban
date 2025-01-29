@@ -442,7 +442,7 @@ private extension RootViewFactory {
             paymentsViewFactory: .preview,
             makeTemplateButtonWrapperView: {
                 
-                .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0.operationDetail))
+                .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0))
             },
             makeUpdatingUserAccountButtonLabel: {
                 

@@ -822,7 +822,6 @@ private extension RootViewFactoryComposer {
         )
     }
     
-    
     private func currencyOfProduct(
         product: ProductSelect.Product
     ) -> String {
@@ -842,7 +841,8 @@ private extension RootViewFactoryComposer {
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
-                makeTemplateButton: makeTemplateButtonView(with: result)
+                makeTemplateButton: makeTemplateButtonView(with: result),
+                makeTemplateButtonWrapperView: makeTemplateButtonWrapperView
             ),
             makeIconView: {
                 
@@ -892,6 +892,7 @@ private extension RootViewFactoryComposer {
                             with: $0.info,
                             merchantLogoMD5Hash: completed.merchantIcon
                         ),
+                        operationDetail: $0.info.operationDetail,
                         printFormType: $0.info.operationDetail?.printFormType ?? "",
                         status: $0.status
                     )

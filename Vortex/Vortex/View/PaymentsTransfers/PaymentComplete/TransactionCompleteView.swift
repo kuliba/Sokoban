@@ -59,7 +59,10 @@ private extension TransactionCompleteView {
         case .completed:
             HStack {
                 
-                factory.makeTemplateButton()
+                state.operationDetail.map {
+                    
+                    factory.makeTemplateButtonWrapperView($0)
+                }
                 
                 state.documentID.map {
                     factory.makeDocumentButton($0.0, $0.1)
@@ -124,7 +127,11 @@ struct TransactionCompleteView_Previews: PreviewProvider {
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: { _,_  in .init(getDocument: { $0(nil) }) },
-                makeTemplateButton: { nil }
+                makeTemplateButton: { nil },
+                makeTemplateButtonWrapperView: {
+                    
+                    .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0))
+                }
             ),
             content: { Text("Content") }
         )
@@ -137,17 +144,18 @@ private extension TransactionCompleteState {
     static let completedWithDetails: Self = .completed(details: .empty)
     static let completedWithDocumentID: Self = .completed(documentID: 1)
     static let completedWithDetailsAndDocumentID: Self = .completed(
-        details: .empty,
         documentID: 1,
+        details: .empty,
         printForm: ""
     )
     private static func completed(
-        details: Details? = nil,
         documentID: DocumentID = 1,
+        details: TransactionDetailButton.Details? = nil,
+        operationDetail: OperationDetailData? = nil,
         printForm: String = ""
     ) -> Self {
         
-        return .init(details: details, documentID: (documentID, printForm), status: .completed)
+        return .init(details: details, operationDetail: operationDetail, documentID: (documentID, printForm), status: .completed)
     }
     
     static let inflight: Self = .init(details: .empty, .inflight)
@@ -155,12 +163,13 @@ private extension TransactionCompleteState {
     static let fraud: Self = .init(.fraud)
     
     private init(
-        details: Details? = nil,
         documentID: DocumentID = 1,
+        details: TransactionDetailButton.Details? = nil,
+        operationDetail: OperationDetailData? = nil,
         printForm: String = "",
         _ status: Status
     ) {
-        self.init(details: details, documentID: (documentID, printForm), status: status)
+        self.init(details: details, operationDetail: operationDetail, documentID: (documentID, printForm), status: .completed)
     }
 }
 

@@ -44,11 +44,12 @@ private extension PaymentCompleteView {
         
         switch state.result {
         case .failure:
-            return .init(details: nil, documentID: nil, status: .fraud)
+            return .init(details: nil, operationDetail: nil, documentID: nil, status: .fraud)
             
         case let .success(report):
             return .init(
                 details: report.details,
+                operationDetail: report.operationDetail,
                 documentID: (.init(report.detailID), report.printFormType),
                 status: {
                     
@@ -175,14 +176,16 @@ extension PaymentCompleteState.Report {
     
     private static func preview(
         detailID: Int = 1,
-        details: Details? = nil,
+        details: TransactionDetailButton.Details? = nil,
+        operationDetail: OperationDetailData? = nil,
         printFormType: String = "abc",
         _ status: DocumentStatus
     ) -> Self {
         
         return .init(
             detailID: detailID,
-            details: details, 
+            details: details,
+            operationDetail: operationDetail,
             printFormType: printFormType,
             status: status
         )
@@ -203,6 +206,10 @@ extension PaymentCompleteViewFactory {
                     operationDetail: .stub()
                 )
             )
+        },
+        makeTemplateButtonWrapperView: {
+            
+            .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0))
         }
     )
 }

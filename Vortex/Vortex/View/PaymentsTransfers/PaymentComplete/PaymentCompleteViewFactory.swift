@@ -10,6 +10,7 @@ struct PaymentCompleteViewFactory {
     let makeDetailButton: MakeDetailButton
     let makeDocumentButton: MakeDocumentButton
     let makeTemplateButton: MakeTemplateButtonView
+    let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
 }
 
 extension PaymentCompleteViewFactory {

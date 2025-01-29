@@ -7,11 +7,10 @@
 
 struct TransactionCompleteState {
     
-    let details: Details?
+    let details: TransactionDetailButton.Details?
+    let operationDetail: OperationDetailData?
     let documentID: (DocumentID, String)?
     let status: Status
-    
-    typealias Details = TransactionDetailButton.Details
     
     enum Status {
         
