@@ -49,7 +49,7 @@ extension CategoryPickerViewDomain {
         
         typealias Mobile = PaymentsViewModel
         typealias Standard = Node<StandardSelectedCategoryDestination>
-        typealias Tax = ClosePaymentsViewModelWrapper
+        typealias Tax = PaymentsViewModel
         typealias Transport = TransportPaymentsViewModel
     }
     

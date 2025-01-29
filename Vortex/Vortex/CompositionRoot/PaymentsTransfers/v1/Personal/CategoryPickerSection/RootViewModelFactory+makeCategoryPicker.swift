@@ -87,7 +87,9 @@ extension RootViewModelFactory {
             }
             
         case .taxAndStateServices:
-            completion(.destination(.taxAndStateServices(makeTaxPayment())))
+            completion(.destination(.taxAndStateServices(makeTaxPayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .transport:
             guard let transport = makeTransportPayment()
