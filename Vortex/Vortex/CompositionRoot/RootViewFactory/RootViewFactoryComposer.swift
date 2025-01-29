@@ -391,7 +391,7 @@ private extension RootViewFactoryComposer {
         .init(
             model: node.model,
             makeAnywayFlowView: makeAnywayFlowView,
-            makeIconView: { self.makeIconView($0.map { .svg($0) }) },
+            makeIconView: { self.makeIconView($0.map { .md5Hash($0) }) },
             viewFactory: makeTemplatesListFlowViewFactory()
         )
     }
