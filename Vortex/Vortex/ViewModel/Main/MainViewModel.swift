@@ -804,7 +804,7 @@ private extension MainViewModel {
         case let payload:
 #warning("need change after analyst creates a new action type")
             if payload.type == .payment {
-                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }
         }
     }
@@ -938,7 +938,7 @@ private extension MainViewModel {
                 openScanner()
                 
             case .utility:
-                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }
         }
     }
