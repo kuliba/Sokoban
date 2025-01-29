@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationButtonView: View {
     
+    @SwiftUI.State private var isDisabled = true
+    
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
@@ -34,11 +36,6 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     typealias State = CreateDraftCollateralLoanApplicationDomain.State
     
-    private var isDisabled: Bool {
-        
-        state.stage == .correctParameters && !state.isValid
-    }
-
     private var title: String {
         
         state.stage == .correctParameters ? config.button.continueTitle : config.button.createTitle

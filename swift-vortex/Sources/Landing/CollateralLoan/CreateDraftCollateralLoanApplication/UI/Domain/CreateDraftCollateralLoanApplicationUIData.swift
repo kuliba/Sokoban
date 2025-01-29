@@ -11,6 +11,8 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     
     public let name: String
     public let amount: UInt
+    public let minAmount: UInt
+    public let maxAmount: UInt
     public let periods: [Period]
     public let selectedMonths: UInt
     public let percent: Double
@@ -21,6 +23,8 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     public init(
         name: String,
         amount: UInt,
+        minAmount: UInt,
+        maxAmount: UInt,
         periods: [Period],
         selectedMonths: UInt,
         percent: Double,
@@ -30,6 +34,8 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     ) {
         self.name = name
         self.amount = amount
+        self.minAmount = minAmount
+        self.maxAmount = maxAmount
         self.periods = periods
         self.selectedMonths = selectedMonths
         self.percent = percent
@@ -92,13 +98,23 @@ extension CreateDraftCollateralLoanApplicationUIData {
         
         periods.first { $0.months == selectedMonths }?.title ?? ""
     }
+    
+    public var hintText: String {
+        
+        let minAmount = String(format: "%ld %@", locale: Locale.current, minAmount, "₽")
+        let maxAmount = String(format: "%ld %@", locale: Locale.current, maxAmount, "₽")
+        
+        return "Мин. - \(minAmount), Макс. - \(maxAmount)"
+    }
 }
 
 extension CreateDraftCollateralLoanApplicationUIData {
     
-    static let preview = Self(
+    public static let preview = Self(
         name: "Кредит под залог транспорта",
         amount: 1_234_567,
+        minAmount: 1_000_000,
+        maxAmount: 5_000_000,
         periods: [
             .init(title: "6 месяцев", months: 6),
             .init(title: "9 месяцев", months: 9),

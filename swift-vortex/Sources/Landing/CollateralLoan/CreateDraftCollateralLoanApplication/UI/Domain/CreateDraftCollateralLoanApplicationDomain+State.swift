@@ -7,29 +7,32 @@
 
 import InputComponent
 import TextFieldDomain
+import OptionalSelectorComponent
+import Foundation
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public struct State: Equatable {
         
-        public let data: CreateDraftCollateralLoanApplicationUIData
+        public let data: Data
 
+        public var city: OptionalSelectorState<CityItem>
+        public var period: OptionalSelectorState<PeriodItem>
+        public var amount: TextInputState
+        public var selectedAmount: UInt
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
         public var isValid: Bool
         public var isLoading: Bool
         public var applicationId: UInt?
-        public var amount: UInt
         public var needToDissmiss: Bool
-        public var textInputState: TextInputState
 
         public init(
-            data: CreateDraftCollateralLoanApplicationUIData,
+            data: Data,
             stage: Stage = .correctParameters,
             isValid: Bool = true,
             isLoading: Bool = false,
             applicationId: UInt? = nil,
-            textInputState: TextInputState = .init(textField: .editing(.empty)),
             needToDissmiss: Bool = false
         ) {
             self.data = data
@@ -37,9 +40,12 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.isValid = isValid
             self.isLoading = isLoading
             self.applicationId = applicationId
-            self.textInputState = textInputState
-            self.amount = data.amount
             self.needToDissmiss = needToDissmiss
+            self.selectedAmount = data.amount
+
+            self.period = data.makePeriodSelectorState()
+            self.city = data.makeCitySelectorState()
+            self.amount = .init(textField: .noFocus(data.formattedAmount))
         }
         
         public enum Stage {
@@ -47,6 +53,36 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case correctParameters
             case confirm
         }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain {
+    
+    public struct PeriodItem: Equatable {
+        
+        let months: UInt
+        let title: String
+    }
+    
+    public struct CityItem: Equatable {
+        
+        let title: String
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.PeriodItem: Identifiable {
+    
+    public var id: String {
+        
+        title
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.CityItem: Identifiable {
+    
+    public var id: String {
+        
+        title
     }
 }
 
@@ -90,4 +126,48 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         stage: .confirm,
         isValid: true
     )
+}
+
+public extension CreateDraftCollateralLoanApplicationUIData {
+    
+    func makePeriodSelectorState() -> OptionalSelectorState<PeriodItem> {
+        
+        let items: [PeriodItem] = periods.map { .init(months: $0.months, title: $0.title) }
+        var selectedItem: PeriodItem?
+        if let selectedPeriod = periods.first(where: { $0.months == selectedMonths }) {
+            
+            selectedItem = .init(months: selectedPeriod.months, title: selectedPeriod.title)
+        }
+        
+        return.init(
+            items: items,
+            filteredItems: items,
+            selected: selectedItem
+        )
+    }
+
+    func makeCitySelectorState() -> OptionalSelectorState<CityItem> {
+        
+        let items: [CityItem] = cities.map { .init(title: $0) }
+        var selectedItem: CityItem?
+        if let selectedCity = cities.first(where: { $0 == selectedCity }) {
+            
+            selectedItem = .init(title: selectedCity)
+        }
+        
+        return .init(
+            items: items,
+            filteredItems: items,
+            selected: selectedItem
+        )
+    }
+
+    typealias PeriodItem = CreateDraftCollateralLoanApplicationDomain.PeriodItem
+    typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem
+}
+
+public extension CreateDraftCollateralLoanApplicationDomain.State {
+    
+    typealias Data = CreateDraftCollateralLoanApplicationUIData
+    typealias Period = Data.Period
 }

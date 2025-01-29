@@ -5,9 +5,10 @@
 //  Created by Valentin Ozerov on 27.01.2025.
 //
 
-import SwiftUI
 import OptionalSelectorComponent
 import PaymentComponents
+import SwiftUI
+import UIPrimitives
 
 struct CreateDraftCollateralLoanApplicationCityView: View {
     
@@ -29,15 +30,22 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
     
     private var editModeView: some View {
 
-        InfoView(
-            info: .init(
-                id: .other(UUID().uuidString),
-                title: config.city.title,
-                value: state.data.selectedCity,
-                style: .expanded
+        SelectorView(
+            state: state.city,
+            event: { event(.city($0)) },
+            factory: .init(
+                makeIconView: { factory.makeImageViewWithMD5hash(state.data.icons.city) },
+                makeItemLabel: { item in IconLabel(
+                    text: item.title,
+                    makeIconView: { Image(systemName: isItemSelected(item) ? "record.circle" : "circle") },
+                    iconColor: isItemSelected(item) ? .red : .secondary
+                ) },
+                makeSelectedItemLabel: { SelectedOptionView(optionTitle: $0.title) },
+                makeToggleLabel: { state in
+                    ChevronView(state: state, config: config.city.chevronViewConfig)
+                }
             ),
-            config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.city) }
+            config: config.city.viewConfig
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -60,10 +68,22 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
 
 extension CreateDraftCollateralLoanApplicationCityView {
     
+    private func isItemSelected(_ item: CityItem) -> Bool {
+        
+        item == state.city.selected
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationCityView {
+    
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem
+    typealias SelectorView
+        = OptionalSelectorView<CityItem, IconView, IconLabel<Image>, SelectedOptionView, ChevronView>
 }
 
 // MARK: - Previews

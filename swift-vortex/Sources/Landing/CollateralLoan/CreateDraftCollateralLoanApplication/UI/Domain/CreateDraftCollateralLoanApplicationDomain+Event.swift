@@ -8,35 +8,22 @@
 import Foundation
 import InputComponent
 import TextFieldDomain
+import OptionalSelectorComponent
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public enum Event: Equatable {
         
-        case selectedAmount(UInt)
-        case selectedPeriod(String)
-        case selectedCity(String)
+        case amount(TextInputEvent)
+        case period(SelectPeriodEvent)
+        case city(SelectCityEvent)
         case tappedContinue
         case tappedSubmit
         case tappedBack
         case applicationCreated(CreateDraftApplicationResult)
         case showSaveConsentsResult(SaveConsentsResult)
-        case inputComponentEvent(InputComponentEvent)
-        
-        public enum InputComponentEvent: Equatable {
-
-            case textField(TextFieldAction)
-        }
     }
-}
-
-extension TextInputEvent {
     
-    public var inputComponentEvent: CreateDraftCollateralLoanApplicationDomain.Event.InputComponentEvent {
-        
-        switch self {
-        case let .textField(event):
-            return .textField(event)
-        }
-    }
+    public typealias SelectPeriodEvent = OptionalSelectorEvent<PeriodItem>
+    public typealias SelectCityEvent = OptionalSelectorEvent<CityItem>
 }

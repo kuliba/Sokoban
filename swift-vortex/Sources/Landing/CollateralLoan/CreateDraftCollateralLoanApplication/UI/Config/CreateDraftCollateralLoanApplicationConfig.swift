@@ -115,6 +115,19 @@ public struct CreateDraftCollateralLoanApplicationConfig {
             self.background = background
         }
     }
+    
+    public struct ChevronViewConfig: Equatable {
+        
+        public let color: Color
+        public let image: Image
+        public let size: CGFloat
+        
+        public init(color: Color, image: Image, size: CGFloat) {
+            self.color = color
+            self.image = image
+            self.size = size
+        }
+    }
 }
 
 extension CreateDraftCollateralLoanApplicationConfig {

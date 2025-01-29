@@ -1111,7 +1111,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.Binder {
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
     static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .preview,
+        initialState: .init(data: .preview),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

@@ -5,8 +5,10 @@
 //  Created by Valentin Ozerov on 27.01.2025.
 //
 
-import SwiftUI
+import OptionalSelectorComponent
 import PaymentComponents
+import SwiftUI
+import UIPrimitives
 
 struct CreateDraftCollateralLoanApplicationPeriodView: View {
     
@@ -28,20 +30,26 @@ struct CreateDraftCollateralLoanApplicationPeriodView: View {
     
     private var editModeView: some View {
 
-        // TODO: Need to realize editing mode
-        InfoView(
-            info: .init(
-                id: .other(UUID().uuidString),
-                title: config.period.title,
-                value: state.data.selectedPeriodTitle,
-                style: .expanded
+        SelectorView(
+            state: state.period,
+            event: { event(.period($0)) },
+            factory: .init(
+                makeIconView: { factory.makeImageViewWithMD5hash(state.data.icons.term) },
+                makeItemLabel: { item in IconLabel(
+                    text: item.title,
+                    makeIconView: { Image(systemName: isItemSelected(item) ? "record.circle" : "circle") },
+                    iconColor: isItemSelected(item) ? .red : .secondary
+                ) },
+                makeSelectedItemLabel: { SelectedOptionView(optionTitle: $0.title) },
+                makeToggleLabel: { state in
+                    ChevronView(state: state, config: config.period.chevronViewConfig)
+                }
             ),
-            config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.term) }
+            config: config.period.viewConfig
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
-    
+        
     private var readOnlyModeView: some View {
         
         InfoView(
@@ -60,10 +68,22 @@ struct CreateDraftCollateralLoanApplicationPeriodView: View {
 
 extension CreateDraftCollateralLoanApplicationPeriodView {
     
+    private func isItemSelected(_ item: PeriodItem) -> Bool {
+        
+        item == state.period.selected
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationPeriodView {
+    
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias PeriodItem = CreateDraftCollateralLoanApplicationDomain.PeriodItem
+    typealias SelectorView
+        = OptionalSelectorView<PeriodItem, IconView, IconLabel<Image>, SelectedOptionView, ChevronView>
 }
 
 // MARK: - Previews

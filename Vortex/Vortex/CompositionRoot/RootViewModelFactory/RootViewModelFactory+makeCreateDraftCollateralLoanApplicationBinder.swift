@@ -41,7 +41,7 @@ extension RootViewModelFactory {
         uiData: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Content {
         
-        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer()
+        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: uiData)
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             saveConsents: { payload, completion in

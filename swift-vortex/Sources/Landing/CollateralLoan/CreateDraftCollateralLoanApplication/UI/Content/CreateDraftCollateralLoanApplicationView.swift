@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-public struct CreateDraftCollateralLoanApplicationView<InputView>: View
-    where InputView: View {
+public struct CreateDraftCollateralLoanApplicationView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -16,20 +15,17 @@ public struct CreateDraftCollateralLoanApplicationView<InputView>: View
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let inputView: InputView
     
     public init(
         state: DomainState,
         event: @escaping (Event) -> Void,
         config: Config,
-        factory: Factory,
-        inputView: InputView
+        factory: Factory
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
-        self.inputView = inputView
     }
     
     public var body: some View {
@@ -107,8 +103,7 @@ extension CreateDraftCollateralLoanApplicationView {
             state: state,
             event: event,
             config: config,
-            factory: factory,
-            inputView: inputView
+            factory: factory
         )
     }
 
@@ -152,11 +147,13 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
     
+    // TODO: Need to realize
     var otpView: some View {
         
         Text("OTP View")
     }
     
+    // TODO: Need to realize
     var consentsView: some View {
         
         Text("Согласия")
@@ -202,8 +199,7 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
             state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
 
@@ -211,8 +207,7 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
             state: .confirmPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
         .previewDisplayName("Экран отправки параметров кредита")
     }

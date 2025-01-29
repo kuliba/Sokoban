@@ -8,14 +8,12 @@
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
-    where InputView: View {
+struct CreateDraftCollateralLoanApplicationAmountView: View {
     
     let state: DomainState
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    let inputView: InputView
 
     var body: some View {
         
@@ -30,8 +28,13 @@ struct CreateDraftCollateralLoanApplicationAmountView<InputView>: View
     
     private var editModeView: some View {
         
-        inputView
-            .modifier(FrameWithCornerRadiusModifier(config: config))
+        TextInputView(
+            state: state.amount,
+            event: { event(.amount($0)) },
+            config: config.amount.inputComponentConfig,
+            iconView: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+        )
+        .modifier(FrameWithCornerRadiusModifier(config: config))
     }
     
     private var readOnlyModeView: some View {
@@ -68,8 +71,7 @@ struct CreateDraftCollateralLoanApplicationAmountView_Previews: PreviewProvider 
             state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
         .previewDisplayName("Edit mode")
 
@@ -77,8 +79,7 @@ struct CreateDraftCollateralLoanApplicationAmountView_Previews: PreviewProvider 
             state: .confirmPreview,
             event: { print($0) },
             config: .default,
-            factory: .preview,
-            inputView: Text("InputView")
+            factory: .preview
         )
         .previewDisplayName("Read only mode")
     }

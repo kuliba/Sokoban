@@ -52,8 +52,8 @@ extension TextInputConfig {
 extension TextFieldView.TextFieldConfig {
     
     static let preview = Self(
-        font: .boldSystemFont(ofSize: 24),
-        textColor: .title,
+        font: .systemFont(ofSize: 16),
+        textColor: .primary,
         tintColor: .accentColor,
         backgroundColor: .clear,
         placeholderColor: .clear

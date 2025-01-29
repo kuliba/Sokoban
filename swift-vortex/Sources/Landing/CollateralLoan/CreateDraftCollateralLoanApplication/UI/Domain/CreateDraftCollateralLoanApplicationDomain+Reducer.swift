@@ -5,14 +5,30 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import Foundation
+import TextFieldComponent
 import InputComponent
 import TextFieldDomain
+import OptionalSelectorComponent
+import AnywayPaymentCore
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public final class Reducer {
         
-        public init() {}
+        private let amountReduce: AmountReduce
+        private let citySelectReduce: CitySelectReduce
+        private let periodSelectReduce: PeriodSelectReduce
+
+        public init(
+            amountReduce: @escaping AmountReduce,
+            citySelectReduce: @escaping CitySelectReduce,
+            periodSelectReduce: @escaping PeriodSelectReduce
+        ) {
+            self.amountReduce = amountReduce
+            self.citySelectReduce = citySelectReduce
+            self.periodSelectReduce = periodSelectReduce
+        }
         
         public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
             
@@ -20,14 +36,14 @@ extension CreateDraftCollateralLoanApplicationDomain {
             var effect: Effect?
             
             switch event {
-            case .selectedAmount(_):
-                break
+            case let .amount(amountEvent):
+                state.amount = amountReduce(state.amount, amountEvent)
                 
-            case .selectedPeriod(_):
-                break
+            case let .period(periodEvent):
+                state.period = periodSelectReduce(state.period, periodEvent)
                 
-            case .selectedCity(_):
-                break
+            case let .city(cityEvent):
+                state.city = citySelectReduce(state.city, cityEvent)
                 
             case .tappedContinue:
                 state.isLoading = true
@@ -50,71 +66,125 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .showSaveConsentsResult(result):
                 state.isLoading = false
-                state.saveConsentsResult = result
-                
-            case let .inputComponentEvent(inputComponentEvent):
-                switch inputComponentEvent {
-                case let .textField(textFieldAction):
-//                    let textField = textFieldReduce(state.textInputState.textField, textFieldAction)
-//                    let message = validate(textField)
-//                    state.textInputState.textField = textField
-//                    state.textInputState.message = message
-                    
-                    switch textFieldAction {
-                    case .startEditing:
-                        break
-                        
-                    case .finishEditing:
-                        break
-                        
-                    case .changeText:
-                        break
-                        
-                    case .setTextTo(_):
-                        break
-                    }
-                }
+                state.saveConsentsResult = result                
             }
             
             return (state, effect)
         }
-        
-        // MARK: Helpers
-//        func makeTextFieldReduce() -> TextFieldReduce {
-//            
-//            TextInputReducer(
-//                textFieldReduce: textFieldReducer.reduce(_:_:),
-//                validate: textInputValidator.validate
-//            )
-//        }
-        
-//        func textFieldReducer(
-//            placeholderText: String
-//        ) -> TextFieldReduce {
-//            
-//            switch (., masking.composedMask) {
-//            case (.number, .none):
-//                return TransformingReducer.sberNumericReducer(
-//                    placeholderText: pleaceholderText
-//                )
-//                
-//            default:
-//                return ChangingReducer.mask(
-//                    placeholderText: placeholderText,
-//                    pattern: masking.composedMask ?? ""
-//                )
-//            }
-//        }
     }
     
-    public typealias TextFieldReduce = (TextFieldState, TextFieldAction) -> TextFieldState
+    public typealias TextFieldReduce = (TextInputState, TextInputEvent) -> TextInputState
     public typealias Validate = (TextFieldState) -> TextInputState.Message?
+    public typealias AmountReduce = TextFieldReduce
+    public typealias CitySelectState = OptionalSelectorState<CityItem>
+    public typealias CitySelectEvent = OptionalSelectorEvent<CityItem>
+    public typealias PeriodSelectState = OptionalSelectorState<PeriodItem>
+    public typealias PeriodSelectEvent = OptionalSelectorEvent<PeriodItem>
+    public typealias CitySelectReduce = (CitySelectState, CitySelectEvent) -> CitySelectState
+    public typealias PeriodSelectReduce = (PeriodSelectState, PeriodSelectEvent) -> PeriodSelectState
 }
 
-//let textInputValidator = AnywayPaymentParameterValidator()
-//let textInputValidator = TextInputValidator(
-//    hintText: "subTitle",
-//    warningText: "subTitle",
-//    validate: { validator.isValid($0, with: parameter.validation) }
-//)
+public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
+    
+    convenience init(
+        data: CreateDraftCollateralLoanApplicationUIData,
+        placeholderText: String = "Введите значение",
+        warningText: String = "Некорректная сумма"
+    ) {
+        let decimalFormatter = DecimalFormatter(currencySymbol: "₽")
+        
+        let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter)
+        
+        let textInputValidator = TextInputValidator(
+            hintText: data.hintText,
+            warningText: warningText,
+            validate: { isValid($0) }
+        )
+        
+        let amountReducer = TextInputReducer(
+            textFieldReduce: textFieldReducer.reduce(_:_:),
+            validate: textInputValidator.validate
+        )
 
+        let selectCityReducer = OptionalSelectorReducer<CityItem>(predicate: { $0.title.contains($1) })
+        let selectPeriodReducer = OptionalSelectorReducer<PeriodItem>(predicate: { $0.title.contains($1) })
+        
+        self.init(
+            amountReduce: amountReducer.reduce,
+            citySelectReduce: selectCityReducer.reduce,
+            periodSelectReduce: selectPeriodReducer.reduce
+        )
+        
+        func isValid(_ amount: String) -> Bool {
+            
+            guard let amount = Int(amount.filter { $0.isNumber }) else { return false }
+            
+            return amount >= data.minAmount && amount <= data.maxAmount
+        }
+    }
+    
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias PeriodItem = Domain.PeriodItem
+    typealias CityItem = Domain.CityItem
+}
+
+private extension OptionalSelectorReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> State {
+        
+        return self.reduce(state, event).0
+    }
+}
+
+private extension TextFieldModel.Reducer {
+    
+    func reduce(
+        _ state: TextFieldState,
+        _ action: TextFieldAction
+    ) -> TextFieldState {
+        
+        (try? reduce(state, with: action)) ?? state
+    }
+}
+
+private extension TextInputReducer {
+    
+    func reduce(
+        _ state: TextInputState,
+        _ event: TextInputEvent
+    ) -> TextInputState {
+        
+        reduce(state, event).0
+    }
+}
+
+private extension ChangingReducer {
+    
+    func setToValue(_ value: UInt) -> TextFieldState {
+        
+        do {
+            let started = try reduce(
+                .placeholder(""),
+                with: .startEditing
+            )
+            
+            let formattedAmount = String(format: "%ld %@", locale: Locale.current, value, "₽")
+
+            let value = try reduce(
+                started,
+                with: .changeText(formattedAmount, in: .zero)
+            )
+            
+            return try reduce(
+                value,
+                with: .finishEditing
+            )
+        } catch {
+            
+            return .placeholder("")
+        }
+    }
+}
