@@ -530,6 +530,9 @@
 		2A267D4D2D4BFD0C001F725C /* MeToMeDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A267D4C2D4BFD0C001F725C /* MeToMeDomain.swift */; };
 		2A267D4F2D4BFEAE001F725C /* RootViewModelFactory+makeCorporateTransfers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A267D4E2D4BFEAE001F725C /* RootViewModelFactory+makeCorporateTransfers.swift */; };
 		2A267D512D4BFFE1001F725C /* RootViewFactory+makeMeToMeFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A267D502D4BFFE1001F725C /* RootViewFactory+makeMeToMeFlowView.swift */; };
+		2A267D532D4C0B35001F725C /* OpenProductDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A267D522D4C0B35001F725C /* OpenProductDomain.swift */; };
+		2A267D552D4C0BCF001F725C /* RootViewModelFactory+makeOpenProductFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A267D542D4C0BCF001F725C /* RootViewModelFactory+makeOpenProductFlow.swift */; };
+		2A267D572D4C0D1B001F725C /* RootViewModelFactory+getOpenNewProductNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A267D562D4C0D1B001F725C /* RootViewModelFactory+getOpenNewProductNavigationTests.swift */; };
 		2A26C2B52C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift */; };
 		2A273E912C770173009935E6 /* Latest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E902C770173009935E6 /* Latest.swift */; };
 		2A2836E42CC79A9D00694241 /* ModelRootComposer+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E32CC79A9D00694241 /* ModelRootComposer+shared.swift */; };
@@ -4165,6 +4168,9 @@
 		2A267D4C2D4BFD0C001F725C /* MeToMeDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeDomain.swift; sourceTree = "<group>"; };
 		2A267D4E2D4BFEAE001F725C /* RootViewModelFactory+makeCorporateTransfers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCorporateTransfers.swift"; sourceTree = "<group>"; };
 		2A267D502D4BFFE1001F725C /* RootViewFactory+makeMeToMeFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeMeToMeFlowView.swift"; sourceTree = "<group>"; };
+		2A267D522D4C0B35001F725C /* OpenProductDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenProductDomain.swift; sourceTree = "<group>"; };
+		2A267D542D4C0BCF001F725C /* RootViewModelFactory+makeOpenProductFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOpenProductFlow.swift"; sourceTree = "<group>"; };
+		2A267D562D4C0D1B001F725C /* RootViewModelFactory+getOpenNewProductNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getOpenNewProductNavigationTests.swift"; sourceTree = "<group>"; };
 		2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersCorporateContentViewConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2A273E902C770173009935E6 /* Latest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Latest.swift; sourceTree = "<group>"; };
 		2A2836E32CC79A9D00694241 /* ModelRootComposer+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelRootComposer+shared.swift"; sourceTree = "<group>"; };
@@ -9688,6 +9694,7 @@
 			children = (
 				2A267D4E2D4BFEAE001F725C /* RootViewModelFactory+makeCorporateTransfers.swift */,
 				2A3C2CEF2D4BB81D003FEEFE /* RootViewModelFactory+makeMeToMeFlow.swift */,
+				2A267D542D4C0BCF001F725C /* RootViewModelFactory+makeOpenProductFlow.swift */,
 			);
 			path = Transfers;
 			sourceTree = "<group>";
@@ -10430,6 +10437,7 @@
 			children = (
 				2A5B48382CFC2E480052801D /* RootViewModelFactory+getPaymentsTransfersCorporateNavigationTests.swift */,
 				2A3C2CF12D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift */,
+				2A267D562D4C0D1B001F725C /* RootViewModelFactory+getOpenNewProductNavigationTests.swift */,
 			);
 			path = Corporate;
 			sourceTree = "<group>";
@@ -11397,6 +11405,7 @@
 			children = (
 				2A8DF0DF2CC8CE4200FB76D4 /* PaymentsTransfersPersonalTransfersDomain.swift */,
 				2A267D4C2D4BFD0C001F725C /* MeToMeDomain.swift */,
+				2A267D522D4C0B35001F725C /* OpenProductDomain.swift */,
 			);
 			path = Transfers;
 			sourceTree = "<group>";
@@ -21453,6 +21462,7 @@
 				7769F5C227D8AC4800F80607 /* Model+Products.swift in Sources */,
 				68DBA9712881A11400A169B4 /* Model+Consent.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
+				2A267D532D4C0B35001F725C /* OpenProductDomain.swift in Sources */,
 				77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */,
 				EDE709042797172E0048CA94 /* TemplatesListViewModel.swift in Sources */,
 				776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */,
@@ -22641,6 +22651,7 @@
 				2A0D9B842B0E2A1E00F1DFD1 /* ResponseMapper+ServerResponse.swift in Sources */,
 				C1097D8E2942FC16002459F6 /* Model+Requisites.swift in Sources */,
 				2A1F084E2A7904D200C5B11B /* Services+Endpoint.swift in Sources */,
+				2A267D552D4C0BCF001F725C /* RootViewModelFactory+makeOpenProductFlow.swift in Sources */,
 				2A92EA662C667558001452E7 /* TemplatesListFlowReducer.swift in Sources */,
 				774A8B642865FDAF00B81140 /* PaymentsPopUpSelectViewComponent.swift in Sources */,
 				2A29666C2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift in Sources */,
@@ -22905,6 +22916,7 @@
 				2A6724102ADADA2A00FAD522 /* Crypto+anySecKey.swift in Sources */,
 				2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */,
 				2AE9835129A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift in Sources */,
+				2A267D572D4C0D1B001F725C /* RootViewModelFactory+getOpenNewProductNavigationTests.swift in Sources */,
 				C183EA512A14B494000FBCEC /* ProductDepositDataTests.swift in Sources */,
 				2A08888C2CE087B6009005EB /* Schedulers+ext.swift in Sources */,
 				2A446A3A2D01EF4A001D0CAA /* RootViewModelFactoryServiceCategoryTests.swift in Sources */,
