@@ -64,9 +64,6 @@ extension PaymentsTransfersPersonalTransfersDomain.NavigationSuccess {
         case let .meToMe(node):
             return .meToMe(.init(node.model))
             
-        case let .payments(node):
-            return .payments(.init(node.model))
-            
         case let .paymentsViewModel(node):
             return .paymentsViewModel(.init(node.model))
             
@@ -119,7 +116,6 @@ extension PaymentsTransfersPersonalTransfersDomain {
         
         case contacts(ObjectIdentifier)
         case meToMe(ObjectIdentifier)
-        case payments(ObjectIdentifier)
         case paymentsViewModel(ObjectIdentifier)
         case successMeToMe(ObjectIdentifier)
         case scanQR

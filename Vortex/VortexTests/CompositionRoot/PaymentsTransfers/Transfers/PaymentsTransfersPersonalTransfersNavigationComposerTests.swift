@@ -63,7 +63,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.anotherCard)
         
-        assert(navigation, .payments(.init(anotherCard)))
+        assert(navigation, .paymentsViewModel(.init(anotherCard)))
     }
     
     func test_betweenSelf_shouldCallMakeContacts() {
@@ -129,7 +129,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.requisites)
         
-        assert(navigation, .payments(.init(detail)))
+        assert(navigation, .paymentsViewModel(.init(detail)))
     }
     
     // MARK: - contactAbroad
@@ -226,7 +226,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.latest(.random(in: 1...100))) { _ in }
         
-        assert(navigation, .payments(.init(latest.model)))
+        assert(navigation, .paymentsViewModel(.init(latest.model)))
     }
     
     // MARK: - qr: result
@@ -249,10 +249,10 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
     private typealias Notify = (SUT.Domain.NotifyEvent) -> Void
     private typealias MakeAbroad = CallSpy<Notify, Node<ContactsViewModel>>
-    private typealias MakeAnotherCard = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
+    private typealias MakeAnotherCard = CallSpy<Notify, Node<PaymentsViewModel>>
     private typealias MakeContacts = CallSpy<Notify, Node<ContactsViewModel>>
-    private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
-    private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
+    private typealias MakeDetail = CallSpy<Notify, Node<PaymentsViewModel>>
+    private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<PaymentsViewModel>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
     private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
@@ -268,11 +268,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     }
     
     private func makeSUT(
-        anotherCard: ClosePaymentsViewModelWrapper? = nil,
+        anotherCard: PaymentsViewModel? = nil,
         abroad: ContactsViewModel? = nil,
         contacts: ContactsViewModel? = nil,
-        detail: ClosePaymentsViewModelWrapper? = nil,
-        latestPayment: Node<ClosePaymentsViewModelWrapper>? = nil,
+        detail: PaymentsViewModel? = nil,
+        latestPayment: Node<PaymentsViewModel>? = nil,
         meToMe: Node<PaymentsMeToMeViewModel>? = nil,
         sourcePayment: Node<PaymentsViewModel>? = nil,
         file: StaticString = #file,
@@ -286,13 +286,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
                 makeAbroad(abroad ?? makeContactsViewModel())
             ]),
             makeAnotherCard: .init(stubs: [
-                makeAnotherCard(anotherCard ?? makeAnotherCard())
+                makeAnotherCardNode(anotherCard ?? makeAnotherCard())
             ]),
             makeContacts: .init(stubs: [
                 makeContacts(contacts ?? makeContactsViewModel())
             ]),
             makeDetail: .init(stubs: [
-                makeDetailPayment(detail)
+                makeDetailPaymentNode(detail)
             ]),
             makeLatest: .init(stubs: [latestPayment]),
             makeMeToMe: .init(stubs: [meToMe]),
@@ -348,48 +348,54 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         return try.init(model: makeMeToMe(with: model), cancellables: [])
     }
     
-    private func makeAnotherCard() -> ClosePaymentsViewModelWrapper {
-        
-        return makePayments()
-    }
-    
     private func makeAnotherCard(
-        _ wrapper: ClosePaymentsViewModelWrapper? = nil
-    ) -> Node<ClosePaymentsViewModelWrapper> {
+        closeAction: @escaping () -> Void = {}
+    ) -> PaymentsViewModel {
         
-        return makePaymentsNode(wrapper)
+        return makePayments(closeAction: closeAction)
     }
     
-    private func makeDetailPayment() -> ClosePaymentsViewModelWrapper {
+    private func makeAnotherCardNode(
+        _ viewModel: PaymentsViewModel? = nil
+    ) -> Node<PaymentsViewModel> {
         
-        return makePayments()
+        return makePaymentsNode(viewModel)
     }
     
     private func makeDetailPayment(
-        _ wrapper: ClosePaymentsViewModelWrapper? = nil
-    ) -> Node<ClosePaymentsViewModelWrapper> {
+        closeAction: @escaping () -> Void = {}
+    ) -> PaymentsViewModel {
         
-        return makePaymentsNode(wrapper)
+        return makePayments(closeAction: closeAction)
     }
-    
+        
+    private func makeDetailPaymentNode(
+        _ detail: PaymentsViewModel? = nil
+    ) -> Node<PaymentsViewModel> {
+        
+        return .init(model: detail ?? makeDetailPayment(), cancellables: [])
+    }
+        
     private func makeLatestPayment(
-        _ wrapper: ClosePaymentsViewModelWrapper? = nil
-    ) -> Node<ClosePaymentsViewModelWrapper> {
+        _ wrapper: PaymentsViewModel? = nil
+    ) -> Node<PaymentsViewModel> {
         
         return makePaymentsNode(wrapper)
     }
     
     private func makePayments(
-    ) -> ClosePaymentsViewModelWrapper {
+        closeAction: @escaping () -> Void
+    ) -> PaymentsViewModel {
         
-        return .init(model: .emptyMock, service: .c2b, scheduler: .immediate)
+        return .init(.emptyMock, service: .c2b, closeAction: closeAction)
     }
     
     private func makePaymentsNode(
-        _ model: ClosePaymentsViewModelWrapper? = nil
-    ) -> Node<ClosePaymentsViewModelWrapper> {
+        _ model: PaymentsViewModel? = nil,
+        closeAction: @escaping () -> Void = {}
+    ) -> Node<PaymentsViewModel> {
         
-        return .init(model: model ?? makePayments(), cancellables: [])
+        return .init(model: model ?? makePayments(closeAction: closeAction), cancellables: [])
     }
     
     private func makeScanQR() -> QRScannerModel {
@@ -409,16 +415,19 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     }
     
     @_disfavoredOverload
-    private func makeSourcePayment() -> PaymentsViewModel {
+    private func makeSourcePayment(
+        closeAction: @escaping () -> Void
+    ) -> PaymentsViewModel {
         
-        return makePayments().paymentsViewModel
+        return makePayments(closeAction: closeAction)
     }
     
     private func makeSourcePayment(
-        _ model: PaymentsViewModel? = nil
+        _ model: PaymentsViewModel? = nil,
+        closeAction: @escaping () -> Void = {}
     ) -> Node<PaymentsViewModel> {
         
-        return .init(model: model ?? makeSourcePayment(), cancellables: [])
+        return .init(model: model ?? makeSourcePayment(closeAction: closeAction), cancellables: [])
     }
 }
 
