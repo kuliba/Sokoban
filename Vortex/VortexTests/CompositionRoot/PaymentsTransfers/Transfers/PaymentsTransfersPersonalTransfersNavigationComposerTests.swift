@@ -441,7 +441,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
         _ buttonType: Domain.ButtonType
-    ) -> Domain.NavigationResult {
+    ) -> Domain.Navigation {
         
         self.compose(.buttonType(buttonType), notify: { _ in })
     }

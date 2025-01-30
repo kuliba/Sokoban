@@ -24,7 +24,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         _ select: Domain.Select,
         notify: @escaping Notify
-    ) -> Domain.NavigationResult {
+    ) -> Domain.Navigation {
         
         switch select {
         case let .alert(message):
@@ -65,7 +65,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         for buttonType: Domain.ButtonType,
         using notify: @escaping Notify
-    ) -> Domain.NavigationResult {
+    ) -> Domain.Navigation {
         
         switch buttonType {
         case .abroad:
@@ -86,7 +86,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     }
 }
 
-private extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+private extension PaymentsTransfersPersonalTransfersDomain.Navigation {
     
     static func makeLatest(
         _ node: Node<ClosePaymentsViewModelWrapper>?

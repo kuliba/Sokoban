@@ -43,7 +43,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func delayProvider(
-        navigation: PaymentsTransfersPersonalTransfersDomain.NavigationResult
+        navigation: PaymentsTransfersPersonalTransfersDomain.Navigation
     ) -> Delay {
         
         switch navigation {
@@ -72,7 +72,7 @@ extension RootViewModelFactory {
     ) -> (
         PaymentsTransfersPersonalTransfersDomain.Select,
         @escaping PaymentsTransfersPersonalTransfersDomain.Notify,
-        @escaping (PaymentsTransfersPersonalTransfersDomain.NavigationResult) -> Void
+        @escaping (PaymentsTransfersPersonalTransfersDomain.Navigation) -> Void
     ) -> Void {
         
         return { [weak self] select, notify, completion in

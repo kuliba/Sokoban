@@ -39,7 +39,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
     }
 }
 
-extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+extension PaymentsTransfersPersonalTransfersDomain.Navigation {
     
     var equatable: PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult {
         
@@ -53,7 +53,7 @@ extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
     }
 }
 
-extension PaymentsTransfersPersonalTransfersDomain.Navigation {
+extension PaymentsTransfersPersonalTransfersDomain.NavigationSuccess {
     
     var equatable: PaymentsTransfersPersonalTransfersDomain.EquatableNavigation {
         
