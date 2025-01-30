@@ -48,7 +48,7 @@ extension RootViewFactory {
                     
                     makePaymentsTransfersCorporateToolbarView(binder)
                 },
-                makeTransfersSectionView: makeCorporateTransfers
+                makeTransfersSectionView: makeCorporateTransfersView
             ),
             config: .iVortex
         )

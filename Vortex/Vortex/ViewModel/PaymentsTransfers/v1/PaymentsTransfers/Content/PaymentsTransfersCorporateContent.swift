@@ -23,13 +23,12 @@ extension PayHubUI.CorporateBannerPicker {
 
 // MARK: - CorporateTransfers
 
-typealias CorporateTransfers = Int
-extension CorporateTransfers: CorporateTransfersProtocol {}
+extension PaymentsTransfersCorporateTransfersDomain.Binder: CorporateTransfersProtocol {}
 
 extension CorporateTransfersProtocol {
     
-    var corporateTransfersBinder: CorporateTransfers? {
+    var corporateTransfersBinder: PaymentsTransfersCorporateTransfersDomain.Binder? {
         
-        return self as? CorporateTransfers
+        return self as? PaymentsTransfersCorporateTransfersDomain.Binder
     }
 }

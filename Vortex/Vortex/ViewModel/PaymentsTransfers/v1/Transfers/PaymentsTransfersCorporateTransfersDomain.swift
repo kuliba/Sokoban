@@ -16,7 +16,7 @@ extension PaymentsTransfersCorporateTransfersDomain {
     
     // MARK: - Content
     
-    typealias Content = Void
+    typealias Content = Int
     
     // MARK: - Flow
     

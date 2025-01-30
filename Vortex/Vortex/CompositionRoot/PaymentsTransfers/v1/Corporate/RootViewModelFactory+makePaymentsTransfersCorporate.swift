@@ -41,7 +41,7 @@ extension RootViewModelFactory {
         
         // MARK: - CorporateTransfers
         
-        let corporateTransfers: CorporateTransfersProtocol = 1
+        let corporateTransfers = makeCorporateTransfers()
         
         // MARK: - PaymentsTransfers
         

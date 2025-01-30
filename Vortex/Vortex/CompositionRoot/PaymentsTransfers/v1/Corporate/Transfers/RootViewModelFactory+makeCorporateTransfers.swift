@@ -14,7 +14,7 @@ extension RootViewModelFactory {
     ) -> PaymentsTransfersCorporateTransfersDomain.Binder {
         
         composeBinder(
-            content: (),
+            content: 1,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: .empty
