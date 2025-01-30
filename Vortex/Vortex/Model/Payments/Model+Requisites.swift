@@ -27,7 +27,7 @@ extension Model {
         switch stepIndex {
         case 0:
             // operator
-            let operatorParameter = Payments.ParameterOperator(operatorType: .requisites)
+            let operatorParameter = Payments.ParameterOperator(operator: .requisites)
             
             // header
             let headerParameter: Payments.ParameterHeader = parameterHeader(

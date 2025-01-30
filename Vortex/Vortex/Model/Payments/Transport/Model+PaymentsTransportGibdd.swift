@@ -23,7 +23,7 @@ extension Model {
             }
             
             // operator
-            let operatorParameter = Payments.ParameterOperator(operatorType: .gibdd)
+            let operatorParameter = Payments.ParameterOperator(operator: .gibdd)
             
             // header
             let headerParameter = transportHeader(

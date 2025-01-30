@@ -394,7 +394,7 @@ private extension RootViewFactoryComposer {
         .init(
             model: node.model,
             makeAnywayFlowView: makeAnywayFlowView,
-            makeIconView: { self.makeIconView($0.map { .svg($0) }) },
+            makeIconView: { self.makeIconView($0.map { .md5Hash($0) }) },
             viewFactory: makeTemplatesListFlowViewFactory()
         )
     }
@@ -766,23 +766,28 @@ private extension RootViewFactoryComposer {
     func makeComposedSegmentedPaymentProviderPickerFlowView(
         flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
-            iconView: makeIconView,
             viewFactory: makeComposedSegmentedPaymentProviderPickerFlowViewFactory()
         )
     }
     
-    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory() -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
-        .init(
-            makePaymentsView: makePaymentsView,
-            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView)
+    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory(
+    ) -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+        
+        return .init(
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+            makeIconView: makeIconView,
+            makePaymentsView: makePaymentsView
+        )
     }
     
     func makeAnywayServicePickerFlowView(
         flowModel: AnywayServicePickerFlowModel
     ) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: makeAnywayFlowView,

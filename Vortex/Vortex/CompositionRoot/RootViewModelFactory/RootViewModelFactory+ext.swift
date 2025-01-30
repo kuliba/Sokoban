@@ -318,12 +318,17 @@ extension RootViewModelFactory {
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if featureFlags.paymentsTransfersFlag.isActive {
+            
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
-        } else {
-            performOrWaitForActive({ [weak self] in
-                self?.model.handleDictionaryAnywayOperatorsRequest(nil)
-            })
         }
+        
+        performOrWaitForActive({ [weak self] in
+            
+            guard let self else { return }
+            
+            let serial = model.localAgent.serial(for: [OperatorsListComponents.SberOperator].self)
+            model.handleDictionaryAnywayOperatorsRequest(serial)
+        })
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
