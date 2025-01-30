@@ -1,22 +1,14 @@
 //
-//  PaymentsTransfersCorporateTransfersDomain.swift
+//  MeToMeDomain.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 30.01.2025.
 //
 
 /// A namespace.
-enum PaymentsTransfersCorporateTransfersDomain {}
+enum MeToMeDomain {}
 
-extension PaymentsTransfersCorporateTransfersDomain {
-    
-    // MARK: - Binder
-    
-    typealias Binder = Vortex.Binder<Content, Flow>
-    
-    // MARK: - Content
-    
-    typealias Content = Int
+extension MeToMeDomain {
     
     // MARK: - Flow
     
@@ -29,7 +21,6 @@ extension PaymentsTransfersCorporateTransfersDomain {
         
         case alert(String)
         case meToMe
-        case openProduct
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
@@ -37,7 +28,6 @@ extension PaymentsTransfersCorporateTransfersDomain {
         
         case alert(String)
         case meToMe(Node<PaymentsMeToMeViewModel>)
-        case openProduct(String)
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
 }

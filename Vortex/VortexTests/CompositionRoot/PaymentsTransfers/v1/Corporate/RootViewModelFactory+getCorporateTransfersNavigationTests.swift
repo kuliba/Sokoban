@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+getCorporateTransfersNavigationTests.swift
+//  RootViewModelFactory+getMeToMeNavigationTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 30.01.2025.
@@ -8,7 +8,7 @@
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_getMeToMeNavigationTests: RootViewModelFactoryTests {
     
     // MARK: - alert
     
@@ -34,12 +34,6 @@ final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewM
         expect(sut: sut, .meToMe, toDeliver: .meToMe)
     }
     
-    // MARK: - openProduct
-    
-    func test_openProduct_shouldDeliverOpenProduct() {
-        
-        expect(.openProduct, toDeliver: .openProduct)
-    }
     // MARK: - successMeToMe
     
     func test_successMeToMe_shouldDeliverSuccessMeToMe() {
@@ -51,7 +45,7 @@ final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewM
     
     // MARK: - Helpers
     
-    private typealias Domain = Vortex.PaymentsTransfersCorporateTransfersDomain
+    private typealias Domain = Vortex.MeToMeDomain
     
     private func makeSuccess() -> Node<PaymentsSuccessViewModel> {
         
@@ -108,9 +102,6 @@ final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewM
         case .meToMe:
             return .meToMe
             
-        case .openProduct:
-            return .openProduct
-            
         case let .successMeToMe(node):
             return .successMeToMe(.init(node.model))
         }
@@ -121,7 +112,6 @@ final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewM
         
         case alert(String)
         case meToMe
-        case openProduct
         case successMeToMe(ObjectIdentifier)
     }
 }
