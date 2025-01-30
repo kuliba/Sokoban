@@ -106,8 +106,11 @@ private extension RootBinderView {
         _ picker: PaymentProviderPickerDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makePaymentProviderPickerView(picker)
-            .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
+        rootViewFactory.makePaymentProviderPickerView(
+            binder: picker,
+            dismiss: { binder.flow.event(.dismiss) }
+        )
+        .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
     }
     
     private func templatesView(

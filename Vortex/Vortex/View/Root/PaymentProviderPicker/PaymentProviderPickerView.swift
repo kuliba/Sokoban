@@ -14,6 +14,7 @@ import UtilityServicePrepaymentUI
 struct PaymentProviderPickerView: View {
     
     let binder: PaymentProviderPickerDomain.Binder
+    let dismiss: () -> Void
     let components: ViewComponents
     let makeIconView: MakeIconView
     
@@ -32,7 +33,7 @@ struct PaymentProviderPickerView: View {
                 .navigationBarHidden(true)
                 .navigationBarWithBack(
                     title: binder.content.title,
-                    dismiss: { binder.flow.event(.dismiss) },
+                    dismiss: dismiss,
                     rightItem: .barcodeScanner {
                         
                         binder.flow.event(.select(.outside(.qr)))
