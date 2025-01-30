@@ -26,7 +26,7 @@ extension Image {
 extension SplashScreenState {
     
     static let preview: Self = .init(
-        state: .zoomed,
+        state: .start,
         background: .backgroundImage,
         logo: .logoImage,
         footer: "Vortex",

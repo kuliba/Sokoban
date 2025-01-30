@@ -15,12 +15,12 @@ typealias SplashScreenState = SplashScreen.Splash
 enum SplashScreenEvent {
     
     case start
-    case fadeOut
+    case splash
     case noSplash
 }
 
 enum SplashScreenEffect {
     
-    case startZoomTimer
-    case startFadeOutTimer
+    case startFirstTimer
+    case startSecondTimer
 }

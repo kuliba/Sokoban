@@ -21,19 +21,19 @@ final class SplashScreenReducer {
         case .start:
             if state.isNoSplash {
                 
-                state = state.zoomed()
-                effect = .startZoomTimer
+                state = state.started()
+                effect = .startFirstTimer
             }
             
-        case .fadeOut:
-            if state.isZoomed {
+        case .splash:
+            if state.isStarted {
 
-                state = state.fadedOut()
-                effect = .startFadeOutTimer
+                state = state.splashed()
+                effect = .startSecondTimer
             }
             
         case .noSplash:
-            if state.isFadeOut {
+            if state.isSplash {
                 
                 state = state.noSplash()
             }

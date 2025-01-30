@@ -10,8 +10,8 @@ import SwiftUI
 public struct SplashScreenState {
     
     public enum SplashState {
-        case zoomed
-        case fadedOut
+        case start
+        case splash
         case noSplash
     }
     
