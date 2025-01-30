@@ -61,7 +61,22 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select category: CategoryPickerSectionDomain.Select,
+        select: CategoryPickerSectionDomain.Select,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
+        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case let .category(category):
+            getNavigation(category: category, notify: notify, completion: completion)
+        
+        case .qr:
+            completion(.outside(.qr))
+        }
+    }
+    
+    @inlinable
+    func getNavigation(
+        category: ServiceCategory,
         notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {

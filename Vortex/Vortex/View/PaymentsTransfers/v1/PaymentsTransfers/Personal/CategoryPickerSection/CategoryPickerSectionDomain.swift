@@ -27,7 +27,11 @@ extension CategoryPickerSectionDomain {
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     
-    typealias Select = ServiceCategory
+    enum Select {
+     
+        case category(ServiceCategory)
+        case qr
+    }
     
     enum Navigation {
         

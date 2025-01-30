@@ -25,7 +25,7 @@ extension RootViewFactory {
                     
                     makeCategoryPickerContentView(
                         binder.content, 
-                        select: { binder.flow.event(.select($0)) },
+                        select: { binder.flow.event(.select(.category($0))) },
                         headerHeight: 24
                     )
                         .alert(
@@ -36,10 +36,11 @@ extension RootViewFactory {
                             destination: makeSectionDestination(state),
                             content: {
                                 
-                                makeSectionDestinationView(destination: $0) {
-                                    
-                                    binder.flow.event(.dismiss)
-                                }
+                                makeSectionDestinationView(
+                                    destination: $0,
+                                    dismiss: { binder.flow.event(.dismiss) },
+                                    scanQR: { binder.flow.event(.select(.qr))}
+                                )
                             }
                         )
                 }
@@ -66,7 +67,8 @@ extension RootViewFactory {
     @ViewBuilder
     private func makeSectionDestinationView(
         destination: CategoryPickerSectionDomain.Destination,
-        dismiss: @escaping () -> Void
+        dismiss: @escaping () -> Void,
+        scanQR: @escaping () -> Void
     ) -> some View {
         
         switch destination {
@@ -80,7 +82,8 @@ extension RootViewFactory {
             transportPaymentsView(transport)
                 .navigationBarWithBack(
                     title: "Транспорт",
-                    dismiss: dismiss
+                    dismiss: dismiss,
+                    rightItem: .barcodeScanner(action: scanQR)
                 )
         }
     }
