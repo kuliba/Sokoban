@@ -1,5 +1,5 @@
 //
-//  GetShowcaseOTPWarningView.swift
+//  OTPWarningView.swift
 //
 //
 //  Created by Valentin Ozerov on 29.01.2025.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct GetShowcaseOTPWarningView: View {
+public struct OTPWarningView: View {
     
     let text: String?
     let config: Config
     
-    var body: some View {
+    public var body: some View {
         
         text.map {
             
@@ -23,5 +23,5 @@ struct GetShowcaseOTPWarningView: View {
 
 extension OTPWarningView {
     
-    typealias Config = OTPWarningViewConfig
+    typealias Config = CollateralLoanLandingGetShowcaseViewConfig.OTPWarningViewConfig
 }

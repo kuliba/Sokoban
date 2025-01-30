@@ -76,7 +76,8 @@ extension RootViewFactoryComposer {
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(),
             paymentsViewFactory: makePaymentsViewFactory(),
-            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel,
+            makeCollateralLoanLandingOTPView: makeCollateralLoanLandingOTPView
         )
     }
     
@@ -147,7 +148,8 @@ private extension RootViewFactoryComposer {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView,
-                components: makeViewComponents()
+                components: makeViewComponents(),
+                makeCollateralLoanLandingOTPView: makeCollateralLoanLandingOTPView
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,

@@ -8,6 +8,7 @@
 import ActivateSlider
 import AnywayPaymentDomain
 import Banners
+import CollateralLoanLandingGetShowcaseUI
 import LoadableResourceComponent
 import MarketShowcase
 import SberQR
@@ -23,6 +24,7 @@ typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentComple
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeCollateralLoanLandingOTPView = CollateralLoanLandingGetShowcaseViewFactory.MakeOTPView
 
 typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
 typealias MakeOrderCard = () -> Void
@@ -56,6 +58,7 @@ struct RootViewFactory {
     let components: ViewComponents
     let paymentsViewFactory: PaymentsViewFactory
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
+    let makeCollateralLoanLandingOTPView: MakeCollateralLoanLandingOTPView
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
 }
@@ -106,7 +109,8 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            components: components
+            components: components,
+            makeCollateralLoanLandingOTPView: makeCollateralLoanLandingOTPView
         )
     }
 }

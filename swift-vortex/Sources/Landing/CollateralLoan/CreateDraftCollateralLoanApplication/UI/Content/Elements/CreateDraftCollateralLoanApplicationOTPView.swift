@@ -17,13 +17,14 @@ struct CreateDraftCollateralLoanApplicationOTPView: View {
     let factory: Factory
 
     var body: some View {
-        
-        TimedOTPInputWrapperView(
-            viewModel: <#T##TimedOTPInputViewModel#>,
-            config: <#T##TimedOTPInputViewConfig#>,
-            iconView: <#T##() -> View#>
-        )
-        .modifier(FrameWithCornerRadiusModifier(config: config))
+
+        Text("OTP")
+//        TimedOTPInputWrapperView(
+//            viewModel: <#T##TimedOTPInputViewModel#>,
+//            config: <#T##TimedOTPInputViewConfig#>,
+//            iconView: <#T##() -> View#>
+//        )
+//        .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 

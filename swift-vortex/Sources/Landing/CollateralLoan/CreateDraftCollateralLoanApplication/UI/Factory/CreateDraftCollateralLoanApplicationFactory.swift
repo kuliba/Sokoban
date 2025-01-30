@@ -5,42 +5,58 @@
 //  Created by Valentin Ozerov on 30.12.2024.
 //
 
+import CollateralLoanLandingGetShowcaseUI
 import Combine
+import OTPInputComponent
 import SwiftUI
 import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
-    public let makeImageViewWithMD5hash: MakeImageViewWithMD5hash
-    public let makeImageViewWithURL: MakeImageViewWithURL
+    public let makeImageViewByMD5hash: MakeImageViewByMD5hash
+    public let makeImageViewByURL: MakeImageViewByURL
+    public let makeOTPView: MakeOTPView
     
     public init(
-        makeImageViewWithMD5hash: @escaping MakeImageViewWithMD5hash,
-        makeImageViewWithURL: @escaping MakeImageViewWithURL
+        makeImageViewByMD5hash: @escaping MakeImageViewByMD5hash,
+        makeImageViewByURL: @escaping MakeImageViewByURL,
+        makeOTPView: @escaping MakeOTPView
     ) {
-        self.makeImageViewWithMD5hash = makeImageViewWithMD5hash
-        self.makeImageViewWithURL = makeImageViewWithURL
+        self.makeImageViewByMD5hash = makeImageViewByMD5hash
+        self.makeImageViewByURL = makeImageViewByURL
+        self.makeOTPView = makeOTPView
     }
     
-    public typealias MakeImageViewWithMD5hash = (String) -> UIPrimitives.AsyncImage
-    public typealias MakeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
+    public typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
+    public typealias MakeImageViewByMD5hash = ShowcaseFactory.MakeImageViewByMD5Hash
+    public typealias MakeImageViewByURL = ShowcaseFactory.MakeImageViewByURL
+    public typealias MakeOTPView = ShowcaseFactory.MakeOTPView
 }
 
-extension CreateDraftCollateralLoanApplicationFactory {
+// MARK: Preview helpers
+
+public extension CreateDraftCollateralLoanApplicationFactory {
     
     static let preview = Self(
-        makeImageViewWithMD5hash: { _ in
-                .init(
-                    image: .iconPlaceholder,
-                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-                )},
-        makeImageViewWithURL: { _ in
+        makeImageViewByMD5hash: { _ in .preview },
+        makeImageViewByURL: { _ in .preview },
+        makeOTPView: { _ in
             
                 .init(
-                    image: .iconPlaceholder,
-                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                    viewModel: .preview,
+                    config: .preview,
+                    iconView: { .preview },
+                    warningView: { .preview }
                 )
         }
+    )
+}
+
+extension UIPrimitives.AsyncImage {
+    
+    static let preview = Self(
+        image: .iconPlaceholder,
+        publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
     )
 }
 

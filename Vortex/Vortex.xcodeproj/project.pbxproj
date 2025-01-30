@@ -3019,7 +3019,10 @@
 		A7598A782CE76848001980B1 /* CollateralLoanLandingShowCaseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7598A772CE76848001980B1 /* CollateralLoanLandingShowCaseUI */; };
 		A7598A7A2CE76A12001980B1 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = A7598A792CE76A12001980B1 /* PayHub */; };
 		A7598A7C2CE76A34001980B1 /* PayHubUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7598A7B2CE76A34001980B1 /* PayHubUI */; };
-		A781DF902D4A5ACC00C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = A781DF8F2D4A5ACC00C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTP.swift */; };
+		A781DF902D4A5ACC00C8AE13 /* RootViewFactory+makeCollateralLoanLandingOTPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A781DF8F2D4A5ACC00C8AE13 /* RootViewFactory+makeCollateralLoanLandingOTPView.swift */; };
+		A781DF932D4B6FFB00C8AE13 /* CollateralLoanLandingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A781DF922D4B6FFB00C8AE13 /* CollateralLoanLandingModel.swift */; };
+		A781DF952D4B752100C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTPViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A781DF942D4B752100C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTPViewModel.swift */; };
+		A781DF972D4B7DF500C8AE13 /* CollateralLoanLandingOTPServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A781DF962D4B7DF500C8AE13 /* CollateralLoanLandingOTPServices.swift */; };
 		A7875EF72CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */; };
 		A7875EF92CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7875EF82CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend */; };
 		A787C45C2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */; };
@@ -6619,7 +6622,10 @@
 		A7598A4E2CE766DC001980B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7598A4F2CE766DC001980B1 /* CollateralLoanLandingPreviewApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingPreviewApp.swift; sourceTree = "<group>"; };
 		A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollateralLoanLandingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A781DF8F2D4A5ACC00C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCollateralLoanLandingOTP.swift"; sourceTree = "<group>"; };
+		A781DF8F2D4A5ACC00C8AE13 /* RootViewFactory+makeCollateralLoanLandingOTPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeCollateralLoanLandingOTPView.swift"; sourceTree = "<group>"; };
+		A781DF922D4B6FFB00C8AE13 /* CollateralLoanLandingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingModel.swift; sourceTree = "<group>"; };
+		A781DF942D4B752100C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTPViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCollateralLoanLandingOTPViewModel.swift"; sourceTree = "<group>"; };
+		A781DF962D4B7DF500C8AE13 /* CollateralLoanLandingOTPServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingOTPServices.swift; sourceTree = "<group>"; };
 		A7875EF52CCFB3F200D43E20 /* CollateralLoanLandingSaveConsentsBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingSaveConsentsBackend.xctestplan; sourceTree = "<group>"; };
 		A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift"; sourceTree = "<group>"; };
 		A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMainViewModelSections.swift"; sourceTree = "<group>"; };
@@ -12841,6 +12847,7 @@
 		2AF1774D2AC476B600D100DD /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
+				A781DF912D4B6F5900C8AE13 /* CollateralLoanLanding */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A2836E52CC79FD100694241 /* HTTPClientFactory */,
@@ -12896,6 +12903,7 @@
 				2AEA3D6A2C199FE800718AA7 /* Model+makeTransactionDetailButtonDetail.swift */,
 				2A5B23102BEE03CE00270D50 /* View+ext.swift */,
 				830207402D37E2780038EFA4 /* RootViewFactoryComposer+makeSavingsAccountView.swift */,
+				A781DF8F2D4A5ACC00C8AE13 /* RootViewFactory+makeCollateralLoanLandingOTPView.swift */,
 			);
 			path = RootViewFactory;
 			sourceTree = "<group>";
@@ -16566,7 +16574,16 @@
 				A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift */,
 				A7930E6D2D3577B8003D3BB8 /* RootViewModelFactory+makeCollateralLoanLandingBinder.swift */,
 				A7E314132D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift */,
-				A781DF8F2D4A5ACC00C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTP.swift */,
+			);
+			path = CollateralLoanLanding;
+			sourceTree = "<group>";
+		};
+		A781DF912D4B6F5900C8AE13 /* CollateralLoanLanding */ = {
+			isa = PBXGroup;
+			children = (
+				A781DF922D4B6FFB00C8AE13 /* CollateralLoanLandingModel.swift */,
+				A781DF942D4B752100C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTPViewModel.swift */,
+				A781DF962D4B7DF500C8AE13 /* CollateralLoanLandingOTPServices.swift */,
 			);
 			path = CollateralLoanLanding;
 			sourceTree = "<group>";
@@ -21716,6 +21733,7 @@
 				2AB7AF702C626616007FA0CC /* Model+getFormattedAmount.swift in Sources */,
 				A7E314102D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift in Sources */,
 				2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */,
+				A781DF932D4B6FFB00C8AE13 /* CollateralLoanLandingModel.swift in Sources */,
 				77D01EB429CDAC0B0026B099 /* PaymentC2BParameter.swift in Sources */,
 				77D038632988283B00FBE5AB /* ServerCommands+SBP.swift in Sources */,
 				777460E5291E574400D3FF46 /* ContactsBankItemViewComponent.swift in Sources */,
@@ -22703,6 +22721,7 @@
 				68AB32C928BF9014004DC481 /* PersonAgreement.swift in Sources */,
 				83F775DE2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift in Sources */,
 				7772978727C39E2D0099EF91 /* StringValueMask.swift in Sources */,
+				A781DF972D4B7DF500C8AE13 /* CollateralLoanLandingOTPServices.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				A5ECD4C127ECB392008FBEEC /* C2BSuccessViewController.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
@@ -22728,7 +22747,7 @@
 				2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */,
 				2A1F084C2A79049E00C5B11B /* Services.swift in Sources */,
 				2A29B0B82D3B94E100EAD554 /* SerialStamped+description.swift in Sources */,
-				A781DF902D4A5ACC00C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTP.swift in Sources */,
+				A781DF902D4A5ACC00C8AE13 /* RootViewFactory+makeCollateralLoanLandingOTPView.swift in Sources */,
 				C10CE65D29070CDF00FC5706 /* TextViewPhoneNumberViewComponent.swift in Sources */,
 				2A61D0672BECB65A00802C95 /* UtilityPrepaymentViewModel.swift in Sources */,
 				83E45EC82D01CA4200158F64 /* FlowView.swift in Sources */,
@@ -22805,6 +22824,7 @@
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				ECCA5B5C2CFDFCB00034A64A /* ImageCache.swift in Sources */,
+				A781DF952D4B752100C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingOTPViewModel.swift in Sources */,
 				7705ABC927E8846E000E99CA /* Model+PaymentsTaxes.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
 				5011B1E8291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift in Sources */,

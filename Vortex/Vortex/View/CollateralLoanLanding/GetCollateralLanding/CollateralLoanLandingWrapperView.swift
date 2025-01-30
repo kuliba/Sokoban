@@ -56,7 +56,8 @@ struct CollateralLoanLandingWrapperView: View {
             },
             factory: .init(
                 makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash,
-                makeImageViewByURL: factory.makeImageViewByURL
+                makeImageViewByURL: factory.makeImageViewByURL,
+                makeOTPView: factory.makeOTPView
             )
         )
         .onFirstAppear {
@@ -75,8 +76,9 @@ struct CollateralLoanLandingWrapperView: View {
                 binder: binder,
                 config: .default,
                 factory: .init(
-                    makeImageViewWithMD5hash: factory.makeImageViewByMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewByURL
+                    makeImageViewByMD5hash: factory.makeImageViewByMD5Hash,
+                    makeImageViewByURL: factory.makeImageViewByURL,
+                    makeOTPView: factory.makeOTPView
                 )
             )
         }

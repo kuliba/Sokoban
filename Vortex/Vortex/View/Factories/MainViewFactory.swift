@@ -17,6 +17,7 @@ struct MainViewFactory {
     let makeInfoViews: RootViewFactory.MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let components: ViewComponents
+    let makeCollateralLoanLandingOTPView: MakeCollateralLoanLandingOTPView
 }
 
 extension MainViewFactory {

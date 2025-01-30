@@ -25,7 +25,7 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.productName) }
+            icon: { factory.makeImageViewByMD5hash(state.data.icons.productName) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

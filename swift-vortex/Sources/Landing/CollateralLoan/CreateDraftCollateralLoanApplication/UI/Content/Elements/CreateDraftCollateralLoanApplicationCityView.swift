@@ -34,7 +34,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
             state: state.city,
             event: { event(.city($0)) },
             factory: .init(
-                makeIconView: { factory.makeImageViewWithMD5hash(state.data.icons.city) },
+                makeIconView: { factory.makeImageViewByMD5hash(state.data.icons.city) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
                     makeIconView: {
@@ -66,7 +66,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.city) }
+            icon: { factory.makeImageViewByMD5hash(state.data.icons.city) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

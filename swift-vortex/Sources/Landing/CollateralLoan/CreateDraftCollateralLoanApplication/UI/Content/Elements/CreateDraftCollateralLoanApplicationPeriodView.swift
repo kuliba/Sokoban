@@ -34,7 +34,7 @@ struct CreateDraftCollateralLoanApplicationPeriodView: View {
             state: state.period,
             event: { event(.period($0)) },
             factory: .init(
-                makeIconView: { factory.makeImageViewWithMD5hash(state.data.icons.term) },
+                makeIconView: { factory.makeImageViewByMD5hash(state.data.icons.term) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
                     makeIconView: {
@@ -66,7 +66,7 @@ struct CreateDraftCollateralLoanApplicationPeriodView: View {
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.term) }
+            icon: { factory.makeImageViewByMD5hash(state.data.icons.term) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

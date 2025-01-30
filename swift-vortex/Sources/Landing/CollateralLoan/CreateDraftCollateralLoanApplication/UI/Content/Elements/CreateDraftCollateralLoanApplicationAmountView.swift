@@ -32,7 +32,7 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
             state: state.amount,
             event: { event(.amount($0)) },
             config: config.elements.amount.inputComponentConfig,
-            iconView: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+            iconView: { factory.makeImageViewByMD5hash(state.data.icons.amount) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -47,7 +47,7 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+            icon: { factory.makeImageViewByMD5hash(state.data.icons.amount) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
