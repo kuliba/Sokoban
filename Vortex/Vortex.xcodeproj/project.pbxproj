@@ -3080,6 +3080,11 @@
 		C14303FA2A85F0BB00FAD5AA /* Model+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F92A85F0BB00FAD5AA /* Model+Success.swift */; };
 		C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1434566295B76DD007AAD2E /* Payments+Limitation.swift */; };
 		C14389F12C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */; };
+		C143D17A2CFE86FB009C4F3E /* Service+OrderCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1792CFE86FB009C4F3E /* Service+OrderCardLanding.swift */; };
+		C143D17D2CFEAB17009C4F3E /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D17C2CFEAB17009C4F3E /* HeaderView.swift */; };
+		C143D1A02D00918E009C4F3E /* OrderCardHorizontalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D19F2D00918E009C4F3E /* OrderCardHorizontalListView.swift */; };
+		C143D1A22D0092E9009C4F3E /* OrderCardVerticalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A12D0092E9009C4F3E /* OrderCardVerticalListView.swift */; };
+		C143D1A42D00944F009C4F3E /* DropDownListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A32D00944F009C4F3E /* DropDownListView.swift */; };
 		C14A847F299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */; };
 		C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */; };
 		C14F85532AF537B000749534 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = C14F85522AF537B000749534 /* PaymentSticker */; };
@@ -6664,6 +6669,11 @@
 		C14303F92A85F0BB00FAD5AA /* Model+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Success.swift"; sourceTree = "<group>"; };
 		C1434566295B76DD007AAD2E /* Payments+Limitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Limitation.swift"; sourceTree = "<group>"; };
 		C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterEffectMicroServicesComposer.swift; sourceTree = "<group>"; };
+		C143D1792CFE86FB009C4F3E /* Service+OrderCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+OrderCardLanding.swift"; sourceTree = "<group>"; };
+		C143D17C2CFEAB17009C4F3E /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		C143D19F2D00918E009C4F3E /* OrderCardHorizontalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardHorizontalListView.swift; sourceTree = "<group>"; };
+		C143D1A12D0092E9009C4F3E /* OrderCardVerticalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardVerticalListView.swift; sourceTree = "<group>"; };
+		C143D1A32D00944F009C4F3E /* DropDownListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownListView.swift; sourceTree = "<group>"; };
 		C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewComponent.swift; sourceTree = "<group>"; };
 		C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseProductTransferData.swift; sourceTree = "<group>"; };
 		C152489D2B83A6A20043F412 /* MyProductsSectionItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionItemViewModel.swift; sourceTree = "<group>"; };
@@ -14998,6 +15008,7 @@
 		77DC125D277098D500C917B0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C143D17B2CFEAB03009C4F3E /* OrderCardLanding */,
 				A72955C32D3112D60076A5F3 /* CollateralLoanLanding */,
 				83E45EA82D00816800158F64 /* SavingsAccount */,
 				2AD767422CF97E5C00BFDA70 /* Factories */,
@@ -16636,6 +16647,33 @@
 				C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */,
 			);
 			path = CalendarComposer;
+			sourceTree = "<group>";
+		};
+		C143D1782CFE86DD009C4F3E /* OrderCardLanding */ = {
+			isa = PBXGroup;
+			children = (
+				C143D1792CFE86FB009C4F3E /* Service+OrderCardLanding.swift */,
+			);
+			path = OrderCardLanding;
+			sourceTree = "<group>";
+		};
+		C143D17B2CFEAB03009C4F3E /* OrderCardLanding */ = {
+			isa = PBXGroup;
+			children = (
+				C143D19E2D00916E009C4F3E /* Components */,
+			);
+			path = OrderCardLanding;
+			sourceTree = "<group>";
+		};
+		C143D19E2D00916E009C4F3E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C143D17C2CFEAB17009C4F3E /* HeaderView.swift */,
+				C143D19F2D00918E009C4F3E /* OrderCardHorizontalListView.swift */,
+				C143D1A12D0092E9009C4F3E /* OrderCardVerticalListView.swift */,
+				C143D1A32D00944F009C4F3E /* DropDownListView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		C152489C2B83A67F0043F412 /* MyProducts */ = {
@@ -20743,6 +20781,7 @@
 				2A1D7F5D2A0FF00C0066BC02 /* SearchFactory.swift in Sources */,
 				68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */,
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
+				C143D1A02D00918E009C4F3E /* OrderCardHorizontalListView.swift in Sources */,
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				839331992C8F17DC00D15379 /* BannerPickerSectionBinder.swift in Sources */,
 				2AC067E62BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift in Sources */,
@@ -21135,6 +21174,7 @@
 				2AA404BB2D381F99002623BB /* RootViewModelFactory+makeCategoryPickerContent.swift in Sources */,
 				0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */,
 				2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */,
+				C143D1A42D00944F009C4F3E /* DropDownListView.swift in Sources */,
 				7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */,
 				2AECBC292BEBA96E000B0C0E /* PaymentsTransfersFlowEvent.swift in Sources */,
 				0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */,
@@ -21868,6 +21908,7 @@
 				2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */,
 				7769F5C627D8B19300F80607 /* ProductDynamicParams.swift in Sources */,
 				8306C12F2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift in Sources */,
+				C143D1A22D0092E9009C4F3E /* OrderCardVerticalListView.swift in Sources */,
 				8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */,
 				2A556B4C2C7CEAE0002050C2 /* OperationPickerStateItemLabelConfig+iVortex.swift in Sources */,
 				774A8B422865FD1800B81140 /* MessagesHistoryView.swift in Sources */,
@@ -22696,6 +22737,7 @@
 				0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
+				C143D17D2CFEAB17009C4F3E /* HeaderView.swift in Sources */,
 				83F6565B2C3FF4570052B7E1 /* StickerEvents.swift in Sources */,
 				770E68B22902B04300586FC4 /* Model+PaymentsTransferAnyway.swift in Sources */,
 				2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */,
