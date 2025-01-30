@@ -25,6 +25,9 @@ extension OpenProductDomain {
     
     enum Navigation {
         
+        case alert(String)
+        case openAccount(OpenAccountViewModel)
+        case openDeposit(OpenDepositListViewModel)
         case openProduct(Node<MyProductsOpenProductView.ViewModel>)
     }
 }
