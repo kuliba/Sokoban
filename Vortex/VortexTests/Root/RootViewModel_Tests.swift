@@ -51,7 +51,6 @@ class RootViewModel_Tests: XCTestCase {
                     sberQRServices: .empty(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
-                    collateralLoanLandingFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     sections: makeSections(),
@@ -215,7 +214,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.Binder {
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
     static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .preview,
+        initialState: .init(data: .preview),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

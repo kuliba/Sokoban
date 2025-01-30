@@ -50,7 +50,6 @@ class MainViewModel: ObservableObject, Resetable {
     let landingServices: LandingServices
 
     private let paymentsTransfersFactory: PaymentsTransfersFactory
-    private let collateralLoanLandingFactory: CollateralLoanLandingFactory
     private let onRegister: () -> Void
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
@@ -68,7 +67,6 @@ class MainViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         landingServices: LandingServices,
         paymentsTransfersFactory: PaymentsTransfersFactory,
-        collateralLoanLandingFactory: CollateralLoanLandingFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
         sections: [MainSectionViewModel],
@@ -85,7 +83,6 @@ class MainViewModel: ObservableObject, Resetable {
         self.sberQRServices = sberQRServices
         self.landingServices = landingServices
         self.paymentsTransfersFactory = paymentsTransfersFactory
-        self.collateralLoanLandingFactory = collateralLoanLandingFactory
         self.route = route
         self.onRegister = onRegister
         self.bindersFactory = bindersFactory
@@ -1393,12 +1390,6 @@ extension MainViewModel {
         }
     }
     
-    func handleCollateralLoanLandingSubmitResult(result: CollateralLoanLandingResult) {
-        
-        let successViewModel = collateralLoanLandingFactory.makeCollateralLoanLandingSuccessViewModel
-        print(result)
-    }
-
     private func handleURL(_ url: URL) {
         
         route.destination = .failedView(.init(

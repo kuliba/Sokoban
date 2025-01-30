@@ -6,7 +6,6 @@
 //
 
 import RxViewModel
-
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension CreateDraftCollateralLoanApplicationDomain {
@@ -36,8 +35,10 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case showSaveConsentsResult(SaveConsentsResult)
     }
     
-    enum Navigation: Equatable {
+    enum Navigation {
 
-        case showSaveConsentsResult(SaveConsentsResult)
+        // TODO: реализовать 2 кейса для failure: informer и alert
+        case failure(String)
+        case success(String)
     }
 }

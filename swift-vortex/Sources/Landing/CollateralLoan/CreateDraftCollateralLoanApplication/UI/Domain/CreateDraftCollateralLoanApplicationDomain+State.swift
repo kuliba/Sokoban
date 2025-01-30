@@ -5,31 +5,41 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import InputComponent
+import TextFieldDomain
+import OptionalSelectorComponent
+import Foundation
+
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public struct State: Equatable {
         
-        public let data: CreateDraftCollateralLoanApplicationUIData
+        public let data: Data
 
-        var saveConsentsResult: SaveConsentsResult?
-
-        public var stage: Stage
-        public var isValid: Bool
-        public var isLoading: Bool
+        public var amount: TextInputState
         public var applicationId: UInt?
-        
+        public var city: OptionalSelectorState<CityItem>
+        public var isLoading: Bool
+        public var needToDissmiss: Bool
+        public var period: OptionalSelectorState<PeriodItem>
+        public var saveConsentsResult: SaveConsentsResult?
+        public var stage: Stage
+
         public init(
-            data: CreateDraftCollateralLoanApplicationUIData,
+            data: Data,
             stage: Stage = .correctParameters,
-            isValid: Bool = true,
             isLoading: Bool = false,
-            applicationId: UInt? = nil
+            applicationId: UInt? = nil,
+            needToDissmiss: Bool = false
         ) {
             self.data = data
             self.stage = stage
-            self.isValid = isValid
             self.isLoading = isLoading
             self.applicationId = applicationId
+            self.needToDissmiss = needToDissmiss
+            self.period = data.makePeriodSelectorState()
+            self.city = data.makeCitySelectorState()
+            self.amount = .init(textField: .noFocus(data.formattedAmount))
         }
         
         public enum Stage {
@@ -37,6 +47,71 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case correctParameters
             case confirm
         }
+        
+        public enum FieldID: String {
+            
+            case amount
+            case city
+            case header
+            case percent
+            case period
+            
+            var id: String { rawValue }
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.State {
+    
+    public var selectedAmount: UInt {
+        
+        guard
+            let amountText = amount.textField.text,
+            let amount = UInt(amountText.filter { $0.isNumber })
+        else { return 0 }
+        
+        return amount
+    }
+    
+    public var isValid: Bool {
+        
+        switch stage {
+        case .correctParameters:
+            return selectedAmount >= data.minAmount && selectedAmount <= data.maxAmount
+
+        case .confirm:
+            return true
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain {
+    
+    public struct PeriodItem: Equatable {
+        
+        let months: UInt
+        let title: String
+    }
+    
+    public struct CityItem: Equatable {
+        
+        let title: String
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.PeriodItem: Identifiable {
+    
+    public var id: String {
+        
+        title
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.CityItem: Identifiable {
+    
+    public var id: String {
+        
+        title
     }
 }
 
@@ -44,7 +119,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var createDraftApplicationPayload: CollateralLandingApplicationCreateDraftPayload {
         
-        // TODO: Need to realize. Mock!
+        // TODO: Need to realize. Stub!
         .init(
             name: "Кредит под залог транспорта",
             amount: 1000000,
@@ -59,7 +134,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var saveConsentspayload: CollateralLandingApplicationSaveConsentsPayload {
         
-        // TODO: Need to realize. Mock!
+        // TODO: Need to realize. Stub!
         .init(
             applicationId: 123,
             verificationCode: "123"
@@ -69,9 +144,57 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
 
 extension CreateDraftCollateralLoanApplicationDomain.State {
     
-    public static let preview = Self(
+    public static let correntParametersPreview = Self(
         data: .preview,
-        stage: .correctParameters,
-        isValid: true
+        stage: .correctParameters
     )
+
+    public static let confirmPreview = Self(
+        data: .preview,
+        stage: .confirm
+    )
+}
+
+public extension CreateDraftCollateralLoanApplicationUIData {
+    
+    func makePeriodSelectorState() -> OptionalSelectorState<PeriodItem> {
+        
+        let items: [PeriodItem] = periods.map { .init(months: $0.months, title: $0.title) }
+        var selectedItem: PeriodItem?
+        if let selectedPeriod = periods.first(where: { $0.months == selectedMonths }) {
+            
+            selectedItem = .init(months: selectedPeriod.months, title: selectedPeriod.title)
+        }
+        
+        return.init(
+            items: items,
+            filteredItems: items,
+            selected: selectedItem
+        )
+    }
+
+    func makeCitySelectorState() -> OptionalSelectorState<CityItem> {
+        
+        let items: [CityItem] = cities.map { .init(title: $0) }
+        var selectedItem: CityItem?
+        if let selectedCity = cities.first(where: { $0 == selectedCity }) {
+            
+            selectedItem = .init(title: selectedCity)
+        }
+        
+        return .init(
+            items: items,
+            filteredItems: items,
+            selected: selectedItem
+        )
+    }
+
+    typealias PeriodItem = CreateDraftCollateralLoanApplicationDomain.PeriodItem
+    typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem
+}
+
+public extension CreateDraftCollateralLoanApplicationDomain.State {
+    
+    typealias Data = CreateDraftCollateralLoanApplicationUIData
+    typealias Period = Data.Period
 }

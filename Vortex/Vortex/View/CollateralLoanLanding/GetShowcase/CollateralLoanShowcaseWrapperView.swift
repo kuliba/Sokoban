@@ -7,6 +7,7 @@
 
 import BottomSheetComponent
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetShowcaseUI
 import RxViewModel
 import SwiftUI
@@ -18,7 +19,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     let binder: GetShowcaseDomain.Binder
     let factory: Factory
-    
+
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
@@ -80,7 +81,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     ) -> some View {
         
         switch navigation {
-        case let .landing(landingID, landing):
+        case let .landing(_, landing):
             CollateralLoanLandingWrapperView(
                 binder: landing,
                 factory: .init(
@@ -91,6 +92,8 @@ struct CollateralLoanShowcaseWrapperView: View {
         }
     }
     
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
 }
 

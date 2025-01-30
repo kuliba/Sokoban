@@ -106,6 +106,7 @@ public struct GetCollateralLandingView: View {
             }
             
             FooterView(
+                product: product,
                 config: factory.config.footer,
                 state: state,
                 externalEvent: externalEvent

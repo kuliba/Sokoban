@@ -116,14 +116,13 @@ final class MainViewModelTests: XCTestCase {
             sberQRServices: .empty(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
@@ -771,7 +770,6 @@ final class MainViewModelTests: XCTestCase {
            // qrViewModelFactory: qrViewModelFactory,
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: {},
             sections: makeSections(),
@@ -841,14 +839,13 @@ final class MainViewModelTests: XCTestCase {
             sberQRServices: sberQRServices,
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
@@ -926,14 +923,13 @@ final class MainViewModelTests: XCTestCase {
             sberQRServices: .empty(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
-            collateralLoanLandingFactory: .preview,
             updateInfoStatusFlag: .inactive,
             onRegister: {},
             sections: makeSections(),
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
@@ -1116,7 +1112,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.Binder {
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
     static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .preview,
+        initialState: .init(data: .preview),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

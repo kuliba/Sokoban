@@ -8,6 +8,7 @@
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import RxViewModel
 import SwiftUI
+import InputComponent
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -25,27 +26,22 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 model: binder.content,
                 makeContentView: makeContentView(state:event:)
             )
-            .navigationDestination(
-                destination: state.navigation?.destination,
-                content: destinationView
+            .alert(
+                item: state.navigation?.alert,
+                content: makeAlert
             )
+            .fullScreenCover(cover: state.navigation?.cover, content: fullScreenCoverView)
         }
     }
     
     private func makeContentView(
-        state: CreateDraftCollateralLoanApplicationDomain.State,
-        event: @escaping (CreateDraftCollateralLoanApplicationDomain.Event) -> Void
+        state: Domain.State,
+        event: @escaping (Domain.Event) -> Void
     ) -> some View {
         
         CreateDraftCollateralLoanApplicationView(
             state: state,
             event: event,
-            externalEvent: {
-                switch $0 {
-                case let .showSaveConsentsResult(saveConsentsResult):
-                    print("######1: " + String(describing: saveConsentsResult))
-                }
-            },
             config: .default,
             factory: .init(
                 makeImageViewWithMD5hash: factory.makeImageViewWithMD5hash,
@@ -53,65 +49,97 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             )
         )
     }
+
+    private func makeAlert(
+        alert: CreateDraftCollateralLoanApplicationDomain.Navigation.Alert
+    ) -> SwiftUI.Alert {
+        
+        switch alert {
+            
+        case let .failure(failure):
+            return .init(
+                title: Text("Ошибка"),
+                message: Text(failure),
+                // TODO: + Action: возврат на гл. экран
+                dismissButton: .default(Text("ОK")) { fatalError("Implement return to main view") }
+            )
+        }
+    }
     
     @ViewBuilder
-    private func destinationView(
-        destination: CreateDraftCollateralLoanApplicationDomain.Navigation.Destination
+    private func fullScreenCoverView(
+        cover: CreateDraftCollateralLoanApplicationDomain.Navigation.Cover
     ) -> some View {
         
-        switch destination {
-        case let .showSaveConsentsResult(saveConsentsResult):
-            Text("######2: " + String(describing: saveConsentsResult))
+        switch cover {
+        case let .completed(completed):
+            Text("completed")
         }
     }
 }
-    
+
 extension CreateDraftCollateralLoanApplicationWrapperView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
+    typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
-
-    var destination: Destination? {
+    
+    var alert: Alert? {
         
         switch self {
-        case let .showSaveConsentsResult(saveConsentsResult):
-            return .showSaveConsentsResult(saveConsentsResult)
+        case let .failure(failure):
+            return .failure(failure)
+            
+        case .success:
+            return nil
         }
     }
 
-    enum Destination {
+    enum Alert {
         
-        case showSaveConsentsResult(CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult)
+        case failure(String)
     }
 
-    enum Navigation {
-
-        case showSaveConsentsResult(CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult)
+    var cover: Cover? {
+        
+        switch self {
+        case .failure:
+            return nil
+            
+        case let .success(success):
+            return .completed(success)
+        }
     }
+    
+    enum Cover {
+        // TODO: передавать данные для Cover
+        case completed(String)
+    }    
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.Navigation: Identifiable {
+extension CreateDraftCollateralLoanApplicationDomain.Navigation.Cover: Identifiable {
     
     var id: String {
         
         switch self {
-        case .showSaveConsentsResult:
-            return "showSaveConsentsResult"
+        case let .completed(completed):
+            return completed
         }
     }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.Navigation.Destination: Identifiable {
+extension CreateDraftCollateralLoanApplicationDomain.Navigation.Alert: Identifiable {
     
     var id: String {
         
         switch self {
-        case .showSaveConsentsResult:
-            return "showSaveConsentsResult"
+        case let .failure(failure):
+            return failure
         }
     }
 }

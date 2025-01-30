@@ -1,14 +1,14 @@
 //
-//  CreateDraftCollateralLoanApplicationHeaderView.swift
+//  CreateDraftCollateralLoanApplicationPercentView.swift
 //
 //
-//  Created by Valentin Ozerov on 30.12.2024.
+//  Created by Valentin Ozerov on 27.01.2025.
 //
 
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationHeaderView: View {
+struct CreateDraftCollateralLoanApplicationPercentView: View {
     
     let state: DomainState
     let event: (Event) -> Void
@@ -19,19 +19,19 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
         
         InfoView(
             info: .init(
-                id: .other(DomainState.FieldID.header.id),
-                title: config.elements.header.title,
-                value: state.data.name,
+                id: .other(DomainState.FieldID.percent.id),
+                title: config.elements.percent.title,
+                value: state.data.formattedPercent,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.productName) }
+            icon: { factory.makeImageViewWithMD5hash(state.data.icons.rate) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 
-extension CreateDraftCollateralLoanApplicationHeaderView {
+extension CreateDraftCollateralLoanApplicationPercentView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
@@ -41,16 +41,25 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationPercentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationHeaderView(
+        CreateDraftCollateralLoanApplicationPercentView(
             state: .correntParametersPreview,
             event: { print($0) },
             config: .default,
             factory: .preview
         )
+        .previewDisplayName("Edit only mode")
+
+        CreateDraftCollateralLoanApplicationPercentView(
+            state: .confirmPreview,
+            event: { print($0) },
+            config: .default,
+            factory: .preview
+        )
+        .previewDisplayName("Read only only mode")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

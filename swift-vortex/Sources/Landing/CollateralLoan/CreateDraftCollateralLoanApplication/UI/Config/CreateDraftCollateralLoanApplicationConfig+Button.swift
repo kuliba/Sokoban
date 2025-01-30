@@ -76,7 +76,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Button {
         layouts: .init(
             height: 56,
             cornerRadius: 12,
-            paddings: .init(top: 0, leading: 16, bottom: 0, trailing: 15)
+            paddings: .init(top: 12, leading: 16, bottom: 0, trailing: 15)
         )
     )
 }

@@ -35,7 +35,7 @@ struct CollateralLoanLandingWrapperView: View {
             )
         }
     }
-    
+
     private func makeContentView(
         state: GetCollateralLandingDomain.State,
         event: @escaping (GetCollateralLandingDomain.Event) -> Void
@@ -49,11 +49,9 @@ struct CollateralLoanLandingWrapperView: View {
                 case let .showCaseList(id):
                     binder.flow.event(.select(.showCaseList(id)))
 
-                case .createDraftApplication:
-                    if let payload = state.payload {
-                        
+                case let .createDraftApplication(product):
+                    let payload = state.payload(product)
                         binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
-                    }
                 }
             },
             factory: .init(
@@ -142,6 +140,8 @@ struct CollateralLoanLandingWrapperView: View {
 extension CollateralLoanLandingWrapperView {
     
     typealias Factory = GetCollateralLandingFactory
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
 
     public typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
     public typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage

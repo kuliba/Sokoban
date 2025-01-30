@@ -5,41 +5,56 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
-import RemoteServices
-import Foundation
 import Combine
+import Foundation
+import InputComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     
     func makeCreateDraftCollateralLoanApplicationBinder(
-        uiData: CreateDraftCollateralLoanApplicationUIData
+        payload: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
-        let content = makeContent(uiData: uiData)
+        let content = makeContent(data: payload)
 
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: .empty
+            witnesses: .init(
+                emitting: { content in content.$state
+                    .compactMap(\.saveConsentsResult)
+                    .map { .select(.showSaveConsentsResult($0)) }
+                    .eraseToAnyPublisher()
+                },
+                dismissing: { _ in {} }
+            )
         )
     }
-    
+
     // MARK: - Content
     
     private func makeContent(
-        uiData: CreateDraftCollateralLoanApplicationUIData
+        data: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Content {
         
-        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer()
+        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: data)
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
-            saveConsents: saveConsents(payload:completion:)
+            saveConsents: { payload, completion in
+            
+                // TODO: Restore
+                // saveConsents(payload:completion:)
+                // TODO: Remove stub
+                completion(.success(.preview))
+            }
         )
         
         return .init(
-            initialState: .init(data: uiData),
+            initialState: .init(data: data),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
@@ -77,7 +92,7 @@ extension RootViewModelFactory {
             _ = saveConsents
         }
     }
-    
+
     // MARK: - Flow
     
     private func getNavigation(
@@ -87,7 +102,13 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .showSaveConsentsResult(saveConsentsResult):
-            completion(.showSaveConsentsResult(saveConsentsResult))
+            switch saveConsentsResult {
+            case let .failure(failure):
+                completion(.failure(failure.localizedDescription))
+                
+            case let .success(success):
+                completion(.success(String(describing: success)))
+            }
         }
     }
 
@@ -96,8 +117,10 @@ extension RootViewModelFactory {
     ) -> Delay {
   
         switch navigation {
+        case .failure(_):
+            return .milliseconds(100)
             
-        case .showSaveConsentsResult:
+        case .success(_):
             return .milliseconds(100)
         }
     }
