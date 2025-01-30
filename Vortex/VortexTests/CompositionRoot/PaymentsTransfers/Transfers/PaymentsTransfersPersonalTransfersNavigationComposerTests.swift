@@ -63,7 +63,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.anotherCard)
         
-        assert(navigation, .paymentsViewModel(.init(anotherCard)))
+        assert(navigation, .payments(.init(anotherCard)))
     }
     
     func test_betweenSelf_shouldCallMakeContacts() {
@@ -129,7 +129,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.requisites)
         
-        assert(navigation, .paymentsViewModel(.init(detail)))
+        assert(navigation, .payments(.init(detail)))
     }
     
     // MARK: - contactAbroad
@@ -151,7 +151,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.contactAbroad(.avtodor)) { _ in }
         
-        assert(navigation, .paymentsViewModel(.init(source.model)))
+        assert(navigation, .payments(.init(source.model)))
     }
     
     // MARK: - contacts
@@ -173,7 +173,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.contacts(.avtodor)) { _ in }
         
-        assert(navigation, .paymentsViewModel(.init(source.model)))
+        assert(navigation, .payments(.init(source.model)))
     }
     
     // MARK: - countries
@@ -195,7 +195,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.countries(.avtodor)) { _ in }
         
-        assert(navigation, .paymentsViewModel(.init(source.model)))
+        assert(navigation, .payments(.init(source.model)))
     }
     
     // MARK: - latest
@@ -226,7 +226,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         
         let navigation = sut.compose(.latest(.random(in: 1...100))) { _ in }
         
-        assert(navigation, .paymentsViewModel(.init(latest.model)))
+        assert(navigation, .payments(.init(latest.model)))
     }
     
     // MARK: - qr: result

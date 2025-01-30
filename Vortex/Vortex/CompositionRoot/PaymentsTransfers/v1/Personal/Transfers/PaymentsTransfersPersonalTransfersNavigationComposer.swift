@@ -36,15 +36,15 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .contactAbroad(source):
             // handleContactAbroad
             // PaymentsTransfersViewModel.swift:1359
-            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            return .success(.payments(nanoServices.makeSource(source, notify)))
             
         case let .contacts(source):
-            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            return .success(.payments(nanoServices.makeSource(source, notify)))
             
         case let .countries(source):
             // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
             // PaymentsTransfersViewModel.swift:1528
-            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            return .success(.payments(nanoServices.makeSource(source, notify)))
             
         case let .latest(latest):
             return .makeLatest(nanoServices.makeLatest(latest, notify))
@@ -72,7 +72,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.contacts(nanoServices.makeAbroad(notify)))
             
         case .anotherCard:
-            return .success(.paymentsViewModel(nanoServices.makeAnotherCard(notify)))
+            return .success(.payments(nanoServices.makeAnotherCard(notify)))
             
         case .betweenSelf:
             return .makeMeToMe(nanoServices.makeMeToMe(notify))
@@ -81,7 +81,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.contacts(nanoServices.makeContacts(notify)))
             
         case .requisites:
-            return .success(.paymentsViewModel(nanoServices.makeDetail(notify)))
+            return .success(.payments(nanoServices.makeDetail(notify)))
         }
     }
 }
@@ -92,7 +92,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.Navigation {
         _ node: Node<PaymentsViewModel>?
     ) -> Self {
         
-        node.map { .success(.paymentsViewModel($0)) } ?? .failure(.makeLatestFailure)
+        node.map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
     }
     
     static func makeMeToMe(

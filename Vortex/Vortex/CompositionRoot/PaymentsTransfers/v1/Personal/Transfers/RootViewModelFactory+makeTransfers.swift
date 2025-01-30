@@ -56,11 +56,11 @@ extension RootViewModelFactory {
             
         case let .success(success):
             switch success {
-            case .contacts:          return .milliseconds(100)
-            case .meToMe:            return .milliseconds(100)
-            case .paymentsViewModel: return .milliseconds(600)
-            case .scanQR:            return .milliseconds(100)
-            case .successMeToMe:     return .milliseconds(100)
+            case .contacts:      return .milliseconds(100)
+            case .meToMe:        return .milliseconds(100)
+            case .payments:      return .milliseconds(600)
+            case .scanQR:        return .milliseconds(100)
+            case .successMeToMe: return .milliseconds(100)
             }
         }
     }

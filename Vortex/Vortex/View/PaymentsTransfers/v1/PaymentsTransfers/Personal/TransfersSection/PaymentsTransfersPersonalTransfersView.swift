@@ -73,7 +73,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
     ) -> some View {
         
         switch destination {
-        case let .paymentsViewModel(node):
+        case let .payments(node):
             viewFactory.makePaymentsView(node.model)
             
         case let .successMeToMe(successMeToMeViewModel):
@@ -107,7 +107,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
             case let .meToMe(meToMe):
                 return .meToMe(meToMe)
                 
-            case .contacts, .paymentsViewModel, .scanQR, .successMeToMe:
+            case .contacts, .payments, .scanQR, .successMeToMe:
                 return nil
             }
         }
@@ -127,8 +127,8 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
             case let .successMeToMe(node):
                 return .successMeToMe(node.model)
                 
-            case let .paymentsViewModel(viewModel):
-                return .paymentsViewModel(viewModel)
+            case let .payments(viewModel):
+                return .payments(viewModel)
                 
             case .contacts, .meToMe, .scanQR:
                 return nil
@@ -147,7 +147,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
             case let .contacts(contacts):
                 return .contacts(contacts)
                 
-            case .meToMe, .paymentsViewModel, .scanQR, .successMeToMe:
+            case .meToMe, .payments, .scanQR, .successMeToMe:
                 return nil
             }
         }
@@ -162,7 +162,7 @@ extension PaymentsTransfersPersonalTransfersDomain {
     
     enum Destination {
         
-        case paymentsViewModel(Node<PaymentsViewModel>)
+        case payments(Node<PaymentsViewModel>)
         case successMeToMe(PaymentsSuccessViewModel)
     }
     
@@ -193,8 +193,8 @@ extension PaymentsTransfersPersonalTransfersDomain.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case let .paymentsViewModel(node):
-            return .paymentsViewModel(.init(node.model))
+        case let .payments(node):
+            return .payments(.init(node.model))
             
         case let .successMeToMe(model):
             return .successMeToMe(.init(model))
@@ -203,7 +203,7 @@ extension PaymentsTransfersPersonalTransfersDomain.Destination: Identifiable {
     
     enum ID: Hashable {
         
-        case paymentsViewModel(ObjectIdentifier)
+        case payments(ObjectIdentifier)
         case successMeToMe(ObjectIdentifier)
     }
 }
