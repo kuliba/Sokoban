@@ -55,6 +55,7 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
         let exp = expectation(description: "wait for get navigation completion")
         
         sut.getNavigation(
+            featureFlags: .active,
             select: select,
             notify: { _ in }
         ) {

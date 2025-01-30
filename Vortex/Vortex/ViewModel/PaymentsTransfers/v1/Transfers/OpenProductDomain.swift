@@ -20,6 +20,7 @@ extension OpenProductDomain {
     enum Select {
         
         case openProduct
+        case productType(OpenProductType)
     }
     
     enum Navigation {
