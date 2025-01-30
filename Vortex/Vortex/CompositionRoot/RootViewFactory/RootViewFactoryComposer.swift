@@ -38,7 +38,8 @@ final class RootViewFactoryComposer {
     ) {
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache()
+            generalImageCache: model.generalImageCache(),
+            getUImage: { model.images.value[$0]?.uiImage }
         )
         self.model = model
         self.httpClient = httpClient

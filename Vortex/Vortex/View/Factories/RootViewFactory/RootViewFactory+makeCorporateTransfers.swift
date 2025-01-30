@@ -40,6 +40,12 @@ extension RootViewFactory {
             ))
             .background(makeMeToMeFlowView(corporateTransfers.meToMe))
             
+            Button("Open product") {
+                
+                corporateTransfers.openProduct.event(.select(.openProduct))
+            }
+            .background(makeOpenProductFlowView(corporateTransfers.openProduct))
+            
             Spacer()
         }
         .padding(.top, 16)

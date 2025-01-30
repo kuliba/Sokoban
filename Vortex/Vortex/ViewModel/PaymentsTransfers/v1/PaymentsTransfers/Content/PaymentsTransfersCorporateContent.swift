@@ -26,6 +26,7 @@ extension PayHubUI.CorporateBannerPicker {
 struct PaymentsTransfersCorporateTransfers {
     
     let meToMe: MeToMeDomain.Flow
+    let openProduct: OpenProductDomain.Flow
 }
 
 extension PaymentsTransfersCorporateTransfers: CorporateTransfersProtocol {}
