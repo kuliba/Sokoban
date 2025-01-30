@@ -12,77 +12,28 @@ import RxViewModel
 
 extension RootViewFactoryComposer {
     
-    func makeFlowView(
-        _ contentView: @escaping () -> SavingsAccountDomain.ContentWrapperView,
-        _ flowState: SavingsAccountDomain.FlowState,
-        _ flowEvent: @escaping (SavingsAccountDomain.FlowEvent) -> Void,
-        _ dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountDomain.FlowView<SavingsAccountDomain.ContentWrapperView, InformerView> {
+    func makeSavingsAccountFullView(
+        binder: SavingsAccountDomain.Binder
+    ) -> SavingsAccountFullView? {
         
-        .init(
-            state: flowState,
-            event: flowEvent,
-            contentView: contentView,
-            informerView: makeInformerView
-        )
+        return .init(
+            binder: binder,
+            config: .iVortex,
+            factory: makeFactory())
     }
     
-    func makeContentWrapperView(
-        _ content: SavingsAccountDomain.Content,
-        _ dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountDomain.ContentWrapperView {
-        
-        RxWrapperView(model: content) {
-            
-            SavingsAccountDomain.ContentView(
-                state: $0,
-                event: $1,
-                config: .prod,
-                factory: self.makeFactory(dismiss)
-            )
-        }
-    }
-        
     func makeFactory(
-        _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.ViewFactory {
         .init(
             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-            makeLandingView: { [makeLandingView] in makeLandingView($0, dismiss) }
+            makeLandingView: {
+                SavingsAccountView(
+                    state: .init($0.list.first ?? .empty),
+                    config: .iVortex,
+                    factory: self.makeImageViewFactory()
+                )
+            }
         )
-    }
-    
-    func makeLandingView(
-        _ viewModel: SavingsAccountDomain.Landing,
-        _ dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountWrapperView {
-        .init(
-            viewModel: .init(
-                initialState: .init(viewModel.list.first ?? .empty),
-                reduce: { state, event in
-                    
-                    var state = state
-                    switch event {
-                    case .dismiss:
-                        dismiss()
-                        
-                    case .continue:
-                        break
-                        
-                    }
-                    return (state, .none)
-                } , // TODO: - add reduce
-                handleEffect: {_,_ in } // TODO: - add handleEffect
-            ),
-            config: .iVortex,
-            imageViewFactory: makeImageViewFactory()
-        )
-    }
-    
-    func makeInformerView(
-        _ payload: SavingsAccountDomain.InformerPayload
-    ) -> InformerView {
-        .init(viewModel: .init(message: payload.message, icon: payload.icon.image, color: payload.color))
     }
 }
 

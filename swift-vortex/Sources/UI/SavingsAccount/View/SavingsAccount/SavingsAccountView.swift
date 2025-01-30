@@ -12,7 +12,6 @@ import DropDownTextListComponent
 public struct SavingsAccountView: View {
     
     let state: SavingsAccountState
-    let event: (Event) -> Void
     let config: Config
     let factory: Factory
         
@@ -20,12 +19,10 @@ public struct SavingsAccountView: View {
     
     public init(
         state: SavingsAccountState,
-        event: @escaping (SavingsAccountEvent) -> Void,
         config: Config,
         factory: Factory
     ) {
         self.state = state
-        self.event = event
         self.config = config
         self.factory = factory
     }
@@ -101,19 +98,10 @@ public struct SavingsAccountView: View {
             list: state.questions.dropDownTextList
         )
     }
-    
-    private struct ViewOffsetKey: PreferenceKey {
-        typealias Value = CGFloat
-        static var defaultValue = CGFloat.zero
-        static func reduce(value: inout Value, nextValue: () -> Value) {
-            value += nextValue()
-        }
-    }
 }
 
 public extension SavingsAccountView {
     
-    typealias Event = SavingsAccountEvent
     typealias Config = SavingsAccountConfig
     typealias Factory = ImageViewFactory
     
@@ -123,23 +111,14 @@ public extension SavingsAccountView {
 
 #Preview {
     
-    NavigationView {
+    ScrollView {
         SavingsAccountView(
             state: .preview,
-            event: {
-                switch $0 {
-                case .dismiss:
-                    print("dismiss")
-                    
-                case .continue:
-                    print("continue")
-                }
-            },
             config: .preview,
-            factory: .default)
+            factory: .default
+        )
     }
 }
-
 
 private struct BackgroundAndCornerRadiusModifier: ViewModifier {
     

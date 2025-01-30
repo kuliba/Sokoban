@@ -11,30 +11,43 @@ import UIPrimitives
 
 public struct GetCollateralLandingFactory {
 
-    let config: GetCollateralLandingConfig
-    let makeImageView: MakeImageView
+    public let config: GetCollateralLandingConfig
+    public let makeImageViewByMD5Hash: MakeImageViewByMD5Hash
+    public let makeImageViewByURL: MakeImageViewByURL
     
     public init(
         config: GetCollateralLandingConfig = .default,
-        makeImageView: @escaping MakeImageView
+        makeImageViewByMD5Hash: @escaping MakeImageViewByMD5Hash,
+        makeImageViewByURL: @escaping MakeImageViewByURL
     ) {
         self.config = config
-        self.makeImageView = makeImageView
+        self.makeImageViewByMD5Hash = makeImageViewByMD5Hash
+        self.makeImageViewByURL = makeImageViewByURL
     }
 }
 
 public extension GetCollateralLandingFactory {
         
-    typealias MakeImageView = (String) -> UIPrimitives.AsyncImage
+    typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
+    typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage
 }
 
 extension GetCollateralLandingFactory {
     
     static let preview = Self(
-        makeImageView: { _ in .init(
-            image: .iconPlaceholder,
-            publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-        )}
+        makeImageViewByMD5Hash: {
+            _ in
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )
+        },
+        makeImageViewByURL: { _ in
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )
+        }
     )
 }
 

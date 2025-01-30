@@ -396,7 +396,7 @@ private extension RootViewFactoryComposer {
         .init(
             model: node.model,
             makeAnywayFlowView: makeAnywayFlowView,
-            makeIconView: { self.makeIconView($0.map { .svg($0) }) },
+            makeIconView: { self.makeIconView($0.map { .md5Hash($0) }) },
             viewFactory: makeTemplatesListFlowViewFactory()
         )
     }
@@ -688,21 +688,12 @@ private extension RootViewFactoryComposer {
     }
     
     func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder,
-        dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountDomain.WrapperView? {
+        binder: SavingsAccountDomain.Binder
+    ) -> SavingsAccountFullView? {
                             
         guard savingsAccountFlag.isActive else { return nil }
             
-        return RxWrapperView(model: binder.flow) {
-            
-            self.makeFlowView(
-                { self.makeContentWrapperView(binder.content, dismiss) },
-                $0,
-                $1,
-                dismiss
-            )
-        }
+        return makeSavingsAccountFullView(binder: binder)
     }
     
     func makePaymentsSuccessView(
@@ -773,23 +764,28 @@ private extension RootViewFactoryComposer {
     func makeComposedSegmentedPaymentProviderPickerFlowView(
         flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
-            iconView: makeIconView,
             viewFactory: makeComposedSegmentedPaymentProviderPickerFlowViewFactory()
         )
     }
     
-    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory() -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
-        .init(
-            makePaymentsView: makePaymentsView,
-            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView)
+    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory(
+    ) -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+        
+        return .init(
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+            makeIconView: makeIconView,
+            makePaymentsView: makePaymentsView
+        )
     }
     
     func makeAnywayServicePickerFlowView(
         flowModel: AnywayServicePickerFlowModel
     ) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: makeAnywayFlowView,

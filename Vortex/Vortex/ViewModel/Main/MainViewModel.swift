@@ -6,6 +6,7 @@
 //
 
 import CalendarUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetShowcaseUI
 import Combine
@@ -804,7 +805,7 @@ private extension MainViewModel {
         case let payload:
 #warning("need change after analyst creates a new action type")
             if payload.type == .payment {
-                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }
         }
     }
@@ -938,7 +939,7 @@ private extension MainViewModel {
                 openScanner()
                 
             case .utility:
-                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }
         }
     }
@@ -1494,7 +1495,7 @@ private extension MainViewModel {
     }
     
     func handle(
-        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Navigation.Outside
     ) {
         resetDestination()
         rootActions?.spinner.hide()
@@ -1520,9 +1521,9 @@ private extension MainViewModel {
 
 extension SegmentedPaymentProviderPickerFlowState {
     
-    var outside: Status.Outside? {
+    var outside: Navigation.Outside? {
         
-        guard case let .outside(outside) = status
+        guard case let .outside(outside) = navigation
         else { return nil }
         
         return outside

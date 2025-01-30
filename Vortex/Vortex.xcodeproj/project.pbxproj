@@ -636,15 +636,9 @@
 		2A35DDB12C0240F100EFF0EB /* Model+formattedBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */; };
 		2A35DDB42C02426F00EFF0EB /* Model+productSelectProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */; };
 		2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */; };
-		2A3624522C5E69E500174C50 /* SegmentedPaymentProviderPickerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624512C5E69E500174C50 /* SegmentedPaymentProviderPickerEffect.swift */; };
-		2A3624542C5E69F900174C50 /* SegmentedPaymentProviderPickerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624532C5E69F900174C50 /* SegmentedPaymentProviderPickerEvent.swift */; };
 		2A3624562C5E6A0600174C50 /* SegmentedPaymentProviderPickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624552C5E6A0600174C50 /* SegmentedPaymentProviderPickerState.swift */; };
-		2A3624592C5E6A2300174C50 /* SegmentedPaymentProviderPickerEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624582C5E6A2300174C50 /* SegmentedPaymentProviderPickerEffectHandler.swift */; };
-		2A36245B2C5E6A3200174C50 /* SegmentedPaymentProviderPickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245A2C5E6A3200174C50 /* SegmentedPaymentProviderPickerReducer.swift */; };
-		2A36245E2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245D2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift */; };
 		2A3624602C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245F2C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift */; };
 		2A3624622C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624612C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift */; };
-		2A3624642C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624632C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift */; };
 		2A3624672C5E6B2000174C50 /* SegmentedPaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624662C5E6B2000174C50 /* SegmentedPaymentProviderPickerFlowModel.swift */; };
 		2A3624692C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624682C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift */; };
 		2A3624712C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624702C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift */; };
@@ -2865,6 +2859,7 @@
 		83C139D32A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */; };
 		83C6A1E92CFF43540076BC25 /* SavingsAccount in Frameworks */ = {isa = PBXBuildFile; productRef = 83C6A1E82CFF43540076BC25 /* SavingsAccount */; };
 		83C6F1162B9601BE00EA892A /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 83C6F1152B9601BE00EA892A /* ProductProfileComponents */; };
+		83C804B82D4CB86F00F7E588 /* SavingsAccountFullView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C804B72D4CB86F00F7E588 /* SavingsAccountFullView.swift */; };
 		83C8F4432A443A10008203E3 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4422A443A10008203E3 /* ItemView.swift */; };
 		83C8F4452A444777008203E3 /* ItemsViewOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4442A444777008203E3 /* ItemsViewOld.swift */; };
 		83C8F4472A445497008203E3 /* ItemsViewNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4462A445497008203E3 /* ItemsViewNew.swift */; };
@@ -2907,7 +2902,6 @@
 		83E455E42AC2E0DB0045BEC1 /* C2BFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E455E32AC2E0DB0045BEC1 /* C2BFactory.swift */; };
 		83E455E62AC2EE980045BEC1 /* DecodeQrData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E455E52AC2EE980045BEC1 /* DecodeQrData.swift */; };
 		83E455EB2AC590C60045BEC1 /* QrDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E455EA2AC590C60045BEC1 /* QrDataMapperTests.swift */; };
-		83E45EAC2D0089F900158F64 /* SavingsAccountWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */; };
 		83E45EAF2D009E2000158F64 /* SavingsAccountDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */; };
 		83E45EB12D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */; };
 		83E45EC52D01C98900158F64 /* FlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E45EBD2D01C98800158F64 /* FlowEffectHandlerMicroServices.swift */; };
@@ -3023,15 +3017,20 @@
 		A787C45C2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */; };
 		A78AC1D82CEBA67600154B88 /* RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78AC1D72CEBA67600154B88 /* RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift */; };
 		A78AC1DB2CEC652500154B88 /* CollateralLoanLandingGetConsentsBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A78AC1DA2CEC652500154B88 /* CollateralLoanLandingGetConsentsBackend */; };
-		A7930E6A2D3559EB003D3BB8 /* GetCollateralLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7930E692D3559EB003D3BB8 /* GetCollateralLandingDomain.swift */; };
 		A7930E6C2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7930E6B2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI */; };
 		A7930E6E2D3577B8003D3BB8 /* RootViewModelFactory+makeCollateralLoanLandingBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7930E6D2D3577B8003D3BB8 /* RootViewModelFactory+makeCollateralLoanLandingBinder.swift */; };
 		A7A4FBFA2D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift */; };
-		A7A4FC072D1BEE8B006031E0 /* CollateralLoanShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FC062D1BEE8B006031E0 /* CollateralLoanShowcaseView.swift */; };
+		A7A4FC072D1BEE8B006031E0 /* CollateralLoanShowcaseWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A4FC062D1BEE8B006031E0 /* CollateralLoanShowcaseWrapperView.swift */; };
 		A7B5BD6A2CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */; };
 		A7B5BD6C2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */; };
 		A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */; };
 		A7C41FCA2CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */; };
+		A7E3140C2D393331009811EB /* CollateralLoanLandingWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E3140B2D393331009811EB /* CollateralLoanLandingWrapperView.swift */; };
+		A7E314102D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E3140F2D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift */; };
+		A7E314122D39369B009811EB /* GetCollateralLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E314112D39369B009811EB /* GetCollateralLandingDomain.swift */; };
+		A7E314142D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E314132D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift */; };
+		A7E314162D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7E314152D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI */; };
+		A7E314182D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E314172D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift */; };
 		A7E8D0382CF6E608008DF828 /* CollateralLoanLandingGetShowcaseBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7E8D0372CF6E608008DF828 /* CollateralLoanLandingGetShowcaseBackend */; };
 		A7E8D03A2CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7E8D0392CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI */; };
 		A7E8D03C2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E8D03B2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift */; };
@@ -4262,15 +4261,9 @@
 		2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+formattedBalance.swift"; sourceTree = "<group>"; };
 		2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+productSelectProducts.swift"; sourceTree = "<group>"; };
 		2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+currencyOf.swift"; sourceTree = "<group>"; };
-		2A3624512C5E69E500174C50 /* SegmentedPaymentProviderPickerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerEffect.swift; sourceTree = "<group>"; };
-		2A3624532C5E69F900174C50 /* SegmentedPaymentProviderPickerEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerEvent.swift; sourceTree = "<group>"; };
 		2A3624552C5E6A0600174C50 /* SegmentedPaymentProviderPickerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerState.swift; sourceTree = "<group>"; };
-		2A3624582C5E6A2300174C50 /* SegmentedPaymentProviderPickerEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerEffectHandler.swift; sourceTree = "<group>"; };
-		2A36245A2C5E6A3200174C50 /* SegmentedPaymentProviderPickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerReducer.swift; sourceTree = "<group>"; };
-		2A36245D2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerModel.swift; sourceTree = "<group>"; };
 		2A36245F2C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerView.swift; sourceTree = "<group>"; };
 		2A3624612C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerViewConfig.swift; sourceTree = "<group>"; };
-		2A3624632C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerWrapperView.swift; sourceTree = "<group>"; };
 		2A3624662C5E6B2000174C50 /* SegmentedPaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowModel.swift; sourceTree = "<group>"; };
 		2A3624682C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A3624702C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowEffect.swift; sourceTree = "<group>"; };
@@ -6462,6 +6455,7 @@
 		83BD071A2C75F72D0074F444 /* DisableCorCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableCorCardsView.swift; sourceTree = "<group>"; };
 		83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponentTests.swift; sourceTree = "<group>"; };
 		83C6A1EA2CFF47670076BC25 /* SavingsAccount.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SavingsAccount.xctestplan; sourceTree = "<group>"; };
+		83C804B72D4CB86F00F7E588 /* SavingsAccountFullView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountFullView.swift; sourceTree = "<group>"; };
 		83C8F4422A443A10008203E3 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		83C8F4442A444777008203E3 /* ItemsViewOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewOld.swift; sourceTree = "<group>"; };
 		83C8F4462A445497008203E3 /* ItemsViewNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewNew.swift; sourceTree = "<group>"; };
@@ -6501,7 +6495,6 @@
 		83E455E32AC2E0DB0045BEC1 /* C2BFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BFactory.swift; sourceTree = "<group>"; };
 		83E455E52AC2EE980045BEC1 /* DecodeQrData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeQrData.swift; sourceTree = "<group>"; };
 		83E455EA2AC590C60045BEC1 /* QrDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrDataMapperTests.swift; sourceTree = "<group>"; };
-		83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountWrapperView.swift; sourceTree = "<group>"; };
 		83E45EAE2D009E2000158F64 /* SavingsAccountDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountDomain.swift; sourceTree = "<group>"; };
 		83E45EB02D00A92100158F64 /* SavingsAccountDomain+ComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavingsAccountDomain+ComposerNanoServices.swift"; sourceTree = "<group>"; };
 		83E45EBD2D01C98800158F64 /* FlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
@@ -6615,18 +6608,22 @@
 		A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMainViewModelSections.swift"; sourceTree = "<group>"; };
 		A78AC1D72CEBA67600154B88 /* RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift"; sourceTree = "<group>"; };
 		A78AC1D92CEC61D900154B88 /* CollateralLoanLandingGetConsentsBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetConsentsBackend.xctestplan; sourceTree = "<group>"; };
-		A7930E692D3559EB003D3BB8 /* GetCollateralLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCollateralLandingDomain.swift; sourceTree = "<group>"; };
 		A7930E6D2D3577B8003D3BB8 /* RootViewModelFactory+makeCollateralLoanLandingBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCollateralLoanLandingBinder.swift"; sourceTree = "<group>"; };
 		A79428002CCBE0F9005D5FC0 /* GetBannersMyProductListService.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetBannersMyProductListService.xctestplan; sourceTree = "<group>"; };
 		A79AAED72CB64D3200B5ABE0 /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift"; sourceTree = "<group>"; };
-		A7A4FC062D1BEE8B006031E0 /* CollateralLoanShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanShowcaseView.swift; sourceTree = "<group>"; };
+		A7A4FC062D1BEE8B006031E0 /* CollateralLoanShowcaseWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanShowcaseWrapperView.swift; sourceTree = "<group>"; };
 		A7B5BD692CF75EBE0094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequest.swift"; sourceTree = "<group>"; };
 		A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift"; sourceTree = "<group>"; };
 		A7B5BD6D2CF855830094D7C6 /* CollateralLoanLandingGetCollateralLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingUI.xctestplan; sourceTree = "<group>"; };
 		A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMainViewModelSectionsTests.swift"; sourceTree = "<group>"; };
 		A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetShowcaseRequest.swift"; sourceTree = "<group>"; };
 		A7DBAC402CE51FB4006776D1 /* CollateralLoanLandingGetJsonAbroadUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetJsonAbroadUI.xctestplan; sourceTree = "<group>"; };
+		A7E3140B2D393331009811EB /* CollateralLoanLandingWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingWrapperView.swift; sourceTree = "<group>"; };
+		A7E3140F2D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDraftCollateralLoanApplicationDomain.swift; sourceTree = "<group>"; };
+		A7E314112D39369B009811EB /* GetCollateralLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCollateralLandingDomain.swift; sourceTree = "<group>"; };
+		A7E314132D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift"; sourceTree = "<group>"; };
+		A7E314172D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDraftCollateralLoanApplicationWrapperView.swift; sourceTree = "<group>"; };
 		A7E8D0352CF6E38E008DF828 /* CollateralLoanLandingGetShowcaseBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetShowcaseBackend.xctestplan; sourceTree = "<group>"; };
 		A7E8D0362CF6E3E1008DF828 /* CollateralLoanLandingGetShowcaseUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetShowcaseUI.xctestplan; sourceTree = "<group>"; };
 		A7E8D03B2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetShowcaseRequestTests.swift"; sourceTree = "<group>"; };
@@ -7462,6 +7459,7 @@
 				2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */,
+				A7E314162D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI in Frameworks */,
 				A7E8D03A2CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI in Frameworks */,
 				2A373A3A2CBA64520057A602 /* EphemeralStores in Frameworks */,
 				2AF720252C74841D00919CAF /* PayHubUI in Frameworks */,
@@ -9448,7 +9446,6 @@
 			isa = PBXGroup;
 			children = (
 				2A3624502C5E69DB00174C50 /* Domain */,
-				2A3624572C5E6A1C00174C50 /* Logic */,
 				2A36245C2C5E6A9100174C50 /* UI */,
 			);
 			path = Content;
@@ -9467,26 +9464,13 @@
 			isa = PBXGroup;
 			children = (
 				2A3624552C5E6A0600174C50 /* SegmentedPaymentProviderPickerState.swift */,
-				2A3624532C5E69F900174C50 /* SegmentedPaymentProviderPickerEvent.swift */,
-				2A3624512C5E69E500174C50 /* SegmentedPaymentProviderPickerEffect.swift */,
 			);
 			path = Domain;
-			sourceTree = "<group>";
-		};
-		2A3624572C5E6A1C00174C50 /* Logic */ = {
-			isa = PBXGroup;
-			children = (
-				2A36245A2C5E6A3200174C50 /* SegmentedPaymentProviderPickerReducer.swift */,
-				2A3624582C5E6A2300174C50 /* SegmentedPaymentProviderPickerEffectHandler.swift */,
-			);
-			path = Logic;
 			sourceTree = "<group>";
 		};
 		2A36245C2C5E6A9100174C50 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				2A36245D2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift */,
-				2A3624632C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift */,
 				2A36245F2C5E6AAD00174C50 /* SegmentedPaymentProviderPickerView.swift */,
 				2A3624612C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift */,
 			);
@@ -10938,6 +10922,7 @@
 				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				A7A4FBF92D19A775006031E0 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift */,
 				A7930E6D2D3577B8003D3BB8 /* RootViewModelFactory+makeCollateralLoanLandingBinder.swift */,
+				A7E314132D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift */,
 				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
 				2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */,
 				2A9CC0C52D1BE09E0071F30E /* Factories */,
@@ -15035,7 +15020,6 @@
 				2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */,
 				2AFA3B142CB78DC10019AFBA /* Refreshable.swift */,
 				2ACBA67C2CE9E99A00758D71 /* ElementIDs.swift */,
-				A7A4FC062D1BEE8B006031E0 /* CollateralLoanShowcaseView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -16148,8 +16132,8 @@
 		83E45EA82D00816800158F64 /* SavingsAccount */ = {
 			isa = PBXGroup;
 			children = (
-				83E45EAB2D0089F900158F64 /* SavingsAccountWrapperView.swift */,
 				83E45EC72D01CA4200158F64 /* FlowView.swift */,
+				83C804B72D4CB86F00F7E588 /* SavingsAccountFullView.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -16493,6 +16477,7 @@
 		A72955C32D3112D60076A5F3 /* CollateralLoanLanding */ = {
 			isa = PBXGroup;
 			children = (
+				A7E3140D2D39348D009811EB /* CreateDraftCollateralLoanApplication */,
 				A7930E672D3559C5003D3BB8 /* GetCollateralLanding */,
 				A7930E662D355983003D3BB8 /* GetShowcase */,
 			);
@@ -16548,6 +16533,7 @@
 		A7930E662D355983003D3BB8 /* GetShowcase */ = {
 			isa = PBXGroup;
 			children = (
+				A7A4FC062D1BEE8B006031E0 /* CollateralLoanShowcaseWrapperView.swift */,
 				A72955C42D3112F00076A5F3 /* Flow */,
 			);
 			path = GetShowcase;
@@ -16557,6 +16543,7 @@
 			isa = PBXGroup;
 			children = (
 				A7930E682D3559DC003D3BB8 /* Flow */,
+				A7E3140B2D393331009811EB /* CollateralLoanLandingWrapperView.swift */,
 			);
 			path = GetCollateralLanding;
 			sourceTree = "<group>";
@@ -16564,7 +16551,24 @@
 		A7930E682D3559DC003D3BB8 /* Flow */ = {
 			isa = PBXGroup;
 			children = (
-				A7930E692D3559EB003D3BB8 /* GetCollateralLandingDomain.swift */,
+				A7E314112D39369B009811EB /* GetCollateralLandingDomain.swift */,
+			);
+			path = Flow;
+			sourceTree = "<group>";
+		};
+		A7E3140D2D39348D009811EB /* CreateDraftCollateralLoanApplication */ = {
+			isa = PBXGroup;
+			children = (
+				A7E3140E2D393499009811EB /* Flow */,
+				A7E314172D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift */,
+			);
+			path = CreateDraftCollateralLoanApplication;
+			sourceTree = "<group>";
+		};
+		A7E3140E2D393499009811EB /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				A7E3140F2D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift */,
 			);
 			path = Flow;
 			sourceTree = "<group>";
@@ -19307,6 +19311,7 @@
 				847321062D11A6740009C721 /* VortexTools */,
 				2A9EA5D82D26AC0700DEC45C /* FlowCore */,
 				A7930E6B2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI */,
+				A7E314152D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI */,
 				8354294C2D43A1AB00963709 /* GetBannersMyProductListService */,
 			);
 			productName = ForaBank;
@@ -21200,7 +21205,6 @@
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				8362FB0529DEFA050094457E /* SearchCityView.swift in Sources */,
 				2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */,
-				2A36245E2C5E6A9D00174C50 /* SegmentedPaymentProviderPickerModel.swift in Sources */,
 				77D0386C2988441D00FBE5AB /* C2BSubscriptionData.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				83EB7A102D180BAF00E6E7BB /* GetInfoRepeatPaymentDomain+ext.swift in Sources */,
@@ -21226,7 +21230,6 @@
 				C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */,
 				50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */,
 				839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */,
-				2A3624592C5E6A2300174C50 /* SegmentedPaymentProviderPickerEffectHandler.swift in Sources */,
 				83DBC7B42C37DD6600DEF441 /* RequestFactory+createUserVisibilityProductsSettingsRequest.swift in Sources */,
 				C1F8314F29DD997700D2C40E /* Bool+Extension.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
@@ -21277,7 +21280,6 @@
 				2AE2662F2C195A850054C274 /* TransactionDetailButton.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
-				83E45EAC2D0089F900158F64 /* SavingsAccountWrapperView.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
 				77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */,
@@ -21299,7 +21301,6 @@
 				77DC125F27709DAF00C917B0 /* PaymentTemplateData.swift in Sources */,
 				5047486C28565D250007128F /* TimerViewComponent.swift in Sources */,
 				2AA3A95C2BFF8E1500AEBCC9 /* SimpleLabel.swift in Sources */,
-				A7930E6A2D3559EB003D3BB8 /* GetCollateralLandingDomain.swift in Sources */,
 				2A3011E12A6AB2A500560B98 /* ServerCommands+CvvPin.swift in Sources */,
 				2A213D3C2C1C528B008800FD /* ObservingSelectorViewModel.swift in Sources */,
 				2AA42C4C2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift in Sources */,
@@ -21660,7 +21661,6 @@
 				83CE89F72BC40178008CA98C /* ProductProfileViewModel+AccountInfoPanel.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				7758400227B13CF300251969 /* ImageData.swift in Sources */,
-				2A3624642C5E6ACC00174C50 /* SegmentedPaymentProviderPickerWrapperView.swift in Sources */,
 				2A3B4F632CF347D000076F05 /* RootViewModelFactory+makeQRFailure.swift in Sources */,
 				2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */,
 				ECCA5B4D2CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift in Sources */,
@@ -21670,6 +21670,7 @@
 				83CDFA7D2BD2556400191D8B /* ArrayOfProductData+Extensions.swift in Sources */,
 				2AB352E02B6BC626000EADC2 /* UserAccountNavigationStateManager.swift in Sources */,
 				2AB7AF702C626616007FA0CC /* Model+getFormattedAmount.swift in Sources */,
+				A7E314102D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift in Sources */,
 				2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */,
 				77D01EB429CDAC0B0026B099 /* PaymentC2BParameter.swift in Sources */,
 				77D038632988283B00FBE5AB /* ServerCommands+SBP.swift in Sources */,
@@ -21691,6 +21692,7 @@
 				7728A17D283632D600EE4CA6 /* MainProductsGroupSettings.swift in Sources */,
 				2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */,
 				F81EF91A27D2180E0096DC70 /* MainSectionPromoViewComponent.swift in Sources */,
+				A7E314142D39429C009811EB /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift in Sources */,
 				ED5CB97228724501008D8A1E /* UserAccountExitInfoView.swift in Sources */,
 				2A84C4A52B25D90900F314BD /* sberQRProducts.swift in Sources */,
 				830AF2D72AB3236000C2F29C /* Factory.swift in Sources */,
@@ -21759,9 +21761,11 @@
 				2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */,
 				EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */,
 				842C42392D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */,
+				A7E314182D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				ED0AF88F286B68B900F86B68 /* UIImage+Extensions.swift in Sources */,
 				83172A1A2D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift in Sources */,
+				83C804B82D4CB86F00F7E588 /* SavingsAccountFullView.swift in Sources */,
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
 				EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */,
 				77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */,
@@ -22012,7 +22016,6 @@
 				2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */,
 				2AA3A93E2BFF8B7900AEBCC9 /* AnywayTransactionStateWrapperView.swift in Sources */,
 				83CA1C952A6013A300672AA5 /* PinCodeChangeView.swift in Sources */,
-				2A3624522C5E69E500174C50 /* SegmentedPaymentProviderPickerEffect.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				774A8B742865FECB00B81140 /* CircleProgressViewComponent.swift in Sources */,
 				2A5B48432CFC6AEA0052801D /* UserAccountButtonLabel.swift in Sources */,
@@ -22443,7 +22446,6 @@
 				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
 				68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */,
 				2A89A51A2CCD8AB80070131F /* QRNavigation+UI Mapping.swift in Sources */,
-				2A36245B2C5E6A3200174C50 /* SegmentedPaymentProviderPickerReducer.swift in Sources */,
 				0C2B55E7299D45A200F9074C /* PaymentsProductTemplateViewComponent.swift in Sources */,
 				0B71D7A228FD834D00AA1970 /* QRCode.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
@@ -22483,6 +22485,7 @@
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,
 				2AC2ADC02B2248140049EE9B /* RemoteService+ext.swift in Sources */,
 				774A8B662865FDAF00B81140 /* PaymentsInfoViewComponent.swift in Sources */,
+				A7E3140C2D393331009811EB /* CollateralLoanLandingWrapperView.swift in Sources */,
 				2A3624772C5E6BCA00174C50 /* SegmentedPaymentProviderPickerViewConfig+iVortex.swift in Sources */,
 				2AE886322AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift in Sources */,
 				6820927F27AB0E1B003DCAFD /* BankData.swift in Sources */,
@@ -22691,12 +22694,11 @@
 				2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */,
 				2A4D9AD02CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift in Sources */,
 				ECA4BD102CF775F300896CDC /* AlertManager.swift in Sources */,
-				A7A4FC072D1BEE8B006031E0 /* CollateralLoanShowcaseView.swift in Sources */,
+				A7A4FC072D1BEE8B006031E0 /* CollateralLoanShowcaseWrapperView.swift in Sources */,
 				2AE0574C2D219A9B00E6296F /* ProviderServicePickerView.swift in Sources */,
 				68CB588C28ABCA7A003064B0 /* LoggerAgentProtocol.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
 				68F9A06B27ECC348006C552C /* ProductViewControllerHistoryTableView.swift in Sources */,
-				2A3624542C5E69F900174C50 /* SegmentedPaymentProviderPickerEvent.swift in Sources */,
 				C113225628CFA84300F90072 /* ContactsViewModel.swift in Sources */,
 				C1F7999F29CD18BF0048346B /* Model+ReturnAbroad.swift in Sources */,
 				EC5A2D202D0997C200E8D14D /* RootViewModelFactory+makeAuthorizedZoneClientInform.swift in Sources */,
@@ -22715,6 +22717,7 @@
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
 				83F6565B2C3FF4570052B7E1 /* StickerEvents.swift in Sources */,
 				770E68B22902B04300586FC4 /* Model+PaymentsTransferAnyway.swift in Sources */,
+				A7E314122D39369B009811EB /* GetCollateralLandingDomain.swift in Sources */,
 				2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
@@ -29057,6 +29060,10 @@
 		A7930E6B2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CollateralLoanLandingGetCollateralLandingUI;
+		};
+		A7E314152D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CollateralLoanLandingCreateDraftCollateralLoanApplicationUI;
 		};
 		A7E8D0372CF6E608008DF828 /* CollateralLoanLandingGetShowcaseBackend */ = {
 			isa = XCSwiftPackageProductDependency;

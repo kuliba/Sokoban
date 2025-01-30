@@ -318,12 +318,17 @@ extension RootViewModelFactory {
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if featureFlags.paymentsTransfersFlag.isActive {
+            
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
-        } else {
-            performOrWaitForActive({ [weak self] in
-                self?.model.handleDictionaryAnywayOperatorsRequest(nil)
-            })
         }
+        
+        performOrWaitForActive({ [weak self] in
+            
+            guard let self else { return }
+            
+            let serial = model.localAgent.serial(for: [OperatorsListComponents.SberOperator].self)
+            model.handleDictionaryAnywayOperatorsRequest(serial)
+        })
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
@@ -783,7 +788,7 @@ private extension RootViewModelFactory {
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-         
+                
         let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
         }
         
@@ -812,6 +817,7 @@ private extension RootViewModelFactory {
                 bannersBinder: bannersBinder,
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
             viewModelsFactory: mainViewModelsFactory,
@@ -871,7 +877,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             marketShowcaseBinder: marketShowcaseBinder
         )
-        
+
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,

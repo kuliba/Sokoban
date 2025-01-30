@@ -15,7 +15,7 @@ public struct SavingsAccountConfig {
     let bannerHeight: CGFloat
     let chevronDownImage: Image
     let cornerRadius: CGFloat
-    let continueButton: ContinueButton
+    public let continueButton: ContinueButton
     let divider: Color
     let icon: Icon
     let list: List
@@ -40,11 +40,11 @@ public struct SavingsAccountConfig {
     }
        
     public struct ContinueButton {
-        let background: Color
-        let cornerRadius: CGFloat
-        let height: CGFloat
-        let label: String
-        let title: TextConfig
+        public let background: Color
+        public let cornerRadius: CGFloat
+        public let height: CGFloat
+        public let label: String
+        public let title: TextConfig
         
         public init(background: Color, cornerRadius: CGFloat, height: CGFloat, label: String, title: TextConfig) {
             self.background = background

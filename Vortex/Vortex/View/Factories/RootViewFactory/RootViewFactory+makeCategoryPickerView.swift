@@ -30,7 +30,13 @@ extension RootViewFactory {
                 )
                 .navigationDestination(
                     destination: makeDestination(state),
-                    content: makeDestinationView
+                    content: {
+                        
+                        makeDestinationView(destination: $0) {
+                            
+                            binder.flow.event(.dismiss)
+                        }
+                    }
                 )
             }
         )
@@ -48,12 +54,13 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeDestinationView(
-        destination: CategoryPickerViewDomain.Destination
+        destination: CategoryPickerViewDomain.Destination,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         switch destination {
-        case let .mobile(mobile):
-            components.makePaymentsView(mobile.paymentsViewModel)
+        case let .mobile(paymentsViewModel):
+            components.makePaymentsView(paymentsViewModel)
             
         case let .standard(standard):
             switch standard.model {
@@ -61,11 +68,11 @@ extension RootViewFactory {
                 components.serviceCategoryFailureView(binder: binder)
                 
             case let .success(binder):
-                makePaymentProviderPickerView(binder)
+                makePaymentProviderPickerView(binder: binder, dismiss: dismiss)
             }
             
-        case let .taxAndStateServices(wrapper):
-            components.makePaymentsView(wrapper.paymentsViewModel)
+        case let .taxAndStateServices(paymentsViewModel):
+            components.makePaymentsView(paymentsViewModel)
             
         case let .transport(transport):
             transportPaymentsView(transport)

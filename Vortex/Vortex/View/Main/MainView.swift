@@ -21,6 +21,8 @@ import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
 import VortexTools
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import SavingsAccount
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -270,10 +272,11 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
+                makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
+                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
-            CollateralLoanShowcaseView(binder: binder, factory: factory)
+            CollateralLoanShowcaseWrapperView(binder: binder, factory: factory)
                 .navigationBarWithBack(
                     title: "Кредиты",
                     dismiss: viewModel.resetDestination
@@ -284,112 +287,12 @@ struct MainView<NavigationOperationView: View>: View {
             viewFactory.components.makeOrderCardView()
             
         case let .savingsAccount(binder):
-           // viewFactory.components.makeSavingsAccountView(binder, viewModel.resetDestination)
-            RxWrapperView(model: binder.content) { contentState, contentEvent in
-
-                RxWrapperView(model: binder.flow) { flowState, flowEvent in
-                    
-                    OffsetObservingScrollView(
-                        axes: .vertical,
-                        showsIndicators: false,
-                        offset: .init(
-                            get: { .zero },
-                            set: { contentEvent(.offset($0.y)) }),
-                        coordinateSpaceName: "savingsAccountScroll"
-                    ) {
-                        SavingsAccountDomain.ContentView(
-                            state: contentState,
-                            event: contentEvent,
-                            config: .prod,
-                            factory: makeFactory(viewModel.resetDestination)
-                        )
-                    }
-                    .padding(.bottom)
-                    /* navTitle: .init(
-                         title: .init(text: "Накопительный счет", config: .init(textFont: .textH3M18240(), textColor: .textSecondary)),
-                         subtitle: .init(text: "Накопительный в рублях", config: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder))),
-                     */
-
-                    .navigationBarWithBack(
-                        title: contentState.navTitle.title,
-                        subtitle: contentState.navTitle.subtitle,
-                        dismiss: { flowEvent(.dismiss) }
-                    )
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        continueButton({ contentEvent(.openSavingsAccount) })
-                    }
-                    
-//                        .navigationDestination(
-//                            destination: flowState.,
-//                            content: <#T##(Destination) -> Content#>)
-                }
-            }
+            viewFactory.components.makeSavingsAccountView(binder)
             .onAppear { binder.content.event(.load) }
             .navigationBarHidden(true)
         }
     }
 
-    @ViewBuilder
-    private func continueButton(
-        _ action: @escaping () -> Void
-    ) -> some View {
-        
-        Button(action: action, label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.buttonPrimary)
-                Text("Продолжить")
-                    .foregroundColor(.white)
-            }
-        })
-        .padding(.horizontal)
-        .frame(height: 56)
-        .frame(maxWidth: .infinity)
-    }
-        
-    func makeFactory(
-        _ dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountDomain.ViewFactory {
-        .init(
-            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-            makeLandingView: { [makeLandingView] in makeLandingView($0, dismiss) }
-        )
-    }
-    
-    func makeLandingView(
-        _ viewModel: SavingsAccountDomain.Landing,
-        _ dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountWrapperView {
-        .init(
-            viewModel: .init(
-                initialState: .init(viewModel.list.first ?? .empty),
-                reduce: { state, event in
-                    
-                    var state = state
-                    switch event {
-                    case .dismiss:
-                        dismiss()
-                        
-                    case .continue:
-                        break
-                    }
-                    return (state, .none)
-                } , // TODO: - add reduce
-                handleEffect: {_,_ in } // TODO: - add handleEffect
-            ),
-            config: .iVortex,
-            imageViewFactory: .init(
-                makeIconView: self.viewModel.model.imageCache().makeIconView(for:),
-                makeBannerImageView: self.viewModel.model.generalImageCache().makeIconView(for:)))
-    }
-    
-    func makeInformerView(
-        _ payload: SavingsAccountDomain.InformerPayload
-    ) -> InformerView {
-        .init(viewModel: .init(message: payload.message, icon: payload.icon.image, color: payload.color))
-    }
-
-    
     @ViewBuilder
     private func sheetView(
         _ sheet: MainViewModel.Sheet
@@ -725,6 +628,68 @@ extension MainViewModel {
         bindersFactory: .preview,
         viewModelsFactory: .preview,
         makeOpenNewProductButtons: { _ in [] }
+    )
+}
+
+// MARK: - GetCollateralLandingDomain.Binder preview
+
+private extension GetCollateralLandingDomain.Binder {
+    
+    static let preview = GetCollateralLandingDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetCollateralLandingDomain.Content {
+    
+    static let preview = GetCollateralLandingDomain.Content(
+        initialState: .init(
+            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+        ),
+        reduce: {
+            state,_ in (state, nil)
+        },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetCollateralLandingDomain.Flow {
+    
+    static let preview = GetCollateralLandingDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - GetShowcaseDomain.Binder preview
+
+private extension GetShowcaseDomain.Binder {
+    
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview: GetShowcaseDomain.Content = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

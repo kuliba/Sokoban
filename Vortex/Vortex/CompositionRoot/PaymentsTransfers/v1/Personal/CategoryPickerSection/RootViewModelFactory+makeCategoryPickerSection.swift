@@ -61,13 +61,30 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select category: CategoryPickerSectionDomain.Select,
-        notify:@escaping CategoryPickerSectionDomain.Notify,
+        select: CategoryPickerSectionDomain.Select,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
+        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case let .category(category):
+            getNavigation(category: category, notify: notify, completion: completion)
+        
+        case .qr:
+            completion(.outside(.qr))
+        }
+    }
+    
+    @inlinable
+    func getNavigation(
+        category: ServiceCategory,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {
         switch category.paymentFlow {
         case .mobile:
-            completion(.destination(.mobile(makeMobilePayment())))
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .qr:
             completion(.outside(.qr))
@@ -76,7 +93,9 @@ extension RootViewModelFactory {
             completion(.outside(.standard(category)))
             
         case .taxAndStateServices:
-            completion(.destination(.taxAndStateServices(makeTaxPayment())))
+            completion(.destination(.taxAndStateServices(makeTaxPayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .transport:
             guard let transport = makeTransportPayment()

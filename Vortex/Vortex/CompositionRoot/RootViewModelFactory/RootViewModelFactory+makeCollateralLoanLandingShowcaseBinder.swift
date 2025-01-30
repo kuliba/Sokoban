@@ -76,9 +76,9 @@ extension RootViewModelFactory {
         completion: @escaping (GetShowcaseDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .landing(landingId):
-            let collateralLoanLandingBinder = makeCollateralLoanLandingBinder(landingId: landingId)
-            completion(.landing(collateralLoanLandingBinder))
+        case let .landing(landingID):
+            let collateralLoanLandingBinder = makeCollateralLoanLandingBinder(landingID: landingID)
+            completion(.landing(landingID, collateralLoanLandingBinder))
         }
     }
     

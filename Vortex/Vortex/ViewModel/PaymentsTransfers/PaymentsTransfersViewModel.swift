@@ -12,6 +12,7 @@ import SberQR
 import SwiftUI
 import OperatorsListComponents
 import CalendarUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -1973,7 +1974,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     func handle(
-        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Navigation.Outside
     ) {
         event(.dismiss(.destination))
         rootActions?.spinner.hide()
