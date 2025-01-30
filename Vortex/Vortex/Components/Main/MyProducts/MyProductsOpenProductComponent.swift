@@ -12,18 +12,18 @@ import Combine
 //MARK: - ViewModel
 
 extension MyProductsOpenProductView {
-
+    
     class ViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
-
+        
         @Published var newProducts: OpenNewProductsViewModel
-
+        
         let title = "Открыть продукт"
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
-
+        
         init(newProducts: OpenNewProductsViewModel, model: Model = .emptyMock) {
             
             self.newProducts = newProducts
@@ -34,7 +34,6 @@ extension MyProductsOpenProductView {
             _ model: Model,
             makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
         ) {
-            
             self.newProducts = .init(model, makeOpenNewProductButtons: makeOpenNewProductButtons)
             self.model = model
             
@@ -44,29 +43,24 @@ extension MyProductsOpenProductView {
         func bind() {
             
             newProducts.action
+                .compactMap { $0 as? OpenNewProductsViewModelAction.Tapped.NewProduct }
+                .map(\.productType)
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] action in
+                .sink { [weak self] productType in
                     
-                    switch action {
-                    case let payload as OpenNewProductsViewModelAction.Tapped.NewProduct:
-                        
-                        self?.action.send(MyProductsViewModelAction.Tapped.NewProduct(productType: payload.productType))
-                        
-                    default: break
-                    }
-                    
-                }.store(in: &bindings)
+                    self?.action.send(MyProductsViewModelAction.Tapped.NewProduct(productType: productType))
+                }
+                .store(in: &bindings)
         }
     }
-        
 }
 
 //MARK: - View
 
 struct MyProductsOpenProductView: View {
-
+    
     @ObservedObject var viewModel: ViewModel
-
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 24) {
@@ -74,17 +68,17 @@ struct MyProductsOpenProductView: View {
             Text(viewModel.title)
                 .font(.textH3Sb18240())
                 .foregroundColor(.mainColorsBlack)
-                
+            
             LazyVGrid(columns: [GridItem(spacing: 12), GridItem()], spacing: 20) {
-                    
+                
                 ForEach(viewModel.newProducts.items) { item in
-                        
+                    
                     NewProductButton(viewModel: item)
                         .frame(height: 124)
                 }
             }
         }
-        .padding([.horizontal], 20)
+        .padding(.horizontal, 20)
         .padding(.bottom, 74)
     }
 }
@@ -92,21 +86,24 @@ struct MyProductsOpenProductView: View {
 //MARK: - Preview
 
 struct MyProductsOpenProductView_Previews: PreviewProvider {
-
+    
     static var previews: some View {
         
         MyProductsOpenProductView(viewModel: .previewSample)
-            .previewLayout(.sizeThatFits) 
+            .previewLayout(.sizeThatFits)
     }
 }
 
 //MARK: - Preview Content
 
 extension MyProductsOpenProductView.ViewModel {
-
-    static let previewSample = MyProductsOpenProductView
-                                .ViewModel(newProducts: .init(items: [.sample,
-                                                                      .sampleAccount,
-                                                                      .sampleEmptySubtitle,
-                                                                      .sampleLongSubtitle]))
+    
+    static let previewSample = MyProductsOpenProductView.ViewModel(
+        newProducts: .init(
+            items: [.sample,
+                    .sampleAccount,
+                    .sampleEmptySubtitle,
+                    .sampleLongSubtitle
+            ])
+    )
 }
