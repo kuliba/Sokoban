@@ -12,7 +12,7 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
     
     // MARK: - productType
     
-    func test_accountProductType_shouldDeliverАшдгкуФдуке() {
+    func test_accountProductType_shouldDeliverFailureAlert() {
         
         expect(.productType(.account), toDeliver: .alert("Ошибка открытия счета."))
     }
@@ -25,9 +25,12 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
         expect(sut: sut, .productType(.account), toDeliver: .openAccount)
     }
     
-    // MARK: - openDeposit
+    func test_cardProductType_shouldDeliverOpenCard() {
+        
+        expect(.productType(.card), toDeliver: .openCard)
+    }
     
-    func test_openDeposit_shouldDeliverOpenProduct() {
+    func test_depositProductType_shouldDeliverOpenDeposit() {
         
         expect(.productType(.deposit), toDeliver: .openDeposit)
     }
@@ -100,11 +103,17 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
         case .openAccount:
             return .openAccount
             
+        case .openCard:
+            return .openCard
+            
         case .openDeposit:
             return .openDeposit
             
         case .openProduct:
             return .openProduct
+            
+        case let .openURL(url):
+            return .openURL(url)
         }
     }
     
@@ -113,8 +122,10 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
         
         case alert(String)
         case openAccount
+        case openCard
         case openDeposit
         case openProduct
+        case openURL(URL)
     }
 }
 

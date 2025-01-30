@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 30.01.2025.
 //
 
+import Foundation
+
 /// A namespace.
 enum OpenProductDomain {}
 
@@ -27,7 +29,9 @@ extension OpenProductDomain {
         
         case alert(String)
         case openAccount(OpenAccountViewModel)
+        case openCard(AuthProductsViewModel)
         case openDeposit(OpenDepositListViewModel)
         case openProduct(Node<MyProductsOpenProductView.ViewModel>)
+        case openURL(URL)
     }
 }

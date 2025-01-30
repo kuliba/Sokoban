@@ -41,8 +41,10 @@ extension RootViewModelFactory {
         switch navigation {
         case .alert:       return .milliseconds(100)
         case .openAccount: return .milliseconds(100)
+        case .openCard:    return .milliseconds(100)
         case .openDeposit: return .milliseconds(100)
         case .openProduct: return .milliseconds(100)
+        case .openURL:     return .milliseconds(100)
         }
     }
     
@@ -66,21 +68,31 @@ extension RootViewModelFactory {
                 completion(makeOpenAccountModel().map { .openAccount($0) } ?? .alert("Ошибка открытия счета."))
                 
             case .card:
-                break
-            
+                switch openCard(dismiss: { notify(.dismiss) }) {
+                case let .first(openCard):
+                    completion(.openCard(openCard))
+                    
+                case let .second(url):
+                    completion(.openURL(url))
+                }
+                
             case .deposit:
                 completion(.openDeposit(openDeposit(dismiss: { notify(.dismiss) })))
                 
             case .insurance:
-                break
+                break // TODO: fixme
+            
             case .loan:
-                break
+                break // TODO: fixme - add openCollateralLoanLanding
+            
             case .mortgage:
-                break
+                break // TODO: fixme
+            
             case .savingsAccount:
-                break
+                break // TODO: fixme
+            
             case .sticker:
-                break
+                break // TODO: fixme
             }
         }
     }
@@ -123,6 +135,27 @@ extension RootViewModelFactory {
     }
     
     @inlinable
+    func openCard(
+        dismiss: @escaping () -> Void
+    ) -> Either<AuthProductsViewModel, URL> {
+        
+        if model.onlyCorporateCards {
+            
+            return .second(model.productsOpenAccountURL)
+            
+        } else {
+            
+            let authProductsViewModel = AuthProductsViewModel(
+                model,
+                products: model.catalogProducts.value,
+                dismissAction: dismiss
+            )
+            
+            return .first(authProductsViewModel)
+        }
+    }
+    
+    @inlinable
     func openDeposit(
         dismiss: @escaping () -> Void
     ) -> OpenDepositListViewModel {
@@ -137,3 +170,11 @@ extension RootViewModelFactory {
         return openDepositViewModel
     }
 }
+
+enum Either<First, Second> {
+    
+    case first(First)
+    case second(Second)
+}
+
+extension Either: Equatable where First: Equatable, Second: Equatable {}
