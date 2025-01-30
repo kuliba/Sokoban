@@ -23,16 +23,21 @@ extension PaymentsTransfersCorporateTransfersDomain {
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
+    typealias NotifyEvent = FlowDomain.NotifyEvent
     
     enum Select {
         
+        case alert(String)
         case meToMe
         case openProduct
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
     enum Navigation {
         
-        case meToMe(String)
+        case alert(String)
+        case meToMe(Node<PaymentsMeToMeViewModel>)
         case openProduct(String)
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
 }

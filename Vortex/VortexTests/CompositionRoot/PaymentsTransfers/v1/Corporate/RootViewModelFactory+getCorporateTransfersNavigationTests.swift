@@ -10,11 +10,28 @@ import XCTest
 
 final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewModelFactoryTests {
     
+    // MARK: - alert
+    
+    func test_alert_shouldDeliverAlert() {
+        
+        let alert = anyMessage()
+        
+        expect(.alert(alert), toDeliver: .alert(alert))
+    }
+    
     // MARK: - meToMe
     
-    func test_meToMe_shouldDeliverUserAccount() {
+    func test_meToMe_shouldDeliverFailureAlert_onMissingMeToMeProduct() {
         
-        expect(.meToMe, toDeliver: .meToMe)
+        expect(.meToMe, toDeliver: .alert("Ошибка создания платежа между своими."))
+    }
+    
+    func test_meToMe_shouldDeliverMeToMe_onMeToMeProduct() throws {
+        
+        let model = try makeModelWithMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .meToMe, toDeliver: .meToMe)
     }
     
     // MARK: - openProduct
@@ -23,10 +40,40 @@ final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewM
         
         expect(.openProduct, toDeliver: .openProduct)
     }
+    // MARK: - successMeToMe
+    
+    func test_successMeToMe_shouldDeliverSuccessMeToMe() {
+        
+        let success = makeSuccess()
+        
+        expect(.successMeToMe(success), toDeliver: .successMeToMe(.init(success.model)))
+    }
     
     // MARK: - Helpers
     
     private typealias Domain = Vortex.PaymentsTransfersCorporateTransfersDomain
+    
+    private func makeSuccess() -> Node<PaymentsSuccessViewModel> {
+        
+        return .init(
+            model: .init(
+                model: .mockWithEmptyExcept(),
+                sections: []
+            ),
+            cancellables: []
+        )
+    }
+    
+    private func makeModelWithMeToMeProduct(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Model {
+        
+        let model: Model = .mockWithEmptyExcept()
+        try model.addMeToMeProduct(file: file, line: line)
+        
+        return model
+    }
     
     private func expect(
         sut: SUT? = nil,
@@ -55,18 +102,26 @@ final class RootViewModelFactory_getCorporateTransfersNavigationTests: RootViewM
     ) -> EquatableNavigation {
         
         switch navigation {
+        case let .alert(alert):
+            return .alert(alert)
+            
         case .meToMe:
             return .meToMe
             
         case .openProduct:
             return .openProduct
+            
+        case let .successMeToMe(node):
+            return .successMeToMe(.init(node.model))
         }
     }
     
     // TODO: improve, but need to control objects creation => SUT needs a dependency
     enum EquatableNavigation: Equatable {
         
+        case alert(String)
         case meToMe
         case openProduct
+        case successMeToMe(ObjectIdentifier)
     }
 }
