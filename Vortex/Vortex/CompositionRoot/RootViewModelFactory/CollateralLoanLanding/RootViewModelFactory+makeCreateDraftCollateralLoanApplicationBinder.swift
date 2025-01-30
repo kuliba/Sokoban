@@ -12,6 +12,7 @@ import Combine
 import Foundation
 import InputComponent
 import RemoteServices
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -85,6 +86,15 @@ extension RootViewModelFactory {
         
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
+            mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
+            mapError: { (error: RemoteServiceError<any Error, any Error, RemoteServices.ResponseMapper.MappingError>) in
+                
+                NSError(domain: "", code: -1)
+            }
+        )
+
+        let getVerificationCode = nanoServiceComposer.compose(
+            createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
         )
         
@@ -95,7 +105,7 @@ extension RootViewModelFactory {
             case let .success(success):
                 completion(.success(success.resendOTPCount))
             case let .failure(failure):
-                completion(.failure( .init(failure) ))
+                completion(.failure(.init(_error: failure)))
             }
         }
         //            completion($0.map(\.resendOTPCount).mapError { .init($0) })
@@ -152,7 +162,7 @@ extension RootViewModelFactory {
 
 extension CreateDraftCollateralLoanApplicationDomain.ServiceFailure {
     
-    init(_ error: MappingError) {
+    init(_error error: MappingError) {
         
         switch error {
         case .createRequest, .performRequest:
