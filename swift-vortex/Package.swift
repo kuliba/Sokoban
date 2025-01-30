@@ -1359,6 +1359,7 @@ private extension Target {
     static let collateralLoanLandingGetShowcaseUI = target(
         name: .collateralLoanLandingGetShowcaseUI,
         dependencies: [
+            .otpInputComponent,
             .rxViewModel,
             .uiPrimitives
         ],

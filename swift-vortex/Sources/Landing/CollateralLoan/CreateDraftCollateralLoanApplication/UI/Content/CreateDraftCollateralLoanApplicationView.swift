@@ -141,11 +141,15 @@ extension CreateDraftCollateralLoanApplicationView {
             factory: factory
         )
     }
-    
-    // TODO: Need to realize
+
     var otpView: some View {
         
-        Text("OTP View")
+        CreateDraftCollateralLoanApplicationOTPView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
     }
     
     // TODO: Need to realize

@@ -18,13 +18,20 @@ struct CreateDraftCollateralLoanApplicationOTPView: View {
 
     var body: some View {
 
-        Text("OTP")
-//        TimedOTPInputWrapperView(
-//            viewModel: <#T##TimedOTPInputViewModel#>,
-//            config: <#T##TimedOTPInputViewConfig#>,
-//            iconView: <#T##() -> View#>
-//        )
-//        .modifier(FrameWithCornerRadiusModifier(config: config))
+        TimedOTPInputWrapperView(
+            viewModel: .init(
+                otpText: "",
+                timerDuration: config.elements.otp.timerDuration,
+                otpLength: config.elements.otp.otpLength,
+                resend: { event(.getVerificationCode) },
+                observe: { event(.otp($0)) }
+            ),
+            config: config.elements.otp.view,
+            iconView: {
+                config.elements.otp.smsIcon
+            }
+        )
+        .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 

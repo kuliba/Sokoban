@@ -19,12 +19,15 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case city(SelectCityEvent)
         case otp(String)
         case period(SelectPeriodEvent)
+        case getVerificationCode
+        case gettedVerificationCode(GetVerificationCodeResult)
         case showSaveConsentsResult(SaveConsentsResult)
         case tappedBack
         case tappedContinue
         case tappedSubmit
     }
     
+    public typealias GetVerificationCodeResult = Result<Int, ServiceFailure>
     public typealias SelectPeriodEvent = OptionalSelectorEvent<PeriodItem>
     public typealias SelectCityEvent = OptionalSelectorEvent<CityItem>
 }

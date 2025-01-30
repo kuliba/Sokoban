@@ -272,7 +272,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
                 makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
-                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }, makeOTPView: viewFactory.makeCollateralLoanLandingOTPView
+                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
             CollateralLoanShowcaseWrapperView(binder: binder, factory: factory)

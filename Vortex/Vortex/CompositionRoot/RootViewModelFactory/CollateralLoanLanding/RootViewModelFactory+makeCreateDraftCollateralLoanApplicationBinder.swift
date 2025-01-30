@@ -5,6 +5,7 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import AnywayPaymentBackend
 import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import Combine
@@ -44,6 +45,7 @@ extension RootViewModelFactory {
         let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: data)
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
+            getVerificationCode: getVerificationCode(completion:),
             saveConsents: { payload, completion in
             
                 // TODO: Restore
@@ -77,6 +79,28 @@ extension RootViewModelFactory {
         }
     }
 
+    private func getVerificationCode(
+        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetVerificationCodeResult) -> Void
+    ) {
+        
+        let getVerificationCode = nanoServiceComposer.compose(
+            createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
+            mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
+        )
+        
+        getVerificationCode(()) { [getVerificationCode] in
+            
+            switch $0 {
+                
+            case let .success(success):
+                completion(.success(success.resendOTPCount))
+            case let .failure(failure):
+                completion(.failure( .init(failure) ))
+            }
+        }
+        //            completion($0.map(\.resendOTPCount).mapError { .init($0) })
+    }
+    
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult) -> Void
@@ -124,6 +148,30 @@ extension RootViewModelFactory {
             return .milliseconds(100)
         }
     }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.ServiceFailure {
+    
+    init(_ error: MappingError) {
+        
+        switch error {
+        case .createRequest, .performRequest:
+            self = .connectivity
+            
+        case let .mapResponse(error):
+            switch error {
+            case .invalid:
+                self = .connectivity
+                
+            case let .server(_, errorMessage: errorMessage):
+                self = .serverError(errorMessage)
+            }
+        }
+    }
+    
+    static let connectivity: Self = .connectivityError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
+    
+    typealias MappingError = MappingRemoteServiceError<RemoteServices.ResponseMapper.MappingError>
 }
 
 // MARK: Adapters

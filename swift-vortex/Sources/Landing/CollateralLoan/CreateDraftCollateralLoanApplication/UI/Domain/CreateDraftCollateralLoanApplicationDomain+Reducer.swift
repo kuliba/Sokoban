@@ -71,6 +71,14 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case let .otp(otp):
                 // TODO: clean up otp
                 state.otp = otp
+                
+            case .getVerificationCode:
+                effect = .getVerificationCode
+                
+            case let .gettedVerificationCode(result):
+                // TODO: Need to realize logic
+                _ = result
+                break
             }
             
             return (state, effect)

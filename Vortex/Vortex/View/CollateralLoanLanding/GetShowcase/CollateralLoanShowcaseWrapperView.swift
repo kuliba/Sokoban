@@ -86,8 +86,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                 binder: landing,
                 factory: .init(
                     makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash,
-                    makeImageViewByURL: factory.makeImageViewByURL,
-                    makeOTPView: factory.makeOTPView
+                    makeImageViewByURL: factory.makeImageViewByURL
                 )
             )
         }

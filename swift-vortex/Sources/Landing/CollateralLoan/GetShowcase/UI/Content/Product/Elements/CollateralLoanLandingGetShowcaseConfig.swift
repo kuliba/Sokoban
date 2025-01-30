@@ -17,7 +17,6 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
     public let bulletsView: BulletsView
     public let imageView: ImageView
     public let footerView: FooterView
-    public let otpWarningView: OTPWarningViewConfig
     
     public init(
         fonts: Fonts,
@@ -26,8 +25,7 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
         termsView: TermsView,
         bulletsView: BulletsView,
         imageView: ImageView,
-        footerView: FooterView,
-        otpWarningView: OTPWarningViewConfig
+        footerView: FooterView
     ) {
         self.fonts = fonts
         self.paddings = paddings
@@ -36,18 +34,6 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
         self.bulletsView = bulletsView
         self.imageView = imageView
         self.footerView = footerView
-        self.otpWarningView = otpWarningView
-    }
-    
-    public struct OTPWarningViewConfig: Equatable {
-        
-        public let text: TextConfig
-        
-        public init(
-            text: TextConfig
-        ) {
-            self.text = text
-        }
     }
     
     public struct Fonts {
@@ -174,12 +160,6 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
             topPadding: 12,
             spacing: 12,
             buttonForegroundColor: .white
-        ), 
-        otpWarningView: .init(
-            text: .init(
-                textFont: Font.system(size: 14),
-                textColor: .red
-            )
         )
     )
 }
