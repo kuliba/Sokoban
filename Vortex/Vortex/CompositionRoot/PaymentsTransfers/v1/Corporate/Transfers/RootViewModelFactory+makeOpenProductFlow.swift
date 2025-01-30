@@ -63,37 +63,46 @@ extension RootViewModelFactory {
             )))
             
         case let .productType(openProductType):
-            switch openProductType {
-            case .account:
-                completion(makeOpenAccountModel().map { .openAccount($0) } ?? .alert("Ошибка открытия счета."))
+            getNavigation(openProductType: openProductType, notify: notify, completion: completion)
+        }
+    }
+    
+    @inlinable
+    func getNavigation(
+        openProductType: OpenProductType,
+        notify: @escaping OpenProductDomain.Notify,
+        completion: @escaping (OpenProductDomain.Navigation) -> Void
+    ) {
+        switch openProductType {
+        case .account:
+            completion(makeOpenAccountModel().map { .openAccount($0) } ?? .alert("Ошибка открытия счета."))
+            
+        case .card:
+            switch openCard(dismiss: { notify(.dismiss) }) {
+            case let .first(openCard):
+                completion(.openCard(openCard))
                 
-            case .card:
-                switch openCard(dismiss: { notify(.dismiss) }) {
-                case let .first(openCard):
-                    completion(.openCard(openCard))
-                    
-                case let .second(url):
-                    completion(.openURL(url))
-                }
-                
-            case .deposit:
-                completion(.openDeposit(openDeposit(dismiss: { notify(.dismiss) })))
-                
-            case .insurance:
-                break // TODO: fixme
-            
-            case .loan:
-                break // TODO: fixme - add openCollateralLoanLanding
-            
-            case .mortgage:
-                break // TODO: fixme
-            
-            case .savingsAccount:
-                break // TODO: fixme
-            
-            case .sticker:
-                break // TODO: fixme
+            case let .second(url):
+                completion(.openURL(url))
             }
+            
+        case .deposit:
+            completion(.openDeposit(openDeposit(dismiss: { notify(.dismiss) })))
+            
+        case .insurance:
+            break // TODO: fixme
+            
+        case .loan:
+            break // TODO: fixme - add openCollateralLoanLanding
+            
+        case .mortgage:
+            break // TODO: fixme
+            
+        case .savingsAccount:
+            break // TODO: fixme
+            
+        case .sticker:
+            break // TODO: fixme
         }
     }
     
