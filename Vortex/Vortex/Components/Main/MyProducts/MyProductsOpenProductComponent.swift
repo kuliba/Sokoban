@@ -24,12 +24,6 @@ extension MyProductsOpenProductView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(newProducts: OpenNewProductsViewModel, model: Model = .emptyMock) {
-            
-            self.newProducts = newProducts
-            self.model = model
-        }
-        
         init(
             _ model: Model,
             makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
@@ -99,11 +93,15 @@ struct MyProductsOpenProductView_Previews: PreviewProvider {
 extension MyProductsOpenProductView.ViewModel {
     
     static let previewSample = MyProductsOpenProductView.ViewModel(
-        newProducts: .init(
-            items: [.sample,
-                    .sampleAccount,
-                    .sampleEmptySubtitle,
-                    .sampleLongSubtitle
-            ])
+        .emptyMock,
+        makeOpenNewProductButtons: { _ in
+            
+            return [
+                .sample,
+                .sampleAccount,
+                .sampleEmptySubtitle,
+                .sampleLongSubtitle
+            ]
+        }
     )
 }
