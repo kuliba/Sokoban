@@ -790,7 +790,7 @@ private extension RootViewModelFactory {
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-         
+                
         let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
         }
         
@@ -819,6 +819,7 @@ private extension RootViewModelFactory {
                 bannersBinder: bannersBinder,
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
             viewModelsFactory: mainViewModelsFactory,
@@ -878,7 +879,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             marketShowcaseBinder: marketShowcaseBinder
         )
-        
+
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,

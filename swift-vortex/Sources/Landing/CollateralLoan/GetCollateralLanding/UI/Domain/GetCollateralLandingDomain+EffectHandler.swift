@@ -9,14 +9,14 @@ extension GetCollateralLandingDomain {
     
     public final class EffectHandler {
         
-        private let landingId: LandingId
+        private let landingID: LandingID
         private let load: Load
         
         public init(
-            landingId: LandingId,
+            landingID: LandingID,
             load: @escaping Load
         ) {
-            self.landingId = landingId
+            self.landingID = landingID
             self.load = load
         }
 
@@ -24,13 +24,13 @@ extension GetCollateralLandingDomain {
             
             switch effect {
             case .load:
-                load(landingId) { dispatch(.loaded($0)) }
+                load(landingID) { dispatch(.loaded($0)) }
             }
         }
 
-        public typealias LandingId = String
+        public typealias LandingID = String
         public typealias Dispatch = (Event) -> Void
-        public typealias Load = (LandingId, @escaping Completion) -> Void
+        public typealias Load = (LandingID, @escaping Completion) -> Void
         public typealias Completion = (Result) -> Void
     }
 }
