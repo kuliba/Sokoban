@@ -121,100 +121,7 @@ private extension ResponseMapper._DTO {
 
 private extension ResponseMapper._DTO {
     
-    enum Kind: String, Decodable {
-        
-        case betweenTheir = "BETWEEN_THEIR"
-        case contactAddressless = "CONTACT_ADDRESSLESS"
-        case direct = "DIRECT"
-        case externalEntity = "EXTERNAL_ENTITY"
-        case externalIndivudual = "EXTERNAL_INDIVIDUAL"
-        case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
-        case insideBank = "INSIDE_BANK"
-        case insideOther = "INSIDE_OTHER"
-        case internet = "INTERNET"
-        case mobile = "MOBILE"
-        case notFinance = "NOT_FINANCE"
-        case otherBank = "OTHER_BANK"
-        case outsideCash = "OUTSIDE_CASH"
-        case outsideOther = "OUTSIDE_OTHER"
-        case sfp = "SFP"
-        case transport = "TRANSPORT"
-        case taxes = "TAX_AND_STATE_SERVICE"
-        case c2b = "C2B_PAYMENT"
-        case insideDeposit = "INSIDE_DEPOSIT"
-        case sberQRPayment = "SBER_QR_PAYMENT"
-        case networkMarketing = "NETWORK_MARKETING_SERVICE"
-        case digitalWallet = "DIGITAL_WALLETS_SERVICE"
-        case charity = "CHARITY_SERVICE"
-        case socialAndGame = "SOCIAL_AND_GAMES_SERVICE"
-        case education = "EDUCATION_SERVICE"
-        case security = "SECURITY_SERVICE"
-        case repayment = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
-    }
-}
-
-private extension ResponseMapper._DTO.Kind {
-    
-    var value: ProductStatementData.Kind {
-        
-        switch self {
-            
-        case .betweenTheir:
-            return .betweenTheir
-        case .contactAddressless:
-            return .contactAddressless
-        case .direct:
-            return .direct
-        case .externalEntity:
-            return .externalEntity
-        case .externalIndivudual:
-            return .externalIndivudual
-        case .housingAndCommunalService:
-            return .housingAndCommunalService
-        case .insideBank:
-            return .insideBank
-        case .insideOther:
-            return .insideOther
-        case .internet:
-            return .internet
-        case .mobile:
-            return .mobile
-        case .notFinance:
-            return .notFinance
-        case .otherBank:
-            return .otherBank
-        case .outsideCash:
-            return .outsideCash
-        case .outsideOther:
-            return .outsideOther
-        case .sfp:
-            return .sfp
-        case .transport:
-            return .transport
-        case .taxes:
-            return .taxes
-        case .c2b:
-            return .c2b
-        case .insideDeposit:
-            return .insideDeposit
-        case .sberQRPayment:
-            return .sberQRPayment
-        case .networkMarketing:
-            return .networkMarketing
-        case .digitalWallet:
-            return .digitalWallet
-        case .charity:
-            return .charity
-        case .socialAndGame:
-            return .socialAndGame
-        case .education:
-            return .education
-        case .security:
-            return .security
-        case .repayment:
-            return .repayment
-        }
-    }
+    typealias Kind = String
 }
 
 private extension ResponseMapper._DTO {
@@ -334,7 +241,7 @@ private extension ProductStatementData {
             type: data.type.value,
             accountID: data.accountID,
             operationType: data.operationType.value,
-            paymentDetailType: data.paymentDetailType.value,
+            paymentDetailType: data.paymentDetailType,
             amount: data.amountValue,
             documentAmount: data.documentAmountValue,
             comment: data.comment,

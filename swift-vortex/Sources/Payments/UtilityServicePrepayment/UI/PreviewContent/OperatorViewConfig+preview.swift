@@ -8,6 +8,7 @@
 extension OperatorLabelConfig {
     
     static let preview: Self = .init(
+        height: 46,
         title: .init(
             textFont: .title3,
             textColor: .black

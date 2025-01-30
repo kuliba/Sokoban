@@ -25,6 +25,13 @@ extension SavingsAccountDomain {
         
         case goToMain
         case order
+        case failure(FlowFailureKind)
+    }
+
+    enum FlowFailureKind: Equatable {
+        
+        case timeout(InformerPayload)
+        case error(String)
     }
 
     enum Navigation {
@@ -32,12 +39,6 @@ extension SavingsAccountDomain {
         case main
         case order
         case failure(FlowFailureKind)
-        
-        enum FlowFailureKind {
-            
-            case timeout(InformerPayload)
-            case error(String)
-        }
     }
     
     // MARK: - Binder

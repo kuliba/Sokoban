@@ -35,17 +35,6 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectNoMainViewQRScannerFullScreenCover(rootView)
     }
     
-    func test_tapMainViewQRButton_shouldOpenMainViewQRScannerFullScreenCoverOnInactiveFlag() throws {
-        
-        let app = TestApp(featureFlags: inactivePaymentsTransfersFlag())
-        let rootView = try app.launch()
-        
-        tapMainViewQRButton(rootView)
-        
-        expectMainViewQRScannerFullScreenCover(rootView)
-        expectNoRootViewQRScannerFullScreenCover(rootView)
-    }
-    
     func test_closeQRScanner_shouldCloseRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
         
         let app = TestApp(featureFlags: activePaymentsTransfersFlag())

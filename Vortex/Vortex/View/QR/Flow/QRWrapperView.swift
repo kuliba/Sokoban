@@ -72,7 +72,7 @@ extension QRWrapperViewFactory {
                         title: "Оплатить",
                         dismiss: { binder.flow.event(.dismiss) },
                         rightItem: .barcodeScanner(
-                            action: { binder.flow.event(.select(.scanQR)) }
+                            action: { binder.flow.event(.select(.outside(.scanQR))) }
                         )
                     )
             }
@@ -111,7 +111,14 @@ private extension QRWrapperView {
         case let .providerPicker(picker):
             factory.makeSegmentedPaymentProviderPickerView(picker)
                 .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
-            
+                .navigationBarWithBack(
+                    title: "Оплатить",
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner(
+                        action: { binder.flow.event(.dismiss) }
+                    )
+                )
+
         case let .providerServicePicker(picker):
             factory.makeAnywayServicePickerFlowView(picker)
                 .navigationBarWithAsyncIcon(

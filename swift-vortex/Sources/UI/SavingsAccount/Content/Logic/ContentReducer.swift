@@ -44,10 +44,15 @@ public extension ContentReducer {
             }
             
         case .selectOrder:
-            state.selection = .order
+            let oldLanding = state.status.oldLanding
+            state.status = .selection(.order, oldLanding)
             
         case .resetSelection:
-            state.selection = nil
+            if let oldLanding = state.status.oldLanding {
+                state.status = .loaded(oldLanding)
+            } else {
+                state.status = .initiate
+            }
         }
         
         return (state, effect)

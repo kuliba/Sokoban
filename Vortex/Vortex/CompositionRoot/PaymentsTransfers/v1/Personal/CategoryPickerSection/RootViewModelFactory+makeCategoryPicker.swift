@@ -23,10 +23,11 @@ extension RootViewModelFactory {
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation(
-                makeStandard: handleSelectedServiceCategory
-            ),
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
+            getNavigation: getNavigation,
+            witnesses: .init(
+                emitting: { _ in Empty() },
+                dismissing: { _ in {} }
+            )
         )
     }
     
@@ -43,34 +44,115 @@ extension RootViewModelFactory {
     }
     
     typealias MakeStandard = (ServiceCategory, @escaping (CategoryPickerViewDomain.Destination.Standard) -> Void) -> Void
-
+    
     @inlinable
     func getNavigation(
-        makeStandard: @escaping MakeStandard
-    ) -> (
-        CategoryPickerViewDomain.Select,
-        @escaping CategoryPickerViewDomain.Notify,
-        @escaping (CategoryPickerViewDomain.Navigation) -> Void
-    ) -> Void {
-        
-        let composer = SelectedCategoryGetNavigationComposer(
-            model: model,
-            nanoServices: .init(
-                makeMobile: makeMobilePayment,
-                makeStandard: makeStandard,
-                makeTax: makeTaxPayment,
-                makeTransport: makeTransportPayment
-            ),
-            scheduler: schedulers.main
-        )
-        
-        return { select, notify, completion in
+        select: CategoryPickerViewDomain.Select,
+        notify: @escaping CategoryPickerViewDomain.Notify,
+        completion: @escaping (CategoryPickerViewDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case let .category(category):
+            getNavigation(category: category, notify: notify, completion: completion)
             
-            composer.getNavigation(select, notify) {
+        case let .outside(outside):
+            completion(.outside(outside))
+        }
+    }
+    
+    @inlinable
+    func getNavigation(
+        category: ServiceCategory,
+        notify: @escaping CategoryPickerViewDomain.Notify,
+        completion: @escaping (CategoryPickerViewDomain.Navigation) -> Void
+    ) {
+        switch category.paymentFlow {
+        case .mobile:
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
+            
+        case .qr:
+            completion(.outside(.qr))
+            
+        case .standard:
+            handleSelectedServiceCategory(category) { [weak self] in
                 
-                completion($0)
-                _ = composer
+                guard let self else { return }
+                
+                completion(.destination(.standard(.init(
+                    model: $0,
+                    cancellable: bind(standard: $0, to: notify)
+                ))))
+            }
+            
+        case .taxAndStateServices:
+            completion(.destination(.taxAndStateServices(makeTaxPayment(
+                closeAction: { notify(.dismiss) }
+            ))))
+            
+        case .transport:
+            guard let transport = makeTransportPayment()
+            else { return completion(.failure(.transport)) }
+            
+            completion(.destination(.transport(transport)))
+        }
+    }
+    
+    @inlinable
+    func bind(
+        standard: StandardSelectedCategoryDestination,
+        to notify: @escaping CategoryPickerViewDomain.Notify
+    ) -> AnyCancellable {
+        
+        switch standard {
+        case let .failure(failure):
+            return failure.flow.$state.compactMap(\.outside)
+                .sink { notify(.select(.outside($0))) }
+            
+        case let .success(success):
+            return success.flow.$state.compactMap(\.outside)
+                .sink { notify(.select(.outside($0))) }
+        }
+    }
+}
+
+private extension ServiceCategoryFailureDomain.FlowDomain.State {
+    
+    var outside: CategoryPickerViewDomain.Outside? {
+        
+        switch navigation {
+        case .none:          return nil
+        case .detailPayment: return nil
+        case .scanQR:        return .qr
+        }
+    }
+}
+
+private extension PaymentProviderPickerDomain.FlowDomain.State {
+    
+    var outside: CategoryPickerViewDomain.Outside? {
+        
+        switch navigation {
+        case .none, .alert, .destination:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .back:     return nil
+            case .chat:     return .chat
+            case .main:     return .main
+            case .payments: return .payments
+            case .qr:       return .qr
             }
         }
     }
+}
+
+private extension SelectedCategoryFailure {
+    
+    static let transport: Self = .init(
+        id: .init(),
+        message: "Ошибка создания транспортных платежей"
+    )
 }

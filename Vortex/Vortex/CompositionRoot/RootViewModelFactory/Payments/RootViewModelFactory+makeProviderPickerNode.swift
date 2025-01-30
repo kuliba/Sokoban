@@ -54,11 +54,11 @@ extension RootViewModelFactory {
 
 extension SegmentedPaymentProviderPickerFlowModel.State {
     
-    typealias NotifyEvent = Vortex.FlowEvent<Status.Outside, Never>
+    typealias NotifyEvent = Vortex.FlowEvent<Navigation.Outside, Never>
     
     var _notifyEvent: NotifyEvent? {
         
-        switch status {
+        switch navigation {
         case let .outside(outside):
             return .select(outside)
             

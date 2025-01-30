@@ -69,15 +69,17 @@ public struct SavingsAccountView: View {
     private func landing() -> some View {
         VStack {
             factory.makeBannerImageView(state.imageLink)
+                .aspectRatio(contentMode: .fill)
+                .frame(height: config.bannerHeight)
                 .aspectRatio(contentMode: .fit)
                 .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
             
             list(items: state.advantages)
                 .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-
+            
             list(items: state.basicConditions)
                 .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-
+            
             questionsView()
                 .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
         }
@@ -114,9 +116,8 @@ public struct SavingsAccountView: View {
         
         if isShowHeader {
             VStack {
-                state.title.text(withConfig: config.navTitle.title)
-                state.subtitle.map { $0.text(withConfig: config.navTitle.subtitle)
-                }
+                config.navTitle.title.text.text(withConfig: config.navTitle.title.config)
+                config.navTitle.subtitle.text.text(withConfig: config.navTitle.subtitle.config)
             }
         }
     }

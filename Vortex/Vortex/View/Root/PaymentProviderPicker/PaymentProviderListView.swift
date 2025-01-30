@@ -10,121 +10,54 @@ import RxViewModel
 import SwiftUI
 import UtilityServicePrepaymentUI
 
-struct PaymentProviderListView<SearchView: View>: View {
+struct PaymentProviderListView: View {
     
     let providerList: PaymentProviderPickerDomain.ProviderList
     let binder: PaymentProviderPickerDomain.Binder
     let makeIconView: MakeIconView
-    let makeSearchView: () -> SearchView
     
     var body: some View {
         
-        RxWrapperView(
-            model: providerList,
-            makeContentView: makeContentView
-        )
+        RxWrapperView(model: providerList, makeContentView: makeContentView)
     }
 }
 
 private extension PaymentProviderListView {
     
+    @ViewBuilder
     func makeContentView(
         state: PaymentProviderPickerDomain.ProviderListState,
         event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
     ) -> some View {
         
-        PrepaymentPickerSuccessView(
-            state: state,
-            event: event,
-            factory: .init(
-                makeFooterView: makeFooterView,
-                makeLastPaymentView: makeLastPaymentView,
-                makeOperatorView: makeOperatorView,
-                makeSearchView: makeSearchView
-            )
-        )
-    }
-    
-    func makeFooterView(
-        _ state: Bool
-    ) -> some View {
+        ForEach(state.operators) { provider in
+            
+            makeProviderView(provider: provider, event: event)
+        }
         
-        FooterView(
-            state: state ? .failure(.iVortex) : .footer(.iVortex),
-            event: binder.flow.handleFooterEvent(_:),
-            config: .iVortex
-        )
+        makeFooterView()
     }
     
-    func makeLastPaymentView(
-        latest: Latest
-    ) -> some View {
-        
-        makeLatestPaymentView(latest: latest, event: binder.flow.selectLatest(_:))
-    }
-    
-    func makeLatestPaymentView(
-        latest: Latest,
-        event: @escaping (Latest) -> Void
-    ) -> some View {
-        
-        Button(
-            action: { event(latest) },
-            label: {
-                
-                LastPaymentLabel(
-                    amount: latest.amount.map { "\($0) ₽" } ?? "",
-                    title: latest.name,
-                    config: .iVortex,
-                    iconView: makeIconView(md5Hash: latest.md5Hash)
-                )
-                .contentShape(Rectangle())
-            }
-        )
-    }
-    
-    func makeOperatorView(
-        `operator`: UtilityPaymentProvider
-    ) -> some View {
-        
-        makeOperatorView(provider: `operator`, event: binder.flow.selectProvider(_:))
-    }
-    
-    func makeOperatorView(
+    func makeProviderView(
         provider: PaymentProviderPickerDomain.Provider,
-        event: @escaping (PaymentProviderPickerDomain.Provider) -> Void
+        event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
     ) -> some View {
         
         Button(
-            action: { event(provider) },
+            action: { binder.flow.selectProvider(provider) },
             label: {
                 
                 OperatorLabel(
                     title: provider.title,
                     subtitle: provider.inn,
-                    config: .iVortex,
+                    config: .iVortex(),
                     iconView: makeIconView(md5Hash: provider.icon)
                 )
                 .contentShape(Rectangle())
             }
         )
-    }
-    
-    @ViewBuilder
-    func _makeSearchView() -> some View {
-        
-        binder.content.search.map { search in
-            
-            DefaultCancellableSearchBarView(
-                viewModel: search,
-                textFieldConfig: .black16,
-                cancel: {
-                    
-                    UIApplication.shared.endEditing()
-                    search.setText(to: nil)
-                }
-            )
-        }
+        .plainListRow(insets: .init(top: 0, leading: 16, bottom: 0, trailing: 16))
+        .onAppear { event(.didScrollTo(provider.id)) }
     }
     
     func makeIconView(
@@ -132,6 +65,15 @@ private extension PaymentProviderListView {
     ) -> some View {
         
         makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
+    
+    func makeFooterView() -> some View {
+        
+        FooterView(
+            state: .footer(.iVortex),
+            event: binder.flow.handleFooterEvent(_:),
+            config: .iVortex
+        )
     }
 }
 

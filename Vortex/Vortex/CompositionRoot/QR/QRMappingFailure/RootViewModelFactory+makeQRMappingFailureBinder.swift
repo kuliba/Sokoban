@@ -29,10 +29,9 @@ extension RootViewModelFactory {
     ) -> Delay {
         
         switch navigation {
-        case .back:          return .milliseconds(100)
-        case .detailPayment: return .milliseconds(500)
-        case .categoryPicker:  return .milliseconds(500)
-        case .scanQR:        return .milliseconds(100)
+        case .detailPayment:  return .milliseconds(500)
+        case .categoryPicker: return .milliseconds(500)
+        case .outside:        return .milliseconds(100)
         }
     }
     
@@ -50,9 +49,6 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             switch select {
-            case .back:
-                completion(.back)
-                
             case .detailPayment:
                 completion(.detailPayment(
                     makePaymentsNode(
@@ -69,8 +65,8 @@ extension RootViewModelFactory {
                     )
                 ))
                 
-            case .scanQR:
-                completion(.scanQR)
+            case let .outside(outside):
+                completion(.outside(outside))
             }
         }
     }
@@ -102,8 +98,8 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
     var notifyEvent: QRMappingFailureDomain.NotifyEvent {
         
         switch self {
-        case .close: return .dismiss
-        case .scanQR: return .select(.scanQR)
+        case .close:  return .dismiss
+        case .scanQR: return .select(.outside(.scanQR))
         }
     }
 }
@@ -118,7 +114,10 @@ private extension CategoryPickerViewDomain.Navigation {
             
         case let .outside(outside):
             switch outside {
-            case .qr: return .select(.scanQR)
+            case .chat:     return .select(.outside(.chat))
+            case .main:     return .select(.outside(.main))
+            case .payments: return .select(.outside(.payments))
+            case .qr:       return .select(.outside(.scanQR))
             }
         }
     }

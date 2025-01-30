@@ -290,9 +290,9 @@ extension Payments {
             return Operator(rawValue: value)
         }
         
-        init(operatorType: Operator) {
+        init(operator: Operator) {
             
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType.rawValue)
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: `operator`.rawValue)
         }
         
         init(operatorType: String) {

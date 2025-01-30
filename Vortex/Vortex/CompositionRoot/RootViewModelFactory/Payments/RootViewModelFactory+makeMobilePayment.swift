@@ -16,4 +16,16 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
+    
+    @inlinable
+    func makeMobilePayment(
+        closeAction: @escaping () -> Void
+    ) -> PaymentsViewModel {
+        
+        return .init(
+            model,
+            service: .mobileConnection,
+            closeAction: closeAction
+        )
+    }
 }

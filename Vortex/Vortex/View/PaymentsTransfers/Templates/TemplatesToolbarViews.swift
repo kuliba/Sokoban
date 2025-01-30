@@ -82,7 +82,7 @@ extension TemplatesListView {
                 
                 Button(action: viewModel.trailingButton.action,
                        label: { viewModel.trailingButton.icon
-                                    .opacity(viewModel.isTrailingButtonDisable ? 0.4 : 1.0)
+                        .opacity(viewModel.isTrailingButtonDisable ? 0.4 : 1.0)
                 })
                 .disabled(viewModel.isTrailingButtonDisable)
                 
@@ -143,7 +143,6 @@ extension TemplatesListView {
     struct SearchNavBarView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.SearchNavBarViewModel
-        @Environment(\.mainViewSize) var mainViewSize
         
         var body: some View {
             
@@ -151,27 +150,39 @@ extension TemplatesListView {
                 
                 viewModel.trailIcon
                 
-                TemplatesListView.SearchTextField
-                    .init(text: $viewModel.searchText)
+                TemplatesListView.SearchTextField(text: $viewModel.searchText)
                     .fixedSize(horizontal: false, vertical: true)
-                    .frame(width: mainViewSize.width - 198)
+                    .frame(maxWidth: .infinity)
                 
-                if let clearButton = viewModel.clearButton {
-                    
-                    Button(action: clearButton.action, label: { clearButton.icon })
-                        .frame(width: 32)
-                    
-                } else {
-                    
-                    Color(.clear).frame(width: 32)
-                }
+                clearButtonOrSpace()
+                    .frame(width: 32)
                 
                 Button(viewModel.closeButton.title, action: viewModel.closeButton.action)
+                    .foregroundColor(.textPlaceholder)
+                    .font(.textBodyMR14200())
             }
+            .buttonStyle(.plain)
+        }
+        
+        @ViewBuilder
+        private func clearButtonOrSpace() -> some View {
             
+            if let clearButton = viewModel.clearButton {
+                
+                Button(action: clearButton.action) {
+                    
+                    clearButton.icon
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.textPlaceholder)
+                }
+                
+            } else {
+                
+                Color(.clear)
+            }
         }
     }
-    
 }
 
 struct TemplatesNavBar_Previews: PreviewProvider {
