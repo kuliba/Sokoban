@@ -85,71 +85,39 @@ private extension SplashScreenView {
     }
 }
 
-#Preview {
-    SplashScreenPreview()
-}
 
-struct SplashScreenPreview: View {
-    
-    @State private var splash: Splash = .init(data: .preview, config: .preview)
-    @State private var showSplash: Bool = true
-    
-    var body: some View {
-        
-        SplashScreenView(splash: splash, config: .preview)
-            .onChange(of: showSplash) { newValue in
-                splash.data.state = newValue ? .start : .splash
-            }
-            .overlay {
-                Toggle("showSplash", isOn: $showSplash)
-                    .labelsHidden()
-                    .padding()
-            }
-    }
-}
-
-#Preview("Zoom Phase") {
+#Preview("Phase One") {
     SplashScreenZoomPreview()
 }
 
 struct SplashScreenZoomPreview: View {
     
-    @State private var splash: Splash = .init(data: .preview, config: .preview)
-    @State private var showSplash: Bool = true
+    @State private var splash: Splash = .init(data: .previewPhaseOne, config: .preview)
     
     var body: some View {
         
-        SplashScreenView(splash: splash, config: .preview)
-            .onChange(of: showSplash) { newValue in
-                splash.data.state = newValue ? .start : .splash
-            }
-            .overlay {
-                Toggle("showSplash", isOn: $showSplash)
-                    .labelsHidden()
-                    .padding()
+        return SplashScreenView(splash: splash, config: .preview)
+            .onFirstAppear {
+                
+                splash.data.state = .splash
             }
     }
 }
 
-#Preview("FadeOut") {
+#Preview("Phase Two") {
     SplashScreenFadeOutPreview()
 }
 
 struct SplashScreenFadeOutPreview: View {
     
-    @State private var splash: Splash = .init(data: .preview, config: .preview)
-    @State private var showSplash: Bool = true
+    @State private var splash: Splash = .init(data: .previewPhaseTwo, config: .preview)
     
     var body: some View {
         
-        SplashScreenView(splash: splash, config: .preview)
-            .onChange(of: showSplash) { newValue in
-                splash.data.state = newValue ? .splash : .noSplash
-            }
-            .overlay {
-                Toggle("showSplash", isOn: $showSplash)
-                    .labelsHidden()
-                    .padding()
+        return SplashScreenView(splash: splash, config: .preview)
+            .onFirstAppear {
+                
+                splash.data.state = .noSplash
             }
     }
 }

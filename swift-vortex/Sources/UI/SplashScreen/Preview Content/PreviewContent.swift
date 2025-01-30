@@ -25,8 +25,18 @@ extension Image {
 
 extension SplashScreenState {
     
-    static let preview: Self = .init(
+    static let previewPhaseOne: Self = .init(
         state: .start,
+        background: .backgroundImage,
+        logo: .logoImage,
+        footer: "Vortex",
+        greeting: "Добрый день!",
+        message: "С наступающим Вас Новым годом! Это время ожидания чудес, и пусть оно будет наполнено теплом и любовью близких! Здоровья,  мира,  добра, счастья и финансового благополучия Вам и Вашим близких!",
+        animation: .easeInOut(duration: 1.2)
+    )
+    
+    static let previewPhaseTwo: Self = .init(
+        state: .splash,
         background: .backgroundImage,
         logo: .logoImage,
         footer: "Vortex",

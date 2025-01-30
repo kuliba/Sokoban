@@ -49,3 +49,69 @@ extension SplashScreenReducer {
     typealias Event = SplashScreenEvent
     typealias Effect = SplashScreenEffect
 }
+
+extension SplashScreenState {
+    
+    var isStarted: Bool {
+        
+        data.state == .start
+    }
+    
+    var isSplash: Bool {
+        
+        data.state == .splash
+    }
+    
+    var isNoSplash: Bool {
+        
+        data.state == .noSplash
+    }
+    
+    func started() -> Self {
+        
+        return .init(
+            data: .init(
+                state: .start,
+                background: data.background,
+                logo: data.logo,
+                footer: data.footer,
+                greeting: data.greeting,
+                message: data.message,
+                animation: data.animation
+            ),
+            config: config
+        )
+    }
+
+    func splashed() -> Self {
+        
+        return .init(
+            data: .init(
+                state: .splash,
+                background: data.background,
+                logo: data.logo,
+                footer: data.footer,
+                greeting: data.greeting,
+                message: data.message,
+                animation: data.animation
+            ),
+            config: config
+        )
+    }
+
+    func noSplash() -> Self {
+        
+        return .init(
+            data: .init(
+                state: .noSplash,
+                background: data.background,
+                logo: data.logo,
+                footer: data.footer,
+                greeting: data.greeting,
+                message: data.message,
+                animation: data.animation
+            ),
+            config: config
+        )
+    }
+}
