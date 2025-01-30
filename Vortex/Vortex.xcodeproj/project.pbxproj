@@ -719,6 +719,7 @@
 		2A3C2CED2D4BB71F003FEEFE /* PaymentsTransfersCorporateTransfersDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CEC2D4BB71F003FEEFE /* PaymentsTransfersCorporateTransfersDomain.swift */; };
 		2A3C2CF02D4BB81D003FEEFE /* RootViewModelFactory+makeCorporateTransfers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CEF2D4BB81D003FEEFE /* RootViewModelFactory+makeCorporateTransfers.swift */; };
 		2A3C2CF22D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CF12D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift */; };
+		2A3C2CF42D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */; };
 		2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */; };
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
@@ -4332,6 +4333,7 @@
 		2A3C2CEC2D4BB71F003FEEFE /* PaymentsTransfersCorporateTransfersDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateTransfersDomain.swift; sourceTree = "<group>"; };
 		2A3C2CEF2D4BB81D003FEEFE /* RootViewModelFactory+makeCorporateTransfers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCorporateTransfers.swift"; sourceTree = "<group>"; };
 		2A3C2CF12D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getCorporateTransfersNavigationTests.swift"; sourceTree = "<group>"; };
+		2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMeToMeNode.swift"; sourceTree = "<group>"; };
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetC2BSubResponse+preview.swift"; sourceTree = "<group>"; };
@@ -11558,6 +11560,7 @@
 				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
 				2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */,
 				2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */,
+				2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */,
 			);
 			path = Factories;
 			sourceTree = "<group>";
@@ -22100,6 +22103,7 @@
 				77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */,
 				2AD7674A2CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift in Sources */,
 				ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */,
+				2A3C2CF42D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift in Sources */,
 				50239E9B2941253F00AA480B /* CheckBoxViewComponent.swift in Sources */,
 				8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
 				2A840BFE2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift in Sources */,
