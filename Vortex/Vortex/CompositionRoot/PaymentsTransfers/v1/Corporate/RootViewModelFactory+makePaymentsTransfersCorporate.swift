@@ -39,10 +39,15 @@ extension RootViewModelFactory {
             suffix: (0..<6).map { _ in .placeholder(.init()) }
         )
         
+        // MARK: - CorporateTransfers
+        
+        let corporateTransfers: CorporateTransfersProtocol = 1
+        
         // MARK: - PaymentsTransfers
         
         let content = Domain.Content(
             bannerPicker: bannerPicker,
+            corporateTransfers: corporateTransfers,
             reload: { bannerPicker.content.event(.load) }
         )
         

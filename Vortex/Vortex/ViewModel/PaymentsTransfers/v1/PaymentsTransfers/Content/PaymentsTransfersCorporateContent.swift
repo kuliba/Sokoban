@@ -20,3 +20,16 @@ extension PayHubUI.CorporateBannerPicker {
         return self as? BannerPickerSectionBinder
     }
 }
+
+// MARK: - CorporateTransfers
+
+typealias CorporateTransfers = Int
+extension CorporateTransfers: CorporateTransfersProtocol {}
+
+extension CorporateTransfersProtocol {
+    
+    var corporateTransfersBinder: CorporateTransfers? {
+        
+        return self as? CorporateTransfers
+    }
+}

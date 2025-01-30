@@ -720,6 +720,7 @@
 		2A3C2CF02D4BB81D003FEEFE /* RootViewModelFactory+makeCorporateTransfers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CEF2D4BB81D003FEEFE /* RootViewModelFactory+makeCorporateTransfers.swift */; };
 		2A3C2CF22D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CF12D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift */; };
 		2A3C2CF42D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */; };
+		2A3C2CF62D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C2CF52D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift */; };
 		2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */; };
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
@@ -4334,6 +4335,7 @@
 		2A3C2CEF2D4BB81D003FEEFE /* RootViewModelFactory+makeCorporateTransfers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCorporateTransfers.swift"; sourceTree = "<group>"; };
 		2A3C2CF12D4BB934003FEEFE /* RootViewModelFactory+getCorporateTransfersNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getCorporateTransfersNavigationTests.swift"; sourceTree = "<group>"; };
 		2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMeToMeNode.swift"; sourceTree = "<group>"; };
+		2A3C2CF52D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+makeCorporateTransfers.swift"; sourceTree = "<group>"; };
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetC2BSubResponse+preview.swift"; sourceTree = "<group>"; };
@@ -12409,6 +12411,7 @@
 				842C423B2D11FF2F006A307D /* RootViewFactory+operatorFailureView.swift */,
 				842C423A2D11FF2F006A307D /* ViewComponents+serviceCategoryFailureView.swift */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
+				2A3C2CF52D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift */,
 				2A1FDF382D3CBDB3005D1614 /* RootViewFactory+makePaymentsTransfersSwitcherView.swift */,
 				2AD767542CF9A0C900BFDA70 /* RootViewFactory+makePaymentsTransfersPersonalView.swift */,
 				2AA09D602CF9B3CF0062415C /* RootViewFactory+makePaymentsTransfersCorporateView.swift */,
@@ -22302,6 +22305,7 @@
 				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,
 				2A61C5072CEC516900EA9BB7 /* QRScannerDomain.swift in Sources */,
 				5A5ABFB327ABCA5100D548AA /* DepositInfoDataItem.swift in Sources */,
+				2A3C2CF62D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
 				77517FE027A98A94005CFB77 /* ServerCommands+User.swift in Sources */,
 				77F9F25E2A45BF0300699433 /* PaymentsParametersReducer.swift in Sources */,
