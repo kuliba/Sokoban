@@ -68,7 +68,9 @@ extension RootViewModelFactory {
     ) {
         switch category.paymentFlow {
         case .mobile:
-            completion(.destination(.mobile(makeMobilePayment())))
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .qr:
             completion(.outside(.qr))
@@ -85,7 +87,9 @@ extension RootViewModelFactory {
             }
             
         case .taxAndStateServices:
-            completion(.destination(.taxAndStateServices(makeTaxPayment())))
+            completion(.destination(.taxAndStateServices(makeTaxPayment(
+                closeAction: { notify(.dismiss) }
+            ))))
             
         case .transport:
             guard let transport = makeTransportPayment()
