@@ -14,22 +14,22 @@ extension RootViewModelFactory {
     @inlinable
     func makeSplashScreenViewModel(
         initialState: SplashScreenState,
-        phaseOneDuration: Delay,
-        phaseTwoDuration: Delay
+        ZoomDuration: Delay,
+        FadeOutDuration: Delay
     ) -> SplashScreenViewModel {
         
         let reducer = SplashScreenReducer()
         let effectHandler = SplashScreenEffectHandler(
-            startPhaseOneTimer: { [weak self] completion in
+            startZoomTimer: { [weak self] completion in
                 
-                self?.schedulers.interactive.delay(for: phaseOneDuration) {
+                self?.schedulers.interactive.delay(for: ZoomDuration) {
                     
                     completion()
                 }
             },
-            startPhaseTwoTimer: { [weak self] completion in
+            startFadeOutTimer: { [weak self] completion in
                 
-                self?.schedulers.interactive.delay(for: phaseTwoDuration) {
+                self?.schedulers.interactive.delay(for: FadeOutDuration) {
                     
                     completion()
                 }
@@ -49,24 +49,24 @@ extension SplashScreenState {
     
     var isZoomed: Bool {
         
-        data.phase == .zoom
+        data.state == .zoomed
     }
     
     var isFadeOut: Bool {
         
-        data.phase == .fadeOut
+        data.state == .fadedOut
     }
     
     var isNoSplash: Bool {
         
-        data.phase == .noSplash
+        data.state == .noSplash
     }
     
     func zoomed() -> Self {
         
         return .init(
             data: .init(
-                phase: .zoom,
+                state: .zoomed,
                 background: data.background,
                 logo: data.logo,
                 footer: data.footer,
@@ -78,11 +78,11 @@ extension SplashScreenState {
         )
     }
 
-    func fadeOut() -> Self {
+    func fadedOut() -> Self {
         
         return .init(
             data: .init(
-                phase: .fadeOut,
+                state: .fadedOut,
                 background: data.background,
                 logo: data.logo,
                 footer: data.footer,
@@ -98,7 +98,7 @@ extension SplashScreenState {
         
         return .init(
             data: .init(
-                phase: .noSplash,
+                state: .noSplash,
                 background: data.background,
                 logo: data.logo,
                 footer: data.footer,

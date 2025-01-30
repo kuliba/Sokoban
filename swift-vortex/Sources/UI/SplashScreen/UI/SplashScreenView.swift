@@ -22,7 +22,7 @@ public struct SplashScreenView: View {
     
     private var scaleEffect: CGFloat {
         
-        splash.data.phase != .zoom ? config.scaleEffect.end : config.scaleEffect.start
+        splash.data.state != .zoomed ? config.scaleEffect.end : config.scaleEffect.start
     }
     
     public var body: some View {
@@ -61,10 +61,10 @@ public struct SplashScreenView: View {
             .padding(.top, config.paddings.top)
             .padding(.bottom, config.paddings.bottom)
         }
-        .opacity(splash.data.phase == .fadeOut ? 1 : 0)
+        .opacity(splash.data.state == .fadedOut ? 1 : 0)
         .animation(
             splash.data.animation,
-            value: splash.data.phase
+            value: splash.data.state
         )
     }
 }
@@ -79,7 +79,7 @@ private extension SplashScreenView {
             .scaleEffect(scaleEffect)
             .animation(
                 splash.data.animation,
-                value: splash.data.phase
+                value: splash.data.state
             )
             .ignoresSafeArea()
     }
@@ -98,7 +98,7 @@ struct SplashScreenPreview: View {
         
         SplashScreenView(splash: splash, config: .preview)
             .onChange(of: showSplash) { newValue in
-                splash.data.phase = newValue ? .zoom : .fadeOut
+                splash.data.state = newValue ? .zoomed : .fadedOut
             }
             .overlay {
                 Toggle("showSplash", isOn: $showSplash)
@@ -121,7 +121,7 @@ struct SplashScreenZoomPreview: View {
         
         SplashScreenView(splash: splash, config: .preview)
             .onChange(of: showSplash) { newValue in
-                splash.data.phase = newValue ? .zoom : .fadeOut
+                splash.data.state = newValue ? .zoomed : .fadedOut
             }
             .overlay {
                 Toggle("showSplash", isOn: $showSplash)
@@ -144,7 +144,7 @@ struct SplashScreenFadeOutPreview: View {
         
         SplashScreenView(splash: splash, config: .preview)
             .onChange(of: showSplash) { newValue in
-                splash.data.phase = newValue ? .fadeOut : .noSplash
+                splash.data.state = newValue ? .fadedOut : .noSplash
             }
             .overlay {
                 Toggle("showSplash", isOn: $showSplash)

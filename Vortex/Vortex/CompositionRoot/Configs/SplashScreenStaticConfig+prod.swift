@@ -48,7 +48,7 @@ extension SplashScreenDynamicConfig {
 extension SplashScreenState {
     
     static let initialSplashData: SplashScreenState = .init(
-        data: .init(phase: .noSplash,
+        data: .init(state: .noSplash,
                     background: Image("splashPlaceholder"),
                     logo: Image("vortexLogoNewYear"),
                     footer: "Vortex",

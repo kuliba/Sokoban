@@ -21,6 +21,6 @@ enum SplashScreenEvent {
 
 enum SplashScreenEffect {
     
-    case startPhaseOneTimer
-    case startPhaseTwoTimer
+    case startZoomTimer
+    case startFadeOutTimer
 }

@@ -9,15 +9,15 @@ import Foundation
 
 final class SplashScreenEffectHandler {
     
-    let startPhaseOneTimer: StartTimer
-    let startPhaseTwoTimer: StartTimer
+    let startZoomTimer: StartTimer
+    let startFadeOutTimer: StartTimer
     
     init(
-        startPhaseOneTimer: @escaping StartTimer,
-        startPhaseTwoTimer: @escaping StartTimer
+        startZoomTimer: @escaping StartTimer,
+        startFadeOutTimer: @escaping StartTimer
     ) {
-        self.startPhaseOneTimer = startPhaseOneTimer
-        self.startPhaseTwoTimer = startPhaseTwoTimer
+        self.startZoomTimer = startZoomTimer
+        self.startFadeOutTimer = startFadeOutTimer
     }
     
     func handleEffect(
@@ -25,11 +25,11 @@ final class SplashScreenEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .startPhaseOneTimer:
+        case .startZoomTimer:
             dispatch(.fadeOut)
             
-        case .startPhaseTwoTimer:
-            startPhaseTwoTimer { dispatch(.noSplash) }
+        case .startFadeOutTimer:
+            startFadeOutTimer { dispatch(.noSplash) }
         }
     }
     
