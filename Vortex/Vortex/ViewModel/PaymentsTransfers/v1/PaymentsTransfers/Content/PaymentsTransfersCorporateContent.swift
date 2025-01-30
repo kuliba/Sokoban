@@ -20,3 +20,20 @@ extension PayHubUI.CorporateBannerPicker {
         return self as? BannerPickerSectionBinder
     }
 }
+
+// MARK: - CorporateTransfers
+
+struct PaymentsTransfersCorporateTransfers {
+    
+    let meToMe: MeToMeDomain.Flow
+}
+
+extension PaymentsTransfersCorporateTransfers: CorporateTransfersProtocol {}
+
+extension CorporateTransfersProtocol {
+    
+    var corporateTransfers: PaymentsTransfersCorporateTransfers? {
+        
+        return self as? PaymentsTransfersCorporateTransfers
+    }
+}
