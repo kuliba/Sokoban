@@ -218,6 +218,15 @@ extension MainViewModel {
     
     private func openScanner() {
         
+        guard !model.onlyCorporateCards
+        else {
+            if let alertViewModel = disableAlertViewModel {
+                
+                route.modal = .alert(alertViewModel)
+            }
+            return
+        }
+        
         guard let qrModel = viewModelsFactory.qrViewModelFactory.makeQRScannerModel()
         else { return }
         
