@@ -82,10 +82,16 @@ extension RootViewFactory {
     }
     
     func makePaymentProviderPickerView(
-        _ binder: PaymentProviderPickerDomain.Binder
+        binder: PaymentProviderPickerDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> PaymentProviderPickerView {
         
-        return .init(binder: binder, components: components, makeIconView: makeIconView)
+        return .init(
+            binder: binder,
+            dismiss: dismiss,
+            components: components,
+            makeIconView: makeIconView
+        )
     }
 }
 
