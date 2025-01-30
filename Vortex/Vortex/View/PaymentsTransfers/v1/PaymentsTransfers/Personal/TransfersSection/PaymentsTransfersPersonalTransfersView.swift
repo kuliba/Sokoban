@@ -74,14 +74,11 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch destination {
         case let .payments(node):
-            viewFactory.makePaymentsView(node.model.paymentsViewModel)
+            viewFactory.makePaymentsView(node.model)
             
         case let .successMeToMe(successMeToMeViewModel):
             viewFactory.makePaymentsSuccessView(successMeToMeViewModel)
                 .navigationBarHidden(true)
-            
-        case let .paymentsViewModel(node):
-            viewFactory.makePaymentsView(node.model)
         }
     }
     
@@ -110,7 +107,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
             case let .meToMe(meToMe):
                 return .meToMe(meToMe)
                 
-            case .contacts, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+            case .contacts, .payments, .scanQR, .successMeToMe:
                 return nil
             }
         }
@@ -127,14 +124,11 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
                 //    case let .anotherCard(anotherCard):
                 //        return .anotherCard(anotherCard)
                 
-            case let .payments(payments):
-                return .payments(payments)
-                
             case let .successMeToMe(node):
                 return .successMeToMe(node.model)
                 
-            case let .paymentsViewModel(viewModel):
-                return .paymentsViewModel(viewModel)
+            case let .payments(viewModel):
+                return .payments(viewModel)
                 
             case .contacts, .meToMe, .scanQR:
                 return nil
@@ -153,7 +147,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
             case let .contacts(contacts):
                 return .contacts(contacts)
                 
-            case .meToMe, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+            case .meToMe, .payments, .scanQR, .successMeToMe:
                 return nil
             }
         }
@@ -168,8 +162,7 @@ extension PaymentsTransfersPersonalTransfersDomain {
     
     enum Destination {
         
-        case payments(Node<ClosePaymentsViewModelWrapper>)
-        case paymentsViewModel(Node<PaymentsViewModel>)
+        case payments(Node<PaymentsViewModel>)
         case successMeToMe(PaymentsSuccessViewModel)
     }
     
@@ -203,9 +196,6 @@ extension PaymentsTransfersPersonalTransfersDomain.Destination: Identifiable {
         case let .payments(node):
             return .payments(.init(node.model))
             
-        case let .paymentsViewModel(node):
-            return .paymentsViewModel(.init(node.model))
-            
         case let .successMeToMe(model):
             return .successMeToMe(.init(model))
         }
@@ -214,7 +204,6 @@ extension PaymentsTransfersPersonalTransfersDomain.Destination: Identifiable {
     enum ID: Hashable {
         
         case payments(ObjectIdentifier)
-        case paymentsViewModel(ObjectIdentifier)
         case successMeToMe(ObjectIdentifier)
     }
 }
