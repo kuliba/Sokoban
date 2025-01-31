@@ -18,6 +18,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersCorporate(
+        featureFlags: FeatureFlags,
         bannerPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersCorporateNanoServices
     ) -> PaymentsTransfersCorporateDomain.Binder {
@@ -41,7 +42,7 @@ extension RootViewModelFactory {
         
         // MARK: - CorporateTransfers
         
-        let corporateTransfers = makeCorporateTransfers()
+        let corporateTransfers = makeCorporateTransfers(featureFlags: featureFlags)
         
         // MARK: - PaymentsTransfers
         

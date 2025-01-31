@@ -9,8 +9,12 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeCorporateTransfers(
+        featureFlags: FeatureFlags
     ) -> PaymentsTransfersCorporateTransfers {
         
-        return .init(meToMe: makeMeToMeFlow())
+        return .init(
+            meToMe: makeMeToMeFlow(),
+            openProduct: makeOpenProductFlow(featureFlags: featureFlags)
+        )
     }
 }
