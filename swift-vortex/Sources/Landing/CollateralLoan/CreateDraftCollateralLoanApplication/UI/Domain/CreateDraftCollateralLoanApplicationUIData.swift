@@ -11,6 +11,7 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     
     public let amount: UInt
     public let cities: [String]
+    public let consents: [Consent]
     public let icons: Icons
     public let maxAmount: UInt
     public let minAmount: UInt
@@ -21,27 +22,29 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     public let selectedMonths: UInt
 
     public init(
-        name: String,
         amount: UInt,
-        minAmount: UInt,
-        maxAmount: UInt,
-        periods: [Period],
-        selectedMonths: UInt,
-        percent: Double,
         cities: [String],
+        consents: [Consent],
+        icons: Icons,
+        maxAmount: UInt,
+        minAmount: UInt,
+        name: String,
+        percent: Double,
+        periods: [Period],
         selectedCity: String,
-        icons: Icons
+        selectedMonths: UInt
     ) {
-        self.name = name
         self.amount = amount
-        self.minAmount = minAmount
-        self.maxAmount = maxAmount
-        self.periods = periods
-        self.selectedMonths = selectedMonths
-        self.percent = percent
         self.cities = cities
-        self.selectedCity = selectedCity
+        self.consents = consents
         self.icons = icons
+        self.maxAmount = maxAmount
+        self.minAmount = minAmount
+        self.name = name
+        self.percent = percent
+        self.periods = periods
+        self.selectedCity = selectedCity
+        self.selectedMonths = selectedMonths
     }
     
     public struct Period: Equatable {
@@ -55,6 +58,20 @@ public struct CreateDraftCollateralLoanApplicationUIData {
         ) {
             self.title = title
             self.months = months
+        }
+    }
+    
+    public struct Consent {
+        
+        public let name: String
+        public let link: String
+        
+        public init(
+            name: String,
+            link: String
+        ) {
+            self.name = name
+            self.link = link
         }
     }
     
@@ -119,23 +136,7 @@ extension CreateDraftCollateralLoanApplicationUIData {
 extension CreateDraftCollateralLoanApplicationUIData {
     
     public static let preview = Self(
-        name: "Кредит под залог транспорта",
         amount: 1_234_567,
-        minAmount: 1_000_000,
-        maxAmount: 5_000_000,
-        periods: [
-            .init(title: "6 месяцев", months: 6),
-            .init(title: "9 месяцев", months: 9),
-            .init(title: "1 год", months: 12),
-            .init(title: "2 года", months: 24),
-            .init(title: "3 года", months: 36),
-            .init(title: "4 года", months: 48),
-            .init(title: "5 лет", months: 60),
-            .init(title: "6 лет", months: 72),
-            .init(title: "7 лет", months: 84)
-        ],
-        selectedMonths: 24,
-        percent: 18.51114,
         cities: [
             "Москва",
             "п.Коммунарка",
@@ -176,19 +177,40 @@ extension CreateDraftCollateralLoanApplicationUIData {
             "Тверь",
             "Липецк"
         ],
-        selectedCity: "Балабаново",
+        consents: [
+            .init(name: "Согласие 1", link: "https://www.forabank.ru/"),
+            .init(name: "Согласие 2", link: "https://www.forabank.ru/")
+            ],
         icons: .init(
             productName: "info",
             amount: "info",
             term: "info",
             rate: "info",
             city: "info"
-        )
+        ),
+        maxAmount: 5_000_000,
+        minAmount: 1_000_000,
+        name: "Кредит под залог транспорта",
+        percent: 18.51114,
+        periods: [
+            .init(title: "6 месяцев", months: 6),
+            .init(title: "9 месяцев", months: 9),
+            .init(title: "1 год", months: 12),
+            .init(title: "2 года", months: 24),
+            .init(title: "3 года", months: 36),
+            .init(title: "4 года", months: 48),
+            .init(title: "5 лет", months: 60),
+            .init(title: "6 лет", months: 72),
+            .init(title: "7 лет", months: 84)
+        ],
+        selectedCity: "Балабаново",
+        selectedMonths: 24
     )
 }
 
 extension CreateDraftCollateralLoanApplicationUIData: Equatable {}
 extension CreateDraftCollateralLoanApplicationUIData.Icons: Equatable {}
+extension CreateDraftCollateralLoanApplicationUIData.Consent: Equatable {}
 
 extension CreateDraftCollateralLoanApplicationUIData: Identifiable {
     

@@ -24,7 +24,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case showSaveConsentsResult(SaveConsentsResult)
         case tappedBack
         case tappedContinue
-        case tappedSubmit
+        case tappedSubmit        
     }
     
     public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>

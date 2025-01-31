@@ -1418,6 +1418,7 @@ private extension Target {
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
             .inputComponent,
+            .linkableText,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,
