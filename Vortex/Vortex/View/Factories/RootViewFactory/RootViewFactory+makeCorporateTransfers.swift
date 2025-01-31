@@ -32,22 +32,45 @@ extension RootViewFactory {
         _ corporateTransfers: PaymentsTransfersCorporateTransfers
     ) -> some View {
         
-        HStack {
+        HStack(alignment: .top) {
             
-            PTSectionTransfersView.TransfersButtonView(viewModel: .init(
-                type: .betweenSelf,
-                action: { corporateTransfers.meToMe.event(.select(.meToMe)) }
-            ))
-            .background(makeMeToMeFlowView(corporateTransfers.meToMe))
+            meToMeButton(corporateTransfers.meToMe)
             
-            Button("Open product") {
-                
-                corporateTransfers.openProduct.event(.select(.openProduct))
-            }
-            .background(makeOpenProductFlowView(corporateTransfers.openProduct))
-            
-            Spacer()
+            openProductButton(corporateTransfers.openProduct)
+                .frame(height: 124)
         }
         .padding(.top, 16)
+    }
+    
+    @inlinable
+    func meToMeButton(
+        _ meToMe: MeToMeDomain.Flow
+    ) -> some View {
+        
+        PTSectionTransfersView.TransfersButtonView(viewModel: .init(
+            type: .betweenSelf,
+            action: { meToMe.event(.select(.meToMe)) }
+        ))
+        .background(makeMeToMeFlowView(meToMe))
+    }
+    
+    @inlinable
+    func openProductButton(
+        _ openProduct: OpenProductDomain.Flow
+    ) -> some View {
+        
+        Button {
+            
+            openProduct.event(.select(.openProduct))
+        } label: {
+            
+            NewProductButtonLabel(
+                icon: .ic24NewCardColor,
+                title: "Открыть продукт",
+                subTitle: "Чтобы открыть все возможности приложения",
+                lineLimit: nil
+            )
+        }
+        .background(makeOpenProductFlowView(openProduct))
     }
 }
