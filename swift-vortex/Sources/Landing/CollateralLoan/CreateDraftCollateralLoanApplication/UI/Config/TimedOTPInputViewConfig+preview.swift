@@ -14,7 +14,7 @@ extension TimedOTPInputViewConfig {
     static let preview = Self(
         otp: .init(
             textFont: .headline,
-            textColor: .orange
+            textColor: .primary
         ),
         resend: .preview,
         timer: .preview,
@@ -26,10 +26,10 @@ extension TimedOTPInputViewConfig.ResendConfig {
     
     static let preview = Self(
         text: "Отправить повторно",
-        backgroundColor: .blue.opacity(0.1),
+        backgroundColor: .white,
         config: .init(
             textFont: .caption,
-            textColor: .blue
+            textColor: .primary
         )
     )
 }
@@ -37,10 +37,10 @@ extension TimedOTPInputViewConfig.ResendConfig {
 extension TimedOTPInputViewConfig.TimerConfig {
     
     static let preview = Self(
-        backgroundColor: .pink,
+        backgroundColor: .clear,
         config: .init(
             textFont: .subheadline.bold(),
-            textColor: .yellow
+            textColor: .red
         )
     )
 }
@@ -51,7 +51,7 @@ extension TitleConfig {
         text: "Введите код",
         config: .init(
             textFont: .subheadline,
-            textColor: .green
+            textColor: .secondary
         )
     )
 }
