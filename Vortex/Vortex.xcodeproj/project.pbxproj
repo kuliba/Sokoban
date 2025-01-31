@@ -3232,6 +3232,8 @@
 		EC432FC22D4A4A5C009A07E3 /* SplashScreenEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC432FC12D4A4A5C009A07E3 /* SplashScreenEffectHandler.swift */; };
 		EC432FC52D4A4B46009A07E3 /* SplashScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC432FC42D4A4B46009A07E3 /* SplashScreenReducer.swift */; };
 		EC4374C82D1D7700009FB5B1 /* SplashScreenFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */; };
+		EC4BF8302D4BBE4000A4223C /* SplashScreenReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4BF82F2D4BBE4000A4223C /* SplashScreenReducerTests.swift */; };
+		EC4BF8322D4CA71A00A4223C /* SplashScreenEffectHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4BF8312D4CA71A00A4223C /* SplashScreenEffectHandlerTests.swift */; };
 		EC554A402CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */; };
 		EC554A422CC92919002A8C3A /* RootViewModelFactory+logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */; };
 		EC554A442CC9291E002A8C3A /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */; };
@@ -6808,6 +6810,8 @@
 		EC432FC12D4A4A5C009A07E3 /* SplashScreenEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenEffectHandler.swift; sourceTree = "<group>"; };
 		EC432FC42D4A4B46009A07E3 /* SplashScreenReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenReducer.swift; sourceTree = "<group>"; };
 		EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenFlag.swift; sourceTree = "<group>"; };
+		EC4BF82F2D4BBE4000A4223C /* SplashScreenReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenReducerTests.swift; sourceTree = "<group>"; };
+		EC4BF8312D4CA71A00A4223C /* SplashScreenEffectHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenEffectHandlerTests.swift; sourceTree = "<group>"; };
 		EC554A3F2CC92904002A8C3A /* RootViewModelFactory+makeBannersBinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeBannersBinder.swift"; sourceTree = "<group>"; };
 		EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logging.swift"; sourceTree = "<group>"; };
 		EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Load.swift"; sourceTree = "<group>"; };
@@ -14796,6 +14800,7 @@
 		77BE9A36290C2097006046B1 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				EC4BF82C2D4BBDE300A4223C /* SplashScreenViewModelTests */,
 				C16DDBF22B314E26001BF988 /* Helpers */,
 				8431A2542AEBE76800E60CB8 /* UserAccount */,
 				2A4B54202AB1D9AF0042A0FF /* Auth */,
@@ -16981,6 +16986,15 @@
 				EC432FC42D4A4B46009A07E3 /* SplashScreenReducer.swift */,
 			);
 			path = Logic;
+			sourceTree = "<group>";
+		};
+		EC4BF82C2D4BBDE300A4223C /* SplashScreenViewModelTests */ = {
+			isa = PBXGroup;
+			children = (
+				EC4BF82F2D4BBE4000A4223C /* SplashScreenReducerTests.swift */,
+				EC4BF8312D4CA71A00A4223C /* SplashScreenEffectHandlerTests.swift */,
+			);
+			path = SplashScreenViewModelTests;
 			sourceTree = "<group>";
 		};
 		ECCA5B362CFDFC250034A64A /* LoggingRemoteNanoServiceComposer */ = {
@@ -22893,6 +22907,7 @@
 				2A1EEB3A2C802F1A006F96BE /* RootViewModelFactory+makeTests.swift in Sources */,
 				83E2F6162A41A4A0000B64CF /* InfoProductViewModelTests.swift in Sources */,
 				2A4CC4832D22549F00F5C263 /* RootViewModelFactory+getPaymentProviderPickerNavigationTests.swift in Sources */,
+				EC4BF8302D4BBE4000A4223C /* SplashScreenReducerTests.swift in Sources */,
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,
 				2ACBA6792CE9BD4A00758D71 /* QRAcceptanceTests.swift in Sources */,
 				2A8B173B2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift in Sources */,
@@ -23093,6 +23108,7 @@
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
 				2A5457592A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift in Sources */,
 				C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */,
+				EC4BF8322D4CA71A00A4223C /* SplashScreenEffectHandlerTests.swift in Sources */,
 				834731E62A13BCB2002590A3 /* PaymentsServicesTests.swift in Sources */,
 				779CF7AD2A6E6CB500011812 /* EncryptionLocalAgentTests.swift in Sources */,
 				2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */,

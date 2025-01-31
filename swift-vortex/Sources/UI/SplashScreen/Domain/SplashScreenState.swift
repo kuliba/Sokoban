@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct SplashScreenState {
+public struct SplashScreenState: Equatable {
     
     public enum SplashState {
         case start
