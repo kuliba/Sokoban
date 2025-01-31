@@ -369,7 +369,9 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                     case .sensor:
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: sensor")
-                        guard let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true else {
+                        guard let sensor = model.authAvailableBiometricSensorType, 
+                              model.authIsBiometricSensorEnabled == true,
+                              self.clientInformAlerts?.updateAlert?.actionType != .authBlocking else {
                             return
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Sensor.Evaluate.Request")
