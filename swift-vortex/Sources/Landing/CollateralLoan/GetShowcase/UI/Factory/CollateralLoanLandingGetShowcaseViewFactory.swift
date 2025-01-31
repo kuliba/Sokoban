@@ -13,25 +13,25 @@ import OTPInputComponent
 public struct CollateralLoanLandingGetShowcaseViewFactory {
     
     public let config: CollateralLoanLandingGetShowcaseViewConfig
-    public let makeImageViewByMD5Hash: MakeImageViewByMD5Hash
-    public let makeImageViewByURL: MakeImageViewByURL
+    public let makeImageViewWithMD5Hash: makeImageViewWithMD5Hash
+    public let makeImageViewWithURL: makeImageViewWithURL
     
     public init(
         config: CollateralLoanLandingGetShowcaseViewConfig = .base,
-        makeImageViewByMD5Hash: @escaping MakeImageViewByMD5Hash,
-        makeImageViewByURL: @escaping MakeImageViewByURL
+        makeImageViewWithMD5Hash: @escaping makeImageViewWithMD5Hash,
+        makeImageViewWithURL: @escaping makeImageViewWithURL
     ) {
         self.config = config
-        self.makeImageViewByMD5Hash = makeImageViewByMD5Hash
-        self.makeImageViewByURL = makeImageViewByURL
+        self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
+        self.makeImageViewWithURL = makeImageViewWithURL
     }
 }
  
 public extension CollateralLoanLandingGetShowcaseViewFactory {
 
     typealias IconView = UIPrimitives.AsyncImage
-    typealias MakeImageViewByMD5Hash = (String) -> IconView
-    typealias MakeImageViewByURL = (String) -> IconView
+    typealias makeImageViewWithMD5Hash = (String) -> IconView
+    typealias makeImageViewWithURL = (String) -> IconView
 }
 
 // MARK: Preview helpers
@@ -39,8 +39,8 @@ public extension CollateralLoanLandingGetShowcaseViewFactory {
 extension CollateralLoanLandingGetShowcaseViewFactory {
     
     static let preview = Self(
-        makeImageViewByMD5Hash: { _ in .preview },
-        makeImageViewByURL: { _ in .preview }
+        makeImageViewWithMD5Hash: { _ in .preview },
+        makeImageViewWithURL: { _ in .preview }
     )
 }
 

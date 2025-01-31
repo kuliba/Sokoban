@@ -10,7 +10,7 @@ import PaymentComponents
 
 struct CreateDraftCollateralLoanApplicationHeaderView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
@@ -19,13 +19,13 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
         
         InfoView(
             info: .init(
-                id: .other(DomainState.FieldID.header.id),
+                id: .other(State.FieldID.header.id),
                 title: config.elements.header.title,
                 value: state.data.name,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewByMD5hash(state.data.icons.productName) }
+            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.productName) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -35,7 +35,7 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 

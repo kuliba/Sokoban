@@ -12,7 +12,7 @@ import UIPrimitives
 
 struct CreateDraftCollateralLoanApplicationCityView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
@@ -34,7 +34,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
             state: state.city,
             event: { event(.city($0)) },
             factory: .init(
-                makeIconView: { factory.makeImageViewByMD5hash(state.data.icons.city) },
+                makeIconView: { factory.makeImageViewWithMD5Hash(state.data.icons.city) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
                     makeIconView: {
@@ -60,13 +60,13 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
         
         InfoView(
             info: .init(
-                id: .other(DomainState.FieldID.city.id),
+                id: .other(State.FieldID.city.id),
                 title: config.elements.city.title,
                 value: state.data.selectedCity,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewByMD5hash(state.data.icons.city) }
+            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.city) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -84,7 +84,7 @@ extension CreateDraftCollateralLoanApplicationCityView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     typealias IconView = UIPrimitives.AsyncImage
     typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem

@@ -11,10 +11,10 @@ import ToggleComponent
 
 struct GetCollateralLandingCalculatorView: View {
     
-    @State private var toggleIsOn = false
-    @State private var sliderCurrentValue: Double = 6.0
+    @SwiftUI.State private var toggleIsOn = false
+    @SwiftUI.State private var sliderCurrentValue: Double = 6.0
     
-    let state: DomainState
+    let state: State
     let product: Product
     let config: Config
     let domainEvent: (DomainEvent) -> Void
@@ -346,7 +346,7 @@ extension GetCollateralLandingCalculatorView {
     typealias Theme = GetCollateralLandingTheme
     typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
     typealias DomainEvent = GetCollateralLandingDomain.Event
-    typealias DomainState = GetCollateralLandingDomain.State
+    typealias State = GetCollateralLandingDomain.State
     typealias Product = GetCollateralLandingProduct
 }
 

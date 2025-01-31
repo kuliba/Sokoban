@@ -83,7 +83,6 @@ extension RootViewModelFactory {
     private func getVerificationCode(
         completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetVerificationCodeResult) -> Void
     ) {
-
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
@@ -91,6 +90,7 @@ extension RootViewModelFactory {
                 
         getVerificationCode(()) { [getVerificationCode] in
             
+            // TODO: Реализовать показ ошибок согласно дизайна
             completion($0.map(\.resendOTPCount).mapError { .init(message: $0.localizedDescription) })
             _ = getVerificationCode
         }

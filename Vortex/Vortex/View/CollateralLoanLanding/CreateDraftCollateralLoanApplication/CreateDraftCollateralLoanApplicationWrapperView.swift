@@ -44,8 +44,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             event: event,
             config: .default,
             factory: .init(
-                makeImageViewByMD5hash: factory.makeImageViewByMD5hash,
-                makeImageViewByURL: factory.makeImageViewByURL
+                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                makeImageViewWithURL: factory.makeImageViewWithURL
             )
         )
     }

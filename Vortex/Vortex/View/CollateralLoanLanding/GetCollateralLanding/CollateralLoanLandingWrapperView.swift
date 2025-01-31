@@ -55,8 +55,8 @@ struct CollateralLoanLandingWrapperView: View {
                 }
             },
             factory: .init(
-                makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash,
-                makeImageViewByURL: factory.makeImageViewByURL
+                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                makeImageViewWithURL: factory.makeImageViewWithURL
             )
         )
         .onFirstAppear {
@@ -75,8 +75,8 @@ struct CollateralLoanLandingWrapperView: View {
                 binder: binder,
                 config: .default,
                 factory: .init(
-                    makeImageViewByMD5hash: factory.makeImageViewByMD5Hash,
-                    makeImageViewByURL: factory.makeImageViewByURL
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                    makeImageViewWithURL: factory.makeImageViewWithURL
                 )
             )
         }
@@ -143,8 +143,8 @@ extension CollateralLoanLandingWrapperView {
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
 
-    public typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
-    public typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage
+    public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
+    public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
 }
 
 extension GetCollateralLandingDomain.Navigation {

@@ -13,23 +13,23 @@ import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
-    public let makeImageViewByMD5hash: MakeImageViewByMD5hash
-    public let makeImageViewByURL: MakeImageViewByURL
+    public let makeImageViewWithMD5Hash: makeImageViewWithMD5Hash
+    public let makeImageViewWithURL: makeImageViewWithURL
 //    public let makeOTPViewModel: MakeOTPViewModel
     
     public init(
-        makeImageViewByMD5hash: @escaping MakeImageViewByMD5hash,
-        makeImageViewByURL: @escaping MakeImageViewByURL
+        makeImageViewWithMD5Hash: @escaping makeImageViewWithMD5Hash,
+        makeImageViewWithURL: @escaping makeImageViewWithURL
 //        makeOTPViewModel: @escaping MakeOTPViewModel
     ) {
-        self.makeImageViewByMD5hash = makeImageViewByMD5hash
-        self.makeImageViewByURL = makeImageViewByURL
+        self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
+        self.makeImageViewWithURL = makeImageViewWithURL
 //        self.makeOTPViewModel = makeOTPViewModel
     }
     
     public typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
-    public typealias MakeImageViewByMD5hash = ShowcaseFactory.MakeImageViewByMD5Hash
-    public typealias MakeImageViewByURL = ShowcaseFactory.MakeImageViewByURL
+    public typealias makeImageViewWithMD5Hash = ShowcaseFactory.makeImageViewWithMD5Hash
+    public typealias makeImageViewWithURL = ShowcaseFactory.makeImageViewWithURL
     public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     public typealias EventDispatcher = (Event) -> Void
 //    public typealias MakeOTPViewModel = (Int?, EventDispatcher) -> TimedOTPInputViewModel
@@ -40,8 +40,8 @@ public struct CreateDraftCollateralLoanApplicationFactory {
 public extension CreateDraftCollateralLoanApplicationFactory {
     
     static let preview = Self(
-        makeImageViewByMD5hash: { _ in .preview },
-        makeImageViewByURL: { _ in .preview }
+        makeImageViewWithMD5Hash: { _ in .preview },
+        makeImageViewWithURL: { _ in .preview }
 //        makeOTPViewModel: { _,_ in .preview }
     )
 }

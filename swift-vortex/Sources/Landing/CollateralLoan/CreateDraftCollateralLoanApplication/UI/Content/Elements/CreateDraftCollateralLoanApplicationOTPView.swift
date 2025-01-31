@@ -11,7 +11,7 @@ import OTPInputComponent
 
 struct CreateDraftCollateralLoanApplicationOTPView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
@@ -39,7 +39,7 @@ extension CreateDraftCollateralLoanApplicationOTPView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 
