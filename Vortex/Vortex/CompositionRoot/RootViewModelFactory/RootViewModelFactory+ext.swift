@@ -335,10 +335,9 @@ extension RootViewModelFactory {
         let loadBannersList = makeLoadBanners()
         
         let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
+            featureFlags: featureFlags,
             bannerPickerPlaceholderCount: 6,
-            nanoServices: .init(
-                loadBanners: loadBannersList
-            )
+            nanoServices: .init(loadBanners: loadBannersList)
         )
         
         let mainViewBannersBinder = makeBannersForMainView(

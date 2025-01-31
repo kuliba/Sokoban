@@ -13,8 +13,7 @@ class OpenNewProductsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published
-    var items: [NewProductButton.ViewModel]
+    @Published var items: [NewProductButton.ViewModel]
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -34,7 +33,9 @@ class OpenNewProductsViewModel: ObservableObject {
     ) {
         self.items = []
         self.model = model
+        
         self.items = makeOpenNewProductButtons { [weak self] productType in
+            
             let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: productType)
             self?.action.send(action)
         }
@@ -72,6 +73,7 @@ enum OpenNewProductsViewModelAction {
     enum Tapped {
         
         struct NewProduct: Action {
+            
             let productType: OpenProductType
         }
     }

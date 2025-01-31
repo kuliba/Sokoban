@@ -13,7 +13,7 @@ class PaymentsTransfersPersonalTransfersTests: XCTestCase {
     typealias Domain = PaymentsTransfersPersonalTransfersDomain
     
     func assert(
-        _ navigation: Domain.NavigationResult,
+        _ navigation: Domain.Navigation,
         _ failure: PaymentsTransfersPersonalTransfersDomain.NavigationFailure,
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,
@@ -23,7 +23,7 @@ class PaymentsTransfersPersonalTransfersTests: XCTestCase {
     }
     
     func assert(
-        _ navigation: Domain.NavigationResult,
+        _ navigation: Domain.Navigation,
         _ success: PaymentsTransfersPersonalTransfersDomain.EquatableNavigation,
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,

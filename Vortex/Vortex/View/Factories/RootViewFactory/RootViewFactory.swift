@@ -36,6 +36,7 @@ struct RootViewFactory {
         
         let imageCache: ImageCache
         let generalImageCache: ImageCache
+        let getUImage: (Md5hash) -> UIImage?
     }
     
     // TODO: add init, make `infra` private
