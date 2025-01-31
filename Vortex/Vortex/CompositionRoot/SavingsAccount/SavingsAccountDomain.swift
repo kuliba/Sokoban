@@ -70,10 +70,11 @@ extension SavingsAccountDomain {
     typealias ContentMicroService = SavingsAccount.ContentEffectHandlerMicroServices<Landing, InformerPayload>
     
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
-    typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountWrapperView, Landing, InformerPayload>
+    typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountView, Landing, InformerPayload>
     typealias ContentWrapperView = RxWrapperView<ContentView, ContentState, ContentEvent, ContentEffect>
-    
     typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView, InformerView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
     
-    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountWrapperView>
+    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView>
+    
+    typealias Config = SavingsAccountConfig
 }

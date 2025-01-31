@@ -383,9 +383,7 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
-        
-        let savingsAccount = makeSavingsAccount()
-        
+                
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in

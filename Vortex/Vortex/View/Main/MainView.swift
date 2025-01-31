@@ -22,6 +22,7 @@ import SwiftUI
 import UIPrimitives
 import VortexTools
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import SavingsAccount
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -286,13 +287,12 @@ struct MainView<NavigationOperationView: View>: View {
             viewFactory.components.makeOrderCardView()
             
         case let .savingsAccount(binder):
-            viewFactory.components.makeSavingsAccountView(binder, viewModel.resetDestination)
-                .onAppear { binder.content.event(.load) }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarBackButtonHidden()
+            viewFactory.components.makeSavingsAccountView(binder)
+            .onAppear { binder.content.event(.load) }
+            .navigationBarHidden(true)
         }
     }
-    
+
     @ViewBuilder
     private func sheetView(
         _ sheet: MainViewModel.Sheet
