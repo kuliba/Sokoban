@@ -21,6 +21,7 @@ import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
+import UIKit
 
 final class RootViewFactoryComposer {
     
@@ -36,6 +37,8 @@ final class RootViewFactoryComposer {
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
+
+        let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
             generalImageCache: model.generalImageCache(),
@@ -684,10 +687,16 @@ private extension RootViewFactoryComposer {
     }
     
     func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder
+        binder: SavingsAccountDomain.Binder,
+        dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.WrapperView? {
         
-        makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
+        makeSavingsAccountView(
+            binder: binder,
+            dismiss: dismiss,
+            model:  model,
+            isActive: savingsAccountFlag.isActive
+        )
     }
     
     func makePaymentsSuccessView(

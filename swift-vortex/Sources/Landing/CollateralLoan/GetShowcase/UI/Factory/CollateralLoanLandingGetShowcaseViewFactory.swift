@@ -11,26 +11,38 @@ import Combine
 
 public struct CollateralLoanLandingGetShowcaseViewFactory {
 
-    let config: CollateralLoanLandingGetShowcaseViewConfig = .base
-
-    public let makeImageView: MakeImageView
+    public let config: CollateralLoanLandingGetShowcaseViewConfig
+    public let makeImageViewByMD5Hash: MakeImageViewByMD5Hash
+    public let makeImageViewByURL: MakeImageViewByURL
 
     public init(
-        makeImageView: @escaping MakeImageView
+        config: CollateralLoanLandingGetShowcaseViewConfig = .base,
+        makeImageViewByMD5Hash: @escaping MakeImageViewByMD5Hash,
+        makeImageViewByURL: @escaping MakeImageViewByURL
     ) {
-        self.makeImageView = makeImageView
+        self.config = config
+        self.makeImageViewByMD5Hash = makeImageViewByMD5Hash
+        self.makeImageViewByURL = makeImageViewByURL
     }
-    
-    public typealias MakeImageView = (String) -> UIPrimitives.AsyncImage
+ 
+    public typealias MakeImageViewByMD5Hash = (String) -> UIPrimitives.AsyncImage
+    public typealias MakeImageViewByURL = (String) -> UIPrimitives.AsyncImage
 }
 
 extension CollateralLoanLandingGetShowcaseViewFactory {
     
     static let preview = Self(
-        makeImageView: { _ in .init(
-            image: .iconPlaceholder,
-            publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-        )}
+        makeImageViewByMD5Hash: {
+            _ in .init(
+                image: .iconPlaceholder,
+                publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+            )
+        },
+        makeImageViewByURL: { _ in
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )}
     )
 }
 

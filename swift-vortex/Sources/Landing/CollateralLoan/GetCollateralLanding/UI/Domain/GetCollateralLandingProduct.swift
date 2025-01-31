@@ -240,7 +240,7 @@ extension GetCollateralLandingProduct {
 
 extension GetCollateralLandingProduct.Calc.Rate {
     
-    var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
+    public var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
         
         .init(
             id: UUID().uuidString,
@@ -253,7 +253,7 @@ extension GetCollateralLandingProduct.Calc.Rate {
 
 extension GetCollateralLandingProduct.Calc.Collateral {
     
-    var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
+    public var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
         
         .init(
             id: type,
@@ -746,22 +746,6 @@ extension GetCollateralLandingProduct {
             rate: "38ef9ce16cb49821559cdbee4109bc82",
             city: "bc750d97c57bb11a1b82a175d9d13460"
         )
-    )
-}
-
-extension GetCollateralLandingProduct {
-    
-    public static let empty = Self(
-        theme: .unknown,
-        name: "",
-        marketing: .empty,
-        conditions: [],
-        calc: .empty,
-        faq: [],
-        documents: [],
-        consents: [],
-        cities: [],
-        icons: .empty
     )
 }
 

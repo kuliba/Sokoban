@@ -28,17 +28,19 @@ struct SavingsAccountWrapperView: View {
     
     public var body: some View {
         
-        RxWrapperView(
-            model: viewModel,
-            makeContentView: {
-                SavingsAccountView(
-                    state: $0,
-                    event: $1,
-                    config: config,
-                    factory: imageViewFactory
-                )
-            }
-        )
+        NavigationView {
+            RxWrapperView(
+                model: viewModel,
+                makeContentView: {
+                    SavingsAccountView(
+                        state: $0,
+                        event: $1,
+                        config: config,
+                        factory: imageViewFactory
+                    )
+                }
+            )
+        }
     }
 }
 

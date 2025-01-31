@@ -21,6 +21,7 @@ import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
 import VortexTools
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -270,10 +271,11 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageView: viewModel.model.generalImageCache().makeIconView(for:)
+                makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
+                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
-            CollateralLoanShowcaseView(binder: binder, factory: factory)
+            CollateralLoanShowcaseWrapperView(binder: binder, factory: factory)
                 .navigationBarWithBack(
                     title: "Кредиты",
                     dismiss: viewModel.resetDestination
@@ -284,11 +286,10 @@ struct MainView<NavigationOperationView: View>: View {
             viewFactory.components.makeOrderCardView()
             
         case let .savingsAccount(binder):
-            viewFactory.components.makeSavingsAccountView(binder)
+            viewFactory.components.makeSavingsAccountView(binder, viewModel.resetDestination)
                 .onAppear { binder.content.event(.load) }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarBackButtonHidden()
-                .navigationViewStyle(StackNavigationViewStyle())
         }
     }
     
@@ -627,6 +628,68 @@ extension MainViewModel {
         bindersFactory: .preview,
         viewModelsFactory: .preview,
         makeOpenNewProductButtons: { _ in [] }
+    )
+}
+
+// MARK: - GetCollateralLandingDomain.Binder preview
+
+private extension GetCollateralLandingDomain.Binder {
+    
+    static let preview = GetCollateralLandingDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetCollateralLandingDomain.Content {
+    
+    static let preview = GetCollateralLandingDomain.Content(
+        initialState: .init(
+            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+        ),
+        reduce: {
+            state,_ in (state, nil)
+        },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetCollateralLandingDomain.Flow {
+    
+    static let preview = GetCollateralLandingDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - GetShowcaseDomain.Binder preview
+
+private extension GetShowcaseDomain.Binder {
+    
+    static let preview = GetShowcaseDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetShowcaseDomain.Flow {
+    
+    static let preview = GetShowcaseDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetShowcaseDomain.Content {
+    
+    static let preview: GetShowcaseDomain.Content = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

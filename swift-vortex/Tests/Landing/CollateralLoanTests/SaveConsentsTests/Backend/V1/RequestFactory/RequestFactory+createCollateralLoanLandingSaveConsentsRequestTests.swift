@@ -54,7 +54,7 @@ private func createRequest(
 }
 
 private func anyPayload(
-    applicationId: Int = .random(in: (0...Int.max)),
+    applicationId: UInt = .random(in: (0...UInt.max)),
     verificationCode: String = anyMessage()
 ) -> RequestFactory.SaveConsentsPayload {
     
@@ -66,7 +66,7 @@ private func anyPayload(
 
 private struct Body: Decodable {
     
-    let applicationId: Int
+    let applicationId: UInt
     let verificationCode: String
     
     var payload: RequestFactory.SaveConsentsPayload {

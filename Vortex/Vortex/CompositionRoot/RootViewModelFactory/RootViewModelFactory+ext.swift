@@ -473,9 +473,20 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch selection {
-        case .none: return nil
-        case .order: return .order
+        switch status {
+        case .initiate, .inflight, .loaded:
+            return nil
+            
+        case let .failure(failure, _):
+            switch failure{
+            case let .alert(message):
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
+            }
+        case .selection:
+            return .order
         }
     }
 }
@@ -778,7 +789,7 @@ private extension RootViewModelFactory {
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
-         
+                
         let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
         }
         
@@ -807,6 +818,7 @@ private extension RootViewModelFactory {
                 bannersBinder: bannersBinder,
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
             viewModelsFactory: mainViewModelsFactory,
@@ -866,7 +878,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             marketShowcaseBinder: marketShowcaseBinder
         )
-        
+
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,

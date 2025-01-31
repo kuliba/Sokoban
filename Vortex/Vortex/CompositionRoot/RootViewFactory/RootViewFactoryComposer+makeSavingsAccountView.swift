@@ -8,74 +8,88 @@
 import Foundation
 import SavingsAccount
 import SavingsServices
+import RxViewModel
 
 extension RootViewFactoryComposer {
     
     func makeSavingsAccountView(
         binder: SavingsAccountDomain.Binder,
+        dismiss: @escaping SavingsAccountDismiss,
         model: Model,
         isActive: Bool
     ) -> SavingsAccountDomain.WrapperView? {
         
-        if isActive {
-            return .init(
-                model: binder.flow,
-                makeContentView: { [makeFlowView] in makeFlowView(binder, $0, $1) })
-        } else {
-            return nil
+        guard isActive else { return nil }
+        
+        return RxWrapperView(model: binder.flow) {
+            
+            self.makeFlowView(
+                { self.makeContentWrapperView(binder.content, dismiss) },
+                $0,
+                $1,
+                dismiss
+            )
         }
     }
     
     func makeFlowView(
-        _ binder: SavingsAccountDomain.Binder,
+        _ contentView: @escaping () -> SavingsAccountDomain.ContentWrapperView,
         _ flowState: SavingsAccountDomain.FlowState,
-        _ flowEvent: @escaping (SavingsAccountDomain.FlowEvent) -> Void
+        _ flowEvent: @escaping (SavingsAccountDomain.FlowEvent) -> Void,
+        _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.FlowView<SavingsAccountDomain.ContentWrapperView, InformerView> {
         
         .init(
             state: flowState,
             event: flowEvent,
-            contentView: { [makeContentWrapperView] in makeContentWrapperView(binder) },
+            contentView: contentView,
             informerView: makeInformerView
         )
     }
     
     func makeContentWrapperView(
-        _ binder: SavingsAccountDomain.Binder
+        _ content: SavingsAccountDomain.Content,
+        _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.ContentWrapperView {
-        .init(
-            model: binder.content,
-            makeContentView: makeContentView(_:_:)
-        )
+        
+        RxWrapperView(model: content) {
+            
+            SavingsAccountDomain.ContentView(
+                state: $0,
+                event: $1,
+                config: .prod,
+                factory: self.makeFactory(dismiss)
+            )
+        }
     }
-    
-    func makeContentView(
-        _ state: SavingsAccountDomain.ContentState,
-        _ event: @escaping (SavingsAccountDomain.ContentEvent) -> Void
-    ) -> SavingsAccountDomain.ContentView {
-        .init(
-            state: state,
-            event: event,
-            config: .prod,
-            factory: makeFactory()
-        )
-    }
-    
+        
     func makeFactory(
+        _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.ViewFactory {
         .init(
             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-            makeLandingView: makeLandingView
+            makeLandingView: { [makeLandingView] in makeLandingView($0, dismiss) }
         )
     }
     
     func makeLandingView(
-        _ viewModel: SavingsAccountDomain.Landing
+        _ viewModel: SavingsAccountDomain.Landing,
+        _ dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountWrapperView {
         .init(
             viewModel: .init(
                 initialState: .init(viewModel.list.first ?? .empty),
-                reduce: { state,_ in (state, .none)} , // TODO: - add reduce
+                reduce: { state, event in
+                    
+                    switch event {
+                    case .dismiss:
+                        dismiss()
+                        
+                    case .continue:
+                        break
+                    }
+                    return (state, .none)
+                } , // TODO: - add reduce
                 handleEffect: {_,_ in } // TODO: - add handleEffect
             ),
             config: .iVortex,
