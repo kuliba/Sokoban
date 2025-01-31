@@ -20,7 +20,7 @@ struct CreateDraftCollateralLoanApplicationOTPView: View {
 
         TimedOTPInputWrapperView(
             viewModel: .init(
-                otpText: "",
+                otpText: state.otp,
                 timerDuration: config.elements.otp.timerDuration,
                 otpLength: config.elements.otp.otpLength,
                 resend: { event(.getVerificationCode) },

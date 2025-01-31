@@ -77,8 +77,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .gettedVerificationCode(result):
                 // TODO: Need to realize logic
-                _ = result
-                break
+                print(result)
             }
             
             return (state, effect)

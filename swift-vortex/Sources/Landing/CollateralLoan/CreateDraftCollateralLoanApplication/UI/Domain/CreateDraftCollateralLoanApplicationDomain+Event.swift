@@ -27,7 +27,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case tappedSubmit
     }
     
-    public typealias GetVerificationCodeResult = Result<Int, ServiceFailure>
+    public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>
     public typealias SelectPeriodEvent = OptionalSelectorEvent<PeriodItem>
     public typealias SelectCityEvent = OptionalSelectorEvent<CityItem>
 }

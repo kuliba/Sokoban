@@ -83,32 +83,17 @@ extension RootViewModelFactory {
     private func getVerificationCode(
         completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetVerificationCodeResult) -> Void
     ) {
-        
-        let getVerificationCode = nanoServiceComposer.compose(
-            createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
-            mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
-            mapError: { (error: RemoteServiceError<any Error, any Error, RemoteServices.ResponseMapper.MappingError>) in
-                
-                NSError(domain: "", code: -1)
-            }
-        )
 
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
         )
-        
+                
         getVerificationCode(()) { [getVerificationCode] in
             
-            switch $0 {
-                
-            case let .success(success):
-                completion(.success(success.resendOTPCount))
-            case let .failure(failure):
-                completion(.failure(.init(_error: failure)))
-            }
+            completion($0.map(\.resendOTPCount).mapError { .init(message: $0.localizedDescription) })
+            _ = getVerificationCode
         }
-        //            completion($0.map(\.resendOTPCount).mapError { .init($0) })
     }
     
     private func saveConsents(
@@ -158,30 +143,6 @@ extension RootViewModelFactory {
             return .milliseconds(100)
         }
     }
-}
-
-extension CreateDraftCollateralLoanApplicationDomain.ServiceFailure {
-    
-    init(_error error: MappingError) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .connectivity
-            
-        case let .mapResponse(error):
-            switch error {
-            case .invalid:
-                self = .connectivity
-                
-            case let .server(_, errorMessage: errorMessage):
-                self = .serverError(errorMessage)
-            }
-        }
-    }
-    
-    static let connectivity: Self = .connectivityError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
-    
-    typealias MappingError = MappingRemoteServiceError<RemoteServices.ResponseMapper.MappingError>
 }
 
 // MARK: Adapters

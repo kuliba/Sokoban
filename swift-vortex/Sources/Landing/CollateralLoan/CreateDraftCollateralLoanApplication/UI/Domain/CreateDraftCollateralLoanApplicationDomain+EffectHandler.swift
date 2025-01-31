@@ -46,6 +46,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public typealias CreateDraftApplicationCompletion = (CreateDraftApplicationResult) -> Void
         public typealias SaveConsentsCompletion = (SaveConsentsResult) -> Void
         public typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
-        public typealias GetVerificationCodeResult = Result<Int, ServiceFailure>
+        public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>
     }
 }
