@@ -47,9 +47,9 @@ extension CategoryPickerViewDomain {
         case taxAndStateServices(Tax)
         case transport(Transport)
         
-        typealias Mobile = ClosePaymentsViewModelWrapper
+        typealias Mobile = PaymentsViewModel
         typealias Standard = Node<StandardSelectedCategoryDestination>
-        typealias Tax = ClosePaymentsViewModelWrapper
+        typealias Tax = PaymentsViewModel
         typealias Transport = TransportPaymentsViewModel
     }
     

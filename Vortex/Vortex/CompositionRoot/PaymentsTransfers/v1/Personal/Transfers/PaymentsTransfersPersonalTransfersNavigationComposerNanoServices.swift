@@ -22,12 +22,12 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     typealias Notify = (NotifyEvent) -> Void
     
     typealias MakeAbroad = MakeContacts
-    typealias MakeAnotherCard = MakePaymentsWrapper
+    typealias MakeAnotherCard = MakePayments
     typealias MakeContacts = (@escaping Notify) -> Node<ContactsViewModel>
-    typealias MakeDetail = MakePaymentsWrapper
-    typealias MakeLatest = (LatestPaymentData.ID, @escaping Notify) -> Node<ClosePaymentsViewModelWrapper>?
+    typealias MakeDetail = MakePayments
+    typealias MakeLatest = (LatestPaymentData.ID, @escaping Notify) -> Node<PaymentsViewModel>?
     typealias MakeMeToMe = (@escaping Notify) -> Node<PaymentsMeToMeViewModel>?
     typealias MakeSource = (Payments.Operation.Source, @escaping Notify) -> Node<PaymentsViewModel>
 
-    typealias MakePaymentsWrapper = (@escaping Notify) -> Node<ClosePaymentsViewModelWrapper>
+    typealias MakePayments = (@escaping Notify) -> Node<PaymentsViewModel>
 }

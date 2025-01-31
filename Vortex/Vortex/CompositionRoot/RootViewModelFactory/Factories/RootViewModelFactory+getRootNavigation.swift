@@ -37,7 +37,11 @@ extension RootViewModelFactory {
             makeScanQR()
             
         case .templates:
-            makeTemplatesNode()
+            if !model.onlyCorporateCards {
+                makeTemplatesNode()
+            } else {
+                completion(.outside(.tab(.main)))
+            }
             
         case .userAccount:
             makeUserAccount()

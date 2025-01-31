@@ -29,6 +29,6 @@ public extension PaymentsTransfersCorporateContentViewFactory {
     
     typealias MakeBannerSectionView = (CorporateBannerPicker) -> BannerSectionView
     typealias MakeRestrictionNoticeView = () -> RestrictionNoticeView
-    typealias MakeTransfersSectionView = () -> TransfersSectionView
+    typealias MakeTransfersSectionView = (CorporateTransfersProtocol) -> TransfersSectionView
     typealias MakeToolbarView = () -> ToolbarView
 }
