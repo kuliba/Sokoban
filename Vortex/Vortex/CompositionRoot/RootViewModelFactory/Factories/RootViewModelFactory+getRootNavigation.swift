@@ -34,13 +34,17 @@ extension RootViewModelFactory {
             }
             
         case .scanQR:
-            makeScanQR()
+            if model.onlyCorporateCards {
+                completion(.outside(.tab(.main)))
+            } else {
+                makeScanQR()
+            }
             
         case .templates:
-            if !model.onlyCorporateCards {
-                makeTemplatesNode()
-            } else {
+            if model.onlyCorporateCards {
                 completion(.outside(.tab(.main)))
+            } else {
+                makeTemplatesNode()
             }
             
         case .userAccount:
