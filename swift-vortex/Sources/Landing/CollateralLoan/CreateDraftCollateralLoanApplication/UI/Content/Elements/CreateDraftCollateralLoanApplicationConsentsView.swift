@@ -26,7 +26,7 @@ struct CreateDraftCollateralLoanApplicationConsentsView: View {
     private func consent(_ consent: Consent) -> some View {
         
         LinkableTextView(
-            taggedText: consent.name,
+            taggedText: "<u>" + consent.name + "</u>",
             urlString: consent.link,
             handleURL: { url in externalEvents(.showConsent(url)) }
         )
