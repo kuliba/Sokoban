@@ -5,27 +5,22 @@
 //  Created by Igor Malyarov on 04.08.2024.
 //
 
+import FooterComponent
+import RxViewModel
 import SwiftUI
-
-struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
-    
-    let makePaymentsView: MakePaymentsView
-    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
-}
 
 struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View
 where AnywayFlowView: View {
     
     let flowModel: FlowModel
-    let iconView: (IconDomain.Icon?) -> IconDomain.IconView
-    let viewFactory: ComposedSegmentedPaymentProviderPickerFlowViewFactory
+    let viewFactory: ViewFactory
     
     var body: some View {
         
         SegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
-            operatorLabel: label(provider:),
-            destinationContent: destinationContent(_:)
+            content: content,
+            destinationContent: destinationContent
         )
     }
 }
@@ -33,9 +28,56 @@ where AnywayFlowView: View {
 extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     typealias FlowModel = SegmentedPaymentProviderPickerFlowModel
+    typealias ViewFactory = ComposedSegmentedPaymentProviderPickerFlowViewFactory
+}
+
+struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+    
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+    let makeIconView: MakeIconView
+    let makePaymentsView: MakePaymentsView
 }
 
 private extension ComposedSegmentedPaymentProviderPickerFlowView {
+    
+    func content() -> some View {
+        
+        SegmentedPaymentProviderPickerView(
+            segments: flowModel.state.content.segments,
+            providerView: providerView,
+            footer: footer,
+            config: .iVortex
+        )
+    }
+    
+    func providerView(
+        provider: SegmentedOperatorProvider
+    ) -> some View {
+        
+        Button {
+            select(provider: provider)
+        } label: {
+            label(provider: provider)
+        }
+    }
+    
+    func select(
+        provider: SegmentedOperatorProvider
+    ) {
+        switch provider {
+        case let .operator(`operator`):
+            select(select: .operator(`operator`))
+            
+        case let .provider(provider):
+            select(select: .provider(provider))
+        }
+    }
+    
+    func select(
+        select: SegmentedPaymentProviderPickerFlowEvent.Select
+    ) {
+        flowModel.event(.select(select))
+    }
     
     func label(
         provider: SegmentedOperatorProvider
@@ -44,8 +86,25 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
         LabelWithIcon(
             title: provider.title,
             subtitle: provider.subtitle,
-            config: .iVortex,
-            iconView: iconView(provider.icon)
+            config: .iVortex(),
+            iconView: viewFactory.makeIconView(provider.icon)
+        )
+    }
+    
+    func footer() -> some View {
+        
+        FooterView(
+            state: .footer(.iVortex),
+            event: {
+                switch $0 {
+                case .addCompany:
+                    flowModel.event(.goTo(.addCompany))
+                    
+                case .payByInstruction:
+                    flowModel.event(.payByInstructions)
+                }
+            },
+            config: .iVortex
         )
     }
     
@@ -53,7 +112,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     @ViewBuilder
     func destinationContent(
-        _ destination: FlowState.Status.Destination
+        _ destination: FlowState.Navigation.Destination
     ) -> some View {
         
         switch destination {
@@ -69,7 +128,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
                     title: node.title,
                     subtitle: node.subtitle,
                     dismiss: { node.model.event(.dismiss) },
-                    icon: iconView(node.icon)
+                    icon: viewFactory.makeIconView(node.icon)
                 )
         }
     }

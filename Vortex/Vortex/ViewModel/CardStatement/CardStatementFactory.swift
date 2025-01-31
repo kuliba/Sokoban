@@ -76,69 +76,6 @@ extension CardStatementAPI.ProductStatementData.OperationType {
     }
 }
 
-extension CardStatementAPI.ProductStatementData.Kind {
-    
-    var value: ProductStatementData.Kind {
-
-        switch self {
-        case .betweenTheir:
-            return .betweenTheir
-        case .contactAddressless:
-            return .contactAddressless
-        case .direct:
-            return .direct
-        case .externalEntity:
-            return .externalEntity
-        case .externalIndivudual:
-            return .externalIndivudual
-        case .housingAndCommunalService:
-            return .housingAndCommunalService
-        case .insideBank:
-            return .insideBank
-        case .insideOther:
-            return .insideOther
-        case .internet:
-            return .internet
-        case .mobile:
-            return .mobile
-        case .notFinance:
-            return .notFinance
-        case .otherBank:
-            return .otherBank
-        case .outsideCash:
-            return .outsideCash
-        case .outsideOther:
-            return .outsideOther
-        case .sfp:
-            return .sfp
-        case .transport:
-            return .transport
-        case .taxes:
-            return .taxes
-        case .c2b:
-            return .c2b
-        case .insideDeposit:
-            return .insideDeposit
-        case .sberQRPayment:
-            return .sberQRPayment
-        case .networkMarketing:
-            return .networkMarketing
-        case .digitalWallet:
-            return .digitalWallet
-        case .charity:
-            return .charity
-        case .socialAndGame:
-            return .socialAndGame
-        case .education:
-            return .education
-        case .security:
-            return .security
-        case .repayment:
-            return .repayment
-        }
-    }
-}
-
 extension CardStatementAPI.ProductStatementData.OperationEnvironment {
     
     var value: OperationEnvironment {
@@ -160,7 +97,35 @@ extension ProductStatementData {
     ) {
         let fastPayment: ProductStatementData.FastPayment? = data.fastPayment.map { .init(data: $0) }
         let svgImage: SVGImageData? = data.svgImage.map { .init(description: $0) }
-        self = .init(mcc: data.MCC, accountId: data.accountID, accountNumber: data.accountNumber, amount: data.amount.doubleValue, cardTranNumber: data.cardTranNumber, city: data.city, comment: data.comment, country: data.country, currencyCodeNumeric: data.currencyCodeNumeric, date: data.date, deviceCode: data.deviceCode, documentAmount: data.documentAmount.doubleValue, documentId: data.documentID, fastPayment: fastPayment, groupName: data.groupName, isCancellation: data.isCancellation, md5hash: data.md5hash, merchantName: data.merchantName, merchantNameRus: data.merchantNameRus, opCode: data.opCode, operationId: data.operationId, operationType: data.operationType.value, paymentDetailType: data.paymentDetailType.value, svgImage: svgImage, terminalCode: data.terminalCode, tranDate: data.tranDate, type: data.type.value)
+        self = .init(
+            mcc: data.MCC,
+            accountId: data.accountID,
+            accountNumber: data.accountNumber,
+            amount: data.amount.doubleValue,
+            cardTranNumber: data.cardTranNumber,
+            city: data.city,
+            comment: data.comment,
+            country: data.country,
+            currencyCodeNumeric: data.currencyCodeNumeric,
+            date: data.date,
+            deviceCode: data.deviceCode,
+            documentAmount: data.documentAmount.doubleValue,
+            documentId: data.documentID,
+            fastPayment: fastPayment,
+            groupName: data.groupName,
+            isCancellation: data.isCancellation,
+            md5hash: data.md5hash,
+            merchantName: data.merchantName,
+            merchantNameRus: data.merchantNameRus,
+            opCode: data.opCode,
+            operationId: data.operationId,
+            operationType: data.operationType.value,
+            paymentDetailType: data.paymentDetailType,
+            svgImage: svgImage,
+            terminalCode: data.terminalCode,
+            tranDate: data.tranDate,
+            type: data.type.value
+        )
     }
 }
 

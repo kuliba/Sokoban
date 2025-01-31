@@ -123,13 +123,9 @@ extension SegmentedPaymentProviderPickerFlowModel {
         return .init(
             initialState: .init(
                 content: .init(
-                    initialState: .init(
                         segments: [],
                         qrCode: qrCode,
                         qrMapping: qrMapping
-                    ),
-                    reduce: { state, _ in (state, nil) },
-                    handleEffect: { _,_ in }
                 )
             ),
             factory: .init(

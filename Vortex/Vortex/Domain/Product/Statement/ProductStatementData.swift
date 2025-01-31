@@ -66,7 +66,35 @@ struct ProductStatementData: Identifiable, Equatable, Hashable {
     let tranDate: Date?
     let type: OperationEnvironment
     
-    init(mcc: Int?, accountId: Int?, accountNumber: String, amount: Double, cardTranNumber: String?, city: String?, comment: String, country: String?, currencyCodeNumeric: Int, date: Date, deviceCode: String?, documentAmount: Double?, documentId: Int?, fastPayment: ProductStatementData.FastPayment?, groupName: String, isCancellation: Bool?, md5hash: String, merchantName: String?, merchantNameRus: String?, opCode: Int?, operationId: String, operationType: OperationType, paymentDetailType: ProductStatementData.Kind, svgImage: SVGImageData?, terminalCode: String?, tranDate: Date?, type: OperationEnvironment) {
+    init(
+        mcc: Int?,
+        accountId: Int?,
+        accountNumber: String,
+        amount: Double,
+        cardTranNumber: String?,
+        city: String?,
+        comment: String,
+        country: String?,
+        currencyCodeNumeric: Int,
+        date: Date,
+        deviceCode: String?,
+        documentAmount: Double?,
+        documentId: Int?,
+        fastPayment: ProductStatementData.FastPayment?,
+        groupName: String,
+        isCancellation: Bool?,
+        md5hash: String,
+        merchantName: String?,
+        merchantNameRus: String?,
+        opCode: Int?,
+        operationId: String,
+        operationType: OperationType,
+        paymentDetailType: ProductStatementData.Kind,
+        svgImage: SVGImageData?,
+        terminalCode: String?,
+        tranDate: Date?,
+        type: OperationEnvironment
+    ) {
         self.mcc = mcc
         self.accountId = accountId
         self.accountNumber = accountNumber
@@ -113,37 +141,7 @@ extension ProductStatementData {
         let guid: String
     }
     
-    enum Kind: String, Codable, Hashable, Unknownable {
-        
-        case betweenTheir = "BETWEEN_THEIR"
-        case contactAddressless = "CONTACT_ADDRESSLESS"
-        case direct = "DIRECT"
-        case externalEntity = "EXTERNAL_ENTITY"
-        case externalIndivudual = "EXTERNAL_INDIVIDUAL"
-        case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
-        case insideBank = "INSIDE_BANK"
-        case insideOther = "INSIDE_OTHER"
-        case internet = "INTERNET"
-        case mobile = "MOBILE"
-        case notFinance = "NOT_FINANCE"
-        case otherBank = "OTHER_BANK"
-        case outsideCash = "OUTSIDE_CASH"
-        case outsideOther = "OUTSIDE_OTHER"
-        case sfp = "SFP"
-        case transport = "TRANSPORT"
-        case taxes = "TAX_AND_STATE_SERVICE"
-        case c2b = "C2B_PAYMENT"
-        case insideDeposit = "INSIDE_DEPOSIT"
-        case sberQRPayment = "SBER_QR_PAYMENT"
-        case networkMarketing = "NETWORK_MARKETING_SERVICE"
-        case digitalWallet = "DIGITAL_WALLETS_SERVICE"
-        case charity = "CHARITY_SERVICE"
-        case socialAndGame = "SOCIAL_AND_GAMES_SERVICE"
-        case education = "EDUCATION_SERVICE"
-        case security = "SECURITY_SERVICE"
-        case repayment = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
-        case unknown
-    }
+    typealias Kind = String
 }
 
 //MARK: - Codable

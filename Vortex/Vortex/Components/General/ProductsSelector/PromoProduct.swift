@@ -7,7 +7,17 @@
 
 import Foundation
 
-enum PromoProduct {
+enum PromoProduct: String {
     case sticker
     case savingsAccount
+}
+
+extension PromoProduct {
+    
+    var interfaceType: SettingType.Interface {
+        switch self {
+        case .sticker:          return .sticker
+        case .savingsAccount:   return .savingsAccount
+        }
+    }
 }

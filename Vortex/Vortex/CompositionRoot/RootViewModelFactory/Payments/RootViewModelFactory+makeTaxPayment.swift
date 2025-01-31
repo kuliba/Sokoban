@@ -16,4 +16,16 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
+    
+    @inlinable
+    func makeTaxPayment(
+        closeAction: @escaping () -> Void
+    ) -> PaymentsViewModel {
+        
+        return .init(
+            category: .taxes, 
+            model: model,
+            closeAction: closeAction
+        )
+    }
 }

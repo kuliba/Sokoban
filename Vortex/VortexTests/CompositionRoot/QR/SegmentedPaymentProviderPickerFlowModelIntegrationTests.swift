@@ -50,7 +50,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
         sut.select(makeSegmentedProvider())
         sut.servicePickerModel?.event(.goTo(.payments))
         
-        switch sut.state.status {
+        switch sut.state.navigation {
         case .outside(.payments):
             break
             

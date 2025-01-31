@@ -10,20 +10,9 @@ import ViewInspector
 import XCTest
 
 final class TemplatesAcceptanceTests: AcceptanceTests {
-    
+        
     @available(iOS 16.0, *)
-    func test_shouldPresentMainViewTemplatesOnMainViewTemplatesButtonTapOnInactiveFlag() throws {
-        
-        let app = TestApp(featureFlags: inactivePaymentsTransfersFlag())
-        let rootView = try app.launch()
-        
-        tapMainViewTemplatesButton(rootView)
-        
-        expectTemplatesPresentedOnMainView(rootView)
-    }
-    
-    @available(iOS 16.0, *)
-    func test_shouldPresentRootViewTemplatesOnMainViewTemplatesButtonTapOnActiveFlag() throws {
+    func test_shouldPresentRootViewTemplatesOnMainViewTemplatesButtonTap() throws {
         
         let app = TestApp(featureFlags: activePaymentsTransfersFlag())
         let rootView = try app.launch()

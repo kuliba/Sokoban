@@ -39,7 +39,7 @@ extension RootViewModelFactory {
         // keep for manual override of release flags
         let featureFlags = FeatureFlags(
             getProductListByTypeV6Flag: .active,
-            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
+            paymentsTransfersFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
@@ -318,12 +318,17 @@ extension RootViewModelFactory {
         runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
         
         if featureFlags.paymentsTransfersFlag.isActive {
+            
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
-        } else {
-            performOrWaitForActive({ [weak self] in
-                self?.model.handleDictionaryAnywayOperatorsRequest(nil)
-            })
         }
+        
+        performOrWaitForActive({ [weak self] in
+            
+            guard let self else { return }
+            
+            let serial = model.localAgent.serial(for: [OperatorsListComponents.SberOperator].self)
+            model.handleDictionaryAnywayOperatorsRequest(serial)
+        })
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
@@ -469,9 +474,20 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch selection {
-        case .none: return nil
-        case .order: return .order
+        switch status {
+        case .initiate, .inflight, .loaded:
+            return nil
+            
+        case let .failure(failure, _):
+            switch failure{
+            case let .alert(message):
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
+            }
+        case .selection:
+            return .order
         }
     }
 }
@@ -781,7 +797,13 @@ private extension RootViewModelFactory {
         let mainViewModelsFactory: MainViewModelsFactory = .init(
             makeAuthFactory: makeAuthFactory,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makePromoProductViewModel: makePromoViewModel,
+            makePromoProductViewModel: { [weak self] in
+                self?.makePromoViewModel(
+                    viewModel: $0,
+                    actions: $1,
+                    featureFlags: featureFlags
+                )
+            },
             qrViewModelFactory: qrViewModelFactory)
         
         let mainViewModel = MainViewModel(

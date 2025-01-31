@@ -17,12 +17,5 @@ extension RootViewFactory {
         components.makeTransportPaymentsView(transport)
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
-            .navigationBar(
-                with: .with(
-                    title: "Транспорт",
-                    navLeadingAction: {},//viewModel.dismiss,
-                    navTrailingAction: {}//viewModel.openScanner
-                )
-            )
     }
 }
