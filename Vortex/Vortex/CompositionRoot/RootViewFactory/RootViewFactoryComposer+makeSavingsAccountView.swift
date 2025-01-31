@@ -12,9 +12,9 @@ import RxViewModel
 
 extension RootViewFactoryComposer {
     
-    func makeSavingsAccountFullView(
+    func makeSavingsAccountBinderView(
         binder: SavingsAccountDomain.Binder
-    ) -> SavingsAccountFullView? {
+    ) -> SavingsAccountBinderView? {
         
         return .init(
             binder: binder,

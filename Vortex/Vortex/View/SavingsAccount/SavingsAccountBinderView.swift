@@ -1,5 +1,5 @@
 //
-//  SavingsAccountFullView.swift
+//  SavingsAccountBinderView.swift
 //  Vortex
 //
 //  Created by Andryusina Nataly on 31.01.2025.
@@ -9,7 +9,7 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-struct SavingsAccountFullView: View {
+struct SavingsAccountBinderView: View {
         
     private let binder: SavingsAccountDomain.Binder
     private let config: Config
@@ -73,7 +73,9 @@ struct SavingsAccountFullView: View {
     ) -> some View {
         
         Button(action: action, label: {
+            
             ZStack {
+                
                 RoundedRectangle(cornerRadius: config.continueButton.cornerRadius)
                     .foregroundColor(config.continueButton.background)
                 config.continueButton.label.text(withConfig: config.continueButton.title)
@@ -85,7 +87,7 @@ struct SavingsAccountFullView: View {
     }
 }
 
-extension SavingsAccountFullView {
+extension SavingsAccountBinderView {
     
     typealias Config = SavingsAccountDomain.Config
     typealias Factory = SavingsAccountDomain.ViewFactory
