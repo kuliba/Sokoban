@@ -22,8 +22,6 @@ import SberQR
 import SwiftUI
 import UIPrimitives
 import UIKit
-import RxViewModel
-
 
 final class RootViewFactoryComposer {
     
@@ -1159,17 +1157,4 @@ extension RootViewFactory.MakeInfoViews {
         makeUpdateInfoView: UpdateInfoView.init(text:),
         makeDisableCorCardsInfoView: DisableCorCardsView.init(text:)
     )
-}
-
-extension SavingsAccountDomain.ContentState {
-    
-    var title: String {
-        
-        switch status {
-        case let .loaded(landing):
-            return "Накопительный заголовок"
-            
-        default: return ""
-        }
-    }
 }

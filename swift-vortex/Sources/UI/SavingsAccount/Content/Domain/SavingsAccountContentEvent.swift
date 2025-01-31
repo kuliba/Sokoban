@@ -12,10 +12,10 @@ public enum SavingsAccountContentEvent<Landing, InformerPayload> {
     case failure(Failure)
     case load
     case loaded(Landing)
+    case offset(CGFloat)
     case openSavingsAccount
     case resetSelection
     case selectOrder
-    case offset(CGFloat)
     
     public enum Failure {
         case alert(String)
