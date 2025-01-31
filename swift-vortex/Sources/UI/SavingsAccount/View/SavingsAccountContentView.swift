@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIPrimitives
 
 public struct SavingsAccountContentView<RefreshView, LandingView, Landing, InformerPayload>: View
 where RefreshView: View,
@@ -32,13 +31,7 @@ where RefreshView: View,
     
     public var body: some View {
         
-        RefreshableScrollView(
-            action: { event(.load) },
-            showsIndicators: false,
-            refreshCompletionDelay: 2.0
-        ) {
-            content()
-        }
+        content()
     }
     
     @ViewBuilder
@@ -98,7 +91,7 @@ where RefreshView == Text,
       InformerPayload == String
 {
     static let preview = SavingsAccountContentView(
-        state: .init(status: .initiate),
+        state: .init(status: .initiate, navTitle: .init(title: "", subtitle: "")),
         event: {_ in },
         config: .prod,
         factory: .init(

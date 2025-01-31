@@ -41,7 +41,8 @@ final class RootViewFactoryComposer {
         let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache(defaultImage)
+            generalImageCache: model.generalImageCache(),
+            getUImage: { model.images.value[$0]?.uiImage }
         )
         self.model = model
         self.httpClient = httpClient
@@ -686,16 +687,12 @@ private extension RootViewFactoryComposer {
     }
     
     func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder,
-        dismiss: @escaping SavingsAccountDismiss
-    ) -> SavingsAccountDomain.WrapperView? {
-        
-        makeSavingsAccountView(
-            binder: binder,
-            dismiss: dismiss,
-            model:  model,
-            isActive: savingsAccountFlag.isActive
-        )
+        binder: SavingsAccountDomain.Binder
+    ) -> SavingsAccountBinderView? {
+                            
+        guard savingsAccountFlag.isActive else { return nil }
+            
+        return makeSavingsAccountBinderView(binder: binder)
     }
     
     func makePaymentsSuccessView(

@@ -20,7 +20,7 @@ extension PaymentsTransfersCorporateContentViewConfig {
         ),
         headerTopPadding: 8,
         spacing: 16,
-        stack: .init(top: 20, leading: 16, bottom: 0, trailing: 15),
+        stack: .init(top: 0, leading: 16, bottom: 0, trailing: 15),
         title: .init(
             text: "Перевести",
             config: .init(

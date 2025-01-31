@@ -10,11 +10,14 @@ import Foundation
 public struct SavingsAccountContentState<Landing, InformerPayload> {
     
     public var status: SavingsAccountContentStatus<Landing, InformerPayload>
-
+    public var navTitle: SavingsAccountNavTitle
+    
     public init(
-        status: SavingsAccountContentStatus<Landing, InformerPayload>
+        status: SavingsAccountContentStatus<Landing, InformerPayload>,
+        navTitle: SavingsAccountNavTitle = .empty
     ) {
         self.status = status
+        self.navTitle = navTitle
     }
 }
 

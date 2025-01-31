@@ -392,8 +392,13 @@ private extension RootViewFactory {
         }
         
         return .init(
-            infra: .init(imageCache: .preview, generalImageCache: .preview),
-            clearCache: {},
+            infra: .init(
+                imageCache: .preview,
+                generalImageCache: .preview,
+                getUImage: { _ in nil }
+            ),
+            clearCache: {
+            },
             isCorporate: { false },
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },

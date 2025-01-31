@@ -74,7 +74,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            initialState: .init(status: status),
+            initialState: .init(status: status, navTitle: .init(title: "", subtitle: "")),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
