@@ -41,8 +41,8 @@ extension RootViewModelFactory {
         switch navigation {
         case .alert:       return .milliseconds(100)
         case .openAccount: return .milliseconds(100)
-        case .openCard:    return .milliseconds(100)
-        case .openDeposit: return .milliseconds(100)
+        case .openCard:    return .milliseconds(600)
+        case .openDeposit: return .milliseconds(600)
         case .openProduct: return .milliseconds(100)
         case .openURL:     return .milliseconds(100)
         }
