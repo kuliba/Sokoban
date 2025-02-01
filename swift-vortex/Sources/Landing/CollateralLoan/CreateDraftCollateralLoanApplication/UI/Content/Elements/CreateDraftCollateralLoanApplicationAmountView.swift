@@ -10,7 +10,7 @@ import PaymentComponents
 
 struct CreateDraftCollateralLoanApplicationAmountView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
@@ -32,7 +32,7 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
             state: state.amount,
             event: { event(.amount($0)) },
             config: config.elements.amount.inputComponentConfig,
-            iconView: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+            iconView: { factory.makeImageViewWithMD5Hash(state.data.icons.amount) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -41,13 +41,13 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
         
         InfoView(
             info: .init(
-                id: .other(DomainState.FieldID.amount.id),
+                id: .other(State.FieldID.amount.id),
                 title: config.elements.amount.title,
                 value: state.data.formattedAmount,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5hash(state.data.icons.amount) }
+            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.amount) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -57,7 +57,7 @@ extension CreateDraftCollateralLoanApplicationAmountView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 

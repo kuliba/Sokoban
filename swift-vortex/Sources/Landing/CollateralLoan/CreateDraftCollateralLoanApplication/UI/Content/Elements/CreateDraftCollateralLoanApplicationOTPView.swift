@@ -1,14 +1,15 @@
 //
-//  CreateDraftCollateralLoanApplicationHeaderView.swift
+//  CreateDraftCollateralLoanApplicationOTPView.swift
 //
 //
-//  Created by Valentin Ozerov on 30.12.2024.
+//  Created by Valentin Ozerov on 29.01.2025.
 //
 
 import SwiftUI
 import PaymentComponents
+import OTPInputComponent
 
-struct CreateDraftCollateralLoanApplicationHeaderView: View {
+struct CreateDraftCollateralLoanApplicationOTPView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -16,22 +17,25 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
     let factory: Factory
 
     var body: some View {
-        
-        InfoView(
-            info: .init(
-                id: .other(State.FieldID.header.id),
-                title: config.elements.header.title,
-                value: state.data.name,
-                style: .expanded
+
+        TimedOTPInputWrapperView(
+            viewModel: .init(
+                otpText: state.otp,
+                timerDuration: config.elements.otp.timerDuration,
+                otpLength: config.elements.otp.otpLength,
+                resend: { event(.getVerificationCode) },
+                observe: { event(.otp($0)) }
             ),
-            config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.productName) }
+            config: config.elements.otp.view,
+            iconView: {
+                config.elements.otp.smsIcon
+            }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 
-extension CreateDraftCollateralLoanApplicationHeaderView {
+extension CreateDraftCollateralLoanApplicationOTPView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
@@ -41,11 +45,11 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationOTPView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationHeaderView(
+        CreateDraftCollateralLoanApplicationOTPView(
             state: .correntParametersPreview,
             event: { print($0) },
             config: .default,

@@ -9,19 +9,19 @@ import SwiftUI
 
 public struct GetCollateralLandingBottomSheetView: View {
     
-    @State var selected: Item? = nil
+    @SwiftUI.State var selected: Item? = nil
 
-    private var state: DomainState
+    private var state: State
     private let domainEvent: (DomainEvent) -> Void
     private let config: Config
     private let factory: Factory
     
     public init(
-        state: DomainState,
+        state: State,
         domainEvent: @escaping (DomainEvent) -> Void,
         config: Config,
         factory: Factory,
-        type: DomainState.BottomSheet.SheetType
+        type: State.BottomSheet.SheetType
     ) {
         self.state = state
         self.domainEvent = domainEvent
@@ -115,7 +115,7 @@ public struct GetCollateralLandingBottomSheetView: View {
         
         if let icon = item.icon {
             
-            factory.makeImageViewByMD5Hash(icon)
+            factory.makeImageViewWithMD5Hash(icon)
         } else {
             
             makeRadioButton(for: item)
@@ -206,7 +206,7 @@ extension GetCollateralLandingBottomSheetView {
     public typealias Config = GetCollateralLandingConfig.BottomSheet
     public typealias Factory = GetCollateralLandingFactory
     public typealias DomainEvent = GetCollateralLandingDomain.Event
-    public typealias DomainState = GetCollateralLandingDomain.State
+    public typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
