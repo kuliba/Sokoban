@@ -25,6 +25,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
         public let percent: Percent
         public let city: City
         public let otp: OTP
+        public let consent: Consent
         public let button: Button
         
         public init(
@@ -34,6 +35,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
             percent: Percent,
             city: City,
             otp: OTP,
+            consent: Consent,
             button: Button
         ) {
             self.header = header
@@ -42,6 +44,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
             self.percent = percent
             self.city = city
             self.otp = otp
+            self.consent = consent
             self.button = button
         }
     }
@@ -188,6 +191,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
             percent: .preview,
             city: .preview,
             otp: .preview,
+            consent: .preview,
             button: .preview
         )
     )

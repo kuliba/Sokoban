@@ -42,7 +42,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         CreateDraftCollateralLoanApplicationView(
             state: state,
             event: event,
-            externalEvents: handleExternalEvents(events:),
+            externalEvent: handleExternalEvent(events:),
             config: .default,
             factory: .init(
                 makeImageViewByMD5hash: factory.makeImageViewByMD5hash,
@@ -51,7 +51,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         )
     }
 
-    private func handleExternalEvents(events: Domain.ExternalEvents) {
+    private func handleExternalEvent(events: Domain.ExternalEvent) {
         
         switch events {
         case let .showConsent(url):

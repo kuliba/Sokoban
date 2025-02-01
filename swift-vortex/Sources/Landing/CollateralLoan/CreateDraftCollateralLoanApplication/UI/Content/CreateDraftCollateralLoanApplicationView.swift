@@ -11,20 +11,20 @@ public struct CreateDraftCollateralLoanApplicationView: View {
     
     let state: DomainState
     let event: (Event) -> Void
-    let externalEvents: (Domain.ExternalEvents) -> Void
+    let externalEvent: (Domain.ExternalEvent) -> Void
     let config: Config
     let factory: Factory
     
     public init(
         state: DomainState,
         event: @escaping (Event) -> Void,
-        externalEvents: @escaping (Domain.ExternalEvents) -> Void,
+        externalEvent: @escaping (Domain.ExternalEvent) -> Void,
         config: Config,
         factory: Factory
     ) {
         self.state = state
         self.event = event
-        self.externalEvents = externalEvents
+        self.externalEvent = externalEvent
         self.config = config
         self.factory = factory
     }
@@ -73,7 +73,6 @@ public struct CreateDraftCollateralLoanApplicationView: View {
                 if state.stage == .confirm {
 
                     otpView
-                    consentsView
                     consentsView
                 }
             }
@@ -156,12 +155,12 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
 
-    // TODO: Need to realize
     var consentsView: some View {
         
         CreateDraftCollateralLoanApplicationConsentsView(
             state: state,
-            externalEvents: { externalEvents($0) },
+            event: event,
+            externalEvent: { externalEvent($0) },
             config: config,
             factory: factory
         )
@@ -211,7 +210,7 @@ extension CreateDraftCollateralLoanApplicationView {
 
 extension CreateDraftCollateralLoanApplicationDomain {
  
-    public enum ExternalEvents: Equatable {
+    public enum ExternalEvent: Equatable {
         
         case showConsent(URL)
     }
@@ -226,7 +225,7 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
         CreateDraftCollateralLoanApplicationView(
             state: .correntParametersPreview,
             event: { print($0) },
-            externalEvents: { print($0) },
+            externalEvent: { print($0) },
             config: .default,
             factory: .preview
         )
@@ -235,7 +234,7 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
         CreateDraftCollateralLoanApplicationView(
             state: .confirmPreview,
             event: { print($0) }, 
-            externalEvents: { print($0) },
+            externalEvent: { print($0) },
             config: .default,
             factory: .preview
         )

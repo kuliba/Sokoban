@@ -5,7 +5,6 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import AnywayPaymentCore
 import Foundation
 import InputComponent
 import OptionalSelectorComponent
@@ -76,8 +75,14 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 effect = .getVerificationCode
                 
             case let .gettedVerificationCode(result):
-                // TODO: Need to realize logic
-                print(result)
+                break
+                
+            case let .checkConsent(consentName):
+                if state.checkedConditions.contains(consentName) {
+                    state.checkedConditions.removeAll { $0 == consentName }
+                } else {
+                    state.checkedConditions.append(consentName)
+                }
             }
             
             return (state, effect)
