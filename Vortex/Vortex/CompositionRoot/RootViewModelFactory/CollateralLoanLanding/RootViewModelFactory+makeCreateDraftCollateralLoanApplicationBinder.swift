@@ -5,12 +5,14 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import AnywayPaymentBackend
 import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import Combine
 import Foundation
 import InputComponent
 import RemoteServices
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -44,6 +46,7 @@ extension RootViewModelFactory {
         let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: data)
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
+            getVerificationCode: getVerificationCode(completion:),
             saveConsents: { payload, completion in
             
                 // TODO: Restore
@@ -77,6 +80,22 @@ extension RootViewModelFactory {
         }
     }
 
+    private func getVerificationCode(
+        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetVerificationCodeResult) -> Void
+    ) {
+        let getVerificationCode = nanoServiceComposer.compose(
+            createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
+            mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
+        )
+                
+        getVerificationCode(()) { [getVerificationCode] in
+            
+            // TODO: Реализовать показ ошибок согласно дизайна
+            completion($0.map(\.resendOTPCount).mapError { .init(message: $0.localizedDescription) })
+            _ = getVerificationCode
+        }
+    }
+    
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult) -> Void

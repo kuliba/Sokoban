@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct CollateralLoanLandingGetShowcaseViewConfig {
     

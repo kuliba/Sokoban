@@ -10,6 +10,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
     public enum Effect: Equatable {
         
         case createDraftApplication(CreateDraftPayload)
+        case getVerificationCode
         case saveConsents(SaveConsentsPayload)
     }
     

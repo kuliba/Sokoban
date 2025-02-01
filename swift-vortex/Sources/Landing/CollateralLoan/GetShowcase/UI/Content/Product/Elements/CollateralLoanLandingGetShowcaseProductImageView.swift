@@ -11,13 +11,13 @@ struct CollateralLoanLandingGetShowcaseProductImageView: View {
     
     let url: String
     let config: Config
-    let makeImageViewByURL: Factory.MakeImageViewByURL
+    let makeImageViewWithURL: Factory.makeImageViewWithURL
     
     var body: some View {
 
         ZStack {
             
-            makeImageViewByURL(url)
+            makeImageViewWithURL(url)
                 .scaledToFill()
                 .frame(height: config.imageView.height)
                 .cornerRadius(config.imageView.сornerRadius)

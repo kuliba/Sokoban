@@ -10,13 +10,16 @@ extension CreateDraftCollateralLoanApplicationDomain {
     public final class EffectHandler {
 
         private let createDraftApplication: CreateDraftApplication
+        private let getVerificationCode: GetVerificationCode
         private let saveConsents: SaveConsents
 
         public init(
             createDraftApplication: @escaping CreateDraftApplication,
+            getVerificationCode: @escaping GetVerificationCode,
             saveConsents: @escaping SaveConsents
         ) {
             self.createDraftApplication = createDraftApplication
+            self.getVerificationCode = getVerificationCode
             self.saveConsents = saveConsents
         }
         
@@ -28,6 +31,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .saveConsents(payload):
                 saveConsents(payload) { dispatch(.showSaveConsentsResult($0)) }
+                
+            case .getVerificationCode:
+                getVerificationCode { dispatch(.gettedVerificationCode($0)) }
             }
         }
 
@@ -36,7 +42,10 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
         public typealias CreateDraftApplication = (CreateDraftApplicationPayload, @escaping CreateDraftApplicationCompletion) -> Void
         public typealias SaveConsents = (SaveConsentsPayload, @escaping SaveConsentsCompletion) -> Void
+        public typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
         public typealias CreateDraftApplicationCompletion = (CreateDraftApplicationResult) -> Void
         public typealias SaveConsentsCompletion = (SaveConsentsResult) -> Void
+        public typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+        public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>
     }
 }

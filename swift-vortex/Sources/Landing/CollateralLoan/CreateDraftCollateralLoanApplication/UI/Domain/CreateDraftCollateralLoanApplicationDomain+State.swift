@@ -24,6 +24,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var period: OptionalSelectorState<PeriodItem>
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
+        public var otp: String = ""
 
         public init(
             data: Data,

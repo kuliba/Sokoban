@@ -9,13 +9,13 @@ import SwiftUI
 
 public struct CreateDraftCollateralLoanApplicationView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
     
     public init(
-        state: DomainState,
+        state: State,
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory
@@ -141,11 +141,15 @@ extension CreateDraftCollateralLoanApplicationView {
             factory: factory
         )
     }
-    
-    // TODO: Need to realize
+
     var otpView: some View {
         
-        Text("OTP View")
+        CreateDraftCollateralLoanApplicationOTPView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
     }
     
     // TODO: Need to realize
@@ -189,7 +193,7 @@ extension View {
 
 extension CreateDraftCollateralLoanApplicationView {
     
-    public typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    public typealias State = CreateDraftCollateralLoanApplicationDomain.State
     public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     public typealias Config = CreateDraftCollateralLoanApplicationConfig
     public typealias Factory = CreateDraftCollateralLoanApplicationFactory

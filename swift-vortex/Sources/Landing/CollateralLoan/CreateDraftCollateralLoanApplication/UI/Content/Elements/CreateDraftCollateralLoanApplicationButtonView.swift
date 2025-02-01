@@ -9,9 +9,9 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationButtonView: View {
     
-    @State private var isDisabled = false
+    @SwiftUI.State private var isDisabled = false
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
@@ -56,7 +56,7 @@ extension CreateDraftCollateralLoanApplicationButtonView {
     
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
-    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
 

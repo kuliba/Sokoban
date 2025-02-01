@@ -66,7 +66,18 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .showSaveConsentsResult(result):
                 state.isLoading = false
-                state.saveConsentsResult = result                
+                state.saveConsentsResult = result     
+                
+            case let .otp(otp):
+                // TODO: clean up otp
+                state.otp = otp
+                
+            case .getVerificationCode:
+                effect = .getVerificationCode
+                
+            case let .gettedVerificationCode(result):
+                // TODO: Need to realize logic
+                print(result)
             }
             
             return (state, effect)
