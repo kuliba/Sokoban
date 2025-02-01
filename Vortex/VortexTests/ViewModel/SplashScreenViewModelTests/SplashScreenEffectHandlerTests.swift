@@ -10,45 +10,81 @@ import XCTest
 
 final class SplashScreenEffectHandlerTests: XCTestCase {
     
-    func test_startFirstTimer_dispatchesSplashEvent() {
+    func test_startFirstTimer_shouldDispatchSplashEvent() {
+        let (sut, startFirstTimerSpy, _) = makeSUT()
         
-        var events: [SplashScreenEvent] = []
+        startFirstTimerSpy.process((), completion: { result in
+            if case .success = result { }
+        })
         
-        let effectHandler = makeSUT()
+        expect(sut, with: .startFirstTimer, toDeliver: .splash) {
+            startFirstTimerSpy.complete(with: (), at: 0)
+        }
         
-        effectHandler.handleEffect(.startFirstTimer) { events.append($0) }
-        
-        XCTAssertEqual(events, [.splash])
+        XCTAssertEqual(startFirstTimerSpy.callCount, 1)
     }
-    
-    func test_startSecondTimer_dispatchesNoSplashEvent() {
-       
-        var events: [SplashScreenEvent] = []
+
+    func test_startSecondTimer_shouldCallStartSecondTimerAndDispatchNoSplashEvent() {
+        let (sut, _, startSecondTimerSpy) = makeSUT()
         
-        let effectHandler = makeSUT(startSecondTimer: { completion in completion() })
+        expect(sut, with: .startSecondTimer, toDeliver: .noSplash) {
+            startSecondTimerSpy.complete(with: (), at: 0)
+        }
         
-        effectHandler.handleEffect(.startSecondTimer) { events.append($0) }
-        
-        XCTAssertEqual(events, [.noSplash])
+        XCTAssertEqual(startSecondTimerSpy.callCount, 1)
     }
     
     // MARK: - Helpers
     private typealias SUT = SplashScreenEffectHandler
-
+    private typealias Event = SUT.Event
+    private typealias Effect = SUT.Effect
+    private typealias TimerSpy = Spy<Void, Void, Never>
+    
     private func makeSUT(
-        startFirstTimer: @escaping SplashScreenEffectHandler.StartTimer = { $0() },
-        startSecondTimer: @escaping SplashScreenEffectHandler.StartTimer = { $0() },
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SplashScreenEffectHandler {
+    ) -> (
+        sut: SUT,
+        startFirstTimerSpy: TimerSpy,
+        startSecondTimerSpy: TimerSpy
+    ) {
         
+        let startFirstTimerSpy = TimerSpy()
+        let startSecondTimerSpy = TimerSpy()
         let sut = SUT(
-            startFirstTimer: startFirstTimer,
-            startSecondTimer: startSecondTimer
+            startFirstTimer: { completion in
+                startFirstTimerSpy.process(completion: completion)
+            },
+            startSecondTimer: { completion in
+                startSecondTimerSpy.process(completion: completion)
+            }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(startFirstTimerSpy, file: file, line: line)
+        trackForMemoryLeaks(startSecondTimerSpy, file: file, line: line)
         
-        return sut
+        return (sut, startFirstTimerSpy, startSecondTimerSpy)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with effect: Effect,
+        toDeliver expectedEvent: Event,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        
+        let exp = expectation(description: "wait for event")
+        
+        sut.handleEffect(effect) { event in
+            XCTAssertEqual(event, expectedEvent, file: file, line: line)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
     }
 }
