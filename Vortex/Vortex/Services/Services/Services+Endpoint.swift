@@ -122,6 +122,7 @@ extension Services {
             case makeTransfer
             case modifyC2BSubAcc
             case modifyC2BSubCard
+            case openAccountForm
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
@@ -244,6 +245,12 @@ extension Services.Endpoint {
         pathPrefix: .savingsAccount,
         version: .none,
         serviceName: .getSavingLanding
+    )
+
+    static let openAccountFormRequest: Self = .init(
+        pathPrefix: .savingsAccount,
+        version: .none,
+        serviceName: .openAccountForm
     )
 
     static let createStickerPayment: Self = .init(

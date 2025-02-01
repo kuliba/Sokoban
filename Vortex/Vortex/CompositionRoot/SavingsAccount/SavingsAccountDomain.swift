@@ -20,7 +20,9 @@ extension SavingsAccountDomain {
     typealias InformerPayload = InformerData
     typealias Landing = RemoteServices.ResponseMapper.GetSavingLandingResponse
     typealias LandingItem = RemoteServices.ResponseMapper.GetSavingLandingData
-    
+    typealias OpenAccountLanding = RemoteServices.ResponseMapper.GetOpenAccountFormResponse
+    typealias OpenAccountLandingItem = RemoteServices.ResponseMapper.GetOpenAccountFormData
+
     enum Select: Equatable {
         
         case goToMain

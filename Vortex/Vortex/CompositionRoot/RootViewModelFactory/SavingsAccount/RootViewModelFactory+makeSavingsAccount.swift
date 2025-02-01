@@ -22,9 +22,15 @@ extension RootViewModelFactory {
             mapError: SavingsAccountDomain.ContentError.init(error:)
         )
 
+        let getOpenAccount = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetOpenAccountFormRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOpenAccountFormResponse,
+            mapError: SavingsAccountDomain.ContentError.init(error:)
+        )
+
         let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
             loadLanding: { getSavingLanding($0, $1) },
-            orderAccount: {_ in }
+            orderAccount: { getOpenAccount("", $0) }
         )
         
         return makeSavingsAccount(nanoServices: nanoServices)

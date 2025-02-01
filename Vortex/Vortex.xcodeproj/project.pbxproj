@@ -2755,6 +2755,7 @@
 		833EC1122BBEA56F0050ABE9 /* ProductAlertsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */; };
 		834090EB2C87524C00A0B7B1 /* Model+DictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834090EA2C87524C00A0B7B1 /* Model+DictionaryTests.swift */; };
 		83415AC02CCBBA3E00326319 /* RootViewModel+openUtilityPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83415ABF2CCBBA3E00326319 /* RootViewModel+openUtilityPayment.swift */; };
+		834239402D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8342393F2D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift */; };
 		8343FE2A2BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */; };
 		8343FE2D2BB2A08500D0C128 /* Services+getProductListByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE2C2BB2A08500D0C128 /* Services+getProductListByType.swift */; };
 		8343FE2F2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */; };
@@ -6375,6 +6376,7 @@
 		833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAlertsViewModel.swift; sourceTree = "<group>"; };
 		834090EA2C87524C00A0B7B1 /* Model+DictionaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DictionaryTests.swift"; sourceTree = "<group>"; };
 		83415ABF2CCBBA3E00326319 /* RootViewModel+openUtilityPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+openUtilityPayment.swift"; sourceTree = "<group>"; };
+		8342393F2D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOpenAccountFormRequest.swift"; sourceTree = "<group>"; };
 		8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeRequest.swift"; sourceTree = "<group>"; };
 		8343FE2C2BB2A08500D0C128 /* Services+getProductListByType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByType.swift"; sourceTree = "<group>"; };
 		8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeRequestTest.swift"; sourceTree = "<group>"; };
@@ -10220,7 +10222,7 @@
 				C179D3FF2CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift */,
 				A78AC1D72CEBA67600154B88 /* RequestFactory+createCollateralLoanLandingGetConsentsRequest.swift */,
 				C15C4C742CFE676E00A8C922 /* RequestFactory+getDigitalCardLanding.swift */,
-				830147882D030D1500174489 /* RequestFactory+createGetSavingLanding.swift */,
+				8342393E2D4D549A0074D331 /* SavingsAccount */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -15879,6 +15881,15 @@
 			path = ControlPanelView;
 			sourceTree = "<group>";
 		};
+		8342393E2D4D549A0074D331 /* SavingsAccount */ = {
+			isa = PBXGroup;
+			children = (
+				830147882D030D1500174489 /* RequestFactory+createGetSavingLanding.swift */,
+				8342393F2D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift */,
+			);
+			path = SavingsAccount;
+			sourceTree = "<group>";
+		};
 		8343FE2B2BB2A07600D0C128 /* GetProductListByTypeService */ = {
 			isa = PBXGroup;
 			children = (
@@ -20934,6 +20945,7 @@
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				77EC58E7277236E90054D75C /* Model.swift in Sources */,
 				C15C4C752CFE676E00A8C922 /* RequestFactory+getDigitalCardLanding.swift in Sources */,
+				834239402D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift in Sources */,
 				2A0A3F662C2A0AA400029854 /* ModelHTTPClientFactory.swift in Sources */,
 				77D01EB629CDACD00026B099 /* PaymentC2BResponseData.swift in Sources */,
 				83CC9D2C2C85CCBB00ABA4C7 /* Services+getBannerCatalogListV2.swift in Sources */,
