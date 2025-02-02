@@ -14,9 +14,7 @@ extension RootViewModelFactory {
         featureFlags: FeatureFlags
     ) -> OpenProductDomain.Flow {
         
-        // TODO: extract flow composer
-        let binder: Binder<Void, OpenProductDomain.Flow> = composeBinder(
-            content: (),
+        composeFlow(
             delayProvider: delayProvider,
             getNavigation: { [weak self] select, notify, completion in
                 
@@ -26,11 +24,8 @@ extension RootViewModelFactory {
                     notify: notify,
                     completion: completion
                 )
-            },
-            witnesses: .empty
+            }
         )
-        
-        return binder.flow
     }
     
     @inlinable
