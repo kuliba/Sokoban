@@ -103,7 +103,7 @@ private extension RootBinderView {
         _ picker: PaymentProviderPickerDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makePaymentProviderPickerView(
+        rootViewFactory.components.makePaymentProviderPickerView(
             binder: picker,
             dismiss: { binder.flow.event(.dismiss) }
         )

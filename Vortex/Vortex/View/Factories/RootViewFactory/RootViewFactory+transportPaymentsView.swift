@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func transportPaymentsView(
         _ transport: TransportPaymentsViewModel
     ) -> some View {
         
-        components.makeTransportPaymentsView(transport)
+        makeTransportPaymentsView(transport)
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
     }

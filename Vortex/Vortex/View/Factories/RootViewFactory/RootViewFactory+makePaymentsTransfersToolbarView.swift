@@ -8,7 +8,7 @@
 import PayHubUI
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ToolbarContentBuilder
     func makePaymentsTransfersToolbar(

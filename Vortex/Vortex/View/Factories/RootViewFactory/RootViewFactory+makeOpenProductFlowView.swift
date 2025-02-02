@@ -9,7 +9,7 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @inlinable
     func makeOpenProductFlowView(
@@ -87,7 +87,7 @@ extension RootViewFactory {
         _ viewModel: OpenDepositListViewModel
     ) -> OpenDepositListView {
         
-        return .init(viewModel: viewModel, getUImage: infra.getUImage)
+        return .init(viewModel: viewModel, getUImage: getUImage)
     }
 }
 

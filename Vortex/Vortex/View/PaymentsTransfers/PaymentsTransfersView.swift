@@ -155,11 +155,11 @@ extension PaymentsTransfersView {
         
         switch section {
         case let disableInfoViewModel as DisableForCorCardsPTViewModel:
-            viewFactory.makeInfoViews.makeDisableCorCardsInfoView(.disableForCorCards)
+            viewFactory.components.makeInfoViews.makeDisableCorCardsInfoView(.disableForCorCards)
                 .padding(.horizontal, 16)
             
         case let updateInfo as UpdateInfoPTViewModel:
-            viewFactory.makeInfoViews.makeUpdateInfoView(.updateInfoText)
+            viewFactory.components.makeInfoViews.makeUpdateInfoView(.updateInfoText)
             
         case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
             PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
