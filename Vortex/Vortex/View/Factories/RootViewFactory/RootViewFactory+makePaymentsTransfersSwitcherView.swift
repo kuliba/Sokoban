@@ -21,7 +21,7 @@ private extension TimeInterval {
     }
 }
 
-extension RootViewFactory {
+extension ViewComponents {
     
     func makePaymentsTransfersSwitcherView(
         _ switcher: PaymentsTransfersSwitcher

@@ -8,7 +8,7 @@
 import RxViewModel
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @inlinable
     func makeMeToMeFlowView(
@@ -38,7 +38,7 @@ extension RootViewFactory {
         
         switch bottomSheet {
         case let .meToMe(meToMe):
-            components.makePaymentsMeToMeView(meToMe)
+            makePaymentsMeToMeView(meToMe)
         }
     }
     
@@ -50,7 +50,7 @@ extension RootViewFactory {
         
         switch destination {
         case let .successMeToMe(successMeToMe):
-            components.makePaymentsSuccessView(successMeToMe)
+            makePaymentsSuccessView(successMeToMe)
         }
     }
 }

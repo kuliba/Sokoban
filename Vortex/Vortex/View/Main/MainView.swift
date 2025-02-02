@@ -125,7 +125,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch section {
         case let updateInfoViewModel as UpdateInfoViewModel:
-            viewFactory.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
+            viewFactory.components.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
             
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             viewFactory.components.makeMainSectionProductsView(productsSectionViewModel)
@@ -566,7 +566,6 @@ extension MainViewFactory {
                     config: .iVortex
                 )
             },
-            makeInfoViews: .default,
             makeUserAccountView: {
                 
                 return .init(
