@@ -14,7 +14,6 @@ struct PaymentProviderPickerDestinationView: View {
     let detailPayment: () -> Void
     let destination: PaymentProviderPickerDomain.Destination
     let components: ViewComponents
-    let makeIconView: MakeIconView
     
     var body: some View {
         
@@ -55,7 +54,7 @@ private extension PaymentProviderPickerDestinationView {
                     title: utilityPaymentOperator.title,
                     subtitle: "ИНН \(utilityPaymentOperator.inn)",
                     dismiss: dismiss,
-                    icon: makeMD5HashIconView(utilityPaymentOperator.icon),
+                    icon: components.makeIconView(md5Hash: utilityPaymentOperator.icon),
                     style: .large
                 )
                 
@@ -78,7 +77,7 @@ private extension PaymentProviderPickerDestinationView {
                             dismiss: { binder.flow.event(.dismiss) }
                         )
                     },
-                    makeIconView: makeIconView
+                    makeIconView: components.makeIconView
                 )
                 
             case let .startPayment(node):
@@ -100,22 +99,8 @@ private extension PaymentProviderPickerDestinationView {
                 title: payload.title,
                 subtitle: payload.subtitle,
                 dismiss: dismiss,
-                icon: iconView(payload.icon),
+                icon: components.makeIconView(md5Hash: payload.icon),
                 style: .normal
             )
-    }
-    
-    func iconView(
-        _ icon: String?
-    ) -> IconDomain.IconView {
-        
-        makeIconView(icon.map { .md5Hash(.init($0)) })
-    }
-
-    private func makeMD5HashIconView(
-        _ icon: String?
-    ) -> UIPrimitives.AsyncImage {
-        
-        makeIconView(icon.map { .md5Hash(.init($0)) })
     }
 }
