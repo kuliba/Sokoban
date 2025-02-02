@@ -95,34 +95,7 @@ final class ContentReducerTests: XCTestCase {
         
         assert(.failure(.alert(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
     }
-
-    func test_reduce_selectOrder_shouldStatusToOrder() {
-        
-        assertState(.selectOrder, on: .init(status: .inflight(nil))) {
-            
-            $0.status = .selection(.order, nil)
-        }
-    }
     
-    func test_reduce_selectOrder_shouldDeliverNoEffect() {
-        
-        assert(.selectOrder, on: .init(status: .inflight(nil)), effect: nil)
-    }
-
-    func test_reduce_reset_shouldStatusToLoaded() {
-        
-        let landing = anyMessage()
-        assertState(.resetSelection, on: .init(status: .selection(.order, landing))) {
-            
-            $0.status = .loaded(landing)
-        }
-    }
-    
-    func test_reduce_reset_shouldDeliverNoEffect() {
-        
-        assert(.resetSelection, on: .init(status: .selection(.order, nil)), effect: nil)
-    }
-
     func test_reduce_offsetMoreThenShowTitleOffset_shouldNavTitleToValue() {
         
         let landing = anyMessage()

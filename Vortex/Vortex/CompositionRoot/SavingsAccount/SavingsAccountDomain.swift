@@ -20,11 +20,13 @@ extension SavingsAccountDomain {
     typealias InformerPayload = InformerData
     typealias Landing = RemoteServices.ResponseMapper.GetSavingLandingResponse
     typealias LandingItem = RemoteServices.ResponseMapper.GetSavingLandingData
-    
+    typealias OpenAccountLanding = RemoteServices.ResponseMapper.GetOpenAccountFormResponse
+    typealias OpenAccountLandingItem = RemoteServices.ResponseMapper.GetOpenAccountFormData
+
     enum Select: Equatable {
         
         case goToMain
-        case order
+        case openSavingsAccount
         case failure(FlowFailureKind)
     }
 
@@ -37,7 +39,7 @@ extension SavingsAccountDomain {
     enum Navigation {
         
         case main
-        case order
+        case openSavingsAccount
         case failure(FlowFailureKind)
     }
     

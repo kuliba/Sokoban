@@ -51,7 +51,7 @@ where RefreshView: View,
                     Color.clear
                         .frame(maxHeight: .infinity)
                 }
-
+                
             case let .loaded(landing):
                 factory.makeLandingView(landing)
                 
@@ -63,10 +63,6 @@ where RefreshView: View,
                     factory.makeRefreshView()
                         .modifier(ViewByCenterModifier(height: config.spinnerHeight))
                 }
-                
-            case .selection:
-                Color.clear
-                    .frame(maxHeight: .infinity)
             }
         }
     }

@@ -29,11 +29,15 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
     case inflight(Landing?)
     case loaded(Landing)
     case failure(Failure, Landing?)
-    case selection(Selection?, Landing?)
 
     public enum Selection: Equatable {
         
-        case order
+        case openSavingsAccount
+    }
+
+    public var needContinueButton: Bool {
+        
+        oldLanding != nil
     }
 
     var isLoading: Bool {
@@ -41,7 +45,7 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
         switch self {
         case .inflight:
             return true
-        case .initiate, .failure, .loaded, .selection:
+        case .initiate, .failure, .loaded:
             return false
         }
     }
@@ -60,9 +64,6 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
             
         case .initiate:
             return nil
-            
-        case let .selection(_, landing):
-            return landing
         }
     }
 
