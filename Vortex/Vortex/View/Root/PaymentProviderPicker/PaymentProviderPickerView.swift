@@ -16,7 +16,6 @@ struct PaymentProviderPickerView: View {
     let binder: PaymentProviderPickerDomain.Binder
     let dismiss: () -> Void
     let components: ViewComponents
-    let makeIconView: MakeIconView
     
     var body: some View {
         
@@ -93,7 +92,7 @@ private extension PaymentProviderPickerView {
             amount: latest.amount.map { "\($0) ₽" } ?? "",
             title: latest.name,
             config: .iVortex,
-            iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
+            iconView: components.makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
         )
         .contentShape(Rectangle())
     }
@@ -112,7 +111,7 @@ private extension PaymentProviderPickerView {
         PaymentProviderListView(
             providerList: providerList,
             binder: binder,
-            makeIconView: makeIconView
+            makeIconView: components.makeIconView
         )
     }
     
@@ -143,8 +142,7 @@ private extension PaymentProviderPickerView {
             dismiss: { binder.flow.event(.dismiss) },
             detailPayment: { binder.flow.event(.select(.detailPayment)) },
             destination: destination,
-            components: components,
-            makeIconView: makeIconView
+            components: components
         )
     }
 }

@@ -78,6 +78,16 @@ struct ViewComponents {
 
 extension ViewComponents {
     
+    func makeIconView(
+        md5Hash: String?
+    ) -> IconDomain.IconView {
+        
+        makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
+}
+
+extension ViewComponents {
+    
     @ViewBuilder
     func makeAnywayServicePickerFlowView(
         flowModel: AnywayServicePickerFlowModel,
@@ -91,11 +101,12 @@ extension ViewComponents {
                 title: provider.origin.title,
                 subtitle: provider.origin.inn,
                 dismiss: dismiss,
-                icon: iconView(provider.origin.icon),
+                icon: makeIconView(md5Hash:provider.origin.icon),
                 style: .normal
             )
     }
     
+    @available(*, deprecated, renamed: "makeIconView(md5Hash:)")
     func iconView(
         _ icon: String?
     ) -> IconDomain.IconView {

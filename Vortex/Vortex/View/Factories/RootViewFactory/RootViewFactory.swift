@@ -90,8 +90,7 @@ extension RootViewFactory {
         return .init(
             binder: binder,
             dismiss: dismiss,
-            components: components,
-            makeIconView: makeIconView
+            components: components
         )
     }
 }
