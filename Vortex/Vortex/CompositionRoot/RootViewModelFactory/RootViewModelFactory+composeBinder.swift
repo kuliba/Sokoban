@@ -11,7 +11,6 @@ extension RootViewModelFactory {
     
     // TODO: add docs
     // TODO: extract to separate file
-    // TODO: use in `composeBinder`, get rid of `RxFlowBinderComposer`
     @inlinable
     func composeFlow<Select, Navigation>(
         initialState: FlowDomain<Select, Navigation>.State = .init(),
@@ -50,16 +49,15 @@ extension RootViewModelFactory {
         witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
         
-        let composer = RxFlowBinderComposer(scheduler: schedulers.main)
-        
         let decoratedGetNavigation = schedulers.interactive.decorateGetNavigation(delayProvider: delayProvider)(getNavigation)
         
-        return composer.compose(
+        let flow = composeFlow(
             initialState: initialState,
-            makeContent: makeContent,
-            getNavigation: decoratedGetNavigation,
-            witnesses: witnesses
+            delayProvider: delayProvider,
+            getNavigation: decoratedGetNavigation
         )
+        
+        return witnesses.composeBinder(content: makeContent(), flow: flow)
     }
     
     /// Composes a `Binder` using a content instance and custom navigation logic.
