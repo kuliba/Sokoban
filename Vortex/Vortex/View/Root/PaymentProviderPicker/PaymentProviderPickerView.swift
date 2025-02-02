@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FooterComponent
 import PayHubUI
 import RxViewModel
 import SwiftUI
@@ -108,10 +109,51 @@ private extension PaymentProviderPickerView {
         providerList: PaymentProviderPickerDomain.ProviderList
     ) -> some View {
         
-        PaymentProviderListView(
-            providerList: providerList,
-            binder: binder,
-            makeIconView: components.makeIconView
+        RxWrapperView(model: providerList, makeContentView: makeContentView)
+    }
+    
+    @ViewBuilder
+    func makeContentView(
+        state: PaymentProviderPickerDomain.ProviderListState,
+        event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
+    ) -> some View {
+        
+        ForEach(state.operators) { provider in
+            
+            makeProviderView(provider: provider, event: event)
+        }
+        
+        makeFooterView()
+    }
+    
+    func makeProviderView(
+        provider: PaymentProviderPickerDomain.Provider,
+        event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { binder.flow.selectProvider(provider) },
+            label: {
+                
+                OperatorLabel(
+                    title: provider.title,
+                    subtitle: provider.inn,
+                    config: .iVortex(),
+                    iconView: components.makeIconView(md5Hash: provider.icon)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+        .plainListRow(insets: .init(top: 0, leading: 16, bottom: 0, trailing: 16))
+        .onAppear { event(.didScrollTo(provider.id)) }
+    }
+    
+    func makeFooterView() -> some View {
+        
+        FooterView(
+            state: .footer(.iVortex),
+            event: binder.flow.handleFooterEvent(_:),
+            config: .iVortex
         )
     }
     
