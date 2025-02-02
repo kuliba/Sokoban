@@ -10,11 +10,25 @@ import ViewInspector
 import XCTest
 
 final class TemplatesAcceptanceTests: AcceptanceTests {
-        
+    
     @available(iOS 16.0, *)
-    func test_shouldPresentRootViewTemplatesOnMainViewTemplatesButtonTap() throws {
+    func test_shouldNotPresentRootViewTemplatesOnMainViewTemplatesButtonTap_onMissingProduct() throws {
         
         let app = TestApp(featureFlags: activePaymentsTransfersFlag())
+        let rootView = try app.launch()
+        
+        tapMainViewTemplatesButton(rootView)
+        
+        XCTExpectFailure("Should not show templates on missing products.")
+        expectTemplatesPresentedOnRootView(rootView)
+    }
+    
+    @available(iOS 16.0, *)
+    func test_shouldPresentRootViewTemplatesOnMainViewTemplatesButtonTap_onExistingProduct() throws {
+        
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let app = TestApp(featureFlags: activePaymentsTransfersFlag(), model: model)
         let rootView = try app.launch()
         
         tapMainViewTemplatesButton(rootView)

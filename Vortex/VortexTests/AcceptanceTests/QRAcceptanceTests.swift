@@ -13,9 +13,20 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     // TODO: - scan QR can be initiated from the main view, payments view, or toolbar
     
-    func test_openQRWithFlowEvent_shouldOpenRootViewQRScannerFullScreenCover() throws {
+    func test_openQRWithFlowEvent_shouldNotOpenRootViewQRScannerFullScreenCover_onMissingProduct() throws {
         
         let app = TestApp()
+        _ = try app.launch()
+        
+        XCTExpectFailure("Should not navigate to scanQR on empty products")
+        try app.openQRWithFlowEvent()
+    }
+    
+    func test_openQRWithFlowEvent_shouldOpenRootViewQRScannerFullScreenCover_onExistingProsuct() throws {
+        
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let app = TestApp(model: model)
         let rootView = try app.launch()
         
         openQRWithFlowEvent(app)
@@ -24,9 +35,22 @@ final class QRAcceptanceTests: AcceptanceTests {
         expectNoMainViewQRScannerFullScreenCover(rootView)
     }
     
-    func test_tapMainViewQRButton_shouldOpenRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
+    func test_tapMainViewQRButton_shouldNotOpenRootViewQRScannerFullScreenCoverOnActiveFlag_onMissingProduct() throws {
         
         let app = TestApp(featureFlags: activePaymentsTransfersFlag())
+        let rootView = try app.launch()
+        
+        tapMainViewQRButton(rootView)
+        
+        expectNoRootViewQRScannerFullScreenCover(rootView)
+        expectNoMainViewQRScannerFullScreenCover(rootView)
+    }
+    
+    func test_tapMainViewQRButton_shouldOpenRootViewQRScannerFullScreenCoverOnActiveFlag_onExistingProduct() throws {
+        
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let app = TestApp(featureFlags: activePaymentsTransfersFlag(), model: model)
         let rootView = try app.launch()
         
         tapMainViewQRButton(rootView)
@@ -37,7 +61,9 @@ final class QRAcceptanceTests: AcceptanceTests {
     
     func test_closeQRScanner_shouldCloseRootViewQRScannerFullScreenCoverOnActiveFlag() throws {
         
-        let app = TestApp(featureFlags: activePaymentsTransfersFlag())
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let app = TestApp(featureFlags: activePaymentsTransfersFlag(), model: model)
         let rootView = try app.launch()
         tapMainViewQRButton(rootView)
         expectRootViewQRScannerFullScreenCover(rootView)
@@ -52,7 +78,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulC2BSubscribeQRScan() throws {
         
-        let (app, _,_, scanner) = makeSUT(scanResult: .c2bSubscribeURL(anyURL()))
+        let (app, _, model, scanner) = makeSUT(
+            scanResult: .c2bSubscribeURL(anyURL())
+        )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -63,7 +92,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulC2BQRScan() throws {
         
-        let (app, _,_, scanner) = makeSUT(scanResult: .c2bURL(anyURL()))
+        let (app, _, model, scanner) = makeSUT(
+            scanResult: .c2bURL(anyURL())
+        )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -74,7 +106,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanFailure() throws {
         
-        let (app, _,_, scanner) = makeSUT(scanResult: .failure(anyQRCode()))
+        let (app, _, model, scanner) = makeSUT(
+            scanResult: .failure(anyQRCode())
+        )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -85,9 +120,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnMissingINN() throws {
         
-        let (app, _,_, scanner) = makeSUT(
+        let (app, _, model, scanner) = makeSUT(
             scanResult: .mapped(.missingINN(anyQRCode()))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -98,8 +134,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentProviderPickerOnMixed() throws {
         
-        let (app, _,_, scanner) = makeSUT(scanResult: .mapped(.mixed(makeMixedQRResult()))
+        let (app, _, model, scanner) = makeSUT(
+            scanResult: .mapped(.mixed(makeMixedQRResult()))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -110,9 +148,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentOperatorSearchOnMultiple() throws {
         
-        let (app, _,_, scanner) = makeSUT(
+        let (app, _, model, scanner) = makeSUT(
             scanResult: .mapped(.multiple(makeMultipleQRResult()))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -123,9 +162,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnQRScanNoneMapped() throws {
         
-        let (app, _,_, scanner) = makeSUT(
+        let (app, _, model, scanner) = makeSUT(
             scanResult: .mapped(.none(makeQR()))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -136,9 +176,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentProviderServicePickerOnQRScanProvider() throws {
         
-        let (app, _,_, scanner) = makeSUT(
+        let (app, _, model, scanner) = makeSUT(
             scanResult: .mapped(.provider(makeProviderPayload()))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -149,9 +190,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentOperatorViewOnQRScanSingle() throws {
         
-        let (app, _,_, scanner) = makeSUT(
+        let (app, _, model, scanner) = makeSUT(
             scanResult: .mapped(.single(makeSinglePayload()))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -162,9 +204,10 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentPaymentOnSuccessfulSourceQRScan() throws {
         
-        let (app, _,_, scanner) = makeSUT(
+        let (app, _, model, scanner) = makeSUT(
             scanResult: .mapped(.source(.avtodor))
         )
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -177,7 +220,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanURL() throws {
         
-        let (app, _,_, scanner) = makeSUT(scanResult: .url(anyURL()))
+        let (app, _, model, scanner) = makeSUT(scanResult: .url(anyURL()))
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)
@@ -188,7 +232,8 @@ final class QRAcceptanceTests: AcceptanceTests {
     @available(iOS 16.0, *)
     func test_shouldPresentQRFailureOnQRScanUnknown() throws {
         
-        let (app, _,_, scanner) = makeSUT(scanResult: .unknown)
+        let (app, _, model, scanner) = makeSUT(scanResult: .unknown)
+        try model.addMeToMeProduct()
         let rootView = try app.launch()
         
         scanSuccessfully(rootView, scanner)

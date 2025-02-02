@@ -13,9 +13,9 @@ extension RootViewModelFactory {
     typealias MakeProductProfileByID = (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel?
     
     @inlinable
-    func hasCorporateCardsOnly() -> Bool {
+    func isUserPersonal() -> Bool {
         
-        model.products.value.isEmpty && model.onlyCorporateCards
+        !model.products.value.isEmpty && !model.onlyCorporateCards
     }
     
     @inlinable
@@ -40,17 +40,17 @@ extension RootViewModelFactory {
             }
             
         case .scanQR:
-            if hasCorporateCardsOnly() {
-                completion(.outside(.tab(.main)))
-            } else {
+            if isUserPersonal() {
                 makeScanQR()
+            } else {
+                completion(.outside(.tab(.main)))
             }
             
         case .templates:
-            if hasCorporateCardsOnly() {
-                completion(.outside(.tab(.main)))
-            } else {
+            if isUserPersonal() {
                 makeTemplatesNode()
+            } else {
+                completion(.outside(.tab(.main)))
             }
             
         case .userAccount:
