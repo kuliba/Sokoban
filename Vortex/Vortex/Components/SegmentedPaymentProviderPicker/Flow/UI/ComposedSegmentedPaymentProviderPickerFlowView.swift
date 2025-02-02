@@ -17,11 +17,16 @@ where AnywayFlowView: View {
     
     var body: some View {
         
-        content()
-            .navigationDestination(
-                destination: flowModel.state.destination,
-                content: destinationContent
-            )
+        SegmentedPaymentProviderPickerView(
+            segments: flowModel.state.content.segments,
+            providerView: providerView,
+            footer: footer,
+            config: .iVortex
+        )
+        .navigationDestination(
+            destination: flowModel.state.destination,
+            content: destinationContent
+        )
     }
 }
 
@@ -39,16 +44,6 @@ struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
 }
 
 private extension ComposedSegmentedPaymentProviderPickerFlowView {
-    
-    func content() -> some View {
-        
-        SegmentedPaymentProviderPickerView(
-            segments: flowModel.state.content.segments,
-            providerView: providerView,
-            footer: footer,
-            config: .iVortex
-        )
-    }
     
     func providerView(
         provider: SegmentedOperatorProvider
@@ -189,7 +184,9 @@ extension SegmentedPaymentProviderPickerFlowState {
     
     var destination: Navigation.Destination? {
         
-        guard case let .destination(destination) = navigation else { return nil }
+        guard case let .destination(destination) = navigation 
+        else { return nil }
+        
         return destination
     }
 }
