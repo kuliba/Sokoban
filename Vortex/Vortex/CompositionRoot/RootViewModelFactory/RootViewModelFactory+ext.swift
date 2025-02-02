@@ -483,8 +483,6 @@ extension SavingsAccountDomain.ContentState {
             case let .informer(info):
                 return .failure(.timeout(info))
             }
-        case .selection:
-            return .order
         }
     }
 }

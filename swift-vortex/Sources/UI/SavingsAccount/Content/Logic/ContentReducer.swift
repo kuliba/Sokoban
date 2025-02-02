@@ -52,22 +52,7 @@ public extension ContentReducer {
                 let oldLanding = state.status.oldLanding
                 state.status = .failure(.informer(informer), oldLanding)
             }
-            
-        case .selectOrder:
-            let oldLanding = state.status.oldLanding
-            state.status = .selection(.openSavingsAccount, oldLanding)
-            
-        case .resetSelection:
-            if let oldLanding = state.status.oldLanding {
-                state.status = .loaded(oldLanding)
-            } else {
-                state.status = .initiate
-            }
-            
-        case .openSavingsAccount:
-            let oldLanding = state.status.oldLanding
-            state.status = .selection(.openSavingsAccount, oldLanding)
-            
+                        
         case let .offset(offset):
             if refreshRange.contains(offset), !state.status.isLoading {
                     let oldLanding = state.status.oldLanding

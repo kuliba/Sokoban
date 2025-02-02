@@ -63,10 +63,6 @@ where RefreshView: View,
                     factory.makeRefreshView()
                         .modifier(ViewByCenterModifier(height: config.spinnerHeight))
                 }
-                
-            case .selection:
-                Color.clear
-                    .frame(maxHeight: .infinity)
             }
         }
     }

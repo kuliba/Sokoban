@@ -27,12 +27,12 @@ final class RootViewModelFactory_GetSavingsAccountNavigationTests: XCTestCase {
         }
     }
     
-    func test_getNavigation_shouldDeliverOrderOnOrder() {
+    func test_getNavigation_shouldDeliverOpenSavingsAccountOnOpenSavingsAccount() {
         
-        getNavigation(with: .order) {
+        getNavigation(with: .openSavingsAccount) {
             
             switch $0 {
-            case .order:
+            case .openSavingsAccount:
                 break
                 
             default:

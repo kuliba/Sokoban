@@ -22,7 +22,7 @@ extension SavingsAccountDomain {
         
         var body: some View {
             
-            ZStack {
+            ZStack(alignment: .top) {
                 
                 state.navigation?.informer.map(informerView)
                     .zIndex(1)

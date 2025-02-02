@@ -60,9 +60,9 @@ extension RootViewModelFactory {
     ) -> Delay {
         
         switch navigation {
-        case .main:    return .milliseconds(100)
-        case .order:   return settings.delay
-        case .failure: return settings.delay
+        case .main:                  return .milliseconds(100)
+        case .openSavingsAccount:   return settings.delay
+        case .failure:               return settings.delay
         }
     }
     
@@ -96,8 +96,8 @@ extension RootViewModelFactory {
         switch select {
         case .goToMain:
             completion(.main)
-        case .order:
-            completion(.order)
+        case .openSavingsAccount:
+            completion(.openSavingsAccount)
         case let .failure(failure):
             completion(.failure(failure))
         }
@@ -116,7 +116,7 @@ extension RootViewModelFactory {
         content: SavingsAccountDomain.Content
     ) -> () -> Void {
         
-        return { content.event(.resetSelection) }
+        return {}
     }
 }
 

@@ -66,7 +66,7 @@ struct SavingsAccountBinderView: View {
                 )
                 .safeAreaInset(edge: .bottom, spacing: 8) {
                     if contentState.status.needContinueButton {
-                        continueButton({ contentEvent(.openSavingsAccount) })
+                        continueButton({ flowEvent(.select(.openSavingsAccount)) })
                     }
                 }
             }
@@ -121,7 +121,7 @@ extension SavingsAccountDomain.Navigation {
         case .main:
             return nil
             
-        case .order:
+        case .openSavingsAccount:
             return .openSavingsAccount
         }
     }

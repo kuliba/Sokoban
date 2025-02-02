@@ -26,7 +26,7 @@ extension SavingsAccountDomain {
     enum Select: Equatable {
         
         case goToMain
-        case order
+        case openSavingsAccount
         case failure(FlowFailureKind)
     }
 
@@ -39,7 +39,7 @@ extension SavingsAccountDomain {
     enum Navigation {
         
         case main
-        case order
+        case openSavingsAccount
         case failure(FlowFailureKind)
     }
     
