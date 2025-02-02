@@ -35,6 +35,7 @@ private extension RootBinderView {
             
             SpinnerView(viewModel: .init())
                 .opacity(state.isLoading ? 1 : 0)
+                .animation(.easeInOut, value: state.isLoading)
         }
     }
     
