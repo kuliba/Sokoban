@@ -1391,6 +1391,7 @@
 		2AB6BFE62AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB6BFE52AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift */; };
 		2AB766BE29EA82A600501DD2 /* StringUpdateMaskedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB766BD29EA82A600501DD2 /* StringUpdateMaskedTests.swift */; };
 		2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AB766BF29EA89AB00501DD2 /* UIKitHelpers */; };
+		2AB79B0F2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB79B0E2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift */; };
 		2AB7AF702C626616007FA0CC /* Model+getFormattedAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB7AF6F2C626616007FA0CC /* Model+getFormattedAmount.swift */; };
 		2AB823A72B8EF917000C5FAD /* EffectHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB823A62B8EF917000C5FAD /* EffectHandlerSpy.swift */; };
 		2AB87C4D2C13346F0013EFFE /* AnywayElementModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */; };
@@ -5039,6 +5040,7 @@
 		2AB6BFE22AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAuthLoginViewModelFactoryTests.swift; sourceTree = "<group>"; };
 		2AB6BFE52AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingAuthLoginViewModelTests.swift; sourceTree = "<group>"; };
 		2AB766BD29EA82A600501DD2 /* StringUpdateMaskedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUpdateMaskedTests.swift; sourceTree = "<group>"; };
+		2AB79B0E2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeFlow.swift"; sourceTree = "<group>"; };
 		2AB7AF6F2C626616007FA0CC /* Model+getFormattedAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getFormattedAmount.swift"; sourceTree = "<group>"; };
 		2AB823A62B8EF917000C5FAD /* EffectHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectHandlerSpy.swift; sourceTree = "<group>"; };
 		2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayElementModelMapper.swift; sourceTree = "<group>"; };
@@ -10951,6 +10953,7 @@
 				2A11B9382D402D6500BD98C2 /* RootViewModelFactory+Infra.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
 				2AB529FC2D296F930016AA6E /* RootViewModelFactory+composeBinder.swift */,
+				2AB79B0E2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
 				EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */,
 				EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */,
@@ -20942,6 +20945,7 @@
 				ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */,
+				2AB79B0F2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift in Sources */,
 				68CB588E28ABCB15003064B0 /* LoggerAgent.swift in Sources */,
 				0B11A78A2922C8B400C9BDD0 /* QRFailedView.swift in Sources */,
 				831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */,

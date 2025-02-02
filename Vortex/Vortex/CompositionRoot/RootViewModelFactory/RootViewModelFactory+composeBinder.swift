@@ -9,25 +9,6 @@ import FlowCore
 
 extension RootViewModelFactory {
     
-    // TODO: add docs
-    // TODO: extract to separate file
-    @inlinable
-    func composeFlow<Select, Navigation>(
-        initialState: FlowDomain<Select, Navigation>.State = .init(),
-        delayProvider: @escaping (Navigation) -> Delay,
-        getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation
-    ) -> FlowDomain<Select, Navigation>.Flow {
-        
-        let decoratedGetNavigation = schedulers.interactive.decorateGetNavigation(delayProvider: delayProvider)(getNavigation)
-        
-        let composer = FlowComposer(
-            getNavigation: decoratedGetNavigation,
-            scheduler: schedulers.main
-        )
-        
-        return composer.compose(initialState: initialState)
-    }
-    
     /// Composes a `Binder` using a dynamic content factory and custom navigation logic.
     ///
     /// This method sets up a `Binder` that binds a dynamically created `Content` instance with a `Flow`,
