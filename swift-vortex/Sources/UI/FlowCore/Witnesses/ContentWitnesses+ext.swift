@@ -18,6 +18,7 @@ public extension ContentWitnesses {
     ///
     /// This wraps everything into `ContentFlowWitnesses` so the parent flow can
     /// observe or react to these events appropriately.
+    @inlinable
     func bind<S, N>(
         content: Content,
         flow: Flow<S, N>
@@ -37,6 +38,7 @@ public extension ContentWitnesses {
     ///
     /// - Warning: This variant does not explicitly handle `isLoading` or `dismiss`. It relies on
     /// mapping `Select` into `FlowEvent.select(...)`.
+    @inlinable
     func bind<Navigation>(
         content: Content,
         flow: Flow<Select, Navigation>
