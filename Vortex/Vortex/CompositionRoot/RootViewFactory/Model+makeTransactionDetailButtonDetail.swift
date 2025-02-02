@@ -12,19 +12,28 @@ import RemoteServices
 extension Model {
     
     func makeTransactionDetailButtonDetail(
-        with info: _OperationInfo
+        with info: _OperationInfo,
+        merchantLogoMD5Hash: String?
     ) -> TransactionDetailButton.Details? {
         
-        info.operationDetail.map(makeTransactionDetailButtonDetail)
+        guard let detail = info.operationDetail
+        else { return nil }
+        
+        return makeTransactionDetailButtonDetail(
+            with: detail,
+            merchantLogoMD5Hash: merchantLogoMD5Hash
+        )
     }
     
     func makeTransactionDetailButtonDetail(
-        with operation: OperationDetailData
+        with operation: OperationDetailData,
+        merchantLogoMD5Hash: String?
     ) -> TransactionDetailButton.Details {
         
         let viewModel = OperationDetailInfoViewModel(
             model: self,
-            operation: operation,
+            operation: operation, 
+            merchantLogoMD5Hash: merchantLogoMD5Hash,
             dismissAction: {}
         )
         

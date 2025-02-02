@@ -23,7 +23,7 @@ extension RootViewModelFactory {
         )
 
         let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
-            loadLanding: { getSavingLanding(( "", $0), $1) },
+            loadLanding: { getSavingLanding($0, $1) },
             orderAccount: {_ in }
         )
         
@@ -92,6 +92,8 @@ extension RootViewModelFactory {
             completion(.main)
         case .order:
             completion(.order)
+        case let .failure(failure):
+            completion(.failure(failure))
         }
     }
     

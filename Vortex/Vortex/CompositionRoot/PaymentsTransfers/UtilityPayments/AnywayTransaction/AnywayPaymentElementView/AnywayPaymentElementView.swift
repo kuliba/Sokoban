@@ -9,6 +9,7 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import PaymentComponents
 import SwiftUI
+import TextFieldUI
 
 struct AnywayPaymentElementView<IconView: View>: View {
     
@@ -29,6 +30,9 @@ struct AnywayPaymentElementView<IconView: View>: View {
             
         case let .widget(widget):
             widgetView(widget)
+            
+        case let .withContacts(withContacts):
+            withContactsView(withContacts)
         }
     }
 }
@@ -87,6 +91,66 @@ private extension AnywayPaymentElementView {
         case let .product(viewModel):
             ProductSelectWrapperView(viewModel: viewModel, config: .iVortex)
                 .paddedRoundedBackground()
+        }
+    }
+    
+    private var keyboard: TextFieldUI.KeyboardType { .default }
+    
+    func withContactsView(
+        _ withContacts: AnywayElementModel.WithContacts
+    ) -> some View {
+        
+        WithContactView(
+            withContacts: withContacts,
+            makeTextInputWrapperView: {
+                
+                TextInputWrapperView(
+                    model: $0.input.model,
+                    config: .iVortex(
+                        keyboard: keyboard,
+                        title: $0.origin.title
+                    ),
+                    iconView: {
+                        
+                        factory.makeIconView(withContacts.origin.icon)
+                            .frame(width: 32, height: 32)
+                    }
+                )
+            }, 
+            makeContactsView: factory.makeContactsView
+        )
+         .paddedRoundedBackground()
+    }
+}
+
+struct WithContactView<InputView: View, ContactsView: View>: View {
+    
+    @State private var isShowingContacts = false
+    
+    let withContacts: AnywayElementModel.WithContacts
+    let makeTextInputWrapperView: (AnywayElementModel.WithContacts) -> InputView
+    let makeContactsView: (ContactsViewModel) -> ContactsView
+    
+    var body: some View {
+        
+        HStack {
+            
+            makeTextInputWrapperView(withContacts)
+            
+            Button {
+                isShowingContacts = true
+            } label: {
+                Image.ic24User
+            }
+            .buttonStyle(.plain)
+        }
+        .sheet(isPresented: $isShowingContacts) {
+            
+            makeContactsView(withContacts.contacts)
+                .onReceive(withContacts.contacts.phoneDigitsPublisher) { _ in
+                    
+                    isShowingContacts = false
+                }
         }
     }
 }

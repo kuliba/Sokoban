@@ -40,7 +40,7 @@ public struct CollateralLoanLandingGetShowcaseProductView: View {
             ImageView(
                 url: product.image,
                 config: config,
-                makeImageView: factory.makeImageView
+                makeImageViewByURL: factory.makeImageViewByURL
             )
             
             FooterView(

@@ -97,14 +97,20 @@ import UtilityServicePrepaymentUI
 #warning("move to the call site and make private")
 /*private*/ extension OperatorLabelConfig {
     
-    static let iVortex: Self = .init(
-        title: .init(
-            textFont: .textH4M16240(),
-            textColor: .textSecondary
-        ),
-        subtitle: .init(
-            textFont: .textBodyMR14180(),
-            textColor: .textPlaceholder
+    static func iVortex(
+        height: CGFloat = 46
+    ) -> Self {
+        
+        return .init(
+            height: height,
+            title: .init(
+                textFont: .textH4M16240(),
+                textColor: .textSecondary
+            ),
+            subtitle: .init(
+                textFont: .textBodyMR14180(),
+                textColor: .textPlaceholder
+            )
         )
-    )
+    }
 }

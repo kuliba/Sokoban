@@ -73,7 +73,7 @@ public struct C2BSubscriptionView_Demo: View {
                 SearchView(
                     textFieldState: $0,
                     event: $1,
-                    textFieldConfig: .preview
+                    textFieldConfig: .preview()
                 )
             },
             config: .preview

@@ -18,7 +18,7 @@ class MyProductsViewModel: ObservableObject {
     
     typealias CardAction = (CardDomain.CardEvent) -> Void
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var sections: [MyProductsSectionViewModel]
@@ -36,7 +36,7 @@ class MyProductsViewModel: ObservableObject {
     var rootActions: RootViewModel.RootActions?
     var contactsAction: () -> Void = { }
     var informerWasShown: Bool = false
-
+    
     let openOrderSticker: () -> Void
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
@@ -44,7 +44,7 @@ class MyProductsViewModel: ObservableObject {
     private let cardAction: CardAction?
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeMyProductsViewFactory: MyProductsViewFactory
-
+    
     private var bindings = Set<AnyCancellable>()
     
     init(navigationBar: NavigationBarView.ViewModel,
@@ -180,7 +180,7 @@ class MyProductsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.createInformer($0) }
             .store(in: &bindings)
-  
+        
         model.productsOrdersUpdating
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isOrdersUpdating in
@@ -238,58 +238,57 @@ class MyProductsViewModel: ObservableObject {
     private func bind(_ openProductVM: MyProductsOpenProductView.ViewModel) {
         
         openProductVM.action
+            .compactMap { $0 as? MyProductsViewModelAction.Tapped.NewProduct }
+            .map(\.productType)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] productType in
                 
-                switch action {
-                case let payload as MyProductsViewModelAction.Tapped.NewProduct:
+                switch productType {
+                case .account:
                     
-                    switch payload.productType {
-                    case .account:
-                        bottomSheet = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            
-                            let accountProductsList = self.model.accountProductsList.value
-                            
-                            guard let openAccountViewModel: OpenAccountViewModel = .init(self.model, products: accountProductsList)
-                            else { return }
-                            
-                            self.bottomSheet = .init(type: .openAccount(openAccountViewModel))
-                        }
+                        let accountProductsList = self.model.accountProductsList.value
                         
-                    case .deposit:
-                        bottomSheet = nil
+                        guard let openAccountViewModel: OpenAccountViewModel = .init(self.model, products: accountProductsList)
+                        else { return }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            
-                            let openDepositViewModel = OpenDepositListViewModel(
-                                self.model,
-                                catalogType: .deposit,
-                                dismissAction: {[weak self] in
-                                    
-                                    self?.action.send(MyProductsViewModelAction.Close.Link()) }, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
-                            
-                            self.link = .openDeposit(openDepositViewModel)
-                        }
-                        
-                    case .card:
-                        bottomSheet = nil
-                        
-                        DispatchQueue.main.delay(for: .milliseconds(300)) {
-                            
-                            self.openCard()
-                        }
-                        
-                    default: 
-                        bottomSheet = nil
-                        
-                        openOrderSticker()
+                        self.bottomSheet = .init(type: .openAccount(openAccountViewModel))
                     }
                     
-                default: break
+                case .deposit:
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        
+                        let openDepositViewModel = OpenDepositListViewModel(
+                            self.model,
+                            catalogType: .deposit,
+                            dismissAction: {[weak self] in
+                                
+                                self?.action.send(MyProductsViewModelAction.Close.Link()) }, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
+                        
+                        self.link = .openDeposit(openDepositViewModel)
+                    }
+                    
+                case .card:
+                    
+                    DispatchQueue.main.delay(for: .milliseconds(300)) {
+                        
+                        self.openCard()
+                    }
+                    
+                case .sticker:
+                    openOrderSticker()
+                    
+                case .loan:
+                    // TODO: - add openCollateralLoanLanding
+                    break
+                    
+                default:
+                    break
                 }
             }
+        
             .store(in: &bindings)
     }
     
@@ -648,7 +647,7 @@ enum MyProductsViewModelAction {
     enum Tapped {
         
         struct NewProduct: Action {
-            let productType: ProductType
+            let productType: OpenProductType
         }
         
         struct NewProductLauncher: Action {}

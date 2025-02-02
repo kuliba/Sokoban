@@ -6,6 +6,8 @@
 //
 
 import Combine
+import FlowCore
+import Foundation
 import PayHub
 import RemoteServices
 
@@ -14,7 +16,6 @@ extension RootViewModelFactory {
     struct MakeSelectedCategorySuccessPayload {
         
         let category: ServiceCategory
-        let latest: [Latest]
         let operators: [UtilityPaymentProvider]
     }
     
@@ -29,7 +30,7 @@ extension RootViewModelFactory {
             content: content,
             delayProvider: delayProvider,
             getNavigation: getPaymentProviderPickerNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
+            witnesses: .empty
         )
     }
     
@@ -40,7 +41,7 @@ extension RootViewModelFactory {
         
         switch navigation {
         case .alert:       return .milliseconds(100)
-        case .destination: return .milliseconds(100)
+        case .destination: return .milliseconds(600)
         case .outside:     return .milliseconds(100)
         }
     }
@@ -53,7 +54,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .detailPayment:
-            completion(.destination(.detailPayment(makePaymentsNode(
+            let node = makePaymentsNode(
                 payload: .service(.requisites),
                 notify: { event in
                     
@@ -62,7 +63,8 @@ extension RootViewModelFactory {
                     case .scanQR: notify(.select(.outside(.qr)))
                     }
                 }
-            ))))
+            )
+            completion(.destination(.detailPayment(node)))
             
         case let .latest(latest):
             initiateAnywayPayment(latest: latest, notify: notify, completion: completion)
@@ -128,13 +130,8 @@ extension RootViewModelFactory {
             case let .success(success):
                 switch success {
                 case let .services(operatorServices):
-                    
-                    completion(.destination(.payment(.success(
-                        .services(makeProviderServicePicker(
-                            provider: operatorServices.operator.operator,
-                            services: operatorServices.services
-                        ))
-                    ))))
+                    let node = makeProviderServicePickerNode(operatorServices, notify)
+                    completion(.destination(.payment(.success(.services(node)))))
                     
                 case let .startPayment(transaction):
                     completion(makeNavigation(
@@ -144,6 +141,23 @@ extension RootViewModelFactory {
                 }
             }
         }
+    }
+    
+    @inlinable
+    func makeProviderServicePickerNode(
+        _ operatorServices: OperatorServices,
+        _ notify: @escaping PaymentProviderPickerDomain.FlowDomain.Notify
+    ) -> Node<ProviderServicePickerDomain.Binder> {
+        
+        let picker = makeProviderServicePicker(
+            provider: operatorServices.operator.operator,
+            services: operatorServices.services
+        )
+        let cancellable = picker.flow.$state
+            .compactMap(\.navigation?.notifyEvent)
+            .sink { notify($0) }
+        
+        return .init(model: picker, cancellable: cancellable)
     }
     
     @inlinable
@@ -157,12 +171,10 @@ extension RootViewModelFactory {
             .compactMap(\.outside)
             .sink { notify($0.notifyEvent) }
         
-        return .destination(.payment(.success(
-            .startPayment(.init(
-                model: flowModel,
-                cancellable: cancellable
-            ))
-        )))
+        return .destination(.payment(.success(.startPayment(.init(
+            model: flowModel,
+            cancellable: cancellable
+        )))))
     }
     
     // MARK: - Content
@@ -174,13 +186,34 @@ extension RootViewModelFactory {
         
         let providerList = makeProviderList(with: payload)
         let search = payload.category.hasSearch ? makeSearch() : nil
+        let operationPicker = makeOperationPickerContent(for: payload.category)
+        
+        operationPicker.event(.reload)
         
         return .init(
             title: payload.category.name,
-            operationPicker: (),
+            operationPicker: operationPicker,
             providerList: providerList,
             search: search,
             cancellables: bind(search, to: providerList)
+        )
+    }
+    
+    @inlinable
+    func makeOperationPickerContent(
+        for category: ServiceCategory,
+        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item] = []
+    ) -> OperationPickerDomain.Content {
+        
+        makeOperationPickerContent(
+            loadLatest: { [weak self] completion in
+                
+                self?.loadLatestPayments(for: category) {
+                    
+                    completion(try? $0.get())
+                }
+            },
+            prefix: prefix
         )
     }
     
@@ -216,7 +249,7 @@ extension RootViewModelFactory {
         
         return .init(
             initialState: .init(
-                lastPayments: payload.latest,
+                lastPayments: [], // latest is the responsibility of operationPicker, not provider list
                 operators: payload.operators,
                 searchText: ""
             ),
@@ -230,25 +263,46 @@ extension RootViewModelFactory {
         
         makeSearch(placeholderText: "Наименование или ИНН")
     }
-    
-    @inlinable
-    func emitting(
-        content: PaymentProviderPickerDomain.Content
-    ) -> some Publisher<FlowEvent<PaymentProviderPickerDomain.Select, Never>, Never> {
-        
-        Empty()
-    }
-    
-    @inlinable
-    func dismissing(
-        content: PaymentProviderPickerDomain.Content
-    ) -> () -> Void {
-        
-        return {}
-    }
 }
 
 // MARK: - Adapters
+
+private extension ProviderServicePickerDomain.Navigation {
+    
+    var outcome: NavigationOutcome<PaymentProviderPickerDomain.Select>? {
+
+        switch self {
+        case let .outside(outside):
+            switch outside {
+            case .main:
+                return .select(.outside(.main))
+                
+            case .payments:
+                return .select(.outside(.payments))
+            }
+            
+        case .failure, .payment:
+            return nil
+        }
+    }
+    
+    var notifyEvent: PaymentProviderPickerDomain.FlowDomain.NotifyEvent? {
+
+        switch self {
+        case let .outside(outside):
+            switch outside {
+            case .main:
+                return .select(.outside(.main))
+                
+            case .payments:
+                return .select(.outside(.payments))
+            }
+            
+        case .failure, .payment:
+            return nil
+        }
+    }
+}
 
 private extension Latest {
     

@@ -290,7 +290,8 @@ extension AnywayPaymentContext {
             payment: payment,
             staged: .init(),
             outline: outline,
-            shouldRestart: false
+            shouldRestart: false,
+            needSum: update.details.control.needSum
         )
     }
 }

@@ -106,7 +106,8 @@ class ServicePaymentFlowTests: XCTestCase {
                     icon: icon
                 )
             ),
-            shouldRestart: false
+            shouldRestart: false,
+            needSum: false
         )
     }
     

@@ -17,28 +17,35 @@ import PayHub
 import PayHubUI
 import PaymentComponents
 import PDFKit
+import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
+import UIKit
 
 final class RootViewFactoryComposer {
     
+    private let infra: RootViewFactory.Infra
     private let model: Model
     private let httpClient: HTTPClient
-    private let historyFeatureFlag: HistoryFilterFlag
     private let savingsAccountFlag: SavingsAccountFlag
     private let schedulers: Schedulers
     
     init(
         model: Model,
         httpClient: HTTPClient,
-        historyFeatureFlag: HistoryFilterFlag,
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
+
+        let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
+        self.infra = .init(
+            imageCache: model.imageCache(),
+            generalImageCache: model.generalImageCache(),
+            getUImage: { model.images.value[$0]?.uiImage }
+        )
         self.model = model
         self.httpClient = httpClient
-        self.historyFeatureFlag = historyFeatureFlag
         self.savingsAccountFlag = savingsAccountFlag
         self.schedulers = schedulers
     }
@@ -46,45 +53,102 @@ final class RootViewFactoryComposer {
 
 extension RootViewFactoryComposer {
     
+    typealias IconView = UIPrimitives.AsyncImage
+    
+    var makeGeneralIconView: MakeIconView {
+        
+        infra.generalImageCache.makeIconView(for:)
+    }
+    
+    func makeGeneralIconView(
+        forMD5Hash md5Hash: String
+    ) -> IconView {
+        
+        return infra.generalImageCache.makeIconView(for: md5Hash)
+    }
+
+    var makeIconView: MakeIconView {
+        
+        infra.imageCache.makeIconView(for:)
+    }
+    
+    func makeIconView(
+        forMD5Hash md5Hash: String?
+    ) -> IconView? {
+        
+        return md5Hash.map { makeIconView(forMD5Hash: $0) }
+    }
+    
+    func makeIconView(
+        forMD5Hash md5Hash: String
+    ) -> IconView {
+        
+        return makeIconView(.md5Hash(.init(md5Hash)))
+    }
+    
+    func makeIconView(
+        _ icon: AnywayElement.UIComponent.Icon?
+    ) -> IconView {
+        
+        switch icon {
+        case .none:
+            return makeIconView(forMD5Hash: "placeholder")
+            
+        case let .md5Hash(md5Hash):
+            return makeIconView(forMD5Hash: md5Hash)
+            
+        case let .svg(svg):
+            return .init(
+                image: .init(svg: svg) ?? .init("placeholder"),
+                publisher: Empty().eraseToAnyPublisher()
+            )
+            
+        case let .withFallback(md5Hash: md5Hash, svg: _):
+            return makeIconView(forMD5Hash: md5Hash)
+        }
+    }
+    
+    func getUImage(
+        _ key: String
+    ) -> UIImage? {
+        model.images.value[key]?.uiImage
+    }
+}
+
+extension RootViewFactoryComposer {
+    
     func compose() -> Factory {
-        
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-        
+                
         return .init(
-            clearCache: clearCache,
-            isCorporate: { self.model.onlyCorporateCards },
+            infra: infra,
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
                 
                 self.makeHistoryButtonView(
-                    self.historyFeatureFlag,
                     isFiltered: isFiltered,
                     isDateFiltered: isDateFiltered,
                     clearAction: clearAction,
                     event: event
                 )
             },
-            makeIconView: imageCache.makeIconView(for:),
-            makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
-            makeReturnButtonView: { action in
-                
-                self.makeReturnButtonView(self.historyFeatureFlag, action: action)
-            },
+            makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(),
+            paymentsViewFactory: makePaymentsViewFactory(),
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
         )
     }
     
     func makeViewComponents() -> ViewComponents {
         .init(
+            clearCache: clearCache,
+            isCorporate: { self.model.onlyCorporateCards },
+            getUImage: getUImage,
             makeAnywayFlowView: makeAnywayFlowView,
             makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
             makeSegmentedPaymentProviderPickerView: makeComposedSegmentedPaymentProviderPickerFlowView,
@@ -92,27 +156,40 @@ extension RootViewFactoryComposer {
             makeControlPanelWrapperView: makeControlPanelWrapperView,
             makeCurrencyWalletView: makeCurrencyWalletView,
             makeIconView: makeIconView,
+            makeGeneralIconView: makeGeneralIconView,
             makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
             makeMainSectionProductsView: makeMainSectionProductsView,
             makeOperationDetailView: makeOperationDetailView,
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView, 
+            makePaymentsView: makePaymentsView,
             makeProductProfileView: makeProductProfileView,
             makeQRFailedView: makeQRFailedView,
             makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
+            makeSavingsAccountView: makeSavingsAccountView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView,
-            makeOrderCardView: makeOrderCardView
+            makeOrderCardView: makeOrderCardView,
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel,
+            makeInfoViews: .default
         )
     }
     
     private func clearCache() {
         
-        try? model.localAgent.clear(type: [CodableServicePaymentOperator].self)
+        (model.localAgent as? LocalAgent)?.clearCache()
+    }
+    
+    func makeImageViewFactory(
+    ) -> SavingsAccount.ImageViewFactory {
+        
+        .init(
+            makeIconView: makeIconView,
+            makeBannerImageView: makeGeneralIconView
+        )
     }
 }
 
@@ -127,20 +204,14 @@ private extension RootViewFactoryComposer {
         viewModel: PaymentsTransfersViewModel
     ) -> PaymentsTransfersView {
         
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-        
-        let getUImage = { self.model.images.value[$0]?.uiImage }
-        
         return .init(
             viewModel: viewModel,
             viewFactory: .init(
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-                makeIconView: imageCache.makeIconView(for:),
-                makeGeneralIconView: generalImageCache.makeIconView(for:),
+                makeIconView: makeIconView,
+                makeGeneralIconView: makeGeneralIconView,
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView,
                 components: makeViewComponents()
             ),
@@ -148,14 +219,13 @@ private extension RootViewFactoryComposer {
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: {
                     self.makeHistoryButtonView(
-                        self.historyFeatureFlag,
                         isFiltered: $1,
                         isDateFiltered: $2,
                         clearAction: $3,
                         event: $0
                     )
                 },
-                makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
+                makeRepeatButtonView: makeReturnButtonView
             ),
             getUImage: getUImage
         )
@@ -210,26 +280,35 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountViewFactory() -> UserAccountViewFactory {
-        .init(
+        
+        return .init(
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makeSbpPayView: makeSbpPayView)
+            makeSbpPayView: makeSbpPayView
+        )
     }
     
     func makeSbpPayView(
         viewModel: SbpPayViewModel
     ) -> SbpPayView {
-        .init(viewModel: viewModel, viewFactory: makeSbpPayViewFactory())
+        
+        return .init(
+            viewModel: viewModel,
+            viewFactory: makeSbpPayViewFactory()
+        )
     }
     
     func makeSbpPayViewFactory() -> SbpPayViewFactory {
-        .init(makeProductSelectorView: makeProductSelectorView)
+        
+        return .init(makeProductSelectorView: makeProductSelectorView)
     }
     
     func makeAnywayPaymentFactory(
         event: @escaping (AnywayPaymentEvent) -> ()
     ) -> AnywayPaymentFactory<IconView> {
+        
         let composer = AnywayPaymentFactoryComposer(
             currencyOfProduct: currencyOfProduct,
+            makeContactsView: makeContactsView,
             makeIconView: makeIconView
         )
         
@@ -239,8 +318,14 @@ private extension RootViewFactoryComposer {
     func makeCategoryView(
         savingsAccountFlag: Bool
     ) -> MakeProductsCategoryView  {
+        
         return {
-            .init(newImplementation: savingsAccountFlag, isSelected: $0, title: $1)
+            
+            .init(
+                newImplementation: savingsAccountFlag,
+                isSelected: $0,
+                title: $1
+            )
         }
     }
     
@@ -281,7 +366,16 @@ private extension RootViewFactoryComposer {
     }
     
     func makeProductCarouselViewFactory() -> ProductCarouselViewFactory {
-        .init(makeOptionSelectorView: makeOptionSelectorView)
+        .init(
+            makeOptionSelectorView: makeOptionSelectorView,
+            makePromoView: makePromoView
+        )
+    }
+    
+    func makePromoView(
+        _ viewModel: AdditionalProductViewModel
+    ) -> AdditionalProductView {
+        .init(viewModel: viewModel, makeIconView: makeIconView)
     }
     
     func makeMainSectionCurrencyMetalView(
@@ -303,7 +397,7 @@ private extension RootViewFactoryComposer {
         .init(
             model: node.model,
             makeAnywayFlowView: makeAnywayFlowView,
-            makeIconView: { self.makeIconView($0.map { .svg($0) }) },
+            makeIconView: { self.makeIconView($0.map { .md5Hash($0) }) },
             viewFactory: makeTemplatesListFlowViewFactory()
         )
     }
@@ -574,7 +668,7 @@ private extension RootViewFactoryComposer {
         .init(
             viewModel: viewModel,
             config: .default,
-            getUImage: { self.model.images.value[$0]?.uiImage },
+            getUImage: getUImage,
             viewFactory: makeControlPanelWrapperViewFactory())
     }
     
@@ -594,6 +688,19 @@ private extension RootViewFactoryComposer {
         )
     }
     
+    func makeSavingsAccountView(
+        binder: SavingsAccountDomain.Binder,
+        dismiss: @escaping SavingsAccountDismiss
+    ) -> SavingsAccountDomain.WrapperView? {
+        
+        makeSavingsAccountView(
+            binder: binder,
+            dismiss: dismiss,
+            model:  model,
+            isActive: savingsAccountFlag.isActive
+        )
+    }
+    
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {
@@ -602,13 +709,11 @@ private extension RootViewFactoryComposer {
             viewFactory: makePaymentsSuccessViewFactory()
         )
     }
-        
+    
     func makeProductProfileView(
         viewModel: ProductProfileViewModel
     ) -> ProductProfileView {
         
-        let getUImage = { self.model.images.value[$0]?.uiImage }
-
         return .init(
             viewModel: viewModel,
             viewFactory: makePaymentsTransfersViewFactory(),
@@ -625,7 +730,6 @@ private extension RootViewFactoryComposer {
                 guard let self else { return nil }
                 
                 return makeHistoryButtonView(
-                    historyFeatureFlag,
                     isFiltered: $1,
                     isDateFiltered: $2,
                     clearAction: $3,
@@ -636,23 +740,19 @@ private extension RootViewFactoryComposer {
                 
                 guard let self else { return nil }
                 
-                return makeReturnButtonView(historyFeatureFlag, action: $0)
+                return makeReturnButtonView(action: $0)
             }
         )
     }
-        
+    
     func makePaymentsTransfersViewFactory() -> PaymentsTransfersViewFactory {
         
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-
         return .init(
             makeAnywayPaymentFactory: makeAnywayPaymentFactory(event:),
-            makeIconView: imageCache.makeIconView(for:),
-            makeGeneralIconView: generalImageCache.makeIconView(for:),
+            makeIconView: makeIconView,
+            makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
-            makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView(viewModel:),
             components: makeViewComponents()
         )
@@ -668,27 +768,32 @@ private extension RootViewFactoryComposer {
     func makeComposedSegmentedPaymentProviderPickerFlowView(
         flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
-            iconView: model.imageCache().makeIconView(for:),
             viewFactory: makeComposedSegmentedPaymentProviderPickerFlowViewFactory()
         )
     }
     
-    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory() -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
-        .init(
-            makePaymentsView: makePaymentsView,
-            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView)
+    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory(
+    ) -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+        
+        return .init(
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+            makeIconView: makeIconView,
+            makePaymentsView: makePaymentsView
+        )
     }
     
     func makeAnywayServicePickerFlowView(
         flowModel: AnywayServicePickerFlowModel
     ) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: makeAnywayFlowView,
-                makeIconView: model.imageCache().makeIconView(for:),
+                makeIconView: makeIconView,
                 makePaymentsView: makePaymentsView
             )
         )
@@ -733,45 +838,7 @@ private extension RootViewFactoryComposer {
         
         model.currencyOf(product: product) ?? ""
     }
-    
-    typealias IconView = UIPrimitives.AsyncImage
-    
-    private func makeIconView(
-        _  icon: AnywayElement.UIComponent.Icon?
-    ) -> IconView {
         
-        switch icon {
-        case .none:
-            return makeIconView("placeholder")
-            
-        case let .md5Hash(md5Hash):
-            return makeIconView(md5Hash)
-            
-        case let .svg(svg):
-            return .init(
-                image: .init(svg: svg) ?? .init("placeholder"),
-                publisher: Empty().eraseToAnyPublisher()
-            )
-            
-        case let .withFallback(md5Hash: md5Hash, svg: _):
-            return makeIconView(md5Hash)
-        }
-    }
-    
-    private func makeIconView(
-        _ icon: String
-    ) -> IconView {
-        
-        return makeIconView(for: .md5Hash(.init(icon)))
-    }
-    
-    private func makeIconView(
-        for icon: IconDomain.Icon?
-    ) -> IconView {
-        
-        return model.imageCache().makeIconView(for: icon)
-    }
-    
     func makePaymentCompleteView(
         result: Completed,
         goToMain: @escaping () -> Void
@@ -795,7 +862,6 @@ private extension RootViewFactoryComposer {
     }
     
     func makeReturnButtonView(
-        _ historyFeatureFlag: HistoryFilterFlag,
         action: @escaping () -> Void
     ) -> RepeatButtonView? {
         
@@ -803,7 +869,6 @@ private extension RootViewFactoryComposer {
     }
     
     func makeHistoryButtonView(
-        _ historyFeatureFlag: HistoryFilterFlag,
         isFiltered: @escaping () -> Bool,
         isDateFiltered: @escaping () -> Bool,
         clearAction: @escaping () -> Void,
@@ -832,7 +897,10 @@ private extension RootViewFactoryComposer {
                     
                     return .init(
                         detailID: $0.detailID,
-                        details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                        details: model.makeTransactionDetailButtonDetail(
+                            with: $0.info,
+                            merchantLogoMD5Hash: completed.merchantIcon
+                        ),
                         printFormType: $0.info.operationDetail?.printFormType ?? "",
                         status: $0.status
                     )
@@ -1089,7 +1157,7 @@ extension ImageCache {
     }
 }
 
-extension RootViewFactory.MakeInfoViews {
+extension ViewComponents.MakeInfoViews {
     
     static let `default`: Self = .init(
         makeUpdateInfoView: UpdateInfoView.init(text:),

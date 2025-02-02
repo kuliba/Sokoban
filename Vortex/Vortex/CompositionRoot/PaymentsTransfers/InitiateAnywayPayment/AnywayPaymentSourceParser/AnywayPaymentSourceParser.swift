@@ -53,13 +53,13 @@ extension AnywayPaymentSourceParser {
             return self.latest(latest, product)
             
         case let .oneOf(service, `operator`):
-            return oneOf(service, `operator`, product)
+            return self.oneOf(service, `operator`, product)
             
         case let .picked(item, payload):
-            return picked(item, payload, product)
+            return self.picked(item, payload, product)
             
         case let .single(service, `operator`):
-            return single(service, `operator`, product)
+            return self.single(service, `operator`, product)
             
         case let .template(template):
             return try self.template(template, product)
@@ -199,7 +199,7 @@ private extension PaymentTemplateData {
                 puref: core.puref,
                 title: name,
                 subtitle: groupName,
-                icon: svgImage?.description // TODO: replace with fallback to md5Hash
+                icon: md5hash
             )
         )
     }

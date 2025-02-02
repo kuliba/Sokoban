@@ -17,7 +17,7 @@ extension Model {
         switch stepIndex {
         case 0:
             let operatorParameter = Payments.ParameterOperator(
-                operatorType: .mobileConnection
+                operator: .mobileConnection
             )
             
             let headerParameter: Payments.ParameterHeader = parameterHeader(

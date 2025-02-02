@@ -5,8 +5,8 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import ClientInformList
 import Combine
-import VortexTools
 import Foundation
 import LandingUIComponent
 import MarketShowcase
@@ -14,7 +14,7 @@ import PayHub
 import PayHubUI
 import RemoteServices
 import SwiftUI
-import ClientInformList
+import VortexTools
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -40,7 +40,7 @@ class RootViewModel: ObservableObject, Resetable {
     let mainScheduler: AnySchedulerOfDispatchQueue
     
     let stickerViewFactory: StickerViewFactory
-
+    
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -167,7 +167,7 @@ class RootViewModel: ObservableObject, Resetable {
                     delay(for: .milliseconds(600)) { [unowned self] in
                         
                         guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
-
+                        
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
                         self.model.clientAuthorizationState.value.authorized = nil
                     }
@@ -395,7 +395,7 @@ class RootViewModel: ObservableObject, Resetable {
             break
         }
     }
-
+    
     lazy var rootActions: RootViewModel.RootActions = {
         
         let dismissCover: (() -> Void) = { [weak self] in
@@ -477,7 +477,7 @@ class RootViewModel: ObservableObject, Resetable {
     private func handleC2BDeepLink(url: URL) {
         
         self.rootActions.dismissAll()
-     
+        
         let operationViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: self.model,
@@ -494,12 +494,12 @@ class RootViewModel: ObservableObject, Resetable {
 }
 
 private extension Model {
-
+    
     var authLoginAlertManager: AuthLoginViewModel.ClientInformAlertsManager {
         
         .init(clientInformAlertsManager: clientInformAlertManager)
     }
-
+    
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
@@ -630,7 +630,7 @@ extension RootViewModel.PaymentsModel: Resetable {
 extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     
     var hasDestination: AnyPublisher<Bool, Never> {
-                
+        
         $state
             .flatMap {
                 
@@ -664,7 +664,7 @@ extension PaymentsTransfersPersonalDomain.Binder {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
-        let transferPicker = content.transfers.hasDestination
+        let transferPicker = content.transfers.hasDestination.handleEvents(receiveOutput: { print("transferPicker.hasDestination", $0) })
         let flowHasDestination = Just(false)
         
         return Publishers.Merge4(
@@ -677,7 +677,7 @@ extension PaymentsTransfersPersonalDomain.Binder {
     }
 }
 
-private extension PayHubUI.CategoryPicker {
+private extension CategoryPicker {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
@@ -693,7 +693,7 @@ private extension CategoryPickerSectionDomain.Binder {
     }
 }
 
-private extension PayHubUI.OperationPicker {
+private extension OperationPicker {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
@@ -709,7 +709,7 @@ private extension OperationPickerDomain.Binder {
     }
 }
 
-private extension PayHubUI.TransfersPicker {
+private extension TransfersPicker {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         

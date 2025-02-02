@@ -24,13 +24,12 @@ public extension ResponseMapper {
         
         guard
             let serial = data.serial,
-            let products = data.products,
-            !products.compactMap(\.data).isEmpty
+            let product = data.products?.compactMap(\.data).first
         else {
             throw InvalidResponse()
         }
         
-        return .init(list: products.compactMap(\.data), serial: serial)
+        return product
     }
     
     private struct InvalidResponse: Error {}

@@ -119,6 +119,7 @@ extension RootViewModelFactory {
             amount: Decimal(info.parameterList.amount ?? 0),
             name: name,
             md5Hash: md5Hash,
+            paymentFlow: info.paymentFlow,
             puref: puref,
             type: info.type.camelCased,
             additionalItems: info.parameterList.additional.map {

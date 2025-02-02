@@ -229,7 +229,7 @@ private extension TransactionReducer {
         case let .failure(serviceFailure):
             switch serviceFailure {
             case let .connectivityError(message):
-                state.status = .result(.failure(.updatePaymentFailure(message)))
+                state.status = .result(.failure(.transactionFailure(message)))
                 
             case let .serverError(message):
                 state.status = .serverError(message)

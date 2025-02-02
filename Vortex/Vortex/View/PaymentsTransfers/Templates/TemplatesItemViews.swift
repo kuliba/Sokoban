@@ -13,62 +13,65 @@ extension TemplatesListView {
     struct TemplateItemView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.ItemViewModel
+        
         @Binding var style: TemplatesListViewModel.Style
         @Binding var editMode: EditMode
         
         var body: some View {
-                        
+            
             switch viewModel.state {
             case .normal, .processing:
-                            
-                TemplatesListView.NormalItemView
-                    .init(avatar: viewModel.avatar,
-                          topImage: viewModel.topImage,
-                          title: viewModel.title,
-                          subTitle: viewModel.subTitle,
-                          amount: viewModel.amount,
-                          style: style, editMode: $editMode)
+                
+                itemView(viewModel: viewModel,editMode: $editMode)
                     .shimmering(active: viewModel.state.isProcessing, bounce: true)
                     .onTapGesture {
+                        
                         if !viewModel.state.isProcessing {
+                            
                             viewModel.tapAction(viewModel.id)
                         }
                     }
                 
             case let .deleting(deletingProgressViewModel):
-                            
-                TemplatesListView.DeletingProgressView
-                    .init(viewModel: deletingProgressViewModel)
-                            
+                
+                TemplatesListView.DeletingProgressView(
+                    viewModel: deletingProgressViewModel
+                )
+                
             case let .select(roundButtonViewModel):
-                            
-                TemplatesListView.NormalItemView
-                    .init(avatar: viewModel.avatar,
-                          topImage: viewModel.topImage,
-                          title: viewModel.title,
-                          subTitle: viewModel.subTitle,
-                          amount: viewModel.amount,
-                          style: style, editMode: .constant(.inactive))
+                
+                itemView(viewModel: viewModel, editMode: .constant(.inactive))
                     .overlay13(alignment: .topLeading) {
-                                   
-                        TemplatesListView.SelectItemVew
-                            .init(isSelected: roundButtonViewModel.isSelected)
-                            .offset(x: 8, y: 14)
+                        
+                        TemplatesListView.SelectItemVew(
+                            isSelected: roundButtonViewModel.isSelected
+                        )
+                        .offset(x: 8, y: 14)
                     }
                     .onTapGesture { roundButtonViewModel.action(viewModel.id) }
-                            
+                
             case let .delete(itemActionViewModel):
-                            
-                TemplatesListView.NormalItemView
-                    .init(avatar: viewModel.avatar,
-                          topImage: viewModel.topImage,
-                          title: viewModel.title,
-                          subTitle: viewModel.subTitle,
-                          amount: viewModel.amount,
-                          style: style, editMode: .constant(.inactive))
+                
+                itemView(viewModel: viewModel, editMode: .constant(.inactive))
                     .offset(x: -100, y: 0)
-                            
-            } //switch item state
+            }
+        }
+        
+        private func itemView(
+            viewModel: TemplatesListViewModel.ItemViewModel,
+            editMode: Binding<EditMode>
+        ) -> some View {
+            
+            TemplatesListView.NormalItemView(
+                avatar: viewModel.avatar,
+                topImage: viewModel.topImage,
+                title: viewModel.title,
+                subTitle: viewModel.subTitle,
+                amount: viewModel.amount,
+                style: style,
+                editMode: editMode
+            )
+            .id(viewModel.id)
         }
     }
 }
@@ -81,18 +84,16 @@ extension TemplatesListView {
         
         var body: some View {
             
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
+                .frame(height: height)
+        }
+        
+        private var height: CGFloat {
+            
             switch style {
-            case .list:
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
-                    .frame(height: 72)
-                
-            case .tiles:
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
-                    .frame(height: 188)
+            case .list: return 72
+            case .tiles: return 188
             }
         }
     }
@@ -100,55 +101,78 @@ extension TemplatesListView {
     struct AddNewItemView: View {
         
         let viewModel: TemplatesListViewModel.ItemViewModel
+        
         @Binding var style: TemplatesListViewModel.Style
-
+        
         var body: some View {
-                
-            switch style {
-            case .list:
-                
-                HStack(spacing: 16) {
-                    
-                    TemplatesListView.ItemIconView(avatar: viewModel.avatar,
-                                                   topImage: viewModel.topImage,
-                                                   style: style)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        
-                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                    }
-                }
-                .padding(.horizontal)
-                .frame(height: 72)
-                .contentShape(Rectangle())
-                .onTapGesture { viewModel.tapAction(0) }
-                
-            case .tiles:
-                
-                ZStack {
-                    
-                    Color.mainColorsGrayLightest.cornerRadius(16)
-                    
-                    VStack(spacing: 0) {
-                        
-                        TemplatesListView.ItemIconView(avatar: viewModel.avatar,
-                                                       topImage: viewModel.topImage,
-                                                       style: style)
-                            .padding(.vertical, 16)
-                        
-                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                            .padding(.bottom, 4)
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            .padding(.bottom, 28)
-                    }
-                }
-                .frame(height: 188)
-                .onTapGesture { viewModel.tapAction(0) }
-            } //switch
             
+            Group {
+                
+                switch style {
+                case .list:  listItem()
+                case .tiles: tilesItem()
+                }
+            }
+            .onTapGesture { viewModel.tapAction(0) }
+        }
+        
+        private func listItem() -> some View {
+            
+            HStack(spacing: 16) {
+                
+                TemplatesListView.ItemIconView(
+                    avatar: viewModel.avatar,
+                    topImage: viewModel.topImage,
+                    style: style
+                )
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    TemplatesListView.ItemTitleView(
+                        title: viewModel.title,
+                        style: style
+                    )
+                    
+                    TemplatesListView.ItemSubtitleView(
+                        subtitle: viewModel.subTitle,
+                        style: style
+                    )
+                }
+            }
+            .padding(.horizontal)
+            .frame(height: 72)
+            .contentShape(Rectangle())
+        }
+        
+        private func tilesItem() -> some View {
+            
+            ZStack {
+                
+                Color.mainColorsGrayLightest.cornerRadius(16)
+                
+                VStack(spacing: 0) {
+                    
+                    TemplatesListView.ItemIconView(
+                        avatar: viewModel.avatar,
+                        topImage: viewModel.topImage,
+                        style: style
+                    )
+                    .padding(.vertical, 16)
+                    
+                    TemplatesListView.ItemTitleView(
+                        title: viewModel.title,
+                        style: style
+                    )
+                    .padding(.bottom, 4)
+                    
+                    TemplatesListView.ItemSubtitleView(
+                        subtitle: viewModel.subTitle,
+                        style: style
+                    )
+                    .padding(.bottom, 28)
+                }
+            }
+            .frame(height: 188)
         }
     }
 }
@@ -185,66 +209,83 @@ extension TemplatesListView {
         let subTitle: String
         let amount: String
         let style: TemplatesListViewModel.Style
+        
         @Binding var editMode: EditMode
         
         var body: some View {
             
             switch style {
-            case .list:
-                
-                HStack(spacing: 16) {
-                    
-                    TemplatesListView.ItemIconView(avatar: avatar,
-                                                   topImage: topImage,
-                                                   style: style)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        
-                        HStack {
-                            
-                            TemplatesListView.ItemTitleView(title: title, style: style)
-                            
-                            Spacer()
-                            
-                            TemplatesListView.ItemAmountView(amount: amount)
-                        }
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: subTitle,
-                                                           style: style)
-                    }
-                    
-                }
-                .modifier(Self.ItemPaddings(editMode: $editMode))
-                .frame(height: 84)
-                
-            case .tiles:
-                
-                ZStack {
-                    
-                    Color.mainColorsGrayLightest.cornerRadius(16)
-                    
-                    VStack(spacing: 0) {
-                        
-                        TemplatesListView.ItemIconView(avatar: avatar,
-                                                       topImage: topImage,
-                                                       style: style)
-                            .padding(.vertical, 16)
-                        
-                        TemplatesListView.ItemTitleView(title: title,
-                                                        style: style)
-                            .padding(.bottom, 4)
-                        
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: subTitle,
-                                                           style: style)
-                        
-                        TemplatesListView.ItemAmountView(amount: amount)
-                            .padding(.bottom, 16)
-                        
-                    }
-                }
-            } //switch style
+            case .list:  listItem()
+            case .tiles: tilesItem()
+            }
+        }
+        
+        private func listItem() -> some View {
             
+            HStack(spacing: 16) {
+                
+                itemIconView()
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    HStack {
+                        
+                        itemTitleView()
+                        Spacer()
+                        itemAmountView()
+                    }
+                    
+                    itemSubtitleView()
+                }
+            }
+            .modifier(Self.ItemPaddings(editMode: $editMode))
+            .frame(height: 84)
+        }
+        
+        private func tilesItem() -> some View {
+            
+            ZStack {
+                
+                Color.mainColorsGrayLightest.cornerRadius(16)
+                
+                VStack(spacing: 0) {
+                    
+                    itemIconView().padding(.vertical, 16)
+                    itemTitleView().padding(.bottom, 4)
+                    itemSubtitleView()
+                    itemAmountView().padding(.bottom, 16)
+                }
+            }
+        }
+        
+        private func itemIconView() -> some View {
+            
+            TemplatesListView.ItemIconView(
+                avatar: avatar,
+                topImage: topImage,
+                style: style
+            )
+        }
+        
+        private func itemTitleView() -> some View {
+            
+            TemplatesListView.ItemTitleView(
+                title: title,
+                style: style
+            )
+        }
+        
+        private func itemSubtitleView() -> some View {
+            
+            TemplatesListView.ItemSubtitleView(
+                subtitle: subTitle,
+                style: style
+            )
+        }
+        
+        private func itemAmountView() -> some View {
+            
+            TemplatesListView.ItemAmountView(amount: amount)
         }
     }
     
@@ -252,16 +293,16 @@ extension TemplatesListView {
         
         let isSelected: Bool
         var body: some View {
-           
+            
             if isSelected {
-                        
+                
                 Image.ic16Check
                     .background(Circle()
-                    .foregroundColor(.iconWhite)
-                    .frame(width: 24, height: 24))
-                        
+                        .foregroundColor(.iconWhite)
+                        .frame(width: 24, height: 24))
+                
             } else {
-                        
+                
                 Circle()
                     .foregroundColor(.iconWhite)
                     .frame(width: 24, height: 24)
@@ -276,70 +317,89 @@ extension TemplatesListView {
         var body: some View {
             
             switch viewModel.style {
-            case .list:
+            case .list:  listView()
+            case .tiles: tilesView()
+            } //switch style
+        }
+        
+        private func listView() -> some View {
+            
+            HStack(spacing: 16) {
                 
-                HStack(spacing: 16) {
+                TemplatesListView.ItemProgressView(
+                    viewModel: .init(
+                        progress: viewModel.progress,
+                        title: viewModel.countTitle,
+                        style: viewModel.style
+                    )
+                )
+                
+                HStack {
                     
-                    TemplatesListView.ItemProgressView
-                        .init(viewModel: .init(progress: viewModel.progress,
-                                               title: viewModel.countTitle,
-                                               style: viewModel.style))
-                    HStack {
+                    VStack(alignment: .leading, spacing: 4) {
                         
-                        VStack(alignment: .leading, spacing: 4) {
-                            
-                            TemplatesListView.ItemTitleView(title: viewModel.title,
-                                                            style: viewModel.style)
-                            
-                            TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle,
-                                                               style: viewModel.style)
-                        }
+                        TemplatesListView.ItemTitleView(
+                            title: viewModel.title,
+                            style: viewModel.style
+                        )
+                        
+                        TemplatesListView.ItemSubtitleView(
+                            subtitle: viewModel.subTitle,
+                            style: viewModel.style
+                        )
                     }
+                }
+                
+                Spacer()
+                
+                TemplatesListView.ItemCancelButtonView(title: viewModel.cancelButton.title) {
                     
-                    Spacer()
+                    viewModel.cancelButton.action(viewModel.id)
+                }
+                .disabled(viewModel.isDisableCancelButton)
+            }
+            .padding(16)
+            .frame(height: 84)
+            .shimmering(active: viewModel.isDisableCancelButton, bounce: true)
+        }
+        
+        private func tilesView() -> some View {
+            
+            ZStack {
+                
+                Color.mainColorsGrayLightest
+                    .cornerRadius(16)
+                
+                VStack(spacing: 0) {
                     
-                    TemplatesListView.ItemCancelButtonView(title: viewModel.cancelButton.title) {
-                        
+                    TemplatesListView.ItemProgressView(
+                        viewModel: .init(
+                            progress: viewModel.progress,
+                            title: viewModel.countTitle,
+                            style: viewModel.style
+                        )
+                    )
+                    .padding(.vertical, 16)
+                    
+                    TemplatesListView.ItemTitleView(
+                        title: viewModel.title,
+                        style: viewModel.style
+                    )
+                    .padding(.bottom, 4)
+                    
+                    TemplatesListView.ItemSubtitleView(
+                        subtitle: viewModel.subTitle,
+                        style: viewModel.style
+                    )
+                    
+                    TemplatesListView.ItemCancelButtonView(
+                        title: viewModel.cancelButton.title
+                    ) {
                         viewModel.cancelButton.action(viewModel.id)
                     }
-                    .disabled(viewModel.isDisableCancelButton)
+                    .padding(.bottom, 16)
                 }
-                .padding(16)
-                .frame(height: 84)
-                .shimmering(active: viewModel.isDisableCancelButton, bounce: true)
-                
-            case .tiles:
-                
-                ZStack {
-                    
-                    Color.mainColorsGrayLightest
-                        .cornerRadius(16)
-                    
-                    VStack(spacing: 0) {
-                        
-                        TemplatesListView.ItemProgressView
-                            .init(viewModel: .init(progress: viewModel.progress,
-                                                   title: viewModel.countTitle,
-                                                   style: viewModel.style))
-                            .padding(.vertical, 16)
-                        
-                        TemplatesListView.ItemTitleView(title: viewModel.title,
-                                                        style: viewModel.style)
-                        .padding(.bottom, 4)
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle,
-                                                           style: viewModel.style)
-                        
-                        TemplatesListView.ItemCancelButtonView(title: viewModel.cancelButton.title) {
-                            
-                            viewModel.cancelButton.action(viewModel.id)
-                        }
-                        .padding(.bottom, 16)
-                    }
-                }
-                
-            } //switch style
-            
+            }
         }
     }
     
@@ -356,55 +416,82 @@ extension TemplatesListView {
             case .tiles: return (56, 24)
             }
         }
- 
+        
         var body: some View {
             
             ZStack(alignment: .topTrailing)  {
                 
-                switch avatar {
-                case let .image(image):
-                    
-                    image
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(Circle())
-                        .frame(height: side.main)
-                    
-                case let .md5Hash(publisher):
-                    AsyncImage(image: .ic24MoreHorizontal, publisher: publisher)
-                        .frame(width: side.main, height: side.main)
-                    
-                case let .text(text):
-                    
-                    Circle()
-                        .fill(Color.mainColorsGrayMedium.opacity(0.4))
-                        .frame(width: side.main, height: side.main)
-                        .overlay13 {
-                            Text(text)
-                                .font(.textH4M16240())
-                                .foregroundColor(.textPlaceholder)
-                        }
-                
-                case .placeholder:
-                    
-                    Circle()
-                        .fill(Color.mainColorsGrayMedium.opacity(0.4))
-                        .frame(width: side.main, height: side.main)
-                        .shimmering(bounce: true)
+                if #available(iOS 16.4, *) {
+                    avatarView()
+                        .animated(initialScale: 0.8, scaleEffectAnchor: .center, transition: .identity)
+                } else {
+                    avatarView()
                 }
                 
-                if let topImage = topImage {
-                    
-                    topImage
-                        .renderingMode(.original)
-                        .resizable()
-                        .clipShape(Circle())
-                        .frame(width: side.top, height: side.top)
-                        .offset(x: 9, y: -2)
-                }
+                topImageView()
             }
-       
+        }
+        
+        @ViewBuilder
+        private func avatarView() -> some View {
+            
+            switch avatar {
+            case let .image(image):
+                imageView(image)
+                
+            case .md5Hash:
+                placeholderView()
+                
+            case let .text(text):
+                textView(text)
+                
+            case .placeholder:
+                placeholderView()
+            }
+        }
+        
+        private func imageView(_ image: Image) -> some View {
+            
+            image
+                .renderingMode(.original)
+                .resizable()
+                .scaledToFit()
+                .clipShape(Circle())
+                .frame(height: side.main)
+        }
+        
+        private func placeholderView() -> some View {
+            
+            Circle()
+                .fill(Color.mainColorsGrayMedium.opacity(0.4))
+                .frame(width: side.main, height: side.main)
+                .shimmering(bounce: true)
+        }
+        
+        private func textView(_ text: String) -> some View {
+            
+            Circle()
+                .fill(Color.mainColorsGrayMedium.opacity(0.4))
+                .frame(width: side.main, height: side.main)
+                .overlay13 {
+                    Text(text)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textPlaceholder)
+                }
+        }
+        
+        @ViewBuilder
+        private func topImageView() -> some View {
+            
+            topImage.map {
+                
+                $0
+                    .renderingMode(.original)
+                    .resizable()
+                    .clipShape(Circle())
+                    .frame(width: side.top, height: side.top)
+                    .offset(x: 9, y: -2)
+            }
         }
     }
     
@@ -491,7 +578,7 @@ extension TemplatesListView {
                             style: StrokeStyle(lineWidth: 2,
                                                lineCap: CGLineCap.round))
                     .rotationEffect(Angle.degrees(-90))
-                    
+                
                 Text(viewModel.title)
                     .font(.textH4M16240())
                     .foregroundColor(.textPlaceholder)
@@ -533,9 +620,11 @@ struct TemplatesItemView_Previews: PreviewProvider {
                 
                 ForEach(TemplatesListViewModel.sampleItems3) { item in
                     
-                    TemplatesListView.TemplateItemView(viewModel: item,
-                                     style: .constant(.tiles),
-                                     editMode: .constant(.inactive))
+                    TemplatesListView.TemplateItemView(
+                        viewModel: item,
+                        style: .constant(.tiles),
+                        editMode: .constant(.inactive)
+                    )
                     .contextMenu {
                         
                         Button(action: {}) {
@@ -550,19 +639,23 @@ struct TemplatesItemView_Previews: PreviewProvider {
                     }
                 }
                 
-                TemplatesListView.AddNewItemView(viewModel: TemplatesListViewModel.sampleItems[4],
-                                                 style: .constant(.tiles))
+                TemplatesListView.AddNewItemView(
+                    viewModel: TemplatesListViewModel.sampleItems[4],
+                    style: .constant(.tiles)
+                )
             }
             //List Items
             List {
                 
                 ForEach(TemplatesListViewModel.sampleItems) { item in
                     
-                    TemplatesListView.TemplateItemView(viewModel: item,
-                                                       style: .constant(.list),
-                                                       editMode: .constant(.inactive))
-                        .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                        .listRowBackground(TemplatesListView.BackgroundListView())
+                    TemplatesListView.TemplateItemView(
+                        viewModel: item,
+                        style: .constant(.list),
+                        editMode: .constant(.inactive)
+                    )
+                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                    .listRowBackground(TemplatesListView.BackgroundListView())
                 }
             }
             .listStyle(.plain)

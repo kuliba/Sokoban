@@ -25,6 +25,7 @@ where ID: Hashable {
 
 public extension LoadablePickerReducer {
     
+    @inlinable
     func reduce(
         _ state: State,
         _ event: Event
@@ -58,8 +59,9 @@ public extension LoadablePickerReducer {
     typealias Effect = LoadablePickerEffect
 }
 
-private extension LoadablePickerReducer {
+extension LoadablePickerReducer {
     
+    @usableFromInline
     func load(
         _ state: inout State,
         _ effect: inout Effect?
@@ -69,19 +71,24 @@ private extension LoadablePickerReducer {
         effect = .load
     }
     
+    @usableFromInline
     func handleLoaded(
         _ state: inout State,
         _ effect: inout Effect?,
         with elements: [Element]?
     ) {
-        guard let elements else { return }
+        guard let elements else {
+            
+            return state.suffix = []
+        }
         
         state.suffix = state.suffix
             .map(\.id)
             .assignIDs(elements, makeID)
-            .map { State.Item.element($0) }
+            .map { .element($0) }
     }
     
+    @usableFromInline
     func reload(
         _ state: inout State,
         _ effect: inout Effect?

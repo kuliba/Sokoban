@@ -10,20 +10,10 @@ import SwiftUI
 
 struct TextInputWrapperView<IconView: View>: View {
     
-    @ObservedObject private var model: Model
+    @ObservedObject var model: Model
     
-    private let config: Config
-    private let iconView: () -> IconView
-    
-    init(
-        model: Model,
-        config: Config,
-        iconView: @escaping () -> IconView
-    ) {
-        self.model = model
-        self.config = config
-        self.iconView = iconView
-    }
+    let config: Config
+    let iconView: () -> IconView
     
     var body: some View {
         

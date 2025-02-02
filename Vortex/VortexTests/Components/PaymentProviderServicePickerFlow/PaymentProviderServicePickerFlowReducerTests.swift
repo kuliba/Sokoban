@@ -148,7 +148,8 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
                         icon: anyMessage()
                     )
                 ),
-                shouldRestart: false
+                shouldRestart: false,
+                needSum: false
             ),
             isValid: true
         )

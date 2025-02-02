@@ -82,8 +82,8 @@ extension Model {
         
         // TODO: replace with loader with fallback to remote
         // TODO: expensive! make async with QOS
-        localAgent.load(type: [CodableServicePaymentOperator].self)?
-            .filter { $0.inn == inn }
+        localAgent.load(type: ServicePaymentOperatorStorage.self)?
+            .search(for: inn, in: \.inn)
             .map(SegmentedPaymentProvider.init)
     }
 }
@@ -105,17 +105,14 @@ private extension SegmentedPaymentProvider {
         )
     }
     
-    init(with `operator`: CodableServicePaymentOperator) {
-        
-        // TODO: add `segment` property to `CachingSberOperator`
-        let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
+    init(with codable: CodableServicePaymentOperator) {
         
         self.init(
-            id: `operator`.id,
-            icon: `operator`.md5Hash,
-            inn: `operator`.inn,
-            title: `operator`.name,
-            segment: segment.apearance.title
+            id: codable.id,
+            icon: codable.md5Hash,
+            inn: codable.inn,
+            title: codable.name,
+            segment: codable.type
         )
     }
 }

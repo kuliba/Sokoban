@@ -1071,7 +1071,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
-            makeOrderCardViewModel: { }
+            makeOrderCardViewModel: { },
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -1085,7 +1086,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makeUtilitiesViewModel: { _, completion in
                 
                 completion(.utilities)
-            }
+            },
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )
         
         let sut = SUT(
@@ -1144,10 +1146,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         date: Date = .init(),
         _ title: String = anyMessage(),
         _ type: String = anyMessage(),
+        _ paymentFlow: String? = nil,
         additionalItems: [RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem] = []
     ) -> UtilityPaymentLastPayment {
         
-        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, type: type, additionalItems: additionalItems)
+        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, paymentFlow: paymentFlow, puref: UUID().uuidString, type: type, additionalItems: additionalItems)
     }
     
     private func makeService(

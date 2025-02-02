@@ -134,18 +134,13 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
         let switcher = PaymentsTransfersSwitcher(
             hasCorporateCardsOnly: hasCorporateCardsOnlySubject.eraseToAnyPublisher(),
             corporate: factory.makePaymentsTransfersCorporate(
+                featureFlags: .active,
                 bannerPickerPlaceholderCount: 6,
                 nanoServices: .init(
                     loadBanners: { _ in unimplemented() }
                 )
             ),
-            personal: factory.makePaymentsTransfersPersonal(
-                nanoServices: .init(
-                    loadCategories: { _ in unimplemented() },
-                    reloadCategories: { _ in unimplemented() },
-                    loadAllLatest: { _ in unimplemented() }
-                )
-            ),
+            personal: factory.makePaymentsTransfersPersonal().0,
             scheduler: .immediate
         )
         

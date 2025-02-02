@@ -11,6 +11,7 @@ import SwiftUI
 struct ProviderServicePickerView<AnywayFlowView: View>: View {
     
     let binder: Domain.Binder
+    let dismiss: () -> Void
     @ViewBuilder
     let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
     let makeIconView: MakeIconView
@@ -19,16 +20,33 @@ struct ProviderServicePickerView<AnywayFlowView: View>: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            contentView(binder.content)
-                .navigationDestination(
-                    destination: state.destination,
-                    dismiss: { event(.dismiss) },
-                    content: destinationView
-                )
-                .alert(
-                    item: state.alert,
-                    content: alert(failure:)
-                )
+            let navbar = binder.content.navBar
+
+            ZStack {
+                
+                if state.isLoading {
+                    
+                    SpinnerView(viewModel: .init())
+                        .zIndex(1)
+                }
+                
+                contentView(binder.content)
+                    .alert(
+                        item: state.alert,
+                        content: alert(failure:)
+                    )
+                    .navigationDestination(
+                        destination: state.destination,
+                        content: destinationView
+                    )
+                    .navigationBarWithAsyncIcon(
+                        title: navbar.title,
+                        subtitle: navbar.subtitle,
+                        dismiss: dismiss,
+                        icon: iconView(icon: navbar.icon),
+                        style: .normal
+                    )
+            }
         }
     }
 }
@@ -75,11 +93,12 @@ private extension ProviderServicePickerView {
             )
             .animated()
         }
+        .buttonStyle(.plain)
     }
     
     func iconView(
         icon: String?
-    ) -> some View {
+    ) -> IconDomain.IconView {
         
         makeIconView(icon.map { .md5Hash(.init($0)) })
     }

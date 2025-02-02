@@ -25,19 +25,16 @@ struct AnywayPaymentParameterView: View {
         case .hidden:
             EmptyView()
             
-        case let .nonEditable(node):
-            inputView(keyboard: .decimal, model: node.model)
-                .disabled(true)
+        case let .input(node, keyboard):
+            inputView(model: node.model, keyboard: keyboard)
             
-        case let .numberInput(node):
-            inputView(keyboard: .decimal, model: node.model)
+        case let .nonEditable(node):
+            inputView(model: node.model, keyboard: .default)
+                .disabled(true)
             
         case let .select(viewModel):
             factory.makeSelectorView(parameter, viewModel)
                 .paddedRoundedBackground()
-            
-        case let .textInput(node):
-            inputView(keyboard: .default, model: node.model)
             
         case .unknown:
             EmptyView()
@@ -54,8 +51,8 @@ extension AnywayPaymentParameterView {
 private extension AnywayPaymentParameterView {
     
     func inputView(
-        keyboard: TextFieldUI.KeyboardType,
-        model: RxInputViewModel
+        model: RxInputViewModel,
+        keyboard: TextFieldUI.KeyboardType
     ) -> some View {
         
         TextInputWrapperView(
@@ -70,6 +67,7 @@ private extension AnywayPaymentParameterView {
                     .frame(width: 32, height: 32)
             }
         )
+        .keyboardType(keyboard.uiKeyboardType)
         .paddedRoundedBackground()
     }
     

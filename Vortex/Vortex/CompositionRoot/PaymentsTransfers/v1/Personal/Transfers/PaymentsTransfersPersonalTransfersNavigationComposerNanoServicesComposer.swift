@@ -77,6 +77,22 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         return .init(model: anotherCard, cancellables: cancellables)
     }
     
+    func makeAnotherCard(
+        notify: @escaping Notify
+    ) -> Node<PaymentsViewModel>{
+        
+        model.action.send(ModelAction.ProductTemplate.List.Request())
+        
+        let anotherCard = PaymentsViewModel(
+            model,
+            service: .toAnotherCard,
+            closeAction: { notify(.dismiss) }
+        )
+        let cancellables = bind(anotherCard, using: notify)
+        
+        return .init(model: anotherCard, cancellables: cancellables)
+    }
+    
     func makeContacts(
         notify: @escaping Notify
     ) -> Node<ContactsViewModel> {
@@ -103,6 +119,20 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         return .init(model: detailPayment, cancellables: cancellables)
     }
     
+    func makeDetail(
+        notify: @escaping Notify
+    ) -> Node<PaymentsViewModel> {
+        
+        let detailPayment = PaymentsViewModel(
+            model,
+            service: .requisites,
+            closeAction: { notify(.dismiss) }
+        )
+        let cancellables = bind(detailPayment, using: notify)
+        
+        return .init(model: detailPayment, cancellables: cancellables)
+    }
+    
     func makeLatest(
         latest: LatestPaymentData.ID,
         notify: @escaping Notify
@@ -122,6 +152,27 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         let cancellables = bind(wrapper.paymentsViewModel, using: notify)
         
         return .init(model: wrapper, cancellables: cancellables)
+    }
+    
+    func makeLatest(
+        latest: LatestPaymentData.ID,
+        notify: @escaping Notify
+    ) -> Node<PaymentsViewModel>? {
+        
+        guard let latest = model.latestPayments.value.first(where: { $0.id == latest }),
+              // pasted from PaymentsTransfersViewModel.swift:341
+              // but might need updated approach with payment flow?
+                [LatestPaymentData.Kind.internet, .service, .mobile, .outside, .phone, .transport, .taxAndStateService].contains(latest.type)
+        else { return nil }
+        
+        let viewModel = PaymentsViewModel(
+            source: .latestPayment(latest.id),
+            model: model,
+            closeAction: { notify(.dismiss) }
+        )
+        let cancellables = bind(viewModel, using: notify)
+        
+        return .init(model: viewModel, cancellables: cancellables)
     }
     
     func makeSource(

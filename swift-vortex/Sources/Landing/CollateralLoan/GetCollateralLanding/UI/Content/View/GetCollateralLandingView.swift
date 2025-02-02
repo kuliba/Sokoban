@@ -5,73 +5,60 @@
 //  Created by Valentin Ozerov on 12.12.2024.
 //
 
-import BottomSheetComponent
 import Combine
 import SwiftUI
 
 public struct GetCollateralLandingView: View {
     
     let state: State
-    let event: (Event) -> Void
+    let domainEvent: (DomainEvent) -> Void
+    let externalEvent: (ExternalEvent) -> Void
     let factory: Factory
+
+    public init(
+        state: State,
+        domainEvent: @escaping (DomainEvent) -> Void,
+        externalEvent: @escaping (ExternalEvent) -> Void,
+        factory: Factory
+    ) {
+        self.state = state
+        self.domainEvent = domainEvent
+        self.externalEvent = externalEvent
+        self.factory = factory
+    }
     
     public var body: some View {
         
-        ScrollView {
+        switch state.product {
+        case .none:
+            ProgressView()
+        case let .some(product):
             
-            ZStack {
+            ScrollView {
                 
-                backgroundImageView
-                contentView
+                ZStack {
+                    
+                    backgroundImageView(product: product)
+                    contentView(product: product)
+                }
+                .background(product.getCollateralLandingTheme.backgroundColor)
             }
-            .background(state.product.getCollateralLandingTheme.backgroundColor)
+            .ignoresSafeArea()
         }
-        .ignoresSafeArea()
-        .bottomSheet(item: bottomSheetItem, content: bottomSheet)
     }
-    
-    private func bottomSheet(_ bottomSheet: State.BottomSheet) -> some View {
         
-        switch bottomSheet.sheetType {
-        case let .periods(period):
-            return BottomSheetView(
-                items: period.map(\.bottomSheetItem),
-                config: factory.config.bottomSheet,
-                makeImageView: factory.makeImageView
-            ) {
-                switch $0 {
-                case .selectMonthPeriod(let termMonth):
-                    event(.selectMonthPeriod(termMonth))
-                default: break
-                }
-            }
-        case let .collaterals(collateral):
-            return BottomSheetView(
-                items: collateral.map(\.bottomSheetItem),
-                config: factory.config.bottomSheet,
-                makeImageView: factory.makeImageView
-            ) {
-                switch $0 {
-                case .selectCollateral(let collateral):
-                    event(.selectCollateral(collateral))
-                default: break
-                }
-            }
-        }
-    }
-    
     private var bottomSheetItem: Binding<State.BottomSheet?> {
         
     .init(
         get: { state.bottomSheet },
-        set: { if $0 == nil { event(.closeBottomSheet) } })
+        set: { _ in })
     }
 
-    var backgroundImageView: some View {
+    func backgroundImageView(product: Product) -> some View {
         
         VStack {
             
-            factory.makeImageView(state.product.marketing.image)
+            factory.makeImageViewByURL(product.marketing.image)
                 .frame(height: factory.config.backgroundImageHeight)
             
             Spacer()
@@ -81,44 +68,48 @@ public struct GetCollateralLandingView: View {
         .ignoresSafeArea(edges: .all)
     }
 
-    var contentView: some View {
+    private func contentView(product: Product) -> some View {
         
         VStack {
             
             HeaderView(config: factory.config)
             
-            state.product.conditions.nilIfEmpty.map { _ in
+            product.conditions.nilIfEmpty.map { _ in
                 
                 ConditionsView(
+                    product: product,
                     config: factory.config,
-                    state: state,
-                    makeImageView: factory.makeImageView
+                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
                 )
             }
             
             CalculatorView(
+                state: state,
+                product: product,
                 config: factory.config,
-                event: { event($0) },
-                state: state
+                domainEvent: domainEvent,
+                externalEvent: externalEvent
             )
             
-            state.product.faq.nilIfEmpty.map { _ in
+            product.faq.nilIfEmpty.map { _ in
 
-                FaqView(config: factory.config, state: state)
+                FaqView(product: product, config: factory.config)
             }
 
-            state.product.documents.nilIfEmpty.map { _ in
+            product.documents.nilIfEmpty.map { _ in
 
                 DocumentsView(
+                    product: product,
                     config: factory.config,
-                    state: state,
-                    makeImageView: factory.makeImageView)
+                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
+                )
             }
             
             FooterView(
+                product: product,
                 config: factory.config.footer,
                 state: state,
-                event: { event($0) }
+                externalEvent: externalEvent
             )
         }
         .background(Color.clear)
@@ -136,11 +127,12 @@ extension GetCollateralLandingView {
     typealias FaqView = GetCollateralLandingFaqView
     typealias DocumentsView = GetCollateralLandingDocumentsView
     typealias FooterView = GetCollateralLandingFooterView
-    typealias BottomSheetView = GetCollateralLandingBottomSheetView
+    typealias Product = GetCollateralLandingProduct
     
-    typealias Factory = GetCollateralLandingFactory
-    typealias State = GetCollateralLandingState
-    typealias Event = GetCollateralLandingEvent
+    public typealias Factory = GetCollateralLandingFactory
+    public typealias State = GetCollateralLandingDomain.State
+    public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    public typealias DomainEvent = GetCollateralLandingDomain.Event
 }
 
 // MARK: - Previews
@@ -150,26 +142,43 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
     static var previews: some View {
         
         GetCollateralLandingView(
-            state: .init(product: .carStub),
-            event: { print($0) },
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+            ),
+            domainEvent: { print($0) },
+            externalEvent: {
+                print($0)
+            },
             factory: Factory.preview
         )
         .previewDisplayName("Product with calculator")
 
-        let periodBottomSheet = State.BottomSheet(sheetType: .periods(carStub.calc.rates))
+        let periodBottomSheet = State.BottomSheet(sheetType: .periods)
         
         GetCollateralLandingView(
-            state: .init(bottomSheet: periodBottomSheet, product: .carStub),
-            event: { print($0) },
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: periodBottomSheet
+            ),
+            domainEvent: { print($0) },
+            externalEvent: {
+                print($0)
+            },
             factory: Factory.preview
         )
         .previewDisplayName("Product period selector")
         
-        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals(carStub.calc.collaterals))
+        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals)
 
         GetCollateralLandingView(
-            state: .init(bottomSheet: collateralBottomSheet, product: .carStub),
-            event: { print($0) },
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: collateralBottomSheet
+            ),
+            domainEvent: {
+                print($0)
+            },
+            externalEvent: { print($0) },
             factory: Factory.preview
         )
         .previewDisplayName("Product collateral selector")
@@ -177,6 +186,6 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
 
     static let carStub = GetCollateralLandingProduct.carStub
 
-    typealias State = GetCollateralLandingState
+    typealias State = GetCollateralLandingDomain.State
     typealias Factory = GetCollateralLandingFactory
 }

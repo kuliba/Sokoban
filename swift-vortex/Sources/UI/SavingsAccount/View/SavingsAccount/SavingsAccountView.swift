@@ -46,7 +46,6 @@ public struct SavingsAccountView: View {
             }
             .coordinateSpace(name: coordinateSpace)
         }
-        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
         .toolbar(content: toolbarContent)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             continueButton()
@@ -70,12 +69,19 @@ public struct SavingsAccountView: View {
     private func landing() -> some View {
         VStack {
             factory.makeBannerImageView(state.imageLink)
+                .aspectRatio(contentMode: .fill)
+                .frame(height: config.bannerHeight)
                 .aspectRatio(contentMode: .fit)
                 .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
             
             list(items: state.advantages)
+                .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+            
             list(items: state.basicConditions)
+                .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+            
             questionsView()
+                .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
         }
         .background(
             GeometryReader {
@@ -110,9 +116,8 @@ public struct SavingsAccountView: View {
         
         if isShowHeader {
             VStack {
-                state.title.text(withConfig: config.navTitle.title)
-                state.subtitle.map { $0.text(withConfig: config.navTitle.subtitle)
-                }
+                config.navTitle.title.text.text(withConfig: config.navTitle.title.config)
+                config.navTitle.subtitle.text.text(withConfig: config.navTitle.subtitle.config)
             }
         }
     }
@@ -252,7 +257,11 @@ private struct PaddingsModifier: ViewModifier {
         switch (bottom, horizontal, vertical) {
         case (.none, .none, .none):
             content
-            
+        
+        case let (.none, horizontal, .none):
+            content
+                .padding(.horizontal, horizontal)
+
         case let (.none, horizontal, vertical):
             content
                 .padding(.horizontal, horizontal)

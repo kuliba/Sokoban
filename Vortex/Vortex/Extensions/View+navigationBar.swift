@@ -29,17 +29,21 @@ extension View {
         title: String,
         subtitle: String? = nil,
         dismiss: @escaping () -> Void,
-        rightItem: NavigationBarView.ViewModel.ButtonItemViewModel
+        rightItem: NavigationBarView.ViewModel.ButtonItemViewModel,
+        backgroundColor: Color = .clear
     ) -> some View {
         
-        navigationBar(with: .init(
-            title: title,
-            subtitle: subtitle,
-            leftItems: [
-                backButton(action: dismiss)
-            ],
-            rightItems: [rightItem]
-        ))
+        navigationBar(
+            with: .init(
+                title: title,
+                subtitle: subtitle,
+                leftItems: [
+                    backButton(action: dismiss)
+                ],
+                rightItems: [rightItem]
+            ),
+            backgroundColor: backgroundColor
+        )
     }
     
     func navigationBarWithAsyncIcon(

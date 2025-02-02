@@ -79,29 +79,47 @@ private extension Model {
         with inn: String
     ) -> [SegmentedProvider]? {
         
-        localAgent.load(type: [CodableServicePaymentOperator].self)?
-            .filter { $0.inn == inn }
-            .map(SegmentedProvider.init)
+        let segments = segments()
+        
+        let segment = { (codable: CodableServicePaymentOperator) in
+            
+            segments[codable.type] ?? "Услуги"
+        }
+        
+        let segmented = localAgent.load(type: ServicePaymentOperatorStorage.self)?
+            .search(for: inn, in: \.inn)
+            .map { SegmentedProvider(with: $0, and: segment($0)) }
+        
+        return segmented
+    }
+    
+    private func segments() -> [String: String] {
+        
+        guard let categories = localAgent.load(type: [CodableServiceCategory].self)
+        else { return [:] }
+        
+        return categories.reduce(into: [String: String]()) { dict, category in
+            
+            dict[category.type] = category.name
+        }
     }
 }
 
 private extension SegmentedProvider {
     
     init(
-        with cached: CodableServicePaymentOperator
+        with cached: CodableServicePaymentOperator,
+        and segment: String
     ) {
-        // TODO: add `segment` property to `CachingSberOperator`
-        let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
-        
         self.init(
             origin: .init(
                 id: cached.id,
                 icon: cached.md5Hash,
                 inn: cached.inn,
                 title: cached.name,
-                type: segment.apearance.title
+                type: cached.type
             ),
-            segment: segment.apearance.title
+            segment: segment
         )
     }
 }

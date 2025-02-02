@@ -32,27 +32,46 @@ typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     
-    let clearCache: () -> Void
-    let isCorporate: () -> Bool
+    struct Infra {
+        
+        let imageCache: ImageCache
+        let generalImageCache: ImageCache
+        let getUImage: (Md5hash) -> UIImage?
+    }
+    
+    // TODO: add init, make `infra` private
+    let infra: Infra
+    
     let makeActivateSliderView: MakeActivateSliderView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView
-    let makeIconView: MakeIconView
-    let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
     let components: ViewComponents
+    let paymentsViewFactory: PaymentsViewFactory
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
 }
 
 extension RootViewFactory {
+
+    var makeGeneralIconView: MakeIconView {
+        
+        infra.generalImageCache.makeIconView(for:)
+    }
+    
+    var makeIconView: MakeIconView {
+        
+        infra.imageCache.makeIconView(for:)
+    }
+}
+
+extension ViewComponents {
     
     struct MakeInfoViews {
         
@@ -61,10 +80,15 @@ extension RootViewFactory {
     }
     
     func makePaymentProviderPickerView(
-        _ binder: PaymentProviderPickerDomain.Binder
+        binder: PaymentProviderPickerDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> PaymentProviderPickerView {
         
-        return .init(binder: binder, components: components, makeIconView: makeIconView)
+        return .init(
+            binder: binder,
+            dismiss: dismiss,
+            components: self
+        )
     }
 }
 
@@ -83,7 +107,6 @@ extension RootViewFactory {
             makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
             components: components
         )

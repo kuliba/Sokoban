@@ -11,28 +11,36 @@ import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
-    private let makeImageView: MakeImageView
-    private let config: Config
+    public let makeImageViewWithMD5hash: MakeImageViewWithMD5hash
+    public let makeImageViewWithURL: MakeImageViewWithURL
     
     public init(
-            makeImageView: @escaping MakeImageView,
-            config: Config = .default
-        ) {
-            self.makeImageView = makeImageView
-            self.config = config
-        }
+        makeImageViewWithMD5hash: @escaping MakeImageViewWithMD5hash,
+        makeImageViewWithURL: @escaping MakeImageViewWithURL
+    ) {
+        self.makeImageViewWithMD5hash = makeImageViewWithMD5hash
+        self.makeImageViewWithURL = makeImageViewWithURL
+    }
     
-    public typealias MakeImageView = (String) -> UIPrimitives.AsyncImage
-    public typealias Config = CreateDraftCollateralLoanApplicationConfig
+    public typealias MakeImageViewWithMD5hash = (String) -> UIPrimitives.AsyncImage
+    public typealias MakeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
 }
 
 extension CreateDraftCollateralLoanApplicationFactory {
     
     static let preview = Self(
-        makeImageView: { _ in .init(
-            image: .iconPlaceholder,
-            publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-        )}
+        makeImageViewWithMD5hash: { _ in
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )},
+        makeImageViewWithURL: { _ in
+            
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )
+        }
     )
 }
 

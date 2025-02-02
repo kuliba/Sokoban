@@ -91,7 +91,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(switcher as PaymentsTransfersSwitcher):
-                paymentsTransfersSwitcherView(switcher)
+                rootViewFactory.components.makePaymentsTransfersSwitcherView(switcher)
 
             default:
                 EmptyView()
@@ -220,31 +220,9 @@ extension PaymentsTransfersPersonalDomain.Binder {
     }
 }
 
-private extension RootView {
-    
-    func paymentsTransfersSwitcherView(
-        _ switcher: PaymentsTransfersSwitcher
-    ) -> some View {
-        
-        RefreshableScrollView(
-            action: switcher.refresh,
-            showsIndicators: false,
-            refreshCompletionDelay: 2.0
-        ) {
-            ComposedProfileSwitcherView(
-                model: switcher,
-                corporateView: rootViewFactory.makePaymentsTransfersCorporateView,
-                personalView: rootViewFactory.makePaymentsTransfersPersonalView,
-                undefinedView: { SpinnerView(viewModel: .init()) }
-            )
-            .padding(.top)
-        }
-    }
-}
-
 // MARK: - adapters
 
-/*private*/ extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,
@@ -414,15 +392,16 @@ private extension RootViewFactory {
         }
         
         return .init(
-            clearCache: {},
-            isCorporate: { false },
+            infra: .init(
+                imageCache: .preview,
+                generalImageCache: .preview,
+                getUImage: { _ in nil }
+            ),
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _,_,_,_   in
                 HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
             },
-            makeIconView: IconDomain.preview,
-            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
@@ -434,7 +413,6 @@ private extension RootViewFactory {
                         makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeInfoViews: .default,
                         makeUserAccountView: {
                             
                             return .init(viewModel: $0, config: .preview, viewFactory: .preview)
@@ -451,7 +429,6 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: .default,
             makeUserAccountView: {
                 
                 return .init(
@@ -462,12 +439,22 @@ private extension RootViewFactory {
             },
             makeMarketShowcaseView: { _,_,_   in .none },
             components: .preview,
+            paymentsViewFactory: .preview,
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
             }
         )
     }
+}
+
+private extension ImageCache {
+    
+    static let preview: ImageCache = .init(
+        requestImages: { _ in },
+        imagesPublisher: .init([:]),
+        fallback: { _ in .ic24MoreHorizontal }
+    )
 }
 
 private struct IgnoringSafeArea: ViewModifier {

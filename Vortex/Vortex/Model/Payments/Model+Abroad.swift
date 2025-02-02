@@ -47,7 +47,7 @@ extension Model {
                 throw Payments.Error.missingValueCountryForParameter(Payments.Parameter.Identifier.operator.rawValue)
             }
             
-            let operatorParameter = Payments.ParameterOperator(operatorType: operatorParameterValue)
+            let operatorParameter = Payments.ParameterOperator(operator: operatorParameterValue)
             
             let countryId = Payments.Parameter.Identifier.countrySelect.rawValue
             let countryParameter = Payments.ParameterSelectCountry(.init(id: countryId, value: countryWithService?.code), icon: .iconPlaceholder, title: "Страна получателя", options: [], validator: .anyValue, limitator: nil, group: .init(id: "top", type: .regular))
@@ -96,14 +96,12 @@ extension Model {
                 )
                 
             default:
-                
-                if countryWithService?.servicesList.first(where: { $0.isDefault == true }) != nil {
-                    
-                    let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
-                    
+
+                if let defaultService = options.first?.id {
+                                        
                     let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(
                         id: dropDownListId,
-                        value: option
+                        value: defaultService
                     ), title: titleDropDownList(operation), options: options)
                     
                     var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,
@@ -233,7 +231,7 @@ extension Model {
                 return nil
             }
             
-            return Payments.ParameterOperator(operatorType: .init(rawValue: value) ?? .direct) //FIXME: fix unwrap
+            return Payments.ParameterOperator(operator: .init(rawValue: value) ?? .direct) //FIXME: fix unwrap
             
         case Payments.Parameter.Identifier.countryDropDownList.rawValue:
             guard let service = parameters.first(where: { $0.id == parameterId}) as? Payments.ParameterSelectDropDownList else {
