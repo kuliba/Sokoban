@@ -15,12 +15,13 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        ZStack {
+        RxWrapperView(model: binder.flow) { state, event in
             
-            spinnerView(flow: binder.flow)
-                .zIndex(1.0)
-            
-            rootViewInNavigationView(flow: binder.flow)
+            ZStack {
+                
+                rootViewInNavigationView(state: state, event: event)
+                spinnerView(isShowing: state.isLoading)
+            }
         }
     }
 }
@@ -28,37 +29,32 @@ struct RootBinderView: View {
 private extension RootBinderView {
     
     func spinnerView(
-        flow: RootViewDomain.Flow
+        isShowing: Bool
     ) -> some View {
         
-        RxWrapperView(model: flow) { state, event in
-            
-            SpinnerView(viewModel: .init())
-                .opacity(state.isLoading ? 1 : 0)
-        }
+        SpinnerView(viewModel: .init())
+            .opacity(isShowing ? 1 : 0)
     }
     
     func rootViewInNavigationView(
-        flow: RootViewDomain.Flow
+        state: RootViewDomain.FlowDomain.State,
+        event: @escaping (RootViewDomain.FlowDomain.Event) -> Void
     ) -> some View {
         
         NavigationView {
             
-            RxWrapperView(model: flow) { state, event in
-                
-                rootView()
-                    .fullScreenCoverInspectable(
-                        item: { state.navigation?.fullScreenCover },
-                        dismiss: { event(.dismiss) },
-                        content: fullScreenCoverContent
-                    )
-                    .navigationDestination(
-                        destination: state.navigation?.destination,
-                        // dismiss managed by flow, not SwiftUI
-                        content: destinationContent
-                    )
-            }
-            .navigationBarHidden(true)
+            rootView()
+                .navigationBarHidden(true)
+                .fullScreenCoverInspectable(
+                    item: { state.navigation?.fullScreenCover },
+                    dismiss: { event(.dismiss) },
+                    content: fullScreenCoverContent
+                )
+                .navigationDestination(
+                    destination: state.navigation?.destination,
+                    // dismiss managed by flow, not SwiftUI
+                    content: destinationContent
+                )
         }
     }
     
