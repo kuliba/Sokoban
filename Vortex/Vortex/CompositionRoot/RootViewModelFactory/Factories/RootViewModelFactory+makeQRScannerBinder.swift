@@ -18,7 +18,7 @@ extension RootViewModelFactory {
     func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
         return composeBinder(
-            makeContent: makeQRScannerModel,
+            content: makeQRScannerModel(),
             delayProvider: delayProvider,
             getNavigation: getQRNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)

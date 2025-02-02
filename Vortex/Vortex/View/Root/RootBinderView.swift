@@ -34,6 +34,7 @@ private extension RootBinderView {
         
         SpinnerView(viewModel: .init())
             .opacity(isShowing ? 1 : 0)
+            .animation(.easeInOut, value: isShowing)
     }
     
     func rootViewInNavigationView(
