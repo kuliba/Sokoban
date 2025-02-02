@@ -24,7 +24,7 @@ struct PaymentProviderPickerView: View {
             
             PaymentProviderPickerFlowView(
                 state: state.navigation,
-                event: event,
+                dismissAlert: { event(.select(.outside(.payments))) },
                 contentView: contentView,
                 destinationView: destinationView
             )

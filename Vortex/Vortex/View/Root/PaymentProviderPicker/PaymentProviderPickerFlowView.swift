@@ -12,8 +12,8 @@ struct PaymentProviderPickerFlowView<ContentView, DestinationView>: View
 where ContentView: View,
       DestinationView: View {
     
-    let state: State
-    let event: (Event) -> Void
+    let state: Navigation?
+    let dismissAlert: () -> Void
     let contentView: () -> ContentView
     let destinationView: (Destination) -> DestinationView
     
@@ -27,9 +27,7 @@ where ContentView: View,
 
 extension PaymentProviderPickerFlowView {
     
-    typealias Domain = PaymentProviderPickerDomain.FlowDomain
-    typealias State = PaymentProviderPickerDomain.Navigation?
-    typealias Event = Domain.Event
+    typealias Navigation = PaymentProviderPickerDomain.Navigation
     typealias Destination = PaymentProviderPickerDomain.Destination
 }
 
@@ -53,7 +51,7 @@ private extension PaymentProviderPickerFlowView {
         backendFailure: BackendFailure
     ) -> Alert {
         
-        return backendFailure.alert { event(.select(.outside(.payments))) }
+        return backendFailure.alert(action: dismissAlert)
     }
     
     var destination: Destination? {
