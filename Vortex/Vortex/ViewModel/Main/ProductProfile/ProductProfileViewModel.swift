@@ -478,21 +478,10 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] _ in
                 
                 model.setPreferredProductID(to: product.activeProductId)
-                
-                let paymentsTransfersViewModel = PaymentsTransfersViewModel(
-                    model: model,
-                    makeFlowManager: makePaymentsTransfersFlowManager,
-                    userAccountNavigationStateManager: userAccountNavigationStateManager,
-                    sberQRServices: sberQRServices,
-                    qrViewModelFactory: qrViewModelFactory,
-                    paymentsTransfersFactory: paymentsTransfersFactory,
-                    isTabBarHidden: true,
-                    mode: .link
-                )
-                paymentsTransfersViewModel.rootActions = rootActions
-                link = .paymentsTransfers(.init(model: paymentsTransfersViewModel, cancellables: []))
-                
-            }.store(in: &bindings)
+                let switcher = paymentsTransfersFactory.makePaymentsTransfers()
+                link = .paymentsTransfersSwitcher(switcher)
+            }
+            .store(in: &bindings)
         
         action
             .compactMap { $0 as? ProductProfileViewModelAction.DepositTransferButtonDidTapped }
@@ -2557,6 +2546,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(Node<PaymentsTransfersViewModel>)
+        case paymentsTransfersSwitcher(PaymentsTransfersSwitcherProtocol)
         case controlPanel(ControlPanelViewModel)
     }
     
