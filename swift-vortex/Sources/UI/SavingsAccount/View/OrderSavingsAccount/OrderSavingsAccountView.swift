@@ -11,7 +11,7 @@ import SharedConfigs
 import SwiftUI
 import ToggleComponent
 
-struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
+public struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
 where AmountInfo: View,
       OTPView: View,
       ProductPicker: View {
@@ -28,7 +28,7 @@ where AmountInfo: View,
     @State private(set) var isShowHeader = false
     @State private(set) var isShowingProducts = false
     
-    init(
+    public init(
         amountToString: @escaping AmountToString,
         state: OrderSavingsAccountState,
         event: @escaping (Event) -> Void,
@@ -46,7 +46,7 @@ where AmountInfo: View,
         self.viewFactory = viewFactory
     }
     
-    var body: some View {
+    public var body: some View {
         
         ScrollView(showsIndicators: false) {
             orderSavingsAccount(state.data)
@@ -421,7 +421,7 @@ where AmountInfo: View,
     }
 }
 
-extension OrderSavingsAccountView {
+public extension OrderSavingsAccountView {
     
     typealias Event = OrderSavingsAccountEvent
     typealias Config = OrderSavingsAccountConfig

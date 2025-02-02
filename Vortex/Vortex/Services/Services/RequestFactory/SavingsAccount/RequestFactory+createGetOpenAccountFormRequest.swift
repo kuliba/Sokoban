@@ -13,7 +13,7 @@ extension RequestFactory {
         _ name: String
     ) throws -> URLRequest {
         
-        let endpoint = Services.Endpoint.openAccountFormRequest
+        let endpoint = Services.Endpoint.getOpenAccountFormRequest
         let url = try! endpoint.url(
             withBase: Config.serverAgentEnvironment.baseURL,
             parameters: [])

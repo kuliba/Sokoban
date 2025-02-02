@@ -124,7 +124,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
+                makeSavingsAccountBinders: .preview
             ),
             viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in [] }
@@ -780,7 +780,7 @@ final class MainViewModelTests: XCTestCase {
                     collateralLandingSpy.call()
                 },
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
+                makeSavingsAccountBinders: .preview
             ),
             viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
@@ -847,7 +847,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
+                makeSavingsAccountBinders: .preview
             ),
             viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
@@ -931,7 +931,7 @@ final class MainViewModelTests: XCTestCase {
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in .preview }, 
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
+                makeSavingsAccountBinders: .preview
             ),
             viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in buttons },

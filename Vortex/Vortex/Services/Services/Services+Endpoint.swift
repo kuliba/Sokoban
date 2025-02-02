@@ -117,12 +117,12 @@ extension Services {
             case getVerificationCode
             case getAuthorizedZoneClientInformData
             case getNotAuthorizedZoneClientInformData
+            case getOpenAccountForm
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
             case modifyC2BSubAcc
             case modifyC2BSubCard
-            case openAccountForm
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
@@ -247,10 +247,10 @@ extension Services.Endpoint {
         serviceName: .getSavingLanding
     )
 
-    static let openAccountFormRequest: Self = .init(
+    static let getOpenAccountFormRequest: Self = .init(
         pathPrefix: .savingsAccount,
         version: .none,
-        serviceName: .openAccountForm
+        serviceName: .getOpenAccountForm
     )
 
     static let createStickerPayment: Self = .init(

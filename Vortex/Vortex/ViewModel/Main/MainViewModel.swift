@@ -1736,7 +1736,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
-        case savingsAccount(Node<SavingsAccountDomain.Binder>)
+        case savingsAccount(Node<SavingsAccountDomain.OpenAccountBinder>, Node<SavingsAccountDomain.Binder>)
         case orderCard
         
         var id: Case {
@@ -1858,7 +1858,7 @@ extension MainViewModel {
     
     func openSavingsAccount() {
         
-        let binder: SavingsAccountDomain.Binder = bindersFactory.makeSavingsAccountBinder()
+        let binder: SavingsAccountDomain.Binder = bindersFactory.makeSavingsAccountBinders.makeSavingsAccountBinder()
         let cancellable = binder.flow.$state
             .compactMap {
                 switch $0.navigation {
@@ -1871,7 +1871,20 @@ extension MainViewModel {
                 self?.resetDestination()
             }
         
-        route.destination = .savingsAccount(.init(model: binder, cancellable: cancellable))
+        let openAccountBinder: SavingsAccountDomain.OpenAccountBinder = bindersFactory.makeSavingsAccountBinders.makeOpenSavingsAccountBinder()
+        let openAccountCancellable = openAccountBinder.flow.$state
+            .compactMap {
+                switch $0.navigation {
+                case .main: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { [weak self] in
+                self?.resetDestination()
+            }
+
+        route.destination = .savingsAccount(.init(model: openAccountBinder, cancellable: openAccountCancellable), .init(model: binder, cancellable: cancellable))
     }
 }
 

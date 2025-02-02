@@ -11,6 +11,7 @@ import RemoteServices
 import RxViewModel
 import SavingsAccount
 import SavingsServices
+import SwiftUI
 
 enum SavingsAccountDomain {}
 
@@ -75,6 +76,26 @@ extension SavingsAccountDomain {
     typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountView, Landing, InformerPayload>
     typealias ContentWrapperView = RxWrapperView<ContentView, ContentState, ContentEvent, ContentEffect>
     typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView, InformerView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
+    
+    
+    // MARK: - OpenAccount
+    
+    typealias OpenAccountBinderDomain = FlowCore.BinderDomain<OpenAccountContent, Select, Navigation>
+    typealias OpenAccountBinder = OpenAccountBinderDomain.Binder
+
+    typealias OpenAccountContentState = SavingsAccountContentState<OpenAccountLanding, InformerPayload>
+    typealias OpenAccountContentStatus = SavingsAccountContentStatus<OpenAccountLanding, InformerPayload>
+    typealias OpenAccountContentEvent = SavingsAccountContentEvent<OpenAccountLanding, InformerPayload>
+    typealias OpenAccountContentEffect = SavingsAccountContentEffect
+
+    typealias OpenAccountContentReducer = SavingsAccount.FormContentReducer<OpenAccountLanding, InformerPayload>
+    typealias OpenAccountContentEffectHandler = SavingsAccount.FormContentEffectHandler<OpenAccountLanding, InformerPayload>
+    typealias OpenAccountContentMicroService = SavingsAccount.FormContentEffectHandlerMicroServices<OpenAccountLanding, InformerPayload>
+
+    typealias OpenAccountContent = RxViewModel<OpenAccountContentState, OpenAccountContentEvent, OpenAccountContentEffect>
+    typealias OpenAccountView = OrderSavingsAccountView<Text, Text, Text>
+    typealias OpenAccountContentView = SavingsAccountContentView<SpinnerRefreshView, OpenAccountView, OpenAccountLanding, InformerPayload>
+    typealias OpenAccountViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OpenAccountView>
     
     typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView>
     

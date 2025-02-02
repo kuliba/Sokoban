@@ -1,34 +1,28 @@
 //
-//  SavingsAccountBinderView.swift
+//  OpenSavingsAccountBinderView.swift
 //  Vortex
 //
-//  Created by Andryusina Nataly on 31.01.2025.
+//  Created by Andryusina Nataly on 02.02.2025.
 //
 
 import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-struct SavingsAccountBinderView: View {
+struct OpenSavingsAccountBinderView: View {
         
-    private let binder: SavingsAccountDomain.Binder
-    private let openAccountBinder: SavingsAccountDomain.OpenAccountBinder
-
+    private let binder: SavingsAccountDomain.OpenAccountBinder
     private let config: Config
     private let factory: Factory
-    private let openAccountFactory: OpenAccountFactory
-
+    
     init(
-        binders: MakeSavingsAccountBinders,
+        binder: SavingsAccountDomain.OpenAccountBinder,
         config: Config,
-        factory: Factory,
-        openAccountFactory: OpenAccountFactory
+        factory: Factory
     ) {
-        self.binder = binders.makeSavingsAccountBinder()
-        self.openAccountBinder = binders.makeOpenSavingsAccountBinder()
+        self.binder = binder
         self.config = config
         self.factory = factory
-        self.openAccountFactory = openAccountFactory
     }
     
     var body: some View {
@@ -42,15 +36,12 @@ struct SavingsAccountBinderView: View {
                     event: flowEvent,
                     contentView: {
                         
-                        OffsetObservingScrollView(
-                            axes: .vertical,
+                        RefreshableScrollView(
+                            action: { contentEvent(.load) },
                             showsIndicators: false,
-                            offset: .init(
-                                get: { .zero },
-                                set: { contentEvent(.offset($0.y)) }),
-                            coordinateSpaceName: "savingsAccountScroll"
+                            coordinateSpaceName: "openSavingsAccountScroll"
                         ) {
-                            SavingsAccountDomain.ContentView(
+                            SavingsAccountDomain.OpenAccountContentView(
                                 state: contentState,
                                 event: contentEvent,
                                 config: .prod,
@@ -62,8 +53,8 @@ struct SavingsAccountBinderView: View {
                 )
                 .padding(.bottom)
                 .navigationBarWithBack(
-                    title: contentState.navTitle.title,
-                    subtitle: contentState.navTitle.subtitle,
+                    title: "Оформление накопительного счета",
+                    subtitle: nil,
                     dismiss: { flowEvent(.dismiss) }
                 )
                 .navigationDestination(
@@ -117,53 +108,13 @@ struct SavingsAccountBinderView: View {
         
         switch destination {
         case .openSavingsAccount:
-            OpenSavingsAccountBinderView(binder: openAccountBinder, config: .iVortex, factory: openAccountFactory)
+            Text("openSavingsAccount")
         }
     }
 }
 
-extension SavingsAccountBinderView {
+extension OpenSavingsAccountBinderView {
     
     typealias Config = SavingsAccountDomain.Config
-    typealias Factory = SavingsAccountDomain.ViewFactory
-    typealias OpenAccountFactory = SavingsAccountDomain.OpenAccountViewFactory
-
-}
-
-extension SavingsAccountDomain.Navigation {
-    
-    var destination: Destination? {
-        
-        switch self {
-        case .failure:
-            return nil
-            
-        case .main:
-            return nil
-            
-        case .openSavingsAccount:
-            return .openSavingsAccount
-        }
-    }
-    
-    enum Destination {
-        
-        case openSavingsAccount
-    }
-}
-
-extension SavingsAccountDomain.Navigation.Destination: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case .openSavingsAccount:
-            return .openSavingsAccount
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case openSavingsAccount
-    }
+    typealias Factory = SavingsAccountDomain.OpenAccountViewFactory
 }

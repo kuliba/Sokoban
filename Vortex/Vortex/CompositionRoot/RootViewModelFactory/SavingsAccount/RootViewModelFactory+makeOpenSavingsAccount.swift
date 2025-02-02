@@ -1,8 +1,8 @@
 //
-//  RootViewModelFactory+makeSavingsAccount.swift
+//  RootViewModelFactory+makeOpenSavingsAccount.swift
 //  Vortex
 //
-//  Created by Andryusina Nataly on 09.12.2024.
+//  Created by Andryusina Nataly on 02.02.2025.
 //
 
 import Combine
@@ -14,7 +14,7 @@ import SavingsServices
 extension RootViewModelFactory {
     
     @inlinable
-    func makeSavingsAccount() -> SavingsAccountDomain.Binder {
+    func makeOpenSavingsAccount() -> SavingsAccountDomain.OpenAccountBinder {
         
         let getSavingLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetSavingLandingRequest,
@@ -33,15 +33,15 @@ extension RootViewModelFactory {
             openSavingsAccount: { getOpenAccount("", $0) }
         )
         
-        return makeSavingsAccount(nanoServices: nanoServices)
+        return makeOpenSavingsAccount(nanoServices: nanoServices)
     }
-    
+   
     @inlinable
-    func makeSavingsAccount(
+    func makeOpenSavingsAccount(
         nanoServices: SavingsAccountDomain.ComposerNanoServices
-    ) -> SavingsAccountDomain.Binder {
+    ) -> SavingsAccountDomain.OpenAccountBinder {
         
-        let content = makeContent(
+        let content = makeOpenSavingsAccountContent(
             nanoServices: nanoServices,
             status: .initiate
         )
@@ -54,29 +54,16 @@ extension RootViewModelFactory {
         )
     }
     
-    @inlinable
-    func delayProvider(
-        navigation: SavingsAccountDomain.Navigation
-    ) -> Delay {
-        
-        switch navigation {
-        case .main:                  return .milliseconds(100)
-        case .openSavingsAccount:   return settings.delay
-        case .failure:               return settings.delay
-        }
-    }
-    
-    private func makeContent(
+    private func makeOpenSavingsAccountContent(
         nanoServices: SavingsAccountDomain.ComposerNanoServices,
-        status: SavingsAccountDomain.ContentStatus
-    ) -> SavingsAccountDomain.Content {
+        status: SavingsAccountDomain.OpenAccountContentStatus
+    ) -> SavingsAccountDomain.OpenAccountContent {
         
-        let reducer = SavingsAccountDomain.ContentReducer()
-        let effectHandler = SavingsAccountDomain.ContentEffectHandler(
+        let reducer = SavingsAccountDomain.OpenAccountContentReducer()
+        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
             microServices: .init(
-                loadLanding: nanoServices.loadLanding
-            ),
-            landingType: "DEFAULT"
+                loadLanding: nanoServices.openSavingsAccount
+            )
         )
         
         return .init(
@@ -88,39 +75,23 @@ extension RootViewModelFactory {
     }
 
     @inlinable
-    func getSavingsAccountNavigation(
-        select: SavingsAccountDomain.Select,
-        notify: @escaping SavingsAccountDomain.Notify,
-        completion: @escaping (SavingsAccountDomain.Navigation) -> Void
-    ) {
-        switch select {
-        case .goToMain:
-            completion(.main)
-        case .openSavingsAccount:
-            completion(.openSavingsAccount)
-        case let .failure(failure):
-            completion(.failure(failure))
-        }
-    }
-    
-    @inlinable
     func emitting(
-        content: SavingsAccountDomain.Content
+        content: SavingsAccountDomain.OpenAccountContent
     ) -> some Publisher<FlowEvent<SavingsAccountDomain.Select, Never>, Never> {
         
-        content.$state.compactMap(\.select).map(FlowEvent.select)
+        Empty()
     }
     
     @inlinable
     func dismissing(
-        content: SavingsAccountDomain.Content
+        content: SavingsAccountDomain.OpenAccountContent
     ) -> () -> Void {
         
         return {}
     }
 }
 
-extension SavingsAccountDomain.ContentError {
+/*private extension SavingsAccountDomain.ContentError {
     
     typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     
@@ -140,3 +111,4 @@ extension SavingsAccountDomain.ContentError {
         }
     }
 }
+*/
