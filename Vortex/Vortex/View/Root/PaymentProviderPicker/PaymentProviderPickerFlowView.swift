@@ -19,22 +19,9 @@ where ContentView: View,
     
     var body: some View {
         
-        ZStack {
-            
-            contentView()
-            
-            fixedFrameTinyClear()
-                .alert(item: backendFailure, content: alert)
-            //  .id(backendFailure?.id)
-            
-            fixedFrameTinyClear()
-                .navigationDestination(
-                    destination: destination,
-                    // dismiss: { event(.dismiss) },
-                    content: destinationView
-                )
-                .id(destination?.id) // hack to prevent double view redraw, downside: not smooth animation
-        }
+        contentView()
+            .alert(item: backendFailure, content: alert)
+            .fullScreenCover(cover: destination, content: destinationView)
     }
 }
 
@@ -44,14 +31,6 @@ extension PaymentProviderPickerFlowView {
     typealias State = PaymentProviderPickerDomain.Navigation?
     typealias Event = Domain.Event
     typealias Destination = PaymentProviderPickerDomain.Destination
-}
-
-private extension PaymentProviderPickerFlowView {
-    
-    func fixedFrameTinyClear() -> some View {
-        
-        Color.clear.frame(width: 1, height: 1)
-    }
 }
 
 private extension PaymentProviderPickerFlowView {
