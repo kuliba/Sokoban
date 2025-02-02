@@ -8,18 +8,16 @@
 import PayHub
 import SwiftUI
 
-struct PaymentProviderPickerFlowView<ContentView, DestinationView>: View
-where ContentView: View,
-      DestinationView: View {
+struct PaymentProviderPickerFlowView<DestinationView>: View
+where DestinationView: View {
     
     let state: Navigation?
     let dismissAlert: () -> Void
-    let contentView: () -> ContentView
     let destinationView: (Destination) -> DestinationView
     
     var body: some View {
         
-        contentView()
+        Color.clear
             .alert(item: backendFailure, content: alert)
             .fullScreenCover(cover: destination, content: destinationView)
     }

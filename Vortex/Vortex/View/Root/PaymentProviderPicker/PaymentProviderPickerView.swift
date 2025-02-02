@@ -22,20 +22,22 @@ struct PaymentProviderPickerView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            PaymentProviderPickerFlowView(
-                state: state.navigation,
-                dismissAlert: { event(.select(.outside(.payments))) },
-                contentView: contentView,
-                destinationView: destinationView
-            )
-            .navigationBarWithBack(
-                title: binder.content.title,
-                dismiss: dismiss,
-                rightItem: .barcodeScanner {
-                    
-                    binder.flow.event(.select(.outside(.qr)))
-                }
-            )
+            contentView()
+                .background(
+                    PaymentProviderPickerFlowView(
+                        state: state.navigation,
+                        dismissAlert: { event(.select(.outside(.payments))) },
+                        destinationView: destinationView
+                    )
+                )
+                .navigationBarWithBack(
+                    title: binder.content.title,
+                    dismiss: dismiss,
+                    rightItem: .barcodeScanner {
+                        
+                        binder.flow.event(.select(.outside(.qr)))
+                    }
+                )
         }
     }
 }
