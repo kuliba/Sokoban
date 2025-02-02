@@ -122,7 +122,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
                 .navigationBarWithAsyncIcon(
                     title: node.title,
                     subtitle: node.subtitle,
-                    dismiss: { node.model.event(.dismiss) },
+                    dismiss: { flowModel.event(.dismiss) },
                     icon: viewFactory.makeIconView(node.icon)
                 )
         }
