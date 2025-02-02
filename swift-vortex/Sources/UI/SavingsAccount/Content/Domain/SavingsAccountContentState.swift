@@ -33,7 +33,12 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
 
     public enum Selection: Equatable {
         
-        case order
+        case openSavingsAccount
+    }
+
+    public var needContinueButton: Bool {
+        
+        oldLanding != nil
     }
 
     var isLoading: Bool {

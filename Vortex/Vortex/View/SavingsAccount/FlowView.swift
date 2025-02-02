@@ -24,7 +24,6 @@ extension SavingsAccountDomain {
             
             ZStack {
                 
-                // InformerView(viewModel: .init(message: $0.message, icon: $0.icon.image, color: $0.color))
                 state.navigation?.informer.map(informerView)
                     .zIndex(1)
                 

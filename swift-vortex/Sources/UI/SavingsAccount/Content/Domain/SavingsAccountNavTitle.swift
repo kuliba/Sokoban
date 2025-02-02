@@ -29,4 +29,8 @@ public extension SavingsAccountNavTitle {
         title: "",
         subtitle: ""
     )
+    
+    static let openSavingsAccount: Self = .init(
+        title: "Оформление накопительного счета",
+        subtitle: "")
 }

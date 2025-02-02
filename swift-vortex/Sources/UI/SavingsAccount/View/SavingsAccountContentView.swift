@@ -51,7 +51,7 @@ where RefreshView: View,
                     Color.clear
                         .frame(maxHeight: .infinity)
                 }
-
+                
             case let .loaded(landing):
                 factory.makeLandingView(landing)
                 
