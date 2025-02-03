@@ -8,50 +8,25 @@
 import PayHub
 import SwiftUI
 
-struct PaymentProviderPickerFlowView<ContentView, DestinationView>: View
-where ContentView: View,
-      DestinationView: View {
+struct PaymentProviderPickerFlowView<DestinationView>: View
+where DestinationView: View {
     
-    let state: State
-    let event: (Event) -> Void
-    let contentView: () -> ContentView
+    let state: Navigation?
+    let dismissAlert: () -> Void
     let destinationView: (Destination) -> DestinationView
     
     var body: some View {
         
-        ZStack {
-            
-            contentView()
-            
-            fixedFrameTinyClear()
-                .alert(item: backendFailure, content: alert)
-            //  .id(backendFailure?.id)
-            
-            fixedFrameTinyClear()
-                .navigationDestination(
-                    destination: destination,
-                    // dismiss: { event(.dismiss) },
-                    content: destinationView
-                )
-                .id(destination?.id) // hack to prevent double view redraw, downside: not smooth animation
-        }
+        Color.clear
+            .alert(item: backendFailure, content: alert)
+            .fullScreenCover(cover: destination, content: destinationView)
     }
 }
 
 extension PaymentProviderPickerFlowView {
     
-    typealias Domain = PaymentProviderPickerDomain.FlowDomain
-    typealias State = PaymentProviderPickerDomain.Navigation?
-    typealias Event = Domain.Event
+    typealias Navigation = PaymentProviderPickerDomain.Navigation
     typealias Destination = PaymentProviderPickerDomain.Destination
-}
-
-private extension PaymentProviderPickerFlowView {
-    
-    func fixedFrameTinyClear() -> some View {
-        
-        Color.clear.frame(width: 1, height: 1)
-    }
 }
 
 private extension PaymentProviderPickerFlowView {
@@ -74,7 +49,7 @@ private extension PaymentProviderPickerFlowView {
         backendFailure: BackendFailure
     ) -> Alert {
         
-        return backendFailure.alert { event(.select(.outside(.payments))) }
+        return backendFailure.alert(action: dismissAlert)
     }
     
     var destination: Destination? {

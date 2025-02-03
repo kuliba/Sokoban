@@ -10,7 +10,7 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makeCategoryPickerSectionView(
@@ -73,10 +73,10 @@ extension RootViewFactory {
         
         switch destination {
         case let .mobile(paymentsViewModel):
-            components.makePaymentsView(paymentsViewModel)
+            makePaymentsView(paymentsViewModel)
             
         case let .taxAndStateServices(paymentsViewModel):
-            components.makePaymentsView(paymentsViewModel)
+            makePaymentsView(paymentsViewModel)
             
         case let .transport(transport):
             transportPaymentsView(transport)

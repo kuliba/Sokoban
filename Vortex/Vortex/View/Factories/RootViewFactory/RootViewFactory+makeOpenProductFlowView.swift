@@ -7,8 +7,9 @@
 
 import RxViewModel
 import SwiftUI
+import UIPrimitives
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @inlinable
     func makeOpenProductFlowView(
@@ -18,6 +19,10 @@ extension RootViewFactory {
         RxWrapperView(model: flow) { state, event in
             
             Color.clear
+                .alert(
+                    item: state.navigation?.alert,
+                    content: { alert($0, event) }
+                )
                 .bottomSheet(
                     sheet: state.navigation?.bottomSheet,
                     dismiss: { event(.dismiss) },
@@ -28,6 +33,15 @@ extension RootViewFactory {
                     content: makeOpenProductDestinationView
                 )
         }
+    }
+    
+    @inlinable
+    func alert(
+        _ alert: AlertModelOf<OpenProductDomain.FlowDomain.Event>,
+        _ event: @escaping (OpenProductDomain.FlowDomain.Event) -> Void
+    ) -> SwiftUI.Alert {
+        
+        .init(with: alert) { event ($0) }
     }
     
     @inlinable
@@ -73,11 +87,23 @@ extension RootViewFactory {
         _ viewModel: OpenDepositListViewModel
     ) -> OpenDepositListView {
         
-        return .init(viewModel: viewModel, getUImage: infra.getUImage)
+        return .init(viewModel: viewModel, getUImage: getUImage)
     }
 }
 
 extension OpenProductDomain.Navigation {
+    
+    var alert: AlertModel<OpenProductDomain.FlowDomain.Event, OpenProductDomain.FlowDomain.Event>? {
+        
+        guard case let .alert(message) = self else { return nil }
+        
+        return .error(message: message)
+    }
+    
+    enum Alert {
+        
+        case message(String)
+    }
     
     var bottomSheet: BottomSheet? {
         
@@ -165,5 +191,25 @@ extension OpenProductDomain.Navigation.Destination: Identifiable {
         
         case openCard(ObjectIdentifier)
         case openDeposit(ObjectIdentifier)
+    }
+}
+
+// MARK: - Alerts
+
+private extension AlertModelOf<OpenProductDomain.FlowDomain.Event> {
+    
+    static func error(
+        message: String
+    ) -> Self {
+        
+        return .init(
+            title: "Ошибка",
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .dismiss
+            )
+        )
     }
 }

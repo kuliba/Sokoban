@@ -7,6 +7,9 @@
 
 import PayHub
 import PayHubUI
+import RxViewModel
+import UtilityServicePrepaymentCore
+import UtilityServicePrepaymentDomain
 import VortexTools
 
 /// A namespace.
@@ -30,9 +33,6 @@ extension PaymentProviderPickerDomain {
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     
-    typealias FlowReducer = FlowDomain.Reducer
-    typealias FlowEffectHandler = FlowDomain.EffectHandler
-    
     typealias DetailPayment = Node<PaymentsViewModel>
     typealias Payment = ProcessSelectionResult
     typealias Provider = UtilityPaymentProvider
@@ -40,7 +40,6 @@ extension PaymentProviderPickerDomain {
     typealias ServicesFailure = ServiceCategoryFailureDomain.Binder
     
     typealias ProcessSelectionResult = InitiateAnywayPaymentDomain.Result
-    typealias OperatorServices = Vortex.OperatorServices<UtilityPaymentProvider, UtilityService>
     typealias InitiateAnywayPaymentDomain = Vortex.InitiateAnywayPaymentDomain<UtilityPaymentLastPayment, UtilityPaymentProvider, UtilityService, Node<ProviderServicePickerDomain.Binder>, Node<AnywayFlowModel>>
     
     enum Select: Equatable {
@@ -76,13 +75,9 @@ extension PaymentProviderPickerDomain {
     }
 }
 
-// MARK: - ProviderList
-
-import RxViewModel
-import UtilityServicePrepaymentCore
-import UtilityServicePrepaymentDomain
-
 extension PaymentProviderPickerDomain {
+    
+    // MARK: - ProviderList
     
     typealias ProviderList = RxViewModel<ProviderListState, ProviderListEvent, ProviderListEffect>
     

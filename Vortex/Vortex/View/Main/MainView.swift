@@ -126,7 +126,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch section {
         case let updateInfoViewModel as UpdateInfoViewModel:
-            viewFactory.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
+            viewFactory.components.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
             
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             viewFactory.components.makeMainSectionProductsView(productsSectionViewModel)
@@ -566,7 +566,6 @@ extension MainViewFactory {
                     config: .iVortex
                 )
             },
-            makeInfoViews: .default,
             makeUserAccountView: {
                 
                 return .init(
@@ -603,7 +602,8 @@ extension ProductProfileViewModel  {
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
         makeServicePaymentBinder: ServicePaymentBinder.preview,
         makeOpenNewProductButtons: { _ in [] },
-        makeOrderCardViewModel: { /*TODO:  implement preview*/ }
+        makeOrderCardViewModel: { /*TODO:  implement preview*/ },
+        makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
     )
 }
 

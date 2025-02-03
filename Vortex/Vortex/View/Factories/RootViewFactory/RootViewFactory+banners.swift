@@ -10,7 +10,7 @@ import PayHubUI
 import SwiftUI
 import UIPrimitives
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makeBannerSectionView(

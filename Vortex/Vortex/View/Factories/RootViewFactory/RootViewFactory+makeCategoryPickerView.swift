@@ -9,7 +9,7 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-extension RootViewFactory {
+extension ViewComponents {
     
     func makeCategoryPickerView(
         _ binder: CategoryPickerViewDomain.Binder
@@ -60,19 +60,19 @@ extension RootViewFactory {
         
         switch destination {
         case let .mobile(paymentsViewModel):
-            components.makePaymentsView(paymentsViewModel)
+            makePaymentsView(paymentsViewModel)
             
         case let .standard(standard):
             switch standard.model {
             case let .failure(binder):
-                components.serviceCategoryFailureView(binder: binder)
+                serviceCategoryFailureView(binder: binder)
                 
             case let .success(binder):
                 makePaymentProviderPickerView(binder: binder, dismiss: dismiss)
             }
             
         case let .taxAndStateServices(paymentsViewModel):
-            components.makePaymentsView(paymentsViewModel)
+            makePaymentsView(paymentsViewModel)
             
         case let .transport(transport):
             transportPaymentsView(transport)

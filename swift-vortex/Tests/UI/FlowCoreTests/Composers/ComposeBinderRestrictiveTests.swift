@@ -1,5 +1,5 @@
 //
-//  RxFlowBinderComposerRestrictiveTests.swift
+//  ComposeBinderRestrictiveTests.swift
 //  swift-vortex
 //
 //  Created by Igor Malyarov on 04.01.2025.
@@ -8,7 +8,7 @@
 import FlowCore
 import XCTest
 
-final class RxFlowBinderComposerRestrictiveTests: XCTestCase {
+final class ComposeBinderRestrictiveTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -23,61 +23,61 @@ final class RxFlowBinderComposerRestrictiveTests: XCTestCase {
             isLoading: true,
             navigation: makeNavigation()
         )
-        let (binder, _) = makeSUT(initialState: initialState)
+        let (sut, _) = makeSUT(initialState: initialState)
         
-        XCTAssertNoDiff(binder.flow.state, initialState)
+        XCTAssertNoDiff(sut.flow.state, initialState)
     }
     
     // MARK: - Flow to Content
     
     func test_shouldNotMessageContentOnFlowNavigation() {
         
-        let (binder, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
-        binder.flow.event(.navigation(makeNavigation()))
+        sut.flow.event(.navigation(makeNavigation()))
         
-        XCTAssertEqual(binder.content.callCount, 0)
+        XCTAssertEqual(sut.content.callCount, 0)
     }
     
     func test_shouldNotMessageContentOnSecondNavigation() {
         
-        let (binder, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
-        binder.flow.event(.navigation(makeNavigation()))
-        binder.flow.event(.navigation(makeNavigation()))
+        sut.flow.event(.navigation(makeNavigation()))
+        sut.flow.event(.navigation(makeNavigation()))
         
-        XCTAssertEqual(binder.content.callCount, 0)
+        XCTAssertEqual(sut.content.callCount, 0)
     }
     
     func test_shouldMessageContentOnDismissAfterNonNilNavigation() {
         
-        let (binder, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
-        binder.flow.event(.navigation(makeNavigation()))
-        binder.flow.event(.dismiss)
+        sut.flow.event(.navigation(makeNavigation()))
+        sut.flow.event(.dismiss)
         
-        XCTAssertEqual(binder.content.callCount, 1)
+        XCTAssertEqual(sut.content.callCount, 1)
     }
     
     func test_shouldNotMessageContentOnSecondDismissAfterNonNilNavigation() {
         
-        let (binder, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
-        binder.flow.event(.navigation(makeNavigation()))
-        binder.flow.event(.dismiss)
-        binder.flow.event(.dismiss)
+        sut.flow.event(.navigation(makeNavigation()))
+        sut.flow.event(.dismiss)
+        sut.flow.event(.dismiss)
         
-        XCTAssertEqual(binder.content.callCount, 1)
+        XCTAssertEqual(sut.content.callCount, 1)
     }
     
     func test_shouldNotMessageContentOnFlowIsLoading() {
         
-        let (binder, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
-        binder.flow.event(.isLoading(true))
-        binder.flow.event(.isLoading(false))
+        sut.flow.event(.isLoading(true))
+        sut.flow.event(.isLoading(false))
         
-        XCTAssertEqual(binder.content.callCount, 0)
+        XCTAssertEqual(sut.content.callCount, 0)
     }
     
     // MARK: - Content to Flow
@@ -85,10 +85,10 @@ final class RxFlowBinderComposerRestrictiveTests: XCTestCase {
     func test_shouldSetFlowStateIsLoadingToTrue_onContentEmittingSelect() {
         
         let select = makeSelect()
-        let (binder, _) = makeSUT()
-        let flowSpy = ValueSpy(binder.flow.$state)
+        let (sut, _) = makeSUT()
+        let flowSpy = ValueSpy(sut.flow.$state)
         
-        binder.content.emit(select)
+        sut.content.emit(select)
         
         XCTAssertNoDiff(flowSpy.values, [
             .init(isLoading: false, navigation: nil),
@@ -99,47 +99,47 @@ final class RxFlowBinderComposerRestrictiveTests: XCTestCase {
     func test_shouldMessageGetNavigationWithSelect_onContentEmittingSelect() {
         
         let select = makeSelect()
-        let (binder, getNavigation) = makeSUT()
+        let (sut, getNavigation) = makeSUT()
         
-        binder.content.emit(select)
+        sut.content.emit(select)
         
         XCTAssertNoDiff(getNavigation.payloads, [select])
     }
     
     // MARK: - Helpers
     
+    private typealias Domain = FlowDomain<Select, Navigation>
     private typealias Content = EmitterReceiver<Select, Void>
-    private typealias SUT = RxFlowBinderComposer
-    private typealias Binder = FlowCore.Binder<Content, FlowDomain<Select, Navigation>.Flow>
+    private typealias Flow = Domain.Flow
+    private typealias SUT = FlowCore.Binder<Content, Flow>
     private typealias GetNavigationSpy = Spy<Select, Navigation>
-    private typealias FlowState = FlowDomain<Select, Navigation>.State
+    private typealias FlowState = Domain.State
     
     private func makeSUT(
         initialState: FlowState = .init(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        binder: Binder,
+        sut: SUT,
         getNavigation: GetNavigationSpy
     ) {
         let getNavigation = GetNavigationSpy()
         let content = Content()
-        let sut = SUT(
+        let witnesses = content.selectWitnesses()
+        let flowComposer = FlowComposer(
+            getNavigation: { getNavigation.process($0, completion: $2) },
             scheduler: .immediate
         )
-        let binder = sut.compose(
-            initialState: initialState,
-            makeContent: { content },
-            getNavigation: { getNavigation.process($0, completion: $2) },
-            witnesses: content.selectWitnesses()
-        )
+        let flow = flowComposer.compose(initialState: initialState)
+        let sut = witnesses.composeBinder(content: content, flow: flow)
         
         trackForMemoryLeaks(getNavigation, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
+        trackForMemoryLeaks(flowComposer, file: file, line: line)
+        trackForMemoryLeaks(flow, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(binder, file: file, line: line)
         
-        return (binder, getNavigation)
+        return (sut, getNavigation)
     }
     
     private func makeFlowState(
