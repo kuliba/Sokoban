@@ -9,37 +9,27 @@ import PaymentComponents
 import PaymentCompletionUI
 import SwiftUI
 
-struct TransactionCompleteView<Content: View>: View {
+struct TransactionCompleteView: View {
     
     let state: State
     let goToMain: () -> Void
     let `repeat`: () -> Void
     let factory: Factory
-    let content: () -> Content
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 56) {
             
-            content()
+            buttons()
+                .frame(maxHeight: .infinity, alignment: .bottom)
             
-            Spacer()
-            
-            VStack(spacing: 56) {
+            VStack(spacing: 8) {
                 
-                buttons()
-                    .frame(maxHeight: .infinity, alignment: .bottom)
+                // repeatButton()
                 
-                VStack(spacing: 8) {
-                    
-                    // repeatButton()
-                    
-                    PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
-                }
+                PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
             }
         }
-        .padding(.bottom)
-        .padding(.horizontal)
     }
 }
 
@@ -132,8 +122,7 @@ struct TransactionCompleteView_Previews: PreviewProvider {
                     
                     .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0))
                 }
-            ),
-            content: { Text("Content") }
+            )
         )
     }
 }

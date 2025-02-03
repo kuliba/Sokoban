@@ -21,13 +21,14 @@ struct PaymentCompleteView: View {
     
     var body: some View {
         
-        TransactionCompleteView(
-            state: transactionCompleteState,
-            goToMain: goToMain,
-            repeat: `repeat`,
-            factory: factory,
-            content: content
-        )
+        VStack {
+            
+            paymentCompletionStatusView()
+            Spacer()
+            transactionCompleteView()
+        }
+        .padding(.bottom)
+        .padding(.horizontal)
     }
 }
 
@@ -40,9 +41,31 @@ extension PaymentCompleteView {
 
 private extension PaymentCompleteView {
     
+    func paymentCompletionStatusView() -> some View {
+        
+        PaymentCompletionStatusView(
+            state: state.paymentCompletionState,
+            makeIconView: makeIconView,
+            config: config
+        )
+    }
+    
+    func transactionCompleteView() -> some View {
+        
+        TransactionCompleteView(
+            state: state.transactionCompleteState,
+            goToMain: goToMain,
+            repeat: `repeat`,
+            factory: factory
+        )
+    }
+}
+
+private extension PaymentCompleteState {
+    
     var transactionCompleteState: TransactionCompleteState {
         
-        switch state.result {
+        switch result {
         case .failure:
             return .init(details: nil, operationDetail: nil, documentID: nil, status: .fraud)
             
@@ -66,15 +89,15 @@ private extension PaymentCompleteView {
     var paymentCompletionState: PaymentCompletion {
         
         return .init(
-            formattedAmount: state.formattedAmount,
-            merchantIcon: state.merchantIcon,
+            formattedAmount: formattedAmount,
+            merchantIcon: merchantIcon,
             status: paymentCompletionStatus
         )
     }
     
     private var paymentCompletionStatus: PaymentCompletion.Status {
         
-        switch state.result {
+        switch result {
         case let .failure(fraud):
             return .fraud(fraud.hasExpired ? .expired : .cancelled)
             
@@ -85,15 +108,6 @@ private extension PaymentCompleteView {
             case .rejected:  return .rejected
             }
         }
-    }
-    
-    private func content() -> some View {
-        
-        PaymentCompletionStatusView(
-            state: paymentCompletionState,
-            makeIconView: makeIconView,
-            config: config
-        )
     }
 }
 
@@ -130,7 +144,7 @@ struct PaymentCompleteView_Previews: PreviewProvider {
                 
                 return .init(
                     image: .init(systemName: $0 ?? "pencil.and.outline"),
-                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).delay(for: .seconds(1), scheduler: DispatchQueue.main).eraseToAnyPublisher()
                 )
             },
             config: .iVortex
