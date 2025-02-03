@@ -20,7 +20,10 @@ struct QRWrapperView: View {
             
             factory.makeQRView(binder.content.qrScanner)
             // TODO: fix alert, see MainViewModel.swift:1345
-                // .alert(state.navigation?.alert, content: alert)
+                .alert(
+                    item: state.navigation?.alert, 
+                    content: alert(failure:)
+                )
                 .navigationDestination(
                     destination: state.navigation?.destination,
                     dismiss: { event(.dismiss) },
@@ -89,8 +92,22 @@ extension QRWrapperViewFactory {
 
 private extension QRWrapperView {
     
-#warning("add alert for sberQR failure case")
-    
+    func alert(
+        failure: ServiceFailureAlert.ServiceFailure
+    ) -> Alert {
+        
+        return failure.alert(
+            connectivityErrorTitle: "Ошибка",
+            connectivityErrorMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
+            serverErrorTitle: "Ошибка",
+            event: { binder.flow.event(.select(.outside($0))) },
+            map: {
+                switch $0 {
+                case .dismissAlert: return .payments
+                }
+            }
+        )
+    }
     typealias Destination = QRScannerDomain.Navigation.Destination
     
     @ViewBuilder
@@ -180,12 +197,15 @@ private extension AnywayServicePickerFlowModel {
 
 extension QRScannerDomain.Navigation {
     
-    var alert: String? {
+    var alert: ServiceFailureAlert.ServiceFailure? {
         
-        guard case .sberQR(nil) = self
-        else { return nil }
-
-        return "Возникла техническая ошибка"
+        switch self {
+        case .sberQR(nil), .sberQRComplete(nil):
+            return .serverError("Возникла техническая ошибка")
+            
+        default:
+            return nil
+        }
     }
     
     var destination: Destination? {
