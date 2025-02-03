@@ -124,9 +124,25 @@ class AuthPinCodeViewModel: ObservableObject {
         
         model.clientInformAlertManager.alertPublisher
             .receive(on: DispatchQueue.global(qos: .background))
-            .sink { [weak self] alerts in
-                DispatchQueue.main.async {
-                    self?.clientInformAlerts = alerts
+            .combineLatest(model.sessionState, self.viewDidAppear)
+            .sink { [weak self] alerts, state, isViewDidAppear in
+                
+                guard let self else { return }
+                
+                switch state {
+                case .active:
+                    
+                    withAnimation { self.spinner = nil }
+                    
+                    if alerts != nil {
+                        
+                        DispatchQueue.main.async { self.clientInformAlerts = alerts }
+                    } else { tryAutoEvaluateSensor() }
+                    
+                default:
+                    withAnimation {
+                        self.spinner = .init()
+                    }
                 }
             }
             .store(in: &bindings)
@@ -398,7 +414,9 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                     case .sensor:
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: sensor")
-                        guard let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true else {
+                        guard let sensor = model.authAvailableBiometricSensorType, 
+                              model.authIsBiometricSensorEnabled == true,
+                              self.clientInformAlerts?.updateAlert?.actionType != .authBlocking else {
                             return
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Sensor.Evaluate.Request")
