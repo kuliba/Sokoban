@@ -132,6 +132,10 @@ private extension QRWrapperView {
         case let .sberQR(sberQRConfirm):
             factory.makeSberQRConfirmPaymentView(sberQRConfirm)
                 .accessibilityIdentifier(ElementIDs.sberQRConfirm.rawValue)
+                .navigationBarWithBack(
+                    title: "Оплата по QR-коду",
+                    dismiss: { binder.flow.event(.dismiss) }
+                )
         }
     }
 }
