@@ -75,7 +75,8 @@ extension RootViewModelFactory {
         
         createDraftApplication(payload.payload) { [createDraftApplication] in
   
-            completion($0.map(\.submitResult).mapError { .init(message: $0.localizedDescription) })
+            completion($0.map { .init(applicationID: $0.applicationID) }
+                .mapError { .init(message: $0.localizedDescription) })
             _ = createDraftApplication
         }
     }
@@ -169,7 +170,7 @@ extension CollateralLandingApplicationSaveConsentsPayload {
     var payload: RemoteServices.RequestFactory.SaveConsentsPayload {
         
         .init(
-            applicationId: applicationId,
+            applicationID: applicationID,
             verificationCode: verificationCode
         )
     }
@@ -180,7 +181,7 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
     var response: CollateralLandingApplicationSaveConsentsResult {
         
         .init(
-            applicationId: applicationId,
+            applicationID: applicationID,
             name: name,
             amount: amount,
             termMonth: termMonth,
@@ -197,8 +198,8 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
 
 extension RemoteServices.ResponseMapper.CreateDraftCollateralLoanApplicationData {
     
-    var submitResult: CollateralLandingApplicationCreateDraftResult {
+    func submitResult(_ applicationID: UInt) -> CollateralLandingApplicationCreateDraftResult {
         
-        .init(applicationId: applicationId)
+        .init(applicationID: applicationID)
     }
 }

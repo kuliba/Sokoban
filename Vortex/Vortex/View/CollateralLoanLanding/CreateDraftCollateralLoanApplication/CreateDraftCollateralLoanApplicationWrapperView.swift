@@ -82,7 +82,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         switch cover {
         case let .completed(completed):
-            Text("completed")
+            Text(completed)
         }
     }
 }

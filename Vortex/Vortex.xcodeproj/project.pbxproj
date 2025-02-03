@@ -3037,6 +3037,9 @@
 		A7B5BD6C2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */; };
 		A7B8FB412D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */; };
 		A7C41FCA2CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */; };
+		A7D8D58B2D51036E00978DB0 /* CollateralLoanLandingCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8D58A2D51036E00978DB0 /* CollateralLoanLandingCompleteView.swift */; };
+		A7D8D58D2D51095500978DB0 /* RootViewModelFactory+makeCollateralLoanLandingSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8D58C2D51095500978DB0 /* RootViewModelFactory+makeCollateralLoanLandingSuccessViewModel.swift */; };
+		A7D8D5912D510C9000978DB0 /* CollateralLoanLandingResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8D5902D510C9000978DB0 /* CollateralLoanLandingResponse.swift */; };
 		A7E3140C2D393331009811EB /* CollateralLoanLandingWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E3140B2D393331009811EB /* CollateralLoanLandingWrapperView.swift */; };
 		A7E314102D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E3140F2D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift */; };
 		A7E314122D39369B009811EB /* GetCollateralLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E314112D39369B009811EB /* GetCollateralLandingDomain.swift */; };
@@ -6648,6 +6651,9 @@
 		A7B5BD6D2CF855830094D7C6 /* CollateralLoanLandingGetCollateralLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingUI.xctestplan; sourceTree = "<group>"; };
 		A7B8FB402D15A5ED002BEB97 /* RootViewModelFactory+makeMainViewModelSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeMainViewModelSectionsTests.swift"; sourceTree = "<group>"; };
 		A7C41FC92CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetShowcaseRequest.swift"; sourceTree = "<group>"; };
+		A7D8D58A2D51036E00978DB0 /* CollateralLoanLandingCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingCompleteView.swift; sourceTree = "<group>"; };
+		A7D8D58C2D51095500978DB0 /* RootViewModelFactory+makeCollateralLoanLandingSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCollateralLoanLandingSuccessViewModel.swift"; sourceTree = "<group>"; };
+		A7D8D5902D510C9000978DB0 /* CollateralLoanLandingResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingResponse.swift; sourceTree = "<group>"; };
 		A7DBAC402CE51FB4006776D1 /* CollateralLoanLandingGetJsonAbroadUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetJsonAbroadUI.xctestplan; sourceTree = "<group>"; };
 		A7E3140B2D393331009811EB /* CollateralLoanLandingWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingWrapperView.swift; sourceTree = "<group>"; };
 		A7E3140F2D3934B3009811EB /* CreateDraftCollateralLoanApplicationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDraftCollateralLoanApplicationDomain.swift; sourceTree = "<group>"; };
@@ -14643,6 +14649,7 @@
 		7772979127C77BFF0099EF91 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				A7D8D58F2D510AB100978DB0 /* CollateralLoanLanding */,
 				83D962B22B67BDB00092C61C /* PaymentsTransfers */,
 				7772979227C77C190099EF91 /* MainViewModel.swift */,
 				830207472D394DD60038EFA4 /* BindersFactory.swift */,
@@ -16592,6 +16599,7 @@
 				A781DF982D4BC4B400C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingBinder.swift */,
 				A781DF992D4BC4B400C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift */,
 				A781DF9A2D4BC4B400C8AE13 /* RootViewModelFactory+makeCreateDraftCollateralLoanApplicationBinder.swift */,
+				A7D8D58C2D51095500978DB0 /* RootViewModelFactory+makeCollateralLoanLandingSuccessViewModel.swift */,
 			);
 			path = CollateralLoanLanding;
 			sourceTree = "<group>";
@@ -16622,9 +16630,26 @@
 			path = Flow;
 			sourceTree = "<group>";
 		};
+		A7D8D5892D51035100978DB0 /* Complete */ = {
+			isa = PBXGroup;
+			children = (
+				A7D8D58A2D51036E00978DB0 /* CollateralLoanLandingCompleteView.swift */,
+			);
+			path = Complete;
+			sourceTree = "<group>";
+		};
+		A7D8D58F2D510AB100978DB0 /* CollateralLoanLanding */ = {
+			isa = PBXGroup;
+			children = (
+				A7D8D5902D510C9000978DB0 /* CollateralLoanLandingResponse.swift */,
+			);
+			path = CollateralLoanLanding;
+			sourceTree = "<group>";
+		};
 		A7E3140D2D39348D009811EB /* CreateDraftCollateralLoanApplication */ = {
 			isa = PBXGroup;
 			children = (
+				A7D8D5892D51035100978DB0 /* Complete */,
 				A7E3140E2D393499009811EB /* Flow */,
 				A7E314172D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift */,
 			);
@@ -21105,6 +21130,7 @@
 				C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */,
 				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,
 				7798848A285C983A0023CA65 /* ProductProfileDetailCircleProgressViewComponent.swift in Sources */,
+				A7D8D5912D510C9000978DB0 /* CollateralLoanLandingResponse.swift in Sources */,
 				2A2D4D312B6E7EDC006912EE /* RequestFactory+createPrepareSetBankDefaultRequest.swift in Sources */,
 				2AD109692CBF9358007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
@@ -21619,6 +21645,7 @@
 				2AF7202F2C749B8200919CAF /* CategorySet.swift in Sources */,
 				0CC8FCA928315F3500F0E9BD /* Model+LatestPayments.swift in Sources */,
 				0B931B1826DCD62200CA8017 /* AddOperatorsList.swift in Sources */,
+				A7D8D58D2D51095500978DB0 /* RootViewModelFactory+makeCollateralLoanLandingSuccessViewModel.swift in Sources */,
 				0CF3D7122836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift in Sources */,
 				7798848E285DCB400023CA65 /* ProductProfileDetailMainBlockViewComponent.swift in Sources */,
 				2A5190362A7E10AC0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest.swift in Sources */,
@@ -22764,6 +22791,7 @@
 				68AB32C928BF9014004DC481 /* PersonAgreement.swift in Sources */,
 				83F775DE2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift in Sources */,
 				7772978727C39E2D0099EF91 /* StringValueMask.swift in Sources */,
+				A7D8D58B2D51036E00978DB0 /* CollateralLoanLandingCompleteView.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				A5ECD4C127ECB392008FBEEC /* C2BSuccessViewController.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
@@ -26136,7 +26164,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
@@ -26825,7 +26852,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27891,7 +27917,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
@@ -27929,7 +27954,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;

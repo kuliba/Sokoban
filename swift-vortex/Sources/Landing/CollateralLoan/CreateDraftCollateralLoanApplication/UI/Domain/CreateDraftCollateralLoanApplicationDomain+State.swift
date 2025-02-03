@@ -18,7 +18,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public let data: Data
 
         public var amount: TextInputState
-        public var applicationId: UInt?
+        public var applicationID: UInt?
         public var city: OptionalSelectorState<CityItem>
         public var isLoading: Bool
         public var needToDissmiss: Bool
@@ -34,7 +34,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             data: Data,
             stage: Stage = .correctParameters,
             isLoading: Bool = false,
-            applicationId: UInt? = nil,
+            applicationID: UInt? = nil,
             needToDissmiss: Bool = false,
             otp: String = "",
             checkedConsents: [String] = [],
@@ -44,7 +44,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.data = data
             self.stage = stage
             self.isLoading = isLoading
-            self.applicationId = applicationId
+            self.applicationID = applicationID
             self.needToDissmiss = needToDissmiss
             self.period = data.makePeriodSelectorState()
             self.city = data.makeCitySelectorState()
@@ -94,7 +94,8 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     public var checkButtonStatus: Bool {
         
         let isFirstStageValid = isAmountVaild
-        let isSecondStageValid = checkedConsents.count == data.consents.count && isOTPValidated
+        // TODO: Uncomment condition below!
+        let isSecondStageValid = checkedConsents.count == data.consents.count // && isOTPValidated
         
         switch stage {
         case .correctParameters:
@@ -153,12 +154,11 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         )
     }
     
-    var saveConsentspayload: CollateralLandingApplicationSaveConsentsPayload {
+    func saveConsentspayload(_ applicationID: UInt) -> CollateralLandingApplicationSaveConsentsPayload {
         
-        // TODO: Need to realize. Stub!
         .init(
-            applicationId: 123,
-            verificationCode: "123"
+            applicationID: applicationID,
+            verificationCode: otp
         )
     }
 }

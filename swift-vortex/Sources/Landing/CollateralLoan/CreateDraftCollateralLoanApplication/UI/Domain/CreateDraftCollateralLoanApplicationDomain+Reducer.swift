@@ -57,14 +57,18 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 effect = .createDraftApplication(state.createDraftApplicationPayload)
                 
             case let .applicationCreated(result):
-                state.applicationId = try? result.get().applicationId
+                state.applicationID = try? result.get().applicationID
                 state.stage = .confirm
                 state.isButtonDisabled = !state.checkButtonStatus
                 state.isLoading = false
                 
             case .tappedSubmit:
                 state.isLoading = true
-                effect = .saveConsents(state.saveConsentspayload)
+                
+                if let applicationID = state.applicationID {
+                    
+                    effect = .saveConsents(state.saveConsentspayload(applicationID))
+                }
                 
             case .tappedBack:
                 if state.stage == .confirm {

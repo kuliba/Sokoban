@@ -7,12 +7,12 @@
 
 public struct CollateralLandingApplicationSaveConsentsPayload: Equatable {
     
-    public let applicationId: UInt
+    public let applicationID: UInt
     public let verificationCode: String
     
-    public init(applicationId: UInt, verificationCode: String) {
+    public init(applicationID: UInt, verificationCode: String) {
         
-        self.applicationId = applicationId
+        self.applicationID = applicationID
         self.verificationCode = verificationCode
     }
 }

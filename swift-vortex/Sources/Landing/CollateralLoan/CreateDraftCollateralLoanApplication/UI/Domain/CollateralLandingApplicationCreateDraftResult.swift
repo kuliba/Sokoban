@@ -7,10 +7,10 @@
 
 public struct CollateralLandingApplicationCreateDraftResult: Equatable {
     
-    public let applicationId: UInt
+    public let applicationID: UInt
     
-    public init(applicationId: UInt) {
+    public init(applicationID: UInt) {
      
-        self.applicationId = applicationId
+        self.applicationID = applicationID
     }
 }
