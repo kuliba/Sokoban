@@ -47,7 +47,7 @@ extension AlertManagerSpy: AlertManager {
     }
     
     func dismissAll() {
-        
+        dismissCount += 1
     }
     
     func update(alerts: Alert) {
