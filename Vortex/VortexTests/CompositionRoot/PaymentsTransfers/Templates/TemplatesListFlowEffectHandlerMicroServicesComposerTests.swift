@@ -128,7 +128,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
     
     func test_compose_shouldCallCollaboratorWithPayload_activePaymentsTransfers_inactiveUtilitiesPayments() {
         
-        let template = makeTemplate()
+        let template = makeTemplate(paymentFlow: anyMessage())
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         
         sut.makePayment((template, {})) { _ in }
@@ -141,7 +141,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         let exp = expectation(description: "wait for completion")
         
-        sut.makePayment((makeTemplate(), {})) { result in
+        sut.makePayment((makeTemplate(paymentFlow: anyMessage()), {})) { result in
         
             switch result {
             case .failure(.connectivityError):
@@ -165,7 +165,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         let exp = expectation(description: "wait for completion")
         
-        sut.makePayment((makeTemplate(), {})) { result in
+        sut.makePayment((makeTemplate(paymentFlow: anyMessage()), {})) { result in
         
             switch result {
             case let .failure(.serverError(receivedMessage)):
@@ -189,7 +189,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         let exp = expectation(description: "wait for completion")
         
-        sut.makePayment((makeTemplate(), {})) { result in
+        sut.makePayment((makeTemplate(paymentFlow: anyMessage()), {})) { result in
         
             switch result {
             case let .success(.v1(receivedPayment)):
@@ -209,14 +209,25 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         
     // MARK: - compose active-active
     
-    func test_compose_shouldCallCollaboratorWithPayload_activePaymentsTransfers_activeUtilitiesPayments() {
+    // TODO: Add test with legacy assertion
+    func test_compose_shouldNotCallCollaborator_activePaymentsTransfers_activeUtilitiesPayments_onUnknownPaymentFlow() {
         
-        let template = makeTemplate()
+        let template = makeTemplate(paymentFlow: nil)
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         
         sut.makePayment((template, {})) { _ in }
         
-        XCTAssertEqual(spy.payloads, [template])
+        XCTAssertEqual(spy.payloads, [])
+    }
+    
+    func test_compose_shouldCallCollaboratorWithPayload_activePaymentsTransfers_activeUtilitiesPayments_onKnownPaymentFlow() {
+        
+        let template = makeTemplate(paymentFlow: anyMessage())
+        let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
+        
+        sut.makePayment((template, {})) { _ in }
+        
+        XCTAssertNoDiff(spy.payloads, [template])
     }
     
     func test_compose_shouldDeliverConnectivityError_activePaymentsTransfers_activeUtilitiesPayments() {
@@ -224,7 +235,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         let exp = expectation(description: "wait for completion")
         
-        sut.makePayment((makeTemplate(), {})) { result in
+        sut.makePayment((makeTemplate(paymentFlow: anyMessage()), {})) { result in
         
             switch result {
             case .failure(.connectivityError):
@@ -248,7 +259,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         let exp = expectation(description: "wait for completion")
         
-        sut.makePayment((makeTemplate(), {})) { result in
+        sut.makePayment((makeTemplate(paymentFlow: anyMessage()), {})) { result in
         
             switch result {
             case let .failure(.serverError(receivedMessage)):
@@ -272,7 +283,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let (sut, spy) = makeSUT(paymentsTransfersFlag: .active)
         let exp = expectation(description: "wait for completion")
         
-        sut.makePayment((makeTemplate(), {})) { result in
+        sut.makePayment((makeTemplate(paymentFlow: anyMessage()), {})) { result in
         
             switch result {
             case let .success(.v1(receivedPayment)):
@@ -348,10 +359,15 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
     
     private func makeTemplate(
         id: Int = .random(in: 1...100),
+        paymentFlow: String? = nil,
         type: PaymentTemplateData.Kind = .housingAndCommunalService
     ) -> PaymentTemplateData {
         
-        return .templateStub(paymentTemplateId: id, type: type)
+        return .templateStub(
+            paymentTemplateId: id,
+            paymentFlow: paymentFlow, 
+            type: type
+        )
     }
     
     private func makePayment(
