@@ -24,14 +24,17 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var period: OptionalSelectorState<PeriodItem>
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
-        public var otp: String = ""
+        public var otp: String
+        public var checkedConditions: [String]
 
         public init(
             data: Data,
             stage: Stage = .correctParameters,
             isLoading: Bool = false,
             applicationId: UInt? = nil,
-            needToDissmiss: Bool = false
+            needToDissmiss: Bool = false,
+            otp: String = "",
+            checkedConditions: [String] = []
         ) {
             self.data = data
             self.stage = stage
@@ -41,6 +44,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.period = data.makePeriodSelectorState()
             self.city = data.makeCitySelectorState()
             self.amount = .init(textField: .noFocus(data.formattedAmount))
+            self.otp = otp
+            self.checkedConditions = checkedConditions
         }
         
         public enum Stage {

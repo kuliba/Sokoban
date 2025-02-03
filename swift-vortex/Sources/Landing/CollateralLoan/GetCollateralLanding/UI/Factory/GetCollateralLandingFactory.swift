@@ -13,13 +13,13 @@ import CollateralLoanLandingGetShowcaseUI
 public struct GetCollateralLandingFactory {
 
     public let config: GetCollateralLandingConfig
-    public let makeImageViewWithMD5Hash: makeImageViewWithMD5Hash
-    public let makeImageViewWithURL: makeImageViewWithURL
+    public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
+    public let makeImageViewWithURL: MakeImageViewWithURL
     
     public init(
         config: GetCollateralLandingConfig = .default,
-        makeImageViewWithMD5Hash: @escaping makeImageViewWithMD5Hash,
-        makeImageViewWithURL: @escaping makeImageViewWithURL
+        makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
+        makeImageViewWithURL: @escaping MakeImageViewWithURL
     ) {
         self.config = config
         self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
@@ -30,8 +30,8 @@ public struct GetCollateralLandingFactory {
 public extension GetCollateralLandingFactory {
         
     typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
-    typealias makeImageViewWithMD5Hash = ShowcaseFactory.makeImageViewWithMD5Hash
-    typealias makeImageViewWithURL = ShowcaseFactory.makeImageViewWithURL
+    typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
+    typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
 }
 
 // MARK: Preview helpers

@@ -16,6 +16,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         
         case amount(TextInputEvent)
         case applicationCreated(CreateDraftApplicationResult)
+        case checkConsent(String)
         case city(SelectCityEvent)
         case otp(String)
         case period(SelectPeriodEvent)
@@ -24,7 +25,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case showSaveConsentsResult(SaveConsentsResult)
         case tappedBack
         case tappedContinue
-        case tappedSubmit
+        case tappedSubmit        
     }
     
     public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>

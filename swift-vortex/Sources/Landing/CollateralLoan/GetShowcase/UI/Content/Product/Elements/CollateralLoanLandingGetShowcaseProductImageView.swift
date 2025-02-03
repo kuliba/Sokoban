@@ -11,7 +11,7 @@ struct CollateralLoanLandingGetShowcaseProductImageView: View {
     
     let url: String
     let config: Config
-    let makeImageViewWithURL: Factory.makeImageViewWithURL
+    let makeImageViewWithURL: Factory.MakeImageViewWithURL
     
     var body: some View {
 

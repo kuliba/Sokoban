@@ -42,6 +42,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         CreateDraftCollateralLoanApplicationView(
             state: state,
             event: event,
+            externalEvent: handleExternalEvent(events:),
             config: .default,
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
@@ -50,6 +51,14 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         )
     }
 
+    private func handleExternalEvent(events: Domain.ExternalEvent) {
+        
+        switch events {
+        case let .showConsent(url):
+            openURL(url)
+        }
+    }
+    
     private func makeAlert(
         alert: CreateDraftCollateralLoanApplicationDomain.Navigation.Alert
     ) -> SwiftUI.Alert {
