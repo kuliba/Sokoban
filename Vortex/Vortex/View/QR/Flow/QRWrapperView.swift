@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.11.2024.
 //
 
+import PayHub
 import RxViewModel
 import SberQR
 import SwiftUI
@@ -18,23 +19,41 @@ struct QRWrapperView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            factory.makeQRView(binder.content.qrScanner)
-            // TODO: fix alert, see MainViewModel.swift:1345
-                .alert(
-                    item: state.navigation?.alert, 
-                    content: alert(failure:)
-                )
-                .navigationDestination(
-                    destination: state.navigation?.destination,
-                    dismiss: { event(.dismiss) },
-                    content: destinationContent
-                )
-                .fullScreenCover(
-                    cover: state.navigation?.fullScreenCover,
-                    content: fullScreenCoverContent
-                )
-                .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
+            ZStack {
+                
+                factory.makeQRView(binder.content.qrScanner)
+                // TODO: fix alert, see MainViewModel.swift:1345
+                    .alert(
+                        item: state.navigation?.alert,
+                        content: alert
+                    )
+                    .navigationDestination(
+                        destination: state.navigation?.destination,
+                        dismiss: { event(.dismiss) },
+                        content: destinationContent
+                    )
+                    .fullScreenCover(
+                        cover: state.navigation?.fullScreenCover,
+                        content: fullScreenCoverContent
+                    )
+                    .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
+                
+                spinnerView(isShowing: state.isLoading)
+                    .ignoresSafeArea()
+            }
         }
+    }
+}
+
+private extension QRWrapperView {
+    
+    func spinnerView(
+        isShowing: Bool
+    ) -> some View {
+        
+        SpinnerView(viewModel: .init())
+            .opacity(isShowing ? 1 : 0)
+            .animation(.easeInOut, value: isShowing)
     }
 }
 
@@ -93,21 +112,15 @@ extension QRWrapperViewFactory {
 private extension QRWrapperView {
     
     func alert(
-        failure: ServiceFailureAlert.ServiceFailure
+        backendFailure: BackendFailure
     ) -> Alert {
         
-        return failure.alert(
-            connectivityErrorTitle: "Ошибка",
-            connectivityErrorMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
-            serverErrorTitle: "Ошибка",
-            event: { binder.flow.event(.select(.outside($0))) },
-            map: {
-                switch $0 {
-                case .dismissAlert: return .payments
-                }
-            }
-        )
+        return backendFailure.alert {
+            
+            binder.flow.event(.select(.outside(.payments)))
+        }
     }
+    
     typealias Destination = QRScannerDomain.Navigation.Destination
     
     @ViewBuilder
@@ -197,11 +210,11 @@ private extension AnywayServicePickerFlowModel {
 
 extension QRScannerDomain.Navigation {
     
-    var alert: ServiceFailureAlert.ServiceFailure? {
+    var alert: BackendFailure? {
         
         switch self {
         case .sberQR(nil), .sberQRComplete(nil):
-            return .serverError("Возникла техническая ошибка")
+            return .server("Возникла техническая ошибка")
             
         default:
             return nil

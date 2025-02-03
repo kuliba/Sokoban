@@ -18,7 +18,6 @@ import PayHubUI
 import PaymentComponents
 import PDFKit
 import SavingsAccount
-import SberQR
 import SwiftUI
 import UIPrimitives
 import UIKit
