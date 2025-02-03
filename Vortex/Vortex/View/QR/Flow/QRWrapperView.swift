@@ -19,6 +19,8 @@ struct QRWrapperView: View {
         RxWrapperView(model: binder.flow) { state, event in
             
             factory.makeQRView(binder.content.qrScanner)
+            // TODO: fix alert, see MainViewModel.swift:1345
+                // .alert(state.navigation?.alert, content: alert)
                 .navigationDestination(
                     destination: state.navigation?.destination,
                     dismiss: { event(.dismiss) },
@@ -159,6 +161,14 @@ private extension AnywayServicePickerFlowModel {
 }
 
 extension QRScannerDomain.Navigation {
+    
+    var alert: String? {
+        
+        guard case .sberQR(nil) = self
+        else { return nil }
+
+        return "Возникла техническая ошибка"
+    }
     
     var destination: Destination? {
         
