@@ -9,8 +9,6 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationButtonView: View {
     
-    @SwiftUI.State private var isDisabled = false
-    
     let state: State
     let event: (Event) -> Void
     let config: Config
@@ -28,7 +26,7 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
                 .cornerRadius(config.elements.button.layouts.cornerRadius)
                 .font(config.elements.button.font.font)
         }
-        .disabled(isDisabled)
+        .disabled(state.isButtonDisabled)
         .padding(config.elements.button.layouts.paddings)
     }
         
@@ -41,7 +39,7 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
     
     private var backgroundColor: Color {
         
-        isDisabled
+        state.isButtonDisabled
             ? config.elements.button.colors.disabled
             : config.elements.button.colors.background
     }

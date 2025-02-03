@@ -5,10 +5,11 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import InputComponent
-import TextFieldDomain
-import OptionalSelectorComponent
 import Foundation
+import InputComponent
+import OptionalSelectorComponent
+import OTPInputComponent
+import TextFieldDomain
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
@@ -25,8 +26,10 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
         public var otp: String
-        public var checkedConditions: [String]
-
+        public var checkedConsents: [String]
+        public var isButtonDisabled: Bool
+        public var isOTPValidated: Bool
+        
         public init(
             data: Data,
             stage: Stage = .correctParameters,
@@ -34,7 +37,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
             applicationId: UInt? = nil,
             needToDissmiss: Bool = false,
             otp: String = "",
-            checkedConditions: [String] = []
+            checkedConsents: [String] = [],
+            isButtonDisabled: Bool = false,
+            isOTPValidated: Bool = false
         ) {
             self.data = data
             self.stage = stage
@@ -45,7 +50,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.city = data.makeCitySelectorState()
             self.amount = .init(textField: .noFocus(data.formattedAmount))
             self.otp = otp
-            self.checkedConditions = checkedConditions
+            self.checkedConsents = checkedConsents
+            self.isButtonDisabled = isButtonDisabled
+            self.isOTPValidated = isOTPValidated
         }
         
         public enum Stage {
@@ -79,14 +86,22 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         return amount
     }
     
-    public var isValid: Bool {
+    public var isAmountVaild: Bool {
+        
+        selectedAmount >= data.minAmount && selectedAmount <= data.maxAmount
+    }
+    
+    public var checkButtonStatus: Bool {
+        
+        let isFirstStageValid = isAmountVaild
+        let isSecondStageValid = checkedConsents.count == data.consents.count && isOTPValidated
         
         switch stage {
         case .correctParameters:
-            return selectedAmount >= data.minAmount && selectedAmount <= data.maxAmount
+            return isFirstStageValid
 
         case .confirm:
-            return true
+            return isFirstStageValid && isSecondStageValid
         }
     }
 }

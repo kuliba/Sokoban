@@ -5,33 +5,55 @@
 //  Created by Valentin Ozerov on 29.01.2025.
 //
 
-import SwiftUI
-import PaymentComponents
+import Combine
 import OTPInputComponent
+import PaymentComponents
+import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationOTPView: View {
-    
+
     let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
-
+    
+    private let viewModel = OTPViewModel()
+        
     var body: some View {
 
         TimedOTPInputWrapperView(
-            viewModel: .init(
-                otpText: state.otp,
-                timerDuration: config.elements.otp.timerDuration,
-                otpLength: config.elements.otp.otpLength,
-                resend: { event(.getVerificationCode) },
-                observe: { event(.otp($0)) }
-            ),
+            viewModel: makeOTPViewModel(),
             config: config.elements.otp.view,
             iconView: {
                 config.elements.otp.smsIcon
             }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
+    }
+}
+
+private extension CreateDraftCollateralLoanApplicationOTPView {
+    
+    func makeOTPViewModel() -> TimedOTPInputViewModel {
+        
+        let otpViewModel = TimedOTPInputViewModel(
+            otpText: state.otp,
+            timerDuration: config.elements.otp.timerDuration,
+            otpLength: config.elements.otp.otpLength,
+            resend: { event(.getVerificationCode) },
+            observe: { event(.otp($0)) }
+        )
+        
+        viewModel.inputViewModel = otpViewModel
+        
+        viewModel.cancellable = otpViewModel.$state
+            .sink(receiveValue: {
+                if $0.status == .validOTP {
+                    event(.otpValidated)
+                }
+        })
+        
+        return otpViewModel
     }
 }
 
@@ -60,4 +82,10 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews: PreviewProvider {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Data = CreateDraftCollateralLoanApplicationUIData
+}
+
+private final class OTPViewModel {
+    
+    var cancellable: AnyCancellable?
+    var inputViewModel: TimedOTPInputViewModel?
 }

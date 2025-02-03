@@ -32,7 +32,7 @@ struct CreateDraftCollateralLoanApplicationConsentsView: View {
             Button(
                 action: { event(.checkConsent(consent.name)) },
                 label: {
-                    state.checkedConditions.contains(consent.name)
+                    state.checkedConsents.contains(consent.name)
                         ? config.elements.consent.images.checkOn
                         : config.elements.consent.images.checkOff
                 })
@@ -44,6 +44,7 @@ struct CreateDraftCollateralLoanApplicationConsentsView: View {
                 urlString: consent.link,
                 handleURL: { url in externalEvent(.showConsent(url)) }
             )
+            .font(config.fonts.title.textFont)
             .frame(maxWidth: .infinity, alignment: .leading)
             .minimumScaleFactor(0.9)
         }

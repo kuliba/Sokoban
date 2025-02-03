@@ -19,6 +19,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case checkConsent(String)
         case city(SelectCityEvent)
         case otp(String)
+        case otpValidated
         case period(SelectPeriodEvent)
         case getVerificationCode
         case gettedVerificationCode(GetVerificationCodeResult)

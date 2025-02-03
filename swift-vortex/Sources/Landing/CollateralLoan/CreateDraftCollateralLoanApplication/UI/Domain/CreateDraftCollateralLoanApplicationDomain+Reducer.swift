@@ -37,6 +37,14 @@ extension CreateDraftCollateralLoanApplicationDomain {
             switch event {
             case let .amount(amountEvent):
                 state.amount = amountReduce(state.amount, amountEvent)
+                if state.isAmountVaild {
+                    
+                    state.amount.message = .hint(state.data.hintText)
+                } else {
+
+                    state.amount.message = .warning("Некорректная сумма")
+                }
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
@@ -51,6 +59,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case let .applicationCreated(result):
                 state.applicationId = try? result.get().applicationId
                 state.stage = .confirm
+                state.isButtonDisabled = !state.checkButtonStatus
                 state.isLoading = false
                 
             case .tappedSubmit:
@@ -68,21 +77,24 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.saveConsentsResult = result     
                 
             case let .otp(otp):
-                // TODO: clean up otp
                 state.otp = otp
                 
             case .getVerificationCode:
                 effect = .getVerificationCode
                 
-            case let .gettedVerificationCode(result):
+            case .gettedVerificationCode:
                 break
                 
             case let .checkConsent(consentName):
-                if state.checkedConditions.contains(consentName) {
-                    state.checkedConditions.removeAll { $0 == consentName }
+                if state.checkedConsents.contains(consentName) {
+                    state.checkedConsents.removeAll { $0 == consentName }
                 } else {
-                    state.checkedConditions.append(consentName)
+                    state.checkedConsents.append(consentName)
                 }
+                state.isButtonDisabled = !state.checkButtonStatus
+                
+            case .otpValidated:
+                state.isOTPValidated = true
             }
             
             return (state, effect)
