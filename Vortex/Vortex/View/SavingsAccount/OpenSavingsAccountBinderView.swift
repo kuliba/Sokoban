@@ -59,16 +59,26 @@ struct OpenSavingsAccountBinderView: View {
                 )
                 .navigationDestination(
                     destination: flowState.navigation?.destination,
-                    content: makeOpenSavingsAccountView
+                    content: makeDestinationView
                 )
-                .safeAreaInset(edge: .bottom, spacing: 8) {
+               /* .safeAreaInset(edge: .bottom, spacing: 8) {
                     if contentState.status.needContinueButton {
                         continueButton({ flowEvent(.select(.openSavingsAccount)) })
                     }
-                }
+                }*/
             }
         }
     }
+    
+    @inlinable
+    @ViewBuilder
+    func makeDestinationView(
+        destination: SavingsAccountDomain.Navigation.Destination
+    ) -> some View {
+        
+        EmptyView()
+    }
+
     
     private func informerView(
         _ informerData: InformerData
