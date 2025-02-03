@@ -664,7 +664,7 @@ extension PaymentsTransfersPersonalDomain.Binder {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
-        let transferPicker = content.transfers.hasDestination
+        let transferPicker = content.transfers.hasDestination.handleEvents(receiveOutput: { print("transferPicker.hasDestination", $0) })
         let flowHasDestination = Just(false)
         
         return Publishers.Merge4(

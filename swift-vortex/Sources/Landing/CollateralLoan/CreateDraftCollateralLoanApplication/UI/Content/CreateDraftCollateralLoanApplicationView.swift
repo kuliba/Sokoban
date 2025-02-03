@@ -9,14 +9,14 @@ import SwiftUI
 
 public struct CreateDraftCollateralLoanApplicationView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let externalEvent: (Domain.ExternalEvent) -> Void
     let config: Config
     let factory: Factory
     
     public init(
-        state: DomainState,
+        state: State,
         event: @escaping (Event) -> Void,
         externalEvent: @escaping (Domain.ExternalEvent) -> Void,
         config: Config,
@@ -201,8 +201,7 @@ extension View {
 
 extension CreateDraftCollateralLoanApplicationView {
     
-    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias DomainState = Domain.State
+    public typealias State = CreateDraftCollateralLoanApplicationDomain.State
     public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     public typealias Config = CreateDraftCollateralLoanApplicationConfig
     public typealias Factory = CreateDraftCollateralLoanApplicationFactory

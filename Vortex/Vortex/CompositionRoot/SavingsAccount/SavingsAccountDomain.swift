@@ -20,24 +20,27 @@ extension SavingsAccountDomain {
     typealias InformerPayload = InformerData
     typealias Landing = RemoteServices.ResponseMapper.GetSavingLandingResponse
     typealias LandingItem = RemoteServices.ResponseMapper.GetSavingLandingData
-    
+    typealias OpenAccountLanding = RemoteServices.ResponseMapper.GetOpenAccountFormResponse
+    typealias OpenAccountLandingItem = RemoteServices.ResponseMapper.GetOpenAccountFormData
+
     enum Select: Equatable {
         
         case goToMain
-        case order
+        case openSavingsAccount
+        case failure(FlowFailureKind)
+    }
+
+    enum FlowFailureKind: Equatable {
+        
+        case timeout(InformerPayload)
+        case error(String)
     }
 
     enum Navigation {
         
         case main
-        case order
+        case openSavingsAccount
         case failure(FlowFailureKind)
-        
-        enum FlowFailureKind {
-            
-            case timeout(InformerPayload)
-            case error(String)
-        }
     }
     
     // MARK: - Binder
@@ -69,10 +72,11 @@ extension SavingsAccountDomain {
     typealias ContentMicroService = SavingsAccount.ContentEffectHandlerMicroServices<Landing, InformerPayload>
     
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
-    typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountWrapperView, Landing, InformerPayload>
+    typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountView, Landing, InformerPayload>
     typealias ContentWrapperView = RxWrapperView<ContentView, ContentState, ContentEvent, ContentEffect>
-    
     typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView, InformerView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
     
-    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountWrapperView>
+    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView>
+    
+    typealias Config = SavingsAccountConfig
 }

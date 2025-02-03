@@ -12,14 +12,14 @@ struct GetCollateralLandingDocumentView: View {
     
     let document: Document
     let config: Config.Documents.List
-    let makeImageViewByMD5Hash: Factory.MakeImageViewByMD5Hash
+    let makeImageViewWithMD5Hash: Factory.makeImageViewWithMD5Hash
 
     var body: some View {
         
         HStack(spacing: 0) {
             
             document.icon.map {
-                makeImageViewByMD5Hash($0)
+                makeImageViewWithMD5Hash($0)
                     .frame(width: 20, height: 20)
                     .padding(.trailing, config.layouts.iconTrailingPadding)
             }
@@ -52,7 +52,7 @@ struct GetCollateralLandingDocumentView_Previews: PreviewProvider {
         GetCollateralLandingDocumentView(
             document: Product.carStub.documents.first!,
             config: Config.Documents.default.list,
-            makeImageViewByMD5Hash: Factory.preview.makeImageViewByMD5Hash
+            makeImageViewWithMD5Hash: Factory.preview.makeImageViewWithMD5Hash
         )
         .padding(.top, 300)
         .padding(.horizontal, 16)

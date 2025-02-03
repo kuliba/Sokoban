@@ -124,7 +124,44 @@ private extension ProductStatementData {
     
     static let sample: Self = .init(
 
-        type: .inside, accountID: 10000872827, operationType: .debit, paymentDetailType: .c2b, amount: 10, documentAmount: 10, comment: "Перевод C2B СБП получателю ООО \"АГРОТОРГ\".", documentID: 20017126099, accountNumber: "30302810900060000006", currencyCodeNumeric: 810, merchantName: "34T4 Пятерочка", merchantNameRus: "34T4 Пятерочка", groupName: "Оплата по QR-коду", md5hash: "d46cb4ded97c143291ea3fab225b0e2f", svgImage: nil, fastPayment: .init(opkcid: "A3359170018807390000040011150101", foreignName: "ООО \"АГРОТОРГ\"", foreignPhoneNumber: "                                                  ", foreignBankBIC: "044525593", foreignBankID: "10000000818", foreignBankName: "АО \"АЛЬФА-БАНК\"", documentComment: "", operTypeFP: "CBPH", tradeName: "34T4 Пятерочка", guid: "640949825"), terminalCode: "", deviceCode: "", country: "", city: "", operationId: "a1cc1739-68cf-465e-b606-119f6dea3940", isCancellation: false, cardTranNumber: "4656260144403580", opCode: 1, date: Date(timeIntervalSince1970: 978307200), tranDate: nil, MCC: 0
+        type: .inside,
+        accountID: 10000872827,
+        operationType: .debit,
+        paymentDetailType: "C2B_PAYMENT",
+        amount: 10,
+        documentAmount: 10,
+        comment: "Перевод C2B СБП получателю ООО \"АГРОТОРГ\".",
+        documentID: 20017126099,
+        accountNumber: "30302810900060000006",
+        currencyCodeNumeric: 810,
+        merchantName: "34T4 Пятерочка",
+        merchantNameRus: "34T4 Пятерочка",
+        groupName: "Оплата по QR-коду",
+        md5hash: "d46cb4ded97c143291ea3fab225b0e2f",
+        svgImage: nil,
+        fastPayment: .init(
+            opkcid: "A3359170018807390000040011150101",
+            foreignName: "ООО \"АГРОТОРГ\"",
+            foreignPhoneNumber: "                                                  ",
+            foreignBankBIC: "044525593",
+            foreignBankID: "10000000818",
+            foreignBankName: "АО \"АЛЬФА-БАНК\"",
+            documentComment: "",
+            operTypeFP: "CBPH",
+            tradeName: "34T4 Пятерочка",
+            guid: "640949825"
+        ),
+        terminalCode: "",
+        deviceCode: "",
+        country: "",
+        city: "",
+        operationId: "a1cc1739-68cf-465e-b606-119f6dea3940",
+        isCancellation: false,
+        cardTranNumber: "4656260144403580",
+        opCode: 1,
+        date: Date(timeIntervalSince1970: 978307200),
+        tranDate: nil,
+        MCC: 0
     )
 }
 

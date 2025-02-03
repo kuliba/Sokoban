@@ -37,6 +37,7 @@ struct RootViewFactory {
         
         let imageCache: ImageCache
         let generalImageCache: ImageCache
+        let getUImage: (Md5hash) -> UIImage?
     }
     
     // TODO: add init, make `infra` private
@@ -83,10 +84,16 @@ extension RootViewFactory {
     }
     
     func makePaymentProviderPickerView(
-        _ binder: PaymentProviderPickerDomain.Binder
+        binder: PaymentProviderPickerDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> PaymentProviderPickerView {
         
-        return .init(binder: binder, components: components, makeIconView: makeIconView)
+        return .init(
+            binder: binder,
+            dismiss: dismiss,
+            components: components,
+            makeIconView: makeIconView
+        )
     }
 }
 

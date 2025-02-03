@@ -13,6 +13,7 @@ extension SavingsAccountConfig {
     
     static let iVortex: Self = .init(
         backImage: .ic24ChevronLeft,
+        bannerHeight: 703,
         chevronDownImage: .ic24ChevronDown,
         cornerRadius: 16,
         continueButton: .init(
@@ -30,9 +31,6 @@ extension SavingsAccountConfig {
                 title: .init(textFont: .textH4M16240(), textColor: .textSecondary),
                 subtitle: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)),
             title: .init(textFont: .textH3M18240(), textColor: .textSecondary)),
-        navTitle: .init(
-            title: .init(textFont: .textH3M18240(), textColor: .textSecondary),
-            subtitle: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder)),
         offsetForDisplayHeader: 100,
         paddings: .init(
             negativeBottomPadding: 60,

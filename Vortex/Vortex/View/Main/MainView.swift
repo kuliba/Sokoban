@@ -22,6 +22,7 @@ import SwiftUI
 import UIPrimitives
 import VortexTools
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import SavingsAccount
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -271,8 +272,8 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .collateralLoanLanding(binder):
             let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageViewByMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
-                makeImageViewByURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
+                makeImageViewWithMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
+                makeImageViewWithURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
             CollateralLoanShowcaseWrapperView(binder: binder, factory: factory)
@@ -285,15 +286,13 @@ struct MainView<NavigationOperationView: View>: View {
         case .orderCard:
             viewFactory.components.makeOrderCardView()
             
-        case let .savingsAccount(binder):
-            viewFactory.components.makeSavingsAccountView(binder)
-                .onAppear { binder.content.event(.load) }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarBackButtonHidden()
-                .navigationViewStyle(StackNavigationViewStyle())
+        case let .savingsAccount(node):
+            viewFactory.components.makeSavingsAccountView(node.model)
+                .onFirstAppear { node.model.content.event(.load) }
+                .navigationBarHidden(true)
         }
     }
-    
+
     @ViewBuilder
     private func sheetView(
         _ sheet: MainViewModel.Sheet

@@ -13,6 +13,12 @@ extension RootViewModelFactory {
     typealias MakeProductProfileByID = (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel?
     
     @inlinable
+    func hasCorporateCardsOnly() -> Bool {
+        
+        model.products.value.isEmpty && model.onlyCorporateCards
+    }
+    
+    @inlinable
     func getRootNavigation(
         makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
@@ -34,10 +40,18 @@ extension RootViewModelFactory {
             }
             
         case .scanQR:
-            makeScanQR()
+            if hasCorporateCardsOnly() {
+                completion(.outside(.tab(.main)))
+            } else {
+                makeScanQR()
+            }
             
         case .templates:
-            makeTemplatesNode()
+            if hasCorporateCardsOnly() {
+                completion(.outside(.tab(.main)))
+            } else {
+                makeTemplatesNode()
+            }
             
         case .userAccount:
             makeUserAccount()

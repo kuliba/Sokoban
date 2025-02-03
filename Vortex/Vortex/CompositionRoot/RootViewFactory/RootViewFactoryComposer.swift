@@ -21,9 +21,11 @@ import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
+import UIKit
 
 final class RootViewFactoryComposer {
     
+    private let infra: RootViewFactory.Infra
     private let model: Model
     private let httpClient: HTTPClient
     private let savingsAccountFlag: SavingsAccountFlag
@@ -35,6 +37,13 @@ final class RootViewFactoryComposer {
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
+
+        let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
+        self.infra = .init(
+            imageCache: model.imageCache(),
+            generalImageCache: model.generalImageCache(),
+            getUImage: { model.images.value[$0]?.uiImage }
+        )
         self.model = model
         self.httpClient = httpClient
         self.savingsAccountFlag = savingsAccountFlag
@@ -44,16 +53,74 @@ final class RootViewFactoryComposer {
 
 extension RootViewFactoryComposer {
     
+    typealias IconView = UIPrimitives.AsyncImage
+    
+    var makeGeneralIconView: MakeIconView {
+        
+        infra.generalImageCache.makeIconView(for:)
+    }
+    
+    func makeGeneralIconView(
+        forMD5Hash md5Hash: String
+    ) -> IconView {
+        
+        return infra.generalImageCache.makeIconView(for: md5Hash)
+    }
+
+    var makeIconView: MakeIconView {
+        
+        infra.imageCache.makeIconView(for:)
+    }
+    
+    func makeIconView(
+        forMD5Hash md5Hash: String?
+    ) -> IconView? {
+        
+        return md5Hash.map { makeIconView(forMD5Hash: $0) }
+    }
+    
+    func makeIconView(
+        forMD5Hash md5Hash: String
+    ) -> IconView {
+        
+        return makeIconView(.md5Hash(.init(md5Hash)))
+    }
+    
+    func makeIconView(
+        _ icon: AnywayElement.UIComponent.Icon?
+    ) -> IconView {
+        
+        switch icon {
+        case .none:
+            return makeIconView(forMD5Hash: "placeholder")
+            
+        case let .md5Hash(md5Hash):
+            return makeIconView(forMD5Hash: md5Hash)
+            
+        case let .svg(svg):
+            return .init(
+                image: .init(svg: svg) ?? .init("placeholder"),
+                publisher: Empty().eraseToAnyPublisher()
+            )
+            
+        case let .withFallback(md5Hash: md5Hash, svg: _):
+            return makeIconView(forMD5Hash: md5Hash)
+        }
+    }
+    
+    func getUImage(
+        _ key: String
+    ) -> UIImage? {
+        model.images.value[key]?.uiImage
+    }
+}
+
+extension RootViewFactoryComposer {
+    
     func compose() -> Factory {
-        
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-        
+                
         return .init(
-            infra: .init(
-                imageCache: imageCache,
-                generalImageCache: generalImageCache
-            ),
+            infra: infra,
             clearCache: clearCache,
             isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -115,9 +182,11 @@ extension RootViewFactoryComposer {
     
     func makeImageViewFactory(
     ) -> SavingsAccount.ImageViewFactory {
+        
         .init(
-            makeIconView: model.imageCache().makeIconView(for:),
-            makeBannerImageView: model.generalImageCache().makeIconView(for:))
+            makeIconView: makeIconView,
+            makeBannerImageView: makeGeneralIconView
+        )
     }
 }
 
@@ -132,17 +201,12 @@ private extension RootViewFactoryComposer {
         viewModel: PaymentsTransfersViewModel
     ) -> PaymentsTransfersView {
         
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-        
-        let getUImage = { self.model.images.value[$0]?.uiImage }
-        
         return .init(
             viewModel: viewModel,
             viewFactory: .init(
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-                makeIconView: imageCache.makeIconView(for:),
-                makeGeneralIconView: generalImageCache.makeIconView(for:),
+                makeIconView: makeIconView,
+                makeGeneralIconView: makeGeneralIconView,
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
@@ -309,7 +373,7 @@ private extension RootViewFactoryComposer {
     func makePromoView(
         _ viewModel: AdditionalProductViewModel
     ) -> AdditionalProductView {
-        .init(viewModel: viewModel, makeIconView: makeIconView(for:))
+        .init(viewModel: viewModel, makeIconView: makeIconView)
     }
     
     func makeMainSectionCurrencyMetalView(
@@ -331,7 +395,7 @@ private extension RootViewFactoryComposer {
         .init(
             model: node.model,
             makeAnywayFlowView: makeAnywayFlowView,
-            makeIconView: { self.makeIconView($0.map { .svg($0) }) },
+            makeIconView: { self.makeIconView($0.map { .md5Hash($0) }) },
             viewFactory: makeTemplatesListFlowViewFactory()
         )
     }
@@ -602,7 +666,7 @@ private extension RootViewFactoryComposer {
         .init(
             viewModel: viewModel,
             config: .default,
-            getUImage: { self.model.images.value[$0]?.uiImage },
+            getUImage: getUImage,
             viewFactory: makeControlPanelWrapperViewFactory())
     }
     
@@ -624,9 +688,11 @@ private extension RootViewFactoryComposer {
     
     func makeSavingsAccountView(
         binder: SavingsAccountDomain.Binder
-    ) -> SavingsAccountDomain.WrapperView? {
-        
-        makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
+    ) -> SavingsAccountBinderView? {
+                            
+        guard savingsAccountFlag.isActive else { return nil }
+            
+        return makeSavingsAccountBinderView(binder: binder)
     }
     
     func makePaymentsSuccessView(
@@ -641,8 +707,6 @@ private extension RootViewFactoryComposer {
     func makeProductProfileView(
         viewModel: ProductProfileViewModel
     ) -> ProductProfileView {
-        
-        let getUImage = { self.model.images.value[$0]?.uiImage }
         
         return .init(
             viewModel: viewModel,
@@ -677,13 +741,10 @@ private extension RootViewFactoryComposer {
     
     func makePaymentsTransfersViewFactory() -> PaymentsTransfersViewFactory {
         
-        let imageCache = model.imageCache()
-        let generalImageCache = model.generalImageCache()
-        
         return .init(
             makeAnywayPaymentFactory: makeAnywayPaymentFactory(event:),
-            makeIconView: imageCache.makeIconView(for:),
-            makeGeneralIconView: generalImageCache.makeIconView(for:),
+            makeIconView: makeIconView,
+            makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
             makeInfoViews: .default,
@@ -702,27 +763,32 @@ private extension RootViewFactoryComposer {
     func makeComposedSegmentedPaymentProviderPickerFlowView(
         flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
-            iconView: model.imageCache().makeIconView(for:),
             viewFactory: makeComposedSegmentedPaymentProviderPickerFlowViewFactory()
         )
     }
     
-    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory() -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
-        .init(
-            makePaymentsView: makePaymentsView,
-            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView)
+    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory(
+    ) -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+        
+        return .init(
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+            makeIconView: makeIconView,
+            makePaymentsView: makePaymentsView
+        )
     }
     
     func makeAnywayServicePickerFlowView(
         flowModel: AnywayServicePickerFlowModel
     ) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>> {
-        .init(
+        
+        return .init(
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: makeAnywayFlowView,
-                makeIconView: model.imageCache().makeIconView(for:),
+                makeIconView: makeIconView,
                 makePaymentsView: makePaymentsView
             )
         )
@@ -767,45 +833,7 @@ private extension RootViewFactoryComposer {
         
         model.currencyOf(product: product) ?? ""
     }
-    
-    typealias IconView = UIPrimitives.AsyncImage
-    
-    private func makeIconView(
-        _  icon: AnywayElement.UIComponent.Icon?
-    ) -> IconView {
         
-        switch icon {
-        case .none:
-            return makeIconView("placeholder")
-            
-        case let .md5Hash(md5Hash):
-            return makeIconView(md5Hash)
-            
-        case let .svg(svg):
-            return .init(
-                image: .init(svg: svg) ?? .init("placeholder"),
-                publisher: Empty().eraseToAnyPublisher()
-            )
-            
-        case let .withFallback(md5Hash: md5Hash, svg: _):
-            return makeIconView(md5Hash)
-        }
-    }
-    
-    private func makeIconView(
-        _ icon: String
-    ) -> IconView {
-        
-        return makeIconView(for: .md5Hash(.init(icon)))
-    }
-    
-    private func makeIconView(
-        for icon: IconDomain.Icon?
-    ) -> IconView {
-        
-        return model.imageCache().makeIconView(for: icon)
-    }
-    
     func makePaymentCompleteView(
         result: Completed,
         goToMain: @escaping () -> Void

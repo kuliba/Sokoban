@@ -10,14 +10,14 @@ import SwiftUI
 struct IconLabel<IconView: View>: View {
     
     let text: String
-    let makeIconView: () -> IconView
+    let image: Image
     let iconColor: Color
     
     var body: some View {
 
         HStack(alignment: .top, spacing: 16) {
             
-            makeIconView()
+            image
                 .foregroundColor(iconColor)
                 .frame(width: 24, height: 24)
             

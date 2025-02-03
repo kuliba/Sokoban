@@ -12,7 +12,7 @@ import UIPrimitives
 
 struct CreateDraftCollateralLoanApplicationPeriodView: View {
     
-    let state: DomainState
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
@@ -34,17 +34,15 @@ struct CreateDraftCollateralLoanApplicationPeriodView: View {
             state: state.period,
             event: { event(.period($0)) },
             factory: .init(
-                makeIconView: { factory.makeImageViewByMD5hash(state.data.icons.term) },
+                makeIconView: { factory.makeImageViewWithMD5Hash(state.data.icons.term) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
-                    makeIconView: {
-                        
-                        Image(
-                            systemName: isItemSelected(item)
-                                          ? config.icons.selectedItem
-                                          : config.icons.unselectedItem)
-                    },
-                    iconColor: isItemSelected(item) ? .red : .secondary
+                    image: isItemSelected(item)
+                        ? config.icons.selectedItem
+                        : config.icons.unselectedItem,
+                    iconColor: isItemSelected(item)
+                        ? config.colors.selected
+                        : config.colors.unselected
                 ) },
                 makeSelectedItemLabel: { SelectedOptionView(optionTitle: $0.title) },
                 makeToggleLabel: { state in
@@ -60,13 +58,13 @@ struct CreateDraftCollateralLoanApplicationPeriodView: View {
         
         InfoView(
             info: .init(
-                id: .other(DomainState.FieldID.period.id),
+                id: .other(State.FieldID.period.id),
                 title: config.elements.period.title,
                 value: state.data.selectedPeriodTitle,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewByMD5hash(state.data.icons.term) }
+            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.term) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -84,7 +82,7 @@ extension CreateDraftCollateralLoanApplicationPeriodView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias DomainState = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     typealias IconView = UIPrimitives.AsyncImage
     typealias PeriodItem = CreateDraftCollateralLoanApplicationDomain.PeriodItem

@@ -58,7 +58,7 @@ public struct GetCollateralLandingView: View {
         
         VStack {
             
-            factory.makeImageViewByURL(product.marketing.image)
+            factory.makeImageViewWithURL(product.marketing.image)
                 .frame(height: factory.config.backgroundImageHeight)
             
             Spacer()
@@ -79,7 +79,7 @@ public struct GetCollateralLandingView: View {
                 ConditionsView(
                     product: product,
                     config: factory.config,
-                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
                 )
             }
             
@@ -101,7 +101,7 @@ public struct GetCollateralLandingView: View {
                 DocumentsView(
                     product: product,
                     config: factory.config,
-                    makeImageViewByMD5Hash: factory.makeImageViewByMD5Hash
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
                 )
             }
             

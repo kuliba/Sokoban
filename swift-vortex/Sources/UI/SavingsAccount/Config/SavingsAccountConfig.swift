@@ -12,27 +12,27 @@ import DropDownTextListComponent
 public struct SavingsAccountConfig {
     
     let backImage: Image
+    let bannerHeight: CGFloat
     let chevronDownImage: Image
     let cornerRadius: CGFloat
-    let continueButton: ContinueButton
+    public let continueButton: ContinueButton
     let divider: Color
     let icon: Icon
     let list: List
-    let navTitle: TitleWithSubtitle
     let offsetForDisplayHeader: CGFloat
     let paddings: Paddings
     let spacing: CGFloat
     let questionHeight: CGFloat
     
-    public init(backImage: Image, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, navTitle: TitleWithSubtitle, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
+    public init(backImage: Image, bannerHeight: CGFloat, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
         self.backImage = backImage
+        self.bannerHeight = bannerHeight
         self.chevronDownImage = chevronDownImage
         self.cornerRadius = cornerRadius
         self.continueButton = continueButton
         self.divider = divider
         self.icon = icon
         self.list = list
-        self.navTitle = navTitle
         self.offsetForDisplayHeader = offsetForDisplayHeader
         self.paddings = paddings
         self.spacing = spacing
@@ -40,11 +40,11 @@ public struct SavingsAccountConfig {
     }
        
     public struct ContinueButton {
-        let background: Color
-        let cornerRadius: CGFloat
-        let height: CGFloat
-        let label: String
-        let title: TextConfig
+        public let background: Color
+        public let cornerRadius: CGFloat
+        public let height: CGFloat
+        public let label: String
+        public let title: TextConfig
         
         public init(background: Color, cornerRadius: CGFloat, height: CGFloat, label: String, title: TextConfig) {
             self.background = background
@@ -87,6 +87,16 @@ public struct SavingsAccountConfig {
         }
     }
     
+    public struct NavTitleWithSubtitle {
+        let title: TitleConfig
+        let subtitle: TitleConfig
+        
+        public init(title: TitleConfig, subtitle: TitleConfig) {
+            self.title = title
+            self.subtitle = subtitle
+        }
+    }
+
     public struct TitleWithSubtitle {
         let title: TextConfig
         let subtitle: TextConfig

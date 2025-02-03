@@ -32,15 +32,25 @@ where OperationPickerView: View,
     
     public var body: some View {
         
-        VStack(spacing: 0) {
+        VStack(spacing: 8) {
             
             content.search.map(factory.makeSearchView)
             
-            factory.makeOperationPickerView(content.operationPicker)
-                .frame(height: isSearchActive ? 0.01 : nil, alignment: .bottom)
-                .opacity(isSearchActive ? 0 : 1)
-            
-            factory.makeProviderList(content.providerList)
+            List {
+                
+                if !isSearchActive {
+                    
+                    factory.makeOperationPickerView(content.operationPicker)
+                        .transition(.opacity.combined(with: .slide))
+                        .opacity(isSearchActive ? 0 : 1)
+                        .frame(height: isSearchActive ? 0.01 : nil, alignment: .bottom)
+                        .plainListRow()
+                }
+                
+                factory.makeProviderList(content.providerList)
+            }
+            .listRowSpacing(13)
+            .listStyle(.plain)
         }
         .onReceive(isSearchActivePublisher) { isSearchActive = $0 }
         .animation(.bouncy, value: isSearchActive)

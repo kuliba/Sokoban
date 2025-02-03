@@ -56,6 +56,6 @@ extension UIPrimitives.AsyncImage {
 extension Image {
     
     static var smsImage: Image {
-        Image(imageData: .named("ic24SmsCode"))
+        Image("ic24SmsCode")
     }
 }

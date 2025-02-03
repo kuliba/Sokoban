@@ -10,7 +10,7 @@ import CalendarUI
 
 typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
 typealias MakeModelAuthLoginViewModelFactory = (Model, RootViewModel.RootActions) -> ModelAuthLoginViewModelFactory
-typealias MakePromoProductViewModel = (StickerBannersMyProductList, PromoProductActions) -> AdditionalProductViewModel?
+typealias MakePromoProductViewModel = (PromoItem, PromoProductActions) -> AdditionalProductViewModel?
 
 struct PromoProductActions {
     

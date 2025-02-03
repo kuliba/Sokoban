@@ -16,6 +16,7 @@ public struct SavingsAccountState: Equatable {
     let questions: Questions
     let subtitle: String?
     let title: String
+    public var needShowHeader: Bool = false
     
     public init(
         advantages: Items,

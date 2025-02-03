@@ -12,6 +12,7 @@ extension SavingsAccountConfig {
     
     static let preview: Self = .init(
         backImage: Image(systemName: "chevron.backward"),
+        bannerHeight: 703,
         chevronDownImage: Image(systemName: "chevron.down"),
         cornerRadius: 16,
         continueButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Продолжить", title: .init(textFont: .body, textColor: .white)),
@@ -23,9 +24,6 @@ extension SavingsAccountConfig {
                 title: .init(textFont: .footnote, textColor: .black),
                 subtitle: .init(textFont: .footnote, textColor: .gray)),
             title: .init(textFont: .title3, textColor: .green)),
-        navTitle: .init(
-            title: .init(textFont: .body, textColor: .black),
-            subtitle: .init(textFont: .callout, textColor: .gray)),
         offsetForDisplayHeader: 100,
         paddings: .init(
             negativeBottomPadding: 60,

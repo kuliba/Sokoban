@@ -23,6 +23,6 @@ extension SavingsAccountDomain {
     typealias LoadLandingCompletion = (Result<Landing, ContentError>) -> Void
     typealias LoadLanding = (LandingType, @escaping LoadLandingCompletion) -> Void
     
-    typealias OrderAccountCompletion = (Destination) -> Void
+    typealias OrderAccountCompletion = (Result<OpenAccountLanding, ContentError>) -> Void
     typealias OrderAccount = (@escaping OrderAccountCompletion) -> Void
 }

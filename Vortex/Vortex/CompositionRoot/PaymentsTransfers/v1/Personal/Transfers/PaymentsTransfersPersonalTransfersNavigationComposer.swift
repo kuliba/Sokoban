@@ -24,7 +24,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         _ select: Domain.Select,
         notify: @escaping Notify
-    ) -> Domain.NavigationResult {
+    ) -> Domain.Navigation {
         
         switch select {
         case let .alert(message):
@@ -36,15 +36,15 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .contactAbroad(source):
             // handleContactAbroad
             // PaymentsTransfersViewModel.swift:1359
-            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            return .success(.payments(nanoServices.makeSource(source, notify)))
             
         case let .contacts(source):
-            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            return .success(.payments(nanoServices.makeSource(source, notify)))
             
         case let .countries(source):
             // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
             // PaymentsTransfersViewModel.swift:1528
-            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            return .success(.payments(nanoServices.makeSource(source, notify)))
             
         case let .latest(latest):
             return .makeLatest(nanoServices.makeLatest(latest, notify))
@@ -65,7 +65,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         for buttonType: Domain.ButtonType,
         using notify: @escaping Notify
-    ) -> Domain.NavigationResult {
+    ) -> Domain.Navigation {
         
         switch buttonType {
         case .abroad:
@@ -86,10 +86,10 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     }
 }
 
-private extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+private extension PaymentsTransfersPersonalTransfersDomain.Navigation {
     
     static func makeLatest(
-        _ node: Node<ClosePaymentsViewModelWrapper>?
+        _ node: Node<PaymentsViewModel>?
     ) -> Self {
         
         node.map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
