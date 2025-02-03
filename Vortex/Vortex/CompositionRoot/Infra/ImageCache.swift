@@ -39,6 +39,8 @@ final class ImageCache {
         self.imagesPublisher = imagesPublisher
         self.fallback = fallback
         self.scheduler = scheduler
+        
+        print("ImageCache init", ObjectIdentifier(self))
     }
     
     func image(

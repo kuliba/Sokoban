@@ -93,7 +93,7 @@ public extension InputPhoneConfig {
         titleConfig: .init(textFont: .system(size: 14), textColor: .gray.opacity(0.7)),
         buttonIcon: .init(systemName: "person"),
         buttonForeground: .gray.opacity(0.7),
-        textFieldConfig: .preview
+        textFieldConfig: .preview()
     )
 }
 

@@ -13,27 +13,18 @@ class OpenNewProductsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published
-    var items: [NewProductButton.ViewModel]
+    @Published var items: [NewProductButton.ViewModel]
     
-    private let displayButtonsTypes: [ProductType] = [.card, .deposit, .account, .loan]
     private let model: Model
     private var bindings = Set<AnyCancellable>()
-    
-    var displayButtons: [String] {
         
-        var items = (displayButtonsTypes.map { $0.rawValue } + ["INSURANCE", "MORTGAGE"])
-        items.insert(contentsOf: ["STICKER"], at: 3)
-        return items
-    }
-    
     init(items: [NewProductButton.ViewModel], model: Model = .emptyMock) {
         
         self.items = items
         self.model = model
     }
     
-    typealias NewProductAction = (ProductType, Bool) -> Void
+    typealias NewProductAction = (OpenProductType) -> Void
     typealias MakeNewProductButtons = (@escaping NewProductAction) -> [NewProductButton.ViewModel]
     
     init(
@@ -42,15 +33,11 @@ class OpenNewProductsViewModel: ObservableObject {
     ) {
         self.items = []
         self.model = model
-        self.items = makeOpenNewProductButtons { [weak self] productType, openCollateralLoanLanding in
+        
+        self.items = makeOpenNewProductButtons { [weak self] productType in
             
-            if openCollateralLoanLanding {
-                let action = OpenNewProductsViewModelAction.Tapped.CollateralLoanLanding()
-                self?.action.send(action)
-            } else {
-                let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: productType)
-                self?.action.send(action)
-            }
+            let action = OpenNewProductsViewModelAction.Tapped.NewProduct(productType: productType)
+            self?.action.send(action)
         }
         
         bind()
@@ -81,37 +68,13 @@ class OpenNewProductsViewModel: ObservableObject {
     
 }
 
-extension ProductType {
-    
-    var openButtonIcon: Image {
-        
-        switch self {
-        case .card: return .ic24NewCardColor
-        case .account: return .ic24FilePluseColor
-        case .deposit: return .ic24DepositPlusColor
-        case .loan: return .ic24CreditColor
-        }
-    }
-    
-    var openButtonTitle: String {
-        
-        switch self {
-        case .card: return "Карту"
-        case .account: return "Счет"
-        case .deposit: return "Вклад"
-        case .loan: return "Кредит"
-        }
-    }
-}
-
 enum OpenNewProductsViewModelAction {
     
     enum Tapped {
         
         struct NewProduct: Action {
-            let productType: ProductType
+            
+            let productType: OpenProductType
         }
-        
-        struct CollateralLoanLanding: Action {}
     }
 }

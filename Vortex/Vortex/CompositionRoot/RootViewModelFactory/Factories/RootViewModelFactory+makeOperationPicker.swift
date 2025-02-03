@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import PayHub
 import PayHubUI
+import SwiftUI
 import VortexTools
 
 private typealias Domain = OperationPickerDomain
@@ -37,24 +38,8 @@ extension RootViewModelFactory {
         prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
     ) -> ReloadableOperationPicker {
         
-        let fetchingUpdater = makeLatestUpdater(fetch: loadLatest)
+        let content = makeOperationPickerContent(loadLatest: loadLatest, prefix: prefix)
         
-        return makeOperationPicker(load: fetchingUpdater.load, prefix: prefix)
-    }
-    
-    @inlinable
-    func makeOperationPicker(
-        load: @escaping (@escaping ([OperationPickerDomain.Select]?) -> Void) -> Void,
-        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
-    ) -> ReloadableOperationPicker {
-        
-        let content = composeLoadablePickerModel(
-            load: load,
-            prefix: prefix,
-            suffix: [],
-            placeholderCount: settings.operationPickerPlaceholderCount
-        )
-                
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
@@ -63,6 +48,22 @@ extension RootViewModelFactory {
         )
     }
     
+    @inlinable
+    func makeOperationPickerContent(
+        loadLatest: @escaping LoadLatest,
+        prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
+    ) -> OperationPickerDomain.Content {
+        
+        let fetchingUpdater = makeLatestUpdater(fetch: loadLatest)
+
+        return composeLoadablePickerModel(
+            load: fetchingUpdater.load,
+            prefix: prefix,
+            suffix: [],
+            placeholderCount: settings.operationPickerPlaceholderCount
+        )
+    }
+        
     private func delayProvider(
         navigation: Domain.Navigation
     ) -> Delay {
@@ -115,18 +116,34 @@ extension RootViewModelFactory {
         return { content.event(.select(nil)) }
     }
     
+    typealias OperationPickerUpdater = ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]>
+    
     @inlinable
     func makeLatestUpdater(
         fetch: @escaping (@escaping ([Latest]?) -> Void) -> Void
-    ) -> ReactiveFetchingUpdater<(), [Latest], [OperationPickerDomain.Select]> {
+    ) -> OperationPickerUpdater {
         
-        ReactiveFetchingUpdater(
+        return .init(
             fetcher: AnyOptionalFetcher(fetch: fetch),
-            updater: AnyReactiveUpdater {
+            updater: AnyReactiveUpdater { [weak self] latest in
                 
-            // TODO: reuse/extract mapping from LatestPaymentsView.ViewModel.bind() - see LatestPaymentsViewComponent.swift:41
-                Just($0.map { .latest($0) })
-                    .handleEvents(receiveOutput: { print("===== latest", $0.count) })
+                guard let self else {
+                    return Just([]).eraseToAnyPublisher()
+                }
+                
+                let md5Hashes = latest.compactMap(\.md5Hash)
+                let dictionaryPublisher = infra.imageCache.imagesDictionaryPublisher(for: md5Hashes)
+                
+                return latest
+                    .updating(with: dictionaryPublisher)
+                    .handleEvents(receiveOutput: {
+                        
+                        print("####### updating: ", String(describing: $0.map {
+                            
+                            ($0.md5Hash, $0.avatarImage)
+                        }))
+                    })
+                    .map { $0.map(OperationPickerDomain.Select.latest) }
                     .eraseToAnyPublisher()
             }
         )
@@ -143,5 +160,17 @@ private extension AnywayFlowState.Status.Outside {
         case .main:     return .dismiss
         case .payments: return .dismiss
         }
+    }
+}
+
+extension Latest: KeyProviding, ValueUpdatable {
+        
+    // Use `md5Hash` as the unique key
+    public var key: String { md5Hash ?? "" }
+    
+    // Return a new `Latest` with its `image` field updated
+    public func updated(value: Image) -> Self {
+        
+        updating(with: value)
     }
 }

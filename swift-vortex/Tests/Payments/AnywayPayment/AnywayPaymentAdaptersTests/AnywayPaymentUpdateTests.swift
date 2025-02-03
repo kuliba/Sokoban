@@ -45,7 +45,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         )))
     }
     
-    func test_init_shouldTrimWhitespaces() {
+    func test_init_shouldNotTrimWhitespaces() {
         
         let response = makeResponse(
             params: [
@@ -58,7 +58,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             ])
         let update = AnywayPaymentUpdate(response)
         
-        XCTAssertNoDiff(update?.parameters.map(\.field.content), ["", "", "a", "a", "a", "a"])
+        XCTAssertNoDiff(update?.parameters.map(\.field.content), [" ", "  ", " a", "a ", " a ", "  a  "])
     }
     
 #warning("move below to Helperrs")
@@ -294,7 +294,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: "",
+                        content: " ",
                         id: "9"
                     ),
                     icon: nil,
@@ -310,7 +310,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: "",
+                        content: " ",
                         id: "13"
                     ),
                     icon: nil,
@@ -326,7 +326,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: "",
+                        content: " ",
                         id: "17"
                     ),
                     icon: nil,
@@ -342,7 +342,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: "",
+                        content: " ",
                         id: "21"
                     ),
                     icon: nil,
@@ -358,7 +358,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: "",
+                        content: " ",
                         id: "25"
                     ),
                     icon: nil,
@@ -374,7 +374,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: "",
+                        content: " ",
                         id: "29"
                     ),
                     icon: .svg(.svgSample7),

@@ -54,6 +54,37 @@ extension RootViewModel {
     
     private func legacyPayment(by name: String) -> PTSectionPaymentsView.ViewModel.PaymentsType? {
         
-        return name == ProductStatementData.Kind.housingAndCommunalService.rawValue ? .service : nil
+        return name == ProductStatementData.Kind.housingAndCommunalService ? .service : nil
     }
+}
+
+extension ProductStatementData.Kind {
+    
+    static let betweenTheir = "BETWEEN_THEIR"
+    static let contactAddressless = "CONTACT_ADDRESSLESS"
+    static let direct = "DIRECT"
+    static let externalEntity = "EXTERNAL_ENTITY"
+    static let externalIndivudual = "EXTERNAL_INDIVIDUAL"
+    static let housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
+    static let insideBank = "INSIDE_BANK"
+    static let insideOther = "INSIDE_OTHER"
+    static let internet = "INTERNET"
+    static let mobile = "MOBILE"
+    static let notFinance = "NOT_FINANCE"
+    static let otherBank = "OTHER_BANK"
+    static let outsideCash = "OUTSIDE_CASH"
+    static let outsideOther = "OUTSIDE_OTHER"
+    static let sfp = "SFP"
+    static let transport = "TRANSPORT"
+    static let taxes = "TAX_AND_STATE_SERVICE"
+    static let c2b = "C2B_PAYMENT"
+    static let insideDeposit = "INSIDE_DEPOSIT"
+    static let sberQRPayment = "SBER_QR_PAYMENT"
+    static let networkMarketing = "NETWORK_MARKETING_SERVICE"
+    static let digitalWallet = "DIGITAL_WALLETS_SERVICE"
+    static let charity = "CHARITY_SERVICE"
+    static let socialAndGame = "SOCIAL_AND_GAMES_SERVICE"
+    static let education = "EDUCATION_SERVICE"
+    static let security = "SECURITY_SERVICE"
+    static let repayment = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
 }

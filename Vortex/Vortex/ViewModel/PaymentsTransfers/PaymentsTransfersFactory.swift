@@ -5,9 +5,11 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-import VortexTools
-import SwiftUI
 import CalendarUI
+import Combine
+import PayHubUI
+import SwiftUI
+import VortexTools
 
 struct PaymentsTransfersFactory {
     
@@ -19,6 +21,7 @@ struct PaymentsTransfersFactory {
     let makeServicePaymentBinder: MakeServicePaymentBinder
     let makeTemplates: MakeTemplates
     let makeUtilitiesViewModel: MakeUtilitiesViewModel
+    let makePaymentsTransfers: MakePaymentsTransfers
 }
 
 extension PaymentsTransfersFactory {
@@ -61,6 +64,9 @@ extension PaymentsTransfersFactory {
     typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel
     
     typealias MakeServicePaymentBinder = (AnywayTransactionState.Transaction, ServicePaymentFlowState) -> ServicePaymentBinder
+    
+    typealias MakePaymentsTransfers = () -> PaymentsTransfersSwitcherProtocol
+
 }
 
 extension PaymentsTransfersFactory {
@@ -88,7 +94,8 @@ extension PaymentsTransfersFactory {
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
-            makeOrderCardViewModel: { /*TODO:  implement preview*/ }
+            makeOrderCardViewModel: { /*TODO:  implement preview*/ },
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )
         
         return .init(
@@ -99,17 +106,49 @@ extension PaymentsTransfersFactory {
             makeSections: { Model.emptyMock.makeSections(flag: .inactive) },
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeTemplates: { _ in .sampleComplete },
-            makeUtilitiesViewModel: { _,_ in }
+            makeUtilitiesViewModel: { _,_ in },
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )
     }()
 }
+
+final class PreviewPaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
+    
+    var hasDestination: AnyPublisher<Bool, Never> { Empty().eraseToAnyPublisher() }
+}
+
+extension PaymentsTransfersPersonalDomain.Binder {
+    
+    static var preview: Self {
+        
+        let content = PaymentsTransfersPersonalContent(categoryPicker: PreviewCategoryPicker(), operationPicker: PreviewOperationPicker(), transfers: PreviewTransfers(), reload: {})
+        
+        return .init(
+            content: content,
+            flow: .init(
+                initialState: .init(),
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in }
+            ),
+            bind: { _,_ in [] }
+        )
+    }
+}
+
+private final class PreviewCategoryPicker: CategoryPicker {}
+
+private final class PreviewOperationPicker: OperationPicker {}
+
+private final class PreviewTransfers: TransfersPicker {}
 
 extension PaymentsTransfersFactory.MakeAlertViewModels {
     
     static let `default`: Self = .init(
         dataUpdateFailure: { _ in nil },
-        disableForCorporateCard: {                     .disableForCorporateCard(primaryAction: $0)
-        })
+        disableForCorporateCard: {        
+            .disableForCorporateCard(primaryAction: $0)
+        }
+    )
 }
 
 extension SegmentedPaymentProviderPickerFlowModel {
@@ -123,13 +162,9 @@ extension SegmentedPaymentProviderPickerFlowModel {
         return .init(
             initialState: .init(
                 content: .init(
-                    initialState: .init(
                         segments: [],
                         qrCode: qrCode,
                         qrMapping: qrMapping
-                    ),
-                    reduce: { state, _ in (state, nil) },
-                    handleEffect: { _,_ in }
                 )
             ),
             factory: .init(

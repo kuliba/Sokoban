@@ -9,13 +9,14 @@ import SwiftUI
 
 struct GetCollateralLandingFooterView: View {
     
+    let product: Product
     let config: Config.Footer
-    let state: GetCollateralLandingState
-    let event: (Event) -> Void
+    let state: State
+    let externalEvent: (ExternalEvent) -> Void
 
     var body: some View {
         
-        Button(action: { event(.createDraftApplication) }) {
+        Button(action: { externalEvent(.createDraftApplication(product)) }) {
             
             Text(config.text)
                 .frame(maxWidth: .infinity)
@@ -37,7 +38,8 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias Event = GetCollateralLandingEvent
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    typealias State = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
@@ -47,9 +49,10 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
     static var previews: some View {
         
         GetCollateralLandingFooterView(
+            product: .carStub,
             config: .default,
-            state: .init(product: .carStub),
-            event: { print($0) }
+            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            externalEvent: { print($0) }
         )
     }
 }

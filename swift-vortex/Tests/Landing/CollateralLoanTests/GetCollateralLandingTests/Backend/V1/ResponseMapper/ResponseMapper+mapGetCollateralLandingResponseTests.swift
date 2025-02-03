@@ -84,8 +84,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let data = Data(validJson.utf8)
         let result = try map(data).get()
         
-        XCTAssertEqual(result.list.count, 1)
-        XCTAssert(result.list.first?.name == "Кредит под залог недвижимости" )
+        XCTAssert(result.name == "Кредит под залог недвижимости" )
     }
     
     func test_map_shouldBeInvalidWithoutSerial() throws {
@@ -143,7 +142,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -155,7 +154,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             [.init(icon: icon, title: title, subTitle: subTitle)]
         )
     }
@@ -172,7 +171,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             [
                 .init(icon: iconFirst, title: titleFirst, subTitle: subTitleFirst),
                 .init(icon: iconSecond, title: titleSecond, subTitle: subTitleSecond)
@@ -186,7 +185,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -197,7 +196,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -208,7 +207,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -219,7 +218,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -230,7 +229,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -241,7 +240,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -252,7 +251,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         let stub = makeCodableResponse(data: makeSerialStamped(products: [makeProduct(conditions: [condition])]))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.conditions),
+            map(stub.encoded()).get().conditions,
             []
         )
     }
@@ -280,7 +279,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            map(stub.encoded()).get().frequentlyAskedQuestions,
             []
         )
     }
@@ -305,7 +304,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            map(stub.encoded()).get().frequentlyAskedQuestions,
             [
                 .init(question: questionFirst, answer: answerFirst),
                 .init(question: questionSecond, answer: answerSecond)
@@ -321,7 +320,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            map(stub.encoded()).get().frequentlyAskedQuestions,
             []
         )
     }
@@ -334,7 +333,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            map(stub.encoded()).get().frequentlyAskedQuestions,
             []
         )
     }
@@ -347,7 +346,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.frequentlyAskedQuestions),
+            map(stub.encoded()).get().frequentlyAskedQuestions,
             []
         )
     }
@@ -368,7 +367,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -382,7 +381,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             [.init(title: title, icon: icon, link: link)]
         )
     }
@@ -398,7 +397,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             [
                 .init(title: titleFirst, icon: iconFirst, link: linkFirst),
                 .init(title: titleSecond, icon: iconSecond, link: linkSecond)
@@ -414,7 +413,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -430,7 +429,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             [.init(title: title, icon: nil, link: link)]
         )
     }
@@ -443,7 +442,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -456,7 +455,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -469,7 +468,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -482,7 +481,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -495,7 +494,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.documents),
+            map(stub.encoded()).get().documents,
             []
         )
     }
@@ -516,7 +515,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             []
         )
     }
@@ -530,7 +529,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             [.init(name: name, link: link)]
         )
     }
@@ -543,7 +542,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             []
         )
     }
@@ -556,7 +555,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             []
         )
     }
@@ -569,7 +568,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             []
         )
     }
@@ -585,7 +584,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             [
                 .init(name: nameFirst, link: linkFirst),
                 .init(name: nameSecond, link: linkSecond)
@@ -609,7 +608,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.consents),
+            map(stub.encoded()).get().consents,
             []
         )
     }
@@ -622,7 +621,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.cities),
+            map(stub.encoded()).get().cities,
             [city]
         )
     }
@@ -636,7 +635,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         )
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.flatMap(\.cities),
+            map(stub.encoded()).get().cities,
             [cityFirst, citySecond]
         )
     }
@@ -730,7 +729,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.marketing.params,
+            map(stub.encoded()).get().marketing.params,
             []
         )
     }
@@ -744,7 +743,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.marketing.params,
+            map(stub.encoded()).get().marketing.params,
             [param]
         )
     }
@@ -763,7 +762,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
         
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.marketing.params,
+            map(stub.encoded()).get().marketing.params,
             [paramFirst, paramSecond]
         )
     }
@@ -836,7 +835,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -854,7 +853,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             [.init(icon: icon, name: name, type: type)]
         )
     }
@@ -868,7 +867,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -882,7 +881,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -896,7 +895,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -910,7 +909,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -924,7 +923,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -938,7 +937,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -952,7 +951,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             []
         )
     }
@@ -978,7 +977,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.collateral,
+            map(stub.encoded()).get().calc.collateral,
             [
                 .init(icon: iconFirst, name: nameFirst, type: typeFirst),
                 .init(icon: iconSecond, name: nameSecond, type: typeSecond)
@@ -1004,7 +1003,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.rates,
+            map(stub.encoded()).get().calc.rates,
             []
         )
     }
@@ -1029,7 +1028,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.rates,
+            map(stub.encoded()).get().calc.rates,
             [.init(
                 rateBase: rateBase,
                 ratePayrollClient: ratePayrollClient,
@@ -1071,7 +1070,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
         ))
 
         try XCTAssertNoDiff(
-            map(stub.encoded()).get().list.first?.calc.rates,
+            map(stub.encoded()).get().calc.rates,
             [
                 .init(
                     rateBase: rateBaseFirst,
@@ -1201,7 +1200,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
             ))
             
             try XCTAssertNoDiff(
-                map(stub.encoded()).get().list.first?.calc.rates,
+                map(stub.encoded()).get().calc.rates,
                 []
             )
         }
@@ -1221,7 +1220,7 @@ final class ResponseMapper_mapGetCollateralLandingResponseTests: XCTestCase {
     
     private func mapAndGetProductFromStub(_ stub: CodableResponse) throws -> ResponseMapper.CollateralLandingProduct {
         
-        try XCTUnwrap(map(try stub.encoded()).get().list.first)
+        try XCTUnwrap(map(try stub.encoded()).get())
     }
 }
 

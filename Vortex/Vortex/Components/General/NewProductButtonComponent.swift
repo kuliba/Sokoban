@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-//MARK: - ViewModel
+// MARK: - ViewModel
 
 extension NewProductButton {
     
     class ViewModel: Identifiable, ObservableObject {
         
-        let id: String 
+        let id: String
         let icon: Image
         let title: String
         @Published var subTitle: String
@@ -42,10 +42,22 @@ extension NewProductButton {
             self.subTitle = subTitle
             self.tapActionType = .url(url)
         }
+        
+        init(
+            openProductType: OpenProductType,
+            subTitle: String,
+            action: TapActionType
+        ) {
+            self.id = openProductType.rawValue
+            self.icon = openProductType.openButtonIcon
+            self.title = openProductType.openButtonTitle
+            self.subTitle = subTitle
+            self.tapActionType = action
+        }
     }
 }
 
-//MARK: - View
+// MARK: - View
 
 struct NewProductButton: View {
     
@@ -55,78 +67,70 @@ struct NewProductButton: View {
         
         switch viewModel.tapActionType {
         case let .action(action):
-            Button(action: action) {
-                
-                ZStack(alignment: .leading) {
-                    
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundColor(.mainColorsGrayLightest)
-                    
-                    VStack(alignment: .leading) {
-                        
-                        viewModel.icon
-                            .renderingMode(.original)
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            
-                            Text(viewModel.title)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
-                            
-                            Text(viewModel.subTitle)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textPlaceholder)
-                                .lineLimit(1)
-                        }
-                        
-                    }.padding(11)
-                }
-
-            }
-            .buttonStyle(PushButtonStyle())
-            .accessibilityIdentifier("buttonOpenNewProduct")
+            Button(action: action, label: label)
+                .buttonStyle(PushButtonStyle())
+                .accessibilityIdentifier("buttonOpenNewProduct")
             
         case let .url(url):
             
-            Link(destination: url) {
-                
-                ZStack(alignment: .leading) {
-                    
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundColor(.mainColorsGrayLightest)
-                    
-                    VStack(alignment: .leading) {
-                        
-                        viewModel.icon
-                            .renderingMode(.original)
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            
-                            Text(viewModel.title)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
-                            
-                            Text(viewModel.subTitle)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textPlaceholder)
-                                .lineLimit(1)
-                        }
-                        
-                    }.padding(11)
-                }
-                
-            }
-            .buttonStyle(PushButtonStyle())
-            .accessibilityIdentifier("linkOpenNewProduct")
+            Link(destination: url, label: label)
+                .buttonStyle(PushButtonStyle())
+                .accessibilityIdentifier("linkOpenNewProduct")
         }
+    }
+    
+    private func label() -> some View {
+        
+        NewProductButtonLabel(
+            icon: viewModel.icon,
+            title: viewModel.title,
+            subTitle: viewModel.subTitle
+        )
     }
 }
 
-//MARK: - Preview
+struct NewProductButtonLabel: View {
+    
+    let icon: Image
+    let title: String
+    let subTitle: String
+    var lineLimit: Int? = 1
+    
+    var body: some View {
+        
+        ZStack(alignment: .leading) {
+            
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.mainColorsGrayLightest)
+            
+            VStack(alignment: .leading) {
+                
+                icon
+                    .renderingMode(.original)
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    Text(title)
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
+                    
+                    Text(subTitle)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(.textPlaceholder)
+                        .lineLimit(lineLimit)
+                        .multilineTextAlignment(.leading)
+                }
+            }
+            .padding(11)
+        }
+        .contentShape(Rectangle())
+    }
+}
+
+
+// MARK: - Preview
 
 struct NewProductButton_Previews: PreviewProvider {
     
@@ -146,7 +150,7 @@ struct NewProductButton_Previews: PreviewProvider {
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension NewProductButton.ViewModel {
     

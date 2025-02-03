@@ -14,9 +14,11 @@ struct GetCollateralLandingCalculatorView: View {
     @State private var toggleIsOn = false
     @State private var sliderCurrentValue: Double = 6.0
     
+    let state: DomainState
+    let product: Product
     let config: Config
-    let event: (Event) -> Void
-    let state: GetCollateralLandingState
+    let domainEvent: (DomainEvent) -> Void
+    let externalEvent: (ExternalEvent) -> Void
 
     var body: some View {
         
@@ -66,7 +68,7 @@ struct GetCollateralLandingCalculatorView: View {
                     .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
                     .onChange(of: toggleIsOn) { state in
                         
-                        event(.toggleIHaveSalaryInCompany(state))
+                        domainEvent(.toggleIHaveSalaryInCompany(state))
                     }
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }
@@ -153,14 +155,13 @@ struct GetCollateralLandingCalculatorView: View {
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
                 
                 chevron(config: config)
+                    .onTapGesture {
+                        externalEvent(.showCaseList(.periods(product.calc.rates)))
+                    }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
-        .onTapGesture {
-            
-            event(.showPeriodBottomSheet)
-        }
     }
     
     private func percentView(config: Config.Calculator) -> some View {
@@ -193,12 +194,11 @@ struct GetCollateralLandingCalculatorView: View {
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
 
                 chevron(config: config)
+                    .onTapGesture {
+                        externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
+                    }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .onTapGesture {
-            
-            event(.showCollateralBottomSheet)
         }
     }
     
@@ -240,7 +240,7 @@ struct GetCollateralLandingCalculatorView: View {
         )
         .onChange(of: sliderCurrentValue, perform: {
             
-            event(.changeDesiredAmount(UInt($0)))
+            domainEvent(.changeDesiredAmount(UInt($0)))
         })
         .padding(.leading, config.root.layouts.contentLeadingPadding)
         .padding(.trailing, config.root.layouts.contentTrailingPadding)
@@ -254,7 +254,6 @@ struct GetCollateralLandingCalculatorView: View {
             .frame(width: 10.5, height: 10.5)
             .padding(.leading, config.root.layouts.chevronSpacing)
             .offset(y: config.root.layouts.chevronOffsetY)
-
     }
     
     // MARK: Content Subviews
@@ -345,7 +344,10 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias Event = GetCollateralLandingEvent
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    typealias DomainEvent = GetCollateralLandingDomain.Event
+    typealias DomainState = GetCollateralLandingDomain.State
+    typealias Product = GetCollateralLandingProduct
 }
 
 // MARK: - Previews
@@ -355,9 +357,11 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
     static var previews: some View {
         
         GetCollateralLandingCalculatorView(
+            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            product: .carStub,
             config: .default,
-            event: { print($0) },
-            state: .init(product: .carStub)
+            domainEvent: { print($0) },
+            externalEvent: { print($0) }
         )
     }
 }

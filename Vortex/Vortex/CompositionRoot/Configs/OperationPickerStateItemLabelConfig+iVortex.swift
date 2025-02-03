@@ -9,7 +9,7 @@ import PayHubUI
 
 extension OperationPickerStateItemLabelConfig {
     
-    static let iVortex: Self = .init(
+    static let prod: Self = .init(
         iconSize: .init(width: 24, height: 24),
         exchange: .exchange,
         latestPlaceholder: .iVortex,

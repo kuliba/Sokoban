@@ -16,7 +16,7 @@ protocol ReloadableCategoryPicker: CategoryPicker {
 extension CategoryPickerSectionDomain.Binder: ReloadableCategoryPicker {
     
     func reload() {
-         
+        
         content.event(.reload)
     }
 }
@@ -25,10 +25,19 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerSection(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> ReloadableCategoryPicker {
+    ) -> CategoryPickerSectionDomain.Binder {
         
-        let content = makeContent(nanoServices)
+        let nanoServices = composePaymentsTransfersPersonalNanoServices()
+        
+        return makeCategoryPickerSection(nanoServices: nanoServices)
+    }
+    
+    @inlinable
+    func makeCategoryPickerSection(
+        nanoServices: PaymentsTransfersPersonalNanoServices
+    ) -> CategoryPickerSectionDomain.Binder {
+        
+        let content = makeCategoryPickerContent(nanoServices)
         
         return composeBinder(
             content: content,
@@ -45,43 +54,10 @@ extension RootViewModelFactory {
         
         switch navigation {
         case .failure:     return .milliseconds(100)
-        case .paymentFlow: return settings.delay
+        case .destination: return settings.delay
+        case .outside:     return .milliseconds(100)
         }
     }
-    
-    @inlinable
-    func makeContent(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> CategoryPickerSectionDomain.Content {
-        
-        let placeholderCount = settings.categoryPickerPlaceholderCount
-        
-        return composeLoadablePickerModel(
-            load: nanoServices.loadCategories,
-            reload: nanoServices.reloadCategories,
-            suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) },
-            placeholderCount: placeholderCount
-        )
-    }
-    
-    @inlinable
-    func emitting(
-        content: CategoryPickerSectionDomain.Content
-    ) -> some Publisher<FlowEvent<CategoryPickerSectionDomain.Select, Never>, Never> {
-        
-        content.$state.compactMap(\.selected).map(FlowEvent.select)
-    }
-    
-    @inlinable
-    func dismissing(
-        content: CategoryPickerSectionDomain.Content
-    ) -> () -> Void {
-        
-        return { content.event(.select(nil)) }
-    }
-}
-
-extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
@@ -89,16 +65,51 @@ extension RootViewModelFactory {
         notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {
-        let composer = SelectedCategoryGetNavigationComposer(
-            model: model,
-            nanoServices: .init(
-                makeMobile: makeMobilePayment,
-                makeTax: makeTaxPayment,
-                makeTransport: makeTransportPayment
-            ),
-            scheduler: schedulers.main
-        )
+        switch select {
+        case let .category(category):
+            getNavigation(category: category, notify: notify, completion: completion)
         
-        composer.getNavigation(select, notify, completion)
+        case .qr:
+            completion(.outside(.qr))
+        }
     }
+    
+    @inlinable
+    func getNavigation(
+        category: ServiceCategory,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
+        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) {
+        switch category.paymentFlow {
+        case .mobile:
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
+            
+        case .qr:
+            completion(.outside(.qr))
+            
+        case .standard:
+            completion(.outside(.standard(category)))
+            
+        case .taxAndStateServices:
+            completion(.destination(.taxAndStateServices(makeTaxPayment(
+                closeAction: { notify(.dismiss) }
+            ))))
+            
+        case .transport:
+            guard let transport = makeTransportPayment()
+            else { return completion(.failure(.transport)) }
+            
+            completion(.destination(.transport(transport)))
+        }
+    }
+}
+
+private extension SelectedCategoryFailure {
+    
+    static let transport: Self = .init(
+        id: .init(),
+        message: "Ошибка создания транспортных платежей"
+    )
 }

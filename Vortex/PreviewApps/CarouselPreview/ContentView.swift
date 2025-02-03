@@ -24,6 +24,11 @@ struct ContentView: View {
                 needShowSticker: false
             )
             .padding()
+            
+            CarouselWithPromoView(
+                state: .preview,
+                event: CarouselWithPromoView.event
+            )
         }
     }
 }

@@ -98,25 +98,25 @@ final class Model_QRHelpersTests: XCTestCase {
     
     // MARK: - helpers tests
     
-    func test_load_shouldDeliverNilOnEmptyStub() {
+    func test_load_shouldDeliverNilOnNilStub() {
         
         let sut = makeSUT(operators: nil)
         
-        XCTAssertNil(load(sut))
+        XCTAssertNil(load(sut, for: "education"))
     }
     
-    func test_load_shouldDeliverEmptyOnEmptyStub() {
+    func test_load_shouldDeliverNilOnEmptyStub() {
         
         let sut = makeSUT(operators: [])
         
-        XCTAssertEqual(load(sut), [])
+        XCTAssertEqual(load(sut, for: "education"), nil)
     }
     
     func test_load_shouldDeliverStub() {
         
         let sut = makeSUT(operators: makeCachingOperators(count: 13))
         
-        XCTAssertEqual(load(sut)?.count, 13)
+        XCTAssertEqual(load(sut, for: "education")?.count, 13)
     }
     
     // MARK: - Helpers
@@ -126,11 +126,12 @@ final class Model_QRHelpersTests: XCTestCase {
     
     private func makeSUT(
         operators: [CachingOperator]?,
+        serial: String = anyMessage(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let localAgent = try! LocalAgentStub(with: operators)
+        let localAgent = try! LocalAgentStub(with: ServicePaymentOperatorStorage(items: operators ?? [], serial: serial))
         let sut = SUT.mockWithEmptyExcept(localAgent: localAgent)
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -152,12 +153,13 @@ final class Model_QRHelpersTests: XCTestCase {
     }
     
     private func makeCachingOperators(
-        count: Int
+        count: Int,
+        type: String = "education"
     ) -> [CachingOperator] {
         
         let operators = (0..<count).enumerated().map { order, _ in
             
-            return makeCachingOperator(sortedOrder: order)
+            return makeCachingOperator(type: type, sortedOrder: order)
         }
         
         precondition(operators.count == count)
@@ -173,8 +175,12 @@ final class Model_QRHelpersTests: XCTestCase {
     
     // MARK: - DSL
     
-    private func load(_ sut: SUT) -> [CachingOperator]? {
+    private func load(
+        _ sut: SUT,
+        for type: String
+    ) -> [CachingOperator]? {
         
-        return sut.localAgent.load(type: [CachingOperator].self)
+        let storage = sut.localAgent.load(type: ServicePaymentOperatorStorage.self)
+        return storage?.items(for: type)
     }
 }

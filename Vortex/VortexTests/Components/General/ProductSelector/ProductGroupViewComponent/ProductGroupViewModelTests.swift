@@ -149,13 +149,13 @@ final class ProductGroupViewModelTests: XCTestCase {
     func test_init_width_regular() {
         let sut = makeSUT(dimensions: .regular)
         
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
     }
     
     func test_init_width_small() {
         let sut = makeSUT(dimensions: .small)
         
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
     }
     
     func test_width_onEmpty_regular() {
@@ -163,7 +163,7 @@ final class ProductGroupViewModelTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(sut.width, 9, "Empty group should be 9pt wide.")
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9, "Empty group should be 9pt wide.")
     }
     
     func test_width_onEmpty_small() {
@@ -171,7 +171,7 @@ final class ProductGroupViewModelTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(sut.width, 9, "Empty group should be 9pt wide.")
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9, "Empty group should be 9pt wide.")
     }
     
     func test_width_withoutGroupButton_regular() {
@@ -181,15 +181,15 @@ final class ProductGroupViewModelTests: XCTestCase {
             visibleCount: visibleCount,
             dimensions: .regular
         )
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let productsWidth = visibleCount * 164
         let spacingWidth = (visibleCount - 1) * 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth))
-        XCTAssertEqual(sut.width, 517)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 517)
         XCTAssertNil(sut.groupButton)
     }
     
@@ -200,15 +200,15 @@ final class ProductGroupViewModelTests: XCTestCase {
             visibleCount: 3,
             dimensions: .small
         )
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let productsWidth = visibleCount * 112
         let spacingWidth = (visibleCount - 1) * 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth))
-        XCTAssertEqual(sut.width, 361)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 361)
         XCTAssertNil(sut.groupButton)
     }
     
@@ -219,7 +219,7 @@ final class ProductGroupViewModelTests: XCTestCase {
             visibleCount: visibleCount,
             dimensions: .regular
         )
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -227,8 +227,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let spacingWidth = (visibleCount - 1) * 8
         let buttonWithSpacing = 48 + 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
-        XCTAssertEqual(sut.width, 573)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 573)
         XCTAssertNotNil(sut.groupButton)
     }
     
@@ -239,7 +239,7 @@ final class ProductGroupViewModelTests: XCTestCase {
             visibleCount: visibleCount,
             dimensions: .small
         )
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -247,8 +247,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let spacingWidth = (visibleCount - 1) * 8
         let buttonWithSpacing = 40 + 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
-        XCTAssertEqual(sut.width, 409)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 409)
         XCTAssertNotNil(sut.groupButton)
     }
     
@@ -259,7 +259,7 @@ final class ProductGroupViewModelTests: XCTestCase {
             visibleCount: 3,
             dimensions: .regular
         )
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         sut.expand()
@@ -269,8 +269,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let spacingWidth = (productsCount - 1) * 8
         let buttonWithSpacing = 48 + 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
-        XCTAssertEqual(sut.width, 917)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 917)
         XCTAssertEqual(sut.visible.count, productsCount)
         XCTAssertEqual(sut.groupButton?.content, .icon(.ic24ChevronsLeft))
     }
@@ -282,7 +282,7 @@ final class ProductGroupViewModelTests: XCTestCase {
             visibleCount: 3,
             dimensions: .small
         )
-        XCTAssertEqual(sut.width, 9)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 9)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         sut.expand()
@@ -292,8 +292,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let spacingWidth = (productsCount - 1) * 8
         let buttonWithSpacing = 40 + 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
-        XCTAssertEqual(sut.width, 649)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + buttonWithSpacing))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 649)
         XCTAssertEqual(sut.visible.count, productsCount)
         XCTAssertEqual(sut.groupButton?.content, .icon(.ic24ChevronsLeft))
     }
@@ -304,8 +304,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(sut.width, Double(9 + 164))
-        XCTAssertEqual(sut.width, 173)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + 164))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 173)
         XCTAssert(sut.isOpeningProduct)
     }
     
@@ -315,8 +315,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(sut.width, Double(9 + 112))
-        XCTAssertEqual(sut.width, 121)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + 112))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 121)
         XCTAssert(sut.isOpeningProduct)
     }
     
@@ -334,8 +334,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let productsWidth = count * 164
         let spacingWidth = (count - 1) * 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + 164))
-        XCTAssertEqual(sut.width, 681)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + 164))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 681)
         XCTAssertNil(sut.groupButton)
         XCTAssert(sut.isOpeningProduct)
     }
@@ -354,8 +354,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let productsWidth = count * 112
         let spacingWidth = (count - 1) * 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + 112))
-        XCTAssertEqual(sut.width, 473)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + 112))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 473)
         XCTAssertNil(sut.groupButton)
         XCTAssert(sut.isOpeningProduct)
     }
@@ -375,8 +375,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let spacingWidth = (visibleCount - 1) * 8
         let buttonWithSpacing = 48 + 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + buttonWithSpacing + 164))
-        XCTAssertEqual(sut.width, 737)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + buttonWithSpacing + 164))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 737)
         XCTAssertNotNil(sut.groupButton)
         XCTAssert(sut.isOpeningProduct)
     }
@@ -396,8 +396,8 @@ final class ProductGroupViewModelTests: XCTestCase {
         let spacingWidth = (visibleCount - 1) * 8
         let buttonWithSpacing = 40 + 8
         
-        XCTAssertEqual(sut.width, Double(9 + productsWidth + spacingWidth + buttonWithSpacing + 112))
-        XCTAssertEqual(sut.width, 521)
+        XCTAssertEqual(sut.widthWith(promoCount: 0), Double(9 + productsWidth + spacingWidth + buttonWithSpacing + 112))
+        XCTAssertEqual(sut.widthWith(promoCount: 0), 521)
         XCTAssertNotNil(sut.groupButton)
         XCTAssert(sut.isOpeningProduct)
     }

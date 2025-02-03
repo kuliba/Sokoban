@@ -68,7 +68,9 @@ enum MainSectionViewModelAction {
             let productId: ProductData.ID
         }
         
-        struct StickerDidTapped: Action {}
+        struct PromoDidTapped: Action {
+            let promo: PromoProduct
+        }
         
         struct ResetScroll: Action {}
         
@@ -79,10 +81,8 @@ enum MainSectionViewModelAction {
     
         struct ButtonTapped: Action {
             
-            let productType: ProductType
+            let productType: OpenProductType
         }
-        
-        struct OpenCollateralLoanLanding: Action {}
     }
     
     enum FastPayment {

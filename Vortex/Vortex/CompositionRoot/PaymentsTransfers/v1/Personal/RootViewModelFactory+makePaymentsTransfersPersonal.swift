@@ -14,46 +14,46 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersPersonal(
-    ) -> (PaymentsTransfersPersonalDomain.Binder, () -> Void) {
+    ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
-        
-        let personal = makePaymentsTransfersPersonal(
-            nanoServices: nanoServices
-        )
-        
-        let loadCategoriesAndNotifyPicker = {
-            
-            nanoServices.reloadCategories { [weak personal] categories in
-                
-                let categoryPicker = personal?.content.categoryPicker.sectionBinder
-                
-                guard let categoryPicker else {
-                    
-                    return self.logger.log(level: .error, category: .payments, message: "==== Unknown categoryPicker type \(String(describing: categoryPicker))", file: #file, line: #line)
-                }
-                
-                categoryPicker.content.event(.loaded(categories ?? []))
-                
-                self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-            }
-        }
-        
-        return (personal, loadCategoriesAndNotifyPicker)
-    }
-    
-    @inlinable
-    func makePaymentsTransfersPersonal(
-        nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> PaymentsTransfersPersonalDomain.Binder {
-        
         let content = makePaymentsTransfersPersonalContent(nanoServices)
         
-        return composeBinder(
+        let personal = composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getPaymentsTransfersPersonalNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
+        )
+        
+        let event = content.categoryPicker.sectionBinder?.content.event
+        
+        let notify: () -> Void = {
+            
+            nanoServices.reloadCategories(
+                { event?($0) },
+                { event?(.loaded($0?.pending)) }
+            )
+        }
+        
+        return (personal, notify)
+    }
+    
+    @inlinable
+    func composePaymentsTransfersPersonalNanoServices(
+    ) -> PaymentsTransfersPersonalNanoServices {
+        
+        let (loadCategories, reloadCategories) = composeDecoratedServiceCategoryListLoaders()
+        
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: loadCategories,
+            getLatestPayments: loadLatestPayments
+        )
+        
+        return .init(
+            loadCategories: loadCategories,
+            reloadCategories: reloadCategories,
+            loadAllLatest: makeLoadLatestOperations(.all)
         )
     }
     
@@ -70,6 +70,15 @@ extension RootViewModelFactory {
         case .templates:       return settings.delay
         case .userAccount:     return settings.delay
         }
+    }
+    
+    @inlinable
+    func getPaymentsTransfersPersonalNavigation(
+        select: PaymentsTransfersPersonalDomain.Select,
+        notify: @escaping PaymentsTransfersPersonalDomain.Notify,
+        completion: @escaping (PaymentsTransfersPersonalDomain.Navigation) -> Void
+    ) {
+        completion(select)
     }
     
     @inlinable
@@ -114,7 +123,7 @@ extension PaymentsTransfersPersonalDomain.Content {
 
 // MARK: - CategoryPicker
 
-private extension PayHubUI.CategoryPicker {
+private extension CategoryPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -143,32 +152,29 @@ private extension CategoryPickerSectionDomain.Binder {
     }
 }
 
-private extension FlowState<SelectedCategoryNavigation> {
+private extension FlowState<CategoryPickerSectionDomain.Navigation> {
     
     var select: PaymentsTransfersPersonalSelect? {
         
         switch navigation {
-        case let .paymentFlow(paymentFlow):
-            switch paymentFlow {
-            case .mobile, .taxAndStateServices, .transport:
-                return nil
-                
-            case .qr(()):
+        case .destination, .failure, .none:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .qr:
                 return .scanQR
                 
             case let .standard(category):
                 return .standardPayment(category.type)
             }
-            
-        default:
-            return nil
         }
     }
 }
 
 // MARK: - OperationPicker
 
-private extension PayHubUI.OperationPicker {
+private extension OperationPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -222,7 +228,7 @@ private extension OperationPickerDomain.FlowDomain.State {
 
 // MARK: - TransfersPicker
 
-private extension PayHubUI.TransfersPicker {
+private extension TransfersPicker {
     
     var eventPublisher: EventPublisher {
         
@@ -241,10 +247,6 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
-            .handleEvents(receiveOutput: {
-                
-                print($0)
-            })
             .map { .select($0) }
             .eraseToAnyPublisher()
     }

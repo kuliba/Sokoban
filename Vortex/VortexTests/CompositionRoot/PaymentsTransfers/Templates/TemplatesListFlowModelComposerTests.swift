@@ -159,7 +159,8 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
                         icon: nil
                     )
                 ),
-                shouldRestart: false
+                shouldRestart: false,
+                needSum: false
             ),
             isValid: true
         )

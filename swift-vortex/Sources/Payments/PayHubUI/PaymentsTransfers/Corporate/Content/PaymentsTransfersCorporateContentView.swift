@@ -30,26 +30,23 @@ where BannerSectionView: View,
     
     public var body: some View {
         
-        ScrollView(showsIndicators: false) {
+        VStack(alignment: .leading, spacing: config.spacing) {
             
-            VStack(alignment: .leading, spacing: config.spacing) {
-                
-                factory.makeRestrictionNoticeView()
-                
-                config.header.render()
-                    .padding(.top, config.headerTopPadding)
-                
-                factory.makeBannerSectionView(content.bannerPicker)
-                    .frame(height: config.bannerSectionHeight)
-                
-                config.title.render()
-                    .padding(.top, config.titleTopPadding)
-                
-                factory.makeTransfersSectionView()
-                    .frame(height: config.transfersSectionHeight)
-            }
-            .padding(config.stack)
+            factory.makeRestrictionNoticeView()
+            
+            config.header.render()
+                .padding(.top, config.headerTopPadding)
+            
+            factory.makeBannerSectionView(content.bannerPicker)
+                .frame(height: config.bannerSectionHeight)
+            
+            config.title.render()
+                .padding(.top, config.titleTopPadding)
+            
+            factory.makeTransfersSectionView(content.corporateTransfers)
+                .frame(height: config.transfersSectionHeight)
         }
+        .padding(config.stack)
         .toolbar(content: factory.makeToolbarView)
     }
 }
@@ -70,13 +67,13 @@ public extension PaymentsTransfersCorporateContentView {
         PaymentsTransfersCorporateContentView(
             content: .preview,
             factory: .init(
-                makeBannerSectionView: { _ in
+                makeBannerSectionView: { bannerPicker in
                     
                     ZStack {
                         
                         Color.orange.opacity(0.5)
                         
-                        Text("Banners")
+                        Text("Banners: \(String(describing: bannerPicker))")
                             .foregroundColor(.white)
                             .font(.title3.bold())
                     }
@@ -89,7 +86,7 @@ public extension PaymentsTransfersCorporateContentView {
                         .background(Color.gray.opacity(0.2))
                         .clipShape(Capsule())
                 },
-                makeToolbarView: { 
+                makeToolbarView: {
                     
                     ToolbarItem(placement: .topBarLeading) {
                         
@@ -100,13 +97,13 @@ public extension PaymentsTransfersCorporateContentView {
                         }
                     }
                 },
-                makeTransfersSectionView: {
+                makeTransfersSectionView: { corporateTransfers in
                     
                     ZStack {
                         
                         Color.green.opacity(0.5)
                         
-                        Text("Transfers")
+                        Text("Transfers: \(String(describing: corporateTransfers))")
                             .foregroundColor(.white)
                             .font(.title3.bold())
                     }
@@ -124,9 +121,11 @@ private extension PaymentsTransfersCorporateContent {
         
         return .init(
             bannerPicker: PreviewBannerPicker(),
+            corporateTransfers: PreviewCorporateTransfers(),
             reload: {}
         )
     }
 }
 
 private final class PreviewBannerPicker: CorporateBannerPicker {}
+private final class PreviewCorporateTransfers: CorporateTransfersProtocol {}

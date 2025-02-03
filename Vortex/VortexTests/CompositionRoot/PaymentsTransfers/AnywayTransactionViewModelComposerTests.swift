@@ -65,7 +65,8 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             elementMapper: .init(
                 currencyOfProduct: { _ in "₽" }, 
                 format: { _,_ in ""},
-                getProducts: { [] }
+                getProducts: { [] }, 
+                makeContacts: { .sampleFastContacts }
             ),
             microServices: .init(
                 getVerificationCode: { _ in },
@@ -127,7 +128,8 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         payment: AnywayPayment? = nil,
         staged: AnywayPaymentStaged = [],
         outline: AnywayPaymentOutline? = nil,
-        shouldRestart: Bool = false
+        shouldRestart: Bool = false,
+        needSum: Bool = false
     ) -> AnywayPaymentContext {
         
         return .init(
@@ -135,7 +137,8 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             payment: payment ?? makeAnywayPayment(),
             staged: staged,
             outline: outline ?? makeAnywayPaymentOutline(),
-            shouldRestart: shouldRestart
+            shouldRestart: shouldRestart,
+            needSum: needSum
         )
     }
     

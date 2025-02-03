@@ -10,6 +10,55 @@ import SwiftUI
 /// Extending SwiftUI API
 public extension View {
     
+    /// Presents a navigation destination for an `Identifiable` item while ensuring duplicate updates are ignored.
+    ///
+    /// This variant of `navigationDestination` prevents unnecessary UI updates by deduplicating the bound item
+    /// based on its `id` before triggering the navigation.
+    ///
+    /// - Parameters:
+    ///   - titleKey: A localized string key for the navigation title. Defaults to an empty string.
+    ///   - item: A binding to an optional `Identifiable` item that determines when the destination should be presented.
+    ///   - content: A closure that returns the destination view for the given item.
+    @inlinable
+    func navigationDestination<Item: Identifiable, Content: View>(
+        _ titleKey: LocalizedStringKey = "",
+        deduplicated item: Binding<Item?>,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            titleKey,
+            item: item.removingDuplicates(),
+            content: content
+        )
+    }
+    
+    /// Presents a navigation destination for an `Identifiable` item with a custom deduplication strategy.
+    ///
+    /// This variant of `navigationDestination` prevents redundant updates by applying a custom comparison
+    /// closure to determine whether the new value is a duplicate of the existing one.
+    ///
+    /// - Parameters:
+    ///   - titleKey: A localized string key for the navigation title. Defaults to an empty string.
+    ///   - item: A binding to an optional `Identifiable` item that determines when the destination should be presented.
+    ///   - isDuplicate: A closure that takes two `Item?` values and returns `true` if the update should be ignored.
+    ///   - content: A closure that returns the destination view for the given item.
+    @inlinable
+    func navigationDestination<Item: Identifiable, Content: View>(
+        _ titleKey: LocalizedStringKey = "",
+        item: Binding<Item?>,
+        removingDuplicatesBy isDuplicate: @escaping (Item?, Item?) -> Bool,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            titleKey,
+            item: item.removingDuplicates(by: isDuplicate),
+            content: content
+        )
+    }
+    
+    @inlinable
     func navigationDestination<Item: Identifiable, Content: View>(
         _ titleKey: LocalizedStringKey = "",
         item: Binding<Item?>,
@@ -31,6 +80,7 @@ public extension View {
     }
     
     /// Alert setter is managed by action in alert content
+    @inlinable
     func alert<Item: Identifiable>(
         item: Item?,
         content: (Item) -> Alert
@@ -61,6 +111,7 @@ public extension View {
         )
     }
     
+    @inlinable
     func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
         cover: FullScreenCover?,
         dismiss: @escaping () -> Void,
@@ -77,6 +128,7 @@ public extension View {
     }
     
     /// - Warning: Use for cases when cover setter is managed programmatically, not by SwiftUI
+    @inlinable
     func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
         cover: FullScreenCover?,
         @ViewBuilder content: @escaping (FullScreenCover) -> Content
@@ -102,6 +154,32 @@ public extension View {
             item: .init(
                 get: { destination },
                 set: { if $0 == nil { dismissDestination() }}
+            ),
+            content: content
+        )
+    }
+    
+    /// Presents a navigation destination for an `Identifiable` item while ensuring duplicate updates are ignored.
+    ///
+    /// This variant of `navigationDestination` accepts a non-binding `Identifiable` destination and provides a closure
+    /// to handle dismissal when the destination is set to `nil`. It ensures duplicate updates are ignored by deduplicating
+    /// the destination before triggering the navigation.
+    ///
+    /// - Parameters:
+    ///   - destination: An optional `Identifiable` item that determines when the destination should be presented.
+    ///   - dismiss: A closure that is called when the destination is set to `nil`, typically used to handle dismissal.
+    ///   - content: A closure that returns the destination view for the given item.
+    @inlinable
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        deduplicated destination: Destination?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            deduplicated: .init(
+                get: { destination },
+                set: { if $0 == nil { dismiss() }}
             ),
             content: content
         )
@@ -165,6 +243,100 @@ public extension View {
                 set: { if $0 == nil { dismiss() }}
             ),
             content: content
+        )
+    }
+}
+
+public extension View {
+    
+    /// A convenience overload for navigation driven purely programmatically
+    /// (no direct writes to the binding). This uses `.constant(destination)`,
+    /// so any user-driven pop (e.g., swipe back) will not automatically
+    /// set the `destination` to `nil`.
+    ///
+    /// - Parameter destination: The identifiable destination to push.
+    /// - Parameter content: A closure that generates the destination view.
+    /// - Returns: A view that conditionally navigates to the given destination.
+    @inlinable
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        deduplicating destination: Destination?,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            deduplicating: .constant(destination),
+            content: content
+        )
+    }
+    
+    /// A convenience overload for navigation driven purely programmatically
+    /// (no direct writes to the binding), with an explicit `dismiss` closure.
+    ///
+    /// - Important: If you rely on user-initiated navigation (like swiping back),
+    ///   ensure `dismiss()` sets the model's destination to `nil` so that
+    ///   SwiftUI's navigation state remains in sync.
+    ///
+    /// - Parameter destination: The current destination to navigate to, or `nil`.
+    /// - Parameter dismiss: A closure called when the user attempts to set
+    ///   the destination to `nil` (e.g., tapping the Back button).
+    /// - Parameter content: A closure that generates the destination view.
+    /// - Returns: A view that conditionally navigates to the given destination.
+    @inlinable
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        deduplicating destination: Destination?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            deduplicating: .init(
+                get: { destination },
+                set: { if $0 == nil { dismiss() }}
+            ),
+            content: content
+        )
+    }
+    
+    /// A version of navigation destination that uses a binding to an optional Identifiable
+    /// and prevents redundant writes for the same `id`.
+    ///
+    /// By wrapping the binding in `removingDuplicates()`, repeated writes of the
+    /// same underlying `id` are ignored, minimizing unnecessary view updates.
+    ///
+    /// - Parameter titleKey: The localized title for the navigation link.
+    /// - Parameter item: A binding to an optional `Identifiable` value, which
+    ///   determines when navigation is active.
+    /// - Parameter content: A closure that generates the destination view when `item` is non-`nil`.
+    /// - Returns: A view that conditionally presents `content` when `item` is non-`nil`.
+    @inlinable
+    func navigationDestination<Item: Identifiable, Content: View>(
+        _ titleKey: LocalizedStringKey = "",
+        deduplicating item: Binding<Item?>,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) -> some View {
+        
+        // Deduplicate the binding so that setting an item with the same `id`
+        // doesn't cause unnecessary updates.
+        let deduplicated = item.removingDuplicates()
+        
+        return self.background(
+            NavigationLink(
+                titleKey,
+                isActive: Binding(
+                    get: { deduplicated.wrappedValue != nil },
+                    set: { isActive in
+                        
+                        if !isActive {
+                            // Clear the item when going back
+                            deduplicated.wrappedValue = nil
+                        }
+                    }
+                ),
+                destination: {
+                    // Create the destination if we have a non-nil item
+                    deduplicated.wrappedValue.map(content)
+                }
+            )
         )
     }
 }

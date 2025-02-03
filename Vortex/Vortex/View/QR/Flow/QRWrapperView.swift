@@ -40,13 +40,49 @@ struct QRWrapperViewFactory {
     let makeQRView: MakeQRView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
+    let paymentsViewFactory: PaymentsViewFactory
+    let rootViewFactory: RootViewFactory
     
     typealias MakeOperatorView = (InternetTVDetailsViewModel) -> InternetTVDetailsView
 }
 
+extension QRWrapperViewFactory {
+    
+    func makeQRMappingFailureView(
+        binder: QRMappingFailureDomain.Binder
+    ) -> some View {
+        
+        QRMappingFailureView(binder: binder) { destination in
+            
+            switch destination {
+            case let .detailPayment(viewModel):
+                // TODO: - replace with factory call
+                PaymentsView(
+                    viewModel: viewModel,
+                    viewFactory: paymentsViewFactory
+                )
+                
+            case let .categoryPicker(categoryPicker):
+                rootViewFactory.components.makeCategoryPickerView(categoryPicker)
+                    .onFirstAppear {
+                        
+                        categoryPicker.content.event(.load)
+                    }
+                    .navigationBarWithBack(
+                        title: "Оплатить",
+                        dismiss: { binder.flow.event(.dismiss) },
+                        rightItem: .barcodeScanner(
+                            action: { binder.flow.event(.select(.outside(.scanQR))) }
+                        )
+                    )
+            }
+        }
+    }
+}
+
 private extension QRWrapperView {
     
-    #warning("add alert for sberQR failure case")
+#warning("add alert for sberQR failure case")
     
     typealias Destination = QRScannerDomain.Navigation.Destination
     
@@ -56,8 +92,8 @@ private extension QRWrapperView {
     ) -> some View {
         
         switch destination {
-        case let .failure(qrFailedViewModel):
-            factory.makeQRFailedWrapperView(qrFailedViewModel)
+        case let .failure(binder):
+            factory.makeQRMappingFailureView(binder: binder)
                 .accessibilityIdentifier(ElementIDs.qrFailure.rawValue)
             
         case let .operatorSearch(search):
@@ -75,7 +111,14 @@ private extension QRWrapperView {
         case let .providerPicker(picker):
             factory.makeSegmentedPaymentProviderPickerView(picker)
                 .accessibilityIdentifier(ElementIDs.providerPicker.rawValue)
-            
+                .navigationBarWithBack(
+                    title: "Оплатить",
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner(
+                        action: { binder.flow.event(.dismiss) }
+                    )
+                )
+
         case let .providerServicePicker(picker):
             factory.makeAnywayServicePickerFlowView(picker)
                 .navigationBarWithAsyncIcon(
@@ -116,8 +159,8 @@ extension QRScannerDomain.Navigation {
     var destination: Destination? {
         
         switch self {
-        case let .failure(qrFailedViewModel):
-            return .failure(qrFailedViewModel)
+        case let .failure(node):
+            return .failure(node.model)
             
         case let .operatorSearch(operatorSearch):
             return .operatorSearch(operatorSearch)
@@ -147,7 +190,7 @@ extension QRScannerDomain.Navigation {
     
     enum Destination {
         
-        case failure(QRFailedViewModelWrapper)
+        case failure(QRMappingFailureDomain.Binder)
         case operatorSearch(QRSearchOperatorViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case payments(PaymentsViewModel)

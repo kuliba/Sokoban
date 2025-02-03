@@ -722,7 +722,11 @@ class CurrencyWalletViewModel: ObservableObject {
         switch payload.result {
         case let .success(detailData):
             
-            let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) {
+            let viewModel = OperationDetailInfoViewModel(
+                model: model,
+                operation: detailData,
+                merchantLogoMD5Hash: nil
+            ) {
                 self.sheet = nil
             }
             

@@ -46,8 +46,7 @@ class ProductProfileViewModel: ObservableObject {
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published var link: Link?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
@@ -434,6 +433,12 @@ extension ProductProfileViewModel {
 private extension ProductProfileViewModel {
     
     func bind() {
+        
+        NotificationCenter.default
+            .publisher(for: .dismissAllViewAndSwitchToMainTab)
+            .receive(on: scheduler)
+            .sink { [weak self] _ in self?.link = nil }
+            .store(in: &bindings)
                 
         action
             .compactMap { $0 as? DelayWrappedAction }
@@ -451,7 +456,7 @@ private extension ProductProfileViewModel {
         
         action
             .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ChangePin }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] payload in
                 
                 guard let self else { return }
@@ -473,21 +478,10 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] _ in
                 
                 model.setPreferredProductID(to: product.activeProductId)
-                
-                let paymentsTransfersViewModel = PaymentsTransfersViewModel(
-                    model: model,
-                    makeFlowManager: makePaymentsTransfersFlowManager,
-                    userAccountNavigationStateManager: userAccountNavigationStateManager,
-                    sberQRServices: sberQRServices,
-                    qrViewModelFactory: qrViewModelFactory,
-                    paymentsTransfersFactory: paymentsTransfersFactory,
-                    isTabBarHidden: true,
-                    mode: .link
-                )
-                paymentsTransfersViewModel.rootActions = rootActions
-                link = .paymentsTransfers(.init(model: paymentsTransfersViewModel, cancellables: []))
-                
-            }.store(in: &bindings)
+                let switcher = paymentsTransfersFactory.makePaymentsTransfers()
+                link = .paymentsTransfersSwitcher(switcher)
+            }
+            .store(in: &bindings)
         
         action
             .compactMap { $0 as? ProductProfileViewModelAction.DepositTransferButtonDidTapped }
@@ -539,15 +533,15 @@ private extension ProductProfileViewModel {
 //                }
             }.store(in: &bindings)
         
-        $isLinkActive
-            .sink { [unowned self] value in
-                
-                if value == false {
+        $link
+            .sink { [weak self] link in
                     
-                    model.setPreferredProductID(to: nil)
+                if link == nil {
+                    
+                    self?.model.setPreferredProductID(to: nil)
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         $filterState
             .sink { state in
@@ -700,25 +694,8 @@ private extension ProductProfileViewModel {
                     textFieldAlert = nil
                     
                 case _ as ProductProfileViewModelAction.Show.MeToMeExternal:
-                    if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
-                        
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(
-                            productTo: loanAccount,
-                            closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
-                            getUImage: { self.model.images.value[$0]?.uiImage }
-                        )
-                        self.link = .meToMeExternal(meToMeExternalViewModel)
-                    } else {
-                        
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(
-                            productTo: productData,
-                            closeAction: { [weak self] in
-                                self?.action.send(ProductProfileViewModelAction.Close.Link())
-                            },
-                            getUImage: { self.model.images.value[$0]?.uiImage }
-                        )
-                        self.link = .meToMeExternal(meToMeExternalViewModel)
-                    }
+                    openMeToMeLegacy(self.productData)
+                    
                 default:
                     break
                 }
@@ -1338,6 +1315,29 @@ private extension ProductProfileViewModel {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func openMeToMeLegacy(_ productData: ProductData?) {
+        
+        var loanAccount: ProductData?
+        
+        if let productData = productData as? ProductLoanData,
+           let loan = self.model.products.value[.account]?.first(where: {
+               $0.number == productData.settlementAccount }) {
+            
+            loanAccount = loan
+        }
+        
+        let meToMeExternalViewModel = MeToMeExternalViewModel(
+            productTo: loanAccount ?? productData,
+            closeAction: { [weak self] in
+                
+                self?.action.send(ProductProfileViewModelAction.Close.Link())
+            },
+            getUImage: { self.model.images.value[$0]?.uiImage }
+        )
+        
+        self.link = .meToMeExternal(meToMeExternalViewModel)
     }
     
     private func handleDepositTransfer() {
@@ -2395,7 +2395,7 @@ extension ProductProfileViewModel {
                 openDeposit(deposit.depositID)
                 
             case .payment:
-                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService.rawValue)
+                rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             
             case .cardOrder:
                 orderCard()
@@ -2546,6 +2546,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(Node<PaymentsTransfersViewModel>)
+        case paymentsTransfersSwitcher(PaymentsTransfersSwitcherProtocol)
         case controlPanel(ControlPanelViewModel)
     }
     
@@ -3143,14 +3144,7 @@ extension ProductProfileViewModel {
             self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))
             
         default:
-            let meToMeExternalViewModel = MeToMeExternalViewModel(
-                productTo: productData,
-                closeAction: { [weak self] in
-                    self?.action.send(ProductProfileViewModelAction.Close.Link())
-                },
-                getUImage: { self.model.images.value[$0]?.uiImage }
-            )
-            self.link = .meToMeExternal(meToMeExternalViewModel)
+            openMeToMeLegacy(productData)
         }
     }
     
@@ -3249,9 +3243,15 @@ extension ProductProfileViewModel {
         operationID: Int?,
         productStatement: ProductStatementData
     ) {
-        
         // TODO: call with non-optional operationID
         guard let operationID else { return cannotRepeatPayment() }
+        
+        let closeAction: () -> Void = { [weak self] in
+            
+            self?.closeAction()   
+            self?.rootActions?.dismissAll()
+            self?.rootActions?.switchTab(.main)
+        }
         
         productProfileServices.repeatPayment(
             .init(

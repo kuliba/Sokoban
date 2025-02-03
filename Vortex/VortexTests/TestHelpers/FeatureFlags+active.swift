@@ -13,7 +13,6 @@ extension FeatureFlags {
     
     static func activeExcept(
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active,
-        historyFilterFlag: HistoryFilterFlag = true,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
         savingsAccountFlag: SavingsAccountFlag = .active,
         collateralLoanLandingFlag: CollateralLoanLandingFlag = .active,
@@ -23,7 +22,6 @@ extension FeatureFlags {
         
         return .init(
             getProductListByTypeV6Flag: getProductListByTypeV6Flag,
-            historyFilterFlag: historyFilterFlag,
             paymentsTransfersFlag: paymentsTransfersFlag,
             savingsAccountFlag: savingsAccountFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag,

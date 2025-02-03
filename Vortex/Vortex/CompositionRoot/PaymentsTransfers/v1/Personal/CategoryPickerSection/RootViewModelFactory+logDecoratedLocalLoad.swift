@@ -32,27 +32,4 @@ extension RootViewModelFactory {
         debugLog(category: .cache, message: "Loaded \(values.count) item(s) of type \(type).")
         return values
     }
-    
-    /// Logs a message at the debug level with the specified category.
-    ///
-    /// - Parameters:
-    ///   - category: The log category.
-    ///   - message: The message to log.
-    ///   - file: The file from which this method is called.
-    ///   - line: The line number from which this method is called.
-    @inlinable
-    func debugLog(
-        category: LoggerAgentCategory,
-        message: String,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        logger.log(level: .debug, category: category, message: message, file: file, line: line)
-    }
-    
-    @inlinable
-    func debugLog(pageCount: Int, of total: Int) {
-        
-        debugLog(category: .cache, message: "Page with \(pageCount) item(s) of \(total) total.")
-    }
 }

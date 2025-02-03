@@ -11,6 +11,8 @@ import LandingUIComponent
 import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import UIPrimitives
 import Combine
 
@@ -483,18 +485,21 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     sections: [],
-                    bannersBinder: .preview,
-                    makeCollateralLoanLandingBinder: { .preview },
+                    bindersFactory: .init(
+                        bannersBinder: .preview,
+                        makeCollateralLoanShowcaseBinder: { .preview },
+                        makeCollateralLoanLandingBinder: { _ in .preview },
+                        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                        makeSavingsAccountBinder: { fatalError() }
+                    ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -562,17 +567,21 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
                     onRegister: {},
                     sections: makeSections(),
-                    bannersBinder: .immediate,
-                    makeCollateralLoanLandingBinder: { .preview },
+                    bindersFactory: .init(
+                        bannersBinder: .preview,
+                        makeCollateralLoanShowcaseBinder: { .preview },
+                        makeCollateralLoanLandingBinder: { _ in .preview },
+                        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                        makeSavingsAccountBinder: { fatalError() }
+                    ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -707,6 +716,37 @@ final class RootViewModelTests: XCTestCase {
     }    
 }
 
+// MARK: - GetCollateralLandingDomain.Binder preview
+
+private extension GetCollateralLandingDomain.Binder {
+    
+    static let preview = GetCollateralLandingDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension GetCollateralLandingDomain.Content {
+    
+    static let preview = GetCollateralLandingDomain.Content(
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension GetCollateralLandingDomain.Flow {
+    
+    static let preview = GetCollateralLandingDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - GetShowcaseDomain.Binder preview
+
 private extension GetShowcaseDomain.Binder {
     
     static let preview = GetShowcaseDomain.Binder(
@@ -731,6 +771,35 @@ private extension GetShowcaseDomain.Content {
         initialState: .init(),
         reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
         handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+    )
+}
+
+// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
+
+private extension CreateDraftCollateralLoanApplicationDomain.Binder {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Content {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
+        initialState: .init(data: .preview),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Flow {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

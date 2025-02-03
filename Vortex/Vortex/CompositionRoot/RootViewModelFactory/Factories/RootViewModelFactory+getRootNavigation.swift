@@ -13,6 +13,12 @@ extension RootViewModelFactory {
     typealias MakeProductProfileByID = (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel?
     
     @inlinable
+    func isUserPersonal() -> Bool {
+        
+        !model.products.value.isEmpty && !model.onlyCorporateCards
+    }
+    
+    @inlinable
     func getRootNavigation(
         makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
@@ -34,10 +40,18 @@ extension RootViewModelFactory {
             }
             
         case .scanQR:
-            makeScanQR()
+            if isUserPersonal() {
+                makeScanQR()
+            } else {
+                completion(.outside(.tab(.main)))
+            }
             
         case .templates:
-            makeTemplatesNode()
+            if isUserPersonal() {
+                makeTemplatesNode()
+            } else {
+                completion(.outside(.tab(.main)))
+            }
             
         case .userAccount:
             makeUserAccount()
@@ -49,20 +63,20 @@ extension RootViewModelFactory {
         func makeScanQR() {
             
             let qrScanner = makeQRScannerBinder()
-            let cancellable = bind(qrScanner.content)
+            let cancellables = bind(qrScanner)
             
             completion(.scanQR(.init(
                 model: qrScanner,
-                cancellable: cancellable
+                cancellables: cancellables
             )))
         }
         
         func bind(
-            _ scanQR: QRScannerModel
-        ) -> AnyCancellable {
+            _ qrScanner: QRScannerDomain.Binder
+        ) -> Set<AnyCancellable> {
             
             // PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer.swift:308
-            return scanQR.$state
+            let content = qrScanner.content.$state
                 .compactMap { $0 }
                 .delay(for: 0.1, scheduler: schedulers.main)
             // .debounce(for: 0.1, scheduler: scheduler)
@@ -80,6 +94,12 @@ extension RootViewModelFactory {
                         break
                     }
                 }
+            
+            let flow = qrScanner.flow.$state
+                .compactMap(\.rootOutside)
+                .sink { notify(.select(.outside($0))) }
+            
+            return [content, flow]
         }
         
         func makeTemplatesNode() {
@@ -144,6 +164,27 @@ extension RootViewModelFactory {
 
 // MARK: - Adapters
 
+private extension QRScannerDomain.FlowDomain.State {
+    
+    var rootOutside: RootViewSelect.RootViewOutside? {
+
+        switch navigation {
+        case let .outside(outside):
+            switch outside {
+            case .chat:
+                return .tab(.chat)
+            case .main:
+                return .tab(.main)
+            case .payments:
+                return .tab(.payments)
+            }
+            
+        default:
+            return nil
+        }
+    }
+}
+    
 private extension PaymentProviderPickerDomain.Navigation {
     
     var outcome: NavigationOutcome<RootViewSelect>? {

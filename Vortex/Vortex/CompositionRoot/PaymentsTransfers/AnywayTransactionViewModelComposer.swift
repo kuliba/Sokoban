@@ -8,9 +8,9 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import CombineSchedulers
-import VortexTools
 import Foundation
 import PaymentComponents
+import VortexTools
 
 final class AnywayTransactionViewModelComposer {
     
@@ -45,8 +45,12 @@ extension AnywayTransactionViewModelComposer {
         typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
         typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
         
-        let elementMapperComposer = AnywayElementModelMapperComposer(model: model)
-        let elementMapper = elementMapperComposer.compose()
+        let elementMapper = AnywayElementModelMapper(
+            currencyOfProduct: currencyOfProduct(product:),
+            format: format(currency:amount:),
+            getProducts: model.productSelectProducts,
+            makeContacts: makeContacts
+        )
         
         let composer = ReducerComposer()
         let reducer = composer.compose()
@@ -71,6 +75,26 @@ extension AnywayTransactionViewModelComposer {
 }
 
 private extension AnywayTransactionViewModelComposer {
+    
+    func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        return model.currencyOf(product: product) ?? ""
+    }
+    
+    func format(
+        currency: String?,
+        amount: Decimal
+    ) -> String {
+        
+        return model.formatted(amount, with: currency ?? "") ?? ""
+    }
+    
+    func makeContacts() -> ContactsViewModel {
+        
+        model.makeContactsViewModel(forMode: .select(.contacts))
+    }
     
     func makeFooterViewModel(
         transaction: AnywayTransactionState.Transaction,
@@ -123,6 +147,6 @@ private extension AnywayTransactionViewModelComposer {
         for currency: String
     ) -> String {
         
-        model.dictionaryCurrencySymbol(for: currency) ?? ""
+        return model.dictionaryCurrencySymbol(for: currency) ?? ""
     }
 }

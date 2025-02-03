@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FlowCore
 import Foundation
 import PayHub
 import PayHubUI
@@ -17,7 +18,7 @@ extension RootViewModelFactory {
     func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
         return composeBinder(
-            makeContent: makeQRScannerModel,
+            content: makeQRScannerModel(),
             delayProvider: delayProvider,
             getNavigation: getQRNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
@@ -61,7 +62,7 @@ extension RootViewModelFactory {
             completion(.sberQR(nil))
             
         case let .sberQR(response):
-            #warning("FIXME")
+#warning("FIXME")
         }
     }
     
@@ -79,7 +80,9 @@ extension RootViewModelFactory {
             completion(payments(payload: .source(.c2b(url))))
             
         case let .failure(qrCode):
-            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            completion(.failure(
+                makeQRMappingFailureNode(qrCode, notify)
+            ))
             
         case let .mapped(mapped):
             getQRNavigation(mapped, notify, completion)
@@ -91,7 +94,9 @@ extension RootViewModelFactory {
             }
             
         case .url, .unknown:
-            completion(.failure(makeQRFailure(qrCode: nil)))
+            completion(.failure(
+                makeQRMappingFailureNode(nil, notify)
+            ))
         }
         
         func payments(
@@ -107,7 +112,7 @@ extension RootViewModelFactory {
         func pay(
             _ url: URL
         ) -> (SberQRConfirmPaymentState) -> Void {
-           
+            
             decoratedSberQRPay(url) { notify(.select(.sberQR($0))) }
         }
     }
@@ -120,7 +125,9 @@ extension RootViewModelFactory {
     ) {
         switch mapped {
         case let .missingINN(qrCode):
-            completion(.failure(makeQRFailure(qrCode: qrCode)))
+            completion(.failure(
+                makeQRMappingFailureNode(qrCode, notify)
+            ))
             
         case let .mixed(mixed):
             completion(providerPicker(mixed))
@@ -214,6 +221,19 @@ extension RootViewModelFactory {
     }
     
     @inlinable
+    func makeQRMappingFailureNode(
+        _ qrCode: QRCode?,
+        _ notify: @escaping QRScannerDomain.Notify
+    ) -> Node<QRMappingFailureDomain.Binder> {
+        
+        makeQRMappingFailureBinder(qrCode: qrCode)
+            .asNode(
+                transform: { $0.notifyEvent },
+                notify: notify
+            )
+    }
+
+    @inlinable
     func emitting(
         content: QRScannerModel
     ) -> some Publisher<FlowEvent<QRScannerDomain.Select, Never>, Never> {
@@ -256,9 +276,29 @@ private extension RootViewModelFactory.PaymentsViewModelEvent {
     }
 }
 
+private extension QRMappingFailureDomain.Navigation {
+    
+    var notifyEvent: NavigationOutcome<QRScannerDomain.Select>? {
+        
+        switch self {
+        case .detailPayment, .categoryPicker:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .back:     return .dismiss
+            case .chat:     return .select(.outside(.chat))
+            case .main:     return .select(.outside(.main))
+            case .payments: return .select(.outside(.payments))
+            case .scanQR:   return .dismiss
+            }
+        }
+    }
+}
+
 private extension QRScannerDomain.NotifyEvent {
     
-    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Navigation.Outside, Never>
     
     init(_ event: PickerFlowEvent) {
         

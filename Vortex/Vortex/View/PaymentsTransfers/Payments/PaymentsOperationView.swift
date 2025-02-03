@@ -103,19 +103,15 @@ struct PaymentsOperationView: View {
             
             Color.clear
                 .frame(height: 0)
-                .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+                .bottomSheetInteractiveDismissDisabled(item: $viewModel.bottomSheet) { bottomSheet in
                     
                     switch bottomSheet.type {
                     case .popUp(let popUpVewModel):
                         PaymentsPopUpSelectView(viewModel: popUpVewModel)
                         
                     case .antifraud(let antifraudViewModel):
-                        if #available(iOS 15.0, *) {
                         PaymentsAntifraudView(viewModel: antifraudViewModel)
                             .interactiveDismissDisabled()
-                        } else {
-                            PaymentsAntifraudView(viewModel: antifraudViewModel)
-                        }
                         
                     case .hint(let hintViewModel):
                         HintView(viewModel: hintViewModel)

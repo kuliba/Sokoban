@@ -245,6 +245,18 @@ private extension TemplatesListViewModel {
                         }
                     }
                 
+                images
+                    .filter { self.md5Hashes.contains($0.key) }
+                    .forEach { (key, value) in
+                        
+                        self.items.forEach {
+                            
+                            if let image = value.image {
+                                $0.update(image: image, forMD5Hash: key)
+                            }
+                        }
+                    }
+                
                 withAnimation {
                     
                     self.items = self.reduceItems(

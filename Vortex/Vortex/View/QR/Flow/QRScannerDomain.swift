@@ -43,7 +43,7 @@ extension QRScannerDomain {
     
     enum Navigation {
         
-        case failure(QRFailedViewModelWrapper)
+        case failure(Node<QRMappingFailureDomain.Binder>)
         case operatorSearch(QRSearchOperatorViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case outside(Outside)
