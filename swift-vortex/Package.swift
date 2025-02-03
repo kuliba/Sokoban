@@ -2806,6 +2806,9 @@ private extension Target {
             .sharedConfigs,
             .uiPrimitives,
             .rxViewModel,
+            .linkableText,
+            .amountComponent,
+            .paymentComponents
         ],
         path: "Sources/UI/\(String.orderCard)"
     )
