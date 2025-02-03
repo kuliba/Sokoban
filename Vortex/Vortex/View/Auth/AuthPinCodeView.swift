@@ -361,7 +361,10 @@ extension AuthPinCodeView {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(Text("Ok"), action: { openURL() })
+                                 dismissButton: .default(Text("Ok"), action: {
+                        openURL()
+                        viewModel.tryAutoEvaluateSensor()
+                    })
                     )
                     
                 case let .optionalRequired(alert):
@@ -369,7 +372,10 @@ extension AuthPinCodeView {
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
                                  primaryButton: .default(Text("Позже"), action: viewModel.dismissAll),
-                                 secondaryButton: .default(Text("Обновить"), action: { openURL() })
+                                 secondaryButton: .default(Text("Обновить"), action: {
+                        openURL()
+                        viewModel.tryAutoEvaluateSensor()
+                    })
                     )
                     
                 case let .required(alert):
@@ -379,7 +385,10 @@ extension AuthPinCodeView {
                     
                     return .init(title: Text(alert.title),
                                  message: Text(alert.text),
-                                 dismissButton: .default(dismissText, action: { openURL() })
+                                 dismissButton: .default(dismissText, action: {
+                        openURL()
+                        viewModel.tryAutoEvaluateSensor()
+                    })
                     )
                 }
                 

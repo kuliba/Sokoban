@@ -124,9 +124,25 @@ class AuthPinCodeViewModel: ObservableObject {
         
         model.clientInformAlertManager.alertPublisher
             .receive(on: DispatchQueue.global(qos: .background))
-            .sink { [weak self] alerts in
-                DispatchQueue.main.async {
-                    self?.clientInformAlerts = alerts
+            .combineLatest(model.sessionState, self.viewDidAppear)
+            .sink { [weak self] alerts, state, isViewDidAppear in
+                
+                guard let self else { return }
+                
+                switch state {
+                case .active:
+                    
+                    withAnimation { self.spinner = nil }
+                    
+                    if alerts != nil {
+                        
+                        DispatchQueue.main.async { self.clientInformAlerts = alerts }
+                    } else { tryAutoEvaluateSensor() }
+                    
+                default:
+                    withAnimation {
+                        self.spinner = .init()
+                    }
                 }
             }
             .store(in: &bindings)
