@@ -63,7 +63,7 @@ extension QRWrapperViewFactory {
                 )
                 
             case let .categoryPicker(categoryPicker):
-                rootViewFactory.makeCategoryPickerView(categoryPicker)
+                rootViewFactory.components.makeCategoryPickerView(categoryPicker)
                     .onFirstAppear {
                         
                         categoryPicker.content.event(.load)

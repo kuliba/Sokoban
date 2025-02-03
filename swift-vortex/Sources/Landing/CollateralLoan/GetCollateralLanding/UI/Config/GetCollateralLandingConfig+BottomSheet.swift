@@ -10,7 +10,7 @@ import SwiftUI
 
 extension GetCollateralLandingConfig {
     
-    struct BottomSheet {
+    public struct BottomSheet {
         
         let font: FontConfig
         let layouts: Layouts

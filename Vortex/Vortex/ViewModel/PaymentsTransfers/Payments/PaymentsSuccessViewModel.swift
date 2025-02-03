@@ -356,7 +356,14 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .document:
                     
                     switch mode {
-                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund, .sberQR:
+                    case .normal,
+                         .meToMe,
+                         .closeDeposit,
+                         .makePaymentToDeposit,
+                         .makePaymentFromDeposit,
+                         .change,
+                         .refund,
+                         .sberQR:
                         guard
                             let operationDetailData,
                             let paymentOperationDetailID

@@ -42,7 +42,8 @@ typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
 typealias MakeQRFailedWrapperView = (QRFailedViewModelWrapper) -> QRFailedViewModelWrapperView
 typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOperatorView
 typealias MakeQRView = (QRScanner) -> QRScanner_View
-typealias MakeSavingsAccountView = (SavingsAccountDomain.Binder) -> SavingsAccountDomain.WrapperView?
+typealias SavingsAccountDismiss = () -> Void
+typealias MakeSavingsAccountView = (SavingsAccountDomain.Binder, @escaping SavingsAccountDismiss) -> SavingsAccountDomain.WrapperView?
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
@@ -50,6 +51,10 @@ typealias MakeOrderCardView = () -> EmptyView
 
 struct ViewComponents {
     
+    let clearCache: () -> Void
+    let isCorporate: () -> Bool
+    let getUImage: (Md5hash) -> UIImage?
+
     let makeAnywayFlowView: MakeAnywayFlowView
     let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
     let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
@@ -57,6 +62,7 @@ struct ViewComponents {
     let makeControlPanelWrapperView: MakeControlPanelWrapperView
     let makeCurrencyWalletView: MakeCurrencyWalletView
     let makeIconView: MakeIconView
+    let makeGeneralIconView: MakeIconView
     let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
     let makeMainSectionProductsView: MakeMainSectionProductsView
     let makeOperationDetailView: MakeOperationDetailView
@@ -73,6 +79,18 @@ struct ViewComponents {
     let makeTemplatesListFlowView: MakeTemplatesListFlowView
     let makeTransportPaymentsView: MakeTransportPaymentsView
     let makeOrderCardView: MakeOrderCardView
+    let makeUpdatingUserAccountButtonLabel: () -> UpdatingUserAccountButtonLabel
+    let makeInfoViews: MakeInfoViews
+}
+
+extension ViewComponents {
+    
+    func makeIconView(
+        md5Hash: String?
+    ) -> IconDomain.IconView {
+        
+        makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
 }
 
 extension ViewComponents {
@@ -90,11 +108,12 @@ extension ViewComponents {
                 title: provider.origin.title,
                 subtitle: provider.origin.inn,
                 dismiss: dismiss,
-                icon: iconView(provider.origin.icon),
+                icon: makeIconView(md5Hash:provider.origin.icon),
                 style: .normal
             )
     }
     
+    @available(*, deprecated, renamed: "makeIconView(md5Hash:)")
     func iconView(
         _ icon: String?
     ) -> IconDomain.IconView {
@@ -106,6 +125,9 @@ extension ViewComponents {
 extension ViewComponents {
     
     static let preview: Self = .init(
+        clearCache: {},
+        isCorporate: { false },
+        getUImage: { _ in nil },
         makeAnywayFlowView: { _ in fatalError() },
         makeAnywayServicePickerFlowView: { _ in fatalError() },
         makeSegmentedPaymentProviderPickerView: { _ in fatalError() },
@@ -113,6 +135,7 @@ extension ViewComponents {
         makeControlPanelWrapperView: makeControlPanelWrapperView,
         makeCurrencyWalletView: makeCurrencyWalletView,
         makeIconView: { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) },
+        makeGeneralIconView: { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) },
         makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
         makeMainSectionProductsView: makeMainSectionProductsView,
         makeOperationDetailView: { _,_,_  in fatalError() },
@@ -125,10 +148,12 @@ extension ViewComponents {
         makeQRFailedWrapperView: makeQRFailedWrapperView,
         makeQRSearchOperatorView: makeQRSearchOperatorView,
         makeQRView: makeQRView,
-        makeSavingsAccountView: { _ in fatalError() },
+        makeSavingsAccountView: { _,_ in fatalError() },
         makeTemplatesListFlowView: { _ in fatalError() },
         makeTransportPaymentsView: { _ in fatalError() },
-        makeOrderCardView: { EmptyView() }
+        makeOrderCardView: { EmptyView() },
+        makeUpdatingUserAccountButtonLabel: { .init(label: .init(avatar: .checkImage, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .prod) },
+        makeInfoViews: .default
     )
     
     static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }

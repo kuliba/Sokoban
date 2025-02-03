@@ -372,7 +372,8 @@ private extension Model {
     }
 }
 
-private extension Image {
+extension Image {
     
     static let defaultLanding: Image = .init("defaultLanding")
+    static let defaultSavingsAccount: Image = .init("defaultSavingsAccount")
 }

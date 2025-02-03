@@ -30,7 +30,7 @@ extension RootViewModelFactory {
             content: content,
             delayProvider: delayProvider,
             getNavigation: getPaymentProviderPickerNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
+            witnesses: .empty
         )
     }
     
@@ -262,22 +262,6 @@ extension RootViewModelFactory {
     private func makeSearch() -> RegularFieldViewModel {
         
         makeSearch(placeholderText: "Наименование или ИНН")
-    }
-    
-    @inlinable
-    func emitting(
-        content: PaymentProviderPickerDomain.Content
-    ) -> some Publisher<FlowEvent<PaymentProviderPickerDomain.Select, Never>, Never> {
-        
-        Empty()
-    }
-    
-    @inlinable
-    func dismissing(
-        content: PaymentProviderPickerDomain.Content
-    ) -> () -> Void {
-        
-        return {}
     }
 }
 

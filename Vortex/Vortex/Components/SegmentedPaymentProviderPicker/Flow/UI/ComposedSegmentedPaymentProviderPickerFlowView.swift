@@ -12,15 +12,20 @@ import SwiftUI
 struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View
 where AnywayFlowView: View {
     
-    let flowModel: FlowModel
+    @ObservedObject var flowModel: FlowModel
     let viewFactory: ViewFactory
     
     var body: some View {
         
-        SegmentedPaymentProviderPickerFlowView(
-            flowModel: flowModel,
-            content: content,
-            destinationContent: destinationContent
+        SegmentedPaymentProviderPickerView(
+            segments: flowModel.state.content.segments,
+            providerView: providerView,
+            footer: footer,
+            config: .iVortex
+        )
+        .navigationDestination(
+            destination: flowModel.state.destination,
+            content: destinationContent
         )
     }
 }
@@ -39,16 +44,6 @@ struct ComposedSegmentedPaymentProviderPickerFlowViewFactory {
 }
 
 private extension ComposedSegmentedPaymentProviderPickerFlowView {
-    
-    func content() -> some View {
-        
-        SegmentedPaymentProviderPickerView(
-            segments: flowModel.state.content.segments,
-            providerView: providerView,
-            footer: footer,
-            config: .iVortex
-        )
-    }
     
     func providerView(
         provider: SegmentedOperatorProvider
@@ -127,7 +122,7 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
                 .navigationBarWithAsyncIcon(
                     title: node.title,
                     subtitle: node.subtitle,
-                    dismiss: { node.model.event(.dismiss) },
+                    dismiss: { flowModel.event(.dismiss) },
                     icon: viewFactory.makeIconView(node.icon)
                 )
         }
@@ -182,5 +177,40 @@ private extension Node where Model == AnywayServicePickerFlowModel {
     var icon: IconDomain.Icon? {
         
         model.state.content.state.payload.provider.origin.icon.map { .md5Hash(.init($0)) }
+    }
+}
+
+extension SegmentedPaymentProviderPickerFlowState {
+    
+    var destination: Navigation.Destination? {
+        
+        guard case let .destination(destination) = navigation 
+        else { return nil }
+        
+        return destination
+    }
+}
+
+extension SegmentedPaymentProviderPickerFlowState.Navigation.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .payByInstructions(node):
+            return .payByInstructions(.init(node.model))
+            
+        case let .payments(node):
+            return .payments(.init(node.model))
+            
+        case let .servicePicker(node):
+            return .servicePicker(.init(node.model))
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payByInstructions(ObjectIdentifier)
+        case payments(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
     }
 }

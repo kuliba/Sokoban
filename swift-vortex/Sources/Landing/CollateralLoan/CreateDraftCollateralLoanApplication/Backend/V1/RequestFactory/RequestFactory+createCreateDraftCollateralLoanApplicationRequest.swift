@@ -17,7 +17,7 @@ public extension RequestFactory {
         public let termMonth: UInt
         public let collateralType: String
         public let interestRate: Double
-        public let collateralInfo: String
+        public let collateralInfo: String?
         public let cityName: String
         public let payrollClient: Bool
         
@@ -27,7 +27,7 @@ public extension RequestFactory {
             termMonth: UInt,
             collateralType: String,
             interestRate: Double,
-            collateralInfo: String,
+            collateralInfo: String?,
             cityName: String,
             payrollClient: Bool
         ) {

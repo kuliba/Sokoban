@@ -7,14 +7,56 @@
 
 import SwiftUI
 import UIPrimitives
+import InputComponent
 
 public struct CreateDraftCollateralLoanApplicationConfig {
         
     public let fonts: Fonts
     public let colors: Colors
     public let layouts: Layouts
-    public let header: Header
-
+    public let icons: Icons
+    public let elements: Elements
+    
+    public struct Elements {
+        
+        public let header: Header
+        public let amount: Amount
+        public let period: Period
+        public let percent: Percent
+        public let city: City
+        public let button: Button
+        
+        public init(
+            header: Header,
+            amount: Amount,
+            period: Period,
+            percent: Percent,
+            city: City,
+            button: Button
+        ) {
+            self.header = header
+            self.amount = amount
+            self.period = period
+            self.percent = percent
+            self.city = city
+            self.button = button
+        }
+    }
+    
+    public struct Icons {
+        
+        public let selectedItem: Image
+        public let unselectedItem: Image
+        
+        public init(
+            selectedItem: Image,
+            unselectedItem: Image
+        ) {
+            self.selectedItem = selectedItem
+            self.unselectedItem = unselectedItem
+        }
+    }
+    
     public struct Fonts {
         
         let title: TextConfig
@@ -30,9 +72,17 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public struct Colors {
         
         public let background: Color
-        
-        public init(background: Color) {
+        public let selected: Color
+        public let unselected: Color
+
+        public init(
+            background: Color,
+            selected: Color,
+            unselected: Color
+        ) {
             self.background = background
+            self.selected = selected
+            self.unselected = unselected
         }
     }
     
@@ -87,17 +137,32 @@ public struct CreateDraftCollateralLoanApplicationConfig {
             self.background = background
         }
     }
+    
+    public struct ChevronViewConfig: Equatable {
+        
+        public let color: Color
+        public let image: Image
+        public let size: CGFloat
+        
+        public init(color: Color, image: Image, size: CGFloat) {
+            self.color = color
+            self.image = image
+            self.size = size
+        }
+    }
 }
 
 extension CreateDraftCollateralLoanApplicationConfig {
     
-    static let preview = Self(
+    public static let `default` = Self(
         fonts: .init(
             title: .init(textFont: Font.system(size: 14), textColor: .title),
             value: .init(textFont: Font.system(size: 16), textColor: .primary)
         ),
         colors: .init(
-            background: .background
+            background: .background,
+            selected: .red,
+            unselected: .secondary
         ),
         layouts: .init(
             iconSize: .init(width: 27, height: 27),
@@ -106,10 +171,10 @@ extension CreateDraftCollateralLoanApplicationConfig {
             contentVerticalSpacing: 4,
             paddings: .init(
                 stack: .init(
-                    top: 16,
-                    leading: 16,
-                    bottom: 16,
-                    trailing: 15
+                    top: 10,
+                    leading: 15,
+                    bottom: 0,
+                    trailing: 12
                 ),
                 contentStack: .init(
                     top: 13,
@@ -119,7 +184,18 @@ extension CreateDraftCollateralLoanApplicationConfig {
                 )
             )
         ),
-        header: .preview
+        icons: .init(
+            selectedItem: Image(systemName: "record.circle"),
+            unselectedItem: Image(systemName: "circle")
+        ),
+        elements: .init(
+            header: .preview,
+            amount: .preview,
+            period: .preview,
+            percent: .preview,
+            city: .preview,
+            button: .preview
+        )
     )
 }
 

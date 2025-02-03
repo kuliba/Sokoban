@@ -7,6 +7,7 @@
 
 import RxViewModel
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension GetCollateralLandingDomain {
 
@@ -33,12 +34,14 @@ extension GetCollateralLandingDomain {
     
     enum Select: Equatable {
         // TODO: Replace to payload
-        case createDraftCollateralLoanApplication(String)
+        case createDraftCollateralLoanApplication(Payload)
+        case showCaseList(ExternalEvent.CaseType)
     }
     
     enum Navigation {
 
         // TODO: Need to realize binder in the future
-        case createDraftCollateralLoanApplication(String)
+        case createDraftCollateralLoanApplication(CreateDraftCollateralLoanApplicationDomain.Binder)
+        case showBottomSheet(ExternalEvent.CaseType)
     }
 }

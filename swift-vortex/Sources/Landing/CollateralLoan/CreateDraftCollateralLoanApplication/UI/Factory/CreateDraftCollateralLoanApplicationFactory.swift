@@ -11,41 +11,36 @@ import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
-    let makeImageViewWithMd5hash: MakeImageViewWithMd5hash
-    let makeImageView: MakeImageView
-    
-    private let config: Config
+    public let makeImageViewWithMD5hash: MakeImageViewWithMD5hash
+    public let makeImageViewWithURL: MakeImageViewWithURL
     
     public init(
-            makeImageViewWithMd5hash: @escaping MakeImageViewWithMd5hash,
-            makeImageView: @escaping MakeImageView,
-            config: Config
-        ) {
-            self.makeImageViewWithMd5hash = makeImageViewWithMd5hash
-            self.makeImageView = makeImageView
-            self.config = config
-        }
+        makeImageViewWithMD5hash: @escaping MakeImageViewWithMD5hash,
+        makeImageViewWithURL: @escaping MakeImageViewWithURL
+    ) {
+        self.makeImageViewWithMD5hash = makeImageViewWithMD5hash
+        self.makeImageViewWithURL = makeImageViewWithURL
+    }
     
-    public typealias MakeImageViewWithMd5hash = (String) -> UIPrimitives.AsyncImage
-    public typealias MakeImageView = () -> UIPrimitives.AsyncImage
-    public typealias Config = CreateDraftCollateralLoanApplicationConfig
+    public typealias MakeImageViewWithMD5hash = (String) -> UIPrimitives.AsyncImage
+    public typealias MakeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
 }
 
 extension CreateDraftCollateralLoanApplicationFactory {
     
     static let preview = Self(
-        makeImageViewWithMd5hash: { _ in .init(
-            image: .iconPlaceholder,
-            publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-        )},
-        makeImageView: {
-          
-            .init(
-                image: .iconPlaceholder,
-                publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-            )
-        },
-        config: .preview
+        makeImageViewWithMD5hash: { _ in
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )},
+        makeImageViewWithURL: { _ in
+            
+                .init(
+                    image: .iconPlaceholder,
+                    publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
+                )
+        }
     )
 }
 
