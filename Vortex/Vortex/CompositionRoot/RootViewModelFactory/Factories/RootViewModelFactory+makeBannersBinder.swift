@@ -7,8 +7,11 @@
 
 import Banners
 import CombineSchedulers
-import VortexTools
 import Foundation
+import RemoteServices
+import SerialComponents
+import VortexTools
+
 
 extension RootViewModelFactory {
     
@@ -16,35 +19,31 @@ extension RootViewModelFactory {
     func makeLoadBanners() -> LoadBanners {
         
         let localBannerListLoader = ServiceItemsLoader.default
-        let getBannerList = NanoServices.makeGetBannerCatalogListV2(
-            httpClient: infra.httpClient,
-            log: infoNetworkLog
+        let bannersRemoteLoad = nanoServiceComposer.composeSerialResultLoad(
+            createRequest: { try RequestFactory.createGetBannerCatalogListV2Request($0, 120.0) },
+            mapResponse: Vortex.ResponseMapper.mapGetBannerCatalogListResponse
         )
-        
-        let getBannerListLoader = AnyLoader { completion in
-            
-            localBannerListLoader.serial {
-                
-                getBannerList(($0, 120)) {
-                    
-                    completion($0)
-                }
-            }
-        }
-        
-        let bannerListDecorated = CacheDecorator(
-            decoratee: getBannerListLoader,
-            cache: { response, completion in
-                localBannerListLoader.save(.init(response), completion)
-            }
-        )
-        
         let loadBannersList: LoadBanners = { completion in
             
-            bannerListDecorated.load {
+            localBannerListLoader.serial { serial in
                 
-                let banners = (try? $0.get()) ?? .init(bannerCatalogList: [], serial: "")
-                completion(banners.bannerCatalogList.map { .banner($0)})
+                bannersRemoteLoad(serial) { [bannersRemoteLoad] in
+                    
+                    switch $0 {
+                    case let .success(banners):
+                        if serial != banners.serial {
+                            localBannerListLoader.save(.init(serial: banners.serial, items: banners.value), {})
+                        }
+                        completion(banners.value.map {.banner($0)})
+                        
+                    case .failure:
+                        localBannerListLoader.load {
+                            completion($0.items.map { .banner($0 as! BannerCatalogListData) })
+                        }
+                    }
+                    
+                    _ = bannersRemoteLoad
+                }
             }
         }
         
@@ -69,4 +68,25 @@ extension BannersBinder {
             loadLandingByType: {_, _ in }
         )
     )
+}
+
+// MARK: - Adapters
+
+extension Vortex.ResponseMapper {
+    
+    static func mapGetBannerCatalogListResponse(
+        data: Data,
+        response: HTTPURLResponse
+    ) -> Result<SerialComponents.SerialStamped<String, [BannerCatalogListData]>, Error> {
+        
+        RemoteServices.ResponseMapper
+            .mapGetBannerCatalogListResponse(data, response)
+            .map {
+                .init(
+                    value: $0.bannerCatalogList.map {
+                        .init($0)
+                    }, serial: $0.serial)
+            }
+            .mapError { $0 }
+    }
 }
