@@ -13,13 +13,13 @@ import OTPInputComponent
 public struct CollateralLoanLandingGetShowcaseViewFactory {
     
     public let config: CollateralLoanLandingGetShowcaseViewConfig
-    public let makeImageViewWithMD5Hash: makeImageViewWithMD5Hash
-    public let makeImageViewWithURL: makeImageViewWithURL
+    public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
+    public let makeImageViewWithURL: MakeImageViewWithURL
     
     public init(
         config: CollateralLoanLandingGetShowcaseViewConfig = .base,
-        makeImageViewWithMD5Hash: @escaping makeImageViewWithMD5Hash,
-        makeImageViewWithURL: @escaping makeImageViewWithURL
+        makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
+        makeImageViewWithURL: @escaping MakeImageViewWithURL
     ) {
         self.config = config
         self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
@@ -30,8 +30,8 @@ public struct CollateralLoanLandingGetShowcaseViewFactory {
 public extension CollateralLoanLandingGetShowcaseViewFactory {
 
     typealias IconView = UIPrimitives.AsyncImage
-    typealias makeImageViewWithMD5Hash = (String) -> IconView
-    typealias makeImageViewWithURL = (String) -> IconView
+    typealias MakeImageViewWithMD5Hash = (String) -> IconView
+    typealias MakeImageViewWithURL = (String) -> IconView
 }
 
 // MARK: Preview helpers

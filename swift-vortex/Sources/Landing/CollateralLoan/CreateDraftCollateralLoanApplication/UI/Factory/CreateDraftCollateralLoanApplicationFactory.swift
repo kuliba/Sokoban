@@ -13,20 +13,20 @@ import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
-    public let makeImageViewByMD5hash: MakeImageViewByMD5hash
-    public let makeImageViewByURL: MakeImageViewByURL
+    public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
+    public let makeImageViewWithURL: MakeImageViewWithURL
     
     public init(
-        makeImageViewByMD5hash: @escaping MakeImageViewByMD5hash,
-        makeImageViewByURL: @escaping MakeImageViewByURL
+        makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
+        makeImageViewWithURL: @escaping MakeImageViewWithURL
     ) {
-        self.makeImageViewByMD5hash = makeImageViewByMD5hash
-        self.makeImageViewByURL = makeImageViewByURL
+        self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
+        self.makeImageViewWithURL = makeImageViewWithURL
     }
     
     public typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
-    public typealias makeImageViewWithMD5Hash = ShowcaseFactory.makeImageViewWithMD5Hash
-    public typealias makeImageViewWithURL = ShowcaseFactory.makeImageViewWithURL
+    public typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
+    public typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
     public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     public typealias EventDispatcher = (Event) -> Void
 }
@@ -36,8 +36,8 @@ public struct CreateDraftCollateralLoanApplicationFactory {
 public extension CreateDraftCollateralLoanApplicationFactory {
     
     static let preview = Self(
-        makeImageViewByMD5hash: { _ in .preview },
-        makeImageViewByURL: { _ in .preview }
+        makeImageViewWithMD5Hash: { _ in .preview },
+        makeImageViewWithURL: { _ in .preview }
     )
 }
 

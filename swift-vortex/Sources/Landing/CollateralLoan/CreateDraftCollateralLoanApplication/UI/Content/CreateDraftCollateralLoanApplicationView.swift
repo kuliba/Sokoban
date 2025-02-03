@@ -201,8 +201,9 @@ extension View {
 
 extension CreateDraftCollateralLoanApplicationView {
     
-    public typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    public typealias State = Domain.State
+    public typealias Event = Domain.Event
     public typealias Config = CreateDraftCollateralLoanApplicationConfig
     public typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
