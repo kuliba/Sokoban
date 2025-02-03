@@ -1474,7 +1474,8 @@ private extension Target {
         name: .orderCardLandingBackendTests,
         dependencies: [
             .orderCardLandingBackend,
-            .customDump
+            .customDump,
+            .uiPrimitives
         ],
         path: "Tests/Landing/\(String.orderCardLandingBackendTests)"
     )
@@ -2805,7 +2806,6 @@ private extension Target {
             // internal packages
             .sharedConfigs,
             .uiPrimitives,
-            .rxViewModel,
             .linkableText,
             .amountComponent,
             .paymentComponents

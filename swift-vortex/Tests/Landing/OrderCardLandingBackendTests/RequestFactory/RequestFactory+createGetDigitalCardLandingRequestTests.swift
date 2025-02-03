@@ -8,6 +8,7 @@
 import XCTest
 import OrderCardLandingBackend
 import UIPrimitives
+import RemoteServices
 
 final class RequestFactory_createGetDigitalCardLandingRequestTests: XCTestCase {
 
