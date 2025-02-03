@@ -12,7 +12,7 @@ struct GetCollateralLandingDocumentView: View {
     
     let document: Document
     let config: Config.Documents.List
-    let makeImageViewWithMD5Hash: Factory.makeImageViewWithMD5Hash
+    let makeImageViewWithMD5Hash: Factory.MakeImageViewWithMD5Hash
 
     var body: some View {
         

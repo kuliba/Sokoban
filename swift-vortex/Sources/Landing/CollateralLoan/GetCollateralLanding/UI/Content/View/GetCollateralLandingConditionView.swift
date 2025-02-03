@@ -12,7 +12,7 @@ struct GetCollateralLandingConditionView: View{
 
     let condition: Condition
     let config: Config
-    let makeImageViewWithMD5Hash: Factory.makeImageViewWithMD5Hash
+    let makeImageViewWithMD5Hash: Factory.MakeImageViewWithMD5Hash
 
     var body: some View {
         
