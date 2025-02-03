@@ -460,6 +460,9 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
             
         case .sberQR(.some(_)):
             return .sberQR
+            
+        case .sberQRComplete:
+            return .sberQRComplete
         }
     }
     
@@ -474,6 +477,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case providerServicePicker
         case sberQR
         case sberQRFailure
+        case sberQRComplete
     }
     
     private func makePayments(

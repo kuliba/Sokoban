@@ -38,7 +38,7 @@ extension QRScannerDomain {
         
         case outside(Outside)
         case qrResult(QRModelResult)
-        case sberQR(CreateSberQRPaymentResponse?)
+        case sberQRResponse(CreateSberQRPaymentResponse?)
     }
     
     enum Navigation {
@@ -51,5 +51,6 @@ extension QRScannerDomain {
         case providerPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(AnywayServicePickerFlowModel)
         case sberQR(SberQRConfirmPaymentViewModel?)
+        case sberQRComplete(PaymentsSuccessViewModel?)
     }
 }

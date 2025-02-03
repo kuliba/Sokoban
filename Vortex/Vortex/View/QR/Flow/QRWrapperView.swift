@@ -26,6 +26,10 @@ struct QRWrapperView: View {
                     dismiss: { event(.dismiss) },
                     content: destinationContent
                 )
+                .fullScreenCover(
+                    cover: state.navigation?.fullScreenCover,
+                    content: fullScreenCoverContent
+                )
                 .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
         }
     }
@@ -44,6 +48,7 @@ struct QRWrapperViewFactory {
     let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
     let paymentsViewFactory: PaymentsViewFactory
     let rootViewFactory: RootViewFactory
+    let components: ViewComponents
     
     typealias MakeOperatorView = (InternetTVDetailsViewModel) -> InternetTVDetailsView
 }
@@ -120,7 +125,7 @@ private extension QRWrapperView {
                         action: { binder.flow.event(.dismiss) }
                     )
                 )
-
+            
         case let .providerServicePicker(picker):
             factory.makeAnywayServicePickerFlowView(picker)
                 .navigationBarWithAsyncIcon(
@@ -138,6 +143,19 @@ private extension QRWrapperView {
                     title: "Оплата по QR-коду",
                     dismiss: { binder.flow.event(.dismiss) }
                 )
+        }
+    }
+    
+    typealias FullScreenCover = QRScannerDomain.Navigation.FullScreenCover
+    
+    @ViewBuilder
+    func fullScreenCoverContent(
+        fullScreenCover: FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case let .sberQRComplete(viewModel):
+            factory.components.makePaymentsSuccessView(viewModel)
         }
     }
 }
@@ -199,6 +217,24 @@ extension QRScannerDomain.Navigation {
             
         case let .sberQR(.some(sberQRConfirm)):
             return .sberQR(sberQRConfirm)
+            
+        case .sberQRComplete:
+            return nil
+        }
+    }
+    
+    
+    var fullScreenCover: FullScreenCover? {
+        
+        switch self {
+        case .failure, .operatorSearch, .operatorView, .outside, .payments, .providerPicker, .providerServicePicker, .sberQR:
+            return nil
+            
+        case .sberQRComplete(nil):
+            return nil
+            
+        case let .sberQRComplete(.some(complete)):
+            return .sberQRComplete(complete)
         }
     }
     
@@ -211,6 +247,11 @@ extension QRScannerDomain.Navigation {
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
         case providerServicePicker(AnywayServicePickerFlowModel)
         case sberQR(SberQRConfirmPaymentViewModel)
+    }
+    
+    enum FullScreenCover {
+        
+        case sberQRComplete(PaymentsSuccessViewModel)
     }
 }
 
@@ -251,5 +292,21 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case providerPicker(ObjectIdentifier)
         case providerServicePicker(ObjectIdentifier)
         case sberQR(ObjectIdentifier)
+    }
+}
+
+extension QRScannerDomain.Navigation.FullScreenCover: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .sberQRComplete(complete):
+            return .sberQRComplete(.init(complete))
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case sberQRComplete(ObjectIdentifier)
     }
 }
