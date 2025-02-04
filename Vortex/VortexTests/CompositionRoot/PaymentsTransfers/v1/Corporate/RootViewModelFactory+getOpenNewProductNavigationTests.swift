@@ -100,6 +100,9 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
         case let .alert(alert):
             return .alert(alert)
             
+        case .main:
+            return .main
+            
         case .openAccount:
             return .openAccount
             
@@ -112,6 +115,9 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
         case .openProduct:
             return .openProduct
             
+        case .openSticker:
+            return .openSticker
+            
         case let .openURL(url):
             return .openURL(url)
         }
@@ -121,10 +127,12 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
     enum EquatableNavigation: Equatable {
         
         case alert(String)
+        case main
         case openAccount
         case openCard
         case openDeposit
         case openProduct
+        case openSticker
         case openURL(URL)
     }
 }
