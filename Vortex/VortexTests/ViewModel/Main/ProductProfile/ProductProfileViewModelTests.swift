@@ -864,7 +864,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNotNil(sut.link)
-        XCTAssertTrue(sut.viewModelByLink is PaymentsTransfersViewModel)
+        XCTAssertTrue(sut.viewModelByLink is PaymentsTransfersSwitcherProtocol)
 
         sut.link = nil
     }
@@ -1198,10 +1198,8 @@ private extension ProductProfileViewModel {
         switch link {
         case let .anyway(node):
             return node.model
-            
         case let .payment(viewModel):
             return viewModel
-            
         case let .productInfo(viewModel):
             return viewModel
         case let .productStatement(viewModel):
@@ -1214,6 +1212,8 @@ private extension ProductProfileViewModel {
             return node.model
         case let .controlPanel(viewModel):
             return viewModel
+        case let .paymentsTransfersSwitcher(switcher):
+            return switcher
         }
     }
 }

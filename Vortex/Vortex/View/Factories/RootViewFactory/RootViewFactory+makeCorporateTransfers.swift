@@ -9,7 +9,7 @@ import PayHubUI
 import RxViewModel
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makeCorporateTransfersView(

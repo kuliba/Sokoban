@@ -14,7 +14,6 @@ struct MainViewFactory {
     let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeInfoViews: RootViewFactory.MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let components: ViewComponents
 }

@@ -116,9 +116,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             value: dateString
         )
         
-        let operationCategoryCell = Self.operationCategoryCellViewModel(value: operation?.operationCategory)
-        let documentNumberCell = Self.documentNumberCellViewModel(value: operation?.documentNumber)
-        
         guard !isStandardFlow else {
             
             (cells, self.logo) = Self.standardFlow(
@@ -134,7 +131,6 @@ final class OperationDetailInfoViewModel: Identifiable {
         }
         
         switch statement.paymentDetailType {
-            
         case .otherBank:
             if let payeeCardNumber = operation?.payeeCardNumber {
                 
@@ -143,9 +139,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.bank.icon,
                     value: payeeCardNumber))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell)}
-            if let documentNumberCell { cells.append(documentNumberCell)}
             
             if let amountCell = Self.amountCell(
                 with: model,
@@ -180,9 +173,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
                 cells.append(creditAccount)
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-          //  if let documentNumberCell { cells.append(documentNumberCell)}
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -201,7 +191,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(comissionCell)
             }
             
-            if let debitAccount = debitAccount(payeeCardID: operation?.payerCardId) {
+            if let debitAccount = debitAccount(payeeCardID: operation?.payerAccountId ?? operation?.payerCardId) {
                 
                 cells.append(debitAccount)
             }
@@ -240,10 +230,8 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(BankCellViewModel(
                 title: "Банк получателя",
                 icon:  vortexIcon,
-                name: vortexName))
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
+                name: vortexName
+            ))
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -296,9 +284,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.geo.icon,
                     value: countryName))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -393,9 +378,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.geo.icon,
                     value: countryName))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let amount = operation?.amount,
                let foremattedAmount = self.model.amountFormatted(
@@ -475,13 +457,14 @@ final class OperationDetailInfoViewModel: Identifiable {
                 dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank,
                 type,
                 operation,
-                operationCategoryCell,
-                documentNumberCell,
+                nil,
+                nil,
                 amountCell,
                 comissionCell(),
                 debitAccounCell,
                 statement.comment,
-                dateString)
+                dateString
+            )
             
         case .insideOther:
             
@@ -526,8 +509,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: image,
                     value: statement.groupName))
             }
-            
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -575,9 +556,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     name: provider))
             }
             
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
-
             if let amountCell = Self.amountCell(
                 with: model,
                 amount: statement.amount,
@@ -624,9 +602,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.account.icon,
                     value: account))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -691,9 +666,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.account.icon,
                     value: account))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -735,9 +707,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
                 cells.append(debitAccounCell)
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let amountCell = Self.amountCell(
                 with: model,
@@ -783,8 +752,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: nil,
                     value: "\(statement.groupName)"))
             }
-            
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
@@ -865,9 +832,6 @@ final class OperationDetailInfoViewModel: Identifiable {
 
               cells.append(bankCell)
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
@@ -956,8 +920,8 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells = Self.makeItemsForTransport(
                 dictionaryAnywayOperator: model.dictionaryAnywayOperator,
                 operation,
-                operationCategoryCell,
-                documentNumberCell,
+                nil,
+                nil,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -977,9 +941,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
                 return .init(uiImage: uiImage)
             }()
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
@@ -1096,9 +1057,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     icon: image,
                     name: statement.merchant))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
@@ -1132,9 +1090,6 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: nil,
                     value: payeeINN))
             }
-            
-            if let operationCategoryCell { cells.append(operationCategoryCell) }
-            if let documentNumberCell { cells.append(documentNumberCell) }
 
             if let formattedAmount = model.amountFormatted(
                 amount: statement.amount,
@@ -1352,8 +1307,8 @@ extension OperationDetailInfoViewModel {
         
         let cells = [
             merchant,
-            operationCategoryCell,
-            documentNumberCell,
+            operation?.paymentFlow != "MOBILE" ? operationCategoryCell : nil,
+            operation?.paymentFlow != "MOBILE" ? documentNumberCell : nil,
             paymentID,
             amount,
             feeCell,
@@ -1399,8 +1354,12 @@ extension OperationDetailInfoViewModel {
             bank: model.bank(memberID:)
         )
         
-        let operationCategoryCell = Self.operationCategoryCellViewModel(value: operation?.operationCategory)
-        let documentNumberCell = Self.documentNumberCellViewModel(value: operation?.documentNumber)
+        let operationCategoryCell = Self.operationCategoryCellViewModel(
+            value: operation?.operationCategory
+        )
+        let documentNumberCell = Self.documentNumberCellViewModel(
+            value: operation?.documentNumber
+        )
 
         return [
             operationCategoryCell,
@@ -1718,7 +1677,7 @@ private extension OperationDetailInfoViewModel {
         value: String?
     ) -> PropertyCellViewModel? {
         
-        guard let value else { return nil }
+        guard  let value else { return nil }
         
         return .init(
             title: title,
@@ -1750,10 +1709,14 @@ extension OperationDetailInfoViewModel {
             title: "Счет списания",
             productId: payerProductId,
             productNumber: payerProductNumber)
+         
+        let operationCategoryViewModel = operation.operationCategory != nil ? Self.operationCategoryCellViewModel(
+            value: operation.operationCategory
+        ) : nil
         
-        let operationCategoryViewModel = Self.operationCategoryCellViewModel(value: operation.operationCategory)
-        
-        let documentNumberViewModel = Self.documentNumberCellViewModel(value: operation.documentNumber)
+        let documentNumberViewModel = operation.documentNumber != nil ? Self.documentNumberCellViewModel(
+            value: operation.documentNumber
+        ) : nil
 
         let amountViewModel = makePropertyViewModel(
             productId: payerProductId,
@@ -1797,7 +1760,6 @@ extension OperationDetailInfoViewModel {
         
         let payeeBankViewModel = makeBankViewModel(
             operation: operation)
-        
         
         if let merchantLogoMD5Hash {
             

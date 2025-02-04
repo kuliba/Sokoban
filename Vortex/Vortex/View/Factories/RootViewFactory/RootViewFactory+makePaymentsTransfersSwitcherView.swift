@@ -9,20 +9,23 @@ import PayHubUI
 import SwiftUI
 import UIPrimitives
 
-private extension TimeInterval {
+extension ViewComponents {
     
-    static var refreshCompletionDelay: Self {
+    @ViewBuilder
+    func makePaymentsTransfersSwitcherView(
+        _ switcher: PaymentsTransfersSwitcherProtocol
+    ) -> some View {
         
-#if RELEASE
-        120
-#else
-        30
-#endif
+        switch switcher as? PaymentsTransfersSwitcher {
+        case .none:
+            Text("Unexpected switcher type")
+                .foregroundStyle(.red)
+            
+        case let .some(switcher):
+            makePaymentsTransfersSwitcherView(switcher)
+        }
     }
-}
-
-extension RootViewFactory {
-    
+        
     func makePaymentsTransfersSwitcherView(
         _ switcher: PaymentsTransfersSwitcher
     ) -> some View {
@@ -42,3 +45,16 @@ extension RootViewFactory {
         }
     }
 }
+
+private extension TimeInterval {
+    
+    static var refreshCompletionDelay: Self {
+        
+#if RELEASE
+        120
+#else
+        30
+#endif
+    }
+}
+

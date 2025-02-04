@@ -26,13 +26,13 @@ extension RootViewModelFactory {
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
         
-        let categoryPicker = content.categoryPicker.sectionBinder
+        let event = content.categoryPicker.sectionBinder?.content.event
         
         let notify: () -> Void = {
             
             nanoServices.reloadCategories(
-                { categoryPicker?.content.event($0) },
-                { categoryPicker?.content.event(.loaded($0?.pending)) }
+                { event?($0) },
+                { event?(.loaded($0?.pending)) }
             )
         }
         
@@ -247,10 +247,6 @@ private extension PaymentsTransfersPersonalTransfersDomain.Binder {
         
         flow.$state
             .compactMap(\.select)
-            .handleEvents(receiveOutput: {
-                
-                print($0)
-            })
             .map { .select($0) }
             .eraseToAnyPublisher()
     }

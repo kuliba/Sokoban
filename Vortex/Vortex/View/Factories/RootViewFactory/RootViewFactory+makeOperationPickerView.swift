@@ -11,7 +11,7 @@ import RxViewModel
 import SwiftUI
 import UtilityServicePrepaymentUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makeOperationPickerView(
@@ -20,7 +20,7 @@ extension RootViewFactory {
         
         OperationPickerView(
             operationPicker: operationPicker, 
-            components: components,
+            components: self,
             makeIconView: makeIconView
         )
     }

@@ -9,7 +9,7 @@
 import XCTest
 
 final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTests {
-          
+    
     // MARK: - outside
     
     func test_outside_productProfile_shouldDeliverOutsideProductProfile() {
@@ -20,12 +20,12 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     }
     
     func test_outside_productProfile_shouldDeliverFailureOnMissingProduct() {
-         
+        
         let product = anyProduct(id: .random(in: 1...9), productType: .card)
-
+        
         expect(.outside(.productProfile(product.id)), toDeliver: .failure(.makeProductProfileFailure(product.id)))
     }
-
+    
     func test_outside_tab_main_shouldDeliverOutsideTabMain() {
         
         expect(.outside(.tab(.main)), toDeliver: .outside(.tab(.main)))
@@ -38,14 +38,22 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     
     // MARK: - scanQR
     
-    func test_scanQR_shouldDeliverQRScanner() {
+    func test_scanQR_shouldDeliverQRScanner() throws {
         
-        expect(.scanQR, toDeliver: .scanQR)
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .scanQR, toDeliver: .scanQR)
     }
     
-    func test_scanQR_shouldNotifyWithDismissOnCancel() {
+    func test_scanQR_shouldNotifyWithDismissOnCancel() throws{
         
-        expect(.scanQR, toNotifyWith: [.dismiss]) {
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .scanQR, toNotifyWith: [.dismiss]) {
             
             $0.scanQR?.event(.cancel)
         }
@@ -53,44 +61,64 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     
     // MARK: - templates
     
-    func test_templates_shouldDeliverTemplates() {
+    func test_templates_shouldDeliverTemplates() throws {
         
-        expect(.templates, toDeliver: .templates)
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .templates, toDeliver: .templates)
     }
     
-    func test_templates_shouldNotifyWithDismissOnDismissAction() {
+    func test_templates_shouldNotifyWithDismissOnDismissAction() throws {
         
-        expect(.templates, toNotifyWith: [.dismiss]) {
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .templates, toNotifyWith: [.dismiss]) {
             
             $0.templates?.state.content.dismissAction()
         }
     }
     
-    func test_templates_shouldNotifyWithMainTabOnMainTabStatus() {
+    func test_templates_shouldNotifyWithMainTabOnMainTabStatus() throws {
         
-        expect(.templates, toNotifyWith: [.select(.outside(.tab(.main)))]) {
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut, .templates, toNotifyWith: [.select(.outside(.tab(.main)))]) {
             
             $0.templates?.event(.flow(.init(status: .tab(.main))))
         }
     }
     
-    func test_templates_shouldNotifyWithPaymentsTabOnPaymentsTabStatus() {
+    func test_templates_shouldNotifyWithPaymentsTabOnPaymentsTabStatus() throws {
         
-        expect(
-            .templates,
-            toNotifyWith: [.select(.outside(.tab(.payments)))]
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut,
+               .templates,
+               toNotifyWith: [.select(.outside(.tab(.payments)))]
         ) {
             $0.templates?.event(.flow(.init(status: .tab(.payments))))
         }
     }
     
-    func test_templates_shouldNotifyWithProductIDOnProductIDStatus() {
+    func test_templates_shouldNotifyWithProductIDOnProductIDStatus() throws {
         
         let productID = makeProductID()
         
-        expect(
-            .templates,
-            toNotifyWith: [.select(.outside(.productProfile(productID)))]
+        let model = Model.mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let sut = makeSUT(model: model).sut
+        
+        expect(sut: sut,
+               .templates,
+               toNotifyWith: [.select(.outside(.productProfile(productID)))]
         ) {
             $0.templates?.event(.select(.productID(productID)))
         }
@@ -154,21 +182,21 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
     }
     
     // TODO: - fix delay await
-//    func test_standardPayment_shouldNotifyWithScanQROnQR() throws {
-//        
-//        let (sut, httpClient, _) = try makeSUT(
-//            model: .withServiceCategoryAndOperator(ofType: .internet)
-//        )
-//        
-//        expect(
-//            sut: sut,
-//            .standardPayment(.internet),
-//            toNotifyWith: [.select(.scanQR)],
-//            on: { $0.standardPaymentFlow?.event(.select(.outside(.qr))) }
-//        ) {
-//            httpClient.complete(with: anyError())
-//        }
-//    }
+    //    func test_standardPayment_shouldNotifyWithScanQROnQR() throws {
+    //
+    //        let (sut, httpClient, _) = try makeSUT(
+    //            model: .withServiceCategoryAndOperator(ofType: .internet)
+    //        )
+    //
+    //        expect(
+    //            sut: sut,
+    //            .standardPayment(.internet),
+    //            toNotifyWith: [.select(.scanQR)],
+    //            on: { $0.standardPaymentFlow?.event(.select(.outside(.qr))) }
+    //        ) {
+    //            httpClient.complete(with: anyError())
+    //        }
+    //    }
     
     // MARK: - Helpers
     
@@ -332,7 +360,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         _ productID: ProductData.ID,
         _ model: Model
     ) -> ProductProfileViewModel? {
-           
+        
         guard let product: ProductProfileCardView.ViewModel = .init(model, productData: .stub(productId: productID)) else { return nil }
         
         return ProductProfileViewModel(
@@ -511,7 +539,7 @@ extension Model {
         
         return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type, sortedOrder: sortedOrder)
     }
-        
+    
     private static func makeCodableServiceCategory(
         latestPaymentsCategory: CodableServiceCategory.LatestPaymentsCategory? = nil,
         md5Hash: String = anyMessage(),

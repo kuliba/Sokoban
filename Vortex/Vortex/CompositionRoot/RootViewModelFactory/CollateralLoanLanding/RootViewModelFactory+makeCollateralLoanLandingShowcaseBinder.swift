@@ -17,7 +17,7 @@ extension RootViewModelFactory {
     func makeCollateralLoanLandingShowcaseBinder() -> GetShowcaseDomain.Binder {
         
         composeBinder(
-            makeContent: makeContent,
+            content: makeContent(),
             delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: witnesses()

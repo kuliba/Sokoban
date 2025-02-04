@@ -38,12 +38,12 @@ extension TemplatesListFlowEffectHandlerMicroServicesComposer {
             makeV1: makeV1Payment
         )
         
-        return .init(makePayment: { payload, completion in
+        return .init(makePayment: { [paymentsTransfersFlag] payload, completion in
             
-            strategy.compose(
-                isLegacy: self.isLegacy(templateType: payload.0.type),
-                payload: payload
-            ) {
+            let isLegacy = payload.0.isLegacy(flag: paymentsTransfersFlag)
+            
+            strategy.compose(isLegacy: isLegacy, payload: payload) {
+                
                 switch $0 {
                 case let .legacy(legacy):
                     completion(.success(.legacy(legacy)))
@@ -58,40 +58,21 @@ extension TemplatesListFlowEffectHandlerMicroServicesComposer {
     typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<Legacy, V1>
 }
 
-private extension TemplatesListFlowEffectHandlerMicroServicesComposer {
+private extension PaymentTemplateData {
     
-    enum Output {
+    func isLegacy(flag: PaymentsTransfersFlag) -> Bool {
         
-        case legacy, v1
-        
-        var isLegacy: Bool { self == .legacy }
-    }
-    
-    func output(
-        for templateType: PaymentTemplateData.Kind
-    ) -> Output {
-        
-        switch paymentsTransfersFlag.rawValue {
+        switch flag.rawValue {
         case .active:
-            return .v1
+            return paymentFlow == nil
             
         case .inactive:
-            switch templateType {
-            case .housingAndCommunalService:
-                return .v1
-                
-            default:
-                return .legacy
-            }
+            return type != .housingAndCommunalService
         }
     }
-    
-    func isLegacy(
-        templateType: PaymentTemplateData.Kind
-    ) -> Bool {
-        
-        output(for: templateType).isLegacy
-    }
+}
+
+private extension TemplatesListFlowEffectHandlerMicroServicesComposer {
     
     private func makeV1Payment(
         _ payload: MicroServices.MakePaymentPayload,
@@ -99,7 +80,7 @@ private extension TemplatesListFlowEffectHandlerMicroServicesComposer {
     ) {
         initiatePayment(payload.0) { [weak self] in
             
-            guard let self else { return }
+            guard self != nil else { return }
             
             switch $0 {
             case let .failure(serviceFailure):

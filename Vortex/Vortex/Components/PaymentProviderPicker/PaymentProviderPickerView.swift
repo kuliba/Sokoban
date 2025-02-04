@@ -6,6 +6,7 @@
 //
 
 import Combine
+import FooterComponent
 import PayHubUI
 import RxViewModel
 import SwiftUI
@@ -16,21 +17,19 @@ struct PaymentProviderPickerView: View {
     let binder: PaymentProviderPickerDomain.Binder
     let dismiss: () -> Void
     let components: ViewComponents
-    let makeIconView: MakeIconView
     
     var body: some View {
         
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: { state, event in
-                
-                PaymentProviderPickerFlowView(
-                    state: state.navigation,
-                    event: event,
-                    contentView: contentView,
-                    destinationView: destinationView
+        RxWrapperView(model: binder.flow) { state, event in
+            
+            contentView()
+                .background(
+                    PaymentProviderPickerFlowView(
+                        state: state.navigation,
+                        dismissAlert: { event(.select(.outside(.payments))) },
+                        destinationView: destinationView
+                    )
                 )
-                .navigationBarHidden(true)
                 .navigationBarWithBack(
                     title: binder.content.title,
                     dismiss: dismiss,
@@ -39,8 +38,7 @@ struct PaymentProviderPickerView: View {
                         binder.flow.event(.select(.outside(.qr)))
                     }
                 )
-            }
-        )
+        }
     }
 }
 
@@ -95,7 +93,7 @@ private extension PaymentProviderPickerView {
             amount: latest.amount.map { "\($0) ₽" } ?? "",
             title: latest.name,
             config: .iVortex,
-            iconView: makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
+            iconView: components.makeIconView(latest.md5Hash.map { .md5Hash(.init($0)) })
         )
         .contentShape(Rectangle())
     }
@@ -111,10 +109,51 @@ private extension PaymentProviderPickerView {
         providerList: PaymentProviderPickerDomain.ProviderList
     ) -> some View {
         
-        PaymentProviderListView(
-            providerList: providerList,
-            binder: binder,
-            makeIconView: makeIconView
+        RxWrapperView(model: providerList, makeContentView: makeContentView)
+    }
+    
+    @ViewBuilder
+    func makeContentView(
+        state: PaymentProviderPickerDomain.ProviderListState,
+        event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
+    ) -> some View {
+        
+        ForEach(state.operators) { provider in
+            
+            makeProviderView(provider: provider, event: event)
+        }
+        
+        makeFooterView()
+    }
+    
+    func makeProviderView(
+        provider: PaymentProviderPickerDomain.Provider,
+        event: @escaping (PaymentProviderPickerDomain.ProviderListEvent) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { binder.flow.selectProvider(provider) },
+            label: {
+                
+                OperatorLabel(
+                    title: provider.title,
+                    subtitle: provider.inn,
+                    config: .iVortex(),
+                    iconView: components.makeIconView(md5Hash: provider.icon)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+        .plainListRow(insets: .init(top: 0, leading: 16, bottom: 0, trailing: 16))
+        .onAppear { event(.didScrollTo(provider.id)) }
+    }
+    
+    func makeFooterView() -> some View {
+        
+        FooterView(
+            state: .footer(.iVortex),
+            event: binder.flow.handleFooterEvent(_:),
+            config: .iVortex
         )
     }
     
@@ -145,8 +184,7 @@ private extension PaymentProviderPickerView {
             dismiss: { binder.flow.event(.dismiss) },
             detailPayment: { binder.flow.event(.select(.detailPayment)) },
             destination: destination,
-            components: components,
-            makeIconView: makeIconView
+            components: components
         )
     }
 }
