@@ -83,8 +83,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
-            "getServiceCategoryList",
+            "getServiceCategoryList"
         ])
         
         sessionAgent.deactivate()
@@ -95,8 +94,6 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
-            "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
             "getServiceCategoryList",
         ])
@@ -139,13 +136,12 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
-            "getServiceCategoryList",
+            "getServiceCategoryList"
         ])
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: anyError(), at: 2)
+        httpClient.complete(with: anyError(), at: 1)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
@@ -164,13 +160,12 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
-            "getServiceCategoryList",
+            "getServiceCategoryList"
         ])
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: mobileJSON(), at: 2)
+        httpClient.complete(with: mobileJSON(), at: 1)
         awaitActorThreadHop()
         
         let state = try sut.content.categoryPickerContent().state
@@ -189,18 +184,16 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
             "getServiceCategoryList",
         ])
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         awaitActorThreadHop()
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
             "getOperatorsListByParam-housingAndCommunalService",
             "getServiceCategoryList",
         ])
@@ -221,7 +214,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         awaitActorThreadHop()
         
         XCTAssertEqual(localAgent.getStoredValues(ofType: [CodableServiceCategory].self).count, 1, "Expected to cache ServiceCategories once.")
@@ -313,15 +306,14 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         
         httpClient.complete(with: anyError())
         
-        httpClient.complete(with: getServiceCategoryListJSON(), at: 2)
+        httpClient.complete(with: getServiceCategoryListJSON(), at: 1)
         awaitActorThreadHop()
         
-        httpClient.complete(with: anyError(), at: 3)
+        httpClient.complete(with: anyError(), at: 2)
         userInitiatedScheduler.advance(by: RootViewModelFactorySettings.prod.batchDelay)
         
         XCTAssertNoDiff(httpClient.lastPathComponentsWithQueryValue(for: "type").map { $0 ?? "nil" }.sorted(), [
             "getBannerCatalogList",
-            "getNotAuthorizedZoneClientInformData",
             "getOperatorsListByParam-housingAndCommunalService",
             "getOperatorsListByParam-internet",
             "getServiceCategoryList",
