@@ -172,7 +172,8 @@ extension RootViewFactory {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView,
                 paymentsViewFactory: paymentsViewFactory,
-                rootViewFactory: self
+                rootViewFactory: self,
+                components: components
             )
         )
     }
