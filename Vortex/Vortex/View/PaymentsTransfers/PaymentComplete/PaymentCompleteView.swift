@@ -7,6 +7,7 @@
 
 import Combine
 import PaymentCompletionUI
+import PaymentComponents
 import SwiftUI
 import UIPrimitives
 
@@ -52,12 +53,61 @@ private extension PaymentCompleteView {
     
     func transactionCompleteView() -> some View {
         
-        TransactionCompleteView(
-            state: state.transactionCompleteState,
-            goToMain: goToMain,
-            repeat: `repeat`,
-            factory: factory
-        )
+        VStack(spacing: 56) {
+            
+            buttons(state: state.transactionCompleteState)
+                .frame(maxHeight: .infinity, alignment: .bottom)
+            
+            VStack(spacing: 8) {
+                
+                // repeatButton(state: state.transactionCompleteState)
+                
+                PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func buttons(
+        state: TransactionCompleteState
+    ) -> some View {
+        
+        switch state.status {
+        case .completed:
+            HStack {
+                
+                state.operationDetail.map(factory.makeTemplateButtonWrapperView)
+                state.documentID.map(factory.makeDocumentButton)
+                state.details.map(factory.makeDetailButton)
+            }
+            
+        case .inflight:
+            HStack {
+                
+                factory.makeTemplateButton()
+                state.details.map(factory.makeDetailButton)
+            }
+            
+        case .rejected, .fraud:
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    func repeatButton(
+        state: TransactionCompleteState
+    ) -> some View {
+        
+        if state.status == .rejected {
+            
+            Button("TBD: Repeat Button", action: `repeat`)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(Color.buttonSecondary)
+                )
+        }
     }
 }
 
@@ -124,6 +174,12 @@ struct PaymentCompleteView_Previews: PreviewProvider {
                 .previewDisplayName("fraud: expired")
             paymentCompleteView(state: .completed)
                 .previewDisplayName("completed")
+            paymentCompleteView(state: .completedWithDetails)
+                .previewDisplayName("completed with Details")
+            paymentCompleteView(state: .completedWithDocumentID)
+                .previewDisplayName("completed with DocumentID")
+            paymentCompleteView(state: .completedWithDetailsAndDocumentID)
+                .previewDisplayName("completed with Details and DocumentID")
             paymentCompleteView(state: .inflight)
                 .previewDisplayName("inflight")
             paymentCompleteView(state: .rejected)
@@ -157,6 +213,9 @@ extension PaymentCompleteState {
     static let fraudCancelled: Self = failure(.init(hasExpired: false))
     static let fraudExpired: Self = failure(.init(hasExpired: true))
     static let completed: Self = success(.completed)
+    static let completedWithDetails: Self = success(.completedWithDetails)
+    static let completedWithDocumentID: Self = success(.completedWithDocumentID)
+    static let completedWithDetailsAndDocumentID: Self = success(.completedWithDetailsAndDocumentID)
     static let inflight: Self = success(.inflight)
     static let rejected: Self = success(.rejected)
     
@@ -185,6 +244,9 @@ extension PaymentCompleteState {
 extension PaymentCompleteState.Report {
     
     static let completed: Self = .preview(.completed)
+    static let completedWithDetails: Self = .preview(details: .empty, .completed)
+    static let completedWithDocumentID: Self = .preview(detailID: 1, .completed)
+    static let completedWithDetailsAndDocumentID: Self = .preview(detailID: 1, details: .empty, .completed)
     static let inflight: Self = .preview(.inflight)
     static let rejected: Self = .preview(.rejected)
     
@@ -204,6 +266,11 @@ extension PaymentCompleteState.Report {
             status: status
         )
     }
+}
+
+private extension TransactionDetailButton.Details {
+    
+    static let empty: Self = .init(logo: nil, cells: [])
 }
 
 extension PaymentCompleteViewFactory {
