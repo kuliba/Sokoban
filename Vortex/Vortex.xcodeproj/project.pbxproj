@@ -2945,6 +2945,7 @@
 		840749972AE67C5E000A7352 /* ConfigSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840749962AE67C5E000A7352 /* ConfigSticker.swift */; };
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8411B6212D52263500A85791 /* SberQRConfirmPaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411B6202D52263500A85791 /* SberQRConfirmPaymentWrapperView.swift */; };
+		841C7A5E2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841C7A5D2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift */; };
 		842C42322D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C42312D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift */; };
 		842C42372D11FD2B006A307D /* RootViewModelFactory+makeSavingsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C42352D11FD2B006A307D /* RootViewModelFactory+makeSavingsAccount.swift */; };
 		842C42392D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C42382D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift */; };
@@ -6556,6 +6557,7 @@
 		840749962AE67C5E000A7352 /* ConfigSticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigSticker.swift; sourceTree = "<group>"; };
 		841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBannerInProductListData.swift; sourceTree = "<group>"; };
 		8411B6202D52263500A85791 /* SberQRConfirmPaymentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRConfirmPaymentWrapperView.swift; sourceTree = "<group>"; };
+		841C7A5D2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeStickerLandingViewModel.swift"; sourceTree = "<group>"; };
 		842C42312D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+runOnEachNextActiveSession.swift"; sourceTree = "<group>"; };
 		842C42352D11FD2B006A307D /* RootViewModelFactory+makeSavingsAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSavingsAccount.swift"; sourceTree = "<group>"; };
 		842C42382D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeServiceCategoryFailure.swift"; sourceTree = "<group>"; };
@@ -9705,6 +9707,7 @@
 				2A267D4E2D4BFEAE001F725C /* RootViewModelFactory+makeCorporateTransfers.swift */,
 				2A3C2CEF2D4BB81D003FEEFE /* RootViewModelFactory+makeMeToMeFlow.swift */,
 				2A267D542D4C0BCF001F725C /* RootViewModelFactory+makeOpenProductFlow.swift */,
+				841C7A5D2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift */,
 			);
 			path = Transfers;
 			sourceTree = "<group>";
@@ -21392,6 +21395,7 @@
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,
 				68821585283C026500B27D54 /* InfoProductView.swift in Sources */,
 				2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */,
+				841C7A5E2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift in Sources */,
 				68BAECB12744157200E1BF65 /* GetDepositInfoDecodableModel.swift in Sources */,
 				2A5B22FC2BEDE02A00270D50 /* MainViewFactory.swift in Sources */,
 				0B931B5126E005D700CA8017 /* GKHInputFooterView.swift in Sources */,

@@ -5,32 +5,8 @@
 //  Created by Igor Malyarov on 30.01.2025.
 //
 
-import LandingUIComponent
-
-typealias LandingWrapperViewModel = LandingUIComponent.LandingWrapperViewModel
-
-//@!TODO: Move TO separate file
-
-extension RootViewModelFactory {
-    
-    @inlinable
-    func makeStickerLandingViewModel(
-        _ type: AbroadType,
-        config: LandingUIComponent.UILanding.Component.Config,
-        landingActions: @escaping (LandingUIComponent.LandingEvent.Sticker) -> () -> Void
-    ) -> LandingWrapperViewModel {
-        
-        self.model.landingStickerViewModelFactory(
-            abroadType: type,
-            config: config,
-            landingActions: landingActions
-        )
-    }
-}
-
 import Foundation
 import SwiftUI
-//
 
 extension RootViewModelFactory {
     
