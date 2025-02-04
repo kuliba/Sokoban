@@ -27,20 +27,17 @@ public extension ResponseMapper {
         _ data: _DTO
     ) throws -> GetBannerCatalogListResponse {
         
-        return data.data
-    }
-}
-
-private extension ResponseMapper._DTO {
-    
-    var data: GetBannerCatalogListResponse {
+        guard let serial = data.serial
+        else { throw ResponseFailure() }
         
         return .init(
             serial: serial,
-            bannerCatalogList: bannerCatalogList.map {
+            bannerCatalogList: data.bannerCatalogList.map {
                 $0.data
             })
     }
+    
+    struct ResponseFailure: Error {}
 }
 
 private extension ResponseMapper._DTO._Item {
