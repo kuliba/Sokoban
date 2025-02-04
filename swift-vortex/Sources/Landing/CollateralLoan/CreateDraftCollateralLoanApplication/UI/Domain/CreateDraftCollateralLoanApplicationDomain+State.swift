@@ -10,10 +10,11 @@ import InputComponent
 import OptionalSelectorComponent
 import OTPInputComponent
 import TextFieldDomain
+import FlowCore
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public struct State: Equatable {
+    public struct State {
         
         public let data: Data
 
@@ -30,6 +31,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var isButtonDisabled: Bool
         public var isOTPValidated: Bool
         
+        var otpViewModel: TimedOTPInputViewModel?
+        var otpViewModelNode: Node<TimedOTPInputViewModel>?
+
         public init(
             data: Data,
             stage: Stage = .correctParameters,
@@ -161,6 +165,89 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
             verificationCode: "123"
         )
     }
+
+    func makeTimedOTPInputViewModel(
+        timerDuration: Int,
+        otpLength: Int,
+        event: @escaping (Event) -> Void
+    ) -> TimedOTPInputViewModel {
+        
+        if let otpViewModelNode { return otpViewModelNode.model }
+        
+        let model = TimedOTPInputViewModel(
+            otpText: otp,
+            timerDuration: timerDuration,
+            otpLength: otpLength,
+            resend: { event(.getVerificationCode) },
+            observe: { event(.otp($0)) }
+        )
+        
+        let cancellable = model.$state
+            .sink(receiveValue: {
+                if $0.status == .validOTP {
+                    event(.otpValidated)
+                }
+        })
+        
+        otpViewModelNode = Node(model: model, cancellable: cancellable)
+    }
+
+    
+    func makeTimedOTPInputViewModelAlt(
+        timerDuration: Int,
+        otpLength: Int,
+        event: @escaping (Event) -> Void
+    ) -> TimedOTPInputViewModel {
+        
+        let countdownReducer = CountdownReducer(duration: timerDuration)
+        
+        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
+            
+            if case (.completed, .start) = (otpState, otpEvent) {
+                event(.getVerificationCode)
+            }
+            
+            return countdownReducer.reduce(otpState, otpEvent)
+        }
+        
+        let otpFieldReducer = OTPFieldReducer(length: otpLength)
+        
+        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
+            
+            switch event {
+            case let .edit(text):
+                let text = text.filter(\.isWholeNumber).prefix(otpLength)
+                return otpFieldReducer.reduce(state, .edit(.init(text)))
+                
+            default:
+                return otpFieldReducer.reduce(state, event)
+            }
+        }
+        
+        let otpInputReducer = OTPComponentInputReducer(
+            countdownReduce: decorated,
+            otpFieldReduce : decoratedOTPFieldReduce
+        )
+        
+        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
+        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
+        let otpInputEffectHandler = OTPInputEffectHandler(
+            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+        
+        return TimedOTPInputViewModel(
+            initialState: .starting(
+                phoneNumber: "",
+                duration: timerDuration,
+                text: otp
+            ),
+            reduce: otpInputReducer.reduce(_:_:),
+            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+            timer: RealTimer(),
+            observe: { event(.otp($0)) },
+            scheduler: .makeMain()
+        )
+    }
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.State {
@@ -218,4 +305,6 @@ public extension CreateDraftCollateralLoanApplicationDomain.State {
     
     typealias Data = CreateDraftCollateralLoanApplicationUIData
     typealias Period = Data.Period
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Event = Domain.Event
 }
