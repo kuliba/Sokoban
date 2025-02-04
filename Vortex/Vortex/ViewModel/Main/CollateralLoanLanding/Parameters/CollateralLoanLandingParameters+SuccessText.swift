@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingResponse.swift
+//  CollateralLoanLandingParameters+SuccessText.swift
 //  Vortex
 //
 //  Created by Valentin Ozerov on 04.02.2025.
