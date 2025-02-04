@@ -18,36 +18,17 @@ extension RootViewModelFactory {
     @inlinable
     func makeLoadBanners() -> LoadBanners {
         
-        let localBannerListLoader = ServiceItemsLoader.default
         let bannersRemoteLoad = nanoServiceComposer.composeSerialResultLoad(
             createRequest: { try RequestFactory.createGetBannerCatalogListV2Request($0, 120.0) },
             mapResponse: Vortex.ResponseMapper.mapGetBannerCatalogListResponse
         )
-        let loadBannersList: LoadBanners = { completion in
+        let (_, reload) = composeLoaders(
+            remoteLoad: bannersRemoteLoad,
+            fromModel: { $0 },
+            toModel: { $0 }
+        )
             
-            localBannerListLoader.serial { serial in
-                
-                bannersRemoteLoad(serial) { [bannersRemoteLoad] in
-                    
-                    switch $0 {
-                    case let .success(banners):
-                        if serial != banners.serial {
-                            localBannerListLoader.save(.init(serial: banners.serial, items: banners.value), {})
-                        }
-                        completion(banners.value.map {.banner($0)})
-                        
-                    case .failure:
-                        localBannerListLoader.load {
-                            completion($0.items.map { .banner($0 as! BannerCatalogListData) })
-                        }
-                    }
-                    
-                    _ = bannersRemoteLoad
-                }
-            }
-        }
-        
-        return loadBannersList
+        return { completion in reload { completion(($0 ?? []).map { .banner($0) }) }}
     }
 }
 
