@@ -145,15 +145,19 @@ struct ManagingSubscriptionView: View {
         )
     }
     
+    @ViewBuilder
     private func searchView(
         _ searchCancelAction: @escaping () -> Void
     ) -> some View {
-
-        DefaultCancellableSearchBarView(
-            viewModel: subscriptionViewModel.searchViewModel,
-            textFieldConfig: .black16,
-            cancel: searchCancelAction
-        )
+        
+        if !subscriptionViewModel.notFilteredProducts.isEmpty {
+            
+            DefaultCancellableSearchBarView(
+                viewModel: subscriptionViewModel.searchViewModel,
+                textFieldConfig: .black16,
+                cancel: searchCancelAction
+            )
+        }
     }
     
     private func emptyListView() -> some View {
