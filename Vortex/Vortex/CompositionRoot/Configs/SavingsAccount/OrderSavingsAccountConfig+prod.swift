@@ -9,60 +9,66 @@ import Foundation
 import SavingsAccount
 import SwiftUI
 
-// TODO: need update values
-
 extension OrderSavingsAccountConfig {
     
     static let prod: Self = .init(
         amount: .init(
-            amount: .init(textFont: .system(size: 24), textColor: .white),
-            backgroundColor: .black.opacity(0.8),
+            amount: .init(textFont: .textH1Sb24322(), textColor: .textWhite),
+            backgroundColor: .bgIconBlack,
             button: .init(
-                active: .init(backgroundColor: .red, text: .init(textFont: .system(size: 14), textColor: .white)),
-                inactive: .init(backgroundColor: .gray, text: .init(textFont: .system(size: 14), textColor: .white)), buttonHeight: 38),
+                active: .init(backgroundColor: .buttonPrimary, text: .init(textFont: .textBodyMSb14200(), textColor: .textWhite)),
+                inactive: .init(backgroundColor: .buttonPrimaryDisabled, text: .init(textFont: .textBodyMSb14200(), textColor: .textWhite)), buttonHeight: 38),
             dividerColor: .bordersDivider,
-            title: .init(textFont: .system(size: 14), textColor: .white)),
-        background: .bordersDivider,
+            title: .init(textFont: .textH1Sb24322(), textColor: .textWhite)),
+        background: .mainColorsGrayLightest,
         cornerRadius: 12,
-        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .system(size: 18), textColor: .black)),
+        header: .init(text: "Оформление\nнакопительного счета", config: .init(textFont: .textH3M18240(), textColor: .textSecondary)),
         images: .init(
-            back: .init(systemName: "chevron.backward"),
-            checkOff: .init(systemName: "square"),
-            checkOn: .init(systemName: "checkmark.square")),
+            back: .ic24ChevronLeft,
+            checkOff: Image("Checkbox_normal"),
+            checkOn: Image("Checkbox_active")),
         income: .init(
-            image: .init(systemName: "percent"),
+            image: .ic24Percent,
             imageSize: .init(width: 24, height: 24),
-            title: .init(text: "Доход",
-                         config: .init(textFont: .body, textColor: .gray)),
-            subtitle: .init(textFont: .headline, textColor: .black)),
+            title: .init(
+                text: "Доход",
+                config: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)
+            ),
+            subtitle: .init(textFont: .textH4M16240(), textColor: .textSecondary)),
         linkableTexts: .init(checkBoxSize: .init(width: 24, height: 24), condition: "Я соглашаюсь с <u>Условиями</u> и ", tariff: "<u>Тарифами</u>"),
         openButton: .init(
-            background: .init(active: .red, inactive: .gray),
+            background: .init(active: .buttonPrimary, inactive: .buttonPrimaryDisabled),
             cornerRadius: 12,
             height: 56,
             labels: .init(open: "Открыть накопительный счет", confirm: "Подтвердить и открыть"),
-            title: .init(textFont: .body, textColor: .white)),
+            title: .init(textFont: .textH3Sb18240(), textColor: .textWhite)),
         order: .init(
             card: .init(width: 112, height: 72),
-            header: .init(title: .init(textFont: .body, textColor: .black), subtitle: .init(textFont: .subheadline, textColor: .gray)),
-            image: .init(systemName: "arrow.forward"),
+            header: .init(title: .init(textFont: .textH3Sb18240(), textColor: .textSecondary), subtitle: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder)),
+            image: .ic16ArrowRightCircle,
             imageSize: .init(width: 16, height: 16),
-            options: .init(headlines: .init(
-                open: "Открытие",
-                service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
+            options: .init(
+                headlines: .init(
+                    open: "Открытие",
+                    service: "Стоимость обслуживания"),
+                config: .init(
+                    title: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
+                    subtitle: .init(textFont: .textH4M16240(), textColor: .textSecondary))
+            )
         ),
         padding: 16,
+        shadowColor: .blurBlack20,
         shimmering: .solidGrayBackground,
         topUp: .init(
             amount: .init(
-                amount: .init(text: "Сумма пополнения", config: .init(textFont: .system(size: 14), textColor: .gray)),
-                fee: .init(text: "Комиссия", config: .init(textFont: .system(size: 14), textColor: .gray)),
-                value: .init(textFont: .system(size: 14), textColor: .black)
+                amount: .init(text: "Сумма пополнения", config: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)),
+                fee: .init(text: "Комиссия", config: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)),
+                value: .init(textFont: .textBodyMR14200(), textColor: .textSecondary)
             ),
-            description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .system(size: 12), textColor: .gray)),
-            image: .init(systemName: "message"),
-            subtitle: .init(text: "Пополнить сейчас", config: .init(textFont: .system(size: 16), textColor: .black)),
-            title: .init(text: "Хотите пополнить счет?", config: .init(textFont: .system(size: 14), textColor: .gray)),
+            description: .init(text: "Пополнение доступно без комиссии\nс рублевого счета или карты ", config: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder)),
+            image: .ic24MessageSquare,
+            subtitle: .init(text: "Пополнить сейчас", config: .init(textFont: .textH4M16240(), textColor: .textSecondary)),
+            title: .init(text: "Хотите пополнить счет?", config: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)),
             toggle: .preview
         )
     )

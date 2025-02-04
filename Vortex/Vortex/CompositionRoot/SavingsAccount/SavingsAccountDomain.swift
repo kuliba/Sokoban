@@ -12,6 +12,7 @@ import RxViewModel
 import SavingsAccount
 import SavingsServices
 import SwiftUI
+import OTPInputComponent
 
 enum SavingsAccountDomain {}
 
@@ -30,7 +31,7 @@ extension SavingsAccountDomain {
         case openSavingsAccount
         case failure(FlowFailureKind)
     }
-
+    
     enum FlowFailureKind: Equatable {
         
         case timeout(InformerPayload)
@@ -82,7 +83,9 @@ extension SavingsAccountDomain {
     
     typealias OpenAccountBinderDomain = FlowCore.BinderDomain<OpenAccountContent, Select, Navigation>
     typealias OpenAccountBinder = OpenAccountBinderDomain.Binder
-
+    
+    // MARK: - Flow
+    
     typealias OpenAccountContentState = SavingsAccountContentState<OpenAccountLanding, InformerPayload>
     typealias OpenAccountContentStatus = SavingsAccountContentStatus<OpenAccountLanding, InformerPayload>
     typealias OpenAccountContentEvent = SavingsAccountContentEvent<OpenAccountLanding, InformerPayload>
@@ -93,11 +96,15 @@ extension SavingsAccountDomain {
     typealias OpenAccountContentMicroService = SavingsAccount.FormContentEffectHandlerMicroServices<OpenAccountLanding, InformerPayload>
 
     typealias OpenAccountContent = RxViewModel<OpenAccountContentState, OpenAccountContentEvent, OpenAccountContentEffect>
-    typealias OpenAccountView = OrderSavingsAccountView<Text, Text, Text>
+    typealias OpenAccountView = OrderSavingsAccountView<AmountInfoView, OTPView, Text>
     typealias OpenAccountContentView = SavingsAccountContentView<SpinnerRefreshView, OpenAccountView, OpenAccountLanding, InformerPayload>
-    typealias OpenAccountViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OpenAccountView>
+    typealias OpenAccountViewFactory = SavingsAccount.ViewFactory<AmountInfoView, OTPView, Text>
     
+    typealias OpenAccountLandingViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OpenAccountView>
+
     typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView>
     
     typealias Config = SavingsAccountConfig
+    
+    typealias OTPView = TimedOTPInputWrapperView<Image, OTPWarningView>
 }

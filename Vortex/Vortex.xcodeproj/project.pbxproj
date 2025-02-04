@@ -2906,6 +2906,7 @@
 		83DBC7B22C37DCCD00DEF441 /* Services+makeUserVisibilityProductsSettingsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DBC7B12C37DCCD00DEF441 /* Services+makeUserVisibilityProductsSettingsServices.swift */; };
 		83DBC7B42C37DD6600DEF441 /* RequestFactory+createUserVisibilityProductsSettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DBC7B32C37DD6600DEF441 /* RequestFactory+createUserVisibilityProductsSettingsRequest.swift */; };
 		83DBC7B62C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DBC7B52C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift */; };
+		83DE8C682D52728100682617 /* AmountInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DE8C672D52728100682617 /* AmountInfoView.swift */; };
 		83E056812C918A0B00DFE1A8 /* ComposedBannerPickerSectionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E056802C918A0B00DFE1A8 /* ComposedBannerPickerSectionFlowView.swift */; };
 		83E2F6112A40A342000B64CF /* GetProductDetailsResponseGenericFull.json in Resources */ = {isa = PBXBuildFile; fileRef = 83E2F6102A40A342000B64CF /* GetProductDetailsResponseGenericFull.json */; };
 		83E2F6132A40D246000B64CF /* InfoProductViewModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E2F6122A40D246000B64CF /* InfoProductViewModel+Extensions.swift */; };
@@ -6520,6 +6521,7 @@
 		83DBC7B12C37DCCD00DEF441 /* Services+makeUserVisibilityProductsSettingsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeUserVisibilityProductsSettingsServices.swift"; sourceTree = "<group>"; };
 		83DBC7B32C37DD6600DEF441 /* RequestFactory+createUserVisibilityProductsSettingsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createUserVisibilityProductsSettingsRequest.swift"; sourceTree = "<group>"; };
 		83DBC7B52C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVisibilityProductsSettingsServices.swift; sourceTree = "<group>"; };
+		83DE8C672D52728100682617 /* AmountInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountInfoView.swift; sourceTree = "<group>"; };
 		83E056802C918A0B00DFE1A8 /* ComposedBannerPickerSectionFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedBannerPickerSectionFlowView.swift; sourceTree = "<group>"; };
 		83E2F6102A40A342000B64CF /* GetProductDetailsResponseGenericFull.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductDetailsResponseGenericFull.json; sourceTree = "<group>"; };
 		83E2F6122A40D246000B64CF /* InfoProductViewModel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InfoProductViewModel+Extensions.swift"; sourceTree = "<group>"; };
@@ -16189,6 +16191,7 @@
 				83E45EC72D01CA4200158F64 /* FlowView.swift */,
 				83C804B72D4CB86F00F7E588 /* SavingsAccountBinderView.swift */,
 				830BD9632D4F9FC0005A8BD3 /* OpenSavingsAccountBinderView.swift */,
+				83DE8C672D52728100682617 /* AmountInfoView.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -21788,6 +21791,7 @@
 				5059D44A2863B76E00DA446D /* CurrencyListVIewComponent.swift in Sources */,
 				2AE886342AFBA23200D86E84 /* MappingRemoteServiceError.swift in Sources */,
 				0BA7F27529320A8300A13EA1 /* DocumentPicker.swift in Sources */,
+				83DE8C682D52728100682617 /* AmountInfoView.swift in Sources */,
 				833D3E3B2C2EDE31006626F2 /* ControlPanelEffect.swift in Sources */,
 				2AEF685C2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift in Sources */,
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
@@ -22682,7 +22686,7 @@
 				77EC58EC277237720054D75C /* Action.swift in Sources */,
 				0BBDFBE427BD05FD00A30D6D /* PaymentsOperationView.swift in Sources */,
 				C143D1A62D0143FA009C4F3E /* OrderCardLandingView.swift in Sources */,
-				2A556B4E2C7CEB08002050C2 /* LatestPlaceholderConfig+iFora.swift in Sources */,
+				2A556B4E2C7CEB08002050C2 /* LatestPlaceholderConfig+iVortex.swift in Sources */,
 				2A556B4E2C7CEB08002050C2 /* LatestPlaceholderConfig+iVortex.swift in Sources */,
 				77E1803B27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift in Sources */,
 				0BD1CAA826E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift in Sources */,
@@ -26141,7 +26145,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
@@ -26830,7 +26833,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27896,7 +27898,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
@@ -27934,7 +27935,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;

@@ -489,6 +489,26 @@ extension SavingsAccountDomain.ContentState {
     }
 }
 
+extension SavingsAccountDomain.OpenAccountContentState {
+    
+    var select: SavingsAccountDomain.Select? {
+        
+        switch status {
+        case .initiate, .inflight, .loaded:
+            return nil
+            
+        case let .failure(failure, _):
+            switch failure{
+            case let .alert(message):
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
+            }
+        }
+    }
+}
+
 private extension RootViewDomain.Flow {
     
     func bindOutside(

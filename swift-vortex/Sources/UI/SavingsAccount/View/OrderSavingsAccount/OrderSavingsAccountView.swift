@@ -22,9 +22,7 @@ where AmountInfo: View,
     let config: Config
     let factory: Factory
     let viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>
-    
-    private let coordinateSpace: String
-    
+        
     @State private(set) var isShowHeader = false
     @State private(set) var isShowingProducts = false
     
@@ -34,28 +32,23 @@ where AmountInfo: View,
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
-        viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>,
-        coordinateSpace: String = "orderScroll"
+        viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>
     ) {
         self.amountToString = amountToString
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
-        self.coordinateSpace = coordinateSpace
         self.viewFactory = viewFactory
     }
     
     public var body: some View {
         
-        ScrollView(showsIndicators: false) {
-            orderSavingsAccount(state.data)
-        }
-        .coordinateSpace(name: coordinateSpace)
-        .toolbar(content: toolbarContent)
-        .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
+        orderSavingsAccount(state.data)
+            .toolbar(content: toolbarContent)
+            .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
     }
     
     private func orderSavingsAccount(
@@ -215,6 +208,8 @@ where AmountInfo: View,
                         .shimmering()
                 } else {
                     config.order.image
+                        .renderingMode(.template)
+                        .foregroundColor(.green)
                         .frame(config.order.imageSize)
                 }
                 subtitle.text(withConfig: config.order.options.config.subtitle)
@@ -258,8 +253,11 @@ where AmountInfo: View,
             
             HStack(alignment:.top, spacing: config.padding) {
                 
-                product(designMd5hash: designMd5hash, needShimmering)
-                
+                ZStack {
+                    shadow()
+                    product(designMd5hash: designMd5hash, needShimmering)
+                    
+                }
                 orderOptions(
                     open: orderOption.open,
                     service: orderOption.service,
@@ -268,6 +266,15 @@ where AmountInfo: View,
             }
         }
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+    }
+    
+    private func shadow() -> some View {
+        
+        RoundedRectangle(cornerRadius: config.cornerRadius)
+            .frame(width: config.order.card.width - config.cornerRadius * 2, height: config.order.card.height)
+            .foregroundColor(config.shadowColor)
+            .offset(x: 0, y: config.cornerRadius)
+            .blur(radius: 8)
     }
     
     @ViewBuilder
@@ -335,6 +342,8 @@ where AmountInfo: View,
                     .shimmering()
             } else {
                 config.income.image
+                    .renderingMode(.template)
+                    .foregroundColor(.gray)
                     .frame(config.income.imageSize)
             }
             incomeInfo(income: income, needShimmering: needShimmering)
@@ -377,6 +386,8 @@ where AmountInfo: View,
             }
             else {
                 config.topUp.image
+                    .renderingMode(.template)
+                    .foregroundColor(.gray)
                     .frame(config.income.imageSize)
                     .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             }

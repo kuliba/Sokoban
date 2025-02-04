@@ -161,7 +161,8 @@ extension OrderSavingsAccountConfig {
                 open: "Открытие",
                 service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
         ),
-        padding: 16,
+        padding: 16, 
+        shadowColor: .gray,
         shimmering: .background,
         topUp: .init(
             amount: .init(

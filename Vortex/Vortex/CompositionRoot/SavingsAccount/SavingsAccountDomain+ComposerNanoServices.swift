@@ -10,10 +10,14 @@ import SavingsServices
 
 extension SavingsAccountDomain {
     
-    struct ComposerNanoServices {
+    struct ComposerLandingNanoService {
         
         let loadLanding: LoadLanding
-        let openSavingsAccount: OpenSavingsAccount
+    }
+    
+    struct ComposerOpenNanoServices {
+        
+        let loadLanding: LoadOpenSavingsAccountLanding
     }
 }
 
@@ -23,6 +27,6 @@ extension SavingsAccountDomain {
     typealias LoadLandingCompletion = (Result<Landing, ContentError>) -> Void
     typealias LoadLanding = (LandingType, @escaping LoadLandingCompletion) -> Void
     
-    typealias OpenSavingsAccountCompletion = (Result<OpenAccountLanding, ContentError>) -> Void
-    typealias OpenSavingsAccount = (@escaping OpenSavingsAccountCompletion) -> Void
+    typealias LoadOpenSavingsAccountLandingCompletion = (Result<OpenAccountLanding, ContentError>) -> Void
+    typealias LoadOpenSavingsAccountLanding = (@escaping LoadOpenSavingsAccountLandingCompletion) -> Void
 }

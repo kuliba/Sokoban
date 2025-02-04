@@ -117,7 +117,7 @@ struct SavingsAccountBinderView: View {
         
         switch destination {
         case .openSavingsAccount:
-            OpenSavingsAccountBinderView(binder: openAccountBinder, config: .iVortex, factory: openAccountFactory)
+            OpenSavingsAccountBinderView(binder: openAccountBinder, config: .prod, factory: openAccountFactory)
         }
     }
 }
@@ -126,7 +126,7 @@ extension SavingsAccountBinderView {
     
     typealias Config = SavingsAccountDomain.Config
     typealias Factory = SavingsAccountDomain.ViewFactory
-    typealias OpenAccountFactory = SavingsAccountDomain.OpenAccountViewFactory
+    typealias OpenAccountFactory = SavingsAccountDomain.OpenAccountLandingViewFactory
 
 }
 

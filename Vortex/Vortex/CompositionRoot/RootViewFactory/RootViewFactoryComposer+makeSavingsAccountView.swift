@@ -10,6 +10,7 @@ import SavingsAccount
 import SavingsServices
 import RxViewModel
 import SwiftUI
+import OTPInputComponent
 
 extension RootViewFactoryComposer {
     
@@ -21,14 +22,14 @@ extension RootViewFactoryComposer {
             binders: binders,
             config: .iVortex,
             factory: makeFactory(),
-            openAccountFactory: makeOpenAccountFactory()
+            openAccountFactory: makeOpenSavingsAccountLandingViewFactory()
         )
     }
     
     func makeFactory(
     ) -> SavingsAccountDomain.ViewFactory {
         .init(
-            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+            makeRefreshView: makeSpinnerRefreshView(),
             makeLandingView: {
                 SavingsAccountView(
                     state: .init($0.list.first ?? .empty),
@@ -38,38 +39,99 @@ extension RootViewFactoryComposer {
             }
         )
     }
+       
+    func makeSpinnerRefreshView(
+    ) -> () -> SpinnerRefreshView {
+        {
+            .init(icon: .init("Logo Fora Bank"))
+        }
+    }
     
-    func makeOpenAccountFactory(
-    ) -> SavingsAccountDomain.OpenAccountViewFactory {
+    func makeOpenSavingsAccountLandingView(
+        _ data: SavingsAccountDomain.OpenAccountLanding
+    ) -> SavingsAccountDomain.OpenAccountView {
+        
+        OrderSavingsAccountView(
+            amountToString: makeAmountToString,
+            state: .init(status: .result(.init(data.list.first ?? .empty))),
+            event: { _ in },
+            config: .prod,
+            factory: makeImageViewFactory(),
+            viewFactory: makeOpenSavingsAccountViewFactory()
+        )
+    }
+    
+    func makeOpenSavingsAccountLandingViewFactory() -> SavingsAccountDomain.OpenAccountLandingViewFactory {
+        
         .init(
-            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-            makeLandingView: { [makeImageViewFactory] in
+            makeRefreshView: makeSpinnerRefreshView(),
+            makeLandingView: makeOpenSavingsAccountLandingView
+        )
+    }
+    
+    func makeOpenSavingsAccountViewFactory() -> SavingsAccountDomain.OpenAccountViewFactory {
+        
+        .init(
+            makeAmountInfoView: makeAmountInfoView(),
+            makeOTPView: { [makeOTPView] in
                 
-                OrderSavingsAccountView(
-                    amountToString: {
-                        
-                        let formatter = NumberFormatter()
-                        formatter.numberStyle = .currency
-                        formatter.maximumFractionDigits = 2
-                        formatter.minimumFractionDigits = 0
-                        formatter.currencySymbol = ""
-                        
-                        return (formatter.string(for: $0) ?? "") + " " + $1
-
-                    },
-                    state: .init(status: .result(.init($0.list.first ?? .empty))),
-                    event: { _ in },
-                    config: .prod,
-                    factory: makeImageViewFactory(),
-                    viewFactory: .init(
-                        makeAmountInfoView: { Text("makeAmountInfoView") },
-                        makeOTPView:  { Text("otp") },
-                        makeProductPickerView:  { Text("productPicker") })
+                let model = TimedOTPInputViewModel(
+                    otpText: "",
+                    initiateOTP: { _ in },
+                    submitOTP: { _,_ in }
+                   // observe: {  }
                 )
+
+                return makeOTPView(model)
+            },
+            makeProductPickerView:  { Text("productPicker") })
+    }
+    
+    private func makeOTPView(
+       _ viewModel: TimedOTPInputViewModel
+    ) -> SavingsAccountDomain.OTPView {
+        
+        return .init(
+            viewModel: viewModel,
+            config: .iVortex,
+            iconView: { .ic24SmsCode },
+            warningView: {
+                
+                OTPWarningView(text: viewModel.state.warning, config: .iVortex)
             }
         )
     }
+    
+    func makeAmountToString(
+        _ amount: Decimal,
+        _ currencyCode: String
+    ) -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        formatter.currencySymbol = ""
+        
+        return (formatter.string(for: amount) ?? "") + " " + currencyCode
+    }
+    
+    func makeAmountInfoView(
+    ) -> () -> AmountInfoView {
+        { .init() }
+    }
+}
 
+private extension OTPInputState {
+    
+    var warning: String? {
+        
+        guard case let .input(input) = status,
+              case let .failure(.serverError(warning)) = input.otpField.status
+        else { return nil }
+        
+        return warning
+    }
 }
 
 extension OrderSavingsAccount {

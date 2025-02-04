@@ -41,7 +41,7 @@ final class RootViewFactoryComposer {
         let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache(),
+            generalImageCache: model.generalImageCache(defaultImage),
             getUImage: { model.images.value[$0]?.uiImage }
         )
         self.model = model

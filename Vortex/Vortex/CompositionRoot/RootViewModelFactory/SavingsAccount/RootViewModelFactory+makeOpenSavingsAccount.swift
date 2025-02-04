@@ -16,21 +16,16 @@ extension RootViewModelFactory {
     @inlinable
     func makeOpenSavingsAccount() -> SavingsAccountDomain.OpenAccountBinder {
         
-        let getSavingLanding = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetSavingLandingRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
         let getOpenAccount = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetOpenAccountFormRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetOpenAccountFormResponse,
             mapError: SavingsAccountDomain.ContentError.init(error:)
         )
 
-        let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
-            loadLanding: { getSavingLanding($0, $1) },
-            openSavingsAccount: { getOpenAccount("", $0) }
+        let nanoServices: SavingsAccountDomain.ComposerOpenNanoServices = .init(
+            loadLanding: {
+               getOpenAccount("", $0)
+            }
         )
         
         return makeOpenSavingsAccount(nanoServices: nanoServices)
@@ -38,7 +33,7 @@ extension RootViewModelFactory {
    
     @inlinable
     func makeOpenSavingsAccount(
-        nanoServices: SavingsAccountDomain.ComposerNanoServices
+        nanoServices: SavingsAccountDomain.ComposerOpenNanoServices
     ) -> SavingsAccountDomain.OpenAccountBinder {
         
         let content = makeOpenSavingsAccountContent(
@@ -50,19 +45,19 @@ extension RootViewModelFactory {
             content: content,
             delayProvider: delayProvider,
             getNavigation: getSavingsAccountNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
+            witnesses: .init(emitting: emittingOpen, dismissing: dismissing)
         )
     }
     
     private func makeOpenSavingsAccountContent(
-        nanoServices: SavingsAccountDomain.ComposerNanoServices,
+        nanoServices: SavingsAccountDomain.ComposerOpenNanoServices,
         status: SavingsAccountDomain.OpenAccountContentStatus
     ) -> SavingsAccountDomain.OpenAccountContent {
         
         let reducer = SavingsAccountDomain.OpenAccountContentReducer()
         let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
             microServices: .init(
-                loadLanding: nanoServices.openSavingsAccount
+                loadLanding: nanoServices.loadLanding
             )
         )
         
@@ -73,13 +68,14 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
-
+    
+    
     @inlinable
-    func emitting(
+    func emittingOpen(
         content: SavingsAccountDomain.OpenAccountContent
     ) -> some Publisher<FlowEvent<SavingsAccountDomain.Select, Never>, Never> {
         
-        Empty()
+        content.$state.compactMap(\.select).map(FlowEvent.select)
     }
     
     @inlinable
@@ -90,25 +86,3 @@ extension RootViewModelFactory {
         return {}
     }
 }
-
-/*private extension SavingsAccountDomain.ContentError {
-    
-    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
-    
-    init(
-        error: RemoteError
-    ) {
-        switch error {
-        case let .performRequest(error):
-            if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
-            } else {
-                self = .init(kind: .alert("Попробуйте позже."))
-            }
-            
-        default:
-            self = .init(kind: .alert("Попробуйте позже."))
-        }
-    }
-}
-*/

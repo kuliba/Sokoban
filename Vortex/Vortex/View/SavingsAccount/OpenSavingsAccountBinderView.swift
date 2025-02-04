@@ -8,6 +8,7 @@
 import RxViewModel
 import SwiftUI
 import UIPrimitives
+import SavingsAccount
 
 struct OpenSavingsAccountBinderView: View {
         
@@ -44,7 +45,7 @@ struct OpenSavingsAccountBinderView: View {
                             SavingsAccountDomain.OpenAccountContentView(
                                 state: contentState,
                                 event: contentEvent,
-                                config: .prod,
+                                config: config,
                                 factory: factory
                             )
                         }
@@ -52,6 +53,9 @@ struct OpenSavingsAccountBinderView: View {
                     informerView: informerView
                 )
                 .padding(.bottom)
+                .onFirstAppear {
+                    contentEvent(.load)
+                }
                 .navigationBarWithBack(
                     title: "Оформление накопительного счета",
                     subtitle: nil,
@@ -61,11 +65,6 @@ struct OpenSavingsAccountBinderView: View {
                     destination: flowState.navigation?.destination,
                     content: makeDestinationView
                 )
-               /* .safeAreaInset(edge: .bottom, spacing: 8) {
-                    if contentState.status.needContinueButton {
-                        continueButton({ flowEvent(.select(.openSavingsAccount)) })
-                    }
-                }*/
             }
         }
     }
@@ -76,7 +75,7 @@ struct OpenSavingsAccountBinderView: View {
         destination: SavingsAccountDomain.Navigation.Destination
     ) -> some View {
         
-        EmptyView()
+        EmptyView() // TODO: add success view
     }
 
     
@@ -91,25 +90,7 @@ struct OpenSavingsAccountBinderView: View {
                 color: informerData.color)
         )
     }
-    
-    private func continueButton(
-        _ action: @escaping () -> Void
-    ) -> some View {
         
-        Button(action: action, label: {
-            
-            ZStack {
-                
-                RoundedRectangle(cornerRadius: config.continueButton.cornerRadius)
-                    .foregroundColor(config.continueButton.background)
-                config.continueButton.label.text(withConfig: config.continueButton.title)
-            }
-        })
-        .padding(.horizontal)
-        .frame(height: config.continueButton.height)
-        .frame(maxWidth: .infinity)
-    }
-    
     @inlinable
     @ViewBuilder
     func makeOpenSavingsAccountView(
@@ -121,10 +102,21 @@ struct OpenSavingsAccountBinderView: View {
             Text("openSavingsAccount")
         }
     }
+        
+    private func backButton(
+        _ back: @escaping () -> Void
+    ) -> some View {
+        Button(action: back) { Image.ic24ChevronLeft }
+    }
+    
+    private func header() -> some View {
+        "Оформление накопительного счета".text(withConfig: .init(textFont: .textH3M18240(), textColor: .textSecondary), alignment: .center)
+    }
+
 }
 
 extension OpenSavingsAccountBinderView {
     
-    typealias Config = SavingsAccountDomain.Config
-    typealias Factory = SavingsAccountDomain.OpenAccountViewFactory
+    typealias Config = SavingsAccountContentConfig
+    typealias Factory = SavingsAccountDomain.OpenAccountLandingViewFactory
 }
