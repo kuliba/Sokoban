@@ -122,6 +122,7 @@ class AuthPinCodeViewModel: ObservableObject {
 
     func bind() {
         
+        //TODO: check that .combineLatest(model.clientInform, self.viewDidAppear) and spinner hide shall be implemented
         model.clientInformAlertManager.alertPublisher
             .receive(on: DispatchQueue.main)
             .dropFirst()
