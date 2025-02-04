@@ -39,6 +39,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
 
         // TODO: реализовать 2 кейса для failure: informer и alert
         case failure(String)
-        case success(String)
+        case success(CollateralLandingApplicationSaveConsentsResult)
     }
 }

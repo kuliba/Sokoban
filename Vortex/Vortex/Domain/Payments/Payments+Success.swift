@@ -522,6 +522,9 @@ extension Payments.ParameterSuccessText {
                 return .init(id: paramId, value: "Операция успешно завершена", style: .title)
             case .sberQR:
                 return .init(id: paramId, value: "Покупка оплачена", style: .title)
+                
+            case .collateralLoanLanding:
+                return .init(id: paramId, value: "Заявка на кредит успешно оформлена", style: .title)
             }
             
         case .inProgress:
@@ -538,6 +541,9 @@ extension Payments.ParameterSuccessText {
     
             case .refund:
                 return .init(id: paramId, value: "Запрос на возврат перевода принят в обработку", style: .title)
+                
+            case .collateralLoanLanding:
+                return .init(id: paramId, value: "Запрос на кредит принят в обработку", style: .title)
             }
             
         case .rejected, .unknown:
@@ -560,6 +566,9 @@ extension Payments.ParameterSuccessText {
                 
             case .sberQR:
                 return .init(id: paramId, value: "Платеж отклонен", style: .title)
+                
+            case .collateralLoanLanding:
+                return .init(id: paramId, value: "Заявка на кредит неуспешна", style: .title)
             }
         case .suspended:
             return .init(
@@ -743,6 +752,9 @@ extension Payments.ParameterSuccessOptionButtons {
                 operationDetail: operationDetail,
                 meToMePayment: meToMePayment
             )
+            
+        case .collateralLoanLanding:
+            return nil
         }
     }
     
@@ -770,7 +782,7 @@ extension Payments.ParameterSuccessOptionButtons {
                 operation: operation
             )
             
-        case .closeAccount, .closeAccountEmpty, .changePin, .change, .refund, .sberQR:
+        case .closeAccount, .closeAccountEmpty, .changePin, .change, .refund, .sberQR, .collateralLoanLanding:
             return nil
         }
     }

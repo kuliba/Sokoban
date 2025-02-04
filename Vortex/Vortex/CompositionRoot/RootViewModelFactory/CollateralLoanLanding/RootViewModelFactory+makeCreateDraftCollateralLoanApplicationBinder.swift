@@ -47,12 +47,15 @@ extension RootViewModelFactory {
         let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: { payload, completion in
+            saveConsents: { [weak self] payload, completion in
             
+                guard let self else { return }
                 // TODO: Restore
-                // saveConsents(payload:completion:)
+                self.saveConsents(payload: payload) {
+                    completion($0)
+                }
                 // TODO: Remove stub
-                completion(.success(.preview))
+//                completion(.success(.preview))
             }
         )
         
@@ -103,12 +106,13 @@ extension RootViewModelFactory {
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
+            mapError: { CreateDraftCollateralLoanApplicationDomain.LoadResultFailure.init(error: $0) }
         )
         
         saveConsents(payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response).mapError { .init(message: $0.localizedDescription) })
+            completion($0.map(\.response).mapError { $0 })
             _ = saveConsents
         }
     }
@@ -124,10 +128,10 @@ extension RootViewModelFactory {
         case let .showSaveConsentsResult(saveConsentsResult):
             switch saveConsentsResult {
             case let .failure(failure):
-                completion(.failure(failure.localizedDescription))
+                completion(.failure(failure.message))
                 
             case let .success(success):
-                completion(.success(String(describing: success)))
+                completion(.success(success))
             }
         }
     }
@@ -142,6 +146,31 @@ extension RootViewModelFactory {
             
         case .success(_):
             return .milliseconds(100)
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
+    
+    init(
+        error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
+    ) {
+        switch error {
+            
+        case let .createRequest(createRequestError):
+            self = Self(error: .createRequest(createRequestError))
+            
+        case let .performRequest(performRequestError):
+            self = Self(error: .performRequest(performRequestError))
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .invalid:
+                self = Self(message: error.localizedDescription)
+                
+            case .server(_, errorMessage: let errorMessage):
+                self = Self(message: errorMessage)
+            }
         }
     }
 }

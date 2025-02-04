@@ -390,6 +390,9 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         
                     case .changePin:
                         return
+                        
+                    case .collateralLoanLanding:
+                        return
                     }
                     
                 case .details:
@@ -553,6 +556,7 @@ extension PaymentsSuccessViewModel {
         case changePin
         case change, refund
         case sberQR
+        case collateralLoanLanding
     }
     
     struct FullScreenCover: Identifiable {

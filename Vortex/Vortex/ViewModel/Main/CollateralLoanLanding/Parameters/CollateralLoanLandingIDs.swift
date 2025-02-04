@@ -5,4 +5,14 @@
 //  Created by Valentin Ozerov on 04.02.2025.
 //
 
-import Foundation
+/// A namespace.
+public enum CollateralLoanLandingIDs {}
+
+public extension CollateralLoanLandingIDs {
+    
+    enum SuccessTextID: Equatable {
+        
+        case successTitle
+        case successMessage
+    }
+}

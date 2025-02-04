@@ -81,10 +81,42 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     ) -> some View {
         
         switch cover {
-        case let .completed(completed):
-            Text(completed)
+        case let .completed(saveConsentsResult):
+            let successViewModel = factory.makeCollateralLoanLandingSuccessViewModel(
+                saveConsentsResult.mapToResponse()
+            )
+            Text(String(describing: saveConsentsResult))
         }
     }
+}
+
+extension CollateralLandingApplicationSaveConsentsResult {
+    
+    func mapToResponse() -> CollateralLoanLandingResponse {
+ 
+        let successTitleParameter = Parameter.successText(
+            .init(
+                id: .successTitle,
+                value: "Заявка на кредит успешно оформлена",
+                style: .title
+            )
+        )
+
+        let successMessageParameter = Parameter.successText(
+            .init(
+                id: .successMessage,
+                value: "Специалист банка свяжется с вами в ближайшее время",
+                style: .message
+            )
+        )
+        
+        return .init(parameters: [
+            successTitleParameter,
+            successMessageParameter
+        ])
+    }
+    
+    typealias Parameter = CollateralLoanLandingResponse.Parameter
 }
 
 extension CreateDraftCollateralLoanApplicationWrapperView {
@@ -126,18 +158,17 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
     }
     
     enum Cover {
-        // TODO: передавать данные для Cover
-        case completed(String)
-    }    
+        case completed(CollateralLandingApplicationSaveConsentsResult)
+    }
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.Navigation.Cover: Identifiable {
     
-    var id: String {
+    var id: UInt {
         
         switch self {
         case let .completed(completed):
-            return completed
+            return completed.applicationID
         }
     }
 }
