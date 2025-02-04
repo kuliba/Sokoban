@@ -5,7 +5,32 @@
 //  Created by Igor Malyarov on 30.01.2025.
 //
 
+import LandingUIComponent
+
+typealias LandingWrapperViewModel = LandingUIComponent.LandingWrapperViewModel
+
+//@!TODO: Move TO separate file
+
+extension RootViewModelFactory {
+    
+    @inlinable
+    func makeStickerLandingViewModel(
+        _ type: AbroadType,
+        config: LandingUIComponent.UILanding.Component.Config,
+        landingActions: @escaping (LandingUIComponent.LandingEvent.Sticker) -> () -> Void
+    ) -> LandingWrapperViewModel {
+        
+        self.model.landingStickerViewModelFactory(
+            abroadType: type,
+            config: config,
+            landingActions: landingActions
+        )
+    }
+}
+
 import Foundation
+import SwiftUI
+//
 
 extension RootViewModelFactory {
     
@@ -40,6 +65,8 @@ extension RootViewModelFactory {
         case .openDeposit: return .milliseconds(600)
         case .openProduct: return .milliseconds(100)
         case .openURL:     return .milliseconds(100)
+        case .openSticker: return .milliseconds(600)
+        case .main:        return .milliseconds(100)
         }
     }
     
@@ -51,6 +78,9 @@ extension RootViewModelFactory {
         completion: @escaping (OpenProductDomain.Navigation) -> Void
     ) {
         switch select {
+        case .main:
+            completion(.main)
+            
         case .openProduct:
             completion(.openProduct(makeOpenProductNode(
                 featureFlags: featureFlags,
@@ -59,6 +89,9 @@ extension RootViewModelFactory {
             
         case let .productType(openProductType):
             getNavigation(openProductType: openProductType, notify: notify, completion: completion)
+            
+        case .orderSticker:
+            completion(.alert("Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения."))
         }
     }
     
@@ -97,7 +130,24 @@ extension RootViewModelFactory {
             break // TODO: fixme
             
         case .sticker:
-            break // TODO: fixme
+            let sticker = makeStickerLandingViewModel(
+                .sticker,
+                config: .stickerDefault,
+                landingActions: { action in
+                    
+                    return {
+                        //@!TODO: extract to helper
+                        switch action {
+                        case .goToMain:
+                            notify(.select(.main))
+                            
+                        case .order:
+                            notify(.select(.orderSticker))
+                        }
+                    }
+                }
+            )
+            completion(.openSticker(sticker))
         }
     }
     

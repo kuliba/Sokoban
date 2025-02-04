@@ -199,6 +199,9 @@ private extension PaymentsTransfersCorporateNavigation {
     var rootEvent: RootEvent? {
         
         switch self {
+        case .main:
+            return .select(.outside(.tab(.main)))
+            
         case .userAccount:
             return .select(.userAccount)
         }
