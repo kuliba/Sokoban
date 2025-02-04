@@ -124,43 +124,17 @@ class AuthPinCodeViewModel: ObservableObject {
         
         model.clientInformAlertManager.alertPublisher
             .receive(on: DispatchQueue.global(qos: .background))
+            .dropFirst()
             .sink { [weak self] alerts in
-                DispatchQueue.main.async {
-                    self?.clientInformAlerts = alerts
-                }
-            }
-            .store(in: &bindings)
-        
-        model.sessionState
-            .combineLatest(model.clientInform, self.viewDidAppear)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] state, clientInformData, isViewDidAppear in
                 
-                guard let self else { return }
-                
-                switch state {
+                if alerts == nil {
                     
-                case .active:
+                    self?.tryAutoEvaluateSensor()
+                } else {
                     
-                    guard clientInformData.isRecieved, isViewDidAppear else { return }
-                    
-                    withAnimation {
-                        self.spinner = nil
-                    }
-                    
-                    if !self.model.clientInformStatus.isShowNotAuthorized,
-                       let message = clientInformData.data?.notAuthorized  {
+                    DispatchQueue.main.async { [weak self] in
                         
-                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(title: "Ошибка", message: message))
-                        
-                    } else {
-                        
-                        tryAutoEvaluateSensor()
-                    }
-                    
-                default:
-                    withAnimation {
-                        self.spinner = .init()
+                        self?.clientInformAlerts = alerts
                     }
                 }
                 
@@ -420,6 +394,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
+                            self?.clientInformAlerts = nil
                             
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
@@ -724,6 +699,9 @@ extension AuthPinCodeViewModel {
         
         model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
+        
+        guard self.clientInformAlerts?.updateAlert?.actionType != .authBlocking else { return }
+        tryAutoEvaluateSensor()
     }
     
     func dismissAll() {

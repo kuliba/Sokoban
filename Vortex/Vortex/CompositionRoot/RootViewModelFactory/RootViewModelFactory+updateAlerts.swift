@@ -48,6 +48,8 @@ extension RootViewModelFactory {
             } else {
                 
                 self.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
+                
+                self.model.clientInformAlertManager.dismissAll()
             }
             
             _ = createGetNotAuthorizedZoneClientInformData
