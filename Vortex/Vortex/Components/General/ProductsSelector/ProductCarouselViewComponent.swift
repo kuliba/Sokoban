@@ -328,7 +328,7 @@ extension ProductCarouselView {
             var currentLength: CGFloat = 0
             for group in groups {
                 
-                currentLength += group.width
+                currentLength += group.widthWith(promoCount: visiblePromoProducts(productType: group.productType))
                 guard currentLength >= offset else {
                     continue
                 }
@@ -343,6 +343,11 @@ extension ProductCarouselView {
             needUpdate = true
             promoProducts = newItems
             needUpdate = false
+        }
+        
+        func visiblePromoProducts(productType: ProductType) -> Int {
+            
+            return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoType)}.count ?? 0
         }
     }
 }
@@ -883,7 +888,7 @@ extension ProductCarouselView {
                 break
             }
             
-            offset += group.width
+            offset += group.widthWith(promoCount: viewModel.visiblePromoProducts(productType: group.productType))
             offset += group.dimensions.spacing
         }
         

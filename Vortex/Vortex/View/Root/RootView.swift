@@ -91,7 +91,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(switcher as PaymentsTransfersSwitcher):
-                rootViewFactory.makePaymentsTransfersSwitcherView(switcher)
+                rootViewFactory.components.makePaymentsTransfersSwitcherView(switcher)
 
             default:
                 EmptyView()
@@ -392,9 +392,11 @@ private extension RootViewFactory {
         }
         
         return .init(
-            infra: .init(imageCache: .preview, generalImageCache: .preview),
-            clearCache: {},
-            isCorporate: { false },
+            infra: .init(
+                imageCache: .preview,
+                generalImageCache: .preview,
+                getUImage: { _ in nil }
+            ),
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _,_,_,_   in
@@ -411,7 +413,6 @@ private extension RootViewFactory {
                         makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeInfoViews: .default,
                         makeUserAccountView: {
                             
                             return .init(viewModel: $0, config: .preview, viewFactory: .preview)
@@ -428,7 +429,6 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: .default,
             makeUserAccountView: {
                 
                 return .init(

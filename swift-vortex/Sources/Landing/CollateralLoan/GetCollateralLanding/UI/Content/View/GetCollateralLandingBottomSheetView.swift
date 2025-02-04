@@ -5,29 +5,42 @@
 //  Created by Valentin Ozerov on 12.12.2024.
 //
 
-// Do not review, in progress!!
-
 import SwiftUI
 
-struct GetCollateralLandingBottomSheetView: View {
-    
-    let items: [Item]
-    let config: Config
-    let makeImageView: Factory.MakeImageView
-    let uiEvent: (UIEvent) -> Void
+public struct GetCollateralLandingBottomSheetView: View {
     
     @State var selected: Item? = nil
+
+    private var state: DomainState
+    private let domainEvent: (DomainEvent) -> Void
+    private let config: Config
+    private let factory: Factory
     
-    var body: some View {
+    public init(
+        state: DomainState,
+        domainEvent: @escaping (DomainEvent) -> Void,
+        config: Config,
+        factory: Factory,
+        type: DomainState.BottomSheet.SheetType
+    ) {
+        self.state = state
+        self.domainEvent = domainEvent
+        self.config = config
+        self.factory = factory
+        
+        self.state.bottomSheet = .init(sheetType: type)
+    }
+        
+    public var body: some View {
         
         ScrollView(.vertical) {
             
             VStack(spacing: config.layouts.spacing) {
                 
-                ForEach(items, content: itemView)
+                ForEach(state.bottomSheetItems, content: itemView)
             }
         }
-        .disabled(items.count < config.layouts.scrollThreshold)
+        .disabled(state.bottomSheetItems.count < config.layouts.scrollThreshold)
         .frame(height: height)
     }
     
@@ -62,7 +75,7 @@ struct GetCollateralLandingBottomSheetView: View {
             
             if let termMonth = item.termMonth {
                 
-                uiEvent(.selectMonthPeriod(termMonth))
+                domainEvent(.selectMonthPeriod(termMonth))
             }
         }
     }
@@ -88,9 +101,12 @@ struct GetCollateralLandingBottomSheetView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: cellHeight)
+        .contentShape(Rectangle())
         .onTapGesture {
             
-            uiEvent(.selectCollateral(item.id))
+            selected = item
+            
+            domainEvent(.selectCollateral(item.id))
         }
     }
     
@@ -99,7 +115,7 @@ struct GetCollateralLandingBottomSheetView: View {
         
         if let icon = item.icon {
             
-            makeImageView(icon)
+            factory.makeImageViewByMD5Hash(icon)
         } else {
             
             makeRadioButton(for: item)
@@ -164,7 +180,7 @@ struct GetCollateralLandingBottomSheetView: View {
     
     private var isRadioButton: Bool {
         
-        items.first?.icon == nil
+        state.bottomSheetItems.first?.icon == nil
     }
     
     private var cellHeight: CGFloat {
@@ -177,16 +193,20 @@ struct GetCollateralLandingBottomSheetView: View {
     private var height: CGFloat {
         
         min(
-            (cellHeight + config.layouts.cellHeightCompensation) * CGFloat(items.count)
+            (cellHeight + config.layouts.cellHeightCompensation) * CGFloat(state.bottomSheetItems.count)
                 + config.layouts.sheetBottomOffset,
             UIScreen.main.bounds.height - config.layouts.sheetTopOffset
         )
     }
+}
+
+extension GetCollateralLandingBottomSheetView {
     
-    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
-    typealias Config = GetCollateralLandingConfig.BottomSheet
-    typealias Factory = GetCollateralLandingFactory
-    typealias UIEvent = GetCollateralLandingDomain.UIEvent
+    public typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
+    public typealias Config = GetCollateralLandingConfig.BottomSheet
+    public typealias Factory = GetCollateralLandingFactory
+    public typealias DomainEvent = GetCollateralLandingDomain.Event
+    public typealias DomainState = GetCollateralLandingDomain.State
 }
 
 // MARK: - Previews
@@ -195,56 +215,25 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        let periodItems: [Item] = [
-            .init(
-                id: UUID().uuidString,
-                termMonth: 1,
-                icon: nil,
-                title: "1 месяц"
-            ),
-            .init(
-                id: UUID().uuidString,
-                termMonth: 2,
-                icon: nil,
-                title: "2 месяца"
-            ),
-            .init(
-                id: UUID().uuidString,
-                termMonth: 12,
-                icon: nil,
-                title: "1 год"
-            )
-        ]
-        
-        let collateralItems: [Item] = [
-            .init(
-                id: UUID().uuidString,
-                termMonth: nil,
-                icon: "icon",
-                title: "Автомобиль"
-            ),
-            .init(
-                id: UUID().uuidString,
-                termMonth: nil,
-                icon: "icon",
-                title: "Иное движимое имущество"
-            )
-        ]
-        
         GetCollateralLandingBottomSheetView(
-            items: periodItems,
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: .init(sheetType: .periods)),
+            domainEvent: { print($0) },
             config: .default,
-            makeImageView: Factory.preview.makeImageView,
-            uiEvent: { print($0) },
-            selected: periodItems[1]
+            factory: .preview,
+            type: .periods
         )
         .previewDisplayName("Product period selector")
         
         GetCollateralLandingBottomSheetView(
-            items: collateralItems,
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                bottomSheet: .init(sheetType: .periods)),
+            domainEvent: { print($0) },
             config: .default,
-            makeImageView: Factory.preview.makeImageView,
-            uiEvent: { print($0) }
+            factory: .preview,
+            type: .collaterals
         )
         .previewDisplayName("Product collateral selector")
     }

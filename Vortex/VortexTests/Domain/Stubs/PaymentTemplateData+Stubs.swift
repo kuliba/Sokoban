@@ -20,20 +20,21 @@ extension PaymentTemplateData {
         svgImage: SVGImageData,
         type: Kind
     ) -> PaymentTemplateData {
-            
-            return PaymentTemplateData(
-                groupName: groupName,
-                name: name,
-                parameterList: parameterList,
-                paymentTemplateId: paymentTemplateId,
-                productTemplate: productTemplate,
-                sort: sort,
-                svgImage: svgImage,
-                type: type)
-        }
+        
+        return PaymentTemplateData(
+            groupName: groupName,
+            name: name,
+            parameterList: parameterList,
+            paymentTemplateId: paymentTemplateId,
+            productTemplate: productTemplate,
+            sort: sort,
+            svgImage: svgImage,
+            type: type)
+    }
     
     static func templateStub(
         paymentTemplateId: Int = 2513,
+        paymentFlow: String? = nil,
         type: Kind,
         name: String = "name",
         parameterList: [TransferData] = TransferGeneralData.generalStub()
@@ -56,6 +57,7 @@ extension PaymentTemplateData {
             productTemplate: template.productTemplate,
             sort: template.sort,
             svgImage: template.svgImage,
-            type: type)
+            type: type,
+            paymentFlow: paymentFlow)
     }
 }

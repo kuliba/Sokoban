@@ -10,7 +10,7 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makeCategoryPickerSectionView(
@@ -25,7 +25,7 @@ extension RootViewFactory {
                     
                     makeCategoryPickerContentView(
                         binder.content, 
-                        select: { binder.flow.event(.select($0)) },
+                        select: { binder.flow.event(.select(.category($0))) },
                         headerHeight: 24
                     )
                         .alert(
@@ -34,7 +34,14 @@ extension RootViewFactory {
                         )
                         .navigationDestination(
                             destination: makeSectionDestination(state),
-                            content: makeSectionDestinationView
+                            content: {
+                                
+                                makeSectionDestinationView(
+                                    destination: $0,
+                                    dismiss: { binder.flow.event(.dismiss) },
+                                    scanQR: { binder.flow.event(.select(.qr))}
+                                )
+                            }
                         )
                 }
             )
@@ -59,18 +66,25 @@ extension RootViewFactory {
     
     @ViewBuilder
     private func makeSectionDestinationView(
-        destination: CategoryPickerSectionDomain.Destination
+        destination: CategoryPickerSectionDomain.Destination,
+        dismiss: @escaping () -> Void,
+        scanQR: @escaping () -> Void
     ) -> some View {
         
         switch destination {
-        case let .mobile(mobile):
-            components.makePaymentsView(mobile.paymentsViewModel)
+        case let .mobile(paymentsViewModel):
+            makePaymentsView(paymentsViewModel)
             
-        case let .taxAndStateServices(wrapper):
-            components.makePaymentsView(wrapper.paymentsViewModel)
+        case let .taxAndStateServices(paymentsViewModel):
+            makePaymentsView(paymentsViewModel)
             
         case let .transport(transport):
             transportPaymentsView(transport)
+                .navigationBarWithBack(
+                    title: "Транспорт",
+                    dismiss: dismiss,
+                    rightItem: .barcodeScanner(action: scanQR)
+                )
         }
     }
     

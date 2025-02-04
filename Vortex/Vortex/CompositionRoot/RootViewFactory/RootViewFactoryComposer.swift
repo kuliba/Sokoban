@@ -22,6 +22,7 @@ import SavingsAccount
 import SberQR
 import SwiftUI
 import UIPrimitives
+import UIKit
 
 final class RootViewFactoryComposer {
     
@@ -37,9 +38,12 @@ final class RootViewFactoryComposer {
         savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
+
+        let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache()
+            generalImageCache: model.generalImageCache(),
+            getUImage: { model.images.value[$0]?.uiImage }
         )
         self.model = model
         self.httpClient = httpClient
@@ -118,8 +122,6 @@ extension RootViewFactoryComposer {
                 
         return .init(
             infra: infra,
-            clearCache: clearCache,
-            isCorporate: { self.model.onlyCorporateCards },
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
@@ -135,7 +137,6 @@ extension RootViewFactoryComposer {
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(),
@@ -147,6 +148,9 @@ extension RootViewFactoryComposer {
     
     func makeViewComponents() -> ViewComponents {
         .init(
+            clearCache: clearCache,
+            isCorporate: { self.model.onlyCorporateCards },
+            getUImage: getUImage,
             makeAnywayFlowView: makeAnywayFlowView,
             makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
             makeSegmentedPaymentProviderPickerView: makeComposedSegmentedPaymentProviderPickerFlowView,
@@ -154,6 +158,7 @@ extension RootViewFactoryComposer {
             makeControlPanelWrapperView: makeControlPanelWrapperView,
             makeCurrencyWalletView: makeCurrencyWalletView,
             makeIconView: makeIconView,
+            makeGeneralIconView: makeGeneralIconView,
             makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
             makeMainSectionProductsView: makeMainSectionProductsView,
             makeOperationDetailView: makeOperationDetailView,
@@ -169,7 +174,9 @@ extension RootViewFactoryComposer {
             makeSavingsAccountView: makeSavingsAccountView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView,
-            makeOrderCardView: makeOrderCardView
+            makeOrderCardView: makeOrderCardView,
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel,
+            makeInfoViews: .default
         )
     }
     
@@ -207,7 +214,6 @@ private extension RootViewFactoryComposer {
                 makeGeneralIconView: makeGeneralIconView,
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView,
                 components: makeViewComponents()
             ),
@@ -685,10 +691,16 @@ private extension RootViewFactoryComposer {
     }
     
     func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder
+        binder: SavingsAccountDomain.Binder,
+        dismiss: @escaping SavingsAccountDismiss
     ) -> SavingsAccountDomain.WrapperView? {
         
-        makeSavingsAccountView(binder: binder, model: model, isActive: savingsAccountFlag.isActive)
+        makeSavingsAccountView(
+            binder: binder,
+            dismiss: dismiss,
+            model:  model,
+            isActive: savingsAccountFlag.isActive
+        )
     }
     
     func makePaymentsSuccessView(
@@ -743,7 +755,6 @@ private extension RootViewFactoryComposer {
             makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
-            makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView(viewModel:),
             components: makeViewComponents()
         )
@@ -1149,7 +1160,7 @@ extension ImageCache {
     }
 }
 
-extension RootViewFactory.MakeInfoViews {
+extension ViewComponents.MakeInfoViews {
     
     static let `default`: Self = .init(
         makeUpdateInfoView: UpdateInfoView.init(text:),

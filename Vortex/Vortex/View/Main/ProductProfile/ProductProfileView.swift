@@ -234,7 +234,7 @@ struct ProductProfileView: View {
         switch link {
         case let .anyway(node):
             let payload = node.model.state.content.state.transaction.context.outline.payload
-
+            
             viewFactory.components.makeAnywayFlowView(node.model)
                 .navigationBarWithAsyncIcon(
                     title: payload.title,
@@ -247,7 +247,7 @@ struct ProductProfileView: View {
         case let .controlPanel(controlPanelViewModel):
             viewFactory.components.makeControlPanelWrapperView(controlPanelViewModel)
                 .edgesIgnoringSafeArea(.bottom)
-
+            
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -282,8 +282,12 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
+            
         case let .payment(viewModel):
             viewFactory.components.makePaymentsView(viewModel)
+            
+        case let .paymentsTransfersSwitcher(switcher):
+            viewFactory.components.makePaymentsTransfersSwitcherView(switcher)
         }
     }
     

@@ -38,13 +38,12 @@ struct RootViewFactory {
         
         let imageCache: ImageCache
         let generalImageCache: ImageCache
+        let getUImage: (Md5hash) -> UIImage?
     }
     
     // TODO: add init, make `infra` private
     let infra: Infra
     
-    let clearCache: () -> Void
-    let isCorporate: () -> Bool
     let makeActivateSliderView: MakeActivateSliderView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView
@@ -52,7 +51,6 @@ struct RootViewFactory {
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
     let components: ViewComponents
@@ -76,7 +74,7 @@ extension RootViewFactory {
     }
 }
 
-extension RootViewFactory {
+extension ViewComponents {
     
     struct MakeInfoViews {
         
@@ -85,10 +83,15 @@ extension RootViewFactory {
     }
     
     func makePaymentProviderPickerView(
-        _ binder: PaymentProviderPickerDomain.Binder
+        binder: PaymentProviderPickerDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> PaymentProviderPickerView {
         
-        return .init(binder: binder, components: components, makeIconView: makeIconView)
+        return .init(
+            binder: binder,
+            dismiss: dismiss,
+            components: self
+        )
     }
 }
 
@@ -107,7 +110,6 @@ extension RootViewFactory {
             makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
             components: components
         )

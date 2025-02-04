@@ -10,14 +10,14 @@ import DropDownTextListComponent
 
 struct GetCollateralLandingFaqView: View {
     
-    let state: State
+    let product: Product
     let config: Config
 
     var body: some View {
         
         DropDownTextListView(
             config: config.faq,
-            list: state.product.dropDownTextList
+            list: product.dropDownTextList
         )
         .padding(.top, config.paddings.outerTop)
         .padding(.leading, config.paddings.outerLeading)
@@ -39,7 +39,7 @@ struct GetCollateralLandingFaqView_Previews: PreviewProvider {
     static var previews: some View {
         
         GetCollateralLandingFaqView(
-            state: .init(product: carData),
+            product: .carStub,
             config: .default
         )
     }

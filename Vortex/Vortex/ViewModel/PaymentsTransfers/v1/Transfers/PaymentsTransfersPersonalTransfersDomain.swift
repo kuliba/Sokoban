@@ -12,9 +12,9 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     // MARK: - Binder
     
-    typealias Binder = PlainPickerBinder<Select, NavigationResult>
+    typealias Binder = PlainPickerBinder<Select, Navigation>
     
-    typealias FlowDomain = Vortex.FlowDomain<Select, NavigationResult>
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     
     // MARK: - Content
     
@@ -43,14 +43,13 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
-    typealias NavigationResult = Result<Navigation, NavigationFailure>
+    typealias Navigation = Result<NavigationSuccess, NavigationFailure>
     
-    enum Navigation {
+    enum NavigationSuccess {
         
         case contacts(Node<ContactsViewModel>)
         case meToMe(Node<PaymentsMeToMeViewModel>)
-        case payments(Node<ClosePaymentsViewModelWrapper>)
-        case paymentsViewModel(Node<PaymentsViewModel>)
+        case payments(Node<PaymentsViewModel>)
         case scanQR
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }

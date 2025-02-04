@@ -92,6 +92,8 @@ extension RootViewModelFactory {
             completion(.main)
         case .order:
             completion(.order)
+        case let .failure(failure):
+            completion(.failure(failure))
         }
     }
     

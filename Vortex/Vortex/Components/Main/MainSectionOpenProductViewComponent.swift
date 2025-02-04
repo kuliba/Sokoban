@@ -12,24 +12,20 @@ import Combine
 //MARK: - ViewModel
 
 extension MainSectionOpenProductView {
-
+    
     class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
-
+        
         override var type: MainSectionType { .openProduct }
+        
         @Published var newProducts: OpenNewProductsViewModel
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
-
-        init(newProducts: OpenNewProductsViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
-            
-            self.newProducts = newProducts
-            self.model = model
-            super.init(isCollapsed: isCollapsed)
-        }
         
-        init(_ model: Model, makeButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons) {
-            
+        init(
+            _ model: Model,
+            makeButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
+        ) {
             self.newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
             self.model = model
             super.init(isCollapsed: false)
@@ -60,9 +56,9 @@ extension MainSectionOpenProductView {
 //MARK: - View
 
 struct MainSectionOpenProductView: View {
-
+    
     @ObservedObject var viewModel: ViewModel
-
+    
     var body: some View {
         
         CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
@@ -70,9 +66,9 @@ struct MainSectionOpenProductView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack(spacing: 8) {
-
+                    
                     ForEach($viewModel.newProducts.items) { $itemViewModel in
-
+                        
                         NewProductButton(viewModel: itemViewModel)
                             .frame(width: 112, height: 124)
                     }
@@ -85,7 +81,7 @@ struct MainSectionOpenProductView: View {
 //MARK: - Preview
 
 struct MainBlockOpenProductsView_Previews: PreviewProvider {
-
+    
     static var previews: some View {
         
         MainSectionOpenProductView(viewModel: .previewSample)
@@ -96,10 +92,11 @@ struct MainBlockOpenProductsView_Previews: PreviewProvider {
 //MARK: - Preview Content
 
 extension MainSectionOpenProductView.ViewModel {
-
-    static let previewSample = MainSectionOpenProductView.ViewModel(
-        newProducts: .init(items: [.sample, .sample, .sample,.sample]),
-        isCollapsed: false)
-
-    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock, makeButtons: { _ in [] })
+    
+    static let previewSample = MainSectionOpenProductView.ViewModel(.emptyMock) { _ in
+        
+        [.sample, .sample, .sample,.sample]
+    }
+    
+    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock) { _ in [] }
 }

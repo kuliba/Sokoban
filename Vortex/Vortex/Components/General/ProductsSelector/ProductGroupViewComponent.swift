@@ -85,7 +85,7 @@ extension ProductGroupView {
             self.products.value = products
         }
         
-        var width: CGFloat {
+        func widthWith(promoCount: Int) -> CGFloat {
             
             var result: CGFloat = 0
             
@@ -113,6 +113,7 @@ extension ProductGroupView {
                 result += dimensions.sizes.separator.width
             }
 
+            result += promoProductsWidth(promoCount)
             return result
         }
         
@@ -198,6 +199,15 @@ extension ProductGroupView {
                     }
                 }
                 .store(in: &bindings)
+        }
+        
+        func promoProductsWidth(_ count: Int) -> CGFloat {
+            
+            var result: CGFloat = 0
+            result += CGFloat(count) * dimensions.sizes.product.width
+            result += CGFloat(max(count - 1, 0)) * dimensions.spacing
+
+            return result
         }
         
         func needSeparator(for index: Int) -> Bool {

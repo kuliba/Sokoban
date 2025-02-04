@@ -39,7 +39,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
     }
 }
 
-extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+extension PaymentsTransfersPersonalTransfersDomain.Navigation {
     
     var equatable: PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult {
         
@@ -53,7 +53,7 @@ extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
     }
 }
 
-extension PaymentsTransfersPersonalTransfersDomain.Navigation {
+extension PaymentsTransfersPersonalTransfersDomain.NavigationSuccess {
     
     var equatable: PaymentsTransfersPersonalTransfersDomain.EquatableNavigation {
         
@@ -66,9 +66,6 @@ extension PaymentsTransfersPersonalTransfersDomain.Navigation {
             
         case let .payments(node):
             return .payments(.init(node.model))
-            
-        case let .paymentsViewModel(node):
-            return .paymentsViewModel(.init(node.model))
             
         case let .successMeToMe(node):
             return .successMeToMe(.init(node.model))
@@ -120,7 +117,6 @@ extension PaymentsTransfersPersonalTransfersDomain {
         case contacts(ObjectIdentifier)
         case meToMe(ObjectIdentifier)
         case payments(ObjectIdentifier)
-        case paymentsViewModel(ObjectIdentifier)
         case successMeToMe(ObjectIdentifier)
         case scanQR
     }
