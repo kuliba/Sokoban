@@ -9,7 +9,6 @@ import Combine
 import PaymentCompletionUI
 import PaymentComponents
 import SwiftUI
-import UIPrimitives
 
 struct PaymentCompleteView: View {
     
@@ -17,7 +16,6 @@ struct PaymentCompleteView: View {
     let goToMain: () -> Void
     let `repeat`: () -> Void
     let factory: Factory
-    let makeIconView: (String?) -> UIPrimitives.AsyncImage
     let config: Config
     
     var body: some View {
@@ -46,7 +44,7 @@ private extension PaymentCompleteView {
         
         PaymentCompletionStatusView(
             state: state.paymentCompletionState,
-            makeIconView: makeIconView,
+            makeIconView: factory.makeIconView,
             config: config
         )
     }
@@ -196,13 +194,6 @@ struct PaymentCompleteView_Previews: PreviewProvider {
             goToMain: {},
             repeat: {},
             factory: .preview,
-            makeIconView: {
-                
-                return .init(
-                    image: .init(systemName: $0 ?? "pencil.and.outline"),
-                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).delay(for: .seconds(1), scheduler: DispatchQueue.main).eraseToAnyPublisher()
-                )
-            },
             config: .iVortex
         )
     }
@@ -278,6 +269,13 @@ extension PaymentCompleteViewFactory {
     static let preview: Self = .init(
         makeDetailButton: { _ in .init(details: .init(logo: nil, cells: [])) },
         makeDocumentButton: { _,_  in .init(getDocument: { _ in }) },
+        makeIconView: {
+            
+            return .init(
+                image: .init(systemName: $0 ?? "pencil.and.outline"),
+                publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).delay(for: .seconds(1), scheduler: DispatchQueue.main).eraseToAnyPublisher()
+            )
+        },
         makeTemplateButton: {
             
             return .init(

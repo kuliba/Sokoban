@@ -75,9 +75,10 @@ extension RootViewFactoryComposer {
     
     func makeIconView(
         forMD5Hash md5Hash: String?
-    ) -> IconView? {
+    ) -> IconView {
         
-        return md5Hash.map { makeIconView(forMD5Hash: $0) }
+        let icon = md5Hash.map(AnywayElement.UIComponent.Icon.md5Hash)
+        return makeIconView(icon)
     }
     
     func makeIconView(
@@ -852,13 +853,10 @@ private extension RootViewFactoryComposer {
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
+                makeIconView: makeIconView(forMD5Hash:),
                 makeTemplateButton: makeTemplateButtonView(with: result),
                 makeTemplateButtonWrapperView: makeTemplateButtonWrapperView
             ),
-            makeIconView: {
-                
-                self.makeIconView($0.map { .md5Hash(.init($0)) })
-            },
             config: .iVortex
         )
     }
