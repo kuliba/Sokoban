@@ -56,19 +56,7 @@ extension TemplateButtonView {
                 
                 if case let .template(templateID) = operation?.source {
                     
-                    let parameterList = TemplateButton.templateParameterList(
-                        model: model,
-                        operationDetail: operationDetail,
-                        operation: operation
-                    )
-                    
-                    let action = ModelAction.PaymentTemplate.Update.Requested(
-                        name: template.name,
-                        parameterList: parameterList,
-                        paymentTemplateId: templateID
-                    )
-                    
-                    return model.action.send(action)
+                    requestUpdate(name: template.name, templateID: templateID)
                     
                 } else {
                     
@@ -111,6 +99,23 @@ extension TemplateButtonView {
             case .loading:
                 return
             }
+        }
+        
+        private func requestUpdate(name: String, templateID: Int) {
+            
+            let parameterList = TemplateButton.templateParameterList(
+                model: model,
+                operationDetail: details,
+                operation: operation
+            )
+            
+            let action = ModelAction.PaymentTemplate.Update.Requested(
+                name: name,
+                parameterList: parameterList,
+                paymentTemplateId: templateID
+            )
+            
+            model.action.send(action)
         }
         
         private func requestDelete(templateID: Int) {
