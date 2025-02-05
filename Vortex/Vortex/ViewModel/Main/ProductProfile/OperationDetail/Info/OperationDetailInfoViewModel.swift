@@ -2206,11 +2206,12 @@ extension OperationDetailInfoViewModel {
         default:
             
             return [
-                payerViewModel,
+                payeeViewModel,
                 operationCategoryViewModel,
+                payeeNumberPhone,
                 amountViewModel,
                 commissionViewModel,
-                payeeViewModel,
+                payerViewModel,
                 dateViewModel].compactMap {$0}
         }
     }
