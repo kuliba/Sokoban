@@ -556,7 +556,6 @@ extension PaymentsSuccessViewModel {
         case changePin
         case change, refund
         case sberQR
-        case collateralLoanLanding
     }
     
     struct FullScreenCover: Identifiable {

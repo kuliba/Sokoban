@@ -82,41 +82,28 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         switch cover {
         case let .completed(saveConsentsResult):
-            let successViewModel = factory.makeCollateralLoanLandingSuccessViewModel(
-                saveConsentsResult.mapToResponse()
+            PaymentCompleteView(
+                state: makePaymentCompleteState(from: saveConsentsResult),
+                goToMain: {},
+                repeat: {},
+                factory: <#T##Factory#>,
+                makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
+                config: .collateralLoanLanding
             )
-            Text(String(describing: saveConsentsResult))
+            //            Text(String(describing: saveConsentsResult))
         }
     }
-}
-
-extension CollateralLandingApplicationSaveConsentsResult {
     
-    func mapToResponse() -> CollateralLoanLandingResponse {
- 
-        let successTitleParameter = Parameter.successText(
-            .init(
-                id: .successTitle,
-                value: "Заявка на кредит успешно оформлена",
-                style: .title
-            )
-        )
-
-        let successMessageParameter = Parameter.successText(
-            .init(
-                id: .successMessage,
-                value: "Специалист банка свяжется с вами в ближайшее время",
-                style: .message
-            )
-        )
+    private func makePaymentCompleteState(
+        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
+    ) -> PaymentCompleteState {
         
-        return .init(parameters: [
-            successTitleParameter,
-            successMessageParameter
-        ])
+        .init(
+            formattedAmount: saveConsentsResult.formattedAmount(),
+            merchantIcon: <#T##String?#>,
+            result: <#T##Result<PaymentCompleteState.Report, PaymentCompleteState.Fraud>#>
+        )
     }
-    
-    typealias Parameter = CollateralLoanLandingResponse.Parameter
 }
 
 extension CreateDraftCollateralLoanApplicationWrapperView {

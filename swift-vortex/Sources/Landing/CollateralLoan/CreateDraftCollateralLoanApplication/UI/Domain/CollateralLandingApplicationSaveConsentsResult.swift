@@ -5,6 +5,8 @@
 //  Created by Valentin Ozerov on 21.01.2025.
 //
 
+import Foundation
+
 public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     
     public let applicationID: UInt
@@ -44,6 +46,22 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         self.status = status
         self.responseMessage = responseMessage
     }
+}
+
+public extension CollateralLandingApplicationSaveConsentsResult {
+    
+    func formattedAmount() -> String {
+        
+        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
+    }
+}
+
+// MARK: Helpers
+
+var rubSymbol: String {
+    let code = "RUB"
+    let locale = NSLocale(localeIdentifier: code)
+    return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
 }
 
 public extension CollateralLandingApplicationSaveConsentsResult {
