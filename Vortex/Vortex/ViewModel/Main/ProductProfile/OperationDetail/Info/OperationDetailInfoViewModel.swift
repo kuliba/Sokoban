@@ -1720,6 +1720,11 @@ private extension OperationDetailInfoViewModel {
     }
 }
 
+private extension String {
+
+    static let standard = "STANDARD_FLOW"
+}
+
 // MARK: - Methods
 
 extension OperationDetailInfoViewModel {
@@ -1744,11 +1749,11 @@ extension OperationDetailInfoViewModel {
             productId: payerProductId,
             productNumber: payerProductNumber)
          
-        let operationCategoryViewModel = operation.operationCategory != nil ? Self.operationCategoryCellViewModel(
+        let operationCategoryViewModel = operation.paymentFlow == .standard ? Self.operationCategoryCellViewModel(
             value: operation.operationCategory
         ) : nil
         
-        let documentNumberViewModel = operation.documentNumber != nil ? Self.documentNumberCellViewModel(
+        let documentNumberViewModel = operation.paymentFlow == .standard ? Self.documentNumberCellViewModel(
             value: operation.documentNumber
         ) : nil
 
@@ -2143,8 +2148,8 @@ extension OperationDetailInfoViewModel {
             return Self.makeItemsForTransport(
                 dictionaryAnywayOperator: model.dictionaryAnywayOperator,
                 operation,
-                operationCategoryViewModel,
-                documentNumberViewModel,
+                nil, //operationCategoryViewModel,
+                nil, //documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -2220,7 +2225,7 @@ extension OperationDetailInfoViewModel {
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
-                dateViewModel].compactMap {$0}
+                dateViewModel].compactMap { $0 }
         }
     }
     
