@@ -46,8 +46,6 @@ extension TemplateButtonView {
         
         func tapAction() {
             
-            let operationDetail = details
-            
             switch state {
             case let .refresh(templateId: templateID):
                 requestUpdate(templateID: templateID)
@@ -62,99 +60,12 @@ extension TemplateButtonView {
                 return
             }
         }
-        
-        private func requestUpdate(templateID: Int) {
-            
-            guard let template = model.paymentTemplates.value.first(where: { $0.id == templateID } )
-            else { return }
-            
-            if case let .template(templateID) = operation?.source {
-                
-                requestUpdate(name: template.name, templateID: templateID)
-                
-            } else {
-                
-                requestMe2MeUpdate(name: template.name, templateID: templateID)
-            }
-        }
-        
-        private func requestUpdate(name: String, templateID: Int) {
-            
-            let parameterList = TemplateButton.templateParameterList(
-                model: model,
-                operationDetail: details,
-                operation: operation
-            )
-            
-            let action = ModelAction.PaymentTemplate.Update.Requested(
-                name: name,
-                parameterList: parameterList,
-                paymentTemplateId: templateID
-            )
-            
-            model.action.send(action)
-        }
-
-        private func requestMe2MeUpdate(name: String, templateID: Int) {
-            
-            let parameterList = TemplateButton.createMe2MeParameterList(
-                model: model,
-                operationDetail: details
-            )
-            
-            let action = ModelAction.PaymentTemplate.Update.Requested(
-                name: name,
-                parameterList: parameterList,
-                paymentTemplateId: templateID
-            )
-            
-            model.action.send(action)
-        }
-        
-        private func requestDelete(templateID: Int) {
-            
-            switch details.paymentTemplateId {
-            case let .some(templateID):
-                
-                _requestDelete(templateID: templateID)
-                
-            default:
-                
-                if case let .template(templateID) = operation?.source {
-                    
-                    _requestDelete(templateID: templateID)
-                    
-                } else {
-                    
-                    _requestDelete(templateID: templateID)
-                }
-            }
-        }
-        
-        private func _requestDelete(templateID: Int) {
-            
-            let action = ModelAction.PaymentTemplate.Delete.Requested(
-                paymentTemplateIdList: [templateID]
-            )
-            model.action.send(action)
-        }
-
-        private func requestSave() {
-            
-            let paymentOperationDetailId = details.paymentOperationDetailId
-            let name = details.templateName
-            let action = ModelAction.PaymentTemplate.Save.Requested(
-                name: name,
-                paymentOperationDetailId: paymentOperationDetailId
-            )
-            model.action.send(action)
-        }
     }
 }
 
-// MARK: Binding's
+// MARK: - implementation details
 
-extension TemplateButtonView.ViewModel {
+private extension TemplateButtonView.ViewModel {
     
     func bind() {
         
@@ -196,9 +107,97 @@ extension TemplateButtonView.ViewModel {
             .receive(on: scheduler)
             .assign(to: &$state)
     }
+    
+    func requestUpdate(templateID: Int) {
+        
+        guard let template = model.paymentTemplates.value.first(where: { $0.id == templateID } )
+        else { return }
+        
+        if case let .template(templateID) = operation?.source {
+            
+            requestUpdate(name: template.name, templateID: templateID)
+            
+        } else {
+            
+            requestMe2MeUpdate(name: template.name, templateID: templateID)
+        }
+    }
+    
+    func requestUpdate(name: String, templateID: Int) {
+        
+        let parameterList = TemplateButton.templateParameterList(
+            model: model,
+            operationDetail: details,
+            operation: operation
+        )
+        
+        let action = ModelAction.PaymentTemplate.Update.Requested(
+            name: name,
+            parameterList: parameterList,
+            paymentTemplateId: templateID
+        )
+        
+        model.action.send(action)
+    }
+    
+    func requestMe2MeUpdate(name: String, templateID: Int) {
+        
+        let parameterList = TemplateButton.createMe2MeParameterList(
+            model: model,
+            operationDetail: details
+        )
+        
+        let action = ModelAction.PaymentTemplate.Update.Requested(
+            name: name,
+            parameterList: parameterList,
+            paymentTemplateId: templateID
+        )
+        
+        model.action.send(action)
+    }
+    
+    func requestDelete(templateID: Int) {
+        
+        switch details.paymentTemplateId {
+        case let .some(templateID):
+            
+            _requestDelete(templateID: templateID)
+            
+        default:
+            
+            if case let .template(templateID) = operation?.source {
+                
+                _requestDelete(templateID: templateID)
+                
+            } else {
+                
+                _requestDelete(templateID: templateID)
+            }
+        }
+    }
+    
+    func _requestDelete(templateID: Int) {
+        
+        let action = ModelAction.PaymentTemplate.Delete.Requested(
+            paymentTemplateIdList: [templateID]
+        )
+        model.action.send(action)
+    }
+    
+    func requestSave() {
+        
+        let paymentOperationDetailId = details.paymentOperationDetailId
+        let name = details.templateName
+        let action = ModelAction.PaymentTemplate.Save.Requested(
+            name: name,
+            paymentOperationDetailId: paymentOperationDetailId
+        )
+        model.action.send(action)
+    }
 }
 
-// MARK: Helpers
+// MARK: - Helpers
+
 extension TemplateButtonView.ViewModel {
     
     var title: String {
