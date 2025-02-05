@@ -1170,7 +1170,7 @@ extension RootViewFactoryComposer {
     
     func makeTemplateButtonWrapperView(
         response: RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
-    ) -> TemplateButtonWrapperView {
+    ) -> TemplateButtonStateWrapperView {
         
         return makeTemplateButtonWrapperView(
             operationDetail: response.operationDetail
@@ -1179,7 +1179,7 @@ extension RootViewFactoryComposer {
     
     func makeTemplateButtonWrapperView(
         operationDetail: OperationDetailData
-    ) -> TemplateButtonWrapperView {
+    ) -> TemplateButtonStateWrapperView {
         
         return .init(
             viewModel: .init(
@@ -1188,15 +1188,5 @@ extension RootViewFactoryComposer {
                 operationDetail: operationDetail
             )
         )
-    }
-}
-
-struct TemplateButtonWrapperView: View {
-    
-    @StateObject var viewModel: TemplateButtonView.ViewModel
-    
-    var body: some View {
-        
-        TemplateButtonView(viewModel: viewModel)
     }
 }
