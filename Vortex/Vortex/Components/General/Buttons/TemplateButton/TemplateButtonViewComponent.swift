@@ -27,35 +27,19 @@ extension TemplateButtonView {
             operation: Payments.Operation?,
             operationDetail: OperationDetailData
         ) {
-            
             self.model = model
             
             let state = state ?? (operationDetail.paymentTemplateId != nil ? .init(details: operationDetail) : .idle)
             
-            switch operation {
-            case let .some(operation):
-                
-                let action = Self.buttonAction(
-                    model: model,
-                    with: state,
-                    operation: operation,
-                    operationDetail: operationDetail
-                )
-                
-                self.state = state
-                self.tapAction = action
-                
-            default:
-                
-                self.state = state
-                let action = Self.buttonAction(
-                    model: model,
-                    with: state,
-                    operation: operation,
-                    operationDetail: operationDetail
-                )
-                self.tapAction = action
-            }
+            let tapAction = Self.buttonAction(
+                model: model,
+                with: state,
+                operation: operation,
+                operationDetail: operationDetail
+            )
+            
+            self.tapAction = tapAction
+            self.state = state
             
             bind(operation: operation, details: operationDetail)
         }
