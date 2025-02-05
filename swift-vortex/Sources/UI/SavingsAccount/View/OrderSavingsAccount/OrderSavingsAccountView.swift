@@ -99,9 +99,9 @@ where AmountInfo: View,
             
             if let links {
                 
-                LinkableTextView(taggedText: config.linkableTexts.condition, urlString: links.conditions, tag: config.linkableTexts.tag, handleURL: {_ in })
+                LinkableTextView(taggedText: config.linkableTexts.condition, urlString: links.conditions, tag: config.linkableTexts.tag, handleURL: { event(.openURL($0)) })
                     .minimumScaleFactor(0.9)
-                LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: links.tariff, tag: config.linkableTexts.tag, handleURL: {_ in })
+                LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: links.tariff, tag: config.linkableTexts.tag, handleURL: { event(.openURL($0)) })
                     .minimumScaleFactor(0.9)
             }
             Spacer()
@@ -507,6 +507,8 @@ where AmountInfo == Text,
                 case .consent:
                     print("consent")
                     
+                case let .openURL(url):
+                    print("openURL \(url)")
                 }
             },
             config: .preview,
@@ -554,6 +556,9 @@ struct LandingUIView_Previews: PreviewProvider {
                             
                         case .consent:
                             state.consent.toggle()
+                            
+                        case let .openURL(url):
+                            print("openURL \(url)")
                         }
                         
                         return (state, .none)

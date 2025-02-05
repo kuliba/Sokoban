@@ -46,17 +46,50 @@ extension RootViewFactoryComposer {
             .init(icon: .init("Logo Fora Bank"))
         }
     }
-    
-    func makeOpenSavingsAccountLandingView(
-        _ data: SavingsAccountDomain.OpenAccountLanding
-    ) -> SavingsAccountDomain.OpenAccountView {
         
-        OrderSavingsAccountView(
+    func makeOpenSavingsAccountView(
+        _ data: SavingsAccountDomain.OpenAccountLanding
+    ) -> OrderSavingsAccountWrapperView {
+        
+        OrderSavingsAccountWrapperView(
+            viewModel: .init(
+                initialState: .init(status: .result(.init(data.list.first ?? .empty))),
+                reduce: { state,event in // TODO: add reducer
+                    
+                    var state = state
+                    switch event {
+                    case .dismiss:
+                        print("dismiss")
+                        
+                    case .continue:
+                        state.isShowingOTP = true
+                        
+                    case let .amount(amountEvent):
+                        switch amountEvent {
+                            
+                        case let .edit(newValue):
+                            state.amountValue = newValue
+                            
+                        case .pay:
+                            state.isShowingOTP = true
+                        }
+                        
+                    case .consent:
+                        state.consent.toggle()
+                        
+                    case let .openURL(url):
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                    }
+                    
+                    return (state, .none)
+                },
+                handleEffect: {_,_ in } // TODO: add handler
+            ),
             amountToString: makeAmountToString,
-            state: .init(status: .result(.init(data.list.first ?? .empty))),
-            event: { _ in },
             config: .prod,
-            factory: makeImageViewFactory(),
+            imageFactory: makeImageViewFactory(),
             viewFactory: makeOpenSavingsAccountViewFactory()
         )
     }
@@ -65,7 +98,7 @@ extension RootViewFactoryComposer {
         
         .init(
             makeRefreshView: makeSpinnerRefreshView(),
-            makeLandingView: makeOpenSavingsAccountLandingView
+            makeLandingView: makeOpenSavingsAccountView
         )
     }
     
@@ -94,14 +127,14 @@ extension RootViewFactoryComposer {
         return .init(
             viewModel: viewModel,
             config: .iVortex,
-            iconView: { .ic24SmsCode },
+            iconView: OTPInfoView.init,
             warningView: {
                 
                 OTPWarningView(text: viewModel.state.warning, config: .iVortex)
             }
         )
     }
-    
+        
     func makeAmountToString(
         _ amount: Decimal,
         _ currencyCode: String

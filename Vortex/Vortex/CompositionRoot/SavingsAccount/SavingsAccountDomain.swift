@@ -97,14 +97,15 @@ extension SavingsAccountDomain {
 
     typealias OpenAccountContent = RxViewModel<OpenAccountContentState, OpenAccountContentEvent, OpenAccountContentEffect>
     typealias OpenAccountView = OrderSavingsAccountView<AmountInfoView, OTPView, Text>
-    typealias OpenAccountContentView = SavingsAccountContentView<SpinnerRefreshView, OpenAccountView, OpenAccountLanding, InformerPayload>
+    typealias OpenAccountContentView = SavingsAccountContentView<SpinnerRefreshView, OrderSavingsAccountWrapperView, OpenAccountLanding, InformerPayload>
     typealias OpenAccountViewFactory = SavingsAccount.ViewFactory<AmountInfoView, OTPView, Text>
     
-    typealias OpenAccountLandingViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OpenAccountView>
+    typealias OpenAccountLandingViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OrderSavingsAccountWrapperView>
 
     typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView>
     
     typealias Config = SavingsAccountConfig
     
-    typealias OTPView = TimedOTPInputWrapperView<Image, OTPWarningView>
+    typealias OTPView = TimedOTPInputWrapperView<OTPInfoView, OTPWarningView>
 }
+

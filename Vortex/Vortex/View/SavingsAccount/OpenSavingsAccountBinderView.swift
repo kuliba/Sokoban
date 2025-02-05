@@ -12,19 +12,9 @@ import SavingsAccount
 
 struct OpenSavingsAccountBinderView: View {
         
-    private let binder: SavingsAccountDomain.OpenAccountBinder
-    private let config: Config
-    private let factory: Factory
-    
-    init(
-        binder: SavingsAccountDomain.OpenAccountBinder,
-        config: Config,
-        factory: Factory
-    ) {
-        self.binder = binder
-        self.config = config
-        self.factory = factory
-    }
+    let binder: SavingsAccountDomain.OpenAccountBinder
+    let config: Config
+    let factory: Factory
     
     var body: some View {
         

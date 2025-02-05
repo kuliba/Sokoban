@@ -31,38 +31,29 @@ where RefreshView: View,
     
     public var body: some View {
         
-        content()
-    }
-    
-    @ViewBuilder
-    private func content() -> some View {
-       
-        ZStack {
+        switch state.status {
+        case .initiate:
+            Color.clear
+                .frame(maxHeight: .infinity)
             
-            switch state.status {
-            case .initiate:
+        case let .failure(_, oldLanding):
+            if let oldLanding {
+                factory.makeLandingView(oldLanding)
+            } else {
                 Color.clear
                     .frame(maxHeight: .infinity)
-                
-            case let .failure(_, oldLanding):
-                if let oldLanding {
-                    factory.makeLandingView(oldLanding)
-                } else {
-                    Color.clear
-                        .frame(maxHeight: .infinity)
-                }
-                
-            case let .loaded(landing):
-                factory.makeLandingView(landing)
-                
-            case let .inflight(oldLanding):
-                oldLanding.map {
-                    factory.makeLandingView($0)
-                }
-                if oldLanding == nil {
-                    factory.makeRefreshView()
-                        .modifier(ViewByCenterModifier(height: config.spinnerHeight))
-                }
+            }
+            
+        case let .loaded(landing):
+            factory.makeLandingView(landing)
+            
+        case let .inflight(oldLanding):
+            oldLanding.map {
+                factory.makeLandingView($0)
+            }
+            if oldLanding == nil {
+                factory.makeRefreshView()
+                    .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             }
         }
     }
