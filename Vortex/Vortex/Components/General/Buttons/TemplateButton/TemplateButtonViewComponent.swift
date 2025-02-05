@@ -137,7 +137,7 @@ private extension TemplateButtonView.ViewModel {
             paymentTemplateId: templateID
         )
         
-        model.action.send(action)
+        sendModelAction(action)
     }
     
     func requestMe2MeUpdate(name: String, templateID: Int) {
@@ -153,7 +153,7 @@ private extension TemplateButtonView.ViewModel {
             paymentTemplateId: templateID
         )
         
-        model.action.send(action)
+        sendModelAction(action)
     }
     
     func requestDelete(templateID: Int) {
@@ -181,7 +181,7 @@ private extension TemplateButtonView.ViewModel {
         let action = ModelAction.PaymentTemplate.Delete.Requested(
             paymentTemplateIdList: [templateID]
         )
-        model.action.send(action)
+        sendModelAction(action)
     }
     
     func requestSave() {
@@ -192,6 +192,11 @@ private extension TemplateButtonView.ViewModel {
             name: name,
             paymentOperationDetailId: paymentOperationDetailId
         )
+        sendModelAction(action)
+    }
+    
+    func sendModelAction(_ action: Action) {
+        
         model.action.send(action)
     }
 }
