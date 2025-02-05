@@ -35,7 +35,7 @@ extension CreateDraftCollateralLoanApplicationPercentView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 

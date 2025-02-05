@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OTPInputComponent
 
 struct CreateDraftCollateralLoanApplicationButtonView: View {
     
@@ -54,7 +55,7 @@ extension CreateDraftCollateralLoanApplicationButtonView {
     
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
 
@@ -69,7 +70,8 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
             CreateDraftCollateralLoanApplicationButtonView(
                 state: .init(
                     data: .preview,
-                    stage: .correctParameters
+                    stage: .correctParameters,
+                    otpViewModel: .preview
                 ),
                 event: { print($0) },
                 config: .default,
@@ -80,7 +82,8 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
             CreateDraftCollateralLoanApplicationButtonView(
                 state: .init(
                     data: .preview,
-                    stage: .correctParameters
+                    stage: .correctParameters,
+                    otpViewModel: .preview
                 ),
                 event: { print($0) },
                 config: .default,
@@ -91,7 +94,8 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
             CreateDraftCollateralLoanApplicationButtonView(
                 state: .init(
                     data: .preview,
-                    stage: .confirm
+                    stage: .confirm,
+                    otpViewModel: .preview
                 ),
                 event: { print($0) },
                 config: .default,

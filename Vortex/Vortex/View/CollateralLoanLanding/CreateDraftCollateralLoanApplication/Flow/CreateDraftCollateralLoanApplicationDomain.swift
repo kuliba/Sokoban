@@ -5,8 +5,9 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import RxViewModel
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import OTPInputComponent
+import RxViewModel
 
 extension CreateDraftCollateralLoanApplicationDomain {
 
@@ -17,7 +18,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
     // MARK: - Content
     
     typealias Content = RxViewModel<
-        CreateDraftCollateralLoanApplicationDomain.State,
+        CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>,
         CreateDraftCollateralLoanApplicationDomain.Event,
         CreateDraftCollateralLoanApplicationDomain.Effect
     >

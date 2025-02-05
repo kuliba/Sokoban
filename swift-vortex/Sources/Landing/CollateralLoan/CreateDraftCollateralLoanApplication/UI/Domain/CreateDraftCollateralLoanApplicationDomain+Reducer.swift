@@ -8,6 +8,7 @@
 import Foundation
 import InputComponent
 import OptionalSelectorComponent
+import OTPInputComponent
 import TextFieldComponent
 import TextFieldDomain
 
@@ -29,7 +30,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.periodSelectReduce = periodSelectReduce
         }
         
-        public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
+        public func reduce(_ state: State<TimedOTPInputViewModel>, _ event: Event)
+            -> (State<TimedOTPInputViewModel>, Effect?) {
             
             var state = state
             var effect: Effect?

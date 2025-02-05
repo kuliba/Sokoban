@@ -6,9 +6,10 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import InputComponent
+import OTPInputComponent
 import RxViewModel
 import SwiftUI
-import InputComponent
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -35,7 +36,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     }
     
     private func makeContentView(
-        state: Domain.State,
+        state: State,
         event: @escaping (Domain.Event) -> Void
     ) -> some View {
         
@@ -92,6 +93,7 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State<TimedOTPInputViewModel>
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
 }

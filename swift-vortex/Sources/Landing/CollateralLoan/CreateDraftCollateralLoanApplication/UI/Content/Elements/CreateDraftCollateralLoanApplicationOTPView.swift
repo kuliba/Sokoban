@@ -32,11 +32,7 @@ struct CreateDraftCollateralLoanApplicationOTPView: View {
     var body: some View {
 
         TimedOTPInputWrapperView(
-            viewModel: state.makeTimedOTPInputViewModel(
-                timerDuration: config.elements.otp.timerDuration,
-                otpLength: config.elements.otp.otpLength,
-                event: event
-            ),
+            viewModel: state.otpViewModel,
             config: config.elements.otp.view,
             iconView: { config.elements.otp.smsIcon }
         )
@@ -48,7 +44,7 @@ extension CreateDraftCollateralLoanApplicationOTPView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
+    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
     typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 

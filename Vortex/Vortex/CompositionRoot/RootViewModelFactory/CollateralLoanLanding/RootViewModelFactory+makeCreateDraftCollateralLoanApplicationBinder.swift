@@ -10,9 +10,10 @@ import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import Combine
 import Foundation
-import InputComponent
-import RemoteServices
 import GenericRemoteService
+import InputComponent
+import OTPInputComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     
@@ -55,12 +56,77 @@ extension RootViewModelFactory {
                 completion(.success(.preview))
             }
         )
-        
+
         return .init(
-            initialState: .init(data: data),
+            initialState: .init(
+                data: data,
+                otpViewModel: makeTimedOTPInputViewModel(
+                    timerDuration: settings.otpDuration,
+                    otpLength: settings.otpLength,
+                    domainEvent: <#T##(CreateDraftCollateralLoanApplicationDomain.Event) -> Void#>
+                )
+            ),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
+        )
+    }
+    
+    func makeTimedOTPInputViewModel(
+        timerDuration: Int,
+        otpLength: Int,
+        domainEvent: @escaping (CreateDraftCollateralLoanApplicationDomain.Event) -> Void
+    ) -> TimedOTPInputViewModel {
+        
+        let countdownReducer = CountdownReducer(duration: timerDuration)
+        
+        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
+            
+            if case (.completed, .start) = (otpState, otpEvent) {
+                domainEvent(.getVerificationCode)
+            }
+            
+            return countdownReducer.reduce(otpState, otpEvent)
+        }
+        
+        let otpFieldReducer = OTPFieldReducer(length: otpLength)
+        
+        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
+            
+            switch event {
+            case let .edit(text):
+                let text = text.filter(\.isWholeNumber).prefix(otpLength)
+                return otpFieldReducer.reduce(state, .edit(.init(text)))
+            case .otpValidated:
+                domainEvent(.otpValidated)
+                return otpFieldReducer.reduce(state, event)
+            default:
+                return otpFieldReducer.reduce(state, event)
+            }
+        }
+        
+        let otpInputReducer = OTPComponentInputReducer(
+            countdownReduce: decorated,
+            otpFieldReduce : decoratedOTPFieldReduce
+        )
+        
+        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
+        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
+        let otpInputEffectHandler = OTPInputEffectHandler(
+            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+        
+        return TimedOTPInputViewModel(
+            initialState: .starting(
+                phoneNumber: "",
+                duration: timerDuration,
+                text: ""
+            ),
+            reduce: otpInputReducer.reduce(_:_:),
+            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+            timer: RealTimer(),
+            observe: { domainEvent(.otp($0)) },
+            scheduler: .makeMain()
         )
     }
     
@@ -199,6 +265,9 @@ extension RemoteServices.ResponseMapper.CreateDraftCollateralLoanApplicationData
     
     var submitResult: CollateralLandingApplicationCreateDraftResult {
         
-        .init(applicationId: applicationId)
+        .init(
+            applicationId: applicationId,
+            verificationCode: verificationCode
+        )
     }
 }

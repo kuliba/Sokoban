@@ -11,10 +11,11 @@ import OptionalSelectorComponent
 import OTPInputComponent
 import TextFieldDomain
 import FlowCore
+import Combine
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public struct State {
+    public struct State<OTPViewModel> where OTPViewModel: TimedOTPInputViewModel {
         
         public let data: Data
 
@@ -27,13 +28,14 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
         public var otp: String
+        public var verificationCode: String
         public var checkedConsents: [String]
         public var isButtonDisabled: Bool
         public var isOTPValidated: Bool
+        public var otpViewModel: OTPViewModel
         
-        var otpViewModel: TimedOTPInputViewModel?
-        var otpViewModelNode: Node<TimedOTPInputViewModel>?
-
+        private var cancellable: AnyCancellable?
+        
         public init(
             data: Data,
             stage: Stage = .correctParameters,
@@ -41,9 +43,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
             applicationId: UInt? = nil,
             needToDissmiss: Bool = false,
             otp: String = "",
+            verificationCode: String = "",
             checkedConsents: [String] = [],
             isButtonDisabled: Bool = false,
-            isOTPValidated: Bool = false
+            isOTPValidated: Bool = false,
+            otpViewModel: OTPViewModel
         ) {
             self.data = data
             self.stage = stage
@@ -54,9 +58,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.city = data.makeCitySelectorState()
             self.amount = .init(textField: .noFocus(data.formattedAmount))
             self.otp = otp
+            self.verificationCode = verificationCode
             self.checkedConsents = checkedConsents
             self.isButtonDisabled = isButtonDisabled
             self.isOTPValidated = isOTPValidated
+            self.otpViewModel = otpViewModel
+
+            bind()
         }
         
         public enum Stage {
@@ -166,100 +174,102 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         )
     }
 
-    func makeTimedOTPInputViewModel(
-        timerDuration: Int,
-        otpLength: Int,
-        event: @escaping (Event) -> Void
-    ) -> TimedOTPInputViewModel {
-        
-        if let otpViewModelNode { return otpViewModelNode.model }
-        
-        let model = TimedOTPInputViewModel(
-            otpText: otp,
-            timerDuration: timerDuration,
-            otpLength: otpLength,
-            resend: { event(.getVerificationCode) },
-            observe: { event(.otp($0)) }
-        )
-        
-        let cancellable = model.$state
-            .sink(receiveValue: {
-                if $0.status == .validOTP {
-                    event(.otpValidated)
-                }
-        })
-        
-        otpViewModelNode = Node(model: model, cancellable: cancellable)
-    }
-
-    
-    func makeTimedOTPInputViewModelAlt(
-        timerDuration: Int,
-        otpLength: Int,
-        event: @escaping (Event) -> Void
-    ) -> TimedOTPInputViewModel {
-        
-        let countdownReducer = CountdownReducer(duration: timerDuration)
-        
-        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
-            
-            if case (.completed, .start) = (otpState, otpEvent) {
-                event(.getVerificationCode)
-            }
-            
-            return countdownReducer.reduce(otpState, otpEvent)
-        }
-        
-        let otpFieldReducer = OTPFieldReducer(length: otpLength)
-        
-        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
-            
-            switch event {
-            case let .edit(text):
-                let text = text.filter(\.isWholeNumber).prefix(otpLength)
-                return otpFieldReducer.reduce(state, .edit(.init(text)))
-                
-            default:
-                return otpFieldReducer.reduce(state, event)
-            }
-        }
-        
-        let otpInputReducer = OTPComponentInputReducer(
-            countdownReduce: decorated,
-            otpFieldReduce : decoratedOTPFieldReduce
-        )
-        
-        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
-        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
-        let otpInputEffectHandler = OTPInputEffectHandler(
-            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
-            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
-        
-        return TimedOTPInputViewModel(
-            initialState: .starting(
-                phoneNumber: "",
-                duration: timerDuration,
-                text: otp
-            ),
-            reduce: otpInputReducer.reduce(_:_:),
-            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
-            timer: RealTimer(),
-            observe: { event(.otp($0)) },
-            scheduler: .makeMain()
-        )
-    }
+//    func makeTimedOTPInputViewModel(
+//        timerDuration: Int,
+//        otpLength: Int,
+//        event: @escaping (Event) -> Void
+//    ) -> TimedOTPInputViewModel {
+//        
+//        if let otpViewModelNode { return otpViewModelNode.model }
+//        
+//        let model = TimedOTPInputViewModel(
+//            otpText: otp,
+//            timerDuration: timerDuration,
+//            otpLength: otpLength,
+//            resend: { event(.getVerificationCode) },
+//            observe: { event(.otp($0)) }
+//        )
+//        
+//        let cancellable = model.$state
+//            .sink(receiveValue: {
+//                if $0.status == .validOTP {
+//                    event(.otpValidated)
+//                }
+//        })
+//        
+//        otpViewModelNode = Node(model: model, cancellable: cancellable)
+//    }
+//
+//    
+//    func makeTimedOTPInputViewModelAlt(
+//        timerDuration: Int,
+//        otpLength: Int,
+//        event: @escaping (Event) -> Void
+//    ) -> TimedOTPInputViewModel {
+//        
+//        let countdownReducer = CountdownReducer(duration: timerDuration)
+//        
+//        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
+//            
+//            if case (.completed, .start) = (otpState, otpEvent) {
+//                event(.getVerificationCode)
+//            }
+//            
+//            return countdownReducer.reduce(otpState, otpEvent)
+//        }
+//        
+//        let otpFieldReducer = OTPFieldReducer(length: otpLength)
+//        
+//        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
+//            
+//            switch event {
+//            case let .edit(text):
+//                let text = text.filter(\.isWholeNumber).prefix(otpLength)
+//                return otpFieldReducer.reduce(state, .edit(.init(text)))
+//                
+//            default:
+//                return otpFieldReducer.reduce(state, event)
+//            }
+//        }
+//        
+//        let otpInputReducer = OTPComponentInputReducer(
+//            countdownReduce: decorated,
+//            otpFieldReduce : decoratedOTPFieldReduce
+//        )
+//        
+//        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
+//        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
+//        let otpInputEffectHandler = OTPInputEffectHandler(
+//            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+//            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+//        
+//        return TimedOTPInputViewModel(
+//            initialState: .starting(
+//                phoneNumber: "",
+//                duration: timerDuration,
+//                text: otp
+//            ),
+//            reduce: otpInputReducer.reduce(_:_:),
+//            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+//            timer: RealTimer(),
+//            observe: { event(.otp($0)) },
+//            scheduler: .makeMain()
+//        )
+//    }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.State {
+extension CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel> {
     
     public static let correntParametersPreview = Self(
         data: .preview,
-        stage: .correctParameters
+        stage: .correctParameters,
+        otpViewModel: .preview
     )
 
     public static let confirmPreview = Self(
         data: .preview,
-        stage: .confirm
+        stage: .confirm,
+        otpViewModel: .preview
     )
 }
 

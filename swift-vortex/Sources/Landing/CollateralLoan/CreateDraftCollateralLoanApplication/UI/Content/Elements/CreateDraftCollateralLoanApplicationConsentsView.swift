@@ -6,11 +6,12 @@
 //
 
 import LinkableText
+import OTPInputComponent
 import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationConsentsView: View {
     
-    let state: State
+    let state: State<TimedOTPInputViewModel>
     let event: (Event) -> Void
     let externalEvent: (Domain.ExternalEvent) -> Void
     let config: Config

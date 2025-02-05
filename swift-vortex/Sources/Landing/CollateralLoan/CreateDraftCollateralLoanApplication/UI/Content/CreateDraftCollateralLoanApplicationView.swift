@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OTPInputComponent
 
 public struct CreateDraftCollateralLoanApplicationView: View {
     
@@ -202,7 +203,7 @@ extension View {
 extension CreateDraftCollateralLoanApplicationView {
     
     public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias State = Domain.State
+    public typealias State = Domain.State<TimedOTPInputViewModel>
     public typealias Event = Domain.Event
     public typealias Config = CreateDraftCollateralLoanApplicationConfig
     public typealias Factory = CreateDraftCollateralLoanApplicationFactory
