@@ -49,9 +49,9 @@ extension TemplateButtonView {
             let operationDetail = details
             
             switch state {
-            case let .refresh(templateId: templateId):
+            case let .refresh(templateId: templateID):
                 
-                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateId } ) 
+                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateID } ) 
                 else { return }
                 
                 if case let .template(templateID) = operation?.source {
@@ -60,18 +60,7 @@ extension TemplateButtonView {
                     
                 } else {
                     
-                    let parameterList = TemplateButton.createMe2MeParameterList(
-                        model: model,
-                        operationDetail: operationDetail
-                    )
-                    
-                    let action = ModelAction.PaymentTemplate.Update.Requested(
-                        name: template.name,
-                        parameterList: parameterList,
-                        paymentTemplateId: templateId
-                    )
-                    
-                    return model.action.send(action)
+                    requestMe2MeUpdate(name: template.name, templateID: templateID)
                 }
                 
             case let .complete(templateID):
@@ -107,6 +96,22 @@ extension TemplateButtonView {
                 model: model,
                 operationDetail: details,
                 operation: operation
+            )
+            
+            let action = ModelAction.PaymentTemplate.Update.Requested(
+                name: name,
+                parameterList: parameterList,
+                paymentTemplateId: templateID
+            )
+            
+            model.action.send(action)
+        }
+
+        private func requestMe2MeUpdate(name: String, templateID: Int) {
+            
+            let parameterList = TemplateButton.createMe2MeParameterList(
+                model: model,
+                operationDetail: details
             )
             
             let action = ModelAction.PaymentTemplate.Update.Requested(
