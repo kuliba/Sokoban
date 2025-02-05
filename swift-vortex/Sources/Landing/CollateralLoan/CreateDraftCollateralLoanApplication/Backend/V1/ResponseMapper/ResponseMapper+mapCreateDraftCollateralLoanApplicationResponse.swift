@@ -37,15 +37,13 @@ private extension ResponseMapper._Data {
         -> ResponseMapper.CreateDraftCollateralLoanApplicationData {
         
         guard
-            let applicationId,
-            let verificationCode
+            let applicationId
         else {
             throw ResponseMapper.InvalidResponse()
         }
 
         return .init(
-            applicationId: applicationId,
-            verificationCode: verificationCode
+            applicationID: applicationId
         )
     }
 }
@@ -55,6 +53,5 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let applicationId: UInt?
-        let verificationCode: String?
     }
 }

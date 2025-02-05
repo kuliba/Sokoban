@@ -15,12 +15,23 @@ import Combine
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public struct State<OTPViewModel> where OTPViewModel: TimedOTPInputViewModel {
+    public struct Confirmation {
+        
+        public let otpViewModel: TimedOTPInputViewModel
+        
+        public init(
+            otpViewModel: TimedOTPInputViewModel
+        ) {
+            self.otpViewModel = otpViewModel
+        }
+    }
+    
+    public struct State<Confirmation> {
         
         public let data: Data
 
         public var amount: TextInputState
-        public var applicationId: UInt?
+        public var applicationID: UInt?
         public var city: OptionalSelectorState<CityItem>
         public var isLoading: Bool
         public var needToDissmiss: Bool
@@ -31,8 +42,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var verificationCode: String
         public var checkedConsents: [String]
         public var isButtonDisabled: Bool
-        public var isOTPValidated: Bool
-        public var otpViewModel: OTPViewModel
+        public var confirmation: Confirmation?
         
         private var cancellable: AnyCancellable?
         
@@ -40,19 +50,18 @@ extension CreateDraftCollateralLoanApplicationDomain {
             data: Data,
             stage: Stage = .correctParameters,
             isLoading: Bool = false,
-            applicationId: UInt? = nil,
+            applicationID: UInt? = nil,
             needToDissmiss: Bool = false,
             otp: String = "",
             verificationCode: String = "",
             checkedConsents: [String] = [],
             isButtonDisabled: Bool = false,
-            isOTPValidated: Bool = false,
-            otpViewModel: OTPViewModel
+            confirmation: Confirmation? = nil
         ) {
             self.data = data
             self.stage = stage
             self.isLoading = isLoading
-            self.applicationId = applicationId
+            self.applicationID = applicationID
             self.needToDissmiss = needToDissmiss
             self.period = data.makePeriodSelectorState()
             self.city = data.makeCitySelectorState()
@@ -61,10 +70,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.verificationCode = verificationCode
             self.checkedConsents = checkedConsents
             self.isButtonDisabled = isButtonDisabled
-            self.isOTPValidated = isOTPValidated
-            self.otpViewModel = otpViewModel
-
-            bind()
+            self.confirmation = confirmation
         }
         
         public enum Stage {
@@ -106,7 +112,10 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     public var checkButtonStatus: Bool {
         
         let isFirstStageValid = isAmountVaild
-        let isSecondStageValid = checkedConsents.count == data.consents.count && isOTPValidated
+        let isSecondStageValid = checkedConsents.count == data.consents.count
+            && confirmation != nil
+            && !verificationCode.isEmpty
+            && otp == verificationCode
         
         switch stage {
         case .correctParameters:
@@ -165,112 +174,21 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         )
     }
     
-    var saveConsentspayload: CollateralLandingApplicationSaveConsentsPayload {
+    func saveConsentspayload(
+        applicationID: UInt,
+        verificationCode: String
+    ) -> CollateralLandingApplicationSaveConsentsPayload {
         
-        // TODO: Need to realize. Stub!
         .init(
-            applicationId: 123,
-            verificationCode: "123"
+            applicationID: applicationID,
+            verificationCode: otp
         )
     }
-
-//    func makeTimedOTPInputViewModel(
-//        timerDuration: Int,
-//        otpLength: Int,
-//        event: @escaping (Event) -> Void
-//    ) -> TimedOTPInputViewModel {
-//        
-//        if let otpViewModelNode { return otpViewModelNode.model }
-//        
-//        let model = TimedOTPInputViewModel(
-//            otpText: otp,
-//            timerDuration: timerDuration,
-//            otpLength: otpLength,
-//            resend: { event(.getVerificationCode) },
-//            observe: { event(.otp($0)) }
-//        )
-//        
-//        let cancellable = model.$state
-//            .sink(receiveValue: {
-//                if $0.status == .validOTP {
-//                    event(.otpValidated)
-//                }
-//        })
-//        
-//        otpViewModelNode = Node(model: model, cancellable: cancellable)
-//    }
-//
-//    
-//    func makeTimedOTPInputViewModelAlt(
-//        timerDuration: Int,
-//        otpLength: Int,
-//        event: @escaping (Event) -> Void
-//    ) -> TimedOTPInputViewModel {
-//        
-//        let countdownReducer = CountdownReducer(duration: timerDuration)
-//        
-//        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
-//            
-//            if case (.completed, .start) = (otpState, otpEvent) {
-//                event(.getVerificationCode)
-//            }
-//            
-//            return countdownReducer.reduce(otpState, otpEvent)
-//        }
-//        
-//        let otpFieldReducer = OTPFieldReducer(length: otpLength)
-//        
-//        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
-//            
-//            switch event {
-//            case let .edit(text):
-//                let text = text.filter(\.isWholeNumber).prefix(otpLength)
-//                return otpFieldReducer.reduce(state, .edit(.init(text)))
-//                
-//            default:
-//                return otpFieldReducer.reduce(state, event)
-//            }
-//        }
-//        
-//        let otpInputReducer = OTPComponentInputReducer(
-//            countdownReduce: decorated,
-//            otpFieldReduce : decoratedOTPFieldReduce
-//        )
-//        
-//        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
-//        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
-//        let otpInputEffectHandler = OTPInputEffectHandler(
-//            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
-//            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
-//        
-//        return TimedOTPInputViewModel(
-//            initialState: .starting(
-//                phoneNumber: "",
-//                duration: timerDuration,
-//                text: otp
-//            ),
-//            reduce: otpInputReducer.reduce(_:_:),
-//            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
-//            timer: RealTimer(),
-//            observe: { event(.otp($0)) },
-//            scheduler: .makeMain()
-//        )
-//    }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel> {
+extension CreateDraftCollateralLoanApplicationDomain.Confirmation {
     
-    public static let correntParametersPreview = Self(
-        data: .preview,
-        stage: .correctParameters,
-        otpViewModel: .preview
-    )
-
-    public static let confirmPreview = Self(
-        data: .preview,
-        stage: .confirm,
-        otpViewModel: .preview
-    )
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Confirmation(otpViewModel: .preview)
 }
 
 public extension CreateDraftCollateralLoanApplicationUIData {

@@ -12,27 +12,16 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationOTPView: View {
 
-    var state: State
+    let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
+    let otpViewModel: TimedOTPInputViewModel
 
-    init(
-        state: State,
-        event: @escaping (Event) -> Void,
-        config: Config,
-        factory: Factory
-    ) {
-        self.state = state
-        self.event = event
-        self.config = config
-        self.factory = factory
-    }
-    
     var body: some View {
 
         TimedOTPInputWrapperView(
-            viewModel: state.otpViewModel,
+            viewModel: otpViewModel,
             config: config.elements.otp.view,
             iconView: { config.elements.otp.smsIcon }
         )
@@ -44,8 +33,10 @@ extension CreateDraftCollateralLoanApplicationOTPView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Confirmation = Domain.Confirmation
+    typealias State = Domain.State<Confirmation>
+    typealias Event = Domain.Event<Confirmation>
 }
 
 // MARK: - Previews
@@ -55,10 +46,16 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationOTPView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
-            factory: .preview
+            factory: .preview,
+            otpViewModel: .preview
         )
     }
     

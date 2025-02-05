@@ -18,8 +18,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
     // MARK: - Content
     
     typealias Content = RxViewModel<
-        CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>,
-        CreateDraftCollateralLoanApplicationDomain.Event,
+        CreateDraftCollateralLoanApplicationDomain.State<Confirmation>,
+        CreateDraftCollateralLoanApplicationDomain.Event<Confirmation>,
         CreateDraftCollateralLoanApplicationDomain.Effect
     >
     

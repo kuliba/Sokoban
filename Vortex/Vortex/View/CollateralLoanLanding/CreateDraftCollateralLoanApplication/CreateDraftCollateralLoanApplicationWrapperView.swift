@@ -37,7 +37,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     private func makeContentView(
         state: State,
-        event: @escaping (Domain.Event) -> Void
+        event: @escaping (Event) -> Void
     ) -> some View {
         
         CreateDraftCollateralLoanApplicationView(
@@ -93,7 +93,9 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State<TimedOTPInputViewModel>
+    typealias Confirmation = Domain.Confirmation
+    typealias State = Domain.State<Confirmation>
+    typealias Event = Domain.Event<Confirmation>
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
 }

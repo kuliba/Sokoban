@@ -73,7 +73,10 @@ public struct CreateDraftCollateralLoanApplicationView: View {
 
                 if state.stage == .confirm {
 
-                    otpView
+                    if let optViewModel = state.confirmation?.otpViewModel {
+
+                        otpView(otpViewModel: optViewModel)
+                    }
                     consentsView
                 }
             }
@@ -146,13 +149,14 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
 
-    var otpView: some View {
+    func otpView(otpViewModel: TimedOTPInputViewModel) -> some View {
         
         CreateDraftCollateralLoanApplicationOTPView(
             state: state,
             event: event,
             config: config,
-            factory: factory
+            factory: factory,
+            otpViewModel: otpViewModel
         )
     }
 
@@ -203,8 +207,9 @@ extension View {
 extension CreateDraftCollateralLoanApplicationView {
     
     public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias State = Domain.State<TimedOTPInputViewModel>
-    public typealias Event = Domain.Event
+    public typealias Confirmation = Domain.Confirmation
+    public typealias State = Domain.State<Confirmation>
+    public typealias Event = Domain.Event<Confirmation>
     public typealias Config = CreateDraftCollateralLoanApplicationConfig
     public typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
@@ -224,8 +229,14 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview
@@ -233,8 +244,12 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
         .previewDisplayName("Экран подтверждения параметров кредита")
 
         CreateDraftCollateralLoanApplicationView(
-            state: .confirmPreview,
-            event: { print($0) }, 
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: { print($0) },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview

@@ -11,7 +11,7 @@ import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationConsentsView: View {
     
-    let state: State<TimedOTPInputViewModel>
+    let state: State
     let event: (Event) -> Void
     let externalEvent: (Domain.ExternalEvent) -> Void
     let config: Config
@@ -57,8 +57,9 @@ extension CreateDraftCollateralLoanApplicationConsentsView {
     typealias Consent = CreateDraftCollateralLoanApplicationUIData.Consent
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = Domain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias State = Domain.State<Confirmation>
+    typealias Confirmation = Domain.Confirmation
+    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event<Confirmation>
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
 }
 
@@ -69,12 +70,34 @@ struct CreateDraftCollateralLoanApplicationConsentsView_Previews: PreviewProvide
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationConsentsView(
-            state: .correntParametersPreview, 
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview
         )
+        .previewDisplayName("Edit mode")
+        
+        CreateDraftCollateralLoanApplicationConsentsView(
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
+            externalEvent: { print($0) },
+            config: .default,
+            factory: .preview
+        )
+        .previewDisplayName("Read only mode")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

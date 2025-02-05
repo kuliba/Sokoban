@@ -54,8 +54,10 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
 extension CreateDraftCollateralLoanApplicationButtonView {
     
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Confirmation = Domain.Confirmation
+    typealias Event = Domain.Event<Confirmation>
+    typealias State = Domain.State<Confirmation>
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
 
@@ -71,7 +73,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
                 state: .init(
                     data: .preview,
                     stage: .correctParameters,
-                    otpViewModel: .preview
+                    confirmation: .preview
                 ),
                 event: { print($0) },
                 config: .default,
@@ -83,7 +85,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
                 state: .init(
                     data: .preview,
                     stage: .correctParameters,
-                    otpViewModel: .preview
+                    confirmation: .preview
                 ),
                 event: { print($0) },
                 config: .default,
@@ -95,7 +97,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider 
                 state: .init(
                     data: .preview,
                     stage: .confirm,
-                    otpViewModel: .preview
+                    confirmation: .preview
                 ),
                 event: { print($0) },
                 config: .default,

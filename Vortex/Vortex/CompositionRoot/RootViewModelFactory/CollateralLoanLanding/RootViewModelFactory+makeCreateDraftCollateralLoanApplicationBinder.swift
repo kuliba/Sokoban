@@ -21,7 +21,7 @@ extension RootViewModelFactory {
         payload: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
-        let content = makeContent(data: payload)
+        let content = makeDraftContent(data: payload)
 
         return composeBinder(
             content: content,
@@ -40,50 +40,59 @@ extension RootViewModelFactory {
 
     // MARK: - Content
     
-    private func makeContent(
+    private func makeDraftContent(
         data: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Content {
         
-        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: data)
-        let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
+        let reducer = Domain.Reducer<Confirmation>(data: data)
+        let effectHandler = Domain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: { payload, completion in
-            
+            saveConsents: {
+                payload, completion in
+                
                 // TODO: Restore
                 // saveConsents(payload:completion:)
                 // TODO: Remove stub
                 completion(.success(.preview))
+            },
+            confirm: { [weak self] event in
+                
+                guard let self else { return }
+                
+                let model = self.makeTimedOTPInputViewModel(
+                    timerDuration: self.settings.otpDuration,
+                    otpLength: self.settings.otpLength,
+                    notify: event
+                )
+                
+                event(.confirmed(.init(otpViewModel: model)))
             }
         )
 
         return .init(
-            initialState: .init(
-                data: data,
-                otpViewModel: makeTimedOTPInputViewModel(
-                    timerDuration: settings.otpDuration,
-                    otpLength: settings.otpLength,
-                    domainEvent: <#T##(CreateDraftCollateralLoanApplicationDomain.Event) -> Void#>
-                )
-            ),
+            initialState: .init(data: data),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
         )
+        
+        typealias Domain = CreateDraftCollateralLoanApplicationDomain
+        typealias Confirmation = Domain.Confirmation
     }
     
     func makeTimedOTPInputViewModel(
         timerDuration: Int,
         otpLength: Int,
-        domainEvent: @escaping (CreateDraftCollateralLoanApplicationDomain.Event) -> Void
+        notify: @escaping (CreateDraftCollateralLoanApplicationDomain.Event<CreateDraftCollateralLoanApplicationDomain.Confirmation>) -> Void
     ) -> TimedOTPInputViewModel {
-        
+                
         let countdownReducer = CountdownReducer(duration: timerDuration)
         
         let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
             
             if case (.completed, .start) = (otpState, otpEvent) {
-                domainEvent(.getVerificationCode)
+                notify(.getVerificationCode)
             }
             
             return countdownReducer.reduce(otpState, otpEvent)
@@ -97,9 +106,6 @@ extension RootViewModelFactory {
             case let .edit(text):
                 let text = text.filter(\.isWholeNumber).prefix(otpLength)
                 return otpFieldReducer.reduce(state, .edit(.init(text)))
-            case .otpValidated:
-                domainEvent(.otpValidated)
-                return otpFieldReducer.reduce(state, event)
             default:
                 return otpFieldReducer.reduce(state, event)
             }
@@ -125,7 +131,7 @@ extension RootViewModelFactory {
             reduce: otpInputReducer.reduce(_:_:),
             handleEffect: otpInputEffectHandler.handleEffect(_:_:),
             timer: RealTimer(),
-            observe: { domainEvent(.otp($0)) },
+            observe: { notify(.otp($0)) },
             scheduler: .makeMain()
         )
     }
@@ -235,7 +241,7 @@ extension CollateralLandingApplicationSaveConsentsPayload {
     var payload: RemoteServices.RequestFactory.SaveConsentsPayload {
         
         .init(
-            applicationId: applicationId,
+            applicationID: applicationID,
             verificationCode: verificationCode
         )
     }
@@ -266,8 +272,7 @@ extension RemoteServices.ResponseMapper.CreateDraftCollateralLoanApplicationData
     var submitResult: CollateralLandingApplicationCreateDraftResult {
         
         .init(
-            applicationId: applicationId,
-            verificationCode: verificationCode
+            applicationID: applicationID
         )
     }
 }

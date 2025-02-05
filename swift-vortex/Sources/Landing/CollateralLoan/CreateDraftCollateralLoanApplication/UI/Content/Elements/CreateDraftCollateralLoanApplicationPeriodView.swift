@@ -82,10 +82,12 @@ extension CreateDraftCollateralLoanApplicationPeriodView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Confirmation = Domain.Confirmation
+    typealias State = Domain.State<Confirmation>
+    typealias Event = Domain.Event<Confirmation>
     typealias IconView = UIPrimitives.AsyncImage
-    typealias PeriodItem = CreateDraftCollateralLoanApplicationDomain.PeriodItem
+    typealias PeriodItem = Domain.PeriodItem
     typealias SelectorView
         = OptionalSelectorView<PeriodItem, IconView, IconLabel<Image>, SelectedOptionView, ChevronView>
 }
@@ -97,8 +99,13 @@ struct CreateDraftCollateralLoanApplicationPeriodView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationPeriodView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )

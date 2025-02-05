@@ -27,7 +27,9 @@ public struct CreateDraftCollateralLoanApplicationFactory {
     public typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
     public typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
     public typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
-    public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    public typealias Confirmation = Domain.Confirmation
+    public typealias Event = CreateDraftCollateralLoanApplicationDomain.Event<Confirmation>
     public typealias EventDispatcher = (Event) -> Void
 }
 

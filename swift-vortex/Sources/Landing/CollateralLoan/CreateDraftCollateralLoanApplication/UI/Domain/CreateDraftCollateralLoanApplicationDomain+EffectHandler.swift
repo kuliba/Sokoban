@@ -12,15 +12,18 @@ extension CreateDraftCollateralLoanApplicationDomain {
         private let createDraftApplication: CreateDraftApplication
         private let getVerificationCode: GetVerificationCode
         private let saveConsents: SaveConsents
+        private let confirm: Confirm
 
         public init(
             createDraftApplication: @escaping CreateDraftApplication,
             getVerificationCode: @escaping GetVerificationCode,
-            saveConsents: @escaping SaveConsents
+            saveConsents: @escaping SaveConsents,
+            confirm: @escaping Confirm
         ) {
             self.createDraftApplication = createDraftApplication
             self.getVerificationCode = getVerificationCode
             self.saveConsents = saveConsents
+            self.confirm = confirm
         }
         
         public func handleEffect(_ effect: Effect, dispatch: @escaping Dispatch) {
@@ -34,9 +37,16 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case .getVerificationCode:
                 getVerificationCode { dispatch(.gettedVerificationCode($0)) }
+                
+            case .confirm:
+                confirm { event in dispatch(event) }
             }
         }
 
+        public typealias Domain = CreateDraftCollateralLoanApplicationDomain
+        public typealias Confirmation = Domain.Confirmation
+        public typealias Event = Domain.Event<Confirmation>
+        public typealias Confirm = (@escaping (Event) -> Void) -> Void
         public typealias Dispatch = (Event) -> Void
         public typealias CreateDraftApplicationPayload = CollateralLandingApplicationCreateDraftPayload
         public typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload

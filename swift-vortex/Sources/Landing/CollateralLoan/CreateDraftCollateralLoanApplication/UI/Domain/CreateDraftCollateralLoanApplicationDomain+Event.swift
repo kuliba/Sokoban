@@ -12,14 +12,14 @@ import OptionalSelectorComponent
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public enum Event: Equatable {
+    public enum Event<Confirmation> {
         
         case amount(TextInputEvent)
         case applicationCreated(CreateDraftApplicationResult)
         case checkConsent(String)
         case city(SelectCityEvent)
         case otp(String)
-        case otpValidated
+        case confirmed(Confirmation)
         case period(SelectPeriodEvent)
         case getVerificationCode
         case gettedVerificationCode(GetVerificationCodeResult)

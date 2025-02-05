@@ -82,8 +82,10 @@ extension CreateDraftCollateralLoanApplicationCityView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State<TimedOTPInputViewModel>
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State<Confirmation>
+    typealias Event = Domain.Event<Confirmation>
+    typealias Confirmation = Domain.Confirmation
     typealias IconView = UIPrimitives.AsyncImage
     typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem
     typealias SelectorView
@@ -97,16 +99,28 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationCityView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit mode")
 
         CreateDraftCollateralLoanApplicationCityView(
-            state: .confirmPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )
