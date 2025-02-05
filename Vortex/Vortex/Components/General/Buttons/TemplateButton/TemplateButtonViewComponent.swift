@@ -22,6 +22,8 @@ extension TemplateButtonView {
         private(set) var tapAction: () -> Void
 
         private let model: Model
+        private let operation: Payments.Operation?
+        private let details: OperationDetailData
         private var bindings = Set<AnyCancellable>()
         private let scheduler: AnySchedulerOf<DispatchQueue>
         
@@ -29,25 +31,27 @@ extension TemplateButtonView {
             model: Model,
             state: State? = nil,
             operation: Payments.Operation?,
-            operationDetail: OperationDetailData,
+            operationDetail details: OperationDetailData,
             scheduler: AnySchedulerOf<DispatchQueue> = .main
         ) {
             self.model = model
+            self.operation = operation
+            self.details = details
             
-            let state = state ?? (operationDetail.paymentTemplateId != nil ? .init(details: operationDetail) : .idle)
+            let state = state ?? (details.paymentTemplateId != nil ? .init(details: details) : .idle)
             
             let tapAction = Self.buttonAction(
                 model: model,
                 with: state,
                 operation: operation,
-                operationDetail: operationDetail
+                operationDetail: details
             )
             
             self.tapAction = tapAction
             self.state = state
             self.scheduler = scheduler
             
-            bind(operation: operation, details: operationDetail)
+            bind()
         }
         
         static func buttonAction(
@@ -145,10 +149,8 @@ extension TemplateButtonView {
 
 extension TemplateButtonView.ViewModel {
     
-    func bind(
-        operation: Payments.Operation?,
-        details: OperationDetailData
-    ) {
+    func bind() {
+        
         // MARK: - complete
         
         let saveComplete = model.action
