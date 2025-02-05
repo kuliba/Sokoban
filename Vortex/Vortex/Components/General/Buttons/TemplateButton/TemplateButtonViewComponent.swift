@@ -106,13 +106,7 @@ extension TemplateButtonView {
                 }
                 
             case .idle:
-                let paymentOperationDetailId = operationDetail.paymentOperationDetailId
-                let name = operationDetail.templateName
-                let action = ModelAction.PaymentTemplate.Save.Requested(
-                    name: name,
-                    paymentOperationDetailId: paymentOperationDetailId
-                )
-                return model.action.send(action)
+                requestSave()
                 
             case .loading:
                 return
@@ -125,6 +119,17 @@ extension TemplateButtonView {
                 paymentTemplateIdList: [templateID]
             )
             model.action.send(action)
+        }
+
+        private func requestSave() {
+            
+            let paymentOperationDetailId = details.paymentOperationDetailId
+            let name = details.templateName
+            let action = ModelAction.PaymentTemplate.Save.Requested(
+                name: name,
+                paymentOperationDetailId: paymentOperationDetailId
+            )
+            return model.action.send(action)
         }
     }
 }
