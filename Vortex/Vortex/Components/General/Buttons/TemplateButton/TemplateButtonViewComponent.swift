@@ -5,8 +5,9 @@
 //  Created by Дмитрий Савушкин on 30.05.2023.
 //
 
-import SwiftUI
 import Combine
+import CombineSchedulers
+import SwiftUI
 
 extension TemplateButtonView {
     
@@ -15,17 +16,21 @@ extension TemplateButtonView {
         
         let id: Payments.ParameterSuccessOptionButtons.Option = .template
         let action: PassthroughSubject<Action, Never> = .init()
-        private var bindings = Set<AnyCancellable>()
         
         @Published private(set) var state: State
+        
         private(set) var tapAction: () -> Void
+
         private let model: Model
+        private var bindings = Set<AnyCancellable>()
+        private let scheduler: AnySchedulerOf<DispatchQueue>
         
         init(
             model: Model,
             state: State? = nil,
             operation: Payments.Operation?,
-            operationDetail: OperationDetailData
+            operationDetail: OperationDetailData,
+            scheduler: AnySchedulerOf<DispatchQueue> = .main
         ) {
             self.model = model
             
@@ -40,6 +45,7 @@ extension TemplateButtonView {
             
             self.tapAction = tapAction
             self.state = state
+            self.scheduler = scheduler
             
             bind(operation: operation, details: operationDetail)
         }
@@ -143,10 +149,9 @@ extension TemplateButtonView.ViewModel {
         operation: Payments.Operation?,
         details: OperationDetailData
     ) {
+        // MARK: bind model action
         
         //MARK: bind model action
-        
-        let complete = Publishers.CombineLatest(
             model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete },
             model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
         )
@@ -166,14 +171,14 @@ extension TemplateButtonView.ViewModel {
         let refresh = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
             .map(\.paymentTemplateId)
-            .map { templateId in State.complete(templateId: templateId)}
+            .map { State.complete(templateId: $0) }
         
         Publishers.Merge3(complete, idle, refresh)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &$state)
         
         model.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] action in
                 
                 guard let self else { return }
@@ -205,7 +210,7 @@ extension TemplateButtonView.ViewModel {
                     
                 default:
                     break
-                }    
+                }
             }
             .store(in: &bindings)
     }
