@@ -86,33 +86,22 @@ extension TemplateButtonView {
                     return model.action.send(action)
                 }
                 
-            case let .complete(templateId):
+            case let .complete(templateID):
                 
                 switch operationDetail.paymentTemplateId {
-                case let .some(paymentTemplateId):
+                case let .some(templateID):
                     
-                    let action = ModelAction.PaymentTemplate.Delete.Requested(
-                        paymentTemplateIdList: [paymentTemplateId]
-                    )
-                    
-                    return model.action.send(action)
+                    requestDelete(templateID: templateID)
                     
                 default:
                     
                     if case let .template(templateID) = operation?.source {
                         
-                        let action = ModelAction.PaymentTemplate.Delete.Requested(
-                            paymentTemplateIdList: [templateID]
-                        )
-                        return model.action.send(action)
+                        requestDelete(templateID: templateID)
                         
                     } else {
                         
-                        let action = ModelAction.PaymentTemplate.Delete.Requested(
-                            paymentTemplateIdList: [templateId]
-                        )
-                        
-                        return model.action.send(action)
+                        requestDelete(templateID: templateID)
                     }
                 }
                 
@@ -128,6 +117,14 @@ extension TemplateButtonView {
             case .loading:
                 return
             }
+        }
+        
+        private func requestDelete(templateID: Int) {
+            
+            let action = ModelAction.PaymentTemplate.Delete.Requested(
+                paymentTemplateIdList: [templateID]
+            )
+            model.action.send(action)
         }
     }
 }
