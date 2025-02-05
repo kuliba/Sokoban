@@ -151,7 +151,7 @@ extension TemplateButtonView.ViewModel {
     ) {
         // MARK: bind model action
         
-        //MARK: bind model action
+        let complete = Publishers.CombineLatest( // looks like should be `Merge`
             model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete },
             model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
         )
@@ -162,14 +162,14 @@ extension TemplateButtonView.ViewModel {
             .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
             .map { _ in State.idle}
         
-        let loading = Publishers.CombineLatest(
+        let loading = Publishers.CombineLatest( // not used!
             model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested },
             model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
         )
             .map { _ in State.loading}
         
         let refresh = model.action
-            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete } // already covered by `let complete = Publishers.CombineLatest(`
             .map(\.paymentTemplateId)
             .map { State.complete(templateId: $0) }
         
@@ -185,15 +185,15 @@ extension TemplateButtonView.ViewModel {
                 
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Requested:
-                    self.state = .loading
+                    self.state = .loading // should be covered by let `loading = Publishers.CombineLatest(`
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
-                    self.state = .complete(templateId: payload.paymentTemplateId)
+                    self.state = .complete(templateId: payload.paymentTemplateId) // already covered by `let complete = Publishers.CombineLatest(`
                     self.deleteAction(templateId: payload.paymentTemplateId)
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    self.state = .idle
-                    let action = Self.buttonAction(
+                    self.state = .idle // already covered by `let idle = model.action`
+                    let action = Self.buttonAction( // ???
                         model: self.model,
                         with: .idle,
                         operation: operation,
@@ -202,10 +202,10 @@ extension TemplateButtonView.ViewModel {
                     self.tapAction = action
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Requested:
-                    self.state = .loading
+                    self.state = .loading // should be covered by let `loading = Publishers.CombineLatest(`
                     
                 case let payload as ModelAction.PaymentTemplate.Update.Complete:
-                    self.state = .complete(templateId: payload.paymentTemplateId)
+                    self.state = .complete(templateId: payload.paymentTemplateId) // already covered by `let complete = Publishers.CombineLatest(`
                     self.deleteAction(templateId: payload.paymentTemplateId)
                     
                 default:
