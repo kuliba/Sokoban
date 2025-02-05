@@ -2017,7 +2017,20 @@ extension OperationDetailInfoViewModel {
             }
             
         case .external:
-            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, operationCategoryViewModel, documentNumberViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            return Self.makeItemsForExternal(
+                dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank,
+                operation,
+                payeeNameViewModel,
+                payeeViewModel,
+                payeeBankViewModel,
+                operationCategoryViewModel,
+                nil, //documentNumberViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            )
             
         case .internet:
             
