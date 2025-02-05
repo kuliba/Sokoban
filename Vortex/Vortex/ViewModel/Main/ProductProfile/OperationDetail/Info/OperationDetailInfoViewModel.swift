@@ -2201,7 +2201,15 @@ extension OperationDetailInfoViewModel {
                 cells.insert(commentCell, at: 0)
             }
             
-            return cells.compactMap {$0}
+            return cells.compactMap { $0 }
+        
+        case .mobile:
+            
+            return [
+                payeeViewModel,
+                amountViewModel,
+                commissionViewModel,
+                dateViewModel].compactMap { $0 }
             
         default:
             
