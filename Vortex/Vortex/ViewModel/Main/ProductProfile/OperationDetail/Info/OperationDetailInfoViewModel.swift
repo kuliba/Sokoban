@@ -2118,7 +2118,7 @@ extension OperationDetailInfoViewModel {
             
             var cells = [
                 operationCategoryViewModel,
-                documentNumberViewModel,
+//                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
