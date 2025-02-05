@@ -149,78 +149,64 @@ extension TemplateButtonView.ViewModel {
         operation: Payments.Operation?,
         details: OperationDetailData
     ) {
-        // MARK: bind model action
-        
         // MARK: - complete
         
         let saveComplete = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete }
             .map(\.paymentTemplateId)
+        
         let updateComplete = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
             .map(\.paymentTemplateId)
         
         let complete = Publishers.Merge(saveComplete, updateComplete)
+            .handleEvents(receiveOutput: { [weak self] in
+                
+                self?.setTapActionToDelete(templateID: $0)
+            })
             .map { State.complete(templateId: $0) }
         
         // MARK: - idle
         
         let idle = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
-            .map { _ in State.idle}
+            .handleEvents(receiveOutput: { [weak self] _ in
+                
+                guard let self else { return }
+                
+                self.tapAction = Self.buttonAction(
+                    model: self.model,
+                    with: .idle,
+                    operation: operation,
+                    operationDetail: details
+                )
+            })
+            .map { _ in State.idle }
         
         // MARK: - loading
         
         let saveRequested = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested }
             .map { _ in () }
+        
         let updateRequested = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
             .map { _ in () }
         
         let loading = Publishers.Merge(saveRequested, updateRequested)
-            .map { _ in State.loading}
+            .map { _ in State.loading }
         
         // MARK: - Merged state update pipeline
         
         Publishers.Merge3(complete, idle, loading)
             .receive(on: scheduler)
             .assign(to: &$state)
-        
-        // MARK: - Merged pipeline
-        
-        model.action
-            .receive(on: scheduler)
-            .sink { [weak self] action in
-                
-                guard let self else { return }
-                
-                switch action {
-                case let payload as ModelAction.PaymentTemplate.Save.Complete:
-                    self.deleteAction(templateId: payload.paymentTemplateId)
-                    
-                case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    self.tapAction = Self.buttonAction(
-                        model: self.model,
-                        with: .idle,
-                        operation: operation,
-                        operationDetail: details
-                    )
-                    
-                case let payload as ModelAction.PaymentTemplate.Update.Complete:
-                    self.deleteAction(templateId: payload.paymentTemplateId)
-                    
-                default:
-                    break
-                }
-            }
-            .store(in: &bindings)
     }
     
-    func deleteAction(templateId: Int) {
+    func setTapActionToDelete(templateID: Int) {
         
         let action = ModelAction.PaymentTemplate.Delete.Requested(
-            paymentTemplateIdList: [templateId]
+            paymentTemplateIdList: [templateID]
         )
         
         self.tapAction = { self.model.action.send(action) }
