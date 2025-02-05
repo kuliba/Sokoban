@@ -50,27 +50,10 @@ extension TemplateButtonView {
             
             switch state {
             case let .refresh(templateId: templateID):
-                
                 requestUpdate(templateID: templateID)
                 
             case let .complete(templateID):
-                
-                switch operationDetail.paymentTemplateId {
-                case let .some(templateID):
-                    
-                    requestDelete(templateID: templateID)
-                    
-                default:
-                    
-                    if case let .template(templateID) = operation?.source {
-                        
-                        requestDelete(templateID: templateID)
-                        
-                    } else {
-                        
-                        requestDelete(templateID: templateID)
-                    }
-                }
+                requestDelete(templateID: templateID)
                 
             case .idle:
                 requestSave()
@@ -130,6 +113,26 @@ extension TemplateButtonView {
         
         private func requestDelete(templateID: Int) {
             
+            switch details.paymentTemplateId {
+            case let .some(templateID):
+                
+                _requestDelete(templateID: templateID)
+                
+            default:
+                
+                if case let .template(templateID) = operation?.source {
+                    
+                    _requestDelete(templateID: templateID)
+                    
+                } else {
+                    
+                    _requestDelete(templateID: templateID)
+                }
+            }
+        }
+        
+        private func _requestDelete(templateID: Int) {
+            
             let action = ModelAction.PaymentTemplate.Delete.Requested(
                 paymentTemplateIdList: [templateID]
             )
@@ -144,7 +147,7 @@ extension TemplateButtonView {
                 name: name,
                 paymentOperationDetailId: paymentOperationDetailId
             )
-            return model.action.send(action)
+            model.action.send(action)
         }
     }
 }
