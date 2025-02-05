@@ -19,8 +19,6 @@ extension TemplateButtonView {
         
         @Published private(set) var state: State
         
-        private(set) var tapAction: () -> Void
-
         private let model: Model
         private let operation: Payments.Operation?
         private let details: OperationDetailData
@@ -40,33 +38,21 @@ extension TemplateButtonView {
             
             let state = state ?? (details.paymentTemplateId != nil ? .init(details: details) : .idle)
             
-            let tapAction = Self.buttonAction(
-                model: model,
-                with: state,
-                operation: operation,
-                operationDetail: details
-            )
-            
-            self.tapAction = tapAction
             self.state = state
             self.scheduler = scheduler
             
             bind()
         }
         
-        static func buttonAction(
-            model: Model,
-            with state: State,
-            operation: Payments.Operation?,
-            operationDetail: OperationDetailData
-        ) -> () -> Void {
+        func tapAction() {
+            
+            let operationDetail = details
             
             switch state {
             case let .refresh(templateId: templateId):
                 
-                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateId } ) else {
-                    return {}
-                }
+                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateId } ) 
+                else { return }
                 
                 if case let .template(templateID) = operation?.source {
                     
@@ -82,7 +68,7 @@ extension TemplateButtonView {
                         paymentTemplateId: templateID
                     )
                     
-                    return { model.action.send(action) }
+                    return model.action.send(action)
                     
                 } else {
                     
@@ -97,7 +83,7 @@ extension TemplateButtonView {
                         paymentTemplateId: templateId
                     )
                     
-                    return { model.action.send(action) }
+                    return model.action.send(action)
                 }
                 
             case let .complete(templateId):
@@ -108,15 +94,17 @@ extension TemplateButtonView {
                     let action = ModelAction.PaymentTemplate.Delete.Requested(
                         paymentTemplateIdList: [paymentTemplateId]
                     )
-                    return { model.action.send(action) }
+                    
+                    return model.action.send(action)
                     
                 default:
+                    
                     if case let .template(templateID) = operation?.source {
                         
                         let action = ModelAction.PaymentTemplate.Delete.Requested(
                             paymentTemplateIdList: [templateID]
                         )
-                        return { model.action.send(action) }
+                        return model.action.send(action)
                         
                     } else {
                         
@@ -124,22 +112,21 @@ extension TemplateButtonView {
                             paymentTemplateIdList: [templateId]
                         )
                         
-                        return { model.action.send(action) }
+                        return model.action.send(action)
                     }
                 }
                 
             case .idle:
-                
                 let paymentOperationDetailId = operationDetail.paymentOperationDetailId
                 let name = operationDetail.templateName
                 let action = ModelAction.PaymentTemplate.Save.Requested(
                     name: name,
                     paymentOperationDetailId: paymentOperationDetailId
                 )
-                return { model.action.send(action) }
+                return model.action.send(action)
                 
             case .loading:
-                return {}
+                return
             }
         }
     }
@@ -162,27 +149,12 @@ extension TemplateButtonView.ViewModel {
             .map(\.paymentTemplateId)
         
         let complete = Publishers.Merge(saveComplete, updateComplete)
-            .handleEvents(receiveOutput: { [weak self] in
-                
-                self?.setTapActionToDelete(templateID: $0)
-            })
             .map { State.complete(templateId: $0) }
         
         // MARK: - idle
         
         let idle = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
-            .handleEvents(receiveOutput: { [weak self] _ in
-                
-                guard let self else { return }
-                
-                self.tapAction = Self.buttonAction(
-                    model: self.model,
-                    with: .idle,
-                    operation: operation,
-                    operationDetail: details
-                )
-            })
             .map { _ in State.idle }
         
         // MARK: - loading
@@ -203,15 +175,6 @@ extension TemplateButtonView.ViewModel {
         Publishers.Merge3(complete, idle, loading)
             .receive(on: scheduler)
             .assign(to: &$state)
-    }
-    
-    func setTapActionToDelete(templateID: Int) {
-        
-        let action = ModelAction.PaymentTemplate.Delete.Requested(
-            paymentTemplateIdList: [templateID]
-        )
-        
-        self.tapAction = { self.model.action.send(action) }
     }
 }
 
