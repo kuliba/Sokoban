@@ -51,17 +51,7 @@ extension TemplateButtonView {
             switch state {
             case let .refresh(templateId: templateID):
                 
-                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateID } ) 
-                else { return }
-                
-                if case let .template(templateID) = operation?.source {
-                    
-                    requestUpdate(name: template.name, templateID: templateID)
-                    
-                } else {
-                    
-                    requestMe2MeUpdate(name: template.name, templateID: templateID)
-                }
+                requestUpdate(templateID: templateID)
                 
             case let .complete(templateID):
                 
@@ -87,6 +77,21 @@ extension TemplateButtonView {
                 
             case .loading:
                 return
+            }
+        }
+        
+        private func requestUpdate(templateID: Int) {
+            
+            guard let template = model.paymentTemplates.value.first(where: { $0.id == templateID } )
+            else { return }
+            
+            if case let .template(templateID) = operation?.source {
+                
+                requestUpdate(name: template.name, templateID: templateID)
+                
+            } else {
+                
+                requestMe2MeUpdate(name: template.name, templateID: templateID)
             }
         }
         
