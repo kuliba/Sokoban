@@ -115,6 +115,7 @@ extension RootViewModelFactory {
         savingsAccountFlag: SavingsAccountFlag,
         action: @escaping (OpenProductType) -> Void
     ) -> NewProductButton.ViewModel.TapActionType? {
+        
         switch type {
         case .loan:
             return collateralLoanLandingFlag.isActive
@@ -131,6 +132,13 @@ extension RootViewModelFactory {
             
         case .mortgage:
             return .url(model.productsOpenMortgageURL)
+            
+        case .card:
+            if model.onlyCorporateCards {
+                return .url(model.productsOpenAccountURL)
+            } else {
+                return .action { action(.card) }
+            }
             
         default:
             return .action({ action(type) })

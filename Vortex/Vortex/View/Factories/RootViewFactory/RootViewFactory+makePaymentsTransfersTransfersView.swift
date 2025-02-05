@@ -9,7 +9,7 @@ import PayHubUI
 import RxViewModel
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makePaymentsTransfersTransfersView(
@@ -50,15 +50,15 @@ extension RootViewFactory {
 
 // MARK: - View Factories
 
-private extension RootViewFactory {
+private extension ViewComponents {
     
     var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
         
         return .init(
-            makeContactsView: components.makeContactsView,
-            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
-            makePaymentsView: components.makePaymentsView,
-            makePaymentsSuccessView: components.makePaymentsSuccessView
+            makeContactsView: makeContactsView,
+            makePaymentsMeToMeView: makePaymentsMeToMeView,
+            makePaymentsView: makePaymentsView,
+            makePaymentsSuccessView: makePaymentsSuccessView
         )
     }
 }

@@ -12,15 +12,10 @@ extension RootViewModelFactory {
     @inlinable
     func makeMeToMeFlow() -> MeToMeDomain.Flow {
         
-        // TODO: extract flow composer
-        let binder: Binder<Void, MeToMeDomain.Flow> = composeBinder(
-            content: (),
+        composeFlow(
             delayProvider: delayProvider,
-            getNavigation: getNavigation,
-            witnesses: .empty
+            getNavigation: getNavigation
         )
-        
-        return binder.flow
     }
     
     @inlinable
