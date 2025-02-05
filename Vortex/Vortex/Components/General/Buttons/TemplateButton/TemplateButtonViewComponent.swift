@@ -151,31 +151,43 @@ extension TemplateButtonView.ViewModel {
     ) {
         // MARK: bind model action
         
-        let complete = Publishers.CombineLatest( // looks like should be `Merge`
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete },
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
-        )
-            .map(\.0.paymentTemplateId)
+        // MARK: - complete
+        
+        let saveComplete = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete }
+            .map(\.paymentTemplateId)
+        let updateComplete = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
+            .map(\.paymentTemplateId)
+        
+        let complete = Publishers.Merge(saveComplete, updateComplete)
             .map { State.complete(templateId: $0) }
+        
+        // MARK: - idle
         
         let idle = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
             .map { _ in State.idle}
         
-        let loading = Publishers.CombineLatest( // not used!
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested },
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
-        )
+        // MARK: - loading
+        
+        let saveRequested = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested }
+            .map { _ in () }
+        let updateRequested = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
+            .map { _ in () }
+        
+        let loading = Publishers.Merge(saveRequested, updateRequested)
             .map { _ in State.loading}
         
-        let refresh = model.action
-            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete } // already covered by `let complete = Publishers.CombineLatest(`
-            .map(\.paymentTemplateId)
-            .map { State.complete(templateId: $0) }
+        // MARK: - Merged state update pipeline
         
-        Publishers.Merge3(complete, idle, refresh)
+        Publishers.Merge3(complete, idle, loading)
             .receive(on: scheduler)
             .assign(to: &$state)
+        
+        // MARK: - Merged pipeline
         
         model.action
             .receive(on: scheduler)
@@ -184,28 +196,18 @@ extension TemplateButtonView.ViewModel {
                 guard let self else { return }
                 
                 switch action {
-                case _ as ModelAction.PaymentTemplate.Save.Requested:
-                    self.state = .loading // should be covered by let `loading = Publishers.CombineLatest(`
-                    
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
-                    self.state = .complete(templateId: payload.paymentTemplateId) // already covered by `let complete = Publishers.CombineLatest(`
                     self.deleteAction(templateId: payload.paymentTemplateId)
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    self.state = .idle // already covered by `let idle = model.action`
-                    let action = Self.buttonAction( // ???
+                    self.tapAction = Self.buttonAction(
                         model: self.model,
                         with: .idle,
                         operation: operation,
                         operationDetail: details
                     )
-                    self.tapAction = action
-                    
-                case _ as ModelAction.PaymentTemplate.Delete.Requested:
-                    self.state = .loading // should be covered by let `loading = Publishers.CombineLatest(`
                     
                 case let payload as ModelAction.PaymentTemplate.Update.Complete:
-                    self.state = .complete(templateId: payload.paymentTemplateId) // already covered by `let complete = Publishers.CombineLatest(`
                     self.deleteAction(templateId: payload.paymentTemplateId)
                     
                 default:
