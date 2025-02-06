@@ -5,31 +5,25 @@
 //  Created by Valentin Ozerov on 29.01.2025.
 //
 
-import SwiftUI
-import PaymentComponents
+import Combine
 import OTPInputComponent
+import PaymentComponents
+import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationOTPView: View {
-    
+
     let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: Factory
+    let otpViewModel: TimedOTPInputViewModel
 
     var body: some View {
 
         TimedOTPInputWrapperView(
-            viewModel: .init(
-                otpText: state.otp,
-                timerDuration: config.elements.otp.timerDuration,
-                otpLength: config.elements.otp.otpLength,
-                resend: { event(.getVerificationCode) },
-                observe: { event(.otp($0)) }
-            ),
+            viewModel: otpViewModel,
             config: config.elements.otp.view,
-            iconView: {
-                config.elements.otp.smsIcon
-            }
+            iconView: { config.elements.otp.smsIcon }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -39,8 +33,9 @@ extension CreateDraftCollateralLoanApplicationOTPView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
 }
 
 // MARK: - Previews
@@ -50,10 +45,16 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationOTPView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
-            factory: .preview
+            factory: .preview,
+            otpViewModel: .preview
         )
     }
     

@@ -5,19 +5,32 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import InputComponent
-import TextFieldDomain
-import OptionalSelectorComponent
 import Foundation
+import InputComponent
+import OptionalSelectorComponent
+import OTPInputComponent
+import TextFieldDomain
+import Combine
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public struct State: Equatable {
+    public struct Confirmation {
+        
+        public let otpViewModel: TimedOTPInputViewModel
+        
+        public init(
+            otpViewModel: TimedOTPInputViewModel
+        ) {
+            self.otpViewModel = otpViewModel
+        }
+    }
+    
+    public struct State {
         
         public let data: Data
 
         public var amount: TextInputState
-        public var applicationId: UInt?
+        public var applicationID: UInt?
         public var city: OptionalSelectorState<CityItem>
         public var isLoading: Bool
         public var needToDissmiss: Bool
@@ -25,27 +38,39 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
         public var otp: String
-        public var checkedConditions: [String]
-
+        public var verificationCode: String
+        public var checkedConsents: [String]
+        public var isButtonDisabled: Bool
+        public var confirmation: Confirmation?
+        public var otpValidated: Bool
+        
         public init(
             data: Data,
             stage: Stage = .correctParameters,
             isLoading: Bool = false,
-            applicationId: UInt? = nil,
+            applicationID: UInt? = nil,
             needToDissmiss: Bool = false,
             otp: String = "",
-            checkedConditions: [String] = []
+            verificationCode: String = "",
+            checkedConsents: [String] = [],
+            isButtonDisabled: Bool = false,
+            confirmation: Confirmation? = nil,
+            otpValidated: Bool = false
         ) {
             self.data = data
             self.stage = stage
             self.isLoading = isLoading
-            self.applicationId = applicationId
+            self.applicationID = applicationID
             self.needToDissmiss = needToDissmiss
             self.period = data.makePeriodSelectorState()
             self.city = data.makeCitySelectorState()
             self.amount = .init(textField: .noFocus(data.formattedAmount))
             self.otp = otp
-            self.checkedConditions = checkedConditions
+            self.verificationCode = verificationCode
+            self.checkedConsents = checkedConsents
+            self.isButtonDisabled = isButtonDisabled
+            self.confirmation = confirmation
+            self.otpValidated = otpValidated
         }
         
         public enum Stage {
@@ -79,14 +104,24 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         return amount
     }
     
-    public var isValid: Bool {
+    public var isAmountVaild: Bool {
+        
+        selectedAmount >= data.minAmount && selectedAmount <= data.maxAmount
+    }
+    
+    public var checkButtonStatus: Bool {
+        
+        let isFirstStageValid = isAmountVaild
+        let isSecondStageValid = checkedConsents.count == data.consents.count
+            && confirmation != nil
+            && otpValidated
         
         switch stage {
         case .correctParameters:
-            return selectedAmount >= data.minAmount && selectedAmount <= data.maxAmount
+            return isFirstStageValid
 
         case .confirm:
-            return true
+            return isFirstStageValid && isSecondStageValid
         }
     }
 }
@@ -138,27 +173,21 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         )
     }
     
-    var saveConsentspayload: CollateralLandingApplicationSaveConsentsPayload {
+    func saveConsentspayload(
+        applicationID: UInt,
+        verificationCode: String
+    ) -> CollateralLandingApplicationSaveConsentsPayload {
         
-        // TODO: Need to realize. Stub!
         .init(
-            applicationId: 123,
-            verificationCode: "123"
+            applicationID: applicationID,
+            verificationCode: otp
         )
     }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.State {
+extension CreateDraftCollateralLoanApplicationDomain.Confirmation {
     
-    public static let correntParametersPreview = Self(
-        data: .preview,
-        stage: .correctParameters
-    )
-
-    public static let confirmPreview = Self(
-        data: .preview,
-        stage: .confirm
-    )
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Confirmation(otpViewModel: .preview)
 }
 
 public extension CreateDraftCollateralLoanApplicationUIData {
@@ -203,4 +232,6 @@ public extension CreateDraftCollateralLoanApplicationDomain.State {
     
     typealias Data = CreateDraftCollateralLoanApplicationUIData
     typealias Period = Data.Period
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Event = Domain.Event
 }

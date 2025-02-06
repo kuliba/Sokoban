@@ -35,8 +35,9 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
 }
 
 // MARK: - Previews
@@ -46,8 +47,13 @@ struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationHeaderView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )

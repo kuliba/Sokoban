@@ -35,8 +35,9 @@ extension CreateDraftCollateralLoanApplicationPercentView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
 }
 
 // MARK: - Previews
@@ -46,16 +47,28 @@ struct CreateDraftCollateralLoanApplicationPercentView_Previews: PreviewProvider
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationPercentView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit only mode")
 
         CreateDraftCollateralLoanApplicationPercentView(
-            state: .confirmPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )

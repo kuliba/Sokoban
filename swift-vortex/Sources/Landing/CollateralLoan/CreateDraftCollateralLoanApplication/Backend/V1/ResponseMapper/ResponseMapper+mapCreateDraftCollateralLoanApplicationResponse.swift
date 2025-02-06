@@ -43,7 +43,7 @@ private extension ResponseMapper._Data {
         }
 
         return .init(
-            applicationId: applicationId
+            applicationID: applicationId
         )
     }
 }
