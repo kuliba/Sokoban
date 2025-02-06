@@ -13,13 +13,13 @@ extension PaymentCompleteView.Config {
             completed: .init(
                 content: .init(
                     logo: .ic48Check,
-                    title: "Успешный перевод",
-                    subtitle: nil
+                    title: "Заявка на кредит успешно\nоформлена",
+                    subtitle: "Специалист банка свяжется с Вами в\nближайшее время"
                 ),
                 config: .init(
                     amount: .init(
                         textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
+                        textColor: .backgroundBackground
                     ),
                     icon: .init(
                         foregroundColor: .iconWhite,
@@ -27,14 +27,14 @@ extension PaymentCompleteView.Config {
                         innerSize: .init(width: 44, height: 44),
                         outerSize: .init(width: 88, height: 88)
                     ),
-                    logoHeight: 44,
+                    logoHeight: 0,
                     title: .init(
                         textFont: .textH3Sb18240(),
                         textColor: .textSecondary
                     ),
                     subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
+                        textFont: .textBodyMR14200(),
+                        textColor: .textPlaceholder
                     )
                 )
             ),
@@ -69,13 +69,13 @@ extension PaymentCompleteView.Config {
             rejected: .init(
                 content: .init(
                     logo: .ic48Close,
-                    title: "Операция неуспешна!",
-                    subtitle: nil
+                    title: "Заявка на кредит неуспешна!",
+                    subtitle: "Что-то пошло не так...\nПопробуйте позже."
                 ),
                 config: .init(
                     amount: .init(
                         textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
+                        textColor: .backgroundBackground
                     ),
                     icon: .init(
                         foregroundColor: .iconWhite,
@@ -83,14 +83,14 @@ extension PaymentCompleteView.Config {
                         innerSize: .init(width: 44, height: 44),
                         outerSize: .init(width: 88, height: 88)
                     ),
-                    logoHeight: 44,
+                    logoHeight: 0,
                     title: .init(
                         textFont: .textH3Sb18240(),
                         textColor: .textSecondary
                     ),
                     subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
+                        textFont: .textBodyMR14200(),
+                        textColor: .textPlaceholder
                     )
                 )
             ),

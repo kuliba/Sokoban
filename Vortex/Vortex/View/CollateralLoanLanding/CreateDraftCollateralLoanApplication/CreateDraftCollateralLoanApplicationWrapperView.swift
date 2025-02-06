@@ -18,10 +18,13 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let binder: Domain.Binder
     let config: Config
     let factory: Factory
+    let goToMain: () -> Void
     
     var body: some View {
         
-        RxWrapperView(model: binder.flow) { state, event in
+        RxWrapperView(model: binder.flow) {
+            state,
+            event in
             
             RxWrapperView(
                 model: binder.content,
@@ -31,7 +34,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 item: state.navigation?.alert,
                 content: makeAlert
             )
-            .fullScreenCover(cover: state.navigation?.cover, content: fullScreenCoverView)
+            .fullScreenCover(
+                cover: state.navigation?.cover,
+                content: fullScreenCoverView
+            )
         }
     }
     
@@ -104,8 +110,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             return .init(
                 title: Text("Ошибка"),
                 message: Text(failure),
-                // TODO: + Action: возврат на гл. экран
-                dismissButton: .default(Text("ОK")) { fatalError("Implement return to main view") }
+                dismissButton: .default(Text("ОK")) { goToMain() }
             )
         }
     }
@@ -116,16 +121,24 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     ) -> some View {
         
         switch cover {
-        case let .completed(saveConsentsResult):
+        case let .success(saveConsentsResult):
             PaymentCompleteView(
                 state: makePaymentCompleteState(from: saveConsentsResult),
-                goToMain: {},
+                goToMain: goToMain,
                 repeat: {},
-                factory: <#T##Factory#>,
+                factory: makePaymentCompleteViewFactory(),
                 makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
                 config: .collateralLoanLanding
             )
-            //            Text(String(describing: saveConsentsResult))
+        case .failure:
+            PaymentCompleteView(
+                state: .rejected,
+                goToMain: goToMain,
+                repeat: {},
+                factory: makePaymentCompleteViewFactory(),
+                makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
+                config: .collateralLoanLanding
+            )
         }
     }
     
@@ -135,8 +148,51 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         .init(
             formattedAmount: saveConsentsResult.formattedAmount(),
-            merchantIcon: <#T##String?#>,
-            result: <#T##Result<PaymentCompleteState.Report, PaymentCompleteState.Fraud>#>
+            merchantIcon: nil,
+            result: .success(makeReport(from: saveConsentsResult))
+        )
+    }
+    
+    private func makeReport(
+        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
+    ) -> PaymentCompleteState.Report {
+        
+        .init(
+            detailID: 123,
+            details: operationDetails(from: saveConsentsResult),
+            printFormType: "",
+            status: .completed
+        )
+    }
+    
+    private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
+        
+        .init(
+            makeDetailButton: { .init(details: $0) },
+            makeDocumentButton: makeTransactionDocumentButton,
+            makeTemplateButton: { nil }
+        )
+    }
+    
+    private func makeTransactionDocumentButton(
+        documentID: DocumentID,
+        printFormType: RequestFactory.PrintFormType
+    ) -> TransactionDocumentButton {
+        .init(getDocument: { _ in }) // TODO: Load PDFDocument via getConsents request
+    }
+    
+    // TODO: realize map
+    private func operationDetails(
+        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
+    ) -> PaymentCompleteState.Report.Details {
+
+        .init(
+            logo: nil,
+            cells: [
+                .init(title: "Деталь 1"),
+                .init(title: "Деталь 2"),
+                .init(title: "Деталь 3")
+            ]
         )
     }
 }
@@ -174,25 +230,28 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         
         switch self {
         case .failure:
-            return nil
+            return .failure
             
         case let .success(success):
-            return .completed(success)
+            return .success(success)
         }
     }
     
     enum Cover {
-        case completed(CollateralLandingApplicationSaveConsentsResult)
+        case success(CollateralLandingApplicationSaveConsentsResult)
+        case failure
     }
 }
 
 extension CreateDraftCollateralLoanApplicationDomain.Navigation.Cover: Identifiable {
     
-    var id: UInt {
+    var id: String {
         
         switch self {
-        case let .completed(completed):
-            return completed.applicationID
+        case .failure:
+            return "failure"
+        case .success:
+            return "success"
         }
     }
 }

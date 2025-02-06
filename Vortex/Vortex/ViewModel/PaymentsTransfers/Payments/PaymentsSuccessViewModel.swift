@@ -390,9 +390,6 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         
                     case .changePin:
                         return
-                        
-                    case .collateralLoanLanding:
-                        return
                     }
                     
                 case .details:

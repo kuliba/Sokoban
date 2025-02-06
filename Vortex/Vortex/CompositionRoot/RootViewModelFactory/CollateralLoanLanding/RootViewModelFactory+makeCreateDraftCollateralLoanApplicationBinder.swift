@@ -53,12 +53,11 @@ extension RootViewModelFactory {
             saveConsents: {
                 payload, completion in
                 
-                // TODO: Restore
                 self.saveConsents(payload: payload) {
                     completion($0)
                 }
-                // TODO: Remove stub
-                completion(.success(.preview))
+
+                // For tests only: completion(.success(.preview))
             },
             confirm: { [weak self] event in
                 
@@ -172,7 +171,24 @@ extension RootViewModelFactory {
             _ = getVerificationCode
         }
     }
-    
+
+    private func getConsents(
+        payload: CollateralLandingGet,
+        completion: @escaping (Domain.SaveConsentsResult) -> Void
+    ) {
+        let saveConsents = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createSaveConsentsRequest(with:),
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
+            mapError: { CreateDraftCollateralLoanApplicationDomain.LoadResultFailure.init(error: $0) }
+        )
+        
+        saveConsents(payload.payload) { [saveConsents] in
+            
+            completion($0.map(\.response).mapError { $0 })
+            _ = saveConsents
+        }
+    }
+
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (Domain.SaveConsentsResult) -> Void

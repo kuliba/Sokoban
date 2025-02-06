@@ -81,7 +81,12 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
                 if let applicationID = state.applicationID {
                     
-                    effect = .saveConsents(state.saveConsentspayload(applicationID))
+                    effect = .saveConsents(
+                        state.saveConsentspayload(
+                            applicationID: applicationID,
+                            verificationCode: state.verificationCode
+                        )
+                    )
                 }
                 
             case .tappedBack:

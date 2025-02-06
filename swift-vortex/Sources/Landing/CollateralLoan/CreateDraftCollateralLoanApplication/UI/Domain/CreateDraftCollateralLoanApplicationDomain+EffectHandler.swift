@@ -33,7 +33,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 createDraftApplication(payload) { dispatch(.applicationCreated($0)) }
                 
             case let .saveConsents(payload):
-                saveConsents(payload) { dispatch(.showSaveConsentsResult($0)) }
+                saveConsents(payload) { 
+                    dispatch(.showSaveConsentsResult($0))
+                }
                 
             case .getVerificationCode:
                 getVerificationCode { dispatch(.gettedVerificationCode($0)) }
