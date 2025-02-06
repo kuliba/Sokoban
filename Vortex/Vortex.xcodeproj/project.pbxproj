@@ -1243,6 +1243,8 @@
 		2A9602732BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9602722BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift */; };
 		2A9602752BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9602742BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift */; };
 		2A9ACA522D54F22500BF5D6E /* OpenProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */; };
+		2A9ACA542D54F2C300BF5D6E /* OpenProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA532D54F2C300BF5D6E /* OpenProduct.swift */; };
+		2A9ACA572D54F47700BF5D6E /* OpenCardDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA562D54F47700BF5D6E /* OpenCardDomain.swift */; };
 		2A9BD5132B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */; };
 		2A9CB0812BEFC2CB00DA5EF3 /* UtilityServicePrepayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */; };
 		2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */; };
@@ -4895,6 +4897,8 @@
 		2A9602722BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentFooterConfig+preview.swift"; sourceTree = "<group>"; };
 		2A9602742BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFooterConfig.swift; sourceTree = "<group>"; };
 		2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenProductType.swift; sourceTree = "<group>"; };
+		2A9ACA532D54F2C300BF5D6E /* OpenProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenProduct.swift; sourceTree = "<group>"; };
+		2A9ACA562D54F47700BF5D6E /* OpenCardDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCardDomain.swift; sourceTree = "<group>"; };
 		2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientStub+utilityPayments.swift"; sourceTree = "<group>"; };
 		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
@@ -11575,9 +11579,19 @@
 		2A9ACA502D54F21300BF5D6E /* OpenProduct */ = {
 			isa = PBXGroup;
 			children = (
+				2A9ACA532D54F2C300BF5D6E /* OpenProduct.swift */,
 				2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */,
+				2A9ACA552D54F46C00BF5D6E /* OpenCard */,
 			);
 			path = OpenProduct;
+			sourceTree = "<group>";
+		};
+		2A9ACA552D54F46C00BF5D6E /* OpenCard */ = {
+			isa = PBXGroup;
+			children = (
+				2A9ACA562D54F47700BF5D6E /* OpenCardDomain.swift */,
+			);
+			path = OpenCard;
 			sourceTree = "<group>";
 		};
 		2A9BD5142B85F04100B88395 /* UtilityPayments */ = {
@@ -21474,6 +21488,7 @@
 				775875472798C87B0080115D /* Option.swift in Sources */,
 				2ACFD6512C5CC700003F08AE /* QRModelWrapper.swift in Sources */,
 				2ACFD6692C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift in Sources */,
+				2A9ACA542D54F2C300BF5D6E /* OpenProduct.swift in Sources */,
 				77448C0F2872FC05009EEEA8 /* PrintFormViewComponent.swift in Sources */,
 				68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */,
 				770E68B02902B03000586FC4 /* Model+PaymentsTransfer.swift in Sources */,
@@ -22397,6 +22412,7 @@
 				2A3624622C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift in Sources */,
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				2A72ACCA2CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift in Sources */,
+				2A9ACA572D54F47700BF5D6E /* OpenCardDomain.swift in Sources */,
 				2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
