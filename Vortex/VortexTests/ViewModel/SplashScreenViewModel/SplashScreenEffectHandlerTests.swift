@@ -11,60 +11,56 @@ import XCTest
 final class SplashScreenEffectHandlerTests: XCTestCase {
     
     func test_startFirstTimer_shouldDispatchSplashEvent() {
-        let (sut, startFirstTimerSpy, _) = makeSUT()
-        
-        startFirstTimerSpy.process((), completion: { result in
-            if case .success = result { }
-        })
-        
+        let (sut, startPhaseOneSpy, _) = makeSUT()
+
         expect(sut, with: .startFirstTimer, toDeliver: .splash) {
-            startFirstTimerSpy.complete(with: (), at: 0)
+            startPhaseOneSpy.complete(with: (), at: 0)
         }
         
-        XCTAssertEqual(startFirstTimerSpy.callCount, 1)
+        XCTAssertEqual(startPhaseOneSpy.callCount, 1)
     }
 
     func test_startSecondTimer_shouldCallStartSecondTimerAndDispatchNoSplashEvent() {
-        let (sut, _, startSecondTimerSpy) = makeSUT()
+        let (sut, _, startPhaseTwoSpy) = makeSUT()
         
         expect(sut, with: .startSecondTimer, toDeliver: .noSplash) {
-            startSecondTimerSpy.complete(with: (), at: 0)
+            startPhaseTwoSpy.complete(with: (), at: 0)
         }
         
-        XCTAssertEqual(startSecondTimerSpy.callCount, 1)
+        XCTAssertEqual(startPhaseTwoSpy.callCount, 1)
     }
     
     // MARK: - Helpers
     private typealias SUT = SplashScreenEffectHandler
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-    private typealias TimerSpy = Spy<Void, Void, Never>
+    private typealias PhaseSpy = Spy<Void, Void, Never>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        startFirstTimerSpy: TimerSpy,
-        startSecondTimerSpy: TimerSpy
+        startPhaseOne: PhaseSpy,
+        startPhaseTwo: PhaseSpy
     ) {
-        
-        let startFirstTimerSpy = TimerSpy()
-        let startSecondTimerSpy = TimerSpy()
+
+        let startPhaseOneSpy = PhaseSpy()
+        let startPhaseTwoSpy = PhaseSpy()
         let sut = SUT(
             startFirstTimer: { completion in
-                startFirstTimerSpy.process(completion: completion)
+                startPhaseOneSpy.process(completion: completion)
             },
             startSecondTimer: { completion in
-                startSecondTimerSpy.process(completion: completion)
+                startPhaseTwoSpy.process(completion: completion)
             }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(startFirstTimerSpy, file: file, line: line)
-        trackForMemoryLeaks(startSecondTimerSpy, file: file, line: line)
+        trackForMemoryLeaks(startPhaseOneSpy, file: file, line: line)
+        trackForMemoryLeaks(startPhaseTwoSpy, file: file, line: line)
         
-        return (sut, startFirstTimerSpy, startSecondTimerSpy)
+        return (sut, startPhaseOneSpy, startPhaseTwoSpy)
     }
     
     private func expect(

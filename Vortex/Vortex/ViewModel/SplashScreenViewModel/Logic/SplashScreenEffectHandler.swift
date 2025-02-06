@@ -26,7 +26,7 @@ final class SplashScreenEffectHandler {
     ) {
         switch effect {
         case .startFirstTimer:
-            dispatch(.splash)
+            startFirstTimer { dispatch(.splash) }
             
         case .startSecondTimer:
             startSecondTimer { dispatch(.noSplash) }

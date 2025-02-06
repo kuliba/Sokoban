@@ -373,7 +373,7 @@ extension RootViewModelFactory {
         
         let splash = makeSplashScreenViewModel(
             initialState: .initialSplashData,
-            phaseOneDuration: .milliseconds(300),
+            phaseOneDuration: .milliseconds(0),
             phaseTwoDuration: .milliseconds(1200)
         )
         

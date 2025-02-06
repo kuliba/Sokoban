@@ -14800,7 +14800,7 @@
 		77BE9A36290C2097006046B1 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				EC4BF82C2D4BBDE300A4223C /* SplashScreenViewModelTests */,
+				EC4BF82C2D4BBDE300A4223C /* SplashScreenViewModel */,
 				C16DDBF22B314E26001BF988 /* Helpers */,
 				8431A2542AEBE76800E60CB8 /* UserAccount */,
 				2A4B54202AB1D9AF0042A0FF /* Auth */,
@@ -16988,13 +16988,13 @@
 			path = Logic;
 			sourceTree = "<group>";
 		};
-		EC4BF82C2D4BBDE300A4223C /* SplashScreenViewModelTests */ = {
+		EC4BF82C2D4BBDE300A4223C /* SplashScreenViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				EC4BF82F2D4BBE4000A4223C /* SplashScreenReducerTests.swift */,
 				EC4BF8312D4CA71A00A4223C /* SplashScreenEffectHandlerTests.swift */,
 			);
-			path = SplashScreenViewModelTests;
+			path = SplashScreenViewModel;
 			sourceTree = "<group>";
 		};
 		ECCA5B362CFDFC250034A64A /* LoggingRemoteNanoServiceComposer */ = {
