@@ -114,8 +114,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         let isFirstStageValid = isAmountVaild
         let isSecondStageValid = checkedConsents.count == data.consents.count
             && confirmation != nil
-        // TODO: uncomment
-//            && otpValidated
+            && otpValidated
         
         switch stage {
         case .correctParameters:
