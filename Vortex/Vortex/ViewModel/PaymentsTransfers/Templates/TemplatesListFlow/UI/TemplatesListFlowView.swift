@@ -36,8 +36,7 @@ struct TemplatesListFlowView<AnywayFlowView: View>: View {
                 dismiss: { model.event(.dismiss(.destination)) },
                 content: destinationContent
             )
-            .navigationBarHidden(model.state.isLoading)
-            .loader(isLoading: model.state.isLoading)
+            .loader(isLoading: model.state.isLoading, color: .clear)
     }
 }
 
