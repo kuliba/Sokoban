@@ -14,9 +14,7 @@ extension RootViewModelFactory {
         featureFlags: FeatureFlags
     ) -> OpenProductDomain.Flow {
         
-        // TODO: extract flow composer
-        let binder: Binder<Void, OpenProductDomain.Flow> = composeBinder(
-            content: (),
+        composeFlow(
             delayProvider: delayProvider,
             getNavigation: { [weak self] select, notify, completion in
                 
@@ -26,11 +24,8 @@ extension RootViewModelFactory {
                     notify: notify,
                     completion: completion
                 )
-            },
-            witnesses: .empty
+            }
         )
-        
-        return binder.flow
     }
     
     @inlinable
@@ -41,8 +36,8 @@ extension RootViewModelFactory {
         switch navigation {
         case .alert:       return .milliseconds(100)
         case .openAccount: return .milliseconds(100)
-        case .openCard:    return .milliseconds(100)
-        case .openDeposit: return .milliseconds(100)
+        case .openCard:    return .milliseconds(600)
+        case .openDeposit: return .milliseconds(600)
         case .openProduct: return .milliseconds(100)
         case .openURL:     return .milliseconds(100)
         }

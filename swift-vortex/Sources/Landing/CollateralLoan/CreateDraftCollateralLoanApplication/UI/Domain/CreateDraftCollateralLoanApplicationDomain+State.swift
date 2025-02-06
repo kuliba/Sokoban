@@ -10,10 +10,22 @@ import InputComponent
 import OptionalSelectorComponent
 import OTPInputComponent
 import TextFieldDomain
+import Combine
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public struct State: Equatable {
+    public struct Confirmation {
+        
+        public let otpViewModel: TimedOTPInputViewModel
+        
+        public init(
+            otpViewModel: TimedOTPInputViewModel
+        ) {
+            self.otpViewModel = otpViewModel
+        }
+    }
+    
+    public struct State {
         
         public let data: Data
 
@@ -26,9 +38,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var saveConsentsResult: SaveConsentsResult?
         public var stage: Stage
         public var otp: String
+        public var verificationCode: String
         public var checkedConsents: [String]
         public var isButtonDisabled: Bool
-        public var isOTPValidated: Bool
+        public var confirmation: Confirmation?
+        public var otpValidated: Bool
         
         public init(
             data: Data,
@@ -37,9 +51,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
             applicationID: UInt? = nil,
             needToDissmiss: Bool = false,
             otp: String = "",
+            verificationCode: String = "",
             checkedConsents: [String] = [],
             isButtonDisabled: Bool = false,
-            isOTPValidated: Bool = false
+            confirmation: Confirmation? = nil,
+            otpValidated: Bool = false
         ) {
             self.data = data
             self.stage = stage
@@ -50,9 +66,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.city = data.makeCitySelectorState()
             self.amount = .init(textField: .noFocus(data.formattedAmount))
             self.otp = otp
+            self.verificationCode = verificationCode
             self.checkedConsents = checkedConsents
             self.isButtonDisabled = isButtonDisabled
-            self.isOTPValidated = isOTPValidated
+            self.confirmation = confirmation
+            self.otpValidated = otpValidated
         }
         
         public enum Stage {
@@ -94,8 +112,9 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     public var checkButtonStatus: Bool {
         
         let isFirstStageValid = isAmountVaild
-        // TODO: Uncomment condition below!
-        let isSecondStageValid = checkedConsents.count == data.consents.count // && isOTPValidated
+        let isSecondStageValid = checkedConsents.count == data.consents.count
+            && confirmation != nil
+            && otpValidated
         
         switch stage {
         case .correctParameters:
@@ -154,7 +173,10 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         )
     }
     
-    func saveConsentspayload(_ applicationID: UInt) -> CollateralLandingApplicationSaveConsentsPayload {
+    func saveConsentspayload(
+        applicationID: UInt,
+        verificationCode: String
+    ) -> CollateralLandingApplicationSaveConsentsPayload {
         
         .init(
             applicationID: applicationID,
@@ -163,17 +185,9 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.State {
+extension CreateDraftCollateralLoanApplicationDomain.Confirmation {
     
-    public static let correntParametersPreview = Self(
-        data: .preview,
-        stage: .correctParameters
-    )
-
-    public static let confirmPreview = Self(
-        data: .preview,
-        stage: .confirm
-    )
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Confirmation(otpViewModel: .preview)
 }
 
 public extension CreateDraftCollateralLoanApplicationUIData {
@@ -218,4 +232,6 @@ public extension CreateDraftCollateralLoanApplicationDomain.State {
     
     typealias Data = CreateDraftCollateralLoanApplicationUIData
     typealias Period = Data.Period
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Event = Domain.Event
 }

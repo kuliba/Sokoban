@@ -8,12 +8,13 @@
 import Foundation
 import InputComponent
 import OptionalSelectorComponent
+import OTPInputComponent
 import TextFieldComponent
 import TextFieldDomain
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public final class Reducer {
+    public final class Reducer<Confirmation> {
         
         private let amountReduce: AmountReduce
         private let citySelectReduce: CitySelectReduce
@@ -29,7 +30,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.periodSelectReduce = periodSelectReduce
         }
         
-        public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
+        public func reduce(_ state: State, _ event: Event)
+            -> (State, Effect?) {
             
             var state = state
             var effect: Effect?
@@ -48,9 +50,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .city(cityEvent):
                 state.city = citySelectReduce(state.city, cityEvent)
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case .tappedContinue:
                 state.isLoading = true
@@ -61,9 +65,19 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.stage = .confirm
                 state.isButtonDisabled = !state.checkButtonStatus
                 state.isLoading = false
+                effect = .confirm
                 
             case .tappedSubmit:
-                state.isLoading = true
+                if let applicationID = state.applicationID {
+                    
+                    state.isLoading = true
+                    effect = .saveConsents(
+                        state.saveConsentspayload(
+                            applicationID: applicationID,
+                            verificationCode: state.otp
+                        )
+                    )
+                }
                 
                 if let applicationID = state.applicationID {
                     
@@ -75,13 +89,16 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     
                     state.stage = .correctParameters
                 }
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .showSaveConsentsResult(result):
                 state.isLoading = false
                 state.saveConsentsResult = result     
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .otp(otp):
                 state.otp = otp
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case .getVerificationCode:
                 effect = .getVerificationCode
@@ -97,8 +114,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 }
                 state.isButtonDisabled = !state.checkButtonStatus
                 
+            case let .confirmed(confirmation):
+                state.confirmation = confirmation
+                state.isButtonDisabled = !state.checkButtonStatus
+                
             case .otpValidated:
-                state.isOTPValidated = true
+                state.otpValidated = true
+                state.isButtonDisabled = !state.checkButtonStatus
             }
             
             return (state, effect)

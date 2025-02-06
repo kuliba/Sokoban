@@ -6,6 +6,7 @@
 //
 
 import LinkableText
+import OTPInputComponent
 import SwiftUI
 
 struct CreateDraftCollateralLoanApplicationConsentsView: View {
@@ -56,9 +57,9 @@ extension CreateDraftCollateralLoanApplicationConsentsView {
     typealias Consent = CreateDraftCollateralLoanApplicationUIData.Consent
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = Domain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
 }
 
 // MARK: - Previews
@@ -68,12 +69,34 @@ struct CreateDraftCollateralLoanApplicationConsentsView_Previews: PreviewProvide
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationConsentsView(
-            state: .correntParametersPreview, 
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview
         )
+        .previewDisplayName("Edit mode")
+        
+        CreateDraftCollateralLoanApplicationConsentsView(
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
+            externalEvent: { print($0) },
+            config: .default,
+            factory: .preview
+        )
+        .previewDisplayName("Read only mode")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

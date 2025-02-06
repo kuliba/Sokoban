@@ -246,3 +246,97 @@ public extension View {
         )
     }
 }
+
+public extension View {
+    
+    /// A convenience overload for navigation driven purely programmatically
+    /// (no direct writes to the binding). This uses `.constant(destination)`,
+    /// so any user-driven pop (e.g., swipe back) will not automatically
+    /// set the `destination` to `nil`.
+    ///
+    /// - Parameter destination: The identifiable destination to push.
+    /// - Parameter content: A closure that generates the destination view.
+    /// - Returns: A view that conditionally navigates to the given destination.
+    @inlinable
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        deduplicating destination: Destination?,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            deduplicating: .constant(destination),
+            content: content
+        )
+    }
+    
+    /// A convenience overload for navigation driven purely programmatically
+    /// (no direct writes to the binding), with an explicit `dismiss` closure.
+    ///
+    /// - Important: If you rely on user-initiated navigation (like swiping back),
+    ///   ensure `dismiss()` sets the model's destination to `nil` so that
+    ///   SwiftUI's navigation state remains in sync.
+    ///
+    /// - Parameter destination: The current destination to navigate to, or `nil`.
+    /// - Parameter dismiss: A closure called when the user attempts to set
+    ///   the destination to `nil` (e.g., tapping the Back button).
+    /// - Parameter content: A closure that generates the destination view.
+    /// - Returns: A view that conditionally navigates to the given destination.
+    @inlinable
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        deduplicating destination: Destination?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            deduplicating: .init(
+                get: { destination },
+                set: { if $0 == nil { dismiss() }}
+            ),
+            content: content
+        )
+    }
+    
+    /// A version of navigation destination that uses a binding to an optional Identifiable
+    /// and prevents redundant writes for the same `id`.
+    ///
+    /// By wrapping the binding in `removingDuplicates()`, repeated writes of the
+    /// same underlying `id` are ignored, minimizing unnecessary view updates.
+    ///
+    /// - Parameter titleKey: The localized title for the navigation link.
+    /// - Parameter item: A binding to an optional `Identifiable` value, which
+    ///   determines when navigation is active.
+    /// - Parameter content: A closure that generates the destination view when `item` is non-`nil`.
+    /// - Returns: A view that conditionally presents `content` when `item` is non-`nil`.
+    @inlinable
+    func navigationDestination<Item: Identifiable, Content: View>(
+        _ titleKey: LocalizedStringKey = "",
+        deduplicating item: Binding<Item?>,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) -> some View {
+        
+        // Deduplicate the binding so that setting an item with the same `id`
+        // doesn't cause unnecessary updates.
+        let deduplicated = item.removingDuplicates()
+        
+        return self.background(
+            NavigationLink(
+                titleKey,
+                isActive: Binding(
+                    get: { deduplicated.wrappedValue != nil },
+                    set: { isActive in
+                        
+                        if !isActive {
+                            // Clear the item when going back
+                            deduplicated.wrappedValue = nil
+                        }
+                    }
+                ),
+                destination: {
+                    // Create the destination if we have a non-nil item
+                    deduplicated.wrappedValue.map(content)
+                }
+            )
+        )
+    }
+}

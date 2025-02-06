@@ -60,7 +60,7 @@ extension RootViewModelFactory {
             case .meToMe:        return .milliseconds(100)
             case .payments:      return .milliseconds(600)
             case .scanQR:        return .milliseconds(100)
-            case .successMeToMe: return .milliseconds(100)
+            case .successMeToMe: return .milliseconds(600)
             }
         }
     }

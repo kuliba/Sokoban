@@ -10,12 +10,15 @@ import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import Combine
 import Foundation
-import InputComponent
-import RemoteServices
 import GenericRemoteService
+import InputComponent
+import OTPInputComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     
+    private typealias Domain = CreateDraftCollateralLoanApplicationDomain
+
     func makeCreateDraftCollateralLoanApplicationBinder(
         payload: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
@@ -41,24 +44,36 @@ extension RootViewModelFactory {
     
     private func makeContent(
         data: CreateDraftCollateralLoanApplicationUIData
-    ) -> CreateDraftCollateralLoanApplicationDomain.Content {
+    ) -> Domain.Content {
         
-        let reducer = CreateDraftCollateralLoanApplicationDomain.Reducer(data: data)
-        let effectHandler = CreateDraftCollateralLoanApplicationDomain.EffectHandler(
+        let reducer = Domain.Reducer<Domain.Confirmation>(data: data)
+        let effectHandler = Domain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: { [weak self] payload, completion in
-            
-                guard let self else { return }
+            saveConsents: {
+                payload, completion in
+                
                 // TODO: Restore
                 self.saveConsents(payload: payload) {
                     completion($0)
                 }
                 // TODO: Remove stub
-//                completion(.success(.preview))
+                completion(.success(.preview))
+            },
+            confirm: { [weak self] event in
+                
+                guard let self else { return }
+                
+                let model = self.makeTimedOTPInputViewModel(
+                    timerDuration: self.settings.otpDuration,
+                    otpLength: self.settings.otpLength,
+                    notify: event
+                )
+                
+                event(.confirmed(.init(otpViewModel: model)))
             }
         )
-        
+
         return .init(
             initialState: .init(data: data),
             reduce: reducer.reduce(_:_:),
@@ -67,9 +82,67 @@ extension RootViewModelFactory {
         )
     }
     
+    private func makeTimedOTPInputViewModel(
+        timerDuration: Int,
+        otpLength: Int,
+        notify: @escaping (Domain.Event) -> Void
+    ) -> TimedOTPInputViewModel {
+                
+        let countdownReducer = CountdownReducer(duration: timerDuration)
+        
+        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
+            
+            if case (.completed, .start) = (otpState, otpEvent) {
+                notify(.getVerificationCode)
+            }
+            
+            return countdownReducer.reduce(otpState, otpEvent)
+        }
+        
+        let otpFieldReducer = OTPFieldReducer(length: otpLength)
+        
+        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
+            
+            switch event {
+            case let .edit(text):
+                let text = text.filter(\.isWholeNumber).prefix(otpLength)
+                return otpFieldReducer.reduce(state, .edit(.init(text)))
+            case .otpValidated:
+                notify(.otpValidated)
+                return otpFieldReducer.reduce(state, event)
+            default:
+                return otpFieldReducer.reduce(state, event)
+            }
+        }
+        
+        let otpInputReducer = OTPComponentInputReducer(
+            countdownReduce: decorated,
+            otpFieldReduce : decoratedOTPFieldReduce
+        )
+        
+        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
+        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
+        let otpInputEffectHandler = OTPInputEffectHandler(
+            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+        
+        return TimedOTPInputViewModel(
+            initialState: .starting(
+                phoneNumber: "",
+                duration: timerDuration,
+                text: ""
+            ),
+            reduce: otpInputReducer.reduce(_:_:),
+            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+            timer: RealTimer(),
+            observe: { notify(.otp($0)) },
+            scheduler: .makeMain()
+        )
+    }
+    
     private func createDraftApplication(
         payload: CollateralLandingApplicationCreateDraftPayload,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.CreateDraftApplicationResult) -> Void
+        completion: @escaping (Domain.CreateDraftApplicationResult) -> Void
     ) {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
@@ -85,7 +158,7 @@ extension RootViewModelFactory {
     }
 
     private func getVerificationCode(
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetVerificationCodeResult) -> Void
+        completion: @escaping (Domain.GetVerificationCodeResult) -> Void
     ) {
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
@@ -102,7 +175,7 @@ extension RootViewModelFactory {
     
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult) -> Void
+        completion: @escaping (Domain.SaveConsentsResult) -> Void
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
@@ -120,9 +193,9 @@ extension RootViewModelFactory {
     // MARK: - Flow
     
     private func getNavigation(
-        select: CreateDraftCollateralLoanApplicationDomain.Select,
-        notify: @escaping CreateDraftCollateralLoanApplicationDomain.Notify,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.Navigation) -> Void
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
     ) {
         switch select {
         case let .showSaveConsentsResult(saveConsentsResult):
@@ -137,7 +210,7 @@ extension RootViewModelFactory {
     }
 
     private func delayProvider(
-        navigation: CreateDraftCollateralLoanApplicationDomain.Navigation
+        navigation: Domain.Navigation
     ) -> Delay {
   
         switch navigation {
@@ -229,6 +302,8 @@ extension RemoteServices.ResponseMapper.CreateDraftCollateralLoanApplicationData
     
     func submitResult(_ applicationID: UInt) -> CollateralLandingApplicationCreateDraftResult {
         
-        .init(applicationID: applicationID)
+        .init(
+            applicationID: applicationID
+        )
     }
 }
