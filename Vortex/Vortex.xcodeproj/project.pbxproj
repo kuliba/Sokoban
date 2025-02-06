@@ -1242,6 +1242,7 @@
 		2A9602702BCC16CF000D9B68 /* AnywayPaymentFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A96026F2BCC16CF000D9B68 /* AnywayPaymentFooter.swift */; };
 		2A9602732BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9602722BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift */; };
 		2A9602752BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9602742BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift */; };
+		2A9ACA522D54F22500BF5D6E /* OpenProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */; };
 		2A9BD5132B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */; };
 		2A9CB0812BEFC2CB00DA5EF3 /* UtilityServicePrepayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */; };
 		2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */; };
@@ -4893,6 +4894,7 @@
 		2A96026F2BCC16CF000D9B68 /* AnywayPaymentFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFooter.swift; sourceTree = "<group>"; };
 		2A9602722BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentFooterConfig+preview.swift"; sourceTree = "<group>"; };
 		2A9602742BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFooterConfig.swift; sourceTree = "<group>"; };
+		2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenProductType.swift; sourceTree = "<group>"; };
 		2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientStub+utilityPayments.swift"; sourceTree = "<group>"; };
 		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
@@ -10967,11 +10969,12 @@
 				2A2EE9052CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift */,
 				2A65F1FB2D350EC500C0D724 /* ContentWitnesses+empty.swift */,
 				2A9CC0C52D1BE09E0071F30E /* Factories */,
-				842C42362D11FD2B006A307D /* SavingsAccount */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
+				2A9ACA502D54F21300BF5D6E /* OpenProduct */,
 				2A2EE90D2CF0AC950019FC31 /* Payments */,
 				2A7EB6172D2190C000839E3E /* ProcessPaymentProvider */,
 				2A7EB6102D218F2200839E3E /* ProviderServicePicker */,
+				842C42362D11FD2B006A307D /* SavingsAccount */,
 			);
 			path = RootViewModelFactory;
 			sourceTree = "<group>";
@@ -11567,6 +11570,14 @@
 				2AC3EFFC2BCBDE1D0037A4E1 /* AnywayPaymentFooterView.swift */,
 			);
 			path = Footer;
+			sourceTree = "<group>";
+		};
+		2A9ACA502D54F21300BF5D6E /* OpenProduct */ = {
+			isa = PBXGroup;
+			children = (
+				2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */,
+			);
+			path = OpenProduct;
 			sourceTree = "<group>";
 		};
 		2A9BD5142B85F04100B88395 /* UtilityPayments */ = {
@@ -22205,6 +22216,7 @@
 				77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */,
 				2AD7674A2CF9879B00BFDA70 /* OperationPickerFlowViewFactory.swift in Sources */,
 				ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */,
+				2A9ACA522D54F22500BF5D6E /* OpenProductType.swift in Sources */,
 				2A3C2CF42D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift in Sources */,
 				50239E9B2941253F00AA480B /* CheckBoxViewComponent.swift in Sources */,
 				8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
