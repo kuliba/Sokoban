@@ -173,7 +173,7 @@ extension RootViewModelFactory {
     }
 
     private func getConsents(
-        payload: CollateralLandingGet,
+        payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (Domain.SaveConsentsResult) -> Void
     ) {
         let saveConsents = nanoServiceComposer.compose(
