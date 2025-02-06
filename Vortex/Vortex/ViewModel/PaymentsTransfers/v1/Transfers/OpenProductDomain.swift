@@ -21,7 +21,9 @@ extension OpenProductDomain {
     
     enum Select {
         
+        case main
         case openProduct
+        case orderSticker
         case productType(OpenProductType)
     }
     
@@ -33,5 +35,7 @@ extension OpenProductDomain {
         case openDeposit(OpenDepositListViewModel)
         case openProduct(Node<MyProductsOpenProductView.ViewModel>)
         case openURL(URL)
+        case openSticker(LandingWrapperViewModel)
+        case main
     }
 }

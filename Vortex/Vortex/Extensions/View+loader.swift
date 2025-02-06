@@ -11,12 +11,14 @@ extension View {
     
     func loader(
         isLoading: Bool,
-        icon: Image = .init("Logo Vortex")
+        icon: Image = .init("Logo Vortex"),
+        color: Color = .black.opacity(0.3)
     ) -> some View {
         
         self.modifier(LoaderWrapper(
             isLoading: isLoading,
-            icon: icon
+            icon: icon,
+            color: color
         ))
     }
 }
@@ -25,17 +27,18 @@ struct LoaderWrapper: ViewModifier {
     
     let isLoading: Bool
     let icon: Image
+    var color: Color = .black.opacity(0.3)
     
     func body(content: Content) -> some View {
         
         ZStack {
             
             content
+                .disabled(isLoading)
             
             ZStack {
                 
-                Color.black
-                    .opacity(0.3)
+                color
                     .ignoresSafeArea()
                 
                 SpinnerRefreshView(icon: icon)

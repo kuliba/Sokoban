@@ -36,6 +36,7 @@ struct TemplatesListFlowView<AnywayFlowView: View>: View {
                 dismiss: { model.event(.dismiss(.destination)) },
                 content: destinationContent
             )
+            .loader(isLoading: model.state.isLoading, color: .clear)
     }
 }
 

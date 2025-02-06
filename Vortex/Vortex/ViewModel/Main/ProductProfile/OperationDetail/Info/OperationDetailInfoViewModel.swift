@@ -1204,8 +1204,9 @@ extension Model {
                 currencyCode: card.currency,
                 style: .clipped
                ),
-               let icon = images.value[card.smallDesignMd5hash]?.image,
-               let additional = card.additionalField {
+               let icon = images.value[card.smallDesignMd5hash]?.image {
+                
+                let additional = card.additionalField
                 
                 return .init(
                     title: title,
@@ -1213,7 +1214,7 @@ extension Model {
                     name: card.displayName,
                     iconPaymentService: images.value[card.paymentSystemMd5Hash]?.image,
                     balance: balanceFormatted,
-                    description: "· \(description) · \(additional)"
+                    description: "· \(description) · \(additional ?? "")"
                 )
             }
         }

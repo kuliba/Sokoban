@@ -36,5 +36,4 @@ enum DictionaryType: CaseIterable  {
     case qrMapping
     case qrPaymentType
     case prefferedBanks
-    case clientInform
 }
