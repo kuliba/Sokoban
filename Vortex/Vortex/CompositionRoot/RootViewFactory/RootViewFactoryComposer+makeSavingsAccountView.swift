@@ -51,40 +51,16 @@ extension RootViewFactoryComposer {
         _ data: SavingsAccountDomain.OpenAccountLanding
     ) -> OrderSavingsAccountWrapperView {
         
-        OrderSavingsAccountWrapperView(
+        let reducer = OrderSavingsAccountReducer(openURL: { url in
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        })
+        
+        return OrderSavingsAccountWrapperView(
             viewModel: .init(
                 initialState: .init(status: .result(.init(data.list.first ?? .empty))),
-                reduce: { state,event in // TODO: add reducer
-                    
-                    var state = state
-                    switch event {
-                    case .dismiss:
-                        print("dismiss")
-                        
-                    case .continue:
-                        state.isShowingOTP = true
-                        
-                    case let .amount(amountEvent):
-                        switch amountEvent {
-                            
-                        case let .edit(newValue):
-                            state.amountValue = newValue
-                            
-                        case .pay:
-                            state.isShowingOTP = true
-                        }
-                        
-                    case .consent:
-                        state.consent.toggle()
-                        
-                    case let .openURL(url):
-                        if UIApplication.shared.canOpenURL(url) {
-                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                        }
-                    }
-                    
-                    return (state, .none)
-                },
+                reduce: reducer.reduce(_:_:),
                 handleEffect: {_,_ in } // TODO: add handler
             ),
             amountToString: makeAmountToString,

@@ -7,4 +7,8 @@
 
 import Foundation
 
-public enum OrderSavingsAccountEffect: Equatable {}
+public enum OrderSavingsAccountEffect: Equatable {
+    
+    case makeAccount
+    case prepareAccount
+}

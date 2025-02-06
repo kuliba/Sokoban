@@ -424,7 +424,7 @@ where AmountInfo: View,
     }
     
     private func backButton() -> some View {
-        Button(action: { event(.dismiss) }) { config.images.back }
+        Button(action: {  }) { config.images.back }
     }
     
     private func header() -> some View {
@@ -492,10 +492,7 @@ where AmountInfo == Text,
                 switch $0 {
                 case .continue:
                     print("Открыть накопительный счет")
-                    
-                case .dismiss:
-                    print("Назад")
-                    
+                                        
                 case let .amount(amountEvent):
                     switch amountEvent {
                     case let .edit(newValue):
@@ -534,35 +531,7 @@ struct LandingUIView_Previews: PreviewProvider {
             OrderSavingsAccountWrapperView.init(
                 viewModel: .init(
                     initialState: .preview,
-                    reduce: { state, event in
-                        
-                        var state = state
-                        switch event {
-                        case .dismiss:
-                            print("dismiss")
-                            
-                        case .continue:
-                            state.isShowingOTP = true
-                            
-                        case let .amount(amountEvent):
-                            switch amountEvent {
-                                
-                            case let .edit(newValue):
-                                state.amountValue = newValue
-                                
-                            case .pay:
-                                state.isShowingOTP = true
-                            }
-                            
-                        case .consent:
-                            state.consent.toggle()
-                            
-                        case let .openURL(url):
-                            print("openURL \(url)")
-                        }
-                        
-                        return (state, .none)
-                    },
+                    reduce: OrderSavingsAccountReducer(openURL: { _ in }).reduce(_:_:),
                     handleEffect: {_,_ in }),
                 config: .preview,
                 imageViewFactory: .default)
