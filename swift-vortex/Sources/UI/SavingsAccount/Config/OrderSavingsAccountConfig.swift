@@ -21,6 +21,7 @@ public struct OrderSavingsAccountConfig {
     let linkableTexts: LinkableTexts
     let openButton: OpenButton
     let order: Order
+    let shadowColor: Color
     let padding: CGFloat
     let shimmering: Color
     let topUp: TopUp
@@ -36,6 +37,7 @@ public struct OrderSavingsAccountConfig {
         openButton: OpenButton,
         order: Order,
         padding: CGFloat,
+        shadowColor: Color,
         shimmering: Color,
         topUp: TopUp
     ) {
@@ -49,6 +51,7 @@ public struct OrderSavingsAccountConfig {
         self.openButton = openButton
         self.order = order
         self.padding = padding
+        self.shadowColor = shadowColor
         self.shimmering = shimmering
         self.topUp = topUp
     }
