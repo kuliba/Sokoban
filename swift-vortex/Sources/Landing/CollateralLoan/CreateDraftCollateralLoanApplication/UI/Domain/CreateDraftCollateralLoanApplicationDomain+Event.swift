@@ -23,6 +23,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case period(SelectPeriodEvent)
         case getVerificationCode
         case gettedVerificationCode(GetVerificationCodeResult)
+        case otpValidated
         case showSaveConsentsResult(SaveConsentsResult)
         case tappedBack
         case tappedContinue

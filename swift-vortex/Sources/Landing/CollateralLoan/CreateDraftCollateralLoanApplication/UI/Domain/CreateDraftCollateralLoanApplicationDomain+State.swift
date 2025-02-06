@@ -43,8 +43,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var checkedConsents: [String]
         public var isButtonDisabled: Bool
         public var confirmation: Confirmation?
-        
-        private var cancellable: AnyCancellable?
+        public var otpValidated: Bool
         
         public init(
             data: Data,
@@ -56,7 +55,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             verificationCode: String = "",
             checkedConsents: [String] = [],
             isButtonDisabled: Bool = false,
-            confirmation: Confirmation? = nil
+            confirmation: Confirmation? = nil,
+            otpValidated: Bool = false
         ) {
             self.data = data
             self.stage = stage
@@ -71,6 +71,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.checkedConsents = checkedConsents
             self.isButtonDisabled = isButtonDisabled
             self.confirmation = confirmation
+            self.otpValidated = otpValidated
         }
         
         public enum Stage {
@@ -114,8 +115,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         let isFirstStageValid = isAmountVaild
         let isSecondStageValid = checkedConsents.count == data.consents.count
             && confirmation != nil
-            && !verificationCode.isEmpty
-            && otp == verificationCode
+            && otpValidated
         
         switch stage {
         case .correctParameters:

@@ -106,6 +106,9 @@ extension RootViewModelFactory {
             case let .edit(text):
                 let text = text.filter(\.isWholeNumber).prefix(otpLength)
                 return otpFieldReducer.reduce(state, .edit(.init(text)))
+            case .otpValidated:
+                notify(.otpValidated)
+                return otpFieldReducer.reduce(state, event)
             default:
                 return otpFieldReducer.reduce(state, event)
             }

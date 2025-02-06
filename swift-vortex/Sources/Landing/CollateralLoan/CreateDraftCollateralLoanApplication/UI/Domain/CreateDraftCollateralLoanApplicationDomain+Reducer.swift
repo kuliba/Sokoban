@@ -112,6 +112,10 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case let .confirmed(confirmation):
                 state.confirmation = confirmation
                 state.isButtonDisabled = !state.checkButtonStatus
+                
+            case .otpValidated:
+                state.otpValidated = true
+                state.isButtonDisabled = !state.checkButtonStatus
             }
             
             return (state, effect)
