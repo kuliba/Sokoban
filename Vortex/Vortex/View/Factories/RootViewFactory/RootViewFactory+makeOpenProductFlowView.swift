@@ -8,6 +8,7 @@
 import RxViewModel
 import SwiftUI
 import UIPrimitives
+import LandingUIComponent
 
 extension ViewComponents {
     
@@ -71,6 +72,10 @@ extension ViewComponents {
             
         case let .openDeposit(openDeposit):
             makeOpenDepositListView(openDeposit)
+            
+        case let .openSticker(sticker):
+            LandingWrapperView(viewModel: sticker)
+                .ignoresSafeArea(edges: .bottom)
         }
     }
     
@@ -117,7 +122,7 @@ extension OpenProductDomain.Navigation {
         case let .openProduct(node):
             return .openProduct(node.model)
             
-        case .openCard, .openDeposit, .openURL:
+        case .openCard, .openDeposit, .openURL, .openSticker(_), .main:
             return nil
         }
     }
@@ -140,8 +145,11 @@ extension OpenProductDomain.Navigation {
         case let .openDeposit(openDeposit):
             return .openDeposit(openDeposit)
             
-        case .openProduct, .openURL:
+        case .openProduct, .openURL, .main:
             return nil
+            
+        case let .openSticker(sticker):
+            return .openSticker(sticker)
         }
     }
     
@@ -149,6 +157,7 @@ extension OpenProductDomain.Navigation {
         
         case openCard(AuthProductsViewModel)
         case openDeposit(OpenDepositListViewModel)
+        case openSticker(LandingWrapperViewModel)
     }
 }
 
@@ -184,6 +193,9 @@ extension OpenProductDomain.Navigation.Destination: Identifiable {
             
         case let .openDeposit(openDeposit):
             return .openDeposit(.init(openDeposit))
+            
+        case let .openSticker(openSticker):
+            return .openSticker(.init(openSticker))
         }
     }
     
@@ -191,6 +203,7 @@ extension OpenProductDomain.Navigation.Destination: Identifiable {
         
         case openCard(ObjectIdentifier)
         case openDeposit(ObjectIdentifier)
+        case openSticker(ObjectIdentifier)
     }
 }
 

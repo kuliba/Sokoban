@@ -690,7 +690,7 @@ private extension MainViewModel {
         }
     }
     
-    func openMoreProducts() {
+    func openMoreProducts() { // 
         
         let myProductsViewModel = MyProductsViewModel(
             model,

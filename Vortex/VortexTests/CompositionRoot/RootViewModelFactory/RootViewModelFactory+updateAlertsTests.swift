@@ -62,6 +62,19 @@ final class RootViewModelFactory_updateAlertsTests: RootViewModelFactoryTests {
         ])
     }
     
+    func test_shouldDismissAllOnFailure() {
+        
+        let alertManagerSpy = AlertManagerSpy()
+        let (sut, httpClient, _) = makeSUT(model: .mockWithEmptyExcept(
+            clientInformAlertManager: alertManagerSpy
+        ))
+        
+        sut.updateAlerts()
+        httpClient.complete(with: .failure(anyNSError()))
+        
+        XCTAssertNoDiff(alertManagerSpy.dismissCount, 1)
+    }
+    
     // MARK: - Helpers
     
     private func makeValidData() -> Data {
