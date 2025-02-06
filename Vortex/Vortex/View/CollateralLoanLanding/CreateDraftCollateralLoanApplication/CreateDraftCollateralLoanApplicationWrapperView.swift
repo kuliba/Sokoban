@@ -127,7 +127,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 goToMain: goToMain,
                 repeat: {},
                 factory: makePaymentCompleteViewFactory(),
-                makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
                 config: .collateralLoanLanding
             )
         case .failure:
@@ -136,7 +135,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 goToMain: goToMain,
                 repeat: {},
                 factory: makePaymentCompleteViewFactory(),
-                makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
                 config: .collateralLoanLanding
             )
         }
@@ -160,6 +158,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         .init(
             detailID: 123,
             details: operationDetails(from: saveConsentsResult),
+            operationDetail: nil,
             printFormType: "",
             status: .completed
         )
@@ -167,11 +166,18 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
         
-        .init(
+        return .init(
             makeDetailButton: { .init(details: $0) },
             makeDocumentButton: makeTransactionDocumentButton,
-            makeTemplateButton: { nil }
+            makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
+            makeTemplateButton: { nil },
+            makeTemplateButtonWrapperView: { _ in makeTemplateButtonWrapperView() }
         )
+    }
+    
+    private func makeTemplateButtonWrapperView() -> TemplateButtonStateWrapperView {
+        
+        .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: .stub()))
     }
     
     private func makeTransactionDocumentButton(
@@ -184,7 +190,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     // TODO: realize map
     private func operationDetails(
         from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
-    ) -> PaymentCompleteState.Report.Details {
+    ) -> TransactionDetailButton.Details {
 
         .init(
             logo: nil,
