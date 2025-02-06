@@ -83,9 +83,8 @@ extension CreateDraftCollateralLoanApplicationPeriodView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias Confirmation = Domain.Confirmation
-    typealias State = Domain.State<Confirmation>
-    typealias Event = Domain.Event<Confirmation>
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias IconView = UIPrimitives.AsyncImage
     typealias PeriodItem = Domain.PeriodItem
     typealias SelectorView

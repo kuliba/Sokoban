@@ -57,10 +57,9 @@ extension CreateDraftCollateralLoanApplicationConsentsView {
     typealias Consent = CreateDraftCollateralLoanApplicationUIData.Consent
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = Domain.State<Confirmation>
-    typealias Confirmation = Domain.Confirmation
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event<Confirmation>
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
 }
 
 // MARK: - Previews

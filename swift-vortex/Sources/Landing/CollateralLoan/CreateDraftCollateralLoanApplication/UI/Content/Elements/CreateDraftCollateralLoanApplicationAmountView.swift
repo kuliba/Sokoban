@@ -56,11 +56,10 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
 extension CreateDraftCollateralLoanApplicationAmountView {
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias Confirmation = Domain.Confirmation
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State<Confirmation>
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event<Confirmation>
 }
 
 // MARK: - Previews

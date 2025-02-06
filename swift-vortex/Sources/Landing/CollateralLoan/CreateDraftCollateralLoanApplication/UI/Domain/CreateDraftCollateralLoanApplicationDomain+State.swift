@@ -10,7 +10,6 @@ import InputComponent
 import OptionalSelectorComponent
 import OTPInputComponent
 import TextFieldDomain
-import FlowCore
 import Combine
 
 extension CreateDraftCollateralLoanApplicationDomain {
@@ -26,7 +25,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         }
     }
     
-    public struct State<Confirmation> {
+    public struct State {
         
         public let data: Data
 

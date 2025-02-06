@@ -30,8 +30,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.periodSelectReduce = periodSelectReduce
         }
         
-        public func reduce(_ state: State<Confirmation>, _ event: Event<Confirmation>)
-            -> (State<Confirmation>, Effect?) {
+        public func reduce(_ state: State, _ event: Event)
+            -> (State, Effect?) {
             
             var state = state
             var effect: Effect?

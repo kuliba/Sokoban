@@ -32,30 +32,7 @@ public struct CreateDraftCollateralLoanApplicationView: View {
     
     public var body: some View {
         
-        Group {
-            
-            if state.isLoading {
-                
-                ProgressView()
-            } else {
-                
-                content
-            }
-        }
-        .if(state.stage == .confirm) {
-        
-            $0.navigationBarBackButtonHidden(true)
-              .navigationBarItems(leading: buttonBack)
-        }
-    }
-    
-    var buttonBack : some View { Button(action: { event(.tappedBack) }) {
-        HStack {
-            Image(systemName: "chevron.left")
-                .aspectRatio(contentMode: .fit)
-            Text("Назад")
-        }
-    }
+        content
     }
     
     @ViewBuilder
@@ -73,10 +50,7 @@ public struct CreateDraftCollateralLoanApplicationView: View {
 
                 if state.stage == .confirm {
 
-                    if let optViewModel = state.confirmation?.otpViewModel {
-
-                        otpView(otpViewModel: optViewModel)
-                    }
+                    state.confirmation.map { otpView(otpViewModel: $0.otpViewModel) }
                     consentsView
                 }
             }
@@ -193,23 +167,11 @@ struct FrameWithCornerRadiusModifier: ViewModifier {
     }
 }
 
-extension View {
-   @ViewBuilder
-   func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            self
-        }
-    }
-}
-
 extension CreateDraftCollateralLoanApplicationView {
     
     public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias Confirmation = Domain.Confirmation
-    public typealias State = Domain.State<Confirmation>
-    public typealias Event = Domain.Event<Confirmation>
+    public typealias State = Domain.State
+    public typealias Event = Domain.Event
     public typealias Config = CreateDraftCollateralLoanApplicationConfig
     public typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }

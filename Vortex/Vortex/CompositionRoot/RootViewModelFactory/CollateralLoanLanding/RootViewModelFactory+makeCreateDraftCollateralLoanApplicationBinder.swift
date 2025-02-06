@@ -17,11 +17,13 @@ import RemoteServices
 
 extension RootViewModelFactory {
     
+    private typealias Domain = CreateDraftCollateralLoanApplicationDomain
+
     func makeCreateDraftCollateralLoanApplicationBinder(
         payload: CreateDraftCollateralLoanApplicationUIData
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
-        let content = makeDraftContent(data: payload)
+        let content = makeContent(data: payload)
 
         return composeBinder(
             content: content,
@@ -40,11 +42,11 @@ extension RootViewModelFactory {
 
     // MARK: - Content
     
-    private func makeDraftContent(
+    private func makeContent(
         data: CreateDraftCollateralLoanApplicationUIData
-    ) -> CreateDraftCollateralLoanApplicationDomain.Content {
+    ) -> Domain.Content {
         
-        let reducer = Domain.Reducer<Confirmation>(data: data)
+        let reducer = Domain.Reducer<Domain.Confirmation>(data: data)
         let effectHandler = Domain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
@@ -76,15 +78,12 @@ extension RootViewModelFactory {
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
         )
-        
-        typealias Domain = CreateDraftCollateralLoanApplicationDomain
-        typealias Confirmation = Domain.Confirmation
     }
     
-    func makeTimedOTPInputViewModel(
+    private func makeTimedOTPInputViewModel(
         timerDuration: Int,
         otpLength: Int,
-        notify: @escaping (CreateDraftCollateralLoanApplicationDomain.Event<CreateDraftCollateralLoanApplicationDomain.Confirmation>) -> Void
+        notify: @escaping (Domain.Event) -> Void
     ) -> TimedOTPInputViewModel {
                 
         let countdownReducer = CountdownReducer(duration: timerDuration)
@@ -141,7 +140,7 @@ extension RootViewModelFactory {
     
     private func createDraftApplication(
         payload: CollateralLandingApplicationCreateDraftPayload,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.CreateDraftApplicationResult) -> Void
+        completion: @escaping (Domain.CreateDraftApplicationResult) -> Void
     ) {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
@@ -156,7 +155,7 @@ extension RootViewModelFactory {
     }
 
     private func getVerificationCode(
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetVerificationCodeResult) -> Void
+        completion: @escaping (Domain.GetVerificationCodeResult) -> Void
     ) {
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
@@ -173,7 +172,7 @@ extension RootViewModelFactory {
     
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.SaveConsentsResult) -> Void
+        completion: @escaping (Domain.SaveConsentsResult) -> Void
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
@@ -190,9 +189,9 @@ extension RootViewModelFactory {
     // MARK: - Flow
     
     private func getNavigation(
-        select: CreateDraftCollateralLoanApplicationDomain.Select,
-        notify: @escaping CreateDraftCollateralLoanApplicationDomain.Notify,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.Navigation) -> Void
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
     ) {
         switch select {
         case let .showSaveConsentsResult(saveConsentsResult):
@@ -207,7 +206,7 @@ extension RootViewModelFactory {
     }
 
     private func delayProvider(
-        navigation: CreateDraftCollateralLoanApplicationDomain.Navigation
+        navigation: Domain.Navigation
     ) -> Delay {
   
         switch navigation {

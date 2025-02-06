@@ -44,8 +44,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         }
 
         public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-        public typealias Confirmation = Domain.Confirmation
-        public typealias Event = Domain.Event<Confirmation>
+        public typealias Event = Domain.Event
         public typealias Confirm = (@escaping (Event) -> Void) -> Void
         public typealias Dispatch = (Event) -> Void
         public typealias CreateDraftApplicationPayload = CollateralLandingApplicationCreateDraftPayload

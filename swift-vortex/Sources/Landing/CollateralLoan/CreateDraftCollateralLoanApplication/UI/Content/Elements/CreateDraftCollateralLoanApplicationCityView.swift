@@ -83,11 +83,10 @@ extension CreateDraftCollateralLoanApplicationCityView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State<Confirmation>
-    typealias Event = Domain.Event<Confirmation>
-    typealias Confirmation = Domain.Confirmation
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias IconView = UIPrimitives.AsyncImage
-    typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem
+    typealias CityItem = Domain.CityItem
     typealias SelectorView
         = OptionalSelectorView<CityItem, IconView, IconLabel<Image>, SelectedOptionView, ChevronView>
 }

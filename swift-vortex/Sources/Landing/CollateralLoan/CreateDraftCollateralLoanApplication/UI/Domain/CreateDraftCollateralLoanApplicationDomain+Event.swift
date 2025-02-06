@@ -12,7 +12,7 @@ import OptionalSelectorComponent
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public enum Event<Confirmation> {
+    public enum Event {
         
         case amount(TextInputEvent)
         case applicationCreated(CreateDraftApplicationResult)

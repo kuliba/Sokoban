@@ -40,6 +40,23 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         event: @escaping (Event) -> Void
     ) -> some View {
         
+        ZStack {
+            
+            if state.isLoading {
+                
+                SpinnerView(viewModel: .init())
+                    .zIndex(1.0)
+            }
+            content(state: state, event: event)
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    private func content(
+        state: State,
+        event: @escaping (Event) -> Void
+    ) -> some View {
+
         CreateDraftCollateralLoanApplicationView(
             state: state,
             event: event,
@@ -50,8 +67,25 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 makeImageViewWithURL: factory.makeImageViewWithURL
             )
         )
+        .if(state.stage == .confirm) {
+        
+            $0.navigationBarBackButtonHidden(true)
+              .navigationBarItems(leading: buttonBack(event: event))
+        }
     }
-
+    
+    func buttonBack(event: @escaping (Event) -> Void) -> some View {
+        
+        Button(action: { event(.tappedBack) }) {
+            
+            HStack {
+                Image.ic16ChevronLeft
+                    .aspectRatio(contentMode: .fit)
+                Text("Оформление заявки")
+            }
+        }
+    }
+    
     private func handleExternalEvent(events: Domain.ExternalEvent) {
         
         switch events {
@@ -93,9 +127,8 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias Confirmation = Domain.Confirmation
-    typealias State = Domain.State<Confirmation>
-    typealias Event = Domain.Event<Confirmation>
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
 }
