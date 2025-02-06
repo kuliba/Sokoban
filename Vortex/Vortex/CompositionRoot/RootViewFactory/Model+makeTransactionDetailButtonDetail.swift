@@ -61,7 +61,7 @@ extension _OperationInfo {
 
 // MARK: - Adapters
 
-private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     var operationDetail: OperationDetailData {
         

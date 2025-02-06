@@ -10,6 +10,7 @@ import AnywayPaymentDomain
 import Banners
 import LoadableResourceComponent
 import MarketShowcase
+import RemoteServices
 import SberQR
 import SwiftUI
 
@@ -23,6 +24,7 @@ typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentComple
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeTemplateButtonWrapperView = (OperationDetailData) -> TemplateButtonStateWrapperView
 
 typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
 typealias MakeOrderCard = () -> Void
@@ -53,6 +55,7 @@ struct RootViewFactory {
     let makeMarketShowcaseView: MakeMarketShowcaseView
     let components: ViewComponents
     let paymentsViewFactory: PaymentsViewFactory
+    let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
