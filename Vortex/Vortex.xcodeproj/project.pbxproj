@@ -2909,6 +2909,7 @@
 		83DE8C682D52728100682617 /* AmountInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DE8C672D52728100682617 /* AmountInfoView.swift */; };
 		83DE8C6C2D53BFC000682617 /* OrderSavingsAccountWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DE8C6B2D53BFC000682617 /* OrderSavingsAccountWrapperView.swift */; };
 		83DE8C6E2D53C51700682617 /* OTPInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DE8C6D2D53C51700682617 /* OTPInfoView.swift */; };
+		83DE8C702D548F4D00682617 /* OrderSavingsAccountConfig+prod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DE8C6F2D548F4C00682617 /* OrderSavingsAccountConfig+prod.swift */; };
 		83E056812C918A0B00DFE1A8 /* ComposedBannerPickerSectionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E056802C918A0B00DFE1A8 /* ComposedBannerPickerSectionFlowView.swift */; };
 		83E2F6112A40A342000B64CF /* GetProductDetailsResponseGenericFull.json in Resources */ = {isa = PBXBuildFile; fileRef = 83E2F6102A40A342000B64CF /* GetProductDetailsResponseGenericFull.json */; };
 		83E2F6132A40D246000B64CF /* InfoProductViewModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E2F6122A40D246000B64CF /* InfoProductViewModel+Extensions.swift */; };
@@ -6526,6 +6527,7 @@
 		83DE8C672D52728100682617 /* AmountInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountInfoView.swift; sourceTree = "<group>"; };
 		83DE8C6B2D53BFC000682617 /* OrderSavingsAccountWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSavingsAccountWrapperView.swift; sourceTree = "<group>"; };
 		83DE8C6D2D53C51700682617 /* OTPInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInfoView.swift; sourceTree = "<group>"; };
+		83DE8C6F2D548F4C00682617 /* OrderSavingsAccountConfig+prod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrderSavingsAccountConfig+prod.swift"; sourceTree = "<group>"; };
 		83E056802C918A0B00DFE1A8 /* ComposedBannerPickerSectionFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedBannerPickerSectionFlowView.swift; sourceTree = "<group>"; };
 		83E2F6102A40A342000B64CF /* GetProductDetailsResponseGenericFull.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductDetailsResponseGenericFull.json; sourceTree = "<group>"; };
 		83E2F6122A40D246000B64CF /* InfoProductViewModel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InfoProductViewModel+Extensions.swift"; sourceTree = "<group>"; };
@@ -15740,6 +15742,7 @@
 		830207422D37E45E0038EFA4 /* SavingsAccount */ = {
 			isa = PBXGroup;
 			children = (
+				83DE8C6F2D548F4C00682617 /* OrderSavingsAccountConfig+prod.swift */,
 				8302073C2D37E06A0038EFA4 /* SavingsAccountConfig+iVortex.swift */,
 				830BD9652D4FC12A005A8BD3 /* OrderSavingsAccountConfig+prod.swift */,
 				8302073E2D37E1270038EFA4 /* SavingsAccountDomain+Titles.swift */,
@@ -22017,6 +22020,7 @@
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				EDDFE3B12756D52500F57C71 /* MainDepositCollectionViewCell.swift in Sources */,
 				77F9F2642A45EB9300699433 /* PaymentsSuccessLogoComponent.swift in Sources */,
+				83DE8C702D548F4D00682617 /* OrderSavingsAccountConfig+prod.swift in Sources */,
 				5A5ABFAF27ABC84800D548AA /* ServerCommands+Deposit.swift in Sources */,
 				0CF5D0DB29A60F6A00EDF8CB /* Model+ToAnotherCardTransfer.swift in Sources */,
 				0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */,

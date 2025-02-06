@@ -161,7 +161,7 @@ extension OrderSavingsAccountConfig {
                 open: "Открытие",
                 service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
         ),
-        padding: 16, 
+        padding: 16,
         shadowColor: .gray,
         shimmering: .background,
         topUp: .init(
@@ -185,7 +185,7 @@ extension SavingsAccountDetails {
         currentInterest: 22400,
         minBalance: 8000,
         paidInterest: 11134056.77,
-        progress: 0.8, 
+        progress: 0.8,
         currencyCode: "₽"
     )
 }
@@ -224,7 +224,7 @@ extension SavingsAccountDetailsConfig {
             currentInterest: "Проценты текущего периода",
             header: .init(text: "Детали счета", config: .init(textFont: .system(size: 20), textColor: .white)),
             minBalance: "Минимальный остаток текущего периода",
-            paidInterest: "Выплачено всего процентов", 
+            paidInterest: "Выплачено всего процентов",
             per: " / мес",
             days: "5 дней",
             interestDate: "Дата выплаты % - 31 мая",
