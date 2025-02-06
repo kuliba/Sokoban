@@ -16,12 +16,15 @@ enum OpenCardDomain {
     
     // MARK: - Content
     
-    typealias Content = Void
+    typealias Content = Void // TODO: replace with RxViewModel
     
     // MARK: - Flow
     
     typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
+    typealias Notify = FlowDomain.Notify
+    
+    typealias Witnesses = ContentWitnesses<Content, FlowEvent<Select, Never>>
     
     enum Select {}
     

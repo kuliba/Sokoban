@@ -1245,6 +1245,9 @@
 		2A9ACA522D54F22500BF5D6E /* OpenProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */; };
 		2A9ACA542D54F2C300BF5D6E /* OpenProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA532D54F2C300BF5D6E /* OpenProduct.swift */; };
 		2A9ACA572D54F47700BF5D6E /* OpenCardDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA562D54F47700BF5D6E /* OpenCardDomain.swift */; };
+		2A9ACA592D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA582D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift */; };
+		2A9ACA5B2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA5A2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift */; };
+		2A9ACA5D2D54FE0B00BF5D6E /* ViewComponents+makeOpenProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9ACA5C2D54FE0B00BF5D6E /* ViewComponents+makeOpenProductView.swift */; };
 		2A9BD5132B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */; };
 		2A9CB0812BEFC2CB00DA5EF3 /* UtilityServicePrepayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */; };
 		2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */; };
@@ -4899,6 +4902,9 @@
 		2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenProductType.swift; sourceTree = "<group>"; };
 		2A9ACA532D54F2C300BF5D6E /* OpenProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenProduct.swift; sourceTree = "<group>"; };
 		2A9ACA562D54F47700BF5D6E /* OpenCardDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCardDomain.swift; sourceTree = "<group>"; };
+		2A9ACA582D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+openProduct.swift"; sourceTree = "<group>"; };
+		2A9ACA5A2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+openCardProduct.swift"; sourceTree = "<group>"; };
+		2A9ACA5C2D54FE0B00BF5D6E /* ViewComponents+makeOpenProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOpenProductView.swift"; sourceTree = "<group>"; };
 		2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientStub+utilityPayments.swift"; sourceTree = "<group>"; };
 		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
@@ -11609,6 +11615,8 @@
 			isa = PBXGroup;
 			children = (
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
+				2A9ACA582D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift */,
+				2A9ACA5A2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift */,
 				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
 				83172A192D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift */,
 				830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */,
@@ -12471,6 +12479,7 @@
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
 				842C423B2D11FF2F006A307D /* RootViewFactory+operatorFailureView.swift */,
 				842C423A2D11FF2F006A307D /* ViewComponents+serviceCategoryFailureView.swift */,
+				2A9ACA5C2D54FE0B00BF5D6E /* ViewComponents+makeOpenProductView.swift */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
 				2A3C2CF52D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift */,
 				2A267D502D4BFFE1001F725C /* RootViewFactory+makeMeToMeFlowView.swift */,
@@ -21888,6 +21897,7 @@
 				0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */,
 				2A2B91E92C7CBA54008F5186 /* CategoryPickerSectionStateItemLabelConfig+iVortex.swift in Sources */,
 				2A2B91EA2C7CBA54008F5186 /* CategoryPickerSectionContentViewConfig+iVortex.swift in Sources */,
+				2A9ACA5D2D54FE0B00BF5D6E /* ViewComponents+makeOpenProductView.swift in Sources */,
 				2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */,
 				0B11A7882922A71E00C9BDD0 /* QRFailedViewModel.swift in Sources */,
 				2A438C3C2C57674E002FC79F /* LabelWithIcon.swift in Sources */,
@@ -22515,6 +22525,7 @@
 				ED302A3126D3E56600161243 /* UIImage.swift in Sources */,
 				0CC8FCA7283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift in Sources */,
 				83C8F4432A443A10008203E3 /* ItemView.swift in Sources */,
+				2A9ACA592D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift in Sources */,
 				2A118E272AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift in Sources */,
 				7772979B27C7B6AE0099EF91 /* AuthCardScannerView.swift in Sources */,
 				2A1F5E842C26EA92002B3F65 /* FooterButtonConfig+iVortex.swift in Sources */,
@@ -22627,6 +22638,7 @@
 				686A1C9827ED5867002972F0 /* ServerCommands+Loan.swift in Sources */,
 				2A3663C12C59519500114294 /* PaymentCompleteState.swift in Sources */,
 				5A5ABF8C27AAF55800D548AA /* PaymentCountryData.swift in Sources */,
+				2A9ACA5B2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift in Sources */,
 				2AA3A9462BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift in Sources */,
 				834CFDFB2A49CDD000DF301D /* InfoProductSheet.swift in Sources */,
 				2AD767482CF9877E00BFDA70 /* OperationPickerFlowView.swift in Sources */,

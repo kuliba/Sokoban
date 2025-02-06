@@ -17,11 +17,12 @@ extension RootViewDomain {
 
 enum RootViewSelect: Equatable {
     
+    case openProduct(OpenProductType)
     case outside(RootViewOutside)
     case scanQR
-    case userAccount
     case standardPayment(ServiceCategory.CategoryType)
     case templates
+    case userAccount
     
     enum RootViewOutside: Equatable {
         
@@ -38,6 +39,7 @@ enum RootViewTab: Equatable {
 enum RootViewNavigation {
     
     case failure(Failure)
+    case openProduct(OpenProduct)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
     case standardPayment(Node<PaymentProviderPickerDomain.Binder>)

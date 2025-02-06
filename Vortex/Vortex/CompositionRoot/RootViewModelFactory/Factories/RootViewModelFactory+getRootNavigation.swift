@@ -26,6 +26,11 @@ extension RootViewModelFactory {
         completion: @escaping (RootViewNavigation) -> Void
     ) {
         switch select {
+        case let .openProduct(type):
+            completion(.openProduct(
+                openProduct(type: type, notify: {})
+            ))
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(id):

@@ -8,6 +8,7 @@
 enum OpenProduct {
     
     case card(OpenCard)
+    case unknown // TODO: replace with other types
     
     typealias OpenCard = OpenCardDomain.Binder
 }

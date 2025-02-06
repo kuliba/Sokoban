@@ -78,6 +78,12 @@ private extension RootBinderView {
         case let .makeStandardPaymentFailure(binder):
             rootViewFactory.components.serviceCategoryFailureView(binder: binder)
             
+        case let .openProduct(openProduct):
+            rootViewFactory.components.makeOpenProductView(
+                for: openProduct,
+                dismiss: { binder.flow.event(.dismiss) }
+            )
+            
         case let .productProfile(profile):
             productProfileView(profile)
             
@@ -203,6 +209,9 @@ extension RootViewNavigation {
                 return nil
             }
             
+        case let .openProduct(openProduct):
+            return .openProduct(openProduct)
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(productId):
@@ -229,6 +238,7 @@ extension RootViewNavigation {
     enum Destination {
         
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
+        case openProduct(OpenProduct)
         case productProfile(ProductProfileViewModel)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case templates(TemplatesNode)
@@ -243,7 +253,7 @@ extension RootViewNavigation {
         case .failure:
             return nil
             
-        case .outside:
+        case .openProduct, .outside:
             return nil
             
         case let .scanQR(node):
@@ -269,6 +279,15 @@ extension RootViewNavigation.Destination: Identifiable {
         case .makeStandardPaymentFailure:
             return .makeStandardPaymentFailure
             
+        case let .openProduct(openProduct):
+            switch openProduct {
+            case let .card(openCard):
+                return .openProduct(.card(.init(openCard)))
+                
+            case .unknown:
+                return .openProduct(.unknown)
+            }
+            
         case let .productProfile(profile):
             return .productProfile(.init(profile))
             
@@ -286,10 +305,17 @@ extension RootViewNavigation.Destination: Identifiable {
     enum ID: Hashable {
         
         case makeStandardPaymentFailure
+        case openProduct(OpenProductID)
         case productProfile(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
         case userAccount(ObjectIdentifier)
+        
+        enum OpenProductID: Hashable {
+            
+            case card(ObjectIdentifier)
+            case unknown
+        }
     }
 }
 

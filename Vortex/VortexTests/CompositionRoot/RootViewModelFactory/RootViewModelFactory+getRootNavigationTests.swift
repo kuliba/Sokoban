@@ -241,6 +241,15 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
                 return .failure(.makeProductProfileFailure(productID))
             }
             
+        case let .openProduct(openProduct):
+            switch openProduct {
+            case .card:
+                return .openProduct(.card)
+            
+            case .unknown:
+                return .openProduct(.card)
+            }
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(profile):
@@ -268,6 +277,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         case failure(Failure)
         case outside(EquatableRootViewOutside)
+        case openProduct(OpenProduct)
         case scanQR
         case standardPayment
         case templates
@@ -279,6 +289,11 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             case makeStandardPaymentFailure(ObjectIdentifier)
             case makeUserAccountFailure
             case missingCategoryOfType(ServiceCategory.CategoryType)
+        }
+        
+        enum OpenProduct: Equatable {
+            
+            case card, unknown
         }
         
         enum EquatableRootViewOutside: Equatable {
