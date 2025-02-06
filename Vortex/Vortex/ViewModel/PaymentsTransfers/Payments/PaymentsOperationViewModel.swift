@@ -122,22 +122,6 @@ class PaymentsOperationViewModel: ObservableObject {
                     case .step(let operation):
                         self.operation.value = operation
                         
-                    case .confirm(let operation):
-                        
-                        let closeAction: () -> Void = operation.service == .abroad
-                            ? closeAction
-                            : { [weak self] in self?.link = nil }
-                        
-                        let confirmViewModel = PaymentsConfirmViewModel(
-                            operation: operation,
-                            model: model,
-                            closeAction: closeAction
-                        )
-                        confirmViewModel.rootActions = rootActions
-                        bind(confirmViewModel: confirmViewModel)
-                        link = .confirm(confirmViewModel)
-                        
-                        // complete and failed handled on PaymentsViewModel side
                     default:
                         break
                     }
