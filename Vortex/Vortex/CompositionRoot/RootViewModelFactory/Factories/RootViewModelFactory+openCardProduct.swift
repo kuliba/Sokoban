@@ -99,10 +99,9 @@ extension RootViewModelFactory {
         dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenCardDomain.LoadResult) -> Void
     ) {
-        let service = nanoServiceComposer.compose(
+        let _service = nanoServiceComposer.compose(
             makeRequest: RequestFactory.createGetCardOrderFormRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
-
         )
         
         let service: (@escaping (OpenCardDomain.LoadResult) -> Void) -> Void = { [weak self] completion in

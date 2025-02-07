@@ -18,11 +18,12 @@ extension Services {
         enum PathPrefix {
             
             case binding
-            case dict
             case collateralLoanLanding
-            case savingsAccount
+            case dict
+            case pages
             case processing(Processing)
             case rest
+            case savingsAccount
             case transfer
             
             var path: String {
@@ -36,6 +37,9 @@ extension Services {
 
                 case .collateralLoanLanding:
                     return "rest/v1/pages/collateral"
+                    
+                case .pages:
+                    return "pages/order-card"
                     
                 case .savingsAccount:
                     return "rest/pages/savings"
@@ -89,6 +93,7 @@ extension Services {
             case getBankDefault
             case getBannerCatalogList
             case getC2BSub
+            case getCardOrderForm
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
@@ -234,10 +239,17 @@ extension Services.Endpoint {
         serviceName: .createFastPaymentContract
     )
     
+    
     static let createLandingRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getCardOrderForm: Self = .init(
+        pathPrefix: .pages,
+        version: .v2,
+        serviceName: .getCardOrderForm
     )
     
     static let getSavingLandingRequest: Self = .init(

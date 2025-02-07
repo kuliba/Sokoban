@@ -11,15 +11,13 @@ import RemoteServices
 
 extension RequestFactory {
     
-    static func createBlockCardRequest(
-        payload: Payloads.
-    ) throws -> URLRequest {
+    static func createGetCardOrderFormRequest() throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.getCard
+        let endpoint = Services.Endpoint.getCardOrderForm
         let endpointURL = try! endpoint.url(withBase: base)
         
-        var request = try RemoteServices.RequestFactory.createGetCardOrderFormRequest(url: endpointURL, payload: payload)
+        var request = try RemoteServices.RequestFactory.createGetCardOrderFormRequest(url: endpointURL)
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
     }
