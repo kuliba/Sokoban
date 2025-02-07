@@ -8805,11 +8805,11 @@
 				2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iVortex.swift */,
 				2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iVortex.swift */,
 				2A3624762C5E6BCA00174C50 /* SegmentedPaymentProviderPickerViewConfig+iVortex.swift */,
+				2A234FC52D47AE9400EE97BF /* SplashScreenStaticConfig+prod.swift */,
 				2ABB63112C640B6300541DE7 /* TextInputConfig+iVortex.swift */,
 				2A6679DE2C58ACF3003ACA31 /* TransactionCompleteViewConfig+iVortex.swift */,
 				2A5B48462CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift */,
 				830207422D37E45E0038EFA4 /* SavingsAccount */,
-				2A234FC52D47AE9400EE97BF /* SplashScreenStaticConfig+prod.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";

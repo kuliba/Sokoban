@@ -47,7 +47,7 @@ public struct SplashScreenView: View {
                                 
                 splash.data.message.map {
                     
-                    $0.text(withConfig: splash.config.message)
+                    $0.text(withConfig: splash.config.message, alignment: .center)
                 }
                 
                 Spacer()
