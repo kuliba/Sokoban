@@ -653,6 +653,13 @@
         "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests",
         "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetCardOrderFormServiceTests",
+        "name" : "GetCardOrderFormServiceTests"
+      }
     }
   ],
   "version" : 1

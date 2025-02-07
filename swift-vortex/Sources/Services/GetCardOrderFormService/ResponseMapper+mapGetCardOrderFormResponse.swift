@@ -73,7 +73,10 @@ private extension ResponseMapper.GetCardOrderFormData.Currency {
     
     init(_ data: ResponseMapper._Data._Currency) {
         
-        self.init(code: data.code ?? 0, symbol: data.symbol ?? "")
+        self.init(
+            code: data.code ?? 0,
+            symbol: data.symbol ?? ""
+        )
     }
 }
 
@@ -81,7 +84,15 @@ private extension ResponseMapper.GetCardOrderFormData.Fee {
     
     init(_ data: ResponseMapper._Data._Fee) {
         
-        self.init(open: data.open ?? 0, maintenance: .init(data.maintenance ?? .init(period: nil, value: nil)))
+        self.init(
+            maintenance: .init(
+                data.maintenance ?? .init(
+                    period: nil,
+                    value: nil
+                )
+            ),
+            open: data.open ?? 0
+        )
     }
 }
 
