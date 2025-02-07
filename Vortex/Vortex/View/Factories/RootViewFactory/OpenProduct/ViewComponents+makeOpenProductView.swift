@@ -17,7 +17,7 @@ extension ViewComponents {
         
         switch openProduct {
         case let .card(openCard):
-            makeOpenCardProductView(openCard, dismiss: dismiss)
+            makeOpenCardProductView(openCard.model, dismiss: dismiss)
                 .navigationBarWithBack(
                     title: "Заказать карту",
                     dismiss: dismiss

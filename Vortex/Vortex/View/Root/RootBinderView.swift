@@ -139,6 +139,12 @@ private extension RootBinderView {
     ) -> some View {
         
         switch fullScreenCover {
+        case let .orderCardResult(orderCardResult):
+            Button(String(describing: orderCardResult)) {
+                
+                binder.flow.event(.dismiss)
+            }
+            
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
         }
@@ -212,6 +218,9 @@ extension RootViewNavigation {
         case let .openProduct(openProduct):
             return .openProduct(openProduct)
             
+        case .orderCardResult:
+            return nil
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(productId):
@@ -256,6 +265,9 @@ extension RootViewNavigation {
         case .openProduct, .outside:
             return nil
             
+        case let .orderCardResult(orderCardResult):
+               return .orderCardResult(orderCardResult)
+            
         case let .scanQR(node):
             return .scanQR(node.model)
             
@@ -267,6 +279,7 @@ extension RootViewNavigation {
     
     enum FullScreenCover {
         
+        case orderCardResult(OpenCardDomain.OrderCardResult)
         case scanQR(QRScannerDomain.Binder)
     }
 }
@@ -282,7 +295,7 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .openProduct(openProduct):
             switch openProduct {
             case let .card(openCard):
-                return .openProduct(.card(.init(openCard)))
+                return .openProduct(.card(.init(openCard.model)))
                 
             case .unknown:
                 return .openProduct(.unknown)
@@ -324,6 +337,9 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     var id: ID {
         
         switch self {
+        case .orderCardResult:
+            return .orderCardResult
+            
         case let .scanQR(qrRScanner):
             return .scanQR(.init(qrRScanner))
         }
@@ -331,6 +347,7 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     
     enum ID: Hashable {
         
+        case orderCardResult
         case scanQR(ObjectIdentifier)
     }
 }

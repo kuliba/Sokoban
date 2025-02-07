@@ -78,6 +78,7 @@ enum OrderCard { // TODO: replace stub with types from module
         var isLoading: Bool = false
         var otp: String?
         var result: LoadResult<Confirmation>?
+        var orderCardResult: OrderCardResult?
     }
     
     struct Form<Confirmation> {
@@ -217,7 +218,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 }
                 
             case let .orderCardResult(orderCardResult):
-#warning("UNIMPLEMENTED")
+                state.orderCardResult = orderCardResult
                 
             case let .otp(otp):
                 if case let .success(form) = state.result,
@@ -298,7 +299,8 @@ enum OrderCard { // TODO: replace stub with types from module
 
 extension OrderCard.State {
     
-    var canContinue: Bool { !isValid || isLoading }
+    // TODO: FIXME!!!
+   // var canContinue: Bool { isValid || !isLoading }
     var isValid: Bool { payload != nil }
     
     var payload: OrderCard.OrderCardPayload? {

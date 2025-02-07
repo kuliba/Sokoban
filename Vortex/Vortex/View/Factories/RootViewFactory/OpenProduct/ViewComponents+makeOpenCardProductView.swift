@@ -83,7 +83,7 @@ extension ViewComponents {
                         }
                         .buttonStyle(.borderedProminent)
                     }
-                    .disabled(state.canContinue)
+                  //  .disabled(!state.canContinue) // TODO: FIXME!!!
                 }
             }
         }

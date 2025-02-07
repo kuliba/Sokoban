@@ -14,18 +14,24 @@ extension RootViewModelFactory {
     
     @inlinable
     func openCardProduct(
-        notify: @escaping () -> Void
+        notify: @escaping (OpenCardDomain.OrderCardResult) -> Void
     ) -> OpenProduct.OpenCard {
         
         let content: OpenCardDomain.Content = makeContent()
         content.event(.load)
         
-        return composeBinder(
+        let cancellable = content.$state
+            .compactMap(\.orderCardResult)
+            .sink { notify($0) }
+        
+        let binder = composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: witnesses()
         )
+        
+        return .init(model: binder, cancellable: cancellable)
     }
     
     // MARK: - Content
