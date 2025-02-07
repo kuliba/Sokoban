@@ -25,6 +25,7 @@ extension Services {
             case rest
             case savingsAccount
             case transfer
+            case verify
             
             var path: String {
                 
@@ -52,6 +53,9 @@ extension Services {
                     
                 case .transfer:
                     return "rest/transfer"
+                
+                case .verify:
+                    return "verify"
                 }
             }
             

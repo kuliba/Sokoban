@@ -133,11 +133,11 @@ extension RootViewModelFactory {
         notify: @escaping OpenCardDomain.ConfirmationNotify,
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
-#warning("/verify/getVerificationCode")
-        //        let service = nanoServiceComposer.compose(
-        //            makeRequest: RequestFactory.createGetVerificationCodeVerifyRequest,
-        //            mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeVerifyResponse
-        //        )
+
+        let verifyService = nanoServiceComposer.compose(
+            makeRequest: RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeResponse
+        )
         
         let otp = makeOTPModel(
             resend: {
