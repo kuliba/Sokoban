@@ -54,6 +54,14 @@ extension ViewComponents {
                         
                         Text("TBD: openCard Form without confirmation")
                         
+                        Toggle(
+                            "SMS/Push Expanded",
+                            isOn: .init(
+                                get: { state.form?.messages.isOn ?? false },
+                                set: { event(.setMessages($0)) }
+                            )
+                        )
+                        
                         Spacer()
                         
                         continueButton(isLoading: state.isLoading) {
@@ -73,16 +81,31 @@ extension ViewComponents {
                         
                         Text("TBD: openCard Form with confirmation")
                         
-                        makeOTPView(viewModel: confirmation.otp)
-                        
                         Toggle(
-                            "Consent", 
+                            "SMS/Push Expanded",
                             isOn: .init(
-                                get: { state.consent },
-                                set: { event(.setConsent($0)) }
+                                get: { state.form?.messages.isOn ?? false },
+                                set: { event(.setMessages($0)) }
                             )
                         )
-                                                
+                        
+                        makeOTPView(viewModel: confirmation.otp)
+                        
+                        HStack {
+                            
+                            PaymentsCheckView.CheckBoxView(
+                                isChecked: state.consent,
+                                activeColor: .systemColorActive
+                            )
+                            
+                            Text("Consent")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(.textPlaceholder)
+                        }
+                        .onTapGesture { event(.setConsent(!state.consent)) }
+                        .animation(.easeInOut, value: state.consent)
+                        
                         Spacer()
                         
                         Text(String(describing: state.payload))

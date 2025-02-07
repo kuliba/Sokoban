@@ -121,15 +121,10 @@ enum OrderCard { // TODO: replace stub with types from module
         case load
         case loaded(LoadResult<Confirmation>)
         case loadConfirmation(LoadConfirmationResult<Confirmation>)
-        case messages(MessagesEvent)
+        case setMessages(Bool)
         case orderCardResult(OrderCardResult)
         case otp(String)
         case setConsent(Bool)
-        
-        public enum MessagesEvent: Equatable {
-            
-            case toggle
-        }
     }
     
     enum Effect: Equatable {
@@ -211,10 +206,10 @@ enum OrderCard { // TODO: replace stub with types from module
                 state.isLoading = false
                 state.result = result
                 
-            case .messages(.toggle):
+            case let .setMessages(isOn):
                 switch (state.result, state.isLoading) {
                 case var (.success(form), false):
-                    form.messages.isOn.toggle()
+                    form.messages.isOn = isOn
                     state.result = .success(form)
                     
                 default: break
@@ -308,6 +303,26 @@ enum OrderCard { // TODO: replace stub with types from module
 }
 
 extension OrderCard.State {
+    
+    var form: OrderCard.Form<Confirmation>? {
+        
+        get {
+            
+            guard case let .success(form) = result
+            else { return nil }
+            
+            return form
+        }
+        
+        set(newValue) {
+            
+            guard let newValue,
+                  case let .success(form) = result
+            else { return }
+            
+            result = .success(newValue)
+        }
+    }
     
     var isValid: Bool { payload != nil }
     
