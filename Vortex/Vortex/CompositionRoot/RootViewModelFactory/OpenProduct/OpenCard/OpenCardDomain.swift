@@ -78,7 +78,6 @@ enum OrderCard { // TODO: replace stub with types from module
         var isLoading: Bool = false
 #warning("move into form")
         var otp: String?
-        var consent = true
         var orderCardResult: OrderCardResult?
         var result: LoadResult<Confirmation>?
     }
@@ -86,6 +85,7 @@ enum OrderCard { // TODO: replace stub with types from module
     struct Form<Confirmation> {
         
         var confirmation: LoadConfirmationResult<Confirmation>?
+        var consent = true
         let product: Int // Product
         let type: String //ProductType
         var messages: Messages
@@ -134,7 +134,11 @@ enum OrderCard { // TODO: replace stub with types from module
         case orderCard(OrderCardPayload)
     }
     
-    struct OrderCardPayload: Equatable {}
+    struct OrderCardPayload: Equatable {
+        
+        let smsInfo: Bool
+        let verificationCode: String
+    }
     
     typealias OrderCardResult = Bool // TODO: improve associated value
     
@@ -184,7 +188,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 
             case let .setConsent(consent):
                 if case .success = state.form?.confirmation {
-                    state.consent = consent
+                    state.form?.consent = consent
                 }
             }
             
@@ -306,6 +310,8 @@ private extension OrderCard.Reducer {
 
 extension OrderCard.State {
     
+    var consent: Bool { form?.consent ?? false }
+    
     var form: OrderCard.Form<Confirmation>? {
         
         get {
@@ -330,10 +336,14 @@ extension OrderCard.State {
     
     var payload: OrderCard.OrderCardPayload? {
         
-        guard otp?.count == 6,
-              consent
+        guard let otp,
+              otp.count == 6,
+              form?.consent == true
         else { return nil }
         
-        return .init()
+        return .init(
+            smsInfo: form?.messages.isOn ?? false, 
+            verificationCode: otp
+        )
     }
 }
