@@ -4491,6 +4491,7 @@
 		2A4D9AD52CF1C6C40092908E /* TemplatesAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesAcceptanceTests.swift; sourceTree = "<group>"; };
 		2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponentTests.swift; sourceTree = "<group>"; };
 		2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAmountViewViewModelTests.swift; sourceTree = "<group>"; };
+		2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetCardOrderFormService.xctestplan; sourceTree = "<group>"; };
 		2A5190332A7E108A0014B0B7 /* RequestFactory+makeSecretRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeSecretRequest.swift"; sourceTree = "<group>"; };
 		2A5190352A7E10AC0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeBindPublicKeyWithEventIDRequest.swift"; sourceTree = "<group>"; };
 		2A5190382A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeSecretRequestTests.swift"; sourceTree = "<group>"; };
@@ -10314,6 +10315,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
 				A72955C22D304A3A0076A5F3 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan */,
 				2A9EA5D72D26A50100DEC45C /* FlowCore.xctestplan */,
 				834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */,
