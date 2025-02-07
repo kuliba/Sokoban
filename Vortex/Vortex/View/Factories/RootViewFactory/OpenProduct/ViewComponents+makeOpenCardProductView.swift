@@ -50,10 +50,23 @@ extension ViewComponents {
             case let .success(form):
                 switch form.confirmation {
                 case .none:
-                    Text("TBD: openCard Form without confirmation")
+                    VStack {
+                        
+                        Text("TBD: openCard Form without confirmation")
+                     
+                        Spacer()
+                        
+                        Button("Continue") {
+                            
+                            content.event(.continue)
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .disabled(state.isLoading)
                     
                 case .failure:
                     Text("TBD: openCard Form with confirmation failure")
+                        .foregroundStyle(.red)
                     
                 case let .success(confirmation):
                     VStack {
@@ -61,7 +74,16 @@ extension ViewComponents {
                         Text("TBD: openCard Form with confirmation")
                         
                         makeOTPView(viewModel: confirmation.otp)
+                        
+                        Spacer()
+                        
+                        Button("Continue") {
+                            
+                            content.event(.continue)
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
+                    .disabled(state.canContinue)
                 }
             }
         }

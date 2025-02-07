@@ -7,6 +7,7 @@
 
 import Combine
 // import OpenCardBackend
+import OTPInputComponent
 import RemoteServices
 
 extension RootViewModelFactory {
@@ -98,9 +99,9 @@ extension RootViewModelFactory {
         //        )
         let service: (@escaping (OpenCardDomain.LoadResult) -> Void) -> Void = { [weak self] completion in
             
-            self?.schedulers.background.delay(for: .seconds(2)) {
+            self?.schedulers.background.delay(for: .seconds(1)) {
                 
-                completion(.failure(.init(message: "Что-то пошло не так.\nПопробуйте позже.", type: .informer)))
+                completion(.success(.init(product: 1, type: "", messages: .init(description: "", icon: "", subtitle: "", title: "", isOn: false))))
             }
         }
         
@@ -122,30 +123,65 @@ extension RootViewModelFactory {
     
     @inlinable
     func loadConfirmation(
+        notify: @escaping OpenCardDomain.ConfirmationNotify,
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
-        //        #warning("/verify/getVerificationCode")
+                #warning("/verify/getVerificationCode")
         //        let service = nanoServiceComposer.compose(
         //            makeRequest: RequestFactory.createGetVerificationCodeVerifyRequest,
         //            mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeVerifyResponse
         //        )
         
+        let otp = makeOTPModel(
+            resend: {
+                #warning("FIXME")
+            },
+            observe: { notify(.otp($0)) }
+        )
+        let consent = OpenCardDomain.Confirmation.Consent(check: true)
+        
         let service: (@escaping (OpenCardDomain.LoadConfirmationResult) -> Void) -> Void = { [weak self] completion in
             
             self?.schedulers.background.delay(for: .seconds(2)) {
                 
-                completion(.failure(.init(message: "Server failure", type: .alert)))
+                completion(.success(.init(otp: otp, consent: consent)))
             }
         }
         
-        schedulers.background.schedule {
+        schedulers.background.schedule { [weak self] in
             
             service { [service] in
+                
+                if case let .failure(failure) = $0,
+                   case .informer = failure.type {
+                    
+                    self?.schedulers.background.delay(for: .seconds(2)) {
+                        
+                        notify(.dismissInformer)
+                    }
+                }
                 
                 completion($0)
                 _ = service
             }
         }
+    }
+    
+    @inlinable
+    func makeOTPModel(
+        timerDuration: Int = 60,
+        otpLength: Int = 6,
+        resend: @escaping () -> Void,
+        observe: @escaping (String) -> Void
+    ) -> TimedOTPInputViewModel {
+        
+        return .init(
+            otpText: "",
+            timerDuration: timerDuration,
+            otpLength: otpLength,
+            resend: resend,
+            observe: observe
+        )
     }
     
     @inlinable

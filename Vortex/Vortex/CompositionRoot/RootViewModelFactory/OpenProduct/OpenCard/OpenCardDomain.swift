@@ -29,6 +29,8 @@ enum OpenCardDomain {
     typealias Reducer = OrderCard.Reducer<Confirmation>
     typealias EffectHandler = OrderCard.EffectHandler<Confirmation>
     
+    typealias ConfirmationNotify = EffectHandler.ConfirmationNotify
+    
     // MARK: - Flow
     
     typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
@@ -74,6 +76,7 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
+        var otp: String?
         var result: LoadResult<Confirmation>?
     }
     
@@ -117,6 +120,7 @@ enum OrderCard { // TODO: replace stub with types from module
         case loadConfirmation(LoadConfirmationResult<Confirmation>)
         case messages(MessagesEvent)
         case orderCardResult(OrderCardResult)
+        case otp(String)
         
         public enum MessagesEvent: Equatable {
             
@@ -160,11 +164,10 @@ enum OrderCard { // TODO: replace stub with types from module
                         effect = .loadConfirmation
                         
                     case .some:
-                        // TODO: verify otp by creating `OrderCardPayload` (should have failable init)
-                        if let payload: OrderCardPayload? = OrderCardPayload() {
-                         
+                        if let payload = state.payload {
+                            
                             state.isLoading = true
-                            effect = payload.map { .orderCard($0) }
+                            effect = .orderCard(payload)
                         }
                     }
                 }
@@ -174,6 +177,14 @@ enum OrderCard { // TODO: replace stub with types from module
                    case .informer = failure.type {
                     
                     state.result = nil
+                }
+                
+                if case var .success(form) = state.result,
+                   case let .failure(failure) = form.confirmation,
+                   case .informer = failure.type {
+                    
+                    form.confirmation = nil
+                    state.result = .success(form)
                 }
                 
             case .load:
@@ -187,7 +198,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 case (.none, _), (.failure, _):
                     break // impossible cases
                     
-                case var (.success(form), confirmation):
+                case (var .success(form), let confirmation):
                     form.confirmation = confirmation
                     state.result = .success(form)
                 }
@@ -207,6 +218,13 @@ enum OrderCard { // TODO: replace stub with types from module
                 
             case let .orderCardResult(orderCardResult):
 #warning("UNIMPLEMENTED")
+                
+            case let .otp(otp):
+                if case let .success(form) = state.result,
+                   case .success = form.confirmation {
+                    
+                    state.otp = otp
+                }
             }
             
             return (state, effect)
@@ -232,8 +250,18 @@ enum OrderCard { // TODO: replace stub with types from module
             self.orderCard = orderCard
         }
         
-        typealias Load = (@escaping () -> Void, @escaping (LoadResult<Confirmation>) -> Void) -> Void
-        typealias LoadConfirmation = (@escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
+        typealias DismissInformer = () -> Void
+        typealias Load = (@escaping DismissInformer, @escaping (LoadResult<Confirmation>) -> Void) -> Void
+        
+        enum ConfirmationEvent {
+            
+            case dismissInformer
+            case otp(String)
+        }
+        
+        typealias ConfirmationNotify = (ConfirmationEvent) -> Void
+        typealias LoadConfirmation = (@escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
+        
         typealias OrderCard = (OrderCardPayload, @escaping (OrderCardResult) -> Void) -> Void
         
         func handleEffect(
@@ -245,7 +273,18 @@ enum OrderCard { // TODO: replace stub with types from module
                 load({ dispatch(.dismissInformer) }) { dispatch(.loaded($0)) }
                 
             case .loadConfirmation:
-                loadConfirmation { dispatch(.loadConfirmation($0)) }
+                
+                let confirmationNotify: ConfirmationNotify = {
+                    
+                    switch $0 {
+                    case .dismissInformer:
+                        dispatch(.dismissInformer)
+                        
+                    case let .otp(otp):
+                        dispatch(.otp(otp))
+                    }
+                }
+                loadConfirmation(confirmationNotify) { dispatch(.loadConfirmation($0)) }
                 
             case let .orderCard(payload):
                 orderCard(payload) { dispatch(.orderCardResult($0)) }
@@ -254,5 +293,18 @@ enum OrderCard { // TODO: replace stub with types from module
         
         typealias Dispatch = (Event) -> Void
         typealias Event = Vortex.OrderCard.Event<Confirmation>
+    }
+}
+
+extension OrderCard.State {
+    
+    var canContinue: Bool { !isValid || isLoading }
+    var isValid: Bool { payload != nil }
+    
+    var payload: OrderCard.OrderCardPayload? {
+        
+        guard otp?.count == 6 else { return nil }
+        
+        return .init()
     }
 }
