@@ -76,19 +76,18 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
-#warning("move into form")
-        var otp: String?
         var orderCardResult: OrderCardResult?
         var result: LoadResult<Confirmation>?
     }
     
     struct Form<Confirmation> {
         
-        var confirmation: LoadConfirmationResult<Confirmation>?
-        var consent = true
         let product: Int // Product
         let type: String //ProductType
+        var confirmation: LoadConfirmationResult<Confirmation>?
+        var consent = true
         var messages: Messages
+        var otp: String?
         
         struct Messages: Equatable {
             
@@ -182,12 +181,12 @@ enum OrderCard { // TODO: replace stub with types from module
                 state.orderCardResult = orderCardResult
                 
             case let .otp(otp):
-                if case .success = state.form?.confirmation {
-                    state.otp = otp
+                if !state.isLoading && state.hasConfirmation {
+                    state.form?.otp = otp
                 }
                 
             case let .setConsent(consent):
-                if case .success = state.form?.confirmation {
+                if !state.isLoading && state.hasConfirmation {
                     state.form?.consent = consent
                 }
             }
@@ -268,22 +267,18 @@ private extension OrderCard.Reducer {
         _ state: inout State,
         _ effect: inout Effect?
     ) {
-        switch state.result {
-        case .none, .failure:
-            break
+        guard let form = state.form else { return }
+        
+        switch form.confirmation {
+        case .none:
+            state.isLoading = true
+            effect = .loadConfirmation
             
-        case let .success(form):
-            switch form.confirmation {
-            case .none:
-                state.isLoading = true
-                effect = .loadConfirmation
+        case .some:
+            if let payload = state.payload {
                 
-            case .some:
-                if let payload = state.payload {
-                    
-                    state.isLoading = true
-                    effect = .orderCard(payload)
-                }
+                state.isLoading = true
+                effect = .orderCard(payload)
             }
         }
     }
@@ -298,12 +293,10 @@ private extension OrderCard.Reducer {
             state.result = nil
         }
         
-        if case var .success(form) = state.result,
-           case let .failure(failure) = form.confirmation,
+        if case let .failure(failure) = state.form?.confirmation,
            case .informer = failure.type {
             
-            form.confirmation = nil
-            state.result = .success(form)
+            state.form?.confirmation = nil
         }
     }
 }
@@ -324,11 +317,19 @@ extension OrderCard.State {
         
         set(newValue) {
             
-            guard let newValue,
-                  case let .success(form) = result
+            guard let newValue, case .success = result
             else { return }
             
             result = .success(newValue)
+        }
+    }
+    
+    var hasConfirmation: Bool {
+        
+        if case .success = form?.confirmation {
+            return true
+        } else {
+            return false
         }
     }
     
@@ -336,13 +337,13 @@ extension OrderCard.State {
     
     var payload: OrderCard.OrderCardPayload? {
         
-        guard let otp,
+        guard let otp = form?.otp,
               otp.count == 6,
               form?.consent == true
         else { return nil }
         
         return .init(
-            smsInfo: form?.messages.isOn ?? false, 
+            smsInfo: form?.messages.isOn ?? false,
             verificationCode: otp
         )
     }
