@@ -166,7 +166,6 @@ extension RootViewModelFactory {
                 
         getVerificationCode(()) { [getVerificationCode] in
             
-            // TODO: Реализовать показ ошибок согласно дизайна
             completion($0.map(\.resendOTPCount).mapError { .init(message: $0.localizedDescription) })
             _ = getVerificationCode
         }
@@ -239,7 +238,7 @@ extension RootViewModelFactory {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
+private extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
     
     init(
         error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
@@ -310,16 +309,6 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             cityName: cityName,
             status: status,
             responseMessage: responseMessage
-        )
-    }
-}
-
-extension RemoteServices.ResponseMapper.CreateDraftCollateralLoanApplicationData {
-    
-    func submitResult(_ applicationID: UInt) -> CollateralLandingApplicationCreateDraftResult {
-        
-        .init(
-            applicationID: applicationID
         )
     }
 }

@@ -7,7 +7,6 @@
 
 extension PaymentCompleteView.Config {
     
-    // TODO: Need to customize
     static let collateralLoanLanding: Self = .init(
         statuses: .init(
             completed: .init(
