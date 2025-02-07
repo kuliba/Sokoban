@@ -240,11 +240,3 @@ extension PaymentTemplateData {
          .first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpPhone.rawValue })?.fieldvalue
     }
 }
-
-extension String  {
-    
-    var isStandardFlow: Bool {
-        
-        return self == "STANDARD_FLOW"
-    }
-}
