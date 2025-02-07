@@ -43,64 +43,91 @@ private extension ResponseMapper.GetCardOrderFormData {
         
         guard
             let conditionsLink = data.conditionsLink,
-            let currency = data.currency,
-            let description = data.description,
-            let design = data.design,
-            let fee = data.fee,
-            let hint = data.hint,
-            let income = data.income,
-            let productId = data.id,
             let tariffLink = data.tariffLink,
-            let title = data.title
+            let list = data.list?.compactMap({ Item($0) })
         else { return nil }
         
         self.init(
             conditionsLink: conditionsLink,
-            currency: .init(currency),
+            tariffLink: tariffLink,
+            list: list
+        )
+    }
+}
+
+
+private extension ResponseMapper.GetCardOrderFormData.Item {
+    
+    init?(_ data: ResponseMapper._Data._Product._Item) {
+        
+        guard
+            let type = data.type,
+            let typeText = data.typeText,
+            let id = data.id,
+            let title = data.title,
+            let description = data.description,
+            let design = data.design,
+            let currency = data.currency.flatMap(Currency.init),
+            let fee = data.fee.flatMap(Fee.init)
+        else { return nil }
+        
+        self.init(
+            type: type,
+            typeText: typeText,
+            id: id,
+            title: title,
             description: description,
             design: design,
-            fee: .init(fee),
-            hint: hint,
-            income: income,
-            productId: productId,
-            tariffLink: tariffLink,
-            title: title
+            currency: currency,
+            fee: fee
         )
     }
 }
 
-private extension ResponseMapper.GetCardOrderFormData.Currency {
+private extension ResponseMapper.GetCardOrderFormData.Item.Currency {
     
-    init(_ data: ResponseMapper._Data._Currency) {
+    init?(_ data: ResponseMapper._Data._Product._Item._Currency) {
+        
+        guard let code = data.code,
+              let symbol = data.symbol
+        else { return nil }
         
         self.init(
-            code: data.code ?? 0,
-            symbol: data.symbol ?? ""
+            code: code,
+            symbol: symbol
         )
     }
 }
 
-private extension ResponseMapper.GetCardOrderFormData.Fee {
+private extension ResponseMapper.GetCardOrderFormData.Item.Fee {
     
-    init(_ data: ResponseMapper._Data._Fee) {
+    init?(_ data: ResponseMapper._Data._Product._Item._Fee) {
+        
+        guard
+            let maintenance = data.maintenance.flatMap(Maintenance.init),
+            let open = data.open
+        else { return nil }
         
         self.init(
-            maintenance: .init(
-                data.maintenance ?? .init(
-                    period: nil,
-                    value: nil
-                )
-            ),
-            open: data.open ?? 0
+            maintenance: maintenance,
+            open: open
         )
     }
 }
 
-private extension ResponseMapper.GetCardOrderFormData.Maintenance {
+private extension ResponseMapper.GetCardOrderFormData.Item.Fee.Maintenance {
     
-    init(_ data: ResponseMapper._Data._Maintenance) {
+    init?(_ data: ResponseMapper._Data._Product._Item._Fee._Maintenance) {
         
-        self.init(period: data.period ?? "", value: data.value ?? 0)
+        guard
+            let period = data.period,
+            let value = data.value
+        else { return nil }
+        
+        self.init(
+            period: period,
+            value: value
+        )
     }
 }
 
@@ -114,33 +141,38 @@ private extension ResponseMapper {
         struct _Product: Decodable {
             
             let conditionsLink: String?
-            let currency: _Currency?
-            let description: String?
-            let design: String?
-            let fee: _Fee?
-            let id: Int?
-            let income: String?
             let tariffLink: String?
-            let title: String?
-           let hint: String?
-        }
-        
-        struct _Currency: Decodable {
+            let list: [_Item]?
             
-            let code: Int?
-            let symbol: String?
-        }
-        
-        struct _Fee: Decodable {
-            
-            let maintenance: _Maintenance?
-            let open: Int?
-        }
-        
-        struct _Maintenance: Decodable {
-            
-            let period: String?
-            let value: Int?
+            struct _Item: Decodable {
+                
+                let type: String?
+                let typeText: String?
+                let id: String?
+                let title: String?
+                let description: String?
+                let design: String?
+                let currency: _Currency?
+                let fee: _Fee?
+                
+                struct _Currency: Decodable {
+                    
+                    let code: String?
+                    let symbol: String?
+                }
+                
+                struct _Fee: Decodable {
+                    
+                    let maintenance: _Maintenance?
+                    let open: String?
+                    
+                    struct _Maintenance: Decodable {
+                        
+                        let period: String?
+                        let value: Int?
+                    }
+                }
+            }
         }
     }
 }

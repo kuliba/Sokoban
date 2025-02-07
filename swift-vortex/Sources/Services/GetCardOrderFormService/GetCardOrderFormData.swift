@@ -17,79 +17,90 @@ extension ResponseMapper {
     public struct GetCardOrderFormData: Equatable {
         
         public let conditionsLink: String
-        public let currency: Currency
-        public let description: String
-        public let design: String
-        public let fee: Fee
-        public let hint: String
-        public let income: String
-        public let productId: Int
         public let tariffLink: String
-        public let title: String
+        public let list: [Item]
         
         public init(
             conditionsLink: String,
-            currency: Currency,
-            description: String,
-            design: String,
-            fee: Fee,
-            hint: String,
-            income: String,
-            productId: Int,
             tariffLink: String,
-            title: String
+            list: [Item]
         ) {
             self.conditionsLink = conditionsLink
-            self.currency = currency
-            self.description = description
-            self.design = design
-            self.fee = fee
-            self.hint = hint
-            self.income = income
-            self.productId = productId
             self.tariffLink = tariffLink
-            self.title = title
+            self.list = list
         }
         
-        public struct Currency: Equatable {
+        public struct Item: Equatable {
             
-            public let symbol: String
-            public let code: Int
+            public let type: String
+            public let typeText: String
+            public let id: String
+            public let title: String
+            public let description: String
+            public let design: String
+            public let currency: Currency
+            public let fee: Fee
             
             public init(
-                code: Int,
-                symbol: String
+                type: String,
+                typeText: String,
+                id: String,
+                title: String,
+                description: String,
+                design: String,
+                currency: Currency,
+                fee: Fee
             ) {
-                self.code = code
-                self.symbol = symbol
+                self.type = type
+                self.typeText = typeText
+                self.id = id
+                self.title = title
+                self.description = description
+                self.design = design
+                self.currency = currency
+                self.fee = fee
             }
-        }
-        
-        public struct Fee: Equatable {
             
-            public let maintenance: Maintenance
-            public let open: Int
-            
-            public init(
-                maintenance: Maintenance,
-                open: Int
-            ) {
-                self.maintenance = maintenance
-                self.open = open
+            public struct Currency: Equatable {
+                
+                public let symbol: String
+                public let code: String
+                
+                public init(
+                    code: String,
+                    symbol: String
+                ) {
+                    self.code = code
+                    self.symbol = symbol
+                }
             }
-        }
-        
-        public struct Maintenance: Equatable {
             
-            public let period: String
-            public let value: Int
-            
-            public init(
-                period: String,
-                value: Int
-            ) {
-                self.period = period
-                self.value = value
+            public struct Fee: Equatable {
+                
+                public let maintenance: Maintenance
+                public let open: String
+                
+                public init(
+                    maintenance: Maintenance,
+                    open: String
+                ) {
+                    self.maintenance = maintenance
+                    self.open = open
+                }
+                
+                public struct Maintenance: Equatable {
+                    
+                    public let period: String
+                    public let value: Int
+                    
+                    public init(
+                        period: String,
+                        value: Int
+                    ) {
+                        self.period = period
+                        self.value = value
+                    }
+                }
             }
         }
     }

@@ -39,7 +39,7 @@ extension Services {
                     return "rest/v1/pages/collateral"
                     
                 case .pages:
-                    return "pages/order-card"
+                    return "rest/v2/pages/order-card"
                     
                 case .savingsAccount:
                     return "rest/pages/savings"
@@ -248,7 +248,7 @@ extension Services.Endpoint {
     
     static let getCardOrderForm: Self = .init(
         pathPrefix: .pages,
-        version: .v2,
+        version: nil,
         serviceName: .getCardOrderForm
     )
     
