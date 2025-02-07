@@ -76,9 +76,11 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
+#warning("move into form")
         var otp: String?
-        var result: LoadResult<Confirmation>?
+        var consent = true
         var orderCardResult: OrderCardResult?
+        var result: LoadResult<Confirmation>?
     }
     
     struct Form<Confirmation> {
@@ -122,6 +124,7 @@ enum OrderCard { // TODO: replace stub with types from module
         case messages(MessagesEvent)
         case orderCardResult(OrderCardResult)
         case otp(String)
+        case setConsent(Bool)
         
         public enum MessagesEvent: Equatable {
             
@@ -226,6 +229,13 @@ enum OrderCard { // TODO: replace stub with types from module
                     
                     state.otp = otp
                 }
+                
+            case let .setConsent(consent):
+                if case let .success(form) = state.result,
+                   case .success = form.confirmation {
+                    
+                    state.consent = consent
+                }
             }
             
             return (state, effect)
@@ -303,7 +313,9 @@ extension OrderCard.State {
     
     var payload: OrderCard.OrderCardPayload? {
         
-        guard otp?.count == 6 else { return nil }
+        guard otp?.count == 6,
+              consent
+        else { return nil }
         
         return .init()
     }

@@ -75,6 +75,19 @@ extension ViewComponents {
                         
                         makeOTPView(viewModel: confirmation.otp)
                         
+                        Toggle(
+                            "Consent", 
+                            isOn: .init(
+                                get: { state.consent },
+                                set: { event(.setConsent($0)) }
+                            )
+                        )
+                                                
+                        Spacer()
+                        
+                        Text(String(describing: state.payload))
+                            .foregroundStyle(.secondary)
+                        
                         Spacer()
                         
                         continueButton(isLoading: state.isLoading) {
