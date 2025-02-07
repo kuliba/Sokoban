@@ -29,6 +29,8 @@ final class FooterViewModelTests: XCTestCase {
         let initial = makeState(amount: 987)
         let (sut, textField, spy) = makeSUT(initialState: initial)
         
+        waitForMainQueue()
+        
         textField.setText(to: nil)
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
@@ -42,7 +44,10 @@ final class FooterViewModelTests: XCTestCase {
         
         let initial = makeState(amount: 987)
         let (sut, textField, _) = makeSUT(initialState: initial)
+        
+        waitForMainQueue()
         let textFieldSpy = ValueSpy(textField.$state.map(\.text))
+        waitForMainQueue()
         
         textField.setText(to: nil)
         textField.setText(to: "abc")
@@ -61,7 +66,10 @@ final class FooterViewModelTests: XCTestCase {
             initialState: initial,
             locale: .init(identifier: "en_US")
         )
+        
+        waitForMainQueue()
         let textFieldSpy = ValueSpy(textField.$state.map(\.text))
+        waitForMainQueue()
         
         textField.setText(to: nil)
         textField.setText(to: "abc")
@@ -79,7 +87,10 @@ final class FooterViewModelTests: XCTestCase {
         
         let initial = makeState(amount: 987)
         let (sut, textField, _) = makeSUT(initialState: initial)
+        
+        waitForMainQueue()
         let textFieldSpy = ValueSpy(textField.$state)
+        waitForMainQueue()
         
         textField.startEditing()
         textField.setText(to: "123")
@@ -97,7 +108,9 @@ final class FooterViewModelTests: XCTestCase {
         
         let initial = makeState(amount: 987)
         let (sut, textField, _) = makeSUT(initialState: initial)
+        waitForMainQueue()
         let textFieldSpy = ValueSpy(textField.$state)
+        waitForMainQueue()
         
         textField.startEditing()
         textField.setText(to: "123")
@@ -218,5 +231,16 @@ private extension TextFieldState {
         case let .editing(textState):
             return textState.text
         }
+    }
+}
+
+private extension FooterViewModelTests {
+    
+    func waitForMainQueue(timeout: TimeInterval = 0.1) {
+        
+        let exp = expectation(description: "Wait for main queue")
+        DispatchQueue.main.async { exp.fulfill() }
+        
+        _ = XCTWaiter().wait(for: [exp], timeout: timeout)
     }
 }
