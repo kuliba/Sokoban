@@ -10,14 +10,21 @@ import XCTest
 
 final class SplashScreenEffectHandlerTests: XCTestCase {
     
+    func test_initialState_shouldNotTriggerAnyTimers() {
+        let (_, startPhaseOneSpy, startPhaseTwoSpy) = makeSUT()
+        
+        XCTAssertEqual(startPhaseOneSpy.callCount, 0)
+        XCTAssertEqual(startPhaseTwoSpy.callCount, 0)
+    }
+    
     func test_startFirstTimer_shouldDispatchSplashEvent() {
         let (sut, startPhaseOneSpy, _) = makeSUT()
 
         expect(sut, with: .startFirstTimer, toDeliver: .splash) {
             startPhaseOneSpy.complete(with: (), at: 0)
+            
+            XCTAssertEqual(startPhaseOneSpy.callCount, 1)
         }
-        
-        XCTAssertEqual(startPhaseOneSpy.callCount, 1)
     }
 
     func test_startSecondTimer_shouldCallStartSecondTimerAndDispatchNoSplashEvent() {
@@ -25,9 +32,9 @@ final class SplashScreenEffectHandlerTests: XCTestCase {
         
         expect(sut, with: .startSecondTimer, toDeliver: .noSplash) {
             startPhaseTwoSpy.complete(with: (), at: 0)
+            
+            XCTAssertEqual(startPhaseTwoSpy.callCount, 1)
         }
-        
-        XCTAssertEqual(startPhaseTwoSpy.callCount, 1)
     }
     
     // MARK: - Helpers
@@ -44,16 +51,11 @@ final class SplashScreenEffectHandlerTests: XCTestCase {
         startPhaseOne: PhaseSpy,
         startPhaseTwo: PhaseSpy
     ) {
-
         let startPhaseOneSpy = PhaseSpy()
         let startPhaseTwoSpy = PhaseSpy()
         let sut = SUT(
-            startFirstTimer: { completion in
-                startPhaseOneSpy.process(completion: completion)
-            },
-            startSecondTimer: { completion in
-                startPhaseTwoSpy.process(completion: completion)
-            }
+            startFirstTimer: { startPhaseOneSpy.process(completion: $0) },
+            startSecondTimer: { startPhaseTwoSpy.process(completion: $0) }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -71,7 +73,6 @@ final class SplashScreenEffectHandlerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        
         let exp = expectation(description: "wait for event")
         
         sut.handleEffect(effect) { event in
