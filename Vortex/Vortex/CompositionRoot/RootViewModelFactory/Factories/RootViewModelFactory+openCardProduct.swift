@@ -196,10 +196,10 @@ extension RootViewModelFactory {
         payload: OpenCardDomain.OrderCardPayload,
         completion: @escaping (OpenCardDomain.OrderCardResult) -> Void
     ) {
-        //        let service = nanoServiceComposer.compose(
-        //            makeRequest: RequestFactory.createOrderRequest,
-        //            mapResponse: RemoteServices.ResponseMapper.mapOrderCardResponse
-        //        )
+        let createCardApplicationService = nanoServiceComposer.compose(
+            makeRequest: RequestFactory.createCardApplicationRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCreateCardApplicationResponse
+        )
         
         let service: (@escaping (OpenCardDomain.OrderCardResult) -> Void) -> Void = { [weak self] completion in
             

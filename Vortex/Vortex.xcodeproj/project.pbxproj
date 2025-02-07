@@ -3164,6 +3164,9 @@
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
 		C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */; };
 		C18FDF0E2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */; };
+		C19090C02D11915400155987 /* RequestFactory+createGetOrderCardFormRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19090BF2D11915400155987 /* RequestFactory+createGetOrderCardFormRequest.swift */; };
+		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
+		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
 		C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */; };
 		C19738DC2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */; };
@@ -6687,6 +6690,7 @@
 		C1097D972948BA66002459F6 /* SuggestCompanyResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SuggestCompanyResponseGeneric.json; sourceTree = "<group>"; };
 		C1097D992948D302002459F6 /* Model+RequisitesTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+RequisitesTransfer.swift"; sourceTree = "<group>"; };
 		C109B01829921806009CFCFA /* Model+PaymentsAnywayAbroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsAnywayAbroad.swift"; sourceTree = "<group>"; };
+		C10B0F982D51047E00508689 /* OrderCardLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingBackend.xctestplan; sourceTree = "<group>"; };
 		C10CE65C29070CDF00FC5706 /* TextViewPhoneNumberViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewPhoneNumberViewComponent.swift; sourceTree = "<group>"; };
 		C10E0F212D563C50008185D6 /* RequestFactory+createGetCardOrderFormRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCardOrderFormRequest.swift"; sourceTree = "<group>"; };
 		C10F481828E4A52F009918EA /* PushNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
@@ -6776,6 +6780,8 @@
 		C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponent.swift; sourceTree = "<group>"; };
 		C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSourceReducerTemplatesTests.swift; sourceTree = "<group>"; };
 		C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeOperationStateViewModel.swift; sourceTree = "<group>"; };
+		C19090BF2D11915400155987 /* RequestFactory+createGetOrderCardFormRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOrderCardFormRequest.swift"; sourceTree = "<group>"; };
+		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
 		C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStickerResponseMapperTests.swift; sourceTree = "<group>"; };
@@ -7491,6 +7497,7 @@
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A04BFC52CBE61DA002490C5 /* SerialComponents in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
+				C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
 				2A1F08532A79057500C5B11B /* GetProcessingSessionCodeService in Frameworks */,
@@ -10246,6 +10253,8 @@
 				C15C4C742CFE676E00A8C922 /* RequestFactory+getDigitalCardLanding.swift */,
 				830147882D030D1500174489 /* RequestFactory+createGetSavingLanding.swift */,
 				C10E0F212D563C50008185D6 /* RequestFactory+createGetCardOrderFormRequest.swift */,
+				C19090BF2D11915400155987 /* RequestFactory+createGetOrderCardFormRequest.swift */,
+				C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -10319,6 +10328,7 @@
 			isa = PBXGroup;
 			children = (
 				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
+				C10B0F982D51047E00508689 /* OrderCardLandingBackend.xctestplan */,
 				A72955C22D304A3A0076A5F3 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan */,
 				2A9EA5D72D26A50100DEC45C /* FlowCore.xctestplan */,
 				834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */,
@@ -19442,6 +19452,7 @@
 				A7E314152D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI */,
 				8354294C2D43A1AB00963709 /* GetBannersMyProductListService */,
 				C19C234E2D562E210026FD0B /* GetCardOrderFormService */,
+				C192C99B2D47966000518831 /* CreateCardApplication */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -21652,6 +21663,7 @@
 				2A6679EC2C58C00C003ACA31 /* TransactionCompleteState.swift in Sources */,
 				832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */,
 				2AF7202F2C749B8200919CAF /* CategorySet.swift in Sources */,
+				C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */,
 				0CC8FCA928315F3500F0E9BD /* Model+LatestPayments.swift in Sources */,
 				0B931B1826DCD62200CA8017 /* AddOperatorsList.swift in Sources */,
 				0CF3D7122836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift in Sources */,
@@ -26182,7 +26194,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 112;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -26870,7 +26882,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 112;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -27935,7 +27947,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 112;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27972,7 +27984,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 112;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -29253,6 +29265,18 @@
 		C15C4C762CFE72CD00A8C922 /* OrderCardLandingBackend */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OrderCardLandingBackend;
+		};
+		C1724C4A2D0C51DF0002B6AF /* GetCardOrderFormService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GetCardOrderFormService;
+		};
+		C1724C4C2D10697A0002B6AF /* OrderCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OrderCard;
+		};
+		C192C99B2D47966000518831 /* CreateCardApplication */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CreateCardApplication;
 		};
 		C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */ = {
 			isa = XCSwiftPackageProductDependency;
