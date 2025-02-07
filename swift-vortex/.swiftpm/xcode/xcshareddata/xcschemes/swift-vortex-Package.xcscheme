@@ -1280,6 +1280,48 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OrderCard"
+               BuildableName = "OrderCard"
+               BlueprintName = "OrderCard"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OrderCardLandingBackend"
+               BuildableName = "OrderCardLandingBackend"
+               BlueprintName = "OrderCardLandingBackend"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetCardOrderFormService"
+               BuildableName = "GetCardOrderFormService"
+               BlueprintName = "GetCardOrderFormService"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -2191,6 +2233,26 @@
                BlueprintIdentifier = "FlowCoreTests"
                BuildableName = "FlowCoreTests"
                BlueprintName = "FlowCoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OrderCardLandingBackendTests"
+               BuildableName = "OrderCardLandingBackendTests"
+               BlueprintName = "OrderCardLandingBackendTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetCardOrderFormServiceTests"
+               BuildableName = "GetCardOrderFormServiceTests"
+               BlueprintName = "GetCardOrderFormServiceTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
