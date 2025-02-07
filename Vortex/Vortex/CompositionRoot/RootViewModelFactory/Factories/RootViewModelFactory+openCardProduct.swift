@@ -6,7 +6,7 @@
 //
 
 import Combine
-// import OpenCardBackend
+import GetCardOrderFormService
 import OTPInputComponent
 import RemoteServices
 
@@ -99,10 +99,12 @@ extension RootViewModelFactory {
         dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenCardDomain.LoadResult) -> Void
     ) {
-        //        let service = nanoServiceComposer.compose(
-        //            makeRequest: RequestFactory.createGetCardOrderFormRequest,
-        //            mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
-        //        )
+        let service = nanoServiceComposer.compose(
+            makeRequest: RequestFactory.createGetCardOrderFormRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
+
+        )
+        
         let service: (@escaping (OpenCardDomain.LoadResult) -> Void) -> Void = { [weak self] completion in
             
             self?.schedulers.background.delay(for: .seconds(1)) {
@@ -132,7 +134,7 @@ extension RootViewModelFactory {
         notify: @escaping OpenCardDomain.ConfirmationNotify,
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
-                #warning("/verify/getVerificationCode")
+#warning("/verify/getVerificationCode")
         //        let service = nanoServiceComposer.compose(
         //            makeRequest: RequestFactory.createGetVerificationCodeVerifyRequest,
         //            mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeVerifyResponse
@@ -140,7 +142,7 @@ extension RootViewModelFactory {
         
         let otp = makeOTPModel(
             resend: {
-                #warning("FIXME")
+#warning("FIXME")
             },
             observe: { notify(.otp($0)) }
         )

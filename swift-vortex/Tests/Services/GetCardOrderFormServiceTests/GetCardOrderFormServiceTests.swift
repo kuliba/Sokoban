@@ -11,15 +11,13 @@ import RemoteServices
 
 final class RequestFactory_createGetCardOrderFormRequestTests: XCTestCase {
     
-    // TODO: FIXME
-//    func test_createRequest_shouldSetURL() throws {
-//        
-//        let url = anyURL()
-//        let value = UUID().uuidString
-//        let request = try createRequest(payload: value, url: url)
-//        
-//        XCTAssertNoDiff(request.url?.absoluteString, "\(url.absoluteString)?\("name")=\(value)")
-//    }
+    func test_createRequest_shouldSetURL() throws {
+        
+        let url = anyURL()
+        let request = try createRequest(url: url)
+        
+        XCTAssertNoDiff(request.url?.absoluteString, "\(url.absoluteString)")
+    }
 
     func test_createRequest_shouldSetHTTPMethodToGET() throws {
         
@@ -43,11 +41,10 @@ final class RequestFactory_createGetCardOrderFormRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func createRequest(
-        payload: String = "",
         url: URL = anyURL()
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetCardOrderFormRequest(url: url, payload: .init(name: payload))
+        try RequestFactory.createGetCardOrderFormRequest(url: url)
     }
 }
 
