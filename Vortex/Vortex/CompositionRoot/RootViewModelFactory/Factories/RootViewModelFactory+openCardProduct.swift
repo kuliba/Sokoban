@@ -133,34 +133,27 @@ extension RootViewModelFactory {
         notify: @escaping OpenCardDomain.ConfirmationNotify,
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
-
-        let verifyService = nanoServiceComposer.compose(
+        let service = nanoServiceComposer.compose(
             makeRequest: RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeResponse
         )
         
         let otp = makeOTPModel(
-            resend: {
-#warning("FIXME")
-            },
+            resend: { service(()) { _ in }}, // fire and forget
             observe: { notify(.otp($0)) }
         )
         let consent = OpenCardDomain.Confirmation.Consent(check: true)
         
-        let service: (@escaping (OpenCardDomain.LoadConfirmationResult) -> Void) -> Void = { [weak self] completion in
+        schedulers.background.schedule {
             
-            self?.schedulers.background.delay(for: .seconds(2)) {
+            service(()) { [weak self, service] in
                 
-                completion(.success(.init(otp: otp, consent: consent)))
-            }
-        }
-        
-        schedulers.background.schedule { [weak self] in
-            
-            service { [service] in
+                completion($0
+                    .map { _ in .init(otp: otp, consent: consent) }
+                    .mapError(\.loadFailure)
+                )
                 
-                if case let .failure(failure) = $0,
-                   case .informer = failure.type {
+                if case .informer = $0.loadFailure?.type {
                     
                     self?.schedulers.background.delay(for: .seconds(2)) {
                         
@@ -168,7 +161,6 @@ extension RootViewModelFactory {
                     }
                 }
                 
-                completion($0)
                 _ = service
             }
         }
@@ -253,5 +245,29 @@ private extension OpenCardDomain.State {
         default:
             return nil
         }
+    }
+}
+
+private extension Error {
+    
+    var loadFailure: OrderCard.LoadFailure {
+        
+        switch self as? RemoteServices.ResponseMapper.MappingError {
+        case let .server(_, errorMessage: errorMessage):
+            return .init(message: errorMessage, type: .alert)
+            
+        default:
+            return .init(message: "Что-то пошло не так.\nПопробуйте позже.", type: .informer)
+        }
+    }
+}
+
+private extension Result<RemoteServices.ResponseMapper.GetVerificationCodeResponse, Error> {
+    
+    var loadFailure: OrderCard.LoadFailure? {
+        
+        guard case let .failure(failure) = self  else { return nil }
+        
+        return failure.loadFailure
     }
 }
