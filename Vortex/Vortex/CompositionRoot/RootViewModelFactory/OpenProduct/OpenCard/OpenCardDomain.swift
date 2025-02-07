@@ -299,8 +299,6 @@ enum OrderCard { // TODO: replace stub with types from module
 
 extension OrderCard.State {
     
-    // TODO: FIXME!!!
-   // var canContinue: Bool { isValid || !isLoading }
     var isValid: Bool { payload != nil }
     
     var payload: OrderCard.OrderCardPayload? {

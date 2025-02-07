@@ -53,12 +53,12 @@ extension ViewComponents {
                     VStack {
                         
                         Text("TBD: openCard Form without confirmation")
-                     
+                        
                         Spacer()
                         
-                        Button("Continue") {
+                        continueButton(isLoading: state.isLoading) {
                             
-                            content.event(.continue)
+                            event(.continue)
                         }
                         .buttonStyle(.borderedProminent)
                     }
@@ -77,16 +77,31 @@ extension ViewComponents {
                         
                         Spacer()
                         
-                        Button("Continue") {
+                        continueButton(isLoading: state.isLoading) {
                             
-                            content.event(.continue)
+                            event(.continue)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .disabled(!state.isValid)
                     }
-                  //  .disabled(!state.canContinue) // TODO: FIXME!!!
+                    .disabled(state.isLoading)
                 }
             }
         }
+    }
+    
+    private func continueButton(
+        isLoading: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(action: action) {
+            if isLoading {
+                ProgressView()
+            } else {
+                Text("Continue")
+            }
+        }
+        .buttonStyle(.borderedProminent)
     }
     
     func makeOTPView(
@@ -135,7 +150,6 @@ private extension OpenCardDomain.FlowDomain.State {
         else { return nil }
         
         return .failure(message: failure.message)
-
     }
     
     var stringAlert: StringAlert? {
