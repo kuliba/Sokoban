@@ -56,6 +56,10 @@ extension RootViewModelFactory {
         navigation: OpenCardDomain.Navigation
     ) -> Delay {
         
+        switch navigation {
+        case .failure:
+            return .zero
+        }
     }
     
     @inlinable
@@ -64,7 +68,10 @@ extension RootViewModelFactory {
         notify: @escaping OpenCardDomain.Notify,
         completion: @escaping (OpenCardDomain.Navigation) -> Void
     ) {
-        
+        switch select {
+        case let .failure(loadFailure):
+            completion(.failure(loadFailure))
+        }
     }
     
     // MARK: - Bind
@@ -77,13 +84,14 @@ extension RootViewModelFactory {
                 
                 $0.$state.compactMap(\.failure)
                     .map { .select(.failure($0)) }
-                    .eraseToAnyPublisher()
             },
             dismissing: { _ in {} } // TODO: add dismissing failure
         )
     }
     
     // MARK: - Services
+    
+    #warning("<#T##message#>")
     
     @inlinable
     func load(
@@ -164,6 +172,31 @@ extension RootViewModelFactory {
                 completion($0)
                 _ = service
             }
+        }
+    }
+}
+
+// MARK: - Adapters
+
+private extension OpenCardDomain.State {
+    
+    var failure: OpenCardDomain.LoadFailure? {
+        
+        switch result {
+        case let .failure(failure):
+            return failure
+            
+        case let .success(form):
+            switch form.confirmation {
+            case let .failure(failure):
+                return failure
+                
+            default:
+                return nil
+            }
+            
+        default:
+            return nil
         }
     }
 }

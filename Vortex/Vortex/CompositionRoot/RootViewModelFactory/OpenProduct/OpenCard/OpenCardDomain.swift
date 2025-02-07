@@ -42,7 +42,10 @@ enum OpenCardDomain {
         case failure(OrderCard.LoadFailure)
     }
     
-    enum Navigation {}
+    enum Navigation {
+        
+        case failure(OrderCard.LoadFailure)
+    }
     
     // MARK: - Other
     
@@ -64,29 +67,6 @@ enum OpenCardDomain {
     
     typealias OrderCardPayload = OrderCard.OrderCardPayload
     typealias OrderCardResult = OrderCard.OrderCardResult
-}
-
-extension OpenCardDomain.State {
-    
-    var failure: OpenCardDomain.LoadFailure? {
-        
-        switch result {
-        case let .failure(failure):
-            return failure
-            
-        case let .success(form):
-            switch form.confirmation {
-            case let .failure(failure):
-                return failure
-                
-            default:
-                return nil
-            }
-            
-        default:
-            return nil
-        }
-    }
 }
 
 enum OrderCard { // TODO: replace stub with types from module

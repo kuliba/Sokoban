@@ -14,12 +14,10 @@ extension ViewComponents {
         for openProduct: OpenProduct,
         dismiss: @escaping () -> Void
     ) -> some View {
-
+        
         switch openProduct {
         case let .card(openCard):
-            Text("TBD: openCard \(String(describing: openCard))")
-                .frame(maxHeight: .infinity, alignment: .top)
-                .padding(.horizontal)
+            makeOpenCardProductView(openCard, dismiss: dismiss)
                 .navigationBarWithBack(
                     title: "Заказать карту",
                     dismiss: dismiss
