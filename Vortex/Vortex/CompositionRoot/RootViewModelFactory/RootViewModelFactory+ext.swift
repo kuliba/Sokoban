@@ -369,6 +369,24 @@ extension RootViewModelFactory {
         
         let savingsAccount = makeSavingsAccount()
         
+        // MARK: - Splash
+        
+        let splash = makeSplashScreenViewModel(
+            initialState: .initialSplashData,
+            phaseOneDuration: .milliseconds(0),
+            phaseTwoDuration: .milliseconds(1200)
+        )
+        
+        model.auth
+            .sink { auth in
+                
+                if auth == .authorized, featureFlags.splashScreenFlag == .active {
+                    
+                    splash.event(.start)
+                }
+            }
+            .store(in: &bindings)
+
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in
@@ -381,6 +399,7 @@ extension RootViewModelFactory {
         
         let rootViewModel = make(
             featureFlags: featureFlags,
+            splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
             fastPaymentsFactory: fastPaymentsFactory,
@@ -716,6 +735,7 @@ private extension RootViewModelFactory {
     
     func make(
         featureFlags: FeatureFlags,
+        splash: SplashScreenViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -844,6 +864,7 @@ private extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
+            splash: splash,
             model,
             showLoginAction: showLoginAction,
             landingServices: landingServices,

@@ -29,9 +29,12 @@ class RootViewModel: ObservableObject, Resetable {
     
     let tabsViewModel: TabsViewModel
     let informerViewModel: InformerView.ViewModel
+    let splash: SplashScreenViewModel
     
+    @Published private(set) var isShowingSplash = false
+        
     var coverPresented: RootViewHostingViewController.Cover.Kind?
-    
+
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
@@ -54,6 +57,7 @@ class RootViewModel: ObservableObject, Resetable {
         productNavigationStateManager: ProductProfileFlowManager,
         tabsViewModel: TabsViewModel,
         informerViewModel: InformerView.ViewModel,
+        splash: SplashScreenViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction,
@@ -67,6 +71,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.selected = .main
         self.tabsViewModel = tabsViewModel
         self.informerViewModel = informerViewModel
+        self.splash = splash
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction

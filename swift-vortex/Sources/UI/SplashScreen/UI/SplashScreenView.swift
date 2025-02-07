@@ -6,65 +6,118 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct SplashScreenView: View {
-
-    @State private var showSplash: Bool = false
-    private let config: Config
-    private let data: Data
-
-    public init(showSplash: Bool, config: Config, data: Data) {
-        
-        self.showSplash = showSplash
+    
+    private let splash: Splash
+    private let config: SplashScreenStaticConfig
+    
+    public init(splash: Splash, config: SplashScreenStaticConfig) {
+        self.splash = splash
         self.config = config
-        self.data = data
     }
-
+    
+    private var dynamicConfig: SplashScreenDynamicConfig { splash.config }
+    
+    private var scaleEffect: CGFloat {
+        
+        splash.data.state != .start ? config.scaleEffect.end : config.scaleEffect.start
+    }
+    
     public var body: some View {
         
         ZStack {
             
-            (data.backgroundImage ?? config.defaultBackgroundImage)
-                .resizable()
-                .scaledToFill()
-                .scaleEffect(showSplash ? 1.05 : 1.0)
-                .animation(.easeInOut(duration: 1.2), value: showSplash)
+            splashBackground()
             
-            VStack {
+            VStack(spacing: config.spacing) {
                 
-                (data.logoImage ?? config.defaultLogoImage)
-                    .resizable()
-                    .frame(
-                        width: config.sizes.iconSize,
-                        height: config.sizes.iconSize
-                    )
-                    .padding(.bottom, config.paddings.imageBottomPadding)
+                splash.data.logo.map {
+                    
+                    $0
+                        .resizable()
+                        .frame(config.logoSize)
+                }
                 
-                Text(data.dayTimeText)
-                Text(data.userNameText)
+                splash.data.greeting.map {
+                    
+                    $0.text(withConfig: splash.config.greeting)
+                }
+                                
+                splash.data.message.map {
+                    
+                    $0.text(withConfig: splash.config.message, alignment: .center)
+                }
+                
+                Spacer()
+                
+                splash.data.footer.map {
+                    
+                    $0.text(withConfig: splash.config.footer)
+                }
             }
-            .padding(.bottom, config.paddings.bottomPadding)
+            .padding(.horizontal)
+            .padding(.top, config.paddings.top)
+            .padding(.bottom, config.paddings.bottom)
         }
+        .opacity(splash.data.state == .splash ? 1 : 0)
+        .animation(
+            splash.data.animation,
+            value: splash.data.state
+        )
     }
 }
 
-public extension SplashScreenView {
+private extension SplashScreenView {
     
-    typealias Config = SplashScreenConfig
-    typealias Data = SplashScreenData
-}
-
-#Preview {
+    func splashBackground() -> some View {
         
-    SplashScreenPreview(showSplash: true)
+        splash.data.background
+            .resizable()
+            .scaledToFill()
+            .scaleEffect(scaleEffect)
+            .animation(
+                splash.data.animation,
+                value: splash.data.state
+            )
+            .ignoresSafeArea()
+    }
 }
 
-struct SplashScreenPreview: View {
+
+#Preview("Phase One") {
+    SplashScreenZoomPreview()
+}
+
+struct SplashScreenZoomPreview: View {
     
-    @State var showSplash: Bool
+    @State private var splash: Splash = .init(data: .previewPhaseOne, config: .preview)
     
     var body: some View {
         
-        SplashScreenView(showSplash: showSplash, config: .default, data: .preview)
+        return SplashScreenView(splash: splash, config: .preview)
+            .onFirstAppear {
+                
+                splash.data.state = .splash
+            }
+    }
+}
+
+#Preview("Phase Two") {
+    SplashScreenFadeOutPreview()
+}
+
+struct SplashScreenFadeOutPreview: View {
+    
+    @State private var splash: Splash = .init(data: .previewPhaseTwo, config: .preview)
+    
+    var body: some View {
+        
+        return SplashScreenView(splash: splash, config: .preview)
+            .onFirstAppear {
+                
+                splash.data.state = .noSplash
+            }
     }
 }

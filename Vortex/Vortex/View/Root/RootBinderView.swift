@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SplashScreen
 import SwiftUI
 
 struct RootBinderView: View {
@@ -17,9 +18,15 @@ struct RootBinderView: View {
         
         ZStack {
             
+            RxWrapperView(
+                model: binder.content.splash,
+                makeContentView: rootViewFactory.makeSplashScreenView
+            )
+            .zIndex(2.0)
+            
             spinnerView(flow: binder.flow)
                 .zIndex(1.0)
-            
+
             rootViewInNavigationView(flow: binder.flow)
         }
     }

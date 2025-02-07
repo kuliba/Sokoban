@@ -8,65 +8,69 @@
 import SwiftUI
 import SharedConfigs
 
-public struct SplashScreenConfig {
+public struct SplashScreenDynamicConfig {
 
-    let textConfig: TextConfig
-    let sizes: Sizes
-    let paddings: Paddings
-    let defaultBackgroundImage: Image
-    let defaultLogoImage: Image
+    let greeting: TextConfig
+    let message: TextConfig
+    let footer: TextConfig
     
-    public struct Strings {
-        
-        let defaultDayTimeText: String
-        let defaultUserNameText: String
-        
-        public init(
-            dayTimeText: String,
-            userNameText: String
-        ) {
-            
-            self.defaultDayTimeText = dayTimeText
-            self.defaultUserNameText = userNameText
-        }
+    public init(
+        greeting: TextConfig,
+        message: TextConfig,
+        footer: TextConfig
+    ) {
+        self.greeting = greeting
+        self.message = message
+        self.footer = footer
     }
-    
-    public struct Sizes {
+}
 
-        let iconSize: CGFloat
-        
-        public init(
-            iconSize: CGFloat
-        ) {
-            self.iconSize = iconSize
-        }
+public struct SplashScreenStaticConfig {
+
+    let logoSize: CGSize
+    let paddings: Paddings
+//    let defaultBackground: Image
+//    let defaultLogo: Image
+    let spacing: CGFloat
+    let scaleEffect: ScaleEffect
+    
+    public init(
+        logoSize: CGSize,
+        paddings: Paddings,
+        spacing: CGFloat,
+        scaleEffect: ScaleEffect
+    ) {
+        self.logoSize = logoSize
+        self.paddings = paddings
+        self.spacing = spacing
+        self.scaleEffect = scaleEffect
     }
     
     public struct Paddings {
         
-        let imageBottomPadding: CGFloat
-        let bottomPadding: CGFloat
+        let top: CGFloat
+        let bottom: CGFloat
         
         public init(
-            imageBottomPadding: CGFloat,
-            bottomPadding: CGFloat
+            top: CGFloat,
+            bottom: CGFloat
         ) {
-            self.imageBottomPadding = imageBottomPadding
-            self.bottomPadding = bottomPadding
+            self.top = top
+            self.bottom = bottom
         }
     }
     
-    public init(
-        textConfig: TextConfig,
-        sizes: Sizes,
-        paddings: Paddings,
-        defaultBackgroundImage: Image,
-        defaultLogoImage: Image
-    ) {
-        self.textConfig = textConfig
-        self.sizes = sizes
-        self.paddings = paddings
-        self.defaultBackgroundImage = defaultBackgroundImage
-        self.defaultLogoImage = defaultLogoImage
+    public struct ScaleEffect {
+        
+        let start: CGFloat
+        let end: CGFloat
+        
+        public init(
+            start: CGFloat,
+            end: CGFloat
+        ) {
+            self.start = start
+            self.end = end
+        }
     }
 }

@@ -2783,7 +2783,10 @@ private extension Target {
             .sharedConfigs,
             .uiPrimitives
         ],
-        path: "Sources/UI/\(String.splashScreen)"
+        path: "Sources/UI/\(String.splashScreen)",
+        resources: [
+            .process("Resources")
+        ]
     )
 
     static let orderCard = target(
