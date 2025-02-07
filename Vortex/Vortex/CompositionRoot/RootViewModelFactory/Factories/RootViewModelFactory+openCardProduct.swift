@@ -80,38 +80,39 @@ extension RootViewModelFactory {
     func witnesses() -> OpenCardDomain.Witnesses {
         
         return .init(
-            emitting: {
-                
-                $0.$state.compactMap(\.failure)
-                    .map { .select(.failure($0)) }
-            },
+            emitting: { $0.$state.map(\.flowEvent) },
             dismissing: { _ in {} } // TODO: add dismissing failure
         )
     }
     
     // MARK: - Services
     
-    #warning("<#T##message#>")
-    
     @inlinable
     func load(
+        dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenCardDomain.LoadResult) -> Void
     ) {
-//        let service = nanoServiceComposer.compose(
-//            makeRequest: RequestFactory.createGetCardOrderFormRequest,
-//            mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
-//        )
+        //        let service = nanoServiceComposer.compose(
+        //            makeRequest: RequestFactory.createGetCardOrderFormRequest,
+        //            mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
+        //        )
         let service: (@escaping (OpenCardDomain.LoadResult) -> Void) -> Void = { [weak self] completion in
             
             self?.schedulers.background.delay(for: .seconds(2)) {
-             
-                completion(.failure(.init(message: "Server failure", type: .alert)))
+                
+                completion(.failure(.init(message: "Что-то пошло не так.\nПопробуйте позже.", type: .informer)))
             }
         }
         
-        schedulers.background.schedule {
+        schedulers.background.schedule { [weak self] in
             
             service { [service] in
+                
+                if case let .failure(failure) = $0,
+                   case .informer = failure.type {
+                    
+                    self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
+                }
                 
                 completion($0)
                 _ = service
@@ -123,11 +124,11 @@ extension RootViewModelFactory {
     func loadConfirmation(
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
-//        #warning("/verify/getVerificationCode")
-//        let service = nanoServiceComposer.compose(
-//            makeRequest: RequestFactory.createGetVerificationCodeVerifyRequest,
-//            mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeVerifyResponse
-//        )
+        //        #warning("/verify/getVerificationCode")
+        //        let service = nanoServiceComposer.compose(
+        //            makeRequest: RequestFactory.createGetVerificationCodeVerifyRequest,
+        //            mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeVerifyResponse
+        //        )
         
         let service: (@escaping (OpenCardDomain.LoadConfirmationResult) -> Void) -> Void = { [weak self] completion in
             
@@ -152,10 +153,10 @@ extension RootViewModelFactory {
         payload: OpenCardDomain.OrderCardPayload,
         completion: @escaping (OpenCardDomain.OrderCardResult) -> Void
     ) {
-//        let service = nanoServiceComposer.compose(
-//            makeRequest: RequestFactory.createOrderRequest,
-//            mapResponse: RemoteServices.ResponseMapper.mapOrderCardResponse
-//        )
+        //        let service = nanoServiceComposer.compose(
+        //            makeRequest: RequestFactory.createOrderRequest,
+        //            mapResponse: RemoteServices.ResponseMapper.mapOrderCardResponse
+        //        )
         
         let service: (@escaping (OpenCardDomain.OrderCardResult) -> Void) -> Void = { [weak self] completion in
             
@@ -164,7 +165,7 @@ extension RootViewModelFactory {
                 completion(true)
             }
         }
-
+        
         schedulers.background.schedule {
             
             service { [service] in
@@ -179,6 +180,17 @@ extension RootViewModelFactory {
 // MARK: - Adapters
 
 private extension OpenCardDomain.State {
+    
+    var flowEvent: FlowEvent<OpenCardDomain.Select, Never> {
+        
+        switch failure {
+        case .none:
+            return .dismiss
+            
+        case let .some(failure):
+            return .select(.failure(failure))
+        }
+    }
     
     var failure: OpenCardDomain.LoadFailure? {
         

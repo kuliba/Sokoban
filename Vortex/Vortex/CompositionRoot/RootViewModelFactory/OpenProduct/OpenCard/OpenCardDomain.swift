@@ -73,6 +73,7 @@ enum OrderCard { // TODO: replace stub with types from module
     
     struct State<Confirmation> {
         
+        var isLoading: Bool = false
         var result: LoadResult<Confirmation>?
     }
     
@@ -81,7 +82,16 @@ enum OrderCard { // TODO: replace stub with types from module
         var confirmation: LoadConfirmationResult<Confirmation>?
         let product: Int // Product
         let type: String //ProductType
-        var messages: Bool // SMS
+        var messages: Messages
+        
+        struct Messages: Equatable {
+            
+            let description: String
+            let icon: String
+            let subtitle: String
+            let title: String
+            var isOn: Bool
+        }
     }
     
     typealias LoadResult<Confirmation> = Result<Form<Confirmation>, LoadFailure>
@@ -101,11 +111,12 @@ enum OrderCard { // TODO: replace stub with types from module
     enum Event<Confirmation> {
         
         case `continue`
+        case dismissInformer
         case load
         case loaded(LoadResult<Confirmation>)
         case loadConfirmation(LoadConfirmationResult<Confirmation>)
         case messages(MessagesEvent)
-        case orderCardResult(Bool)
+        case orderCardResult(OrderCardResult)
         
         public enum MessagesEvent: Equatable {
             
@@ -122,7 +133,7 @@ enum OrderCard { // TODO: replace stub with types from module
     
     struct OrderCardPayload: Equatable {}
     
-    typealias OrderCardResult = Bool
+    typealias OrderCardResult = Bool // TODO: improve associated value
     
     final class Reducer<Confirmation> {
         
@@ -145,33 +156,54 @@ enum OrderCard { // TODO: replace stub with types from module
                 case let .success(form):
                     switch form.confirmation {
                     case .none:
-                        // TODO: change state to inflight/isLoading
+                        state.isLoading = true
                         effect = .loadConfirmation
                         
                     case .some:
-                        // TODO: change state to inflight/isLoading
-                        effect = .orderCard(.init())
+                        // TODO: verify otp by creating `OrderCardPayload` (should have failable init)
+                        if let payload: OrderCardPayload? = OrderCardPayload() {
+                         
+                            state.isLoading = true
+                            effect = payload.map { .orderCard($0) }
+                        }
                     }
                 }
                 
+            case .dismissInformer:
+                if case let .failure(failure) = state.result,
+                   case .informer = failure.type {
+                    
+                    state.result = nil
+                }
+                
             case .load:
+                state.isLoading = true
                 effect = .load
                 
             case let .loadConfirmation(confirmation):
+                state.isLoading = false
+                
                 switch (state.result, confirmation) {
                 case (.none, _), (.failure, _):
                     break // impossible cases
                     
-                case var (.success(form), confirmationResult):
-                    form.confirmation = confirmationResult
+                case var (.success(form), confirmation):
+                    form.confirmation = confirmation
                     state.result = .success(form)
-                    
                 }
+                
             case let .loaded(result):
+                state.isLoading = false
                 state.result = result
                 
-            case let .messages(value):
-                break // TODO: ignoring here but should not in real type
+            case .messages(.toggle):
+                switch (state.result, state.isLoading) {
+                case var (.success(form), false):
+                    form.messages.isOn.toggle()
+                    state.result = .success(form)
+                    
+                default: break
+                }
                 
             case let .orderCardResult(orderCardResult):
 #warning("UNIMPLEMENTED")
@@ -200,9 +232,9 @@ enum OrderCard { // TODO: replace stub with types from module
             self.orderCard = orderCard
         }
         
-        typealias Load = (@escaping (LoadResult<Confirmation>) -> Void) -> Void
+        typealias Load = (@escaping () -> Void, @escaping (LoadResult<Confirmation>) -> Void) -> Void
         typealias LoadConfirmation = (@escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
-        typealias OrderCard = (OrderCardPayload, @escaping (Bool) -> Void) -> Void
+        typealias OrderCard = (OrderCardPayload, @escaping (OrderCardResult) -> Void) -> Void
         
         func handleEffect(
             _ effect: Effect,
@@ -210,7 +242,7 @@ enum OrderCard { // TODO: replace stub with types from module
         ) {
             switch effect {
             case .load:
-                load { dispatch(.loaded($0)) }
+                load({ dispatch(.dismissInformer) }) { dispatch(.loaded($0)) }
                 
             case .loadConfirmation:
                 loadConfirmation { dispatch(.loadConfirmation($0)) }

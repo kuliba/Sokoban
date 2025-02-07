@@ -18,13 +18,20 @@ extension ViewComponents {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            makeOpenCardProductContentView(binder.content)
-                .frame(maxHeight: .infinity, alignment: .top)
-                .padding(.horizontal)
-                .alert(
-                    item: state.failure,
-                    content: { $0.alert(dismiss: dismiss) }
-                )
+            ZStack(alignment: .top) {
+                
+                state.informer.map(InformerInternalView.init)
+                    .padding(.top, 16	)
+                    .zIndex(1)
+                
+                makeOpenCardProductContentView(binder.content)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .padding(.horizontal)
+                    .alert(
+                        item: state.stringAlert,
+                        content: { $0.error(dismiss: dismiss) }
+                    )
+            }
         }
     }
     
@@ -99,13 +106,23 @@ extension OpenCardDomain.LoadFailure: Identifiable {
 
 private extension OpenCardDomain.FlowDomain.State {
     
-    #warning("need to split alert and informer failure")
-    var failure: OpenCardDomain.LoadFailure? {
+    var informer: Informer? {
         
-        guard case let .failure(failure) = navigation
+        guard case let .failure(failure) = navigation,
+              case .informer = failure.type
         else { return nil }
         
-        return failure
+        return .failure(message: failure.message)
+
+    }
+    
+    var stringAlert: StringAlert? {
+        
+        guard case let .failure(failure) = navigation,
+              case .alert = failure.type
+        else { return nil }
+        
+        return .init(message: failure.message)
     }
 }
 
@@ -118,5 +135,31 @@ private extension OTPInputState {
         else { return nil }
         
         return warning
+    }
+}
+
+private struct Informer {
+    
+    let message: String
+    let icon: Image
+    let color: Color
+    
+    static func failure(
+        message: String
+    ) -> Self {
+        
+        return .init(message: message, icon: .ic24Close, color: .mainColorsBlackMedium)
+    }
+}
+
+private extension InformerInternalView {
+    
+    init(_ informer: Informer) {
+        
+        self.init(
+            message: informer.message,
+            icon: informer.icon,
+            color: informer.color
+        )
     }
 }
