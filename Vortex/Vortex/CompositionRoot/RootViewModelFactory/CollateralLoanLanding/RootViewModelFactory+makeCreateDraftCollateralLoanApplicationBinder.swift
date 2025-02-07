@@ -53,11 +53,11 @@ extension RootViewModelFactory {
             saveConsents: {
                 payload, completion in
                 
-                self.saveConsents(payload: payload) {
-                    completion($0)
-                }
+//                self.saveConsents(payload: payload) {
+//                    completion($0)
+//                }
 
-                // For tests only: completion(.success(.preview))
+                completion(.success(.preview))
             },
             confirm: { [weak self] event in
                 
