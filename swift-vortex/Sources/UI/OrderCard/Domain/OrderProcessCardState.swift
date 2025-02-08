@@ -31,6 +31,8 @@ public struct Form<Confirmation> {
     public let cardProductExtID: String
     public let cardProductName: String
     
+    public let product: Product
+    public let type: CardType
     public var confirmation: LoadConfirmationResult<Confirmation>?
     public var consent = true
     public var messages: Messages
@@ -38,15 +40,17 @@ public struct Form<Confirmation> {
     public var orderCardResponse: OrderCardResponse?
 
     public init(
-        requestID: String,
         cardApplicationCardType: String,
         cardProductExtID: String,
         cardProductName: String,
         confirmation: LoadConfirmationResult<Confirmation>? = nil,
         consent: Bool = true,
         messages: Form<Confirmation>.Messages,
+        orderCardResponse: OrderCardResponse? = nil,
         otp: String? = nil,
-        orderCardResponse: OrderCardResponse? = nil
+        product: Product,
+        requestID: String,
+        type: CardType
     ) {
         self.requestID = requestID
         self.cardApplicationCardType = cardApplicationCardType
@@ -56,7 +60,63 @@ public struct Form<Confirmation> {
         self.consent = consent
         self.messages = messages
         self.otp = otp
+        self.product = product
         self.orderCardResponse = orderCardResponse
+        self.type = type
+    }
+    
+    public struct Product: Equatable {
+        
+        let image: String
+        let options: [Option]
+        let subtitle: String
+        let title: String
+        
+        public init(
+            image: String,
+            options: [Option],
+            subtitle: String,
+            title: String
+        ) {
+            self.image = image
+            self.options = options
+            self.subtitle = subtitle
+            self.title = title
+        }
+        
+        public struct Option: Equatable {
+            
+            let price: String
+            let title: String
+            let icon: String
+            
+            public init(
+                price: String,
+                title: String,
+                icon: String
+            ) {
+                self.price = price
+                self.title = title
+                self.icon = icon
+            }
+        }
+    }
+    
+    public struct CardType: Equatable {
+        
+        let title: String
+        let cardType: String
+        let icon: String
+        
+        public init(
+            title: String,
+            cardType: String,
+            icon: String
+        ) {
+            self.title = title
+            self.cardType = cardType
+            self.icon = icon
+        }
     }
     
     public struct Messages: Equatable {
