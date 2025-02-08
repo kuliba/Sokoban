@@ -20,6 +20,21 @@ extension PaymentCompletionConfig {
             fraudExpired: .fraudExpired()
         )
     )
+    
+    static let orderCard: Self = .init(
+        statuses: .init(
+            completed: .completed(),
+            inflight: .inflight(
+                title: "Заявка на выпуск\nкарты в обработке"
+            ),
+            rejected: .rejected(
+                title: "Заявка на выпуск\nкарты неуспешна",
+                subtitle: "Что-то пошло не так...\nПопробуйте позже."
+            ),
+            fraudCancelled: .fraudCancelled(),
+            fraudExpired: .fraudExpired()
+        )
+    )
 }
 
 extension PaymentCompletionConfig.Statuses.Status {
@@ -122,7 +137,7 @@ extension PaymentCompletionConfig.Statuses.Status {
                     textColor: .textSecondary
                 ),
                 subtitle: .init(
-                    textFont: .textH3Sb18240(),
+                    textFont: .textBodyMR14200(),
                     textColor: .textSecondary
                 )
             )
@@ -140,27 +155,7 @@ extension PaymentCompletionConfig.Statuses.Status {
                 title: title,
                 subtitle: subtitle
             ),
-            config: .init(
-                amount: .init(
-                    textFont: .textH1Sb24322(),
-                    textColor: .textSecondary
-                ),
-                icon: .init(
-                    foregroundColor: .iconWhite,
-                    backgroundColor: .systemColorWarning,
-                    innerSize: .init(width: 44, height: 44),
-                    outerSize: .init(width: 88, height: 88)
-                ),
-                logoHeight: 44,
-                title: .init(
-                    textFont: .textH3Sb18240(),
-                    textColor: .textRed
-                ),
-                subtitle: .init(
-                    textFont: .textH3Sb18240(),
-                    textColor: .textSecondary
-                )
-            )
+            config: .fraud()
         )
     }
     
@@ -175,26 +170,34 @@ extension PaymentCompletionConfig.Statuses.Status {
                 title: title,
                 subtitle: subtitle
             ),
-            config: .init(
-                amount: .init(
-                    textFont: .textH1Sb24322(),
-                    textColor: .textSecondary
-                ),
-                icon: .init(
-                    foregroundColor: .iconWhite,
-                    backgroundColor: .systemColorWarning,
-                    innerSize: .init(width: 44, height: 44),
-                    outerSize: .init(width: 88, height: 88)
-                ),
-                logoHeight: 44,
-                title: .init(
-                    textFont: .textH3Sb18240(),
-                    textColor: .textRed
-                ),
-                subtitle: .init(
-                    textFont: .textH3Sb18240(),
-                    textColor: .textSecondary
-                )
+            config: .fraud()
+        )
+    }
+}
+
+extension PaymentCompletionConfig.Statuses.Status.Config {
+ 
+    static func fraud() -> Self {
+     
+        return .init(
+            amount: .init(
+                textFont: .textH1Sb24322(),
+                textColor: .textSecondary
+            ),
+            icon: .init(
+                foregroundColor: .iconWhite,
+                backgroundColor: .systemColorWarning,
+                innerSize: .init(width: 44, height: 44),
+                outerSize: .init(width: 88, height: 88)
+            ),
+            logoHeight: 44,
+            title: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textRed
+            ),
+            subtitle: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
             )
         )
     }
@@ -217,6 +220,11 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
                 .previewDisplayName("fraud: cancelled")
             statusView(.fraudExpired)
                 .previewDisplayName("fraud: expired")
+
+            orderCardView(.inflight)
+                .previewDisplayName("orderCard inflight")
+            orderCardView(.rejected)
+                .previewDisplayName("orderCard rejected")
         }
     }
     
@@ -234,6 +242,23 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
                 )
             },
             config: .iVortex
+        )
+    }
+    
+    private static func orderCardView(
+        _ completion: PaymentCompletion
+    ) -> some View {
+        
+        PaymentCompletionStatusView(
+            state: completion, 
+            makeIconView: {
+                
+                return .init(
+                    image: .init(systemName: $0),
+                    publisher: Just(.init(systemName: $0)).eraseToAnyPublisher()
+                )
+            },
+            config: .orderCard
         )
     }
 }
