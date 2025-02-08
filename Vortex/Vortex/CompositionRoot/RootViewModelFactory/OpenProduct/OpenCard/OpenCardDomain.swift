@@ -64,11 +64,12 @@ enum OpenCardDomain {
         }
     }
     
-    typealias LoadResult = OrderCard.LoadResult<Confirmation>
+    typealias LoadFormResult = OrderCard.LoadFormResult<Confirmation>
     typealias LoadFailure = OrderCard.LoadFailure
     
     typealias OrderCardPayload = OrderCard.OrderCardPayload
     typealias OrderCardResult = OrderCard.OrderCardResult
+    typealias OrderCardResponse = OrderCard.OrderCardResponse
 }
 
 enum OrderCard { // TODO: replace stub with types from module
@@ -76,18 +77,21 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
-        var orderCardResult: OrderCardResult?
-        var result: LoadResult<Confirmation>?
+        var formResult: LoadFormResult<Confirmation>?
     }
     
     struct Form<Confirmation> {
         
-        let product: Int // Product
-        let type: String //ProductType
+        let requestID: String
+        let cardApplicationCardType: String
+        let cardProductExtID: String
+        let cardProductName: String
+        
         var confirmation: LoadConfirmationResult<Confirmation>?
         var consent = true
         var messages: Messages
         var otp: String?
+        var orderCardResult: OrderCardResult?
         
         struct Messages: Equatable {
             
@@ -99,7 +103,7 @@ enum OrderCard { // TODO: replace stub with types from module
         }
     }
     
-    typealias LoadResult<Confirmation> = Result<Form<Confirmation>, LoadFailure>
+    typealias LoadFormResult<Confirmation> = Result<Form<Confirmation>, LoadFailure>
     typealias LoadConfirmationResult<Confirmation> = Result<Confirmation, LoadFailure>
     
     struct LoadFailure: Error, Equatable {
@@ -118,7 +122,7 @@ enum OrderCard { // TODO: replace stub with types from module
         case `continue`
         case dismissInformer
         case load
-        case loaded(LoadResult<Confirmation>)
+        case loaded(LoadFormResult<Confirmation>)
         case loadConfirmation(LoadConfirmationResult<Confirmation>)
         case setMessages(Bool)
         case orderCardResult(OrderCardResult)
@@ -135,11 +139,16 @@ enum OrderCard { // TODO: replace stub with types from module
     
     struct OrderCardPayload: Equatable {
         
+        let requestID: String
+        let cardApplicationCardType: String
+        let cardProductExtID: String
+        let cardProductName: String
         let smsInfo: Bool
         let verificationCode: String
     }
     
-    typealias OrderCardResult = Bool // TODO: improve associated value
+    typealias OrderCardResult = Result<OrderCardResponse, LoadFailure>
+    typealias OrderCardResponse = Bool
     
     final class Reducer<Confirmation> {
         
@@ -170,7 +179,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 
             case let .loaded(result):
                 state.isLoading = false
-                state.result = result
+                state.formResult = result
                 
             case let .setMessages(isOn):
                 if !state.isLoading {
@@ -178,7 +187,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 }
                 
             case let .orderCardResult(orderCardResult):
-                state.orderCardResult = orderCardResult
+                state.form?.orderCardResult = orderCardResult
                 
             case let .otp(otp):
                 if !state.isLoading && state.hasConfirmation {
@@ -216,7 +225,7 @@ enum OrderCard { // TODO: replace stub with types from module
         }
         
         typealias DismissInformer = () -> Void
-        typealias Load = (@escaping DismissInformer, @escaping (LoadResult<Confirmation>) -> Void) -> Void
+        typealias Load = (@escaping DismissInformer, @escaping (LoadFormResult<Confirmation>) -> Void) -> Void
         
         enum ConfirmationEvent {
             
@@ -287,10 +296,10 @@ private extension OrderCard.Reducer {
         _ state: inout State,
         _ effect: inout Effect?
     ) {
-        if case let .failure(failure) = state.result,
+        if case let .failure(failure) = state.formResult,
            case .informer = failure.type {
             
-            state.result = nil
+            state.formResult = nil
         }
         
         if case let .failure(failure) = state.form?.confirmation,
@@ -309,7 +318,7 @@ extension OrderCard.State {
         
         get {
             
-            guard case let .success(form) = result
+            guard case let .success(form) = formResult
             else { return nil }
             
             return form
@@ -317,10 +326,10 @@ extension OrderCard.State {
         
         set(newValue) {
             
-            guard let newValue, case .success = result
+            guard let newValue, case .success = formResult
             else { return }
             
-            result = .success(newValue)
+            formResult = .success(newValue)
         }
     }
     
@@ -333,18 +342,27 @@ extension OrderCard.State {
         }
     }
     
-    var isValid: Bool { payload != nil }
+    var isValid: Bool { form?.isValid ?? false } // rename to `canOrder`
     
     var payload: OrderCard.OrderCardPayload? {
         
-        guard let otp = form?.otp,
-              otp.count == 6,
-              form?.consent == true
+        guard isValid,
+              let form,
+              let otp = form.otp
         else { return nil }
         
         return .init(
-            smsInfo: form?.messages.isOn ?? false,
+            requestID: form.requestID,
+            cardApplicationCardType: form.cardApplicationCardType,
+            cardProductExtID: form.cardProductExtID,
+            cardProductName: form.cardProductName,
+            smsInfo: form.messages.isOn,
             verificationCode: otp
         )
     }
+}
+
+extension OrderCard.Form {
+    
+    var isValid: Bool { otp?.count == 6 && consent } // rename to `canOrder`
 }
