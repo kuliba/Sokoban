@@ -332,10 +332,10 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
 private extension OrderCard.Form<OpenCardDomain.Confirmation>.Messages {
     
     static let `default`: Self = .init(
-        description: "",
-        icon: "",
-        subtitle: "",
-        title: "",
+        description: "Пуши и смс",
+        icon: "ic24MessageSquare",
+        subtitle: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С Тарифами за услугу согласен.",
+        title: "Способ уведомлений",
         isOn: false
     )
 }
