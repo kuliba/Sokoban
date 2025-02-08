@@ -101,49 +101,20 @@ extension RootViewModelFactory {
         dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenCardDomain.LoadFormResult) -> Void
     ) {
+        // TODO: add `onBackground` overload with response mapping
         let service = onBackground(
             makeRequest: RequestFactory.createGetCardOrderFormRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
         )
         
         service { [weak self] in
-            
-            let result: OpenCardDomain.LoadFormResult
-            
-            switch $0 {
-            case let .failure(failure):
-                result = .failure(failure.loadFailure)
-                
-            case let .success(response):
-                guard let digital = response.digital else {
-                    
-                    return completion(.failure(.init(
-                        message: "Что-то пошло не так.\nПопробуйте позже.",
-                        type: .alert
-                    )))
-                }
-                
-                result = .success(.init(
-                    requestID: UUID().uuidString.lowercased(),
-                    cardApplicationCardType: digital.type,
-                    cardProductExtID: digital.id,
-                    cardProductName: digital.title,
-                    messages: .init(
-                        description: "",
-                        icon: "",
-                        subtitle: "",
-                        title: "",
-                        isOn: false
-                    )
-                ))
-            }
-            
+                        
             if case .informer = $0.loadFailure?.type {
                 
                 self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
             }
             
-            completion(result)
+            completion($0.loadFormResult)
         }
     }
     
@@ -330,15 +301,50 @@ private extension OpenCardDomain.OrderCardPayload {
 }
 
 //private extension Result where Success == CreateCardApplicationResponse {
-//    
+//
 //    var orderCardResult: OpenCardDomain.OrderCardResult {
-//        
+//
 //        return .init(
 //            requestID: requestId,
 //            status: status == "SUBMITTED_FOR_REVIEW" || status == "DRAFT"
 //        )
 //    }
 //}
+
+private extension Result
+where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
+    
+    var loadFormResult: OpenCardDomain.LoadFormResult {
+        
+        switch self {
+        case let .failure(failure):
+            return .failure(failure.loadFailure)
+            
+        case let .success(response):
+            guard let digital = response.digital else {
+                
+                return .failure(.init(
+                    message: "Что-то пошло не так.\nПопробуйте позже.",
+                    type: .alert
+                ))
+            }
+            
+            return .success(.init(
+                requestID: UUID().uuidString.lowercased(),
+                cardApplicationCardType: digital.type,
+                cardProductExtID: digital.id,
+                cardProductName: digital.title,
+                messages: .init( // TODO: replace with private static instance
+                    description: "",
+                    icon: "",
+                    subtitle: "",
+                    title: "",
+                    isOn: false
+                )
+            ))
+        }
+    }
+}
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
     
