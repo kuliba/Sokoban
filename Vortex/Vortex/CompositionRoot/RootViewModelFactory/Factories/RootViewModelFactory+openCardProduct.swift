@@ -286,39 +286,35 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
             return .failure(failure.loadFailure)
             
         case let .success(response):
-            guard let digital = response.digital else {
-                
-                return .failure(.tryLaterAlert)
-            }
-            // TODO: extract mapping
-            return .success(.init(
-                requestID: UUID().uuidString.lowercased(),
-                cardApplicationCardType: digital.type,
-                cardProductExtID: digital.id,
-                cardProductName: digital.title,
-                messages: .init( // TODO: replace with private static instance
-                    description: "",
-                    icon: "",
-                    subtitle: "",
-                    title: "",
-                    isOn: false
-                               )
-            ))
+            let form = response.digital?.form
+            return form.map { .success($0) } ?? .failure(.tryLaterAlert)
         }
     }
 }
 
-private extension OpenCardDomain.LoadFailure {
+private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
     
-    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
-    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
-    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+    var form: OrderCard.Form<OpenCardDomain.Confirmation> {
+        
+        return .init(
+            requestID: UUID().uuidString.lowercased(),
+            cardApplicationCardType: type,
+            cardProductExtID: id,
+            cardProductName: title,
+            messages: .default
+        )
+    }
 }
 
-private extension String {
+private extension OrderCard.Form<OpenCardDomain.Confirmation>.Messages {
     
-    static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
-    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+    static let `default`: Self = .init(
+        description: "",
+        icon: "",
+        subtitle: "",
+        title: "",
+        isOn: false
+    )
 }
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
@@ -358,4 +354,17 @@ private extension RemoteServices.ResponseMapper.MappingResult<CreateCardApplicat
             }
         }
     }
+}
+
+private extension OpenCardDomain.LoadFailure {
+    
+    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
+    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
+    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+}
+
+private extension String {
+    
+    static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
+    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
 }
