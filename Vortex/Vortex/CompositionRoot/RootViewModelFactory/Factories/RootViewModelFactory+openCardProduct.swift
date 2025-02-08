@@ -108,7 +108,7 @@ extension RootViewModelFactory {
         )
         
         service { [weak self] in
-                        
+            
             if case .informer = $0.loadFailure?.type {
                 
                 self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
@@ -178,28 +178,7 @@ extension RootViewModelFactory {
         // TODO: use `onBackground` to create service
         let service = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCardApplicationRequest,
-            mapResponse: { data, response in
-                
-#warning("extract helper")
-                let result = RemoteServices.ResponseMapper.mapCreateCardApplicationResponse(data, response)
-                
-                switch result {
-                case .failure(.server(statusCode: 102, errorMessage: "Введен некорректный код. Попробуйте еще раз.")):
-                    return OpenCardDomain.OrderCardResult.failure(.init(message: "Введен некорректный код. Попробуйте еще раз.", type: .alert))
-                    
-                case .failure:
-                    return .success(false)
-                    
-                case let .success(response):
-                    switch response.status {
-                    case "SUBMITTED_FOR_REVIEW", "DRAFT":
-                        return OpenCardDomain.OrderCardResult.success(true)
-                        
-                    default:
-                        return .success(false)
-                    }
-                }
-            }
+            mapResponse: ResponseMapper.mapCreateCardApplicationServiceResponse
         )
         
         // TODO: use `onBackground` to create service
@@ -211,6 +190,21 @@ extension RootViewModelFactory {
                 _ = service
             }
         }
+    }
+}
+
+// MARK: - Helpers
+
+private extension ResponseMapper {
+    
+    static func mapCreateCardApplicationServiceResponse(
+        _ data: Data,
+        _ response: HTTPURLResponse
+    ) -> OpenCardDomain.OrderCardResult {
+        
+        let result = RemoteServices.ResponseMapper.mapCreateCardApplicationResponse(data, response)
+        
+        return result.orderCardResult
     }
 }
 
@@ -300,17 +294,6 @@ private extension OpenCardDomain.OrderCardPayload {
     }
 }
 
-//private extension Result where Success == CreateCardApplicationResponse {
-//
-//    var orderCardResult: OpenCardDomain.OrderCardResult {
-//
-//        return .init(
-//            requestID: requestId,
-//            status: status == "SUBMITTED_FOR_REVIEW" || status == "DRAFT"
-//        )
-//    }
-//}
-
 private extension Result
 where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
     
@@ -340,7 +323,7 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
                     subtitle: "",
                     title: "",
                     isOn: false
-                )
+                               )
             ))
         }
     }
@@ -356,5 +339,31 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
     var items: [RemoteServices.ResponseMapper.GetCardOrderFormData.Item] {
         
         list.flatMap(\.list)
+    }
+}
+
+private extension RemoteServices.ResponseMapper.MappingResult<CreateCardApplicationResponse> {
+    
+    var orderCardResult: OpenCardDomain.OrderCardResult {
+        
+        switch self {
+        case let .failure(failure):
+            switch failure {
+            case .server(statusCode: 102, errorMessage: "Введен некорректный код. Попробуйте еще раз."):
+                return .failure(.init(message: "Введен некорректный код. Попробуйте еще раз.", type: .alert))
+                
+            default:
+                return .success(false)
+            }
+            
+        case let .success(response):
+            switch response.status {
+            case "SUBMITTED_FOR_REVIEW", "DRAFT":
+                return .success(true)
+                
+            default:
+                return .success(false)
+            }
+        }
     }
 }
