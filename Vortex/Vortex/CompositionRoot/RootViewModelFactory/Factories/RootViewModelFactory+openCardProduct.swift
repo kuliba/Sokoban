@@ -117,12 +117,12 @@ extension RootViewModelFactory {
             case let .success(response):
                 guard let digital = response.digital else {
                     
-                   return completion(.failure(.init(
+                    return completion(.failure(.init(
                         message: "Что-то пошло не так.\nПопробуйте позже.",
                         type: .alert
                     )))
                 }
-
+                
                 result = .success(.init(
                     requestID: UUID().uuidString.lowercased(),
                     cardApplicationCardType: digital.type,
@@ -205,26 +205,38 @@ extension RootViewModelFactory {
         completion: @escaping (OpenCardDomain.OrderCardResult) -> Void
     ) {
         // TODO: use `onBackground` to create service
-        let createCardApplicationService = nanoServiceComposer.compose(
-            makeRequest: RequestFactory.createCardApplicationRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCreateCardApplicationResponse
-        )
-        
-        let service: (@escaping (OpenCardDomain.OrderCardResult) -> Void) -> Void = { [weak self] completion in
-            
-            self?.schedulers.background.delay(for: .seconds(2)) {
+        let service = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createCardApplicationRequest,
+            mapResponse: { data, response in
                 
-//                completion(.success(true))
-                completion(.failure(.init(message: "Error!!!!!", type: .alert)))
+#warning("extract helper")
+                let result = RemoteServices.ResponseMapper.mapCreateCardApplicationResponse(data, response)
+                
+                switch result {
+                case .failure(.server(statusCode: 102, errorMessage: "Введен некорректный код. Попробуйте еще раз.")):
+                    return OpenCardDomain.OrderCardResult.failure(.init(message: "Введен некорректный код. Попробуйте еще раз.", type: .alert))
+                    
+                case .failure:
+                    return .success(false)
+                    
+                case let .success(response):
+                    switch response.status {
+                    case "SUBMITTED_FOR_REVIEW", "DRAFT":
+                        return OpenCardDomain.OrderCardResult.success(true)
+                        
+                    default:
+                        return .success(false)
+                    }
+                }
             }
-        }
+        )
         
         // TODO: use `onBackground` to create service
         schedulers.background.schedule {
             
-            service { [service] in
-                #warning("need to notify OTP in case of special failure")
-                completion($0)
+            service(payload.createCardApplicationPayload) { [service] in
+#warning("need to notify OTP in case of special failure")
+                completion($0.mapError { $0.loadFailure })
                 _ = service
             }
         }
