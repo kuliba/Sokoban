@@ -320,11 +320,23 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
     var form: OrderCard.Form<OpenCardDomain.Confirmation> {
         
         return .init(
-            requestID: UUID().uuidString.lowercased(),
             cardApplicationCardType: type,
             cardProductExtID: id,
             cardProductName: title,
-            messages: .default
+            messages: .default,
+            //TODO: fix mapping
+            product: .init(
+                image: design,
+                options: [],
+                subtitle: description,
+                title: title
+            ),
+            requestID: UUID().uuidString.lowercased(),
+            type: .init(
+                title: "",
+                cardType: "",
+                icon: ""
+            )
         )
     }
 }

@@ -13,13 +13,10 @@ import UIPrimitives
 
 public struct OrderProcessCardConfig {
     
-    let amount: AmountConfig
     let background: Color
     let cornerRadius: CGFloat
     let header: TextWithConfig
-    let images: Images
     let income: Income
-    let linkableTexts: LinkableTexts
     let openButton: OpenButton
     let order: Order
     let padding: CGFloat
@@ -27,68 +24,25 @@ public struct OrderProcessCardConfig {
     let topUp: TopUp
     
     public init(
-        amount: AmountConfig,
         background: Color,
         cornerRadius: CGFloat,
         header: TextWithConfig,
-        images: Images,
         income: Income,
-        linkableTexts: LinkableTexts,
         openButton: OpenButton,
         order: Order,
         padding: CGFloat,
         shimmering: Color,
         topUp: TopUp
     ) {
-        self.amount = amount
         self.background = background
         self.cornerRadius = cornerRadius
         self.header = header
-        self.images = images
         self.income = income
-        self.linkableTexts = linkableTexts
         self.openButton = openButton
         self.order = order
         self.padding = padding
         self.shimmering = shimmering
         self.topUp = topUp
-    }
-    
-    public struct LinkableTexts {
-        
-        let checkBoxSize: CGSize
-        let condition: String
-        let tag: LinkableText.Tag
-        let tariff: String
-        
-        public init(
-            checkBoxSize: CGSize,
-            condition: String,
-            tag: LinkableText.Tag = ("<u>", "</u>"),
-            tariff: String
-        ) {
-            self.checkBoxSize = checkBoxSize
-            self.condition = condition
-            self.tag = tag
-            self.tariff = tariff
-        }
-    }
-    
-    public struct Images {
-        
-        let back: Image
-        let checkOff: Image
-        let checkOn: Image
-        
-        public init(
-            back: Image,
-            checkOff: Image,
-            checkOn: Image
-        ) {
-            self.back = back
-            self.checkOff = checkOff
-            self.checkOn = checkOn
-        }
     }
     
     public struct OpenButton {

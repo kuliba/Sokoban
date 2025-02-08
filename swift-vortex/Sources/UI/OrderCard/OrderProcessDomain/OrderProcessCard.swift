@@ -16,27 +16,21 @@ public struct OrderProcessCard: Equatable {
     let header: Header
     let hint: String
     let income: String
-    let links: Links
     
-    public init(currency: Currency, designMd5hash: String, fee: Fee, header: Header, hint: String, income: String, links: Links) {
+    public init(
+        currency: Currency,
+        designMd5hash: String,
+        fee: Fee,
+        header: Header,
+        hint: String,
+        income: String
+    ) {
         self.currency = currency
         self.designMd5hash = designMd5hash
         self.fee = fee
         self.header = header
         self.hint = hint
         self.income = income
-        self.links = links
-    }
-    
-    public struct Links: Equatable {
-        
-        let conditions: String
-        let tariff: String
-        
-        public init(conditions: String, tariff: String) {
-            self.conditions = conditions
-            self.tariff = tariff
-        }
     }
     
     public struct Fee: Equatable {
@@ -44,7 +38,10 @@ public struct OrderProcessCard: Equatable {
         let open: Int
         let subscription: Subscription
         
-        public init(open: Int, subscription: Subscription) {
+        public init(
+            open: Int,
+            subscription: Subscription
+        ) {
             self.open = open
             self.subscription = subscription
         }
@@ -55,7 +52,10 @@ public struct OrderProcessCard: Equatable {
         let period: String
         let value: Int
         
-        public init(period: String, value: Int) {
+        public init(
+            period: String,
+            value: Int
+        ) {
             self.period = period
             self.value = value
         }
@@ -66,7 +66,10 @@ public struct OrderProcessCard: Equatable {
         let code: Int
         let symbol: String
         
-        public init(code: Int, symbol: String) {
+        public init(
+            code: Int,
+            symbol: String
+        ) {
             self.code = code
             self.symbol = symbol
         }
@@ -77,7 +80,10 @@ public struct OrderProcessCard: Equatable {
         let title: String
         let subtitle: String
         
-        public init(title: String, subtitle: String) {
+        public init(
+            title: String,
+            subtitle: String
+        ) {
             self.title = title
             self.subtitle = subtitle
         }
