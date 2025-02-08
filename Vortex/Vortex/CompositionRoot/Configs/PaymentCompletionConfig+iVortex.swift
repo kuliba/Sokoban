@@ -13,148 +13,191 @@ extension PaymentCompletionConfig {
     
     static let iVortex: Self = .init(
         statuses: .init(
-            completed: .init(
-                content: .init(
-                    logo: .ic48Check,
-                    title: "Успешный перевод",
-                    subtitle: nil
-                ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .systemColorActive,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
-                )
+            completed: .completed(),
+            inflight: .inflight(),
+            rejected: .rejected(),
+            fraudCancelled: .fraudCancelled(),
+            fraudExpired: .fraudExpired()
+        )
+    )
+}
+
+extension PaymentCompletionConfig.Statuses.Status {
+    
+    static func completed(
+        title: String = "Успешный перевод",
+        subtitle: String? = nil
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                logo: .ic48Check,
+                title: title,
+                subtitle: subtitle
             ),
-            inflight: .init(
-                content: .init(
-                    logo: .ic48Clock,
-                    title: "Операция в обработке!",
-                    subtitle: nil
+            config: .init(
+                amount: .init(
+                    textFont: .textH1Sb24322(),
+                    textColor: .textSecondary
                 ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .systemColorWarning,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
-                )
-            ),
-            rejected: .init(
-                content: .init(
-                    logo: .ic48Close,
-                    title: "Операция неуспешна!",
-                    subtitle: nil
+                icon: .init(
+                    foregroundColor: .iconWhite,
+                    backgroundColor: .systemColorActive,
+                    innerSize: .init(width: 44, height: 44),
+                    outerSize: .init(width: 88, height: 88)
                 ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .mainColorsRed,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
-                )
-            ),
-            fraudCancelled: .init(
-                content: .init(
-                    logo: .ic48Clock,
-                    title: "Перевод отменен!",
-                    subtitle: nil
+                logoHeight: 44,
+                title: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
                 ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .systemColorWarning,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textRed
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
-                )
-            ),
-            fraudExpired: .init(
-                content: .init(
-                    logo: .ic48Clock,
-                    title: "Перевод отменен!",
-                    subtitle: "Время на подтверждение\nперевода вышло"
-                ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .systemColorWarning,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textRed
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
+                subtitle: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
                 )
             )
         )
-    )
+    }
+    
+    static func inflight(
+        title: String = "Операция в обработке!",
+        subtitle: String? = nil
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                logo: .ic48Clock,
+                title: title,
+                subtitle: subtitle
+            ),
+            config: .init(
+                amount: .init(
+                    textFont: .textH1Sb24322(),
+                    textColor: .textSecondary
+                ),
+                icon: .init(
+                    foregroundColor: .iconWhite,
+                    backgroundColor: .systemColorWarning,
+                    innerSize: .init(width: 44, height: 44),
+                    outerSize: .init(width: 88, height: 88)
+                ),
+                logoHeight: 44,
+                title: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                ),
+                subtitle: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
+            )
+        )
+    }
+    
+    static func rejected(
+        title: String = "Операция неуспешна!",
+        subtitle: String? = nil
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                logo: .ic48Close,
+                title: title,
+                subtitle: subtitle
+            ),
+            config: .init(
+                amount: .init(
+                    textFont: .textH1Sb24322(),
+                    textColor: .textSecondary
+                ),
+                icon: .init(
+                    foregroundColor: .iconWhite,
+                    backgroundColor: .mainColorsRed,
+                    innerSize: .init(width: 44, height: 44),
+                    outerSize: .init(width: 88, height: 88)
+                ),
+                logoHeight: 44,
+                title: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                ),
+                subtitle: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
+            )
+        )
+    }
+    
+    static func fraudCancelled(
+        title: String = "Перевод отменен!",
+        subtitle: String? = nil
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                logo: .ic48Clock,
+                title: title,
+                subtitle: subtitle
+            ),
+            config: .init(
+                amount: .init(
+                    textFont: .textH1Sb24322(),
+                    textColor: .textSecondary
+                ),
+                icon: .init(
+                    foregroundColor: .iconWhite,
+                    backgroundColor: .systemColorWarning,
+                    innerSize: .init(width: 44, height: 44),
+                    outerSize: .init(width: 88, height: 88)
+                ),
+                logoHeight: 44,
+                title: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textRed
+                ),
+                subtitle: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
+            )
+        )
+    }
+    
+    static func fraudExpired(
+        title: String = "Перевод отменен!",
+        subtitle: String? = "Время на подтверждение\nперевода вышло"
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                logo: .ic48Clock,
+                title: title,
+                subtitle: subtitle
+            ),
+            config: .init(
+                amount: .init(
+                    textFont: .textH1Sb24322(),
+                    textColor: .textSecondary
+                ),
+                icon: .init(
+                    foregroundColor: .iconWhite,
+                    backgroundColor: .systemColorWarning,
+                    innerSize: .init(width: 44, height: 44),
+                    outerSize: .init(width: 88, height: 88)
+                ),
+                logoHeight: 44,
+                title: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textRed
+                ),
+                subtitle: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
+            )
+        )
+    }
 }
 
 #if DEBUG
@@ -186,8 +229,8 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
             makeIconView: {
                 
                 return .init(
-                    image: .init(systemName: $0!),
-                    publisher: Just(.init(systemName: $0!)).eraseToAnyPublisher()
+                    image: .init(systemName: $0),
+                    publisher: Just(.init(systemName: $0)).eraseToAnyPublisher()
                 )
             },
             config: .iVortex
