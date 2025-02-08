@@ -35,8 +35,8 @@ public struct Form<Confirmation> {
     public var consent = true
     public var messages: Messages
     public var otp: String?
-    public var orderCardResult: OrderCardResult?
-    
+    public var orderCardResponse: OrderCardResponse?
+
     public init(
         requestID: String,
         cardApplicationCardType: String,
@@ -46,7 +46,7 @@ public struct Form<Confirmation> {
         consent: Bool = true,
         messages: Form<Confirmation>.Messages,
         otp: String? = nil,
-        orderCardResult: OrderCardResult? = nil
+        orderCardResponse: OrderCardResponse? = nil
     ) {
         self.requestID = requestID
         self.cardApplicationCardType = cardApplicationCardType
@@ -56,7 +56,7 @@ public struct Form<Confirmation> {
         self.consent = consent
         self.messages = messages
         self.otp = otp
-        self.orderCardResult = orderCardResult
+        self.orderCardResponse = orderCardResponse
     }
     
     public struct Messages: Equatable {

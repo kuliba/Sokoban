@@ -9,7 +9,14 @@ import Foundation
 
 public final class Reducer<Confirmation> {
     
-    public init() {}
+    private let otpWitness: OTPWitness
+    public typealias OTPWitness = (Confirmation) -> (String) -> Void
+    
+    public init(
+        otpWitness: @escaping OTPWitness
+    ) {
+        self.otpWitness = otpWitness
+    }
 }
 
 public extension Reducer {
@@ -47,7 +54,18 @@ public extension Reducer {
             }
             
         case let .orderCardResult(orderCardResult):
-            state.form?.orderCardResult = orderCardResult
+            // TODO: extract to helper
+            state.isLoading = false
+            
+            switch orderCardResult {
+            case let .failure(loadFailure):
+//                let notifyOTP = state.form?.confirmation?.success.flatMap(otpWitness)
+//                notifyOTP?(loadFailure.message)
+                break
+                //TODO: Fix with associated type
+            case let .success(orderCardResponse):
+                state.form?.orderCardResponse = orderCardResponse
+            }
             
         case let .otp(otp):
             if !state.isLoading && state.hasConfirmation {

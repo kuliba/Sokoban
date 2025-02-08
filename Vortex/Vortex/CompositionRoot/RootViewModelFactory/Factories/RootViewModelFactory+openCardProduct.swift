@@ -45,7 +45,7 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init()
     ) -> OpenCardDomain.Content {
         
-        let reducer = OpenCardDomain.Reducer { confirmation in
+        let reducer = OpenCardDomain.Reducer<OpenCardDomain.Confirmation> { confirmation in
             
             { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
         }
