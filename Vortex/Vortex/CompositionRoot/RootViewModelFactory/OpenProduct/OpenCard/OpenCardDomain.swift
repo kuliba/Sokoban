@@ -69,6 +69,7 @@ enum OpenCardDomain {
     
     typealias OrderCardPayload = OrderCard.OrderCardPayload
     typealias OrderCardResult = OrderCard.OrderCardResult
+    typealias OrderCardResponse = OrderCard.OrderCardResponse
 }
 
 enum OrderCard { // TODO: replace stub with types from module
@@ -76,8 +77,7 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
-        var orderCardResult: OrderCardResult?
-        var result: LoadResult<Confirmation>?
+        var result: LoadResult<Confirmation>? // TODO: rename to formResult?
     }
     
     struct Form<Confirmation> {
@@ -88,6 +88,7 @@ enum OrderCard { // TODO: replace stub with types from module
         var consent = true
         var messages: Messages
         var otp: String?
+        var orderCardResult: OrderCardResult?
         
         struct Messages: Equatable {
             
@@ -139,7 +140,8 @@ enum OrderCard { // TODO: replace stub with types from module
         let verificationCode: String
     }
     
-    typealias OrderCardResult = Bool // TODO: improve associated value
+    typealias OrderCardResult = Result<OrderCardResponse, LoadFailure>
+    typealias OrderCardResponse = Bool
     
     final class Reducer<Confirmation> {
         
@@ -178,7 +180,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 }
                 
             case let .orderCardResult(orderCardResult):
-                state.orderCardResult = orderCardResult
+                state.form?.orderCardResult = orderCardResult
                 
             case let .otp(otp):
                 if !state.isLoading && state.hasConfirmation {

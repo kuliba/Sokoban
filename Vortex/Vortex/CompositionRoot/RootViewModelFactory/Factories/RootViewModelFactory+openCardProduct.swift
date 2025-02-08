@@ -14,14 +14,14 @@ extension RootViewModelFactory {
     
     @inlinable
     func openCardProduct(
-        notify: @escaping (OpenCardDomain.OrderCardResult) -> Void
+        notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void
     ) -> OpenProduct.OpenCard {
         
         let content: OpenCardDomain.Content = makeContent()
         content.event(.load)
         
         let cancellable = content.$state
-            .compactMap(\.orderCardResult)
+            .compactMap(\.form?.orderCardResult?.success)
             .sink { notify($0) }
         
         let binder = composeBinder(
@@ -193,7 +193,8 @@ extension RootViewModelFactory {
             
             self?.schedulers.background.delay(for: .seconds(2)) {
                 
-                completion(true)
+//                completion(.success(true))
+                completion(.failure(.init(message: "Error!!!!!", type: .alert)))
             }
         }
         
@@ -226,22 +227,33 @@ private extension OpenCardDomain.State {
     
     var failure: OpenCardDomain.LoadFailure? {
         
-        switch result {
-        case let .failure(failure):
-            return failure
-            
-        case let .success(form):
-            switch form.confirmation {
-            case let .failure(failure):
-                return failure
-                
-            default:
-                return nil
-            }
-            
-        default:
-            return nil
-        }
+        return result?.failure ?? form?.failure
+    }
+}
+
+private extension OrderCard.Form {
+    
+    var failure: OrderCard.LoadFailure? {
+        
+        confirmation?.failure ?? orderCardResult?.failure
+    }
+}
+
+#warning("extract as reusable helper")
+private extension Result {
+    
+    var failure: Failure? {
+        
+        guard case let .failure(failure) = self else { return nil }
+        
+        return failure
+    }
+    
+    var success: Success? {
+        
+        guard case let .success(success) = self else { return nil }
+        
+        return success
     }
 }
 
