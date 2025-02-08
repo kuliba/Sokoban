@@ -237,24 +237,6 @@ private extension OrderCard.Form {
     }
 }
 
-#warning("extract as reusable helper")
-private extension Result {
-    
-    var failure: Failure? {
-        
-        guard case let .failure(failure) = self else { return nil }
-        
-        return failure
-    }
-    
-    var success: Success? {
-        
-        guard case let .success(success) = self else { return nil }
-        
-        return success
-    }
-}
-
 private extension Error {
     
     var loadFailure: OrderCard.LoadFailure {
@@ -264,7 +246,7 @@ private extension Error {
             return .init(message: errorMessage, type: .alert)
             
         default:
-            return .init(message: "Что-то пошло не так.\nПопробуйте позже.", type: .informer)
+            return .tryLaterInformer
         }
     }
 }
@@ -306,12 +288,9 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
         case let .success(response):
             guard let digital = response.digital else {
                 
-                return .failure(.init(
-                    message: "Что-то пошло не так.\nПопробуйте позже.",
-                    type: .alert
-                ))
+                return .failure(.tryLaterAlert)
             }
-            
+            // TODO: extract mapping
             return .success(.init(
                 requestID: UUID().uuidString.lowercased(),
                 cardApplicationCardType: digital.type,
@@ -327,6 +306,19 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
             ))
         }
     }
+}
+
+private extension OpenCardDomain.LoadFailure {
+    
+    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
+    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
+    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+}
+
+private extension String {
+    
+    static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
+    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
 }
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
@@ -349,8 +341,8 @@ private extension RemoteServices.ResponseMapper.MappingResult<CreateCardApplicat
         switch self {
         case let .failure(failure):
             switch failure {
-            case .server(statusCode: 102, errorMessage: "Введен некорректный код. Попробуйте еще раз."):
-                return .failure(.init(message: "Введен некорректный код. Попробуйте еще раз.", type: .alert))
+            case .server(statusCode: 102, errorMessage: ._invalidCode):
+                return .failure(.invalidCodeAlert)
                 
             default:
                 return .success(false)
