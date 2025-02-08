@@ -97,7 +97,7 @@ extension RootViewModelFactory {
     @inlinable
     func load(
         dismissInformer: @escaping () -> Void,
-        completion: @escaping (OpenCardDomain.LoadResult) -> Void
+        completion: @escaping (OpenCardDomain.LoadFormResult) -> Void
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createGetCardOrderFormRequest,
@@ -106,7 +106,7 @@ extension RootViewModelFactory {
         
         service { [weak self] in
             
-            let result: OpenCardDomain.LoadResult
+            let result: OpenCardDomain.LoadFormResult
             
             switch $0 {
             case let .failure(failure):
@@ -227,7 +227,7 @@ private extension OpenCardDomain.State {
     
     var failure: OpenCardDomain.LoadFailure? {
         
-        return result?.failure ?? form?.failure
+        return formResult?.failure ?? form?.failure
     }
 }
 

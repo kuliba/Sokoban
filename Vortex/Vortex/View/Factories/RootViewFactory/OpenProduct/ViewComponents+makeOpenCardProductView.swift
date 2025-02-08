@@ -41,11 +41,11 @@ extension ViewComponents {
         
         RxWrapperView(model: content) { state, event in
             
-            switch state.result {
+            switch state.formResult {
             case .none, .failure:
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundStyle(.tertiary)
-                    ._shimmering(isActive: state.result == nil)
+                    ._shimmering(isActive: state.formResult == nil)
                 
             case let .success(form):
                 switch form.confirmation {

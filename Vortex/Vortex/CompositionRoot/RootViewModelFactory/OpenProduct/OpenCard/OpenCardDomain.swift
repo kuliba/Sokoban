@@ -64,7 +64,7 @@ enum OpenCardDomain {
         }
     }
     
-    typealias LoadResult = OrderCard.LoadResult<Confirmation>
+    typealias LoadFormResult = OrderCard.LoadFormResult<Confirmation>
     typealias LoadFailure = OrderCard.LoadFailure
     
     typealias OrderCardPayload = OrderCard.OrderCardPayload
@@ -77,7 +77,7 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
-        var result: LoadResult<Confirmation>? // TODO: rename to formResult?
+        var formResult: LoadFormResult<Confirmation>?
     }
     
     struct Form<Confirmation> {
@@ -100,7 +100,7 @@ enum OrderCard { // TODO: replace stub with types from module
         }
     }
     
-    typealias LoadResult<Confirmation> = Result<Form<Confirmation>, LoadFailure>
+    typealias LoadFormResult<Confirmation> = Result<Form<Confirmation>, LoadFailure>
     typealias LoadConfirmationResult<Confirmation> = Result<Confirmation, LoadFailure>
     
     struct LoadFailure: Error, Equatable {
@@ -119,7 +119,7 @@ enum OrderCard { // TODO: replace stub with types from module
         case `continue`
         case dismissInformer
         case load
-        case loaded(LoadResult<Confirmation>)
+        case loaded(LoadFormResult<Confirmation>)
         case loadConfirmation(LoadConfirmationResult<Confirmation>)
         case setMessages(Bool)
         case orderCardResult(OrderCardResult)
@@ -172,7 +172,7 @@ enum OrderCard { // TODO: replace stub with types from module
                 
             case let .loaded(result):
                 state.isLoading = false
-                state.result = result
+                state.formResult = result
                 
             case let .setMessages(isOn):
                 if !state.isLoading {
@@ -218,7 +218,7 @@ enum OrderCard { // TODO: replace stub with types from module
         }
         
         typealias DismissInformer = () -> Void
-        typealias Load = (@escaping DismissInformer, @escaping (LoadResult<Confirmation>) -> Void) -> Void
+        typealias Load = (@escaping DismissInformer, @escaping (LoadFormResult<Confirmation>) -> Void) -> Void
         
         enum ConfirmationEvent {
             
@@ -289,10 +289,10 @@ private extension OrderCard.Reducer {
         _ state: inout State,
         _ effect: inout Effect?
     ) {
-        if case let .failure(failure) = state.result,
+        if case let .failure(failure) = state.formResult,
            case .informer = failure.type {
             
-            state.result = nil
+            state.formResult = nil
         }
         
         if case let .failure(failure) = state.form?.confirmation,
@@ -311,7 +311,7 @@ extension OrderCard.State {
         
         get {
             
-            guard case let .success(form) = result
+            guard case let .success(form) = formResult
             else { return nil }
             
             return form
@@ -319,10 +319,10 @@ extension OrderCard.State {
         
         set(newValue) {
             
-            guard let newValue, case .success = result
+            guard let newValue, case .success = formResult
             else { return }
             
-            result = .success(newValue)
+            formResult = .success(newValue)
         }
     }
     
