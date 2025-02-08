@@ -11,6 +11,7 @@ import Foundation
 import GetCardOrderFormService
 import OTPInputComponent
 import RemoteServices
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -23,7 +24,7 @@ extension RootViewModelFactory {
         content.event(.load)
         
         let cancellable = content.$state
-            .compactMap(\.form?.orderCardResult?.success)
+            .compactMap(\.form?.orderCardResponse)
             .sink { notify($0) }
         
         let binder = composeBinder(
@@ -43,7 +44,10 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init()
     ) -> OpenCardDomain.Content {
         
-        let reducer = OpenCardDomain.Reducer()
+        let reducer = OpenCardDomain.Reducer { confirmation in
+            
+            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+        }
         let effectHandler = OpenCardDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,
@@ -233,7 +237,7 @@ private extension OrderCard.Form {
     
     var failure: OrderCard.LoadFailure? {
         
-        confirmation?.failure ?? orderCardResult?.failure
+        confirmation?.failure// ?? orderCardResult?.failure
     }
 }
 
@@ -241,9 +245,27 @@ private extension Error {
     
     var loadFailure: OrderCard.LoadFailure {
         
-        switch self as? RemoteServices.ResponseMapper.MappingError {
-        case let .server(_, errorMessage: errorMessage):
-            return .init(message: errorMessage, type: .alert)
+        switch self {
+        case let failure as OrderCard.LoadFailure:
+            return failure
+            
+        case let failure as RemoteServiceError<Error, Error, OrderCard.LoadFailure>:
+            switch failure {
+            case let .mapResponse(failure):
+                return failure
+                
+            default:
+                return .tryLaterInformer
+            }
+            
+        case let mappingError as RemoteServices.ResponseMapper.MappingError:
+            switch mappingError {
+            case let .server(_, errorMessage):
+                return .init(message: errorMessage, type: .alert)
+                
+            default:
+                return .tryLaterInformer
+            }
             
         default:
             return .tryLaterInformer
