@@ -11,6 +11,7 @@ import SwiftUI
 
 extension ViewComponents {
     
+    @inlinable
     func makeOpenCardProductView(
         _ binder: OpenCardDomain.Binder,
         dismiss: @escaping () -> Void
@@ -35,6 +36,7 @@ extension ViewComponents {
         }
     }
     
+    @inlinable
     func makeOpenCardProductContentView(
         _ content: OpenCardDomain.Content
     ) -> some View {
@@ -140,6 +142,7 @@ extension ViewComponents {
         .buttonStyle(.borderedProminent)
     }
     
+    @inlinable
     func makeOTPView(
         viewModel: TimedOTPInputViewModel
     ) -> some View {
