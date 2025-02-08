@@ -12,11 +12,16 @@ extension RootViewModelFactory {
     
     func updateClientInformAlerts() -> AnyCancellable {
         
-        model.sessionState
+        let isActiveSession = model.sessionState
             .map(\.isActive)
             .filter { $0 }
-            .combineLatest( model.clientInformAlertManager.updatePermissionPublisher.filter { $0 })
-            .sink { [weak self] _, _ in self?.updateAlerts() }
+        
+        let canUpdate = model.clientInformAlertManager.updatePermissionPublisher.filter { $0 }
+        
+        return isActiveSession
+            .combineLatest(canUpdate)
+            .subscribe(on: schedulers.background)
+            .sink { [weak self] _,_ in self?.updateAlerts() }
     }
 }
 
@@ -25,32 +30,27 @@ extension RootViewModelFactory {
     @inlinable
     func updateAlerts() {
                 
-        let _createGetNotAuthorizedZoneClientInformData = nanoServiceComposer.compose(
+        let notAuthorized = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetNotAuthorizedZoneClientInformDataRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse
         )
         
-        let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAlerts?) -> Void) in
-            _createGetNotAuthorizedZoneClientInformData(()) {
-                
-                completion($0.alerts)
-                _ = _createGetNotAuthorizedZoneClientInformData
-            }
-        }
-        
-        createGetNotAuthorizedZoneClientInformData {
+        notAuthorized(()) { [weak self] in
             
-            if let alerts = $0 {
+            guard let self else { return }
+            
+            if let alerts = $0.alerts {
                 
-                self.logger.log(level: .info, category: .network, message: "notifications \(alerts)", file: #file, line: #line)
+                infoNetworkLog(message: "notifications \(alerts)")
+                model.clientInformAlertManager.update(alerts: alerts)
                 
-                self.model.clientInformAlertManager.update(alerts: alerts)
             } else {
+                errorLog(category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData")
                 
-                self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
+                self.model.clientInformAlertManager.dismissAll()
             }
             
-            _ = createGetNotAuthorizedZoneClientInformData
+            _ = notAuthorized
         }
     }
 }

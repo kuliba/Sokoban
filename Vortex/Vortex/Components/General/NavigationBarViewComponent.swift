@@ -548,12 +548,16 @@ extension NavigationBarView {
 struct NavigationBarViewModifier: ViewModifier {
     
     let viewModel: NavigationBarView.ViewModel
+    var backgroundColor: Color = .clear
     
     func body(content: Content) -> some View {
         
         VStack(spacing: 0) {
             
             NavigationBarView(viewModel: viewModel)
+                .background(backgroundColor)
+                .zIndex(1)
+            
             content
         }
         .navigationBarTitle("")
@@ -564,9 +568,17 @@ struct NavigationBarViewModifier: ViewModifier {
 
 extension View {
     
-    func navigationBar(with viewModel: NavigationBarView.ViewModel) -> some View {
+    func navigationBar(
+        with viewModel: NavigationBarView.ViewModel,
+        backgroundColor: Color = .clear
+    ) -> some View {
         
-        self.modifier(NavigationBarViewModifier(viewModel: viewModel))
+        self.modifier(
+            NavigationBarViewModifier(
+                viewModel: viewModel,
+                backgroundColor: backgroundColor
+            )
+        )
     }
 }
 

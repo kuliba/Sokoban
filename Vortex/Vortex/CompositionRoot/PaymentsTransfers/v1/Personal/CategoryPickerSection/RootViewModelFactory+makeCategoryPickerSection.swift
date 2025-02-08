@@ -27,24 +27,15 @@ extension RootViewModelFactory {
     func makeCategoryPickerSection(
     ) -> CategoryPickerSectionDomain.Binder {
         
-        let content = makeCategoryPickerContent(.init(
-            loadCategories: getServiceCategoriesWithoutQR,
-            reloadCategories: { $0(nil) },
-            loadAllLatest: { $0(nil) }
-        ))
+        let nanoServices = composePaymentsTransfersPersonalNanoServices()
         
-        return composeBinder(
-            content: content,
-            delayProvider: delayProvider,
-            getNavigation: getNavigation,
-            witnesses: .init(emitting: emitting, dismissing: dismissing)
-        )
+        return makeCategoryPickerSection(nanoServices: nanoServices)
     }
     
     @inlinable
     func makeCategoryPickerSection(
         nanoServices: PaymentsTransfersPersonalNanoServices
-    ) -> ReloadableCategoryPicker {
+    ) -> CategoryPickerSectionDomain.Binder {
         
         let content = makeCategoryPickerContent(nanoServices)
         
@@ -71,25 +62,54 @@ extension RootViewModelFactory {
     @inlinable
     func getNavigation(
         select: CategoryPickerSectionDomain.Select,
-        notify:@escaping CategoryPickerSectionDomain.Notify,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
-    ) -> Void {
+    ) {
+        switch select {
+        case let .category(category):
+            getNavigation(category: category, notify: notify, completion: completion)
         
-        let composer = SelectedCategoryGetNavigationComposer(
-            model: model,
-            nanoServices: .init(
-                makeMobile: makeMobilePayment,
-                makeStandard: { _,_ in }, // standard is not called for Section
-                makeTax: makeTaxPayment,
-                makeTransport: makeTransportPayment
-            ),
-            scheduler: schedulers.main
-        )
-        
-        composer.getNavigation(select, notify) {
-            
-            completion($0)
-            _ = composer
+        case .qr:
+            completion(.outside(.qr))
         }
     }
+    
+    @inlinable
+    func getNavigation(
+        category: ServiceCategory,
+        notify: @escaping CategoryPickerSectionDomain.Notify,
+        completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
+    ) {
+        switch category.paymentFlow {
+        case .mobile:
+            completion(.destination(.mobile(makeMobilePayment(
+                closeAction: { notify(.dismiss) }
+            ))))
+            
+        case .qr:
+            completion(.outside(.qr))
+            
+        case .standard:
+            completion(.outside(.standard(category)))
+            
+        case .taxAndStateServices:
+            completion(.destination(.taxAndStateServices(makeTaxPayment(
+                closeAction: { notify(.dismiss) }
+            ))))
+            
+        case .transport:
+            guard let transport = makeTransportPayment()
+            else { return completion(.failure(.transport)) }
+            
+            completion(.destination(.transport(transport)))
+        }
+    }
+}
+
+private extension SelectedCategoryFailure {
+    
+    static let transport: Self = .init(
+        id: .init(),
+        message: "Ошибка создания транспортных платежей"
+    )
 }

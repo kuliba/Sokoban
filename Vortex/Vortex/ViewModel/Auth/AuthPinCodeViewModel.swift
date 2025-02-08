@@ -122,15 +122,21 @@ class AuthPinCodeViewModel: ObservableObject {
 
     func bind() {
         
+        //TODO: check that .combineLatest(model.clientInform, self.viewDidAppear) and spinner hide shall be implemented
         model.clientInformAlertManager.alertPublisher
-            .receive(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.main)
+            .dropFirst()
             .sink { [weak self] alerts in
-                DispatchQueue.main.async {
-                    self?.clientInformAlerts = alerts
+                
+                guard let self else { return }
+                
+                if alerts == nil {
+                    tryAutoEvaluateSensor()
+                } else {
+                    clientInformAlerts = alerts
                 }
-            }
-            .store(in: &bindings)
-       
+                
+            }.store(in: &bindings)
 
         model.action
             .receive(on: DispatchQueue.main)
@@ -364,7 +370,9 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                     case .sensor:
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: sensor")
-                        guard let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true else {
+                        guard let sensor = model.authAvailableBiometricSensorType, 
+                              model.authIsBiometricSensorEnabled == true,
+                              self.clientInformAlerts?.updateAlert?.actionType != .authBlocking else {
                             return
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Sensor.Evaluate.Request")
@@ -386,6 +394,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             
                             self?.alert = nil
+                            self?.clientInformAlerts = nil
                             
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
                             self?.action.send(AuthPinCodeViewModelAction.Exit())
@@ -690,6 +699,9 @@ extension AuthPinCodeViewModel {
         
         model.clientInformAlertManager.dismiss()
         if let url = createAppStoreURL() { openURL(url) }
+        
+        guard self.clientInformAlerts?.updateAlert?.actionType != .authBlocking else { return }
+        tryAutoEvaluateSensor()
     }
     
     func dismissAll() {

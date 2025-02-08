@@ -43,7 +43,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func delayProvider(
-        navigation: PaymentsTransfersPersonalTransfersDomain.NavigationResult
+        navigation: PaymentsTransfersPersonalTransfersDomain.Navigation
     ) -> Delay {
         
         switch navigation {
@@ -56,12 +56,11 @@ extension RootViewModelFactory {
             
         case let .success(success):
             switch success {
-            case .contacts:          return .milliseconds(100)
-            case .meToMe:            return .milliseconds(100)
-            case .payments:          return .milliseconds(600)
-            case .paymentsViewModel: return .milliseconds(600)
-            case .scanQR:            return .milliseconds(100)
-            case .successMeToMe:     return .milliseconds(100)
+            case .contacts:      return .milliseconds(100)
+            case .meToMe:        return .milliseconds(100)
+            case .payments:      return .milliseconds(600)
+            case .scanQR:        return .milliseconds(100)
+            case .successMeToMe: return .milliseconds(600)
             }
         }
     }
@@ -72,7 +71,7 @@ extension RootViewModelFactory {
     ) -> (
         PaymentsTransfersPersonalTransfersDomain.Select,
         @escaping PaymentsTransfersPersonalTransfersDomain.Notify,
-        @escaping (PaymentsTransfersPersonalTransfersDomain.NavigationResult) -> Void
+        @escaping (PaymentsTransfersPersonalTransfersDomain.Navigation) -> Void
     ) -> Void {
         
         return { [weak self] select, notify, completion in

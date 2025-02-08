@@ -30,17 +30,20 @@ extension QRMappingFailureDomain {
     
     enum Select: Equatable {
         
-        case back
         case detailPayment
         case manualSearch
-        case scanQR
+        case outside(Outside)
+    }
+    
+    enum Outside {
+        
+        case back, chat, main, payments, scanQR
     }
     
     enum Navigation {
         
-        case back
         case detailPayment(Node<PaymentsViewModel>)
         case categoryPicker(Node<CategoryPickerViewDomain.Binder>)
-        case scanQR
+        case outside(Outside)
     }
 }

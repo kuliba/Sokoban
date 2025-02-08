@@ -217,11 +217,6 @@ extension OperationDetailViewModel {
             //FIXME: get currency from currencyList
             let currencyCode = "RUB"
             
-            if operation.flow == nil {
-             
-                operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
-            }
-            
             switch productStatement.paymentDetailType {
             case .contactAddressless:
                 if let transferReference = operation.transferReference {
@@ -311,13 +306,21 @@ extension OperationDetailViewModel {
                     feeViewModel.title = "Комиссия:"
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
+                
             case .transport:
                 if let feeViewModel = OperationDetailViewModel.FeeViewModel(with: operation, currencyCode: currencyCode)  {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
-            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
+                
+            case let type where type.isKnownPaymentType:
                 return operationViewModel
+                                
             default:
+                if operation.flow == nil {
+                    
+                    operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
+                }
+                
                 //FIXME: taxes & c2b
                 return operationViewModel
             }
@@ -328,6 +331,16 @@ extension OperationDetailViewModel {
 }
 
 private extension String {
+    
+    var isKnownPaymentType: Bool {
+        
+        knownPaymentTypes.contains(self)
+    }
+ 
+    private var knownPaymentTypes: [String] {
+        
+        [.outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash, "C2B_PAYMENT", "SBER_QR_PAYMENT"]
+    }
     
     static let warning = "В данной версии приложения операция отражается некорректно. Проверьте наличие обновления."
 }

@@ -10,31 +10,24 @@ import PaymentComponents
 
 struct CreateDraftCollateralLoanApplicationHeaderView: View {
     
-    let data: Data
+    let state: State
+    let event: (Event) -> Void
     let config: Config
     let factory: Factory
-    
+
     var body: some View {
         
-        ZStack {
-            RoundedRectangle(cornerRadius: config.layouts.cornerRadius)
-                .fill(config.colors.background)
-                .frame(maxWidth: .infinity)
-            
-            InfoView(
-                info: .init(
-                    id: .other(UUID().uuidString),
-                    title: config.header.title,
-                    value: data.name,
-                    style: .expanded
-                ),
-                config: .init(title: config.fonts.title, value: config.fonts.value),
-                icon: factory.makeImageView
-            )
-            .padding(config.layouts.paddings.contentStack)
-        }
-        .padding(config.layouts.paddings.stack)
-        .fixedSize(horizontal: false, vertical: true)
+        InfoView(
+            info: .init(
+                id: .other(State.FieldID.header.id),
+                title: config.elements.header.title,
+                value: state.data.name,
+                style: .expanded
+            ),
+            config: .init(title: config.fonts.title, value: config.fonts.value),
+            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.productName) }
+        )
+        .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }
 
@@ -42,7 +35,9 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationData
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
 }
 
 // MARK: - Previews
@@ -52,13 +47,19 @@ struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationHeaderView(
-            data: .preview,
-            config: .preview,
-            factory: Factory.preview
+            state: .init(
+                data: .preview,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
+            config: .default,
+            factory: .preview
         )
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationData
+    typealias Data = CreateDraftCollateralLoanApplicationUIData
 }

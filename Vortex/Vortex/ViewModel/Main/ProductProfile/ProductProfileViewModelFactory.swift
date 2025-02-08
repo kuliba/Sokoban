@@ -89,7 +89,7 @@ struct ProductProfileViewModelFactory {
         _ type: AbroadType,
         config: LandingUIComponent.UILanding.Component.Config,
         landingActions: @escaping (LandingUIComponent.LandingEvent.Sticker) -> () -> Void
-    ) -> LandingUIComponent.LandingWrapperViewModel {
+    ) -> LandingWrapperViewModel {
             
             self.model.landingStickerViewModelFactory(
                 abroadType: type,

@@ -8,33 +8,47 @@
 import Combine
 import SwiftUI
 import UIPrimitives
+import CollateralLoanLandingGetShowcaseUI
 
 public struct GetCollateralLandingFactory {
 
-    let config: GetCollateralLandingConfig
-    let makeImageView: MakeImageView
+    public let config: GetCollateralLandingConfig
+    public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
+    public let makeImageViewWithURL: MakeImageViewWithURL
     
     public init(
         config: GetCollateralLandingConfig = .default,
-        makeImageView: @escaping MakeImageView
+        makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
+        makeImageViewWithURL: @escaping MakeImageViewWithURL
     ) {
         self.config = config
-        self.makeImageView = makeImageView
+        self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
+        self.makeImageViewWithURL = makeImageViewWithURL
     }
 }
 
 public extension GetCollateralLandingFactory {
         
-    typealias MakeImageView = (String) -> UIPrimitives.AsyncImage
+    typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
+    typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
 }
 
-extension GetCollateralLandingFactory {
+// MARK: Preview helpers
+
+public extension GetCollateralLandingFactory {
     
     static let preview = Self(
-        makeImageView: { _ in .init(
-            image: .iconPlaceholder,
-            publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-        )}
+        makeImageViewWithMD5Hash: { _ in .preview },
+        makeImageViewWithURL: { _ in .preview }
+    )
+}
+
+extension UIPrimitives.AsyncImage {
+    
+    static let preview = Self(
+        image: .iconPlaceholder,
+        publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
     )
 }
 

@@ -11,10 +11,12 @@ extension ResponseMapper {
     
     public struct CreateDraftCollateralLoanApplicationData: Equatable {
         
-        public let applicationId: UInt
-        
-        public init(applicationId: UInt) {
-            self.applicationId = applicationId
+        public let applicationID: UInt
+
+        public init(
+            applicationID: UInt
+        ) {
+            self.applicationID = applicationID
         }
     }
 }

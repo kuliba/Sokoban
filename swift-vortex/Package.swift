@@ -31,6 +31,7 @@ let package = Package(
         .collateralLoanLandingGetShowcaseBackend,
         .collateralLoanLandingGetShowcaseUI,
         .collateralLoanLandingSaveConsentsBackend,
+        .orderCardLandingBackend,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -164,6 +165,8 @@ let package = Package(
         .collateralLoanLandingGetCollateralLandingUITests,
         .collateralLoanLandingSaveConsentsBackend,
         .collateralLoanLandingSaveConsentsBackendTests,
+        .orderCardLandingBackend,
+        .orderCardLandingBackendTests,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -499,6 +502,12 @@ private extension Product {
         ]
     )
         
+    static let orderCardLandingBackend = library(
+        name: .orderCardLandingBackend,
+        targets: [
+            .orderCardLandingBackend
+        ]
+    )
     // MARK: - UI
     
     static let activateSlider = library(
@@ -1368,6 +1377,7 @@ private extension Target {
     static let collateralLoanLandingGetShowcaseUI = target(
         name: .collateralLoanLandingGetShowcaseUI,
         dependencies: [
+            .otpInputComponent,
             .rxViewModel,
             .uiPrimitives
         ],
@@ -1425,8 +1435,14 @@ private extension Target {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
-            .uiPrimitives,
-            .paymentComponents
+            .inputComponent,
+            .linkableText,
+            .optionalSelectorComponent,
+            .otpInputComponent,
+            .paymentComponents,
+            .textFieldDomain,
+            .textFieldUI,
+            .uiPrimitives
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
@@ -1458,15 +1474,34 @@ private extension Target {
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/Backend/V1"
     )
 
+    static let orderCardLandingBackend = target(
+        name: .orderCardLandingBackend,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Landing/\(String.orderCardLandingBackend)"
+    )
+    
+    static let orderCardLandingBackendTests = testTarget(
+        name: .orderCardLandingBackendTests,
+        dependencies: [
+            .orderCardLandingBackend,
+            .customDump,
+            .uiPrimitives
+        ],
+        path: "Tests/Landing/\(String.orderCardLandingBackendTests)"
+    )
+    
     static let collateralLoanLandingGetCollateralLandingUI = target(
         name: .collateralLoanLandingGetCollateralLandingUI,
         dependencies: [
-            .bottomSheetComponent,
+            .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
             .dropDownTextListComponent,
             .rxViewModel,
             .sharedConfigs,
             .toggleComponent,
-            .uiPrimitives        ],
+            .uiPrimitives   
+        ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
     )
     
@@ -2795,7 +2830,9 @@ private extension Target {
             // internal packages
             .sharedConfigs,
             .uiPrimitives,
-            .rxViewModel,
+            .linkableText,
+            .amountComponent,
+            .paymentComponents
         ],
         path: "Sources/UI/\(String.orderCard)"
     )
@@ -3428,6 +3465,10 @@ private extension Target.Dependency {
         name: .collateralLoanLandingSaveConsentsBackend
     )
     
+    static let orderCardLandingBackend = byName(
+        name: .orderCardLandingBackend
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -3902,6 +3943,8 @@ private extension String {
     static let collateralLoanLandingSaveConsentsBackend = "CollateralLoanLandingSaveConsentsBackend"
     static let collateralLoanLandingSaveConsentsBackendTests = "CollateralLoanLandingSaveConsentsBackendTests"
     
+    static let orderCardLandingBackend = "OrderCardLandingBackend"
+    static let orderCardLandingBackendTests = "OrderCardLandingBackendTests"
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"

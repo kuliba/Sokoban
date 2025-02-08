@@ -9,7 +9,7 @@ import PayHubUI
 import RxViewModel
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     func makePaymentsTransfersCorporateView(
         _ binder: PaymentsTransfersCorporateDomain.Binder
@@ -48,7 +48,7 @@ extension RootViewFactory {
                     
                     makePaymentsTransfersCorporateToolbarView(binder)
                 },
-                makeTransfersSectionView: makeTransfersSectionView
+                makeTransfersSectionView: makeCorporateTransfersView
             ),
             config: .iVortex
         )
@@ -66,18 +66,6 @@ extension RootViewFactory {
         makeUserAccountToolbarButton {
             
             binder.flow.event(.select(.userAccount))
-        }
-    }
-    
-    private func makeTransfersSectionView() -> some View {
-        
-        ZStack {
-            
-            Color.green.opacity(0.5)
-            
-            Text("Transfers")
-                .foregroundColor(.white)
-                .font(.title3.bold())
         }
     }
     

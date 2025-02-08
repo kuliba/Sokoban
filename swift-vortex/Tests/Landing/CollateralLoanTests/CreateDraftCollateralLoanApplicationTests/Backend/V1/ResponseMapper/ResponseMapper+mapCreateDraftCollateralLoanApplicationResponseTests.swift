@@ -178,6 +178,6 @@ private extension String {
 private extension ResponseMapper.CreateDraftCollateralLoanApplicationData {
     
     static let stub: Self = .init(
-        applicationId: 123456
+        applicationID: 123456
     )
 }

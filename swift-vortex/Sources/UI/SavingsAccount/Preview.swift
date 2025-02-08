@@ -12,6 +12,7 @@ extension SavingsAccountConfig {
     
     static let preview: Self = .init(
         backImage: Image(systemName: "chevron.backward"),
+        bannerHeight: 703,
         chevronDownImage: Image(systemName: "chevron.down"),
         cornerRadius: 16,
         continueButton: .init(background: .red, cornerRadius: 12, height: 56, label: "Продолжить", title: .init(textFont: .body, textColor: .white)),
@@ -23,9 +24,6 @@ extension SavingsAccountConfig {
                 title: .init(textFont: .footnote, textColor: .black),
                 subtitle: .init(textFont: .footnote, textColor: .gray)),
             title: .init(textFont: .title3, textColor: .green)),
-        navTitle: .init(
-            title: .init(textFont: .body, textColor: .black),
-            subtitle: .init(textFont: .callout, textColor: .gray)),
         offsetForDisplayHeader: 100,
         paddings: .init(
             negativeBottomPadding: 60,
@@ -164,6 +162,7 @@ extension OrderSavingsAccountConfig {
                 service: "Стоимость обслуживания"), config: .init(title: .init(textFont: .body, textColor: .gray), subtitle: .init(textFont: .caption2, textColor: .black)))
         ),
         padding: 16,
+        shadowColor: .gray,
         shimmering: .background,
         topUp: .init(
             amount: .init(
@@ -186,7 +185,7 @@ extension SavingsAccountDetails {
         currentInterest: 22400,
         minBalance: 8000,
         paidInterest: 11134056.77,
-        progress: 0.8, 
+        progress: 0.8,
         currencyCode: "₽"
     )
 }
@@ -225,7 +224,7 @@ extension SavingsAccountDetailsConfig {
             currentInterest: "Проценты текущего периода",
             header: .init(text: "Детали счета", config: .init(textFont: .system(size: 20), textColor: .white)),
             minBalance: "Минимальный остаток текущего периода",
-            paidInterest: "Выплачено всего процентов", 
+            paidInterest: "Выплачено всего процентов",
             per: " / мес",
             days: "5 дней",
             interestDate: "Дата выплаты % - 31 мая",

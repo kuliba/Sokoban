@@ -654,15 +654,6 @@ extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     }
 }
 
-extension PaymentsTransfersCorporateDomain.Binder {
-    
-    var hasDestination: AnyPublisher<Bool, Never> {
-        
-#warning("unimplemented")
-        return Empty().eraseToAnyPublisher()
-    }
-}
-
 extension PaymentsTransfersPersonalDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
@@ -719,6 +710,55 @@ private extension TransfersPicker {
     var hasDestination: AnyPublisher<Bool, Never> {
         
         transfersBinder?.flow.$state.map(\.hasDestination).eraseToAnyPublisher() ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension PaymentsTransfersCorporateDomain.Binder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        let bannerPicker = content.bannerPicker.hasDestination
+        let corporateTransfers = content.corporateTransfers.hasDestination
+        let flowHasDestination = flow.$state.map(\.hasDestination)
+        
+        return Publishers.Merge3(
+            bannerPicker,
+            corporateTransfers,
+            flowHasDestination
+        )
+        .eraseToAnyPublisher()
+    }
+}
+
+extension CorporateBannerPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        bannerBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension BannerPickerSectionBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map { $0.destination != nil }.eraseToAnyPublisher()
+    }
+}
+
+extension CorporateTransfersProtocol {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        corporateTransfers?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension PaymentsTransfersCorporateTransfers {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        openProduct.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
 }
 

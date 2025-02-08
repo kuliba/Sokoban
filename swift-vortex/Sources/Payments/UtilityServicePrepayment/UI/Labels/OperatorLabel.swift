@@ -37,8 +37,7 @@ where IconView: View {
             titleView()
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.vertical, 8)
-        .frame(height: 46)
+        .frame(height: config.height)
     }
 }
 

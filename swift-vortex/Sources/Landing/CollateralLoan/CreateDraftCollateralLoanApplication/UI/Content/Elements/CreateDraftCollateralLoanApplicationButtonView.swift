@@ -1,0 +1,110 @@
+//
+//  CreateDraftCollateralLoanApplicationButtonView.swift
+//
+//
+//  Created by Valentin Ozerov on 20.01.2025.
+//
+
+import SwiftUI
+import OTPInputComponent
+
+struct CreateDraftCollateralLoanApplicationButtonView: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
+    let factory: Factory
+
+    var body: some View {
+        
+        Button(action: tapped) {
+            
+            Text(title)
+                .frame(maxWidth: .infinity)
+                .frame(height: config.elements.button.layouts.height)
+                .foregroundColor(config.elements.button.colors.foreground)
+                .background(backgroundColor)
+                .cornerRadius(config.elements.button.layouts.cornerRadius)
+                .font(config.elements.button.font.font)
+        }
+        .disabled(state.isButtonDisabled)
+        .padding(config.elements.button.layouts.paddings)
+    }
+        
+    private var title: String {
+        
+        state.stage == .correctParameters
+            ? config.elements.button.continueTitle
+            : config.elements.button.createTitle
+    }
+    
+    private var backgroundColor: Color {
+        
+        state.isButtonDisabled
+            ? config.elements.button.colors.disabled
+            : config.elements.button.colors.background
+    }
+    
+    private func tapped() {
+        
+        event(state.stage == .correctParameters ? .tappedContinue : .tappedSubmit)
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationButtonView {
+    
+    typealias Config = CreateDraftCollateralLoanApplicationConfig
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Event = Domain.Event
+    typealias State = Domain.State
+    typealias Factory = CreateDraftCollateralLoanApplicationFactory
+}
+
+// MARK: - Previews
+
+struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        VStack {
+            
+            CreateDraftCollateralLoanApplicationButtonView(
+                state: .init(
+                    data: .preview,
+                    stage: .correctParameters,
+                    confirmation: .preview
+                ),
+                event: { print($0) },
+                config: .default,
+                factory: .preview
+            )
+            .previewDisplayName("1st stage. Enabled button")
+            
+            CreateDraftCollateralLoanApplicationButtonView(
+                state: .init(
+                    data: .preview,
+                    stage: .correctParameters,
+                    confirmation: .preview
+                ),
+                event: { print($0) },
+                config: .default,
+                factory: .preview
+            )
+            .previewDisplayName("1st stage. Disabled button")
+
+            CreateDraftCollateralLoanApplicationButtonView(
+                state: .init(
+                    data: .preview,
+                    stage: .confirm,
+                    confirmation: .preview
+                ),
+                event: { print($0) },
+                config: .default,
+                factory: .preview
+            )
+            .previewDisplayName("2st stage")
+        }
+    }
+    
+    typealias Factory = CreateDraftCollateralLoanApplicationFactory
+}

@@ -330,7 +330,11 @@ enum OperationDetailViewModelAction {
 
 private extension OperationDetailViewModel {
     
-    func infoFeatureButtonViewModel(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData? = nil) -> FeatureButtonViewModel? {
+    func infoFeatureButtonViewModel(
+        with productStatement: ProductStatementData,
+        product: ProductData,
+        operationDetail: OperationDetailData? = nil
+    ) -> FeatureButtonViewModel? {
         
         guard let operationDetailInfoViewModel = OperationDetailInfoViewModel(
             with: productStatement,

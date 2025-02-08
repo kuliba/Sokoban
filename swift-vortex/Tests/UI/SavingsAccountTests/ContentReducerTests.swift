@@ -95,31 +95,75 @@ final class ContentReducerTests: XCTestCase {
         
         assert(.failure(.alert(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
     }
-
-    func test_reduce_selectOrder_shouldSelectionToOrder() {
+    
+    func test_reduce_offsetMoreThenShowTitleOffset_shouldNavTitleToValue() {
         
-        assertState(.selectOrder, on: .init(status: .inflight(nil))) {
+        let landing = anyMessage()
+        let sut = makeSUT(showTitleRange: 20...)
+        
+        assertState(sut: sut, .offset(25), on: .init(status: .loaded(landing))) {
             
-            $0.selection = .order
+            $0.navTitle = .savingsAccount
         }
     }
     
-    func test_reduce_selectOrder_shouldDeliverNoEffect() {
+    func test_reduce_offsetMoreThenShowTitleOffset_shouldDeliverNoEffect() {
         
-        assert(.selectOrder, on: .init(status: .inflight(nil)), effect: nil)
+        let landing = anyMessage()
+        let sut = makeSUT(showTitleRange: 20...)
+
+        assert(sut: sut, .offset(25), on: .init(status: .loaded(landing)), effect: nil)
+    }
+    
+    func test_reduce_offsetLessThenShowTitleOffset_shouldNotChangeState() {
+        
+        let landing = anyMessage()
+        let sut = makeSUT(showTitleRange: 20...)
+        
+        assertState(sut: sut, .offset(18), on: .init(status: .loaded(landing)))
+    }
+    
+    func test_reduce_offsetLessThenShowTitleOffset_shouldDeliverNoEffect() {
+        
+        let landing = anyMessage()
+        let sut = makeSUT(showTitleRange: 20...)
+
+        assert(sut: sut, .offset(18), on: .init(status: .loaded(landing)), effect: nil)
     }
 
-    func test_reduce_reset_shouldSelectionToNil() {
+    func test_reduce_refreshOffsetContainOffset_shouldStatusToInflight() {
         
-        assertState(.resetSelection, on: .init(selection: .order, status: .inflight(nil))) {
+        let landing = anyMessage()
+        let sut = makeSUT(refreshRange: 0..<10)
+        
+        assertState(sut: sut, .offset(8), on: .init(status: .loaded(landing))) {
             
-            $0.selection = nil
+            $0.status = .inflight(landing)
         }
     }
     
-    func test_reduce_reset_shouldDeliverNoEffect() {
+    func test_reduce_refreshOffsetContainOffset_shouldDeliverLoadEffect() {
         
-        assert(.resetSelection, on: .init(selection: .order, status: .inflight(nil)), effect: nil)
+        let landing = anyMessage()
+        let sut = makeSUT(refreshRange: 0..<10)
+
+        assert(sut: sut, .offset(8), on: .init(status: .loaded(landing)), effect: .load)
+    }
+    
+    func test_reduce_refreshOffsetNotContainOffset_shouldNotChangeState() {
+        
+        let landing = anyMessage()
+        let sut = makeSUT(refreshRange: 0..<10)
+        
+        assertState(sut: sut, .offset(18), on: .init(status: .loaded(landing)))
+    }
+    
+    func test_reduce_refreshOffsetNotContainOffset_shouldDeliverNoEffect() {
+        
+        let landing = anyMessage()
+        let sut = makeSUT(refreshRange: 0..<10)
+
+        assert(sut: sut, .offset(18), on: .init(status: .loaded(landing)), effect: nil)
     }
 
     // MARK: - Helpers
@@ -131,11 +175,13 @@ final class ContentReducerTests: XCTestCase {
     private typealias UpdateStateToExpected = (_ state: inout State) -> Void
     
     private func makeSUT(
+        refreshRange: Range<CGFloat> = -102..<0,
+        showTitleRange: PartialRangeFrom<CGFloat> = 100...,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(refreshRange: refreshRange, showTitleRange: showTitleRange)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -143,13 +189,14 @@ final class ContentReducerTests: XCTestCase {
     }
     
     private func assertState(
+        sut: SUT? = nil,
         _ event: Event,
         on state: State,
         updateStateToExpected: UpdateStateToExpected? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = makeSUT()
+        let sut = sut ?? makeSUT()
         
         var expectedState = state
         updateStateToExpected?(&expectedState)

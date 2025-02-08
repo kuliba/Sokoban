@@ -28,7 +28,6 @@ final class RootViewFactoryComposerTests: XCTestCase {
         let sut = SUT(
             model: model ?? .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
-            historyFeatureFlag: .init(true), 
             savingsAccountFlag: .init(rawValue: .inactive), 
             schedulers: .immediate
         )

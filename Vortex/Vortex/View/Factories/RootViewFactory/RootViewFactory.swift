@@ -8,8 +8,10 @@
 import ActivateSlider
 import AnywayPaymentDomain
 import Banners
+import CollateralLoanLandingGetShowcaseUI
 import LoadableResourceComponent
 import MarketShowcase
+import RemoteServices
 import SberQR
 import SplashScreen
 import SwiftUI
@@ -25,6 +27,7 @@ typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTr
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeSplashScreenView = (SplashScreenState, @escaping (SplashScreenEvent) -> Void) -> SplashScreenView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeTemplateButtonWrapperView = (OperationDetailData) -> TemplateButtonStateWrapperView
 
 typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
 typealias MakeOrderCard = () -> Void
@@ -34,29 +37,48 @@ typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     
-    let clearCache: () -> Void
-    let isCorporate: () -> Bool
+    struct Infra {
+        
+        let imageCache: ImageCache
+        let generalImageCache: ImageCache
+        let getUImage: (Md5hash) -> UIImage?
+    }
+    
+    // TODO: add init, make `infra` private
+    let infra: Infra
+    
     let makeActivateSliderView: MakeActivateSliderView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView
-    let makeIconView: MakeIconView
-    let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeSplashScreenView: MakeSplashScreenView
-    let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
     let components: ViewComponents
     let paymentsViewFactory: PaymentsViewFactory
+    let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
 }
 
 extension RootViewFactory {
+
+    var makeGeneralIconView: MakeIconView {
+        
+        infra.generalImageCache.makeIconView(for:)
+    }
+    
+    var makeIconView: MakeIconView {
+        
+        infra.imageCache.makeIconView(for:)
+    }
+}
+
+extension ViewComponents {
     
     struct MakeInfoViews {
         
@@ -65,10 +87,15 @@ extension RootViewFactory {
     }
     
     func makePaymentProviderPickerView(
-        _ binder: PaymentProviderPickerDomain.Binder
+        binder: PaymentProviderPickerDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> PaymentProviderPickerView {
         
-        return .init(binder: binder, components: components, makeIconView: makeIconView)
+        return .init(
+            binder: binder,
+            dismiss: dismiss,
+            components: self
+        )
     }
 }
 
@@ -87,7 +114,6 @@ extension RootViewFactory {
             makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
             components: components
         )

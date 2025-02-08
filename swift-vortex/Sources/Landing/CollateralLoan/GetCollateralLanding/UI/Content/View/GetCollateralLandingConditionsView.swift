@@ -11,9 +11,9 @@ import UIPrimitives
 
 struct GetCollateralLandingConditionsView: View {
     
-    let state: State
+    let product: Product
     let config: Config
-    let makeImageView: Factory.MakeImageView
+    let makeImageViewWithMD5Hash: Factory.MakeImageViewWithMD5Hash
     
     var body: some View {
         
@@ -50,12 +50,12 @@ struct GetCollateralLandingConditionsView: View {
 
             VStack {
                 
-                ForEach(state.product.conditions, id: \.title) {
+                ForEach(product.conditions, id: \.title) {
                     
                     GetCollateralLandingConditionView(
                         condition: $0,
                         config: config,
-                        makeImageView: makeImageView
+                        makeImageViewWithMD5Hash: makeImageViewWithMD5Hash
                     )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
@@ -127,9 +127,9 @@ struct GetCollateralLandingConditionsView_Previews: PreviewProvider {
     static var previews: some View {
 
             GetCollateralLandingConditionsView(
-                state: .init(product: .carStub),
+                product: .carStub,
                 config: .default,
-                makeImageView: Factory.preview.makeImageView
+                makeImageViewWithMD5Hash: Factory.preview.makeImageViewWithMD5Hash
             )
             .frame(height: 100)
     }

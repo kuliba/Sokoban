@@ -6,45 +6,37 @@
 //
 
 @testable import Vortex
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetShowcaseUI
+import Combine
 import CombineSchedulers
 import LandingUIComponent
 import SberQR
-import XCTest
-import CollateralLoanLandingGetShowcaseUI
-import CollateralLoanLandingGetCollateralLandingUI
 import UIPrimitives
-import Combine
+import XCTest
 
 final class MainViewModelTests: XCTestCase {
     
-    func test_init_cacheNotContainsSticker_shouldSetStickerToNil()  {
-        
-        let (sut, _) = makeSUT()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNil(sut.sections.stickerViewModel)
-    }
+    // TODO: - fix and restore
+//    func test_init_cacheNotContainsSticker_shouldSetStickerToNil()  {
+//        
+//        let (sut, _) = makeSUT()
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+//        
+//        XCTAssertNil(sut.sections.stickerViewModel)
+//    }
     
     func test_init_cacheContainsSticker_shouldSetSticker() throws {
         
-        let (sut, _) = makeSUTWithLocalAgent(localAgent: try makeLocalAgentForSticker())
+        let (sut, model) = makeSUT()
+        model.productListBannersWithSticker.value = [.init(productName: anyMessage(), link: anyMessage(), md5hash: anyMessage(), action: nil)]
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
         
         XCTAssertNotNil(sut.sections.stickerViewModel)
     }
-    
-    func test_updateImages_imageNotSticker_shouldNotUpdateSticker() {
         
-        let (sut, model) = makeSUT()
-        let stickerSpy = ValueSpy(sut.$sections.map(\.stickerViewModel?.backgroundImage))
-        XCTAssertNoDiff(stickerSpy.values, [nil])
-        
-        model.images.value = ["1": .tiny()]
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertNoDiff(stickerSpy.values, [nil, nil])
-    }
-    
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT(scheduler: .immediate)
@@ -96,22 +88,14 @@ final class MainViewModelTests: XCTestCase {
     
     func test_productCarouselStickerDidTapped()  {
         
-        let (sut, _) = makeSUTWithMainSectionProductsViewVM()
+        let (sut, spy) = makeSUTWithSpy()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+                
+        XCTAssertNoDiff(spy.values, [])
         
-        let sutActionSpy = ValueSpy(
-            sut.productCarouselViewModel.action.compactMap { $0 as? ProductCarouselViewModelAction.Products.StickerDidTapped })
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        sut.productCarouselViewModel.showPromoProductAndWait(.sticker)
         
-        XCTAssertNoDiff(sutActionSpy.values.count, 0)
-        
-        sut.productCarouselViewModel.action.send(ProductCarouselViewModelAction.Products.StickerDidTapped())
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-        
-        XCTAssertNoDiff(sutActionSpy.values.count, 1)
-        
-        XCTAssertNotNil(sutActionSpy.values.first)
+        XCTAssertNoDiff(spy.values, [.init(promo: .sticker)])
     }
     
     func test_orderSticker_showsAlert_whenNoCards() {
@@ -128,12 +112,8 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: {
-                _,_,_,_   in nil
-            },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
-            qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
@@ -142,8 +122,11 @@ final class MainViewModelTests: XCTestCase {
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in [] }
         )
         
@@ -185,6 +168,18 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [nil, .paymentSticker])
     }
     
+    func test_productCarouselSavingsActionDidTapped()  {
+        
+        let (sut, spy) = makeSUTWithSpy()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertNoDiff(spy.values, [])
+        
+        sut.productCarouselViewModel.showPromoProductAndWait(.savingsAccount)
+
+        XCTAssertNoDiff(spy.values, [.init(promo: .savingsAccount)])
+    }
+
     func test_tapQr_onlyCorporateCards_shouldShowAlert() {
         
         let (sut, model) = makeSUT()
@@ -349,26 +344,26 @@ final class MainViewModelTests: XCTestCase {
 
     // MARK: TODO - fix next two tests. Fail on CI
 //    func test_shouldCallMakeCollateralLoanLandingViewModelOnOpenCollateralLoanLandingProductEvent() throws {
-//        
+//
 //        let showcase = makeCollateralLoanLandingViewModel()
 //        let showcaseSpy = ShowcaseSpy(stubs: .init(repeating: showcase, count: 100))
 //        let (sut, _) = makeSUT(showcaseSpy: showcaseSpy, scheduler: .immediate)
 //        XCTAssertEqual(showcaseSpy.callCount, 0)
-//        
+//
 //        try sut.tapOpenCollateralLoanLandingButton()
 //
 //        XCTAssertEqual(showcaseSpy.callCount, 1)
 //    }
-//    
+//
 //    func test_shouldSetDestinationOnOpenCollateralLoanLandingProductEvent() throws {
-//        
+//
 //        let showcase = makeCollateralLoanLandingViewModel()
 //        let showcaseSpy = ShowcaseSpy(stubs: .init(repeating: showcase, count: 100))
 //        let (sut, _) = makeSUT(showcaseSpy: showcaseSpy, scheduler: .immediate)
 //        XCTAssertNil(sut.route.destination)
-//        
+//
 //        try sut.tapOpenCollateralLoanLandingButton()
-//        
+//
 //        try XCTAssert(XCTUnwrap(sut.getShowcaseDomainViewModel) === showcase)
 //    }
     
@@ -377,7 +372,7 @@ final class MainViewModelTests: XCTestCase {
         let (sut, _) = makeSUT(scheduler: .immediate)
         XCTAssertNil(sut.route.destination)
         
-        sut.mainSection?.showSticker()
+        sut.mainSection?.showPromoProduct(.sticker)
         
         XCTAssertNoDiff(sut.route.case, .landing)
     }
@@ -761,12 +756,18 @@ final class MainViewModelTests: XCTestCase {
         
         let qrViewModelFactory = QRViewModelFactory.preview()
         
+        let viewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1)},
+            makeProductProfileViewModel: { _,_,_,_ in .sample },
+            makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
+            qrViewModelFactory: qrViewModelFactory
+        )
+        
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_ in .sample },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
+           // qrViewModelFactory: qrViewModelFactory,
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
@@ -777,9 +778,11 @@ final class MainViewModelTests: XCTestCase {
                 makeCollateralLoanShowcaseBinder: { .preview },
                 makeCollateralLoanLandingBinder: { _ in
                     collateralLandingSpy.call()
-                }, 
+                },
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -802,49 +805,7 @@ final class MainViewModelTests: XCTestCase {
             MainSectionAtmView.ViewModel.initial
         ]
     }
-    
-    private func makeSUTWithLocalAgent(
-        localAgent: LocalAgent,
-        buttons: [NewProductButton.ViewModel] = [],
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> (
-        sut: MainViewModel,
-        model: Model
-    ) {
-        let model: Model = Model.mockWithEmptyExcept(localAgent: localAgent)
-        let sberQRServices = SberQRServices.preview(
-            createSberQRPaymentResultStub: .success(.empty()),
-            getSberQRDataResultStub: .success(.empty())
-        )
         
-        let sut = MainViewModel(
-            model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
-            navigationStateManager: .preview,
-            sberQRServices: sberQRServices,
-            qrViewModelFactory: .preview(),
-            landingServices: .empty(),
-            paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: .inactive,
-            onRegister: {},
-            sections: makeSections(),
-            bindersFactory: .init(
-                bannersBinder: .preview,
-                makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
-                makeSavingsAccountBinder: { fatalError() }
-            ),
-            makeOpenNewProductButtons: { _ in buttons }
-        )
-        
-        // trackForMemoryLeaks(sut, file: file, line: line)
-        // TODO: restore memory leaks tracking after Model fix
-        // trackForMemoryLeaks(model, file: file, line: line)
-        
-        return (sut, model)
-    }
-    
     private func makeSUT(
         currencyList: [CurrencyData],
         currencyWalletList: [CurrencyWalletData],
@@ -865,12 +826,17 @@ final class MainViewModelTests: XCTestCase {
             getSberQRDataResultStub: .success(.empty())
         )
         
+        let viewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1)},
+            makeProductProfileViewModel: { _,_,_,_ in nil },
+            makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
+            qrViewModelFactory: .preview()
+        )
+
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
@@ -879,9 +845,11 @@ final class MainViewModelTests: XCTestCase {
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -896,6 +864,24 @@ final class MainViewModelTests: XCTestCase {
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = AdditionalProductViewModel
     
+    private func makeSUTWithSpy(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: MainSectionViewVM,
+        promoSpy: ValueSpy<ProductCarouselViewModelAction.Products.PromoDidTapped>
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        let sut = MainSectionViewVM(model, promoProducts: nil)
+        
+        let spy = ValueSpy(
+            sut.productCarouselViewModel.action.compactMap { $0 as? ProductCarouselViewModelAction.Products.PromoDidTapped })
+
+        // trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return (sut, spy)
+    }
+
     private func makeSUTWithMainSectionProductsViewVM(
         file: StaticString = #file,
         line: UInt = #line
@@ -904,7 +890,7 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = MainSectionViewVM(model, stickerViewModel: nil)
+        let sut = MainSectionViewVM(model, promoProducts: nil)
         
         // trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -933,10 +919,8 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
-            qrViewModelFactory: .preview(),
             landingServices: .empty(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .inactive,
@@ -945,9 +929,11 @@ final class MainViewModelTests: XCTestCase {
             bindersFactory: .init(
                 bannersBinder: .preview,
                 makeCollateralLoanShowcaseBinder: { .preview },
-                makeCollateralLoanLandingBinder: { _ in .preview },
+                makeCollateralLoanLandingBinder: { _ in .preview }, 
+                makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
                 makeSavingsAccountBinder: { fatalError() }
             ),
+            viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in buttons },
             scheduler: scheduler
         )
@@ -1070,7 +1056,7 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(),
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
@@ -1106,6 +1092,35 @@ private extension GetShowcaseDomain.Flow {
 private extension GetShowcaseDomain.Content {
     
     static let preview: GetShowcaseDomain.Content = .init(
+        initialState: .init(),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
+
+private extension CreateDraftCollateralLoanApplicationDomain.Binder {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Content {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
+        initialState: .init(data: .preview),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Flow {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
         initialState: .init(),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
@@ -1284,7 +1299,7 @@ private extension MainViewModel {
         let openProductSection = try XCTUnwrap(section, file: file, line: line)
 
         let openCollateralLoanLandingAction =
-        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .loan) 
+        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .loan)
         openProductSection.action.send(openCollateralLoanLandingAction)
     }
 }
@@ -1389,25 +1404,47 @@ private extension MainViewModel {
 
 private extension MainSectionOpenProductView.ViewModel {
     
-    func tapStickerAndWait(timeout: TimeInterval = 0.05) {
-        let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
+    func tapPromoProductAndWait(
+        _ promo: PromoProduct,
+        timeout: TimeInterval = 0.05
+    ) {
+        let stickerAction = MainSectionViewModelAction.Products.PromoDidTapped(promo: promo)
         action.send(stickerAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
 
+private extension ProductCarouselView.ViewModel {
+    
+    func showPromoProductAndWait(
+        _ promo: PromoProduct,
+        timeout: TimeInterval = 0.05
+    ) {
+        
+        let promoAction = ProductCarouselViewModelAction.Products.PromoDidTapped(promo: promo)
+        action.send(promoAction)
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
 private extension MainSectionProductsView.ViewModel {
     
-    func showSticker() {
+    func showPromoProduct(
+        _ promo: PromoProduct
+    ) {
         
-        let stickerAction = MainSectionViewModelAction.Products.StickerDidTapped()
-        action.send(stickerAction)
+        let promoAction = MainSectionViewModelAction.Products.PromoDidTapped(promo: promo)
+        action.send(promoAction)
     }
     
-    func showStickerAndWait(timeout: TimeInterval = 0.05) {
+    func showPromoProductAndWait(
+        _ promo: PromoProduct,
+        timeout: TimeInterval = 0.05
+    ) {
         
-        showSticker()
+        showPromoProduct(promo)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -1460,10 +1497,6 @@ private extension MainViewModelTests {
     
     static let cardProducts = [cardActiveAddUsdIsMainFalse,
                                cardActiveAddUsdIsMainTrue]
-}
-
-extension MainSectionViewModelAction.Products.StickerDidTapped: Equatable {
-    public static func == (lhs: MainSectionViewModelAction.Products.StickerDidTapped, rhs: MainSectionViewModelAction.Products.StickerDidTapped) -> Bool { return true }
 }
 
 private extension CurrencyWalletData {

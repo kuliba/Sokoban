@@ -16,18 +16,19 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        ZStack {
+        RxWrapperView(model: binder.flow) { state, event in
             
-            RxWrapperView(
-                model: binder.content.splash,
-                makeContentView: rootViewFactory.makeSplashScreenView
-            )
-            .zIndex(2.0)
-            
-            spinnerView(flow: binder.flow)
-                .zIndex(1.0)
+            ZStack {
+                
+                RxWrapperView(
+                    model: binder.content.splash,
+                    makeContentView: rootViewFactory.makeSplashScreenView
+                )
+                .zIndex(2.0)
 
-            rootViewInNavigationView(flow: binder.flow)
+                rootViewInNavigationView(state: state, event: event)
+                spinnerView(isShowing: state.isLoading)
+            }
         }
     }
 }
@@ -35,37 +36,33 @@ struct RootBinderView: View {
 private extension RootBinderView {
     
     func spinnerView(
-        flow: RootViewDomain.Flow
+        isShowing: Bool
     ) -> some View {
         
-        RxWrapperView(model: flow) { state, event in
-            
-            SpinnerView(viewModel: .init())
-                .opacity(state.isLoading ? 1 : 0)
-        }
+        SpinnerView(viewModel: .init())
+            .opacity(isShowing ? 1 : 0)
+            .animation(.easeInOut, value: isShowing)
     }
     
     func rootViewInNavigationView(
-        flow: RootViewDomain.Flow
+        state: RootViewDomain.FlowDomain.State,
+        event: @escaping (RootViewDomain.FlowDomain.Event) -> Void
     ) -> some View {
         
         NavigationView {
             
-            RxWrapperView(model: flow) { state, event in
-                
-                rootView()
-                    .fullScreenCoverInspectable(
-                        item: { state.navigation?.fullScreenCover },
-                        dismiss: { event(.dismiss) },
-                        content: fullScreenCoverContent
-                    )
-                    .navigationDestination(
-                        destination: state.navigation?.destination,
-                        // dismiss managed by flow, not SwiftUI
-                        content: destinationContent
-                    )
-            }
-            .navigationBarHidden(true)
+            rootView()
+                .navigationBarHidden(true)
+                .fullScreenCoverInspectable(
+                    item: { state.navigation?.fullScreenCover },
+                    dismiss: { event(.dismiss) },
+                    content: fullScreenCoverContent
+                )
+                .navigationDestination(
+                    destination: state.navigation?.destination,
+                    // dismiss managed by flow, not SwiftUI
+                    content: destinationContent
+                )
         }
     }
     
@@ -113,8 +110,11 @@ private extension RootBinderView {
         _ picker: PaymentProviderPickerDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makePaymentProviderPickerView(picker)
-            .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
+        rootViewFactory.components.makePaymentProviderPickerView(
+            binder: picker,
+            dismiss: { binder.flow.event(.dismiss) }
+        )
+        .accessibilityIdentifier(ElementIDs.rootView(.destination(.standardPayment)).rawValue)
     }
     
     private func templatesView(
@@ -179,7 +179,8 @@ extension RootViewFactory {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView,
                 paymentsViewFactory: paymentsViewFactory,
-                rootViewFactory: self
+                rootViewFactory: self,
+                components: components
             )
         )
     }

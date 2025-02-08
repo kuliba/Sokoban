@@ -6,9 +6,10 @@
 //
 
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     @ViewBuilder
     func makePaymentsTransfersTransfersView(
@@ -30,30 +31,34 @@ extension RootViewFactory {
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        ComposedPaymentsTransfersTransfersView(
-            flow: transfers.flow,
-            contentView: {
-                
-                ComposedPaymentsTransfersTransfersContentView(
-                    content: transfers.content
-                )
-            },
-            factory: personalTransfersFlowViewFactory
-        )
+        RxWrapperView(model: transfers.flow) {
+            
+            PaymentsTransfersPersonalTransfersFlowView(
+                state: $0,
+                event: $1,
+                contentView: {
+                    
+                    ComposedPaymentsTransfersTransfersContentView(
+                        content: transfers.content
+                    )
+                },
+                viewFactory: personalTransfersFlowViewFactory
+            )
+        }
     }
 }
 
 // MARK: - View Factories
 
-private extension RootViewFactory {
+private extension ViewComponents {
     
     var personalTransfersFlowViewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory {
         
         return .init(
-            makeContactsView: components.makeContactsView,
-            makePaymentsMeToMeView: components.makePaymentsMeToMeView,
-            makePaymentsView: components.makePaymentsView,
-            makePaymentsSuccessView: components.makePaymentsSuccessView
+            makeContactsView: makeContactsView,
+            makePaymentsMeToMeView: makePaymentsMeToMeView,
+            makePaymentsView: makePaymentsView,
+            makePaymentsSuccessView: makePaymentsSuccessView
         )
     }
 }

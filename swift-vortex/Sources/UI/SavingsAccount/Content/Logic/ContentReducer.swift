@@ -5,9 +5,20 @@
 //  Created by Andryusina Nataly on 03.12.2024.
 //
 
+import Foundation
+
 public final class ContentReducer<Landing, InformerPayload> {
     
-    public init() {}
+    let refreshRange: Range<CGFloat>
+    let showTitleRange: PartialRangeFrom<CGFloat>
+
+    public init(
+        refreshRange: Range<CGFloat> = -100..<0,
+        showTitleRange: PartialRangeFrom<CGFloat> = 100...
+    ) {
+        self.refreshRange = refreshRange
+        self.showTitleRange = showTitleRange
+    }
 }
 
 public extension ContentReducer {
@@ -22,7 +33,6 @@ public extension ContentReducer {
         
         switch event {
         case .load:
-            
             if !state.status.isLoading {
                 let oldLanding = state.status.oldLanding
                 state.status = .inflight(oldLanding)
@@ -42,14 +52,23 @@ public extension ContentReducer {
                 let oldLanding = state.status.oldLanding
                 state.status = .failure(.informer(informer), oldLanding)
             }
+                        
+        case let .offset(offset):
+            if refreshRange.contains(offset), !state.status.isLoading {
+                    let oldLanding = state.status.oldLanding
+                    state.status = .inflight(oldLanding)
+                    effect = .load
+            }
             
-        case .selectOrder:
-            state.selection = .order
-            
-        case .resetSelection:
-            state.selection = nil
+            if offset > showTitleRange.lowerBound {
+                if state.navTitle == .empty {
+                    state.navTitle = .savingsAccount
+                }
+            }
+            else if state.navTitle == .savingsAccount {
+                state.navTitle = .empty
+            }
         }
-        
         return (state, effect)
     }
 }

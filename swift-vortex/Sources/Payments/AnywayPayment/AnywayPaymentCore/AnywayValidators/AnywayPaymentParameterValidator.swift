@@ -63,6 +63,8 @@ public extension AnywayPaymentParameterValidator {
         with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
+        if !validation.isRequired && value.isNilOrEmpty { return nil }
+        
         let validationErrors = [
             validateEmptyRequired(value, with: validation),
             validateMaxLength(value, with: validation),
@@ -79,8 +81,9 @@ public extension AnywayPaymentParameterValidator {
     typealias Parameter = AnywayElement.Parameter
 }
 
-private extension Optional where Wrapped == String {
+extension Optional where Wrapped == String {
     
+    @usableFromInline
     var isNilOrEmpty: Bool {
         
         guard let string = self else { return true }

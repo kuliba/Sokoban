@@ -13,6 +13,9 @@ extension RootViewModelFactory {
         completion: @escaping (PaymentsTransfersCorporateDomain.Navigation) -> Void
     ) {
         switch select {
+        case .main:
+            completion(.main)
+            
         case .userAccount:
             completion(.userAccount)
         }

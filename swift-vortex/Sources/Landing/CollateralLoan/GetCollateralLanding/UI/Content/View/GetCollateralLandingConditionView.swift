@@ -12,7 +12,7 @@ struct GetCollateralLandingConditionView: View{
 
     let condition: Condition
     let config: Config
-    let makeImageView: Factory.MakeImageView
+    let makeImageViewWithMD5Hash: Factory.MakeImageViewWithMD5Hash
 
     var body: some View {
         
@@ -37,7 +37,7 @@ private extension GetCollateralLandingConditionView {
         
         VStack {
             
-            makeImageView(condition.icon)
+            makeImageViewWithMD5Hash(condition.icon)
                 .frame(
                     width: config.list.layouts.iconSize.width,
                     height: config.list.layouts.iconSize.height
@@ -91,7 +91,7 @@ struct GetCollateralLandingConditionView_Previews: PreviewProvider {
         GetCollateralLandingConditionView(
             condition: GetCollateralLandingProduct.carStub.conditions.first!,
             config: .default,
-            makeImageView: Factory.preview.makeImageView
+            makeImageViewWithMD5Hash: Factory.preview.makeImageViewWithMD5Hash
         )
         .padding(.top, 300)
         .padding(.horizontal, 16)

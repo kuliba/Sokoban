@@ -9,9 +9,9 @@ import SwiftUI
 
 struct GetCollateralLandingDocumentsView: View {
 
+    let product: Product
     let config: Config
-    let state: State
-    let makeImageView: Factory.MakeImageView
+    let makeImageViewWithMD5Hash: Factory.MakeImageViewWithMD5Hash
     
     var body: some View {
         
@@ -49,12 +49,12 @@ struct GetCollateralLandingDocumentsView: View {
 
             VStack {
                 
-                ForEach(state.product.documents, id: \.title) {
+                ForEach(product.documents, id: \.title) {
                     
                     GetCollateralLandingDocumentView(
                         document: $0,
                         config: config.list,
-                        makeImageView: makeImageView
+                        makeImageViewWithMD5Hash: makeImageViewWithMD5Hash
                     )
                 }
                 .padding(.horizontal, config.list.layouts.horizontalPadding)
@@ -83,9 +83,9 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
     static var previews: some View {
         
         GetCollateralLandingDocumentsView(
+            product: .carStub,
             config: .default,
-            state: .init(product: .carStub),
-            makeImageView: Factory.preview.makeImageView
+            makeImageViewWithMD5Hash: Factory.preview.makeImageViewWithMD5Hash
         )
     }
     

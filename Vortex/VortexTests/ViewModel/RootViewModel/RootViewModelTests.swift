@@ -12,6 +12,7 @@ import SberQR
 import XCTest
 import CollateralLoanLandingGetShowcaseUI
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import UIPrimitives
 import Combine
 
@@ -484,11 +485,8 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
@@ -497,8 +495,11 @@ final class RootViewModelTests: XCTestCase {
                     bindersFactory: .init(
                         bannersBinder: .preview,
                         makeCollateralLoanShowcaseBinder: { .preview },
-                        makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+                        makeCollateralLoanLandingBinder: { _ in .preview },
+                        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                        makeSavingsAccountBinder: { fatalError() }
                     ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -567,10 +568,8 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
-                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
-                    qrViewModelFactory: .preview(),
                     landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .inactive,
@@ -579,8 +578,11 @@ final class RootViewModelTests: XCTestCase {
                     bindersFactory: .init(
                         bannersBinder: .preview,
                         makeCollateralLoanShowcaseBinder: { .preview },
-                        makeCollateralLoanLandingBinder: { _ in .preview }, makeSavingsAccountBinder: { fatalError() }
+                        makeCollateralLoanLandingBinder: { _ in .preview },
+                        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
+                        makeSavingsAccountBinder: { fatalError() }
                     ),
+                    viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     scheduler: .immediate
                 ),
@@ -730,7 +732,7 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(),
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
@@ -780,6 +782,35 @@ private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
         initialState: .initialSplashData,
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+// MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
+
+private extension CreateDraftCollateralLoanApplicationDomain.Binder {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
+        content: .preview,
+        flow: .preview,
+        bind: { _,_ in [] }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Content {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
+        initialState: .init(data: .preview),
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.Flow {
+    
+    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
+        initialState: .init(),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

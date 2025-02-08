@@ -91,7 +91,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(switcher as PaymentsTransfersSwitcher):
-                rootViewFactory.makePaymentsTransfersSwitcherView(switcher)
+                rootViewFactory.components.makePaymentsTransfersSwitcherView(switcher)
 
             default:
                 EmptyView()
@@ -411,15 +411,16 @@ private extension RootViewFactory {
         }
         
         return .init(
-            clearCache: {},
-            isCorporate: { false },
+            infra: .init(
+                imageCache: .preview,
+                generalImageCache: .preview,
+                getUImage: { _ in nil }
+            ),
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _,_,_,_   in
                 HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
             },
-            makeIconView: IconDomain.preview,
-            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
@@ -431,7 +432,6 @@ private extension RootViewFactory {
                         makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeInfoViews: .default,
                         makeUserAccountView: {
                             
                             return .init(viewModel: $0, config: .preview, viewFactory: .preview)
@@ -447,9 +447,8 @@ private extension RootViewFactory {
                 )
             },
             makeReturnButtonView: { _ in .init(action: {}) },
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView, 
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeSplashScreenView: makeSplashScreenView,
-            makeInfoViews: .default,
             makeUserAccountView: {
                 
                 return .init(
@@ -458,15 +457,28 @@ private extension RootViewFactory {
                     viewFactory: .preview
                 )
             },
-            makeMarketShowcaseView: { _,_,_   in .none },
+            makeMarketShowcaseView: { _,_,_ in .none },
             components: .preview,
             paymentsViewFactory: .preview,
+            makeTemplateButtonWrapperView: {
+                
+                .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0))
+            },
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
             }
         )
     }
+}
+
+private extension ImageCache {
+    
+    static let preview: ImageCache = .init(
+        requestImages: { _ in },
+        imagesPublisher: .init([:]),
+        fallback: { _ in .ic24MoreHorizontal }
+    )
 }
 
 private struct IgnoringSafeArea: ViewModifier {

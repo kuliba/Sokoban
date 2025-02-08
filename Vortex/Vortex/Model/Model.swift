@@ -78,7 +78,6 @@ class Model {
     var images: CurrentValueSubject<[String: ImageData], Never>
     
     // MARK: Client Inform Alerts and Notifications
-    let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let clientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
     let clientInformAlertManager: any AlertManager<ClientInformAlerts>
 
@@ -168,7 +167,6 @@ class Model {
         userModel.preferredProductPublisher
     }
     
-    // private
     private var bindings: Set<AnyCancellable>
     private let queue = DispatchQueue(label: "ru.\(Config.name).sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
@@ -246,7 +244,6 @@ class Model {
         self.qrPaymentType = .init([])
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
-        self.clientInform = .init(.notRecieved)
         self.clientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
         self.clientInformAlertManager = clientInformAlertManager
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
@@ -486,6 +483,30 @@ class Model {
         
         //MARK: - Model Action
         
+        let fcmTokenPublisher = self.fcmToken.compactMap { $0 }
+            .map { _ in () }
+            .eraseToAnyPublisher()
+        
+        let expired = Just(())
+            .delay(for: .seconds(10), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        
+        // either we get a token or wait expired
+        let fcmTokenOrExpired = Publishers.Merge(fcmTokenPublisher, expired).first()
+        
+        action
+            .compactMap { $0 as? ModelAction.Auth.CheckClient.Request }
+            .flatMap { request in
+            
+                fcmTokenOrExpired.map { _ in request }
+            }
+            .receive(on: queue)
+            .sink { [weak self] payload in
+                
+                self?.handleAuthCheckClientRequest(payload: payload)
+            }
+            .store(in: &bindings)
+        
         action
             .receive(on: queue)
             .sink { [weak self] action in
@@ -574,8 +595,9 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
-                case let payload as ModelAction.Auth.CheckClient.Request:
-                    handleAuthCheckClientRequest(payload: payload)
+//resolve - Model.swift:499
+//                case let payload as ModelAction.Auth.CheckClient.Request:
+//                    handleAuthCheckClientRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)
@@ -958,9 +980,6 @@ class Model {
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
-                    
-                    case .clientInform:
-                        handleClientInform(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:

@@ -356,7 +356,14 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .document:
                     
                     switch mode {
-                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund, .sberQR:
+                    case .normal,
+                         .meToMe,
+                         .closeDeposit,
+                         .makePaymentToDeposit,
+                         .makePaymentFromDeposit,
+                         .change,
+                         .refund,
+                         .sberQR:
                         guard
                             let operationDetailData,
                             let paymentOperationDetailID
@@ -390,7 +397,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    let viewModel = adapter.makeOperationDetailInfoViewModel(operationDetailData: operationDetailData) { [weak self] in
+                    let viewModel = adapter.makeOperationDetailInfoViewModel(operationDetailData: operationDetailData, merchantLogoMD5Hash: nil) { [weak self] in
                         
                         self?.sheet = nil
                     }

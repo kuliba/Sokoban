@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension RootViewFactory {
+extension ViewComponents {
     
     func makeUserAccountToolbarButton(
         action: @escaping () -> Void
@@ -21,7 +21,7 @@ extension RootViewFactory {
             makeUserAccountButton(action: action)
                 .contextMenu {
                     
-                    Button(action: clearCache) {
+                    Button(action: {}) {//clearCache) {
                         
                         Label("Clear cache", systemImage: "trash.circle")
                     }

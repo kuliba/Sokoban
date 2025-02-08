@@ -145,16 +145,38 @@ extension ServerCommands {
                 self.payload = payload
             }
             
-            init(credentials: SessionCredentials, pushDeviceId: String, pushFcmToken: String, serverDeviceGUID: String, loginValue: String, availableSensorType: BiometricSensorType?, isSensorEnabled: Bool) throws {
+            init(
+                credentials: SessionCredentials,
+                pushDeviceId: String,
+                pushFcmToken: String,
+                serverDeviceGUID: String,
+                loginValue: String,
+                availableSensorType: BiometricSensorType?,
+                isSensorEnabled: Bool
+            ) throws {
                 
                 let cryptoVersion = "1.0"
                 let pushDeviceIdEncrypted = try credentials.csrfAgent.encrypt(pushDeviceId)
                 let pushFcmTokenEncrypted = try credentials.csrfAgent.encrypt(pushFcmToken)
                 let serverDeviceGUIDEncrypted = try credentials.csrfAgent.encrypt(serverDeviceGUID)
                 
-                let settingsEncrypted = try Self.settingsEncrypted(credentials: credentials, loginValue: loginValue, availableSensorType: availableSensorType, isSensorEnabled: isSensorEnabled)
+                let settingsEncrypted = try Self.settingsEncrypted(
+                    credentials: credentials,
+                    loginValue: loginValue,
+                    availableSensorType: availableSensorType,
+                    isSensorEnabled: isSensorEnabled
+                )
                 
-                self.init(token: credentials.token, payload: .init(cryptoVersion: cryptoVersion, pushDeviceId: pushDeviceIdEncrypted, pushFcmToken: pushFcmTokenEncrypted, serverDeviceGUID: serverDeviceGUIDEncrypted, settings: settingsEncrypted))
+                self.init(
+                    token: credentials.token,
+                    payload: .init(
+                        cryptoVersion: cryptoVersion,
+                        pushDeviceId: pushDeviceIdEncrypted,
+                        pushFcmToken: pushFcmTokenEncrypted,
+                        serverDeviceGUID: serverDeviceGUIDEncrypted,
+                        settings: settingsEncrypted
+                    )
+                )
             }
             
             static func settingsEncrypted(credentials: SessionCredentials, loginValue: String, availableSensorType: BiometricSensorType?, isSensorEnabled: Bool) throws -> [Settings] {

@@ -1,6 +1,6 @@
 //
 //  TextInputView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 07.08.2024.
 //
@@ -18,7 +18,7 @@ public struct TextInputView<IconView: View>: View {
     private let iconView: () -> IconView
     
     public init(
-        state: State, 
+        state: State,
         event: @escaping (Event) -> Void,
         config: Config,
         iconView: @escaping () -> IconView
@@ -50,7 +50,7 @@ public struct TextInputView<IconView: View>: View {
             messageView()
         }
         .transition(.opacity)
-        .animation(.bouncy)
+        .animation(.bouncy, value: state)
     }
 }
 

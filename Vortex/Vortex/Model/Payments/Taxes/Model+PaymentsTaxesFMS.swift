@@ -15,7 +15,7 @@ extension Model {
         case 0:
             
             // operator
-            let operatorParameter = Payments.ParameterOperator(operatorType: .fms)
+            let operatorParameter = Payments.ParameterOperator(operator: .fms)
             
             // header
             let anywayGroup = dictionaryAnywayOperatorGroup(for: Payments.Category.taxes.rawValue)

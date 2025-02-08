@@ -6,30 +6,182 @@
 //
 
 import SwiftUI
+import OTPInputComponent
 
-struct CreateDraftCollateralLoanApplicationView: View {
+public struct CreateDraftCollateralLoanApplicationView: View {
     
-    let data: Data
+    let state: State
+    let event: (Event) -> Void
+    let externalEvent: (Domain.ExternalEvent) -> Void
     let config: Config
     let factory: Factory
     
-    var body: some View {
-
-        ScrollView {
-            
-            CreateDraftCollateralLoanApplicationHeaderView(
-                data: data,
-                config: config,
-                factory: factory
-            )
-            
-            Spacer()
-        }
+    public init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        externalEvent: @escaping (Domain.ExternalEvent) -> Void,
+        config: Config,
+        factory: Factory
+    ) {
+        self.state = state
+        self.event = event
+        self.externalEvent = externalEvent
+        self.config = config
+        self.factory = factory
     }
     
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationData
+    public var body: some View {
+        
+        content
+    }
+    
+    @ViewBuilder
+    private var content: some View {
+        
+        VStack {
+            
+            ScrollView {
+
+                headerView
+                amountView
+                periodView
+                percentView
+                cityView
+
+                if state.stage == .confirm {
+
+                    state.confirmation.map { otpView(otpViewModel: $0.otpViewModel) }
+                    consentsView
+                }
+            }
+            .frame(maxHeight: .infinity)
+            
+            buttonView
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationView {
+    
+    var headerView: some View {
+        
+        CreateDraftCollateralLoanApplicationHeaderView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+    
+    var amountView: some View {
+        
+        CreateDraftCollateralLoanApplicationAmountView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    var periodView: some View {
+        
+        CreateDraftCollateralLoanApplicationPeriodView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+    
+    var percentView: some View {
+
+        CreateDraftCollateralLoanApplicationPercentView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    var cityView: some View {
+
+        CreateDraftCollateralLoanApplicationCityView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    var buttonView: some View {
+
+        CreateDraftCollateralLoanApplicationButtonView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    func otpView(otpViewModel: TimedOTPInputViewModel) -> some View {
+        
+        CreateDraftCollateralLoanApplicationOTPView(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory,
+            otpViewModel: otpViewModel
+        )
+    }
+
+    var consentsView: some View {
+        
+        CreateDraftCollateralLoanApplicationConsentsView(
+            state: state,
+            event: event,
+            externalEvent: { externalEvent($0) },
+            config: config,
+            factory: factory
+        )
+    }
+}
+
+struct FrameWithCornerRadiusModifier: ViewModifier {
+    
+    let config: CreateDraftCollateralLoanApplicationConfig
+    
+    func body(content: Content) -> some View {
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: config.layouts.cornerRadius)
+                .fill(config.colors.background)
+                .frame(maxWidth: .infinity)
+            
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(config.layouts.paddings.contentStack)
+        }
+        .padding(config.layouts.paddings.stack)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationView {
+    
+    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    public typealias State = Domain.State
+    public typealias Event = Domain.Event
+    public typealias Config = CreateDraftCollateralLoanApplicationConfig
+    public typealias Factory = CreateDraftCollateralLoanApplicationFactory
+}
+
+extension CreateDraftCollateralLoanApplicationDomain {
+ 
+    public enum ExternalEvent: Equatable {
+        
+        case showConsent(URL)
+    }
 }
 
 // MARK: - Previews
@@ -39,11 +191,32 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView(
-            data: .preview,
-            config: .preview,
-            factory: Factory.preview
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
+            externalEvent: { print($0) },
+            config: .default,
+            factory: .preview
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
+
+        CreateDraftCollateralLoanApplicationView(
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: { print($0) },
+            externalEvent: { print($0) },
+            config: .default,
+            factory: .preview
+        )
+        .previewDisplayName("Экран отправки параметров кредита")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory

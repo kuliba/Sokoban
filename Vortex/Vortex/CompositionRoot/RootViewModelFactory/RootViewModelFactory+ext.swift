@@ -36,6 +36,19 @@ extension RootViewModelFactory {
         featureFlags: FeatureFlags
     ) -> RootViewDomain.Binder {
         
+        // keep for manual override of release flags
+        let featureFlags = FeatureFlags(
+            getProductListByTypeV6Flag: .active,
+            paymentsTransfersFlag: .active,
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+            splashScreenFlag: featureFlags.splashScreenFlag,
+            orderCardFlag: featureFlags.orderCardFlag
+        )
+        
+        let httpClient = infra.httpClient
+        let logger = infra.logger
+        
         var bindings = Set<AnyCancellable>()
         
         func performOrWaitForActive(
@@ -58,7 +71,7 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
-        if getProductListByTypeV6Flag.isActive {
+        if featureFlags.getProductListByTypeV6Flag.isActive {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
         } else {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
@@ -262,6 +275,32 @@ extension RootViewModelFactory {
             //TODO: implement makeOrderCardViewModel composer
         }
         
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+        
+        let loadBannersList = makeLoadBanners()
+        
+        let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
+            featureFlags: featureFlags,
+            bannerPickerPlaceholderCount: 6,
+            nanoServices: .init(loadBanners: loadBannersList)
+        )
+        
+        let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
+        
+        let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
+            hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
+            corporate: paymentsTransfersCorporate,
+            personal: paymentsTransfersPersonal,
+            scheduler: schedulers.main
+        )
+        
+        runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
+        
+        if featureFlags.paymentsTransfersFlag.isActive {
+            
+            performOrWaitForActive(loadCategoriesAndNotifyPicker)
+        }
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -283,7 +322,8 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
-            makeOrderCardViewModel: makeOrderCardViewModel
+            makeOrderCardViewModel: makeOrderCardViewModel,
+            makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
         
         let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
@@ -300,28 +340,13 @@ extension RootViewModelFactory {
             )
         }
         
-        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
-        
-        runOnEachNextActiveSession(loadCategoriesAndNotifyPicker)
-        
-        if featureFlags.paymentsTransfersFlag.isActive {
-            performOrWaitForActive(loadCategoriesAndNotifyPicker)
-        } else {
-            performOrWaitForActive({ [weak self] in
-                self?.model.handleDictionaryAnywayOperatorsRequest(nil)
-            })
+        performOrWaitForActive { [weak self] in
+            
+            guard let self else { return }
+            
+            let serial = model.localAgent.serial(for: [OperatorsListComponents.SberOperator].self)
+            model.handleDictionaryAnywayOperatorsRequest(serial)
         }
-        
-        let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
-        
-        let loadBannersList = makeLoadBanners()
-        
-        let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
-            bannerPickerPlaceholderCount: 6,
-            nanoServices: .init(
-                loadBanners: loadBannersList
-            )
-        )
         
         let mainViewBannersBinder = makeBannersForMainView(
             bannerPickerPlaceholderCount: 6,
@@ -344,13 +369,6 @@ extension RootViewModelFactory {
                 mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }
-        
-        let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
-            hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
-            corporate: paymentsTransfersCorporate,
-            personal: paymentsTransfersPersonal,
-            scheduler: schedulers.main
-        )
         
         let getLandingByType = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
@@ -427,7 +445,8 @@ extension RootViewModelFactory {
                     action: $0
                 )
             },
-            marketShowcaseBinder: marketShowcaseBinder
+            marketShowcaseBinder: marketShowcaseBinder,
+            makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
         
         let marketBinder = MarketShowcaseToRootViewModelBinder(
@@ -475,9 +494,18 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch selection {
-        case .none: return nil
-        case .order: return .order
+        switch status {
+        case .initiate, .inflight, .loaded:
+            return nil
+            
+        case let .failure(failure, _):
+            switch failure{
+            case let .alert(message):
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
+            }
         }
     }
 }
@@ -580,7 +608,8 @@ extension ProductProfileViewModel {
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
-        makeOrderCardViewModel: @escaping MakeOrderCardViewModel
+        makeOrderCardViewModel: @escaping MakeOrderCardViewModel,
+        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -606,7 +635,8 @@ extension ProductProfileViewModel {
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeOpenNewProductButtons: makeOpenNewProductButtons,
-                makeOrderCardViewModel: makeOrderCardViewModel
+                makeOrderCardViewModel: makeOrderCardViewModel,
+                makePaymentsTransfers: makePaymentsTransfers
             )
             
             let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -625,7 +655,8 @@ extension ProductProfileViewModel {
                 makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeTemplates: makeTemplates,
-                makeUtilitiesViewModel: makeUtilitiesViewModel
+                makeUtilitiesViewModel: makeUtilitiesViewModel,
+                makePaymentsTransfers: makePaymentsTransfers
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -706,17 +737,16 @@ extension ProductProfileViewModel {
 }
 
 // TODO: needs better naming
+
 private extension RootViewModelFactory {
     
     func makeLoggingStore<Key>(
         store: any Store<Key>
     ) -> any Store<Key> {
         
-        let log = { self.logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
-        
         return LoggingStoreDecorator(
             decoratee: store,
-            log: log
+            log: { [weak self] in self?.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         )
     }
     
@@ -755,7 +785,8 @@ private extension RootViewModelFactory {
         paymentsTransfersSwitcher: PaymentsTransfersSwitcher,
         bannersBinder: BannersBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
-        marketShowcaseBinder: MarketShowcaseDomain.Binder
+        marketShowcaseBinder: MarketShowcaseDomain.Binder,
+        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> RootViewModel {
         
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -774,7 +805,8 @@ private extension RootViewModelFactory {
             makeSections: { self.model.makeSections(flag: updateInfoStatusFlag) },
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeTemplates: makeTemplates,
-            makeUtilitiesViewModel: makeUtilitiesViewModel
+            makeUtilitiesViewModel: makeUtilitiesViewModel, 
+            makePaymentsTransfers: makePaymentsTransfers
         )
                 
         let sections = makeMainViewModelSections(
@@ -783,12 +815,25 @@ private extension RootViewModelFactory {
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
                 
+        let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
+        }
+        
+        let mainViewModelsFactory: MainViewModelsFactory = .init(
+            makeAuthFactory: makeAuthFactory,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makePromoProductViewModel: { [weak self] in
+                self?.makePromoViewModel(
+                    viewModel: $0,
+                    actions: $1,
+                    featureFlags: featureFlags
+                )
+            },
+            qrViewModelFactory: qrViewModelFactory)
+        
         let mainViewModel = MainViewModel(
             model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
@@ -798,8 +843,10 @@ private extension RootViewModelFactory {
                 bannersBinder: bannersBinder,
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
                 makeSavingsAccountBinder: makeSavingsAccount
             ),
+            viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             scheduler: schedulers.main
         )
@@ -856,7 +903,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             marketShowcaseBinder: marketShowcaseBinder
         )
-        
+
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,

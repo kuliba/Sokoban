@@ -18,6 +18,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersCorporate(
+        featureFlags: FeatureFlags,
         bannerPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersCorporateNanoServices
     ) -> PaymentsTransfersCorporateDomain.Binder {
@@ -39,10 +40,15 @@ extension RootViewModelFactory {
             suffix: (0..<6).map { _ in .placeholder(.init()) }
         )
         
+        // MARK: - CorporateTransfers
+        
+        let corporateTransfers = makeCorporateTransfers(featureFlags: featureFlags)
+        
         // MARK: - PaymentsTransfers
         
         let content = Domain.Content(
             bannerPicker: bannerPicker,
+            corporateTransfers: corporateTransfers,
             reload: { bannerPicker.content.event(.load) }
         )
         
@@ -60,6 +66,7 @@ extension RootViewModelFactory {
     ) -> Delay {
         
         switch navigation {
+        case .main:        return .milliseconds(100)
         case .userAccount: return settings.delay
         }
     }
@@ -69,7 +76,10 @@ extension RootViewModelFactory {
         content: PaymentsTransfersCorporateDomain.Content
     ) -> some Publisher<FlowEvent<PaymentsTransfersCorporateDomain.Select, Never>, Never> {
         
-        content.bannerPicker.eventPublisher
+        Publishers.Merge(
+            content.bannerPicker.eventPublisher,
+            content.corporateTransfers.eventPublisher
+        ).eraseToAnyPublisher()
     }
     
     @inlinable
@@ -108,5 +118,39 @@ extension BannerPickerSectionBinder {
     func dismissing() {
         
         content.event(.select(nil))
+    }
+}
+
+// MARK: - CorporateTransfers
+
+extension CorporateTransfersProtocol {
+    
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
+        
+        transfers?.eventPublisher ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension CorporateTransfersProtocol {
+ 
+    var transfers: PaymentsTransfersCorporateTransfers? {
+        
+        self as? PaymentsTransfersCorporateTransfers
+    }
+}
+
+extension PaymentsTransfersCorporateTransfers {
+    
+    var eventPublisher: AnyPublisher<FlowEvent<PaymentsTransfersCorporateSelect, Never>, Never> {
+        
+        openProduct.$state
+            .compactMap {
+                
+                switch $0.navigation {
+                case .main: return .select(.main)
+                default:    return nil
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }

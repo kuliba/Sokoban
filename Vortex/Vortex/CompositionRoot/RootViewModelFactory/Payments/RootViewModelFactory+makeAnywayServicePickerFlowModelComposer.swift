@@ -20,8 +20,8 @@ extension RootViewModelFactory {
         )
         let pickerNanoServicesComposer = UtilityPaymentNanoServicesComposer(
             model: model,
-            httpClient: httpClient,
-            log: logger.log,
+            httpClient: infra.httpClient,
+            log: log,
             loadOperators: loadCachedOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(

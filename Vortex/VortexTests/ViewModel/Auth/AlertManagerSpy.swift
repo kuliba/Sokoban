@@ -42,12 +42,12 @@ extension AlertManagerSpy: AlertManager {
     }
 
     func dismiss() {
-        
+        //TODO: Check dismiss logic, compare with dismissAll
         dismissCount += 0
     }
     
     func dismissAll() {
-        
+        dismissCount += 1
     }
     
     func update(alerts: Alert) {

@@ -6,34 +6,37 @@
 //
 
 import AnywayPaymentDomain
+import Combine
 import Foundation
 import PaymentComponents
 import RxViewModel
+import TextFieldUI
 
 enum AnywayElementModel {
     
     case field(AnywayElement.UIComponent.Field)
     case parameter(Parameter)
     case widget(Widget)
+    case withContacts(WithContacts)
 }
 
 extension AnywayElementModel {
+    
+    typealias Origin = AnywayElement.UIComponent.Parameter
+    typealias KeyboardType = TextFieldUI.KeyboardType
     
     struct Parameter {
         
         let origin: Origin
         let type: ParameterType
         
-        typealias Origin = AnywayElement.UIComponent.Parameter
-
         enum ParameterType {
-         
+            
             case checkbox(Node<RxCheckboxViewModel>)
             case hidden
+            case input(Node<RxInputViewModel>, KeyboardType)
             case nonEditable(Node<RxInputViewModel>)
-            case numberInput(Node<RxInputViewModel>)
             case select(ObservingSelectorViewModel)
-            case textInput(Node<RxInputViewModel>)
             case unknown
         }
     }
@@ -45,6 +48,31 @@ extension AnywayElementModel {
         case otp(OTPViewModel)
         case simpleOTP(SimpleOTPViewModel)
     }
+    
+    struct WithContacts {
+        
+        let origin: Origin
+        let input: Node<RxInputViewModel>
+        let keyboard: KeyboardType
+        let contacts: ContactsViewModel
+        private let bindings: Set<AnyCancellable>
+        
+        init(
+            origin: Origin,
+            input: Node<RxInputViewModel>,
+            keyboard: KeyboardType,
+            contacts: ContactsViewModel,
+            bindings: Set<AnyCancellable>
+        ) {
+            self.origin = origin
+            self.input = input
+            self.keyboard = keyboard
+            self.contacts = contacts
+            self.bindings = bindings
+        }
+    }
+    
+    typealias Contact = ContactsViewModel
 }
 
 extension AnywayElementModel.Widget {

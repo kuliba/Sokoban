@@ -94,6 +94,7 @@ extension Services {
             case getClientConsentMe2MePull
             case getCollateralLanding = "getCollateralLanding"
             case getConsentsCollateralLoanLanding = "getConsents"
+            case getDigitalCardLanding
             case getInfoForRepeatPayment
             case getJsonAbroad
             case getOperationDetailByPaymentId
@@ -121,6 +122,7 @@ extension Services {
             case makeTransfer
             case modifyC2BSubAcc
             case modifyC2BSubCard
+            case openAccountForm
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
@@ -243,6 +245,12 @@ extension Services.Endpoint {
         pathPrefix: .savingsAccount,
         version: .none,
         serviceName: .getSavingLanding
+    )
+
+    static let openAccountFormRequest: Self = .init(
+        pathPrefix: .savingsAccount,
+        version: .none,
+        serviceName: .openAccountForm
     )
 
     static let createStickerPayment: Self = .init(
@@ -525,6 +533,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .saveConsents
+    )
+    
+    static let getDigitalCardLanding: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .getDigitalCardLanding
     )
     
     static let getShowcaseCollateralLoanLanding: Self = .init(

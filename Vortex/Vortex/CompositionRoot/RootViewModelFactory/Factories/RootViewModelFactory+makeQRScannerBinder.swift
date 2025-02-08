@@ -18,7 +18,7 @@ extension RootViewModelFactory {
     func makeQRScannerBinder() -> QRScannerDomain.Binder {
         
         return composeBinder(
-            makeContent: makeQRScannerModel,
+            content: makeQRScannerModel(),
             delayProvider: delayProvider,
             getNavigation: getQRNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
@@ -41,7 +41,8 @@ extension RootViewModelFactory {
         case .payments:              return settings.delay
         case .providerPicker:        return settings.delay
         case .providerServicePicker: return settings.delay
-        case .sberQR:                return settings.delay
+        case .sberQR:                return .milliseconds(300)
+        case .sberQRComplete:        return .milliseconds(300)
         }
     }
     
@@ -58,11 +59,12 @@ extension RootViewModelFactory {
         case let .qrResult(qrResult):
             getQRNavigation(qrResult, notify, completion)
             
-        case .sberQR(nil):
+        case .sberQRResponse(nil):
             completion(.sberQR(nil))
             
-        case let .sberQR(response):
-#warning("FIXME")
+        case let .sberQRResponse(response):
+            let viewModel: PaymentsSuccessViewModel? = response.map { PaymentsSuccessViewModel(paymentSuccess: $0.success, self.model) }
+            completion(.sberQRComplete(viewModel))
         }
     }
     
@@ -113,7 +115,7 @@ extension RootViewModelFactory {
             _ url: URL
         ) -> (SberQRConfirmPaymentState) -> Void {
             
-            decoratedSberQRPay(url) { notify(.select(.sberQR($0))) }
+            decoratedSberQRPay(url) { notify(.select(.sberQRResponse($0))) }
         }
     }
     
@@ -281,17 +283,24 @@ private extension QRMappingFailureDomain.Navigation {
     var notifyEvent: NavigationOutcome<QRScannerDomain.Select>? {
         
         switch self {
-        case .back:            return .dismiss
-        case .detailPayment:   return nil
-        case .categoryPicker:  return nil
-        case .scanQR:          return .dismiss
+        case .detailPayment, .categoryPicker:
+            return nil
+            
+        case let .outside(outside):
+            switch outside {
+            case .back:     return .dismiss
+            case .chat:     return .select(.outside(.chat))
+            case .main:     return .select(.outside(.main))
+            case .payments: return .select(.outside(.payments))
+            case .scanQR:   return .dismiss
+            }
         }
     }
 }
 
 private extension QRScannerDomain.NotifyEvent {
     
-    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Status.Outside, Never>
+    typealias PickerFlowEvent = Vortex.FlowEvent<SegmentedPaymentProviderPickerFlowModel.State.Navigation.Outside, Never>
     
     init(_ event: PickerFlowEvent) {
         
