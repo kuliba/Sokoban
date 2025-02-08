@@ -19,6 +19,9 @@ struct RootViewModelFactorySettings {
     let otpDuration: Int
     let otpLength: Int
     let pageSize: Int
+    let phaseOneDuration: DispatchQueue.SchedulerTimeType.Stride
+    let phaseTwoDuration: DispatchQueue.SchedulerTimeType.Stride
+    let splashDelay: DispatchQueue.SchedulerTimeType.Stride
 }
 
 extension RootViewModelFactorySettings {
@@ -32,6 +35,9 @@ extension RootViewModelFactorySettings {
         operationPickerPlaceholderCount: 4,
         otpDuration: 60,
         otpLength: 6,
-        pageSize: 50
+        pageSize: 50,
+        phaseOneDuration: .milliseconds(0),
+        phaseTwoDuration: .milliseconds(1200),
+        splashDelay: .milliseconds(300)
     )
 }
