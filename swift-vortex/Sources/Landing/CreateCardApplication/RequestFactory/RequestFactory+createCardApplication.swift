@@ -25,7 +25,7 @@ public struct CreateCardApplicationPayload: Equatable {
     
     let requestId: String
     let cardApplicationCardType: String
-    let cardProductExtId: Int
+    let cardProductExtId: String
     let cardProductName: String
     let smsInfo: Bool
     let verificationCode: String
@@ -33,7 +33,7 @@ public struct CreateCardApplicationPayload: Equatable {
     public init(
         requestId: String,
         cardApplicationCardType: String,
-        cardProductExtId: Int,
+        cardProductExtId: String,
         cardProductName: String,
         smsInfo: Bool,
         verificationCode: String

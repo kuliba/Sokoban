@@ -82,8 +82,11 @@ enum OrderCard { // TODO: replace stub with types from module
     
     struct Form<Confirmation> {
         
-        let product: Int // Product
-        let type: String //ProductType
+        let requestID: String
+        let cardApplicationCardType: String
+        let cardProductExtID: String
+        let cardProductName: String
+        
         var confirmation: LoadConfirmationResult<Confirmation>?
         var consent = true
         var messages: Messages
@@ -136,6 +139,10 @@ enum OrderCard { // TODO: replace stub with types from module
     
     struct OrderCardPayload: Equatable {
         
+        let requestID: String
+        let cardApplicationCardType: String
+        let cardProductExtID: String
+        let cardProductName: String
         let smsInfo: Bool
         let verificationCode: String
     }
@@ -335,18 +342,27 @@ extension OrderCard.State {
         }
     }
     
-    var isValid: Bool { payload != nil }
+    var isValid: Bool { form?.isValid ?? false } // rename to `canOrder`
     
     var payload: OrderCard.OrderCardPayload? {
         
-        guard let otp = form?.otp,
-              otp.count == 6,
-              form?.consent == true
+        guard isValid,
+              let form,
+              let otp = form.otp
         else { return nil }
         
         return .init(
-            smsInfo: form?.messages.isOn ?? false,
+            requestID: form.requestID,
+            cardApplicationCardType: form.cardApplicationCardType,
+            cardProductExtID: form.cardProductExtID,
+            cardProductName: form.cardProductName,
+            smsInfo: form.messages.isOn,
             verificationCode: otp
         )
     }
+}
+
+extension OrderCard.Form {
+    
+    var isValid: Bool { otp?.count == 6 && consent } // rename to `canOrder`
 }

@@ -6,6 +6,8 @@
 //
 
 import Combine
+import CreateCardApplication
+import Foundation
 import GetCardOrderFormService
 import OTPInputComponent
 import RemoteServices
@@ -113,8 +115,27 @@ extension RootViewModelFactory {
                 result = .failure(failure.loadFailure)
                 
             case let .success(response):
-                // TODO: replace stub with $0 result mapping
-                result = .success(.init(product: 1, type: "", messages: .init(description: "", icon: "", subtitle: "", title: "", isOn: false)))
+                guard let digital = response.digital else {
+                    
+                   return completion(.failure(.init(
+                        message: "Что-то пошло не так.\nПопробуйте позже.",
+                        type: .alert
+                    )))
+                }
+
+                result = .success(.init(
+                    requestID: UUID().uuidString.lowercased(),
+                    cardApplicationCardType: digital.type,
+                    cardProductExtID: digital.id,
+                    cardProductName: digital.title,
+                    messages: .init(
+                        description: "",
+                        icon: "",
+                        subtitle: "",
+                        title: "",
+                        isOn: false
+                    )
+                ))
             }
             
             if case .informer = $0.loadFailure?.type {
@@ -202,7 +223,7 @@ extension RootViewModelFactory {
         schedulers.background.schedule {
             
             service { [service] in
-                
+                #warning("need to notify OTP in case of special failure")
                 completion($0)
                 _ = service
             }
@@ -278,5 +299,44 @@ private extension Result {
         guard case let .failure(failure) = self else { return nil }
         
         return failure.loadFailure
+    }
+}
+
+private extension OpenCardDomain.OrderCardPayload {
+    
+    var createCardApplicationPayload: CreateCardApplicationPayload {
+        
+        return .init(
+            requestId: requestID,
+            cardApplicationCardType: cardApplicationCardType,
+            cardProductExtId: cardProductExtID,
+            cardProductName: cardProductName,
+            smsInfo: smsInfo,
+            verificationCode: verificationCode
+        )
+    }
+}
+
+//private extension Result where Success == CreateCardApplicationResponse {
+//    
+//    var orderCardResult: OpenCardDomain.OrderCardResult {
+//        
+//        return .init(
+//            requestID: requestId,
+//            status: status == "SUBMITTED_FOR_REVIEW" || status == "DRAFT"
+//        )
+//    }
+//}
+
+private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
+    
+    var digital: RemoteServices.ResponseMapper.GetCardOrderFormData.Item? {
+        
+        items.first { $0.type == "DIGITAL" }
+    }
+    
+    var items: [RemoteServices.ResponseMapper.GetCardOrderFormData.Item] {
+        
+        list.flatMap(\.list)
     }
 }
