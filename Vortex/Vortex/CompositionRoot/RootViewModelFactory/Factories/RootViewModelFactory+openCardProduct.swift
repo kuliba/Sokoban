@@ -99,32 +99,30 @@ extension RootViewModelFactory {
         dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenCardDomain.LoadResult) -> Void
     ) {
-        let _service = nanoServiceComposer.compose(
+        let service = onBackground(
             makeRequest: RequestFactory.createGetCardOrderFormRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
         )
         
-        let service: (@escaping (OpenCardDomain.LoadResult) -> Void) -> Void = { [weak self] completion in
+        service { [weak self] in
             
-            self?.schedulers.background.delay(for: .seconds(1)) {
-                
-                completion(.success(.init(product: 1, type: "", messages: .init(description: "", icon: "", subtitle: "", title: "", isOn: false))))
-            }
-        }
-        
-        schedulers.background.schedule { [weak self] in
+            let result: OpenCardDomain.LoadResult
             
-            service { [service] in
+            switch $0 {
+            case let .failure(failure):
+                result = .failure(failure.loadFailure)
                 
-                if case let .failure(failure) = $0,
-                   case .informer = failure.type {
-                    
-                    self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
-                }
-                
-                completion($0)
-                _ = service
+            case let .success(response):
+                // TODO: replace stub with $0 result mapping
+                result = .success(.init(product: 1, type: "", messages: .init(description: "", icon: "", subtitle: "", title: "", isOn: false)))
             }
+            
+            if case .informer = $0.loadFailure?.type {
+                
+                self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
+            }
+            
+            completion(result)
         }
     }
     
@@ -133,44 +131,33 @@ extension RootViewModelFactory {
         notify: @escaping OpenCardDomain.ConfirmationNotify,
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
-
-        let verifyService = nanoServiceComposer.compose(
+        let service = onBackground(
             makeRequest: RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeResponse
         )
         
         let otp = makeOTPModel(
-            resend: {
-#warning("FIXME")
-            },
+            resend: { service { _ in }}, // fire and forget
             observe: { notify(.otp($0)) }
         )
         let consent = OpenCardDomain.Confirmation.Consent(check: true)
         
-        let service: (@escaping (OpenCardDomain.LoadConfirmationResult) -> Void) -> Void = { [weak self] completion in
+        service { [weak self] in
             
-            self?.schedulers.background.delay(for: .seconds(2)) {
-                
-                completion(.success(.init(otp: otp, consent: consent)))
-            }
-        }
-        
-        schedulers.background.schedule { [weak self] in
+            guard let self else { return }
             
-            service { [service] in
+            if case .informer = $0.loadFailure?.type {
                 
-                if case let .failure(failure) = $0,
-                   case .informer = failure.type {
+                schedulers.background.delay(for: .seconds(2)) {
                     
-                    self?.schedulers.background.delay(for: .seconds(2)) {
-                        
-                        notify(.dismissInformer)
-                    }
+                    notify(.dismissInformer)
                 }
-                
-                completion($0)
-                _ = service
             }
+            
+            completion($0
+                .map { _ in .init(otp: otp, consent: consent) }
+                .mapError(\.loadFailure)
+            )
         }
     }
     
@@ -196,6 +183,7 @@ extension RootViewModelFactory {
         payload: OpenCardDomain.OrderCardPayload,
         completion: @escaping (OpenCardDomain.OrderCardResult) -> Void
     ) {
+        // TODO: use `onBackground` to create service
         let createCardApplicationService = nanoServiceComposer.compose(
             makeRequest: RequestFactory.createCardApplicationRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateCardApplicationResponse
@@ -209,6 +197,7 @@ extension RootViewModelFactory {
             }
         }
         
+        // TODO: use `onBackground` to create service
         schedulers.background.schedule {
             
             service { [service] in
@@ -253,5 +242,29 @@ private extension OpenCardDomain.State {
         default:
             return nil
         }
+    }
+}
+
+private extension Error {
+    
+    var loadFailure: OrderCard.LoadFailure {
+        
+        switch self as? RemoteServices.ResponseMapper.MappingError {
+        case let .server(_, errorMessage: errorMessage):
+            return .init(message: errorMessage, type: .alert)
+            
+        default:
+            return .init(message: "Что-то пошло не так.\nПопробуйте позже.", type: .informer)
+        }
+    }
+}
+
+private extension Result {
+    
+    var loadFailure: OrderCard.LoadFailure? {
+        
+        guard case let .failure(failure) = self else { return nil }
+        
+        return failure.loadFailure
     }
 }

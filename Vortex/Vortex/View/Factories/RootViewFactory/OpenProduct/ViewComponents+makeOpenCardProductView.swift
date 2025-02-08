@@ -53,12 +53,20 @@ extension ViewComponents {
                     VStack {
                         
                         Text("TBD: openCard Form without confirmation")
-                     
+                        
+                        Toggle(
+                            "SMS/Push Expanded",
+                            isOn: .init(
+                                get: { state.form?.messages.isOn ?? false },
+                                set: { event(.setMessages($0)) }
+                            )
+                        )
+                        
                         Spacer()
                         
-                        Button("Continue") {
+                        continueButton(isLoading: state.isLoading) {
                             
-                            content.event(.continue)
+                            event(.continue)
                         }
                         .buttonStyle(.borderedProminent)
                     }
@@ -73,20 +81,63 @@ extension ViewComponents {
                         
                         Text("TBD: openCard Form with confirmation")
                         
+                        Toggle(
+                            "SMS/Push Expanded",
+                            isOn: .init(
+                                get: { state.form?.messages.isOn ?? false },
+                                set: { event(.setMessages($0)) }
+                            )
+                        )
+                        
                         makeOTPView(viewModel: confirmation.otp)
+                        
+                        HStack {
+                            
+                            PaymentsCheckView.CheckBoxView(
+                                isChecked: state.consent,
+                                activeColor: .systemColorActive
+                            )
+                            
+                            Text("Consent")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(.textPlaceholder)
+                        }
+                        .onTapGesture { event(.setConsent(!state.consent)) }
+                        .animation(.easeInOut, value: state.consent)
                         
                         Spacer()
                         
-                        Button("Continue") {
+                        Text(String(describing: state.payload))
+                            .foregroundStyle(.secondary)
+                        
+                        Spacer()
+                        
+                        continueButton(isLoading: state.isLoading) {
                             
-                            content.event(.continue)
+                            event(.continue)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .disabled(!state.isValid)
                     }
-                  //  .disabled(!state.canContinue) // TODO: FIXME!!!
+                    .disabled(state.isLoading)
                 }
             }
         }
+    }
+    
+    private func continueButton(
+        isLoading: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(action: action) {
+            if isLoading {
+                ProgressView()
+            } else {
+                Text("Continue")
+            }
+        }
+        .buttonStyle(.borderedProminent)
     }
     
     func makeOTPView(
@@ -135,7 +186,6 @@ private extension OpenCardDomain.FlowDomain.State {
         else { return nil }
         
         return .failure(message: failure.message)
-
     }
     
     var stringAlert: StringAlert? {

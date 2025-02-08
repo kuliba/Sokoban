@@ -76,17 +76,18 @@ enum OrderCard { // TODO: replace stub with types from module
     struct State<Confirmation> {
         
         var isLoading: Bool = false
-        var otp: String?
-        var result: LoadResult<Confirmation>?
         var orderCardResult: OrderCardResult?
+        var result: LoadResult<Confirmation>?
     }
     
     struct Form<Confirmation> {
         
-        var confirmation: LoadConfirmationResult<Confirmation>?
         let product: Int // Product
         let type: String //ProductType
+        var confirmation: LoadConfirmationResult<Confirmation>?
+        var consent = true
         var messages: Messages
+        var otp: String?
         
         struct Messages: Equatable {
             
@@ -119,14 +120,10 @@ enum OrderCard { // TODO: replace stub with types from module
         case load
         case loaded(LoadResult<Confirmation>)
         case loadConfirmation(LoadConfirmationResult<Confirmation>)
-        case messages(MessagesEvent)
+        case setMessages(Bool)
         case orderCardResult(OrderCardResult)
         case otp(String)
-        
-        public enum MessagesEvent: Equatable {
-            
-            case toggle
-        }
+        case setConsent(Bool)
     }
     
     enum Effect: Equatable {
@@ -136,7 +133,11 @@ enum OrderCard { // TODO: replace stub with types from module
         case orderCard(OrderCardPayload)
     }
     
-    struct OrderCardPayload: Equatable {}
+    struct OrderCardPayload: Equatable {
+        
+        let smsInfo: Bool
+        let verificationCode: String
+    }
     
     typealias OrderCardResult = Bool // TODO: improve associated value
     
@@ -154,39 +155,10 @@ enum OrderCard { // TODO: replace stub with types from module
             
             switch event {
             case .continue:
-                switch state.result {
-                case .none, .failure:
-                    break
-                    
-                case let .success(form):
-                    switch form.confirmation {
-                    case .none:
-                        state.isLoading = true
-                        effect = .loadConfirmation
-                        
-                    case .some:
-                        if let payload = state.payload {
-                            
-                            state.isLoading = true
-                            effect = .orderCard(payload)
-                        }
-                    }
-                }
+                reduceContinue(&state, &effect)
                 
             case .dismissInformer:
-                if case let .failure(failure) = state.result,
-                   case .informer = failure.type {
-                    
-                    state.result = nil
-                }
-                
-                if case var .success(form) = state.result,
-                   case let .failure(failure) = form.confirmation,
-                   case .informer = failure.type {
-                    
-                    form.confirmation = nil
-                    state.result = .success(form)
-                }
+                reduceDismissInformer(&state, &effect)
                 
             case .load:
                 state.isLoading = true
@@ -194,37 +166,28 @@ enum OrderCard { // TODO: replace stub with types from module
                 
             case let .loadConfirmation(confirmation):
                 state.isLoading = false
-                
-                switch (state.result, confirmation) {
-                case (.none, _), (.failure, _):
-                    break // impossible cases
-                    
-                case (var .success(form), let confirmation):
-                    form.confirmation = confirmation
-                    state.result = .success(form)
-                }
+                state.form?.confirmation = confirmation
                 
             case let .loaded(result):
                 state.isLoading = false
                 state.result = result
                 
-            case .messages(.toggle):
-                switch (state.result, state.isLoading) {
-                case var (.success(form), false):
-                    form.messages.isOn.toggle()
-                    state.result = .success(form)
-                    
-                default: break
+            case let .setMessages(isOn):
+                if !state.isLoading {
+                    state.form?.messages.isOn = isOn
                 }
                 
             case let .orderCardResult(orderCardResult):
                 state.orderCardResult = orderCardResult
                 
             case let .otp(otp):
-                if case let .success(form) = state.result,
-                   case .success = form.confirmation {
-                    
-                    state.otp = otp
+                if !state.isLoading && state.hasConfirmation {
+                    state.form?.otp = otp
+                }
+                
+            case let .setConsent(consent):
+                if !state.isLoading && state.hasConfirmation {
+                    state.form?.consent = consent
                 }
             }
             
@@ -233,6 +196,7 @@ enum OrderCard { // TODO: replace stub with types from module
         
         typealias State = OrderCard.State<Confirmation>
         typealias Event = OrderCard.Event<Confirmation>
+        typealias Effect = OrderCard.Effect
     }
     
     final class EffectHandler<Confirmation> {
@@ -297,16 +261,90 @@ enum OrderCard { // TODO: replace stub with types from module
     }
 }
 
+private extension OrderCard.Reducer {
+    
+    func reduceContinue(
+        _ state: inout State,
+        _ effect: inout Effect?
+    ) {
+        guard let form = state.form else { return }
+        
+        switch form.confirmation {
+        case .none:
+            state.isLoading = true
+            effect = .loadConfirmation
+            
+        case .some:
+            if let payload = state.payload {
+                
+                state.isLoading = true
+                effect = .orderCard(payload)
+            }
+        }
+    }
+    
+    func reduceDismissInformer(
+        _ state: inout State,
+        _ effect: inout Effect?
+    ) {
+        if case let .failure(failure) = state.result,
+           case .informer = failure.type {
+            
+            state.result = nil
+        }
+        
+        if case let .failure(failure) = state.form?.confirmation,
+           case .informer = failure.type {
+            
+            state.form?.confirmation = nil
+        }
+    }
+}
+
 extension OrderCard.State {
     
-    // TODO: FIXME!!!
-   // var canContinue: Bool { isValid || !isLoading }
+    var consent: Bool { form?.consent ?? false }
+    
+    var form: OrderCard.Form<Confirmation>? {
+        
+        get {
+            
+            guard case let .success(form) = result
+            else { return nil }
+            
+            return form
+        }
+        
+        set(newValue) {
+            
+            guard let newValue, case .success = result
+            else { return }
+            
+            result = .success(newValue)
+        }
+    }
+    
+    var hasConfirmation: Bool {
+        
+        if case .success = form?.confirmation {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     var isValid: Bool { payload != nil }
     
     var payload: OrderCard.OrderCardPayload? {
         
-        guard otp?.count == 6 else { return nil }
+        guard let otp = form?.otp,
+              otp.count == 6,
+              form?.consent == true
+        else { return nil }
         
-        return .init()
+        return .init(
+            smsInfo: form?.messages.isOn ?? false,
+            verificationCode: otp
+        )
     }
 }
