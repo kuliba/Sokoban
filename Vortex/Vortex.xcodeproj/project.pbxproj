@@ -3069,6 +3069,7 @@
 		C109B01929921806009CFCFA /* Model+PaymentsAnywayAbroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109B01829921806009CFCFA /* Model+PaymentsAnywayAbroad.swift */; };
 		C10CE65D29070CDF00FC5706 /* TextViewPhoneNumberViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10CE65C29070CDF00FC5706 /* TextViewPhoneNumberViewComponent.swift */; };
 		C10E0F222D563C50008185D6 /* RequestFactory+createGetCardOrderFormRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10E0F212D563C50008185D6 /* RequestFactory+createGetCardOrderFormRequest.swift */; };
+		C10E0F242D5772ED008185D6 /* OrderCard in Frameworks */ = {isa = PBXBuildFile; productRef = C10E0F232D5772ED008185D6 /* OrderCard */; };
 		C10F481928E4A52F009918EA /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10F481828E4A52F009918EA /* PushNotification.swift */; };
 		C10F481C28E6E335009918EA /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10F481828E4A52F009918EA /* PushNotification.swift */; };
 		C10F482B28E753ED009918EA /* NotificationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5DD287962BA00544C17 /* NotificationStatus.swift */; };
@@ -3165,7 +3166,6 @@
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
 		C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */; };
 		C18FDF0E2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */; };
-		C19090C02D11915400155987 /* RequestFactory+createGetOrderCardFormRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19090BF2D11915400155987 /* RequestFactory+createGetOrderCardFormRequest.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7564,6 +7564,7 @@
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
 				838C09602C8DD9E700E894AC /* Banners in Frameworks */,
 				2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */,
+				C10E0F242D5772ED008185D6 /* OrderCard in Frameworks */,
 				2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */,
 				2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
@@ -19456,6 +19457,7 @@
 				8354294C2D43A1AB00963709 /* GetBannersMyProductListService */,
 				C19C234E2D562E210026FD0B /* GetCardOrderFormService */,
 				C192C99B2D47966000518831 /* CreateCardApplication */,
+				C10E0F232D5772ED008185D6 /* OrderCard */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -29254,6 +29256,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = GenericRemoteService;
 		};
+		C10E0F232D5772ED008185D6 /* OrderCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OrderCard;
+		};
 		C14F85522AF537B000749534 /* PaymentSticker */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PaymentSticker;
@@ -29269,14 +29275,6 @@
 		C15C4C762CFE72CD00A8C922 /* OrderCardLandingBackend */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OrderCardLandingBackend;
-		};
-		C1724C4A2D0C51DF0002B6AF /* GetCardOrderFormService */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GetCardOrderFormService;
-		};
-		C1724C4C2D10697A0002B6AF /* OrderCard */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OrderCard;
 		};
 		C192C99B2D47966000518831 /* CreateCardApplication */ = {
 			isa = XCSwiftPackageProductDependency;

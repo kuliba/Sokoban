@@ -6,12 +6,16 @@
 //
 
 import Foundation
-import AmountComponent
 
-public enum OrderProcessCardEvent: Equatable {
+public enum Event<Confirmation> {
     
-    case dismiss
     case `continue`
-    case amount(AmountEvent)
-    case consent
+    case dismissInformer
+    case load
+    case loaded(LoadFormResult<Confirmation>)
+    case loadConfirmation(LoadConfirmationResult<Confirmation>)
+    case setMessages(Bool)
+    case orderCardResult(OrderCardResult)
+    case otp(String)
+    case setConsent(Bool)
 }

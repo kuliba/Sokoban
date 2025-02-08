@@ -162,7 +162,7 @@ extension ViewComponents {
 
 extension OpenCardDomain.LoadFailure: Identifiable {
     
-    var id: String { message + String(describing: message) }
+    public var id: String { message + String(describing: message) }
     
     func alert(
         title: String = "Ошибка",

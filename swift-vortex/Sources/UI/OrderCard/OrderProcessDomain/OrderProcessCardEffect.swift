@@ -7,4 +7,9 @@
 
 import Foundation
 
-enum OrderProcessCardEffect {}
+public enum Effect: Equatable {
+    
+    case load
+    case loadConfirmation
+    case orderCard(OrderCardPayload)
+}
