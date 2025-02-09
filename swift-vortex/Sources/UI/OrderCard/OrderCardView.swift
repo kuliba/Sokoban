@@ -68,10 +68,21 @@ private extension OrderCardView {
         _ form: Form<Confirmation>
     ) -> some View {
         
-        switch form.confirmation {
-        case .none:
-            // Text("form without confirmation")
+        VStack(spacing: config.formSpacing) {
+            
             coreFormView(form)
+            confirmationView(form.confirmation)
+        }
+    }
+    
+    @ViewBuilder
+    func confirmationView(
+        _ confirmation: LoadConfirmationResult<Confirmation>?
+    ) -> some View {
+        
+        switch confirmation {
+        case .none:
+             EmptyView()
             
         case let .failure(failure):
             switch failure.type {
@@ -118,7 +129,7 @@ private extension OrderCardView {
         
         ProductView(
             product: product,
-            isLoading: state.isLoading,
+            isLoading: state.isProductLoading,
             config: config.product
         )
         .rounded(config.roundedConfig)
@@ -140,6 +151,7 @@ private extension OrderCardView {
         _ messages: Messages
     ) -> some View {
         
+        // TODO: fix: message has link
         MessageView(
             state: messages.isOn,
             event: { event(.setMessages($0)) },

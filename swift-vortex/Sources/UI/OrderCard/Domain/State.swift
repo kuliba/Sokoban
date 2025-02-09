@@ -21,6 +21,8 @@ public struct State<Confirmation> {
 
 public extension State {
     
+    var isProductLoading: Bool { isLoading && form == nil }
+    
     var consent: Bool { form?.consent ?? false }
     
     var form: Form<Confirmation>? {
