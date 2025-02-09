@@ -175,7 +175,7 @@ private extension Product {
 
 private extension CardType {
     
-    static let preview: Self = .init(icon: "icon", title: "title")
+    static let preview: Self = .init(title: "title")
 }
 
 private extension Result
@@ -227,16 +227,18 @@ private extension OrderCardViewConfig {
 private extension CardTypeViewConfig {
     
     static let preview: Self = .init(
-        title: .init(
-            textFont: .title2,
-            textColor: .orange
-        ),
+        backgroundColorIcon: .pink,
+        icon: .flag,
         subtitle: .init(
             text: "Select type",
             config: .init(
                 textFont: .headline,
                 textColor: .green
             )
+        ), 
+        title: .init(
+            textFont: .title2,
+            textColor: .orange
         )
     )
 }

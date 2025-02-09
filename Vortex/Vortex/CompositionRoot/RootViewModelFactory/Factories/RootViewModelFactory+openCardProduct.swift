@@ -325,11 +325,10 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
             product: .init(
                 image: design,
                 header: (description, title),
-                orderOption: ("orderOption.0", "orderOption.1")
+                orderOption: ("\(fee.free)", ("\(String(fee.maintenance.value)) \(currency.symbol)"))
             ),
             type: .init(
-                icon: "type.icon",
-                title: "type.title"
+                title: typeText
             ),
             requestID: UUID().uuidString.lowercased(),
             cardApplicationCardType: type,

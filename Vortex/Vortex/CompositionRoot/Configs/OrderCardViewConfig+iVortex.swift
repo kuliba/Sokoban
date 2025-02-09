@@ -22,16 +22,18 @@ extension OrderCardViewConfig {
 extension CardTypeViewConfig {
     
     static let iVortex: Self = .init(
-        title: .init(
-            textFont: .textH4M16240(),
-            textColor: .textSecondary
-        ),
+        backgroundColorIcon: .bgIconDeepPurpleMedium,
+        icon: .ic24CreditCard,
         subtitle: .init(
             text: "Тип носителя",
             config: .init(
                 textFont: .textBodyMR14180(),
                 textColor: .textPlaceholder
             )
+        ),
+        title: .init(
+            textFont: .textH4M16240(),
+            textColor: .textSecondary
         )
     )
 }

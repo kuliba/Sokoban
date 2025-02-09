@@ -162,8 +162,7 @@ private extension OrderCardView {
         
         CardTypeView(
             select: type,
-            config: config.cardType,
-            makeIconView: factory.makeIconView
+            config: config.cardType
         )
         .rounded(config.roundedConfig)
     }

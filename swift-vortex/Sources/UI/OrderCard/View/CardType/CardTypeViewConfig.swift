@@ -10,14 +10,20 @@ import SwiftUI
 
 public struct CardTypeViewConfig {
     
-    public let title: TextConfig
+    public let backgroundColorIcon: Color
+    public let icon: Image
     public let subtitle: TitleConfig
+    public let title: TextConfig
     
     public init(
-        title: TextConfig,
-        subtitle: TitleConfig
+        backgroundColorIcon: Color,
+        icon: Image,
+        subtitle: TitleConfig,
+        title: TextConfig
     ) {
-        self.title = title
+        self.backgroundColorIcon = backgroundColorIcon
+        self.icon = icon
         self.subtitle = subtitle
+        self.title = title
     }
 }

@@ -8,19 +8,26 @@
 import SwiftUI
 import SharedConfigs
 
-struct CardTypeView<IconView>: View
-where IconView: View {
+struct CardTypeView: View {
     
     let select: CardType
     let config: CardTypeViewConfig
-    let makeIconView: (String) -> IconView
     
     var body: some View {
         
         HStack(spacing: 12) {
             
-            makeIconView(select.icon)
-                .frame(width: 32, height: 32, alignment: .center)
+            ZStack(alignment: .center) {
+                
+                Circle()
+                    .foregroundColor(config.backgroundColorIcon)
+                    .frame(width: 32, height: 32, alignment: .center)
+                
+                config.icon
+                    .resizable()
+                    .foregroundColor(.white)
+                    .frame(width: 19, height: 19)
+            }
             
             VStack(alignment: .leading) {
                 
@@ -34,28 +41,30 @@ where IconView: View {
 
 #Preview {
     
-    CardTypeView(select: .preview, config: .preview) { _ in
-        
-        Image.percent
-    }
+    CardTypeView(select: .preview, config: .preview)
 }
 
 private extension CardType {
     
-    static let preview: Self = .init(icon: "", title: "Digital")
+    static let preview: Self = .init(title: "Digital")
 }
 
 
 private extension CardTypeViewConfig {
     
     static let preview: Self = .init(
-        title: .init(textFont: .title3, textColor: .green),
+        backgroundColorIcon: .red,
+        icon: .bolt,
         subtitle: .init(
             text: "Select type",
             config: .init(
                 textFont: .footnote,
                 textColor: .pink
             )
+        ),
+        title: .init(
+            textFont: .title3,
+            textColor: .green
         )
     )
 }
