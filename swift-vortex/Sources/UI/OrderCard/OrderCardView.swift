@@ -14,12 +14,15 @@
 //import UIPrimitives
 import SwiftUI
 
-public struct OrderCardView<Confirmation>: View {
+public struct OrderCardView<Confirmation, ConfirmationView>: View
+where ConfirmationView: View{
     
     let state: State
     let event: (Event) -> Void
     let config: Config
     let factory: ImageViewFactory
+    // TODO: move to factory, rename factory
+    let confirmationView: (Confirmation) -> ConfirmationView
     
     private let coordinateSpace: String
     
@@ -28,12 +31,14 @@ public struct OrderCardView<Confirmation>: View {
         event: @escaping (Event) -> Void,
         config: Config,
         factory: ImageViewFactory,
+        confirmationView: @escaping (Confirmation) -> ConfirmationView,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
+        self.confirmationView = confirmationView
         self.coordinateSpace = coordinateSpace
     }
     
@@ -68,11 +73,15 @@ private extension OrderCardView {
         _ form: Form<Confirmation>
     ) -> some View {
         
-        VStack(spacing: config.formSpacing) {
+        ScrollView(showsIndicators: false) {
             
-            coreFormView(form)
-            confirmationView(form.confirmation)
+            VStack(spacing: config.formSpacing) {
+                
+                coreFormView(form)
+                confirmationView(form.confirmation)
+            }
         }
+        .coordinateSpace(name: coordinateSpace)
     }
     
     @ViewBuilder
@@ -93,14 +102,14 @@ private extension OrderCardView {
         case let .loaded(.failure(failure)):
             switch failure.type {
             case .alert:
-                Text("confirmation failure alert")
+                EmptyView()
                 
             case .informer:
-                Text("confirmation failure informer")
+                EmptyView()
             }
             
         case let .loaded(.success(confirmation)):
-            Text("form with confirmation \(confirmation)")
+            confirmationView(confirmation)
         }
         //
         //        private let coordinateSpace: String = "orderScroll"

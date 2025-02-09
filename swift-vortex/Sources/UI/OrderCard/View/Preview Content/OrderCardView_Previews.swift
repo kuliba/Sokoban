@@ -46,7 +46,22 @@ struct OrderCardView_Previews: PreviewProvider {
         _ state: State<PreviewConfirmation>
     ) -> some View {
         
-        OrderCardView(state: state, event: { print($0) }, config: .preview, factory: .default)
+        OrderCardView(
+            state: state, 
+            event: { print($0) },
+            config: .preview,
+            factory: .default
+        ) { confirmation in
+            
+            Color.green
+                .frame(height: 400)
+                .overlay {
+                
+                    Text(String(describing: confirmation))
+                        .foregroundStyle(.white)
+                        .font(.title3)
+                }
+        }
     }
 }
 
