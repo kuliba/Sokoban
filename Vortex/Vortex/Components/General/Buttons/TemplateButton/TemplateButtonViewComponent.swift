@@ -35,10 +35,7 @@ extension TemplateButtonView {
             self.model = model
             self.operation = operation
             self.details = details
-            
-            let state = state ?? (details.paymentTemplateId != nil ? .init(details: details) : .idle)
-            
-            self.state = state
+            self.state = state ?? .init(details: details)
             self.scheduler = scheduler
             
             bind()
