@@ -28,13 +28,15 @@ class ServicePaymentFlowTests: XCTestCase {
     func makeState(
         formattedAmount: String = anyMessage(),
         merchantIcon: String? = anyMessage(),
-        result: ServicePaymentFlowState.Completed.TransactionResult
+        result: ServicePaymentFlowState.Completed.TransactionResult,
+        templateID: Int? = nil
     ) -> ServicePaymentFlowState {
         
         return .fullScreenCover(.init(
             formattedAmount: formattedAmount,
             merchantIcon: merchantIcon,
-            result: result
+            result: result,
+            templateID: templateID
         ))
     }
     
@@ -88,7 +90,8 @@ class ServicePaymentFlowTests: XCTestCase {
     }
     
     func makeAnywayPaymentContext(
-        icon: String? = anyMessage()
+        icon: String? = anyMessage(),
+        templateID: Int? = nil
     ) -> AnywayPaymentContext {
         
         return .init(
@@ -103,7 +106,8 @@ class ServicePaymentFlowTests: XCTestCase {
                     puref: anyMessage(),
                     title: anyMessage(),
                     subtitle: anyMessage(),
-                    icon: icon
+                    icon: icon,
+                    templateID: templateID
                 )
             ),
             shouldRestart: false,

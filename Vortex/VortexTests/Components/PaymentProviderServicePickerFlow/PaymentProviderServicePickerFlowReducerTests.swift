@@ -145,7 +145,8 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
                         puref: anyMessage(), 
                         title: anyMessage(),
                         subtitle: anyMessage(),
-                        icon: anyMessage()
+                        icon: anyMessage(),
+                        templateID: nil
                     )
                 ),
                 shouldRestart: false,

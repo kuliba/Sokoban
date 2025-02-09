@@ -583,6 +583,6 @@ private extension TemplateButtonView.ViewModel {
     
     static func preview(state: State) -> TemplateButtonView.ViewModel {
         
-        .init(model: .emptyMock, operation: nil, operationDetail: OperationDetailData.stub())
+        .init(model: .emptyMock, operation: nil, operationDetail: .stub())
     }
 }
