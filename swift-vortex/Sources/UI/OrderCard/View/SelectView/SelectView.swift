@@ -8,24 +8,24 @@
 import SwiftUI
 import SharedConfigs
 
-struct SelectView: View {
+struct SelectView<IconView>: View
+where IconView: View {
     
-    let title: String
-    let select: String
-    let config: SelectConfig
+    let select: CardType
+    let config: SelectViewConfig
+    let makeIconView: (String) -> IconView
     
     var body: some View {
         
         HStack(spacing: 12) {
             
-            config.icon
-                .resizable()
+            makeIconView(select.icon)
                 .frame(width: 32, height: 32, alignment: .center)
             
             VStack(alignment: .leading) {
                 
-                title.text(withConfig: config.title)
-                select.text(withConfig: config.select)
+                config.subtitle.render()
+                select.title.text(withConfig: config.title)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -34,13 +34,29 @@ struct SelectView: View {
 
 #Preview {
     
-    SelectView(
-        title: "Тип носителя",
-        select: "Цифровая",
-        config: .init(
-            title: .init(textFont: .footnote, textColor: .blue),
-            select: .init(textFont: .headline, textColor: .red),
-            icon: .bolt
+    SelectView(select: .preview, config: .preview) { _ in
+        
+        Image.percent
+    }
+}
+
+private extension CardType {
+    
+    static let preview: Self = .init(icon: "", title: "Digital")
+}
+
+
+private extension SelectViewConfig {
+    
+    static let preview: Self = .init(
+        title: .init(textFont: .title3, textColor: .green),
+        subtitle: .init(
+            text: "Select type",
+            config: .init(
+                textFont: .footnote,
+                textColor: .pink
+            )
         )
     )
 }
+

@@ -7,17 +7,14 @@
 
 public struct CardType: Equatable {
     
-    let title: String
-    let cardType: String
     let icon: String
+    let title: String
     
     public init(
-        title: String,
-        cardType: String,
-        icon: String
+        icon: String,
+        title: String
     ) {
         self.title = title
-        self.cardType = cardType
         self.icon = icon
     }
 }

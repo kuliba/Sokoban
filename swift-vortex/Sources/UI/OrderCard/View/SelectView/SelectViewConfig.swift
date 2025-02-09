@@ -8,9 +8,8 @@
 import SharedConfigs
 import SwiftUI
 
-struct SelectConfig {
+struct SelectViewConfig {
     
     let title: TextConfig
-    let select: TextConfig
-    let icon: Image
+    let subtitle: TitleConfig
 }

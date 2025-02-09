@@ -39,7 +39,10 @@ struct OrderCardView_Previews: PreviewProvider {
         _ state: State<PreviewConfirmation>
     ) -> some View {
         
-        OrderCardView(state: state, event: { print($0) }, config: .preview)
+        OrderCardView(state: state, event: { print($0) }, config: .preview) { _ in
+            
+            Image.shield
+        }
     }
 }
 
@@ -129,7 +132,7 @@ private extension Product {
 
 private extension CardType {
     
-    static let preview: Self = .init(title: "title", cardType: "cardType", icon: "icon")
+    static let preview: Self = .init(icon: "icon", title: "title")
 }
 
 private extension Result
@@ -172,18 +175,20 @@ private extension OrderCardViewConfig {
     )
 }
 
-private extension SelectConfig {
+private extension SelectViewConfig {
     
     static let preview: Self = .init(
         title: .init(
             textFont: .title2,
             textColor: .orange
         ),
-        select: .init(
-            textFont: .headline,
-            textColor: .green
-        ),
-        icon: .percent
+        subtitle: .init(
+            text: "Select type",
+            config: .init(
+                textFont: .headline,
+                textColor: .green
+            )
+        )
     )
 }
 

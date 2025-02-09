@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct OrderCardViewConfig {
     
-    let cardType: SelectConfig
+    let cardType: SelectViewConfig
     let formSpacing: CGFloat
     let product: ProductConfig
     let shimmeringColor: Color
