@@ -44,11 +44,15 @@ where ConfirmationView: View{
     
     public var body: some View {
         
-        switch state.form {
-        case .none:
+        switch state.loadableForm {
+        case .loading(nil), .loaded(nil), .loaded(.failure):
             loadingProductView()
             
-        case let .some(form):
+        case let .loading(.some(form)):
+            formView(form)
+                .disabled(true)
+            
+        case let .loaded(.success(form)):
             formView(form)
         }
     }
@@ -96,7 +100,7 @@ private extension OrderCardView {
             
         case .loading:
             RoundedRectangle(cornerRadius: config.roundedConfig.cornerRadius)
-                .foregroundColor(config.roundedConfig.background)
+                .foregroundColor(config.shimmeringColor.opacity(0.7))
                 .frame(height: 56) // TODO: move to config
                 ._shimmering()
             
@@ -137,6 +141,7 @@ private extension OrderCardView {
             cardTypeView(form.type)
             messageView(form.messages)
         }
+        .disabled(state.hasConfirmation)
     }
     
     func productView(

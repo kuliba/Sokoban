@@ -85,7 +85,7 @@ private extension Reducer {
         
         switch form.confirmation {
         case .loaded(nil):
-            state.loadableForm = .loading(form)
+            state.loadableForm.state?.confirmation = .loading(nil)
             effect = .loadConfirmation
             
         case .loaded(.success):
@@ -99,7 +99,7 @@ private extension Reducer {
             break // already loading
         
         case .loaded(.failure):
-            break
+            break // cannot continue on failure
         }
     }
     
@@ -127,13 +127,21 @@ private extension Reducer {
         _ effect: inout Effect?,
         with orderCardResult: Event.OrderCardResult
     ) {
-        switch orderCardResult {
-        case let .failure(loadFailure):
-            let notifyOTP = state.loadableForm.state?.confirmation.state.map(otpWitness)
-            notifyOTP?(loadFailure.message)
+        switch (state.loadableForm, orderCardResult) {
+        case (.loaded, _):
+            break // cannot receive orderCardResult in loaded state
             
-        case let .success(orderCardResponse):
-            state.loadableForm.state?.orderCardResponse = orderCardResponse
+        case (.loading(nil), _):
+            break // cannot receive orderCardResult in empty loading state
+            
+        case let (.loading(.some(form)), .failure(loadFailure)):
+            let notifyOTP = form.confirmation.state.map(otpWitness)
+            notifyOTP?(loadFailure.message)
+            state.loadableForm = .loaded(.success(form))
+            
+        case (var.loading(.some(form)), let .success(orderCardResponse)):
+            form.orderCardResponse = orderCardResponse
+            state.loadableForm = .loaded(.success(form))
         }
     }
 }

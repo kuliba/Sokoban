@@ -47,16 +47,3 @@ public struct Form<Confirmation> {
         self.orderCardResponse = orderCardResponse
     }
 }
-
-public extension Form {
-    
-    var isValid: Bool {
-        
-        switch confirmation {
-        case .loaded(nil):
-            return true
-        default: // rename to `canOrder`
-            return otp?.count == 6 && consent
-        }
-    }
-}

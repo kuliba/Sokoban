@@ -5,20 +5,6 @@
 //  Created by Igor Malyarov on 07.02.2025.
 //
 
-// TODO: extract to separate file
-import UIPrimitives
-
-extension ViewComponents {
-    
-    @inlinable
-    func makeGeneralIconView(
-        md5Hash: String
-    ) -> UIPrimitives.AsyncImage {
-        
-        return makeGeneralIconView(.md5Hash(.init(md5Hash)))
-    }
-}
-
 import OrderCard
 import OTPInputComponent
 import PaymentComponents
@@ -59,57 +45,68 @@ extension ViewComponents {
         
         RxWrapperView(model: content) { state, event in
             
-            VStack {
-                
-                OrderCard.OrderCardView(
-                    state: state,
-                    event: event,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
-                    )
-                ) { confirmation in
+            OrderCard.OrderCardView(
+                state: state,
+                event: event,
+                config: .iVortex,
+                factory: .init(
+                    makeIconView: makeIconView,
+                    makeBannerImageView: makeGeneralIconView
+                ),
+                confirmationView: {
                     
-                    makeOTPView(viewModel: confirmation.otp)
-                    
-                    HStack {
-                        
-                        PaymentsCheckView.CheckBoxView(
-                            isChecked: state.consent,
-                            activeColor: .systemColorActive
-                        )
-                        
-                        Text("Consent")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textPlaceholder)
-                    }
-                    .onTapGesture { event(.setConsent(!state.consent)) }
-                    .animation(.easeInOut, value: state.consent)
+                    confirmationView($0, state, event)
                 }
-                .frame(maxHeight: .infinity, alignment: .top)
+            )
+            .safeAreaInset(edge: .bottom) {
                 
-                continueButton(isLoading: state.loadableForm.isLoading) {
-                    
-                    event(.continue)
-                }
-                .disabled(!state.isValid)
+                continueButton(state: state) { event(.continue) }
             }
-            .disabled(state.loadableForm.isLoading)
+            .opacity(state.isLoading ? 0.7 : 1)
+            .disabled(state.isLoading)
         }
     }
     
+    @ViewBuilder
+    private func confirmationView(
+        _ confirmation: OpenCardDomain.Confirmation,
+        _ state: OpenCardDomain.State,
+        _ event: @escaping (OpenCardDomain.Event) -> Void
+    ) -> some View {
+        
+        makeOTPView(viewModel: confirmation.otp)
+        
+        HStack {
+            
+            PaymentsCheckView.CheckBoxView(
+                isChecked: state.consent,
+                activeColor: .systemColorActive
+            )
+            
+            Text("Consent") // TODO: replace with linked?
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.textBodyMR14200())
+                .foregroundColor(.textPlaceholder)
+        }
+        .onTapGesture { event(.setConsent(!state.consent)) }
+        .animation(.easeInOut, value: state.consent)
+    }
+    
     private func continueButton(
-        isLoading: Bool,
+        state: OpenCardDomain.State,
         action: @escaping () -> Void
     ) -> some View {
         
         PaymentComponents.ButtonView.goToMain(
-            title: "Продолжить",
+            title: state.continueButtonTitle,
             goToMain: action
         )
-        .loader(isLoading: isLoading, color: .clear)
+        // TODO: replace with config with button colors and title
+        .saturation(state.isLoading ? 0 : 1)
+        .opacity(!state.isValid ? 0.3 : 1)
+        .saturation(!state.isValid ? 0 : 1)
+        .disabled(!state.isValid)
+        .loaderOverlay(isLoading: state.isLoading)
     }
     
     @inlinable
@@ -136,6 +133,21 @@ extension ViewComponents {
 private extension OpenCardDomain.State {
     
     var consent: Bool { loadableForm.state?.consent ?? false }
+    
+    var continueButtonTitle: String {
+        
+        hasConfirmation ? "Заказать карту" : "Продолжить"
+    }
+    
+    var isLoading: Bool {
+        
+        loadableForm.isLoading || isConfirmationLoading
+    }
+    
+    var isConfirmationLoading: Bool {
+        
+        loadableForm.state?.confirmation.isLoading ?? false
+    }
 }
 
 // MARK: - Adapters
