@@ -53,11 +53,6 @@ struct ProductView: View {
                 )
             }
         }
-        .rounded(
-            background: config.background,
-            cornerRadius: config.cornerRadius,
-            padding: config.padding
-        )
     }
     
     private func productHeaderView(

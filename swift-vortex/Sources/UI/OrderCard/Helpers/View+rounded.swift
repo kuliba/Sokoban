@@ -10,6 +10,19 @@ import SwiftUI
 extension View {
     
     func rounded(
+        _ config: RoundedConfig
+    ) -> some View {
+        
+        modifier(
+            ViewWithBackgroundCornerRadiusAndPaddingModifier(
+                background: config.background,
+                cornerRadius: config.cornerRadius,
+                padding: config.padding
+            )
+        )
+    }
+    
+    func rounded(
         background: Color,
         cornerRadius: CGFloat,
         padding: CGFloat

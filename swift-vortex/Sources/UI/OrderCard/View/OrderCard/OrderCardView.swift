@@ -14,7 +14,7 @@
 //import UIPrimitives
 import SwiftUI
 
-public struct OrderCardView<Confirmation, IconView>: View 
+public struct OrderCardView<Confirmation, IconView>: View
 where IconView: View {
     
     let state: State
@@ -87,19 +87,19 @@ private extension OrderCardView {
         case let .success(confirmation):
             Text("form with confirmation \(confirmation)")
         }
-//        
-//        private let coordinateSpace: String = "orderScroll"
-//        
-//        var _body: some View {
-//            ScrollView(showsIndicators: false) {
-//#warning("USE SCROLLVIEW")
-//                
-//                //                orderProcessCardView(state.orderProduct)
-//                Text("TBD: Form")
-//            }
-//            .coordinateSpace(name: coordinateSpace)
-//        }
-
+        //
+        //        private let coordinateSpace: String = "orderScroll"
+        //
+        //        var _body: some View {
+        //            ScrollView(showsIndicators: false) {
+        //#warning("USE SCROLLVIEW")
+        //
+        //                //                orderProcessCardView(state.orderProduct)
+        //                Text("TBD: Form")
+        //            }
+        //            .coordinateSpace(name: coordinateSpace)
+        //        }
+        
     }
     
     func coreFormView(
@@ -109,8 +109,8 @@ private extension OrderCardView {
         VStack(spacing: config.formSpacing) {
             
             productView(form.product)
-            
             cardTypeView(form.type)
+            messageView(form.messages)
         }
     }
     
@@ -123,22 +123,31 @@ private extension OrderCardView {
             isLoading: state.isLoading,
             config: config.product
         )
+        .rounded(config.roundedConfig)
     }
     
     func cardTypeView(
         _ type: CardType
     ) -> some View {
-
+        
         CardTypeView(
             select: type,
             config: config.cardType,
             makeIconView: makeIconView
         )
-        .rounded(
-            background: config.background,
-            cornerRadius: config.cornerRadius,
-            padding: config.padding
+        .rounded(config.roundedConfig)
+    }
+    
+    func messageView(
+        _ messages: Messages
+    ) -> some View {
+        
+        MessageView(
+            state: messages.isOn,
+            event: { event(.setMessages($0)) },
+            config: config.messages
         )
+        .rounded(config.roundedConfig)
     }
 }
 

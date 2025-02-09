@@ -170,11 +170,14 @@ private extension OrderCardViewConfig {
     static let preview: Self = .init(
         cardType: .preview,
         formSpacing: 16,
+        messages: .preview,
         product: .preview,
         shimmeringColor: .gray,
-        padding: 16,
-        cornerRadius: 24,
-        background: .blue.opacity(0.1)
+        roundedConfig: .init(
+            padding: 16,
+            cornerRadius: 24,
+            background: .blue.opacity(0.1)
+        )
     )
 }
 
