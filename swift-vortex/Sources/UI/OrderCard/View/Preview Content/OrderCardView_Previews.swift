@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 09.02.2025.
 //
 
+import Combine
 import SwiftUI
 
 struct OrderCardView_Previews: PreviewProvider {
@@ -39,10 +40,7 @@ struct OrderCardView_Previews: PreviewProvider {
         _ state: State<PreviewConfirmation>
     ) -> some View {
         
-        OrderCardView(state: state, event: { print($0) }, config: .preview) { _ in
-            
-            Image.shield
-        }
+        OrderCardView(state: state, event: { print($0) }, config: .preview, factory: .default)
     }
 }
 
@@ -210,5 +208,53 @@ private extension ProductConfig {
         orderOptionIcon: .flag,
         cornerRadius: 24,
         background: .blue.opacity(0.1)
+    )
+}
+
+private extension ImageViewFactory {
+    
+    static let `default`: Self = .init(
+        makeIconView: {
+            switch $0 {
+            case "1":
+                return  .init(
+                    image: .bolt,
+                    publisher: Just(.bolt).eraseToAnyPublisher()
+                )
+                
+            case "2":
+                return  .init(
+                    image: .shield,
+                    publisher: Just(.shield).eraseToAnyPublisher()
+                )
+                
+            default:
+                return .init(
+                    image: .flag,
+                    publisher: Just(.flag).eraseToAnyPublisher()
+                )
+            }
+        },
+        makeBannerImageView: {
+            switch $0 {
+            case "1":
+                return  .init(
+                    image: .shield,
+                    publisher: Just(.shield).eraseToAnyPublisher()
+                )
+                
+            case "2":
+                return  .init(
+                    image: .bolt,
+                    publisher: Just(.bolt).eraseToAnyPublisher()
+                )
+                
+            default:
+                return .init(
+                    image: .percent,
+                    publisher: Just(.percent).eraseToAnyPublisher()
+                )
+            }
+        }
     )
 }

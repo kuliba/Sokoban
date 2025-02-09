@@ -14,13 +14,12 @@
 //import UIPrimitives
 import SwiftUI
 
-public struct OrderCardView<Confirmation, IconView>: View
-where IconView: View {
+public struct OrderCardView<Confirmation>: View {
     
     let state: State
     let event: (Event) -> Void
     let config: Config
-    let makeIconView: (String) -> IconView
+    let factory: ImageViewFactory
     
     private let coordinateSpace: String
     
@@ -28,20 +27,19 @@ where IconView: View {
         state: State,
         event: @escaping (Event) -> Void,
         config: Config,
-        makeIconView: @escaping (String) -> IconView,
+        factory: ImageViewFactory,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
         self.event = event
         self.config = config
-        self.makeIconView = makeIconView
+        self.factory = factory
         self.coordinateSpace = coordinateSpace
     }
     
     public var body: some View {
         
         switch state.formResult {
-            
         case .none, .failure:
             loadingProductView()
             
@@ -133,7 +131,7 @@ private extension OrderCardView {
         CardTypeView(
             select: type,
             config: config.cardType,
-            makeIconView: makeIconView
+            makeIconView: factory.makeIconView
         )
         .rounded(config.roundedConfig)
     }
