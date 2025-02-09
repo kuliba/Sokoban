@@ -2855,11 +2855,12 @@ private extension Target {
         name: .orderCard,
         dependencies: [
             // internal packages
+            .amountComponent,
+            .linkableText,
+            .paymentComponents,
+            .toggleComponent,
             .sharedConfigs,
             .uiPrimitives,
-            .linkableText,
-            .amountComponent,
-            .paymentComponents
         ],
         path: "Sources/UI/\(String.orderCard)"
     )

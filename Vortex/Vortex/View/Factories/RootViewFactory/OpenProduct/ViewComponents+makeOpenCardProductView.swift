@@ -43,6 +43,7 @@ extension ViewComponents {
         
         RxWrapperView(model: content) { state, event in
             
+            OrderCardView(state: state, event: event, config: .iVortex)
             switch state.formResult {
             case .none, .failure:
                 RoundedRectangle(cornerRadius: 12)
