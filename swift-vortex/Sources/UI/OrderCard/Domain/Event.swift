@@ -1,5 +1,5 @@
 //
-//  OrderCardProcessEvent.swift
+//  Event.swift
 //
 //
 //  Created by Дмитрий Савушкин on 09.12.2024.
@@ -18,4 +18,6 @@ public enum Event<Confirmation> {
     case orderCardResult(OrderCardResult)
     case otp(String)
     case setConsent(Bool)
+    
+    public typealias OrderCardResult = Result<OrderCardResponse, LoadFailure>
 }

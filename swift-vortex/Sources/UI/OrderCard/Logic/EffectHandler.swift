@@ -35,7 +35,7 @@ public final class EffectHandler<Confirmation> {
     public typealias ConfirmationNotify = (ConfirmationEvent) -> Void
     public typealias LoadConfirmation = (@escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
     
-    public typealias OrderCard = (OrderCardPayload, @escaping (OrderCardResult) -> Void) -> Void
+    public typealias OrderCard = (OrderCardPayload, @escaping (Event.OrderCardResult) -> Void) -> Void
 }
 
 public extension EffectHandler {

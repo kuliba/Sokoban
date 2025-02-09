@@ -30,7 +30,7 @@ public extension ImageViewFactory {
     typealias MakeBannerImageView = (String) -> UIPrimitives.AsyncImage
 }
 
-extension ImageViewFactory {
+private extension ImageViewFactory {
     
     static let `default`: Self = .init(
         makeIconView: {

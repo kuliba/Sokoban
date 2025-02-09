@@ -1,5 +1,5 @@
 //
-//  OrderProcessCardEffect.swift
+//  Effect.swift
 //  
 //
 //  Created by Дмитрий Савушкин on 09.12.2024.
