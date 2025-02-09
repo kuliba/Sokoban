@@ -161,25 +161,39 @@ struct ProductView: View {
     }
 }
 
-#Preview {
-
-    ProductView(
-        product: .init(
-            image: "",
-            header: ("Все включено", "Кешбэк до 10 000 ₽ в месяц"),
-            orderOption: (open: "Бесплатно", service: "0 ₽")
-        ),
-        isLoading: false,
-        config: .init(
-            padding: 20,
-            title: .init(textFont: .system(size: 18), textColor: .black),
-            subtitle: .init(textFont: .system(size: 14), textColor: .black),
-            optionTitle: .init(textFont: .system(size: 12), textColor: .gray),
-            optionSubtitle: .init(textFont: .system(size: 16), textColor: .black),
-            shimmeringColor: .gray,
-            orderOptionIcon: .bolt,
-            cornerRadius: 12,
-            background: .red
+struct ProductView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        VStack {
+            
+            productView(false)
+            productView(true)
+        }
+    }
+    
+    private static func productView(
+        _ isLoading: Bool
+    ) -> some View {
+        
+        ProductView(
+            product: .init(
+                image: "",
+                header: ("Все включено", "Кешбэк до 10 000 ₽ в месяц"),
+                orderOption: (open: "Бесплатно", service: "0 ₽")
+            ),
+            isLoading: isLoading,
+            config: .init(
+                padding: 20,
+                title: .init(textFont: .system(size: 18), textColor: .black),
+                subtitle: .init(textFont: .system(size: 14), textColor: .black),
+                optionTitle: .init(textFont: .system(size: 12), textColor: .gray),
+                optionSubtitle: .init(textFont: .system(size: 16), textColor: .black),
+                shimmeringColor: .gray,
+                orderOptionIcon: .bolt,
+                cornerRadius: 12,
+                background: .red.opacity(0.2)
+            )
         )
-    )
+    }
 }

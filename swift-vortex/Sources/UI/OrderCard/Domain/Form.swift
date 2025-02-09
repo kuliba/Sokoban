@@ -7,6 +7,9 @@
 
 public struct Form<Confirmation> {
     
+    public let product: Product
+    public let type: CardType
+    
     public let requestID: String
     public let cardApplicationCardType: String
     public let cardProductExtID: String
@@ -19,6 +22,8 @@ public struct Form<Confirmation> {
     public var orderCardResponse: OrderCardResponse?
     
     public init(
+        product: Product,
+        type: CardType,
         requestID: String,
         cardApplicationCardType: String,
         cardProductExtID: String,
@@ -29,6 +34,8 @@ public struct Form<Confirmation> {
         otp: String? = nil,
         orderCardResponse: OrderCardResponse? = nil
     ) {
+        self.product = product
+        self.type = type
         self.requestID = requestID
         self.cardApplicationCardType = cardApplicationCardType
         self.cardProductExtID = cardProductExtID
