@@ -311,7 +311,9 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
             return .failure(failure.loadFailure)
             
         case let .success(response):
-            let form = response.digital?.form
+            let form = response.digital?.form(
+                tariffLink: response.list.first?.tariffLink ?? ""
+            )
             return form.map { .success($0) } ?? .failure(.tryLaterAlert)
         }
     }
@@ -319,7 +321,9 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
     
-    var form: OrderCard.Form<OpenCardDomain.Confirmation> {
+    func form(
+        tariffLink: String
+    ) -> OrderCard.Form<OpenCardDomain.Confirmation> {
         
         return .init(
             product: .init(
@@ -334,20 +338,25 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
             cardApplicationCardType: type,
             cardProductExtID: id,
             cardProductName: title,
-            messages: .default
+            messages: .default(tariffLink)
         )
     }
 }
 
 private extension OrderCard.Messages {
     
-    static let `default`: Self = .init(
-        description: "Пуши и смс",
-        icon: "ic24MessageSquare",
-        subtitle: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С Тарифами за услугу согласен.",
-        title: "Способ уведомлений",
-        isOn: false
-    )
+    static func `default`(
+        _ tariffLink: String
+    ) -> Self {
+        .init(
+            description: "Пуши и смс",
+            icon: "ic24MessageSquare",
+            subtitle: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С Тарифами за услугу согласен.",
+            tariffLink: tariffLink,
+            title: "Способ уведомлений",
+            isOn: false
+        )
+    }
 }
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {

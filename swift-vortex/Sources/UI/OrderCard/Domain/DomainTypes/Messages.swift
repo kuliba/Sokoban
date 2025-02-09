@@ -10,6 +10,7 @@ public struct Messages: Equatable {
     let description: String
     let icon: String
     let subtitle: String
+    let tariffLink: String
     let title: String
     public var isOn: Bool
     
@@ -17,12 +18,14 @@ public struct Messages: Equatable {
         description: String,
         icon: String,
         subtitle: String,
+        tariffLink: String,
         title: String,
         isOn: Bool
     ) {
         self.description = description
         self.icon = icon
         self.subtitle = subtitle
+        self.tariffLink = tariffLink
         self.title = title
         self.isOn = isOn
     }
