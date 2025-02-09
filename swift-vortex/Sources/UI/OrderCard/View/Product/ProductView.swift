@@ -8,28 +8,6 @@
 import SwiftUI
 import SharedConfigs
 
-struct ProductConfig {
-
-    let padding: Double
-    let title: TextConfig
-    let subtitle: TextConfig
-    let optionTitle: TextConfig
-    let optionSubtitle: TextConfig
-    let openOptionTitle: String = "Открытие"
-    let serviceOptionTitle: String = "Стоимость обслуживания"
-    let shimmeringColor: Color
-    let orderOptionIcon: Image
-    let cornerRadius: CGFloat
-    let background: Color
-}
-
-struct Product {
-
-    let image: String
-    let header: (String, String)
-    let orderOption: (open: String, service: String)
-}
-
 struct ProductView: View {
     
     let product: Product
