@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 09.02.2025.
 //
@@ -53,12 +53,10 @@ struct ProductView: View {
                 )
             }
         }
-        .modifier(
-            ViewWithBackgroundCornerRadiusAndPaddingModifier(
-                config.background,
-                config.cornerRadius,
-                config.padding
-            )
+        .rounded(
+            background: config.background,
+            cornerRadius: config.cornerRadius,
+            padding: config.padding
         )
     }
     
@@ -144,7 +142,7 @@ struct ProductView: View {
     ) -> some View {
         
         Group {
-           
+            
             if needShimmering {
                 
                 RoundedRectangle(cornerRadius: 8)

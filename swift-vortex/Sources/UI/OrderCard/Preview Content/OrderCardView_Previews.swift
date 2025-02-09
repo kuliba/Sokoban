@@ -171,11 +171,14 @@ private extension OrderCardViewConfig {
         cardType: .preview,
         formSpacing: 16,
         product: .preview,
-        shimmeringColor: .gray
+        shimmeringColor: .gray,
+        padding: 16,
+        cornerRadius: 24,
+        background: .blue.opacity(0.1)
     )
 }
 
-private extension SelectViewConfig {
+private extension CardTypeViewConfig {
     
     static let preview: Self = .init(
         title: .init(

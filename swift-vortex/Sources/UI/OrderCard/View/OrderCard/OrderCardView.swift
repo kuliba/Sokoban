@@ -129,10 +129,15 @@ private extension OrderCardView {
         _ type: CardType
     ) -> some View {
 
-        SelectView(
+        CardTypeView(
             select: type,
             config: config.cardType,
             makeIconView: makeIconView
+        )
+        .rounded(
+            background: config.background,
+            cornerRadius: config.cornerRadius,
+            padding: config.padding
         )
     }
 }

@@ -1,5 +1,5 @@
 //
-//  SwiftUIView 3.swift
+//  CardTypeView.swift
 //
 //
 //  Created by Дмитрий Савушкин on 09.02.2025.
@@ -8,11 +8,11 @@
 import SwiftUI
 import SharedConfigs
 
-struct SelectView<IconView>: View
+struct CardTypeView<IconView>: View
 where IconView: View {
     
     let select: CardType
-    let config: SelectViewConfig
+    let config: CardTypeViewConfig
     let makeIconView: (String) -> IconView
     
     var body: some View {
@@ -34,7 +34,7 @@ where IconView: View {
 
 #Preview {
     
-    SelectView(select: .preview, config: .preview) { _ in
+    CardTypeView(select: .preview, config: .preview) { _ in
         
         Image.percent
     }
@@ -46,7 +46,7 @@ private extension CardType {
 }
 
 
-private extension SelectViewConfig {
+private extension CardTypeViewConfig {
     
     static let preview: Self = .init(
         title: .init(textFont: .title3, textColor: .green),
