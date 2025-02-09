@@ -8,11 +8,25 @@
 import SharedConfigs
 import SwiftUI
 
-struct MessageViewConfig {
+public struct MessageViewConfig {
     
-    let icon: Image
-    let title: TitleConfig
-    let subtitle: TitleConfig
-    let description: TitleConfig
-    let toggle: SharedConfigs.ToggleConfig
+    public let icon: Image
+    public let title: TitleConfig
+    public let subtitle: TitleConfig
+    public let description: TitleConfig
+    public let toggle: SharedConfigs.ToggleConfig
+    
+    public init(
+        icon: Image,
+        title: TitleConfig,
+        subtitle: TitleConfig,
+        description: TitleConfig,
+        toggle: SharedConfigs.ToggleConfig
+    ) {
+        self.icon = icon
+        self.title = title
+        self.subtitle = subtitle
+        self.description = description
+        self.toggle = toggle
+    }
 }

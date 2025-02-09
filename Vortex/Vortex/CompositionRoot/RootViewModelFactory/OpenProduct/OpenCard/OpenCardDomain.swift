@@ -39,8 +39,6 @@ enum OpenCardDomain {
     
     typealias Witnesses = ContentWitnesses<Content, FlowEvent<Select, Never>>
     
-    typealias LoadFailure = OrderCard.LoadFailure
-    
     enum Select {
         
         case failure(LoadFailure)

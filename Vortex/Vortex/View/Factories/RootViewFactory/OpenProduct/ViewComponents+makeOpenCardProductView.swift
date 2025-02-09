@@ -5,7 +5,23 @@
 //  Created by Igor Malyarov on 07.02.2025.
 //
 
+// TODO: extract to separate file
+import UIPrimitives
+
+extension ViewComponents {
+    
+    @inlinable
+    func makeGeneralIconView(
+        md5Hash: String
+    ) -> UIPrimitives.AsyncImage {
+        
+        return makeGeneralIconView(.md5Hash(.init(md5Hash)))
+    }
+}
+
+import OrderCard
 import OTPInputComponent
+import PaymentComponents
 import RxViewModel
 import SwiftUI
 
@@ -43,88 +59,44 @@ extension ViewComponents {
         
         RxWrapperView(model: content) { state, event in
             
-            OrderCardView(state: state, event: event, config: .iVortex)
-            switch state.formResult {
-            case .none, .failure:
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(.tertiary)
-                    ._shimmering(isActive: state.formResult == nil)
+            VStack {
                 
-            case let .success(form):
-                switch form.confirmation {
-                case .none:
-                    VStack {
+                OrderCard.OrderCardView(
+                    state: state,
+                    event: event,
+                    config: .iVortex,
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    )
+                ) { confirmation in
+                    
+                    makeOTPView(viewModel: confirmation.otp)
+                    
+                    HStack {
                         
-                        Text("TBD: openCard Form without confirmation")
-                        
-                        Toggle(
-                            "SMS/Push Expanded",
-                            isOn: .init(
-                                get: { state.form?.messages.isOn ?? false },
-                                set: { event(.setMessages($0)) }
-                            )
+                        PaymentsCheckView.CheckBoxView(
+                            isChecked: state.consent,
+                            activeColor: .systemColorActive
                         )
                         
-                        Spacer()
-                        
-                        continueButton(isLoading: state.isLoading) {
-                            
-                            event(.continue)
-                        }
-                        .buttonStyle(.borderedProminent)
+                        Text("Consent")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.textBodyMR14200())
+                            .foregroundColor(.textPlaceholder)
                     }
-                    .disabled(state.isLoading)
-                    
-                case .failure:
-                    Text("TBD: openCard Form with confirmation failure")
-                        .foregroundStyle(.red)
-                    
-                case let .success(confirmation):
-                    VStack {
-                        
-                        Text("TBD: openCard Form with confirmation")
-                        
-                        Toggle(
-                            "SMS/Push Expanded",
-                            isOn: .init(
-                                get: { state.form?.messages.isOn ?? false },
-                                set: { event(.setMessages($0)) }
-                            )
-                        )
-                        
-                        makeOTPView(viewModel: confirmation.otp)
-                        
-                        HStack {
-                            
-                            PaymentsCheckView.CheckBoxView(
-                                isChecked: state.consent,
-                                activeColor: .systemColorActive
-                            )
-                            
-                            Text("Consent")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textPlaceholder)
-                        }
-                        .onTapGesture { event(.setConsent(!state.consent)) }
-                        .animation(.easeInOut, value: state.consent)
-                        
-                        Spacer()
-                        
-                        Text(String(describing: state.payload))
-                            .foregroundStyle(.secondary)
-                        
-                        Spacer()
-                        
-                        continueButton(isLoading: state.isLoading) {
-                            
-                            event(.continue)
-                        }
-                        .disabled(!state.isValid)
-                    }
-                    .disabled(state.isLoading)
+                    .onTapGesture { event(.setConsent(!state.consent)) }
+                    .animation(.easeInOut, value: state.consent)
                 }
+                .frame(maxHeight: .infinity, alignment: .top)
+                
+                continueButton(isLoading: state.loadableForm.isLoading) {
+                    
+                    event(.continue)
+                }
+                .disabled(!state.isValid)
             }
+            .disabled(state.loadableForm.isLoading)
         }
     }
     
@@ -133,14 +105,11 @@ extension ViewComponents {
         action: @escaping () -> Void
     ) -> some View {
         
-        Button(action: action) {
-            if isLoading {
-                ProgressView()
-            } else {
-                Text("Continue")
-            }
-        }
-        .buttonStyle(.borderedProminent)
+        PaymentComponents.ButtonView.goToMain(
+            title: "Продолжить",
+            goToMain: action
+        )
+        .loader(isLoading: isLoading, color: .clear)
     }
     
     @inlinable
@@ -160,6 +129,13 @@ extension ViewComponents {
         .paddedRoundedBackground()
         .keyboardType(.numberPad)
     }
+}
+
+// MARK: - Helpers
+
+private extension OpenCardDomain.State {
+    
+    var consent: Bool { loadableForm.state?.consent ?? false }
 }
 
 // MARK: - Adapters

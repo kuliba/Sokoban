@@ -47,7 +47,13 @@ public extension Loadable {
 
 public struct State<Confirmation> {
     
-    var loadableForm: Loadable<Form<Confirmation>>
+    public var loadableForm: Loadable<Form<Confirmation>>
+    
+    public init(
+        loadableForm: Loadable<Form<Confirmation>>
+    ) {
+        self.loadableForm = loadableForm
+    }
 }
 
 public extension State {

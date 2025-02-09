@@ -8,8 +8,16 @@
 import SharedConfigs
 import SwiftUI
 
-struct CardTypeViewConfig {
+public struct CardTypeViewConfig {
     
-    let title: TextConfig
-    let subtitle: TitleConfig
+    public let title: TextConfig
+    public let subtitle: TitleConfig
+    
+    public init(
+        title: TextConfig,
+        subtitle: TitleConfig
+    ) {
+        self.title = title
+        self.subtitle = subtitle
+    }
 }

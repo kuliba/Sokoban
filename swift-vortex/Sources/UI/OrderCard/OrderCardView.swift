@@ -31,7 +31,7 @@ where ConfirmationView: View{
         event: @escaping (Event) -> Void,
         config: Config,
         factory: ImageViewFactory,
-        confirmationView: @escaping (Confirmation) -> ConfirmationView,
+        @ViewBuilder confirmationView: @escaping (Confirmation) -> ConfirmationView,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
@@ -66,6 +66,7 @@ private extension OrderCardView {
     func loadingProductView() -> some View {
         
         ProductView(product: .sample, isLoading: true, config: config.product)
+            .rounded(config.roundedConfig)
     }
     
     @ViewBuilder

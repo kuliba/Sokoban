@@ -50,5 +50,13 @@ public struct Form<Confirmation> {
 
 public extension Form {
     
-    var isValid: Bool { otp?.count == 6 && consent } // rename to `canOrder`
+    var isValid: Bool {
+        
+        switch confirmation {
+        case .loaded(nil):
+            return true
+        default: // rename to `canOrder`
+            return otp?.count == 6 && consent
+        }
+    }
 }

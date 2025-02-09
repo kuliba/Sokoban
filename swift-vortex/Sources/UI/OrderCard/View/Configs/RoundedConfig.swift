@@ -12,4 +12,14 @@ public struct RoundedConfig: Equatable {
     public let padding: CGFloat
     public let cornerRadius: CGFloat
     public let background: Color
+    
+    public init(
+        padding: CGFloat,
+        cornerRadius: CGFloat,
+        background: Color
+    ) {
+        self.padding = padding
+        self.cornerRadius = cornerRadius
+        self.background = background
+    }
 }

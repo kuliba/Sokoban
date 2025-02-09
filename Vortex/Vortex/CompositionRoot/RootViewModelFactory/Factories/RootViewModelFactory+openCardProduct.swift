@@ -42,7 +42,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeContent(
-        initialState: OpenCardDomain.State = .init()
+        initialState: OpenCardDomain.State = .init(loadableForm: .loaded(nil))
     ) -> OpenCardDomain.Content {
         
         let reducer = OpenCardDomain.Reducer { confirmation in
@@ -120,6 +120,7 @@ extension RootViewModelFactory {
             }
             
             completion($0.loadFormResult)
+           // _ = service
         }
     }
     
@@ -230,7 +231,7 @@ private extension OpenCardDomain.State {
     
     var failure: OpenCardDomain.LoadFailure? {
         
-        return formResult?.failure ?? form?.failure
+        return form?.failure ?? form?.failure
     }
 }
 
@@ -238,7 +239,9 @@ private extension OrderCard.Form {
     
     var failure: OrderCard.LoadFailure? {
         
-        confirmation?.failure// ?? orderCardResult?.failure
+        guard case let .loaded(.failure(failure)) = confirmation else { return nil }
+        
+        return failure
     }
 }
 
@@ -320,28 +323,25 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
     var form: OrderCard.Form<OpenCardDomain.Confirmation> {
         
         return .init(
+            product: .init(
+                image: design,
+                header: (description, title),
+                orderOption: ("orderOption.0", "orderOption.1")
+            ),
+            type: .init(
+                icon: "type.icon",
+                title: "type.title"
+            ),
+            requestID: UUID().uuidString.lowercased(),
             cardApplicationCardType: type,
             cardProductExtID: id,
             cardProductName: title,
-            messages: .default,
-            //TODO: fix mapping
-            product: .init(
-                image: design,
-                options: [],
-                subtitle: description,
-                title: title
-            ),
-            requestID: UUID().uuidString.lowercased(),
-            type: .init(
-                title: "",
-                cardType: "",
-                icon: ""
-            )
+            messages: .default
         )
     }
 }
 
-private extension OrderCard.Form<OpenCardDomain.Confirmation>.Messages {
+private extension OrderCard.Messages {
     
     static let `default`: Self = .init(
         description: "Пуши и смс",

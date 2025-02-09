@@ -60,6 +60,7 @@ private extension MessageView {
             set: { event($0) }
         ))
         .toggleStyle(ToggleComponentStyle(config: config.toggle))
+        .animation(.easeInOut, value: state)
     }
 }
 
