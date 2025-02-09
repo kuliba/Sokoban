@@ -105,3 +105,11 @@ extension ResponseMapper {
         }
     }
 }
+
+public extension ResponseMapper.GetCardOrderFormData.Item.Fee {
+    
+    var free: String {
+        
+        self.open == "0" ? "Бусплатно" : self.open
+    }
+}
