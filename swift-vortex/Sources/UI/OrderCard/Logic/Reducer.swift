@@ -59,10 +59,9 @@ public extension Reducer {
             
             switch orderCardResult {
             case let .failure(loadFailure):
-//                let notifyOTP = state.form?.confirmation?.success.flatMap(otpWitness)
-//                notifyOTP?(loadFailure.message)
-                break
-                //TODO: Fix with associated type
+                let notifyOTP = state.form?.confirmation?.success.map(otpWitness)
+                notifyOTP?(loadFailure.message)
+                
             case let .success(orderCardResponse):
                 state.form?.orderCardResponse = orderCardResponse
             }
@@ -119,5 +118,16 @@ private extension Reducer {
             
             state.form?.confirmation = nil
         }
+    }
+}
+
+private extension Result {
+    
+    var success: Success? {
+        
+        guard case let .success(success) = self 
+        else { return nil }
+
+        return success
     }
 }

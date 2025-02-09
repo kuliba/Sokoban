@@ -26,7 +26,7 @@ enum OpenCardDomain {
     typealias Event = OrderCard.Event<Confirmation>
     typealias Effect = OrderCard.Effect
     
-    typealias Reducer = OrderCard.Reducer
+    typealias Reducer = OrderCard.Reducer<Confirmation>
     typealias EffectHandler = OrderCard.EffectHandler<Confirmation>
     
     typealias ConfirmationNotify = EffectHandler.ConfirmationNotify
@@ -68,6 +68,6 @@ enum OpenCardDomain {
     typealias LoadFailure = OrderCard.LoadFailure
     
     typealias OrderCardPayload = OrderCard.OrderCardPayload
-    typealias OrderCardResult = OrderCard.OrderCardResult
+    typealias OrderCardResult = Event.OrderCardResult
     typealias OrderCardResponse = OrderCard.OrderCardResponse
 }

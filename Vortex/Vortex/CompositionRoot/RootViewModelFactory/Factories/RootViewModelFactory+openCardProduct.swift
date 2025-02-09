@@ -8,11 +8,11 @@
 import Combine
 import CreateCardApplication
 import Foundation
+import GenericRemoteService
 import GetCardOrderFormService
+import OrderCard
 import OTPInputComponent
 import RemoteServices
-import GenericRemoteService
-import OrderCard
 
 extension RootViewModelFactory {
     
@@ -45,7 +45,7 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init()
     ) -> OpenCardDomain.Content {
         
-        let reducer = OpenCardDomain.Reducer<OpenCardDomain.Confirmation> { confirmation in
+        let reducer = OpenCardDomain.Reducer { confirmation in
             
             { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
         }
@@ -190,7 +190,7 @@ extension RootViewModelFactory {
         schedulers.background.schedule {
             
             service(payload.createCardApplicationPayload) { [service] in
-#warning("need to notify OTP in case of special failure")
+
                 completion($0.mapError { $0.loadFailure })
                 _ = service
             }
