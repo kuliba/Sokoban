@@ -39,11 +39,11 @@ public struct OrderCardView<Confirmation>: View {
     
     public var body: some View {
         
-        switch state.formResult {
-        case .none, .failure:
+        switch state.form {
+        case .none:
             loadingProductView()
             
-        case let .success(form):
+        case let .some(form):
             formView(form)
         }
     }
@@ -77,14 +77,20 @@ private extension OrderCardView {
     
     @ViewBuilder
     func confirmationView(
-        _ confirmation: LoadConfirmationResult<Confirmation>?
+        _ confirmation: Loadable<Confirmation>?
     ) -> some View {
         
         switch confirmation {
-        case .none:
-             EmptyView()
+        case .none, .loaded(nil):
+            EmptyView()
             
-        case let .failure(failure):
+        case .loading:
+            RoundedRectangle(cornerRadius: config.roundedConfig.cornerRadius)
+                .foregroundColor(config.roundedConfig.background)
+                .frame(height: 56) // TODO: move to config
+                ._shimmering()
+            
+        case let .loaded(.failure(failure)):
             switch failure.type {
             case .alert:
                 Text("confirmation failure alert")
@@ -93,7 +99,7 @@ private extension OrderCardView {
                 Text("confirmation failure informer")
             }
             
-        case let .success(confirmation):
+        case let .loaded(.success(confirmation)):
             Text("form with confirmation \(confirmation)")
         }
         //
@@ -129,7 +135,7 @@ private extension OrderCardView {
         
         ProductView(
             product: product,
-            isLoading: state.isProductLoading,
+            isLoading: state.loadableForm.isLoading,
             config: config.product
         )
         .rounded(config.roundedConfig)

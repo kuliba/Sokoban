@@ -15,7 +15,7 @@ public struct Form<Confirmation> {
     public let cardProductExtID: String
     public let cardProductName: String
     
-    public var confirmation: LoadConfirmationResult<Confirmation>?
+    public var confirmation: Loadable<Confirmation>
     public var consent = true
     public var messages: Messages
     public var otp: String?
@@ -28,7 +28,7 @@ public struct Form<Confirmation> {
         cardApplicationCardType: String,
         cardProductExtID: String,
         cardProductName: String,
-        confirmation: LoadConfirmationResult<Confirmation>? = nil,
+        confirmation: Loadable<Confirmation> = .loaded(nil),
         consent: Bool = true,
         messages: Messages,
         otp: String? = nil,

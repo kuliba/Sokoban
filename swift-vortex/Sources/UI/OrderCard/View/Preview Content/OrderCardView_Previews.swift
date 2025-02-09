@@ -14,26 +14,32 @@ struct OrderCardView_Previews: PreviewProvider {
         
         orderCardView(.isLoading)
             .previewDisplayName("isLoading")
-        orderCardView(.empty)
-            .previewDisplayName("empty")
-        orderCardView(.alertFailure)
+        orderCardView(.isLoadingWithPrevious)
+            .previewDisplayName("isLoadingWithPrevious")
+        
+        orderCardView(.idle)
+            .previewDisplayName("idle")
+        
+        orderCardView(.alert)
             .previewDisplayName("alert")
-        orderCardView(.informerFailure)
+        orderCardView(.informer)
             .previewDisplayName("informer")
+        
         orderCardView(.noConfirmation)
             .previewDisplayName("noConfirmation")
+        
+        orderCardView(.isLoadingConfirmation)
+            .previewDisplayName("isLoadingConfirmation")
+        orderCardView(.isLoadingWithPreviousConfirmation)
+            .previewDisplayName("isLoadingWithPreviousConfirmation")
+        
         orderCardView(.confirmationAlert)
             .previewDisplayName("confirmationAlert")
-        orderCardView(.confirmationAlertIsLoading)
-            .previewDisplayName("confirmationAlertIsLoading")
         orderCardView(.confirmationInformer)
             .previewDisplayName("confirmationInformer")
-        orderCardView(.confirmationInformerIsLoading)
-            .previewDisplayName("confirmationInformerIsLoading")
+        
         orderCardView(.confirmationSuccess)
             .previewDisplayName("confirmationSuccess")
-        orderCardView(.confirmationSuccessIsLoading)
-            .previewDisplayName("confirmationSuccessIsLoading")
     }
     
     private static func orderCardView(
@@ -49,32 +55,36 @@ private struct PreviewConfirmation {}
 private extension State
 where Confirmation == PreviewConfirmation {
     
-    static let isLoading: Self = .init(isLoading: true)
-    static let empty: Self = .init(isLoading: false, formResult: nil)
+    static let isLoading: Self = .init(loadableForm: .loading(nil))
+    static let isLoadingWithPrevious: Self = .init(loadableForm: .loading(.confirmationSuccess))
     
-    static let alertFailure: Self = .init(formResult: .alertFailure)
-    static let informerFailure: Self = .init(formResult: .informerFailure)
+    static let idle: Self = .init(loadableForm: .loaded(nil)) // empty
     
-    static let noConfirmation: Self = .init(formResult: .noConfirmation)
+    static let alert: Self = .init(loadableForm: .loaded(.alert))
+    static let informer: Self = .init(loadableForm: .loaded(.informer))
     
-    static let confirmationAlert: Self = .init(formResult: .confirmationAlert)
-    static let confirmationAlertIsLoading: Self = .init(isLoading: true, formResult: .confirmationAlert)
+    static let noConfirmation: Self = .init(loadableForm: .loaded(.noConfirmation))
     
-    static let confirmationInformer: Self = .init(formResult: .confirmationInformer)
-    static let confirmationInformerIsLoading: Self = .init(isLoading: true, formResult: .confirmationInformer)
+    static let isLoadingConfirmation: Self = .init(loadableForm: .loaded(.isLoadingConfirmation))
+    static let isLoadingWithPreviousConfirmation: Self = .init(loadableForm: .loaded(.isLoadingWithPreviousConfirmation))
     
-    static let confirmationSuccess: Self = .init(formResult: .confirmationSuccess)
-    static let confirmationSuccessIsLoading: Self = .init(isLoading: true, formResult: .confirmationSuccess)
+    static let confirmationAlert: Self = .init(loadableForm: .loaded(.confirmationAlert))
+    static let confirmationInformer: Self = .init(loadableForm: .loaded(.confirmationInformer))
+    
+    static let confirmationSuccess: Self = .init(loadableForm: .loaded(.confirmationSuccess))
 }
 
 private extension Result
 where Success == Form<PreviewConfirmation>,
       Failure == LoadFailure {
     
-    static let alertFailure: Self = .failure(.alert)
-    static let informerFailure: Self = .failure(.informer)
+    static let alert: Self = .failure(.alert)
+    static let informer: Self = .failure(.informer)
     
-    static let noConfirmation: Self = .success(.preview(confirmation: nil, consent: true))
+    static let noConfirmation: Self = .success(.noConfirmation)
+    
+    static let isLoadingConfirmation: Self = .success(.isLoadingConfirmation)
+    static let isLoadingWithPreviousConfirmation: Self = .success(.isLoadingWithPreviousConfirmation)
     
     static let confirmationAlert: Self = .success(.confirmationAlert)
     static let confirmationInformer: Self = .success(.confirmationInformer)
@@ -91,8 +101,14 @@ private extension LoadFailure {
 private extension Form
 where Confirmation == PreviewConfirmation {
     
+    static let noConfirmation: Self = .preview(confirmation: .idle)
+    
+    static let isLoadingConfirmation: Self = .preview(confirmation: .isLoading)
+    static let isLoadingWithPreviousConfirmation: Self = .preview(confirmation: .isLoadingWithPrevious)
+    
     static let confirmationAlert: Self = .preview(confirmation: .alert, consent: true)
     static let confirmationInformer: Self = .preview(confirmation: .informer, consent: false)
+    
     static let confirmationSuccess: Self = .preview(confirmation: .success, consent: false)
     
     static func preview(
@@ -100,8 +116,8 @@ where Confirmation == PreviewConfirmation {
         cardApplicationCardType: String = "cardApplicationCardType",
         cardProductExtID: String = "cardProductExtID",
         cardProductName: String = "cardProductName",
-        confirmation: Result<PreviewConfirmation, LoadFailure>?,
-        consent: Bool,
+        confirmation: Loadable<PreviewConfirmation>,
+        consent: Bool = true,
         messages: Messages = .preview(),
         otp: String? = nil,
         orderCardResponse: OrderCardResponse? = nil
@@ -121,6 +137,20 @@ where Confirmation == PreviewConfirmation {
             orderCardResponse: orderCardResponse
         )
     }
+}
+
+private extension Loadable
+where State == PreviewConfirmation {
+    
+    static let idle: Self = .loaded(nil)
+    
+    static let isLoading: Self = .loading(nil)
+    static let isLoadingWithPrevious: Self = .loading(.init())
+    
+    static let alert: Self = .loaded(.alert)
+    static let informer: Self = .loaded(.informer)
+    
+    static let success: Self = .loaded(.success)
 }
 
 private extension Product {
