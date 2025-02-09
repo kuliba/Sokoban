@@ -27,10 +27,21 @@ public extension Loadable {
     
     var state: State? {
         
-        guard case let .loaded(.success(state)) = self
-        else { return nil }
+        get {
+            
+            guard case let .loaded(.success(state)) = self
+            else { return nil }
+            
+            return state
+        }
         
-        return state
+        set(newValue) {
+            
+            guard let newValue, case .loaded(.success) = self
+            else { return }
+            
+            self = .loaded(.success(newValue))
+        }
     }
 }
 
@@ -64,14 +75,10 @@ public extension State {
         }
     }
     
-//    var hasConfirmation: Bool {
-//        
-//        if case .success = form?.confirmation?.loaded {
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
+    var hasConfirmation: Bool {
+        
+        loadableForm.state?.confirmation.state != nil
+    }
     
     var isValid: Bool { form?.isValid ?? false } // rename to `canOrder`
     
