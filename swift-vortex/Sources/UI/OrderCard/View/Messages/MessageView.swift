@@ -1,5 +1,5 @@
 //
-//  SwiftUIView 2.swift
+//  MessageView.swift
 //
 //
 //  Created by Дмитрий Савушкин on 09.02.2025.

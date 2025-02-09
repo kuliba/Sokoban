@@ -5,13 +5,6 @@
 //  Created by Дмитрий Савушкин on 09.02.2025.
 //
 
-//import CreateCardApplication
-//import Foundation
-//import LinkableText
-//import OTPInputComponent
-//import PaymentComponents
-//import SharedConfigs
-//import UIPrimitives
 import SwiftUI
 
 public struct OrderCardView<Confirmation, ConfirmationView>: View
