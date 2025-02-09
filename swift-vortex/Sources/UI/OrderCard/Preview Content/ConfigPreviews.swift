@@ -20,8 +20,3 @@ extension NumberFormatter {
         return formatter
     }
 }
-
-extension ToggleConfig {
-    
-    static let toggleConfigPreview: Self = .init(colors: .init(on: .green, off: .black))
-}
